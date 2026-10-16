@@ -256,6 +256,26 @@ private func followingRule() -> FillLightRule {
         #expect(h.controller.isOn && h.controller.isAutomatic)
     }
 
+    @Test func byDefaultTheDebouncedSignalActsAtOnce() async {
+        // Signals debounces `isCameraInUse` 1 s on / 3 s off (§7.1); the controller adds no second delay.
+        let h = FillLightHarness(timing: nil)
+        h.settings[FillLightSettings.autoWithCamera] = true
+        await h.start()
+        await camera(true, h)
+        #expect(h.controller.isOn && h.controller.isAutomatic)
+        #expect(h.factory.current?.isShown == true)
+        await camera(false, h)
+        #expect(!h.controller.isOn && h.factory.live.isEmpty)
+        #expect(h.time.sleeperCount == 0)                       // no rule deadline, and the settle reads went with it
+        await camera(true, h)
+        h.controller.setOn(false, source: .panel)                // manual Off wins until the camera stops
+        await h.advance(.seconds(30))
+        #expect(!h.controller.isOn)
+        await camera(false, h)
+        await camera(true, h)
+        #expect(h.controller.isOn && h.controller.isAutomatic)
+    }
+
     @Test func automaticChangesAreAnnouncedAsAlerts() async {
         let h = await cameraHarness()
         await camera(true, h)

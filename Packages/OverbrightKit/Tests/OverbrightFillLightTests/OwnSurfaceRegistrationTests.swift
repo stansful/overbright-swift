@@ -34,6 +34,44 @@ private let msi = DisplayFixture.Keys.mpg322ux
         #expect(h.ownEDRSurfaces.displays == [builtIn: 1])
     }
 
+    @Test func aBrieflyMissingReadingKeepsTheRequestAndTheHold() async {
+        // NSScreen is re-fetched during a reconfiguration, so the display has no reading for a moment while its
+        // frame still shows: the hold and the tag stay, so Boost sees no release and re-acquire.
+        let h = await started()
+        h.controller.setOn(true, source: .panel)
+        h.settings[FillLightSettings.width] = 60
+        await h.settle()
+        let shown = h.style
+        var changes: [[DisplayKey: Int]] = []
+        let token = observe({ h.ownEDRSurfaces.displays }, onChange: { changes.append($0) })
+        h.headroom.update(builtIn) { $0.hasOwnScreen = false }
+        h.signals.emit(.screenParametersChanged)
+        h.settings[FillLightSettings.warmth] = 1                   // settings still apply meanwhile
+        await h.settle()
+        #expect(h.ownEDRSurfaces.displays == [builtIn: 1])
+        #expect(h.style?.headroomRequest == shown?.headroomRequest)
+        #expect(h.style?.color == ColorTemperature.linearSRGB(warmth: 1))
+        h.headroom.update(builtIn) { $0.hasOwnScreen = true }
+        h.signals.emit(.screenParametersChanged)
+        await h.settle()
+        #expect(h.ownEDRSurfaces.displays == [builtIn: 1])
+        #expect(changes.isEmpty)                                    // never released in between
+        #expect(h.factory.made.count == 1)
+        token.cancel()
+    }
+
+    @Test func aNewFrameWithoutAReadingAsksForNothing() async {
+        // No reading yet for a display that just got its frame: SDR, no hold, until a reading arrives.
+        let h = await started()
+        h.headroom.update(builtIn) { $0.hasOwnScreen = false }
+        h.controller.setOn(true, source: .panel)
+        #expect(h.style?.headroomRequest == nil)
+        #expect(h.ownEDRSurfaces.displays.isEmpty)
+        h.headroom.update(builtIn) { $0.hasOwnScreen = true }
+        h.signals.emit(.screenParametersChanged)
+        #expect(h.ownEDRSurfaces.displays == [builtIn: 1])
+    }
+
     @Test func notHeldOnADisplayWithoutExtraRange() async {
         let h = await started(.mpg322uxHDROff)   // macOS HDR off: potential 1.0
         h.controller.setOn(true, source: .panel)

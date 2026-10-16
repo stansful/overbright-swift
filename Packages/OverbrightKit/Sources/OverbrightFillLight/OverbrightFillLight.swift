@@ -3,8 +3,8 @@
 //
 //   FillLightController     implements `FillLightControl` and `ServiceLifecycle`: settings → style, the camera rule,
 //                           the chosen display, `OwnEDRSurfaces` registration, announcements and the journal
-//   FillLightRule           the camera rule (on 1 s after a camera starts, off 3 s after it stops, manual Off wins
-//                           until the camera stops) as a pure state machine over monotonic instants
+//   FillLightRule           the camera rule (on when a camera starts, off when it stops, manual Off wins until the
+//                           camera stops; Signals debounces the signal 1 s on / 3 s off, §7.1) as a pure state machine
 //   ColorTemperature        warmth → kelvin (6 500–3 000 K) → black-body colour in linear sRGB (pure)
 //   FrameGeometry           the lit frame: outer edge = the display below the menu bar, inner edge a rounded rectangle
 //   FillLightStyle          what a surface shows: width, colour, value (≤ 2× white with EDR) and the headroom request

@@ -257,9 +257,13 @@ private let msi = DisplayFixture.Keys.mpg322ux
         h.signals.emit(.didWake)
         h.settings[FillLightSettings.width] = 60
         await h.settle()
+        for _ in 0..<20 { h.signals.emit(.screenParametersChanged) }   // posted whenever headroom moves (§7.1)
         #expect(h.journalCodes.filter { $0 == "fillLight.surfaceFailed" }.count == 1)
+        #expect(h.factory.made.isEmpty)
+        h.signals.emit(.displaysReconfigured)                           // a new layout: journaled again if it fails
+        #expect(h.journalCodes.filter { $0 == "fillLight.surfaceFailed" }.count == 2)
         h.factory.refused = []
-        h.signals.emit(.screenParametersChanged)
+        h.signals.emit(.screenParametersChanged)                        // retried on every event all the same
         #expect(h.factory.current?.isShown == true)
     }
 

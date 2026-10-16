@@ -1,5 +1,6 @@
 // OverbrightFillLight/Rule/FillLightRule.swift — on/off and the camera rule as a pure state machine.
-// ARCHITECTURE.md §10.9 (FillLightRuleTests); DESIGN.md §7.7 ("Turn on while a camera is in use"), §11 (camera rule).
+// ARCHITECTURE.md §10.9 (FillLightRuleTests), §7.1 (Signals debounces `isCameraInUse` 1 s on / 3 s off); DESIGN.md
+// §7.7 ("Turn on while a camera is in use"), §11 (camera rule).
 import OverbrightCore
 
 /// Whether the Fill Light is on, and the camera rule (DESIGN.md §11): on `onDelay` after a matching camera starts,
@@ -20,10 +21,13 @@ public nonisolated struct FillLightRule: Hashable, Sendable {
         public var onDelay: Duration
         /// From the last camera stopping to the light turning off.
         public var offDelay: Duration
-        /// Delays (zero is allowed: the composition root uses zero if Signals already debounces `isCameraInUse`).
+        /// Delays (zero is allowed).
         public init(onDelay: Duration, offDelay: Duration) { self.onDelay = onDelay; self.offDelay = offDelay }
-        /// 1 s on, 3 s off (DESIGN.md §11).
+        /// 1 s on, 3 s off (DESIGN.md §11), for a raw camera signal.
         public static let standard = Timing(onDelay: FillLightTiming.cameraOnDelay, offDelay: FillLightTiming.cameraOffDelay)
+        /// No delays: Signals publishes `isCameraInUse` already debounced by `standard`'s amounts (§7.1), so the
+        /// rule acts at once (`FillLightController`'s default; one debounce, not two).
+        public static let signalsDebounced = Timing(onDelay: .zero, offDelay: .zero)
     }
 
     private nonisolated enum Pending: Hashable, Sendable {

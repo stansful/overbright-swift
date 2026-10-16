@@ -35,9 +35,10 @@ import OverbrightCore
     let controller: FillLightController
     private let mainDisplay = MainDisplayBox()
 
-    /// A harness over `fixture` (or `displays` with idle headroom scripts), not started.
+    /// A harness over `fixture` (or `displays` with idle headroom scripts), not started. `timing` defaults to the
+    /// raw-signal `.standard` delays the rule tests script; nil keeps the controller's own default.
     init(fixture: DisplayFixture = .builtinXDRLidOpen, displays: [DisplayFacts]? = nil,
-         timing: FillLightRule.Timing = .standard) {
+         timing: FillLightRule.Timing? = .standard) {
         if let displays {
             directory = FakeDisplayDirectory(displays: displays)
             let scripts = Dictionary(uniqueKeysWithValues: displays.map {
@@ -49,11 +50,18 @@ import OverbrightCore
             headroom = ScriptedHeadroom(fixture: fixture, time: time)
         }
         let log = announcements, main = mainDisplay
-        controller = FillLightController(
-            settings: settings, displays: directory, headroom: headroom, signals: signals,
-            ownEDRSurfaces: ownEDRSurfaces, time: time, journal: journal,
-            announcer: Announcer(post: { log.append($0) }, now: { 0 }), surfaces: factory, cameraTiming: timing,
-            mainDisplayID: { main.id })
+        let announcer = Announcer(post: { log.append($0) }, now: { 0 })
+        if let timing {
+            controller = FillLightController(
+                settings: settings, displays: directory, headroom: headroom, signals: signals,
+                ownEDRSurfaces: ownEDRSurfaces, time: time, journal: journal, announcer: announcer, surfaces: factory,
+                cameraTiming: timing, mainDisplayID: { main.id })
+        } else {
+            controller = FillLightController(
+                settings: settings, displays: directory, headroom: headroom, signals: signals,
+                ownEDRSurfaces: ownEDRSurfaces, time: time, journal: journal, announcer: announcer, surfaces: factory,
+                mainDisplayID: { main.id })
+        }
     }
 
     /// Starts the controller and lets its first observation pass run.

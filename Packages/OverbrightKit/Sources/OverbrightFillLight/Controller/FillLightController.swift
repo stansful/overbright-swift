@@ -4,9 +4,9 @@
 //
 // Thread: main actor only. Settings, the signals snapshot and the display directory arrive through `observe` (main
 // actor); system events through `SystemSignals.addEventObserver` (delivered on main, synchronously); the rule's
-// deadline and the headroom settle reads are stored tasks sleeping on the injected `TimeSource` (no repeating timer).
-// Zero work while off: no surface, no event observer, no task and no headroom read unless the light is on or the
-// camera rule has a deadline pending.
+// deadline and the headroom settle reads are stored tasks sleeping on the injected `TimeSource` (`FillLightDeadlines`,
+// no repeating timer). Zero work while off: no surface, no event observer, no task and no headroom read unless the
+// light is on or the camera rule has a deadline pending.
 import CoreGraphics
 import Foundation
 import Observation
@@ -20,7 +20,8 @@ private let log = Log.logger(.fillLight)
 /// It follows the `fillLight.*` settings live, picks the chosen display (else the built-in, else the main display),
 /// shows its frame through a `FillLightSurfaceFactory`, asks for EDR headroom where the display has extra range and
 /// registers that display with `OwnEDRSurfaces` while it does, so Boost counts the range as already in use (D6).
-/// The camera rule turns it on and off with the camera (`FillLightRule`).
+/// The camera rule turns it on and off with the camera (`FillLightRule`), following `isCameraInUse` as Signals
+/// publishes it, already debounced 1 s on / 3 s off (§7.1).
 @MainActor @Observable public final class FillLightController: FillLightControl, ServiceLifecycle {
     /// The light should show (the user turned it on, or the camera rule did).
     public private(set) var isOn = false
@@ -39,33 +40,35 @@ private let log = Log.logger(.fillLight)
     @ObservationIgnored private let mainDisplayID: @MainActor () -> CGDirectDisplayID
 
     @ObservationIgnored private var rule: FillLightRule
+    @ObservationIgnored private let deadlines: FillLightDeadlines
     @ObservationIgnored private var isRunning = false
     @ObservationIgnored private var observations: [ObservationToken] = []
     @ObservationIgnored private var eventToken: ObservationToken?
     @ObservationIgnored private var surface: (any FillLightSurface)?
     @ObservationIgnored private var appliedStyle: FillLightStyle?
+    /// The surface's display's latest headroom reading (kept while a reading is briefly missing).
+    @ObservationIgnored private var lastReading: HeadroomReading?
     @ObservationIgnored private var hold: (key: DisplayKey, token: ObservationToken)?
     @ObservationIgnored private var removedDisplays: Set<CGDirectDisplayID> = []
     @ObservationIgnored private var lastFailure: DisplayRef?
-    @ObservationIgnored private var ruleTask: Task<Void, Never>?
-    @ObservationIgnored private var ruleTaskDeadline: MonotonicInstant?
-    @ObservationIgnored private var settleTask: Task<Void, Never>?
 
     /// A controller over the hub's ports. Constructing it does nothing; `start()` begins observing.
     /// - Parameters:
     ///   - surfaces: `SystemFillLightSurfaces()` in the app (its SDR stand-in under `--qa-simulate`), a fake in tests.
-    ///   - cameraTiming: the camera rule's delays; `.standard` (1 s on, 3 s off) unless Signals already debounces
-    ///     `isCameraInUse` by the same amounts.
+    ///   - cameraTiming: the camera rule's own delays. `.signalsDebounced` (none): Signals owns the 1 s on / 3 s off
+    ///     debounce of `isCameraInUse` (§7.1), so adding `.standard` here would double it (2 s on, 6 s off).
+    ///     `.standard` is for a raw camera signal.
     ///   - mainDisplayID: the display with the menu bar (the fallback without a built-in display).
     public init(settings: SettingsStore, displays: any DisplayDirectory, headroom: any HeadroomPort,
                 signals: any SystemSignals, ownEDRSurfaces: OwnEDRSurfaces, time: any TimeSource,
                 journal: any DiagnosticsJournal, announcer: Announcer, surfaces: any FillLightSurfaceFactory,
-                cameraTiming: FillLightRule.Timing = .standard,
+                cameraTiming: FillLightRule.Timing = .signalsDebounced,
                 mainDisplayID: @escaping @MainActor () -> CGDirectDisplayID = { CGMainDisplayID() }) {
         self.settings = settings; self.displays = displays; self.headroom = headroom; self.signals = signals
         self.ownEDRSurfaces = ownEDRSurfaces; self.time = time; self.journal = journal; self.announcer = announcer
         self.factory = surfaces; self.mainDisplayID = mainDisplayID
         rule = FillLightRule(timing: cameraTiming)
+        deadlines = FillLightDeadlines(time: time)
     }
 
     isolated deinit { stopNow() }
@@ -114,9 +117,7 @@ private let log = Log.logger(.fillLight)
         isRunning = false
         for token in observations { token.cancel() }
         observations = []
-        ruleTask?.cancel()
-        ruleTask = nil
-        ruleTaskDeadline = nil
+        deadlines.cancelAll()
         hideAll()
     }
 
@@ -150,8 +151,12 @@ private let log = Log.logger(.fillLight)
                 record("fillLight.displayRemoved", display: surface.display.key)
                 removeSurface()
             }
-        case .screenParametersChanged, .displaysReconfigured:
-            lastFailure = nil
+        case .displaysReconfigured:
+            lastFailure = nil   // a new layout may host the frame: journal a failure there again
+            surface?.refresh()
+            reconcile()
+        case .screenParametersChanged:
+            // Also posted whenever headroom moves (§7.1): retry a failed surface, but journal it only once.
             surface?.refresh()
             reconcile()
         case .didWake, .screensDidWake, .unlocked, .screensaverStopped, .sessionBecameActive:
@@ -174,6 +179,7 @@ private let log = Log.logger(.fillLight)
     private func updateRule(source: ControlSource?, _ change: (inout FillLightRule) -> Void) {
         let wasOn = rule.isOn
         change(&rule)
+        rule.advance(to: time.now)   // a deadline already due (zero delays) applies now, without a task
         if isOn != rule.isOn { isOn = rule.isOn }
         if isAutomatic != rule.isAutomatic { isAutomatic = rule.isAutomatic }
         if wasOn != rule.isOn { stateChanged(on: rule.isOn, source: source) }
@@ -202,14 +208,17 @@ private let log = Log.logger(.fillLight)
             eventToken = signals.addEventObserver { [weak self] in self?.handle($0) }
         }
         let values = FillLightSettingsValues.read(settings)
-        guard let target = targetDisplay(values) else {
+        guard let target = values.target(in: displays.displays, removed: removedDisplays, main: mainDisplayID()) else {
             removeSurface()
             return
         }
         if let current = surface, current.display != target { removeSurface() }
         guard let shown = surface ?? makeSurface(on: target) else { return }
+        // A reading missing for a moment (NSScreen re-fetched during a reconfiguration) keeps the last one, so the
+        // request and the hold do not flap; the display's removal or a screen change removes the surface instead.
+        if let reading = headroom.reading(for: target) { lastReading = reading }
         let style = FillLightStyle.make(width: values.width, warmth: values.warmth, brightness: values.brightness,
-                                        reading: headroom.reading(for: target), rendering: shown.rendering,
+                                        reading: lastReading, rendering: shown.rendering,
                                         reachesTop: signals.snapshot.fullScreenDisplays.contains(target.key))
         if style != appliedStyle {
             let requestChanged = style.headroomRequest != appliedStyle?.headroomRequest
@@ -220,21 +229,14 @@ private let log = Log.logger(.fillLight)
                 record("fillLight.shown", display: target.key,
                        values: ["value": style.value, "request": style.headroomRequest ?? 0,
                                 "rendering": shown.rendering.journalCode])
-                if style.headroomRequest != nil { scheduleSettle() } else { cancelSettle() }
+                if style.headroomRequest != nil {
+                    deadlines.scheduleSettle { [weak self] in self?.reconcile() }
+                } else {
+                    deadlines.cancelSettle()
+                }
             }
         }
         setHold(style.headroomRequest == nil ? nil : target.key)
-    }
-
-    /// The chosen display if it can host the frame, else the built-in display, else the main display, else the first.
-    /// Hardware-mirror members have no screen of their own; a display just removed is skipped until the directory
-    /// catches up.
-    private func targetDisplay(_ values: FillLightSettingsValues) -> DisplayRef? {
-        let candidates = displays.displays.filter { !$0.isMirrored && !removedDisplays.contains($0.ref.id) }
-        if let key = values.display, let chosen = candidates.first(where: { $0.ref.key == key }) { return chosen.ref }
-        if let builtIn = candidates.first(where: \.isBuiltIn) { return builtIn.ref }
-        let main = mainDisplayID()
-        return (candidates.first { $0.ref.id == main } ?? candidates.first)?.ref
     }
 
     private func makeSurface(on target: DisplayRef) -> (any FillLightSurface)? {
@@ -259,13 +261,14 @@ private let log = Log.logger(.fillLight)
     }
 
     private func removeSurface() {
-        cancelSettle()
+        deadlines.cancelSettle()
         if let surface {
             surface.onScreenChange = nil
             surface.remove()
         }
         surface = nil
         appliedStyle = nil
+        lastReading = nil
         setHold(nil)
     }
 
@@ -281,41 +284,11 @@ private let log = Log.logger(.fillLight)
         hold = key.map { ($0, ownEDRSurfaces.hold($0)) }
     }
 
-    // MARK: Deadlines
-
+    /// Sleeps until the rule's next deadline (none while stopped), then lets the rule advance.
     private func scheduleRuleDeadline() {
-        let deadline = isRunning ? rule.nextDeadline : nil
-        guard deadline != ruleTaskDeadline else { return }
-        ruleTask?.cancel()
-        ruleTask = nil
-        ruleTaskDeadline = deadline
-        guard let deadline else { return }
-        ruleTask = Task { [weak self, time] in
-            do { try await time.sleep(for: deadline - time.now) } catch { return }
-            guard !Task.isCancelled, let self else { return }
-            self.ruleTaskDeadline = nil
-            self.updateRule(source: nil) { [now = self.time.now] in $0.advance(to: now) }
+        deadlines.scheduleRule(at: isRunning ? rule.nextDeadline : nil) { [weak self] in
+            self?.updateRule(source: nil) { _ in }   // `updateRule` advances the rule to now
         }
-    }
-
-    /// Re-reads headroom a few times while macOS raises the grant (`FillLightTiming.headroomSettleReads`).
-    private func scheduleSettle() {
-        settleTask?.cancel()
-        let offsets = FillLightTiming.headroomSettleReads
-        settleTask = Task { [weak self, time] in
-            var elapsed: Duration = .zero
-            for offset in offsets {
-                do { try await time.sleep(for: offset - elapsed) } catch { return }
-                elapsed = offset
-                guard !Task.isCancelled, let self else { return }
-                self.reconcile()
-            }
-        }
-    }
-
-    private func cancelSettle() {
-        settleTask?.cancel()
-        settleTask = nil
     }
 
     // MARK: Journal

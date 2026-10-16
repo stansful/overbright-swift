@@ -3,7 +3,8 @@
 
 /// The Fill Light's time constants. Nothing here repeats: each is a one-shot deadline (§8.1 rule 5).
 public nonisolated enum FillLightTiming {
-    /// The camera rule turns the light on this long after a matching camera starts (DESIGN.md §11).
+    /// The camera rule turns the light on this long after a matching camera starts (DESIGN.md §11). Signals applies
+    /// this debounce to `isCameraInUse` (§7.1); the rule uses it only with `FillLightRule.Timing.standard`.
     public static let cameraOnDelay: Duration = .seconds(1)
     /// … and off this long after the last one stops ("Turns off a few seconds after the camera stops").
     public static let cameraOffDelay: Duration = .seconds(3)
