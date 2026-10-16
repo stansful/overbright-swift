@@ -122,19 +122,24 @@ extension SignalsMonitor {
         applyBoostSources()
     }
 
-    /// Sleeps towards the next boundary in chunks; posts `scheduleBoundary` when the wall clock crossed one.
+    /// Sleeps towards the next boundary in chunks; posts `scheduleBoundary` when the wall clock crossed one or the
+    /// window's inside/outside state changed without a crossing (a clock step back, a time-zone change). `last` never
+    /// moves past a boundary that was not posted: without a crossing, `now` is still before it. A schedule change
+    /// restarts the run (`restartSchedule`).
     private func runSchedule() async {
+        guard let window = settings[AutomationSettings.schedule] else { return }
         var last = time.wallClock
+        var wasInside = ScheduleTimer.isInside(last, window: window, calendar: calendar)
         while !Task.isCancelled {
-            guard let window = settings[AutomationSettings.schedule],
-                  let next = ScheduleTimer.nextBoundary(after: last, window: window, calendar: calendar) else { return }
+            guard let next = ScheduleTimer.nextBoundary(after: last, window: window, calendar: calendar) else { return }
             do { try await time.sleep(for: ScheduleTimer.sleepDuration(until: next, now: time.wallClock)) } catch { return }
             let now = time.wallClock
-            if ScheduleTimer.crossedBoundary(from: last, to: now, window: window, calendar: calendar) {
+            if ScheduleTimer.shouldPost(last: last, wasInside: wasInside, now: now, window: window, calendar: calendar) {
                 record("signals.scheduleBoundary")
                 post(.scheduleBoundary)
             }
             last = now
+            wasInside = ScheduleTimer.isInside(now, window: window, calendar: calendar)
         }
     }
 

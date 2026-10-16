@@ -62,14 +62,39 @@ import Testing
     @Test func crossingIsJudgedAgainstTheWallClock() {
         let utc = calendar("UTC")
         let before = date(utc, 2026, 5, 8, 7, 59, 30)
-        #expect(ScheduleTimer.crossedBoundary(from: before, to: date(utc, 2026, 5, 8, 8, 0, 1), window: daytime, calendar: utc))
-        #expect(!ScheduleTimer.crossedBoundary(from: before, to: date(utc, 2026, 5, 8, 8, 0, 0), window: daytime, calendar: utc))
+        func crossed(to now: Date) -> Bool {
+            ScheduleTimer.crossedBoundary(from: before, to: now, window: daytime, calendar: utc)
+        }
+        #expect(crossed(to: date(utc, 2026, 5, 8, 8, 0, 1)))
+        // The boundary itself counts, and so does a wake inside the 1 s margin (timer slack, an NTP slew).
+        #expect(crossed(to: date(utc, 2026, 5, 8, 8, 0, 0)))
+        #expect(crossed(to: date(utc, 2026, 5, 8, 8, 0, 0).addingTimeInterval(0.5)))
+        #expect(!crossed(to: date(utc, 2026, 5, 8, 7, 59, 59)))
         #expect(!ScheduleTimer.crossedBoundary(from: date(utc, 2026, 5, 8, 8, 0, 1), to: date(utc, 2026, 5, 8, 9, 0),
                                                window: daytime, calendar: utc))
         // The clock jumped forward over a boundary (a long sleep, the user set the time): crossed.
         #expect(ScheduleTimer.crossedBoundary(from: before, to: date(utc, 2026, 5, 8, 23, 0), window: daytime, calendar: utc))
         // The clock went backwards: nothing crossed.
         #expect(!ScheduleTimer.crossedBoundary(from: before, to: date(utc, 2026, 5, 8, 6, 0), window: daytime, calendar: utc))
+    }
+
+    @Test func aTimeZoneChangeOverABoundaryPostsWithoutACrossing() {
+        // 07:30 in UTC (outside 08:00–20:00) becomes 09:30 when the Mac moves to UTC+2: no boundary lies in (last, now]
+        // in the new zone, but the window's state changed.
+        let utc = calendar("UTC")
+        let johannesburg = calendar("Africa/Johannesburg")                               // UTC+2, no daylight saving
+        let last = date(utc, 2026, 5, 8, 7, 30)
+        let wasInside = ScheduleTimer.isInside(last, window: daytime, calendar: utc)
+        let now = last.addingTimeInterval(300)
+        #expect(!wasInside && ScheduleTimer.isInside(now, window: daytime, calendar: johannesburg))
+        #expect(!ScheduleTimer.crossedBoundary(from: last, to: now, window: daytime, calendar: johannesburg))
+        #expect(ScheduleTimer.shouldPost(last: last, wasInside: wasInside, now: now, window: daytime, calendar: johannesburg))
+        // Nothing changed: no post.
+        #expect(!ScheduleTimer.shouldPost(last: last, wasInside: wasInside, now: now, window: daytime, calendar: utc))
+        // The clock stepped back over the start: inside before, outside now, no crossing forwards.
+        let inside = date(utc, 2026, 5, 8, 8, 2)
+        #expect(ScheduleTimer.shouldPost(last: inside, wasInside: true, now: date(utc, 2026, 5, 8, 7, 58),
+                                         window: daytime, calendar: utc))
     }
 
     @Test func sleepsAreCappedSoClockChangesAreNoticed() {
@@ -105,6 +130,27 @@ import Testing
         #expect(boundaries == 1)
         await harness.advance(.seconds(3600))                               // the next boundary is hours away
         #expect(boundaries == 1)
+        token.cancel()
+    }
+
+    @MainActor @Test func aWakeInsideTheMarginStillPostsAndTheBoundaryIsNotSkipped() async {
+        // The runner sleeps to the boundary plus 1 s; an NTP slew of −0.6 s during that sleep lands the wake 0.4 s past
+        // the boundary. It must post now, and it must not jump to the boundary after.
+        let harness = SignalsHarness()
+        let (minute, second) = clock(harness)
+        let window = ScheduleWindow(startMinute: (minute + 4) % 1440, endMinute: (minute + 2) % 1440)
+        let untilEnd = 120 - second
+        harness.settings[AutomationSettings.schedule] = window
+        await harness.start()
+        var boundaries = 0
+        let token = harness.monitor.addEventObserver { if $0 == .scheduleBoundary { boundaries += 1 } }
+        harness.monitor.setBoostActive(true)
+        await harness.settle()                                               // the runner sleeps until end + 1 s
+        harness.time.setWallClock(harness.time.wallClock.addingTimeInterval(-0.6))
+        await harness.advance(.seconds(untilEnd + 1))
+        #expect(boundaries == 1)                                             // woke at end + 0.4 s
+        await harness.advance(.seconds(121))                                 // the start, two minutes later
+        #expect(boundaries == 2)
         token.cancel()
     }
 
