@@ -14,7 +14,7 @@ extension DisplayController {
         domain = decision.domain
         let changed = !Self.sameTarget(decision.target, target)
         target = decision.target
-        guard !isOffConsole, parameters.isSessionActive else { return }
+        guard !isOffConsole, parameters.isSessionActive, !isDriven else { return }
         if decision.mechanism != mechanism {
             guard isActive || isScaledOrDimmed else {
                 mechanism = decision.mechanism

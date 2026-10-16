@@ -72,7 +72,8 @@ import OverbrightPolicy
     @ObservationIgnored let preparingSlot = TaskSlot()
     @ObservationIgnored var observers: [ObservationToken] = []
     @ObservationIgnored var instrumentHold = false
-    @ObservationIgnored weak var calibrationSession: CalibrationController?
+    /// The running calibration (kept until its `onEnd`); the master stays off meanwhile.
+    @ObservationIgnored var calibrationSession: CalibrationController?
     @ObservationIgnored var boostSourcesActive = false
     @ObservationIgnored var watchdogActive = false
 

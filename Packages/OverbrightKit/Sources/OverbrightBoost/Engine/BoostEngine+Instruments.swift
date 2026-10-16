@@ -7,31 +7,52 @@ import OverbrightPolicy
 
 extension BoostEngine {
     /// Holds the master off, returns every display to Standard at once, runs the self-test over the chosen displays'
-    /// controllers, leaves every display neutral, then restores the master switch.
+    /// controllers (which take no decisions meanwhile), leaves every display neutral, then restores the master switch.
     public func runSelfTest(_ options: SelfTestOptions) async -> SelfTestReport {
         let wasOn = isMasterOn
         holdForInstrument()
         let drivers = displays.displays
             .filter { options.displays?.contains($0.ref.key) ?? true }
             .compactMap { controllers[$0.ref.key] }
+        for driver in drivers { driver.isDriven = true }
         let report = await SelfTestRunner(drivers: drivers, time: time, journal: journal, machine: machine).run(options)
-        for driver in drivers { driver.returnToStandard() }
+        for driver in drivers {
+            driver.isDriven = false
+            driver.returnToStandard()
+        }
         instrumentHold = false
         if wasOn { turnOn(source: .settings) }
         reduceNow()
         return report
     }
 
-    /// Returns every display to Standard (triggers removed, neutral tables) and holds the master off while the
-    /// session lives; nil for a display without a controller or a transfer table.
+    /// Returns every display to Standard (triggers removed, neutral tables), hands the display's controller to the
+    /// session and holds the master off until the session ends (`onEnd`); nil for a display without a controller or a
+    /// transfer table, or while another session runs. Shield and removal events reach the session too.
     public func beginCalibration(of display: DisplayKey) -> (any CalibrationSession)? {
-        guard let controller = controllers[display], controller.facts.gammaCapacity > 0 else { return nil }
+        guard calibrationSession == nil, let controller = controllers[display],
+              controller.facts.gammaCapacity > 0 || controller.mechanism == .overlay else { return nil }
         holdForInstrument()
+        controller.isDriven = true
         let session = CalibrationController(display: display, driver: controller, writer: writer, time: time,
                                             machine: machine)
+        session.mechanism = controller.mechanism
+        session.onEnd = { [weak self, weak controller] in
+            controller?.isDriven = false
+            controller?.stopNow()
+            self?.calibrationEnded()
+        }
         calibrationSession = session
         instrumentHold = false
+        session.begin()
         return session
+    }
+
+    /// The calibration session ended: the master may turn on again.
+    func calibrationEnded() {
+        calibrationSession = nil
+        journal.record("calibration.released", display: nil, time: time)
+        reduceNow()
     }
 
     /// Advanced ▸ Reset Display Colors: every display to Standard, then dirty-then-restore with verification (D7);
@@ -39,9 +60,13 @@ extension BoostEngine {
     public func rescueDisplayColors() async -> RescueOutcome {
         let wasOn = isMasterOn
         holdForInstrument()
-        let outcome = await LaunchRescue(gamma: gamma, conflicts: conflicts, signals: signals, journal: journal).rescueNow()
+        let rescue = LaunchRescue(gamma: gamma, conflicts: conflicts, signals: signals, journal: journal, time: time,
+                                  displays: { [weak self] in self?.displays.displays.map(\.ref) ?? [] },
+                                  settings: settings)
+        let outcome = await rescue.rescueNow()
         for controller in controllers.values {
             controller.baseline = nil
+            controller.lastWrite = nil
             if controller.trip == .foreignTableAtLaunch { controller.clearTrip() }
         }
         applyLaunchCheck(outcome)

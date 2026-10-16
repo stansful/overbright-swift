@@ -47,6 +47,7 @@ extension BoostEngine {
              .appActivated, .appLaunched:
             break
         }
+        calibrationSession?.handle(event)                                // a lock or the display's removal ends it
         updateAggregates()
         publish()
         scheduleReduce()

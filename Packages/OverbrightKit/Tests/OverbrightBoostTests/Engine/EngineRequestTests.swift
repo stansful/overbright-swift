@@ -85,30 +85,68 @@ import Testing
         #expect(h.signals.boostActiveCalls.last == false)
     }
 
+    /// The self-test drives the controllers (decisions wait while it runs), holds the master off and restores it.
     @Test func selfTestHoldsTheMasterOffAndRestoresIt() async throws {
         let h = EngineHarness()
         await h.start()
         #expect(await h.boost())
-        let report = await h.engine.runSelfTest(SelfTestOptions())
-        #expect(report.machine == h.fixture.machine)
+        async let running = h.engine.runSelfTest(SelfTestOptions(secondsPerStrategy: 5))
+        await h.settle()
+        #expect(!h.engine.status.isOn)                                    // held off while it runs
+        await h.advance(.seconds(30), step: .milliseconds(50))
+        let report = await running
+        let results = try #require(report.displays[h.builtIn.rawValue])
+        #expect(results.first?.strategy == .taggedLayer && results.contains { $0.verdict == .held })
         #expect(h.engine.status.isOn)                                     // restored afterwards
         #expect(await h.boost())
     }
 
-    @Test func calibrationHoldsTheMasterOffWhileItLives() async throws {
+    /// Started with the master off, the self-test writes no scaled table and leaves every display neutral, with no
+    /// trigger and no task.
+    @Test func selfTestNeverWritesAScaledTable() async throws {
+        let h = EngineHarness()
+        await h.start()
+        let writes = h.gamma.writes.count
+        async let running = h.engine.runSelfTest(SelfTestOptions(secondsPerStrategy: 5))
+        await h.advance(.seconds(30), step: .milliseconds(50))
+        _ = await running
+        #expect(h.triggers.made.count >= 1)
+        #expect(h.gamma.writes.dropFirst(writes).allSatisfy { $0.table == h.base() })
+        #expect(h.everyTableAtBase && h.liveTriggers().isEmpty && !h.engine.status.isOn)
+        #expect(h.engine.activeTaskCount == 0)
+    }
+
+    /// Calibration holds the master off until the session ends; its driven controller keeps the session's trigger
+    /// through reductions; the end hands the display back neutral.
+    @Test func calibrationHoldsTheMasterOffUntilItEnds() async throws {
         let h = EngineHarness()
         await h.start()
         #expect(await h.boost())
-        var session = h.engine.beginCalibration(of: h.builtIn)
-        #expect(session != nil)
-        #expect(!h.engine.status.isOn && h.everyTableAtBase && h.liveTriggers().isEmpty)
+        let session = try #require(h.engine.beginCalibration(of: h.builtIn))
+        #expect(!h.engine.status.isOn && h.everyTableAtBase)
+        #expect(h.engine.beginCalibration(of: h.builtIn) == nil)          // one session at a time
         h.engine.setOn(true, source: .panel)
         #expect(!h.engine.status.isOn)                                    // held off
-        session = nil
-        _ = session
+        await h.advance(.seconds(4), step: .milliseconds(50))
+        #expect(session.state == .ready)
+        #expect(h.liveTriggers().count == 1)                              // reductions did not disarm it
+        session.cancel()
+        #expect(h.everyTableAtBase && h.liveTriggers().isEmpty)
         h.engine.setOn(true, source: .panel)
         #expect(h.engine.status.isOn)
         #expect(h.engine.beginCalibration(of: DisplayKey(rawValue: "0B21E7F1-0000-4000-8000-0000000000FF")) == nil)
+    }
+
+    /// A lock ends a running calibration (the engine forwards shield events to the session).
+    @Test func lockEndsACalibration() async throws {
+        let h = EngineHarness()
+        await h.start()
+        let session = try #require(h.engine.beginCalibration(of: h.builtIn))
+        await h.advance(.seconds(4), step: .milliseconds(50))
+        h.signals.snapshot.isScreenLocked = true
+        h.signals.emit(.locked)
+        #expect(session.state == .aborted(.shielded))
+        #expect(h.everyTableAtBase && h.liveTriggers().isEmpty)
     }
 
     /// The calibration seam writes only through the writer, bounded by its max factor and the live headroom.
@@ -127,12 +165,14 @@ import Testing
         #expect(h.everyTableAtBase && h.engine.ledger.entries().isEmpty && h.liveTriggers().isEmpty)
     }
 
+    /// Reset Display Colors: Standard first, then WP5's dirty-then-restore with verification; the master comes back.
     @Test func resetDisplayColorsReturnsToStandardFirst() async throws {
         let h = EngineHarness()
         await h.start()
         #expect(await h.boost())
         let outcome = await h.engine.rescueDisplayColors()
-        #expect(outcome == .alreadyNeutral)                               // WP5's seam until its body lands
+        if case .residueRemains = outcome { Issue.record("a neutral fixture left residue: \(outcome)") }
+        #expect(outcome != .skippedNotOnConsole)
         #expect(h.everyTableAtBase)
         #expect(h.engine.status.isOn)
         #expect(await h.boost())

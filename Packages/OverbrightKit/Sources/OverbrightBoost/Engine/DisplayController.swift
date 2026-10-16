@@ -74,6 +74,9 @@ import OverbrightPolicy
     var lastWrite: (baseline: GammaTable, factor: Double)?
     /// A re-base waits for WindowServer's table: the drift check stands aside meanwhile.
     var isRebasing = false
+    /// The self-test or a calibration drives this display (`DisplayControllerDriving`): decisions are stored, not
+    /// applied, until it is handed back.
+    var isDriven = false
 
     // MARK: Trigger, overlay and the gate
 
