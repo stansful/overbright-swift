@@ -2,9 +2,10 @@
 // (DESIGN.md §8: "Skip (and closing the window) applies every default, including the login item ('Open Overbright,
 // keep it off', registered with SMAppService.mainApp). Done applies the choices of step 3."; §12.4; D16). On a first
 // run every setting Welcome asks about is at its default, so a Skip leaves exactly the defaults and registers the
-// default login item, whatever was picked before it; Done writes the picks and applies the chosen login behaviour;
-// Quit Overbright applies nothing. Welcome opened again from Settings ▸ About shows the stored settings, and a Skip
-// there resets nothing the person set in Settings (Reset All is the one reset, with its own confirmation and Undo).
+// default login item, whatever was picked before it (step 2's switches included); Done writes the picks and applies
+// the chosen login behaviour; Quit Overbright applies nothing. Welcome opened again from Settings ▸ About shows the
+// stored settings, and a Skip there resets nothing the person set in Settings (Reset All is the one reset, with its
+// own confirmation and Undo).
 import Foundation
 import OverbrightCore
 import Testing
@@ -54,6 +55,32 @@ import Testing
         #expect(harness.app.calls == ["setLaunchBehavior(launchOnly)"] && harness.app.loginItem == .enabled)
         #expect(harness.services.settings[OnboardingSettings.completedVersion] != nil)
         #expect(harness.boost.calls.isEmpty)
+    }
+
+    /// Step 2's "Use extra brightness" switches wait for Done like step 3's choices: Skip and the close button drop
+    /// them (DESIGN.md §8: Skip applies every default), Done writes them with the OLED notice that was accepted.
+    @Test(arguments: [WelcomeOutcome.skipped, .done])
+    func stepTwoSwitchesWaitForDone(_ ending: WelcomeOutcome) throws {
+        typealias Keys = DisplayFixture.Keys
+        for closes in ending == .skipped ? [false, true] : [false] {
+            let harness = try WelcomeHarness(.russianNames, step: .displays)
+            let actions = harness.actions()
+            actions.setExtraBrightness(true, for: try harness.row(Keys.mpg322ux))
+            actions.setExtraBrightness(false, for: try harness.row(Keys.builtIn))
+            switch (ending, closes) {
+            case (.skipped, true): harness.session.windowWillClose()
+            case (.skipped, false): harness.session.skip()
+            default: harness.session.finish()
+            }
+            let stored = harness.services.settings[DisplaySettings.perDisplay]
+            if ending == .done {
+                #expect(stored[Keys.mpg322ux]?.boostEnabled == true && stored[Keys.mpg322ux]?.oledNoticeAcknowledged == true)
+                #expect(stored[Keys.builtIn]?.boostEnabled == false && stored[Keys.builtIn]?.oledNoticeAcknowledged == false)
+            } else {
+                #expect(stored.isEmpty, "closed: \(closes)")
+            }
+            #expect(harness.boost.calls.isEmpty)
+        }
     }
 
     /// The close button counts as Skip.

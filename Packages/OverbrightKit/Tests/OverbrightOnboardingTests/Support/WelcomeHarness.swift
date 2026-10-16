@@ -6,6 +6,7 @@ import AppKit
 import Foundation
 import Observation
 import OverbrightCore
+import OverbrightDesign
 import SwiftUI
 import Testing
 @testable import OverbrightOnboarding
@@ -44,8 +45,16 @@ let englishBundle = Bundle(for: WelcomeEnglishMarker.self)
         }
     }
 
-    /// The step 2 rows now.
-    var rows: [WelcomeDisplayRow] { WelcomeDisplayRow.rows(in: services) }
+    /// The step 2 rows now, with the session's pending choices, in English.
+    var rows: [WelcomeDisplayRow] {
+        WelcomeDisplayRow.rows(in: services, choices: session.choices, language: .english())
+    }
+
+    /// Step 2's actions over this session's choices; `confirmOLED` answers the OLED notice.
+    func actions(confirmOLED: @escaping @MainActor (String) -> Bool = { _ in true },
+                 openURL: @escaping @MainActor (URL) -> Void = { _ in }) -> WelcomeDisplayActions {
+        WelcomeDisplayActions(services: services, choices: session.choices, confirmOLED: confirmOLED, openURL: openURL)
+    }
 
     /// The row of `key`.
     func row(_ key: DisplayKey) throws -> WelcomeDisplayRow { try #require(rows.first { $0.key == key }) }
@@ -54,7 +63,8 @@ let englishBundle = Bundle(for: WelcomeEnglishMarker.self)
 /// A `ShortcutCenter` with the catalog defaults that renders key caps through one keyboard layout, as the real center
 /// does with the current one (`KeyCombo.keyCaps(in:)`, the code of `HotKeyCenter.displayString`).
 @MainActor @Observable final class LayoutShortcutCenter: ShortcutCenter {
-    private let layout: KeyCombo.KeyboardLayout?
+    /// The layout the caps are drawn in.
+    let layout: KeyCombo.KeyboardLayout?
     private var bindings: [ShortcutID: KeyCombo?]
 
     /// The catalog defaults in `layout`.
@@ -63,10 +73,13 @@ let englishBundle = Bundle(for: WelcomeEnglishMarker.self)
         bindings = Dictionary(uniqueKeysWithValues: ShortcutCatalog.all.map { ($0.id, $0.defaultCombo) })
     }
 
-    /// An installed macOS layout by its short name ("German"), read-only.
+    /// An installed macOS layout by its short name ("German"), read-only; the test fails when macOS has none by that
+    /// name (no fallback to the current layout).
     static func named(_ name: String) throws -> LayoutShortcutCenter {
-        LayoutShortcutCenter(layout: try #require(KeyCombo.KeyboardLayout.named("com.apple.keylayout.\(name)"),
-                                                  "macOS ships the \(name) layout"))
+        let identifier = "com.apple.keylayout.\(name)"
+        let layout = try #require(KeyCombo.KeyboardLayout.named(identifier), "macOS ships the \(name) layout")
+        #expect(layout.identifier == identifier)
+        return LayoutShortcutCenter(layout: layout)
     }
 
     func state(_ id: ShortcutID) -> ShortcutState {
@@ -98,6 +111,38 @@ let englishBundle = Bundle(for: WelcomeEnglishMarker.self)
                                       shortcuts: center, updates: base.updates)
     services.app = PreviewAppControl()
     return services
+}
+
+/// A display directory that is not the Core fake (what the real app wires): the card treats its ports as real.
+@MainActor @Observable final class StaticDirectory: DisplayDirectory {
+    var displays: [DisplayFacts] = []
+    var generation = 0
+    func facts(for key: DisplayKey) -> DisplayFacts? { displays.first { $0.ref.key == key } }
+}
+
+/// A preview hub over `base`'s fakes whose display directory is not the Core fake, listing `base`'s displays.
+@MainActor func servicesWithRealDirectory(_ base: OverbrightServices = WelcomePreview.services()) -> OverbrightServices {
+    let directory = StaticDirectory()
+    directory.displays = base.displays.displays
+    let services = OverbrightServices(settings: base.settings, paths: base.paths, machine: base.machine, time: base.time,
+                                      journal: base.journal, announcer: base.announcer,
+                                      ownEDRSurfaces: base.ownEDRSurfaces, displays: directory,
+                                      signals: base.signals, boost: base.boost, fillLight: base.fillLight,
+                                      shortcuts: base.shortcuts, updates: base.updates)
+    services.app = PreviewAppControl()
+    return services
+}
+
+/// A small box a sendable closure can read while the test changes it (the OLED notice's answer).
+@MainActor final class Answer {
+    var value: Bool
+    init(_ value: Bool) { self.value = value }
+}
+
+/// Every `NSScrollView` under `view` (SwiftUI's `ScrollView` is one).
+@MainActor func scrollViews(in view: NSView) -> [NSScrollView] {
+    let own = (view as? NSScrollView).map { [$0] } ?? []
+    return own + view.subviews.flatMap { scrollViews(in: $0) }
 }
 
 extension FitMeasure {

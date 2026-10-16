@@ -17,13 +17,6 @@ import Testing
 
 private typealias Keys = DisplayFixture.Keys
 
-/// A display directory that is not the Core fake (what the real app wires).
-@MainActor @Observable private final class StaticDirectory: DisplayDirectory {
-    var displays: [DisplayFacts] = []
-    var generation = 0
-    func facts(for key: DisplayKey) -> DisplayFacts? { displays.first { $0.ref.key == key } }
-}
-
 @MainActor @Suite struct WelcomeFlowTests {
     // MARK: Walking the steps
 
@@ -207,48 +200,104 @@ private typealias Keys = DisplayFixture.Keys
         #expect(harness.rows.map(\.key) == [Keys.proDisplayXDR])
     }
 
-    /// "Use extra brightness" writes the display's preference at once; turning it on for an OLED asks first (once),
-    /// and a cancelled notice changes nothing. The engine is never asked for anything.
-    @Test func theSwitchWritesThePreferenceAndAsksOLEDDisplaysFirst() throws {
+    /// "Keep Automatically adjust brightness…" is Settings only (DESIGN.md §12.1, §7.4) and calibration is not part of
+    /// Welcome (§8): the built-in XDR row shows neither, though the classifier advises both; an OLED keeps its care line.
+    @Test func stepTwoLeavesOutSettingsOnlyAdvisories() throws {
+        let harness = try WelcomeHarness(.russianNames)
+        let published = try #require(harness.boost.status.displays.first { $0.key == Keys.builtIn }?.decision?
+            .eligibility.advisories)
+        #expect(published.contains(.autoBrightnessInteracts))
+        let builtIn = try harness.row(Keys.builtIn)
+        #expect(!builtIn.advisories.contains(.autoBrightnessInteracts) && builtIn.text.advisories.isEmpty)
+        let settingsOnly = VerdictText.line(for: .autoBrightnessInteracts, in: .english())
+        #expect(!harness.rows.flatMap(\.text.advisories).contains(settingsOnly))
+        let msi = try harness.row(Keys.mpg322ux)
+        #expect(msi.text.advisories == [VerdictText.line(for: .oledCare, in: .english())])
+        #expect(Advisory.allCases.filter(WelcomeDisplayRow.showsInWelcome) == [.compatibilityModeAdvised, .oledCare])
+    }
+
+    /// The sentence quotes the display's own limit and the fix comes with those words (Design's `VerdictText`):
+    /// Studio Display XDR on Safe says Safe adds nothing and offers Choose Peak…; on Peak (Welcome reopened from
+    /// Settings ▸ About) it says what Peak gives and offers no fix.
+    @Test func theVerdictFollowsTheDisplaysLimit() throws {
+        let safe = try WelcomeHarness(.studioDisplayXDR).row(Keys.studioDisplayXDR)
+        #expect(safe.capMode == .safe && !safe.canBoost && safe.fix == .choosePeak && safe.text.fix == .choosePeak)
+        #expect(safe.text.sentence.hasPrefix(SafeLimitText.addsNothing(in: .english())))
+        #expect(safe.text.fixTitle == FixAction.choosePeak.title(in: .english()))
+        let peak = try WelcomeHarness(.studioDisplayXDR) { services in
+            services.settings[DisplaySettings.perDisplay] = [Keys.studioDisplayXDR: DisplayPreferences(capMode: .peak)]
+        }.row(Keys.studioDisplayXDR)
+        #expect(peak.capMode == .peak && peak.canBoost && peak.fix == nil && peak.text.fixTitle == nil)
+        #expect(peak.text.sentence.hasPrefix("With Peak") && !peak.text.sentence.contains("Safe"))
+    }
+
+    /// The fix the verdict's words come with agrees with the panel's card in every fixture: Open System Settings for
+    /// the verdicts System Settings fixes, Choose Peak… where Safe adds nothing, nothing else.
+    @Test(arguments: DisplayFixture.allCases)
+    func theFixAgreesWithTheCard(_ fixture: DisplayFixture) throws {
+        let harness = try WelcomeHarness(fixture)
+        for row in harness.rows {
+            let status = try #require(harness.boost.status.displays.first { $0.key == row.key })
+            let card = DisplayCardModel(status: status, isMasterOn: false, services: harness.services)
+            let expected: WelcomeDisplayRow.Fix? = if case .unavailable(.safeLimitReached) = card.boostHalf {
+                .choosePeak
+            } else if card.verdict.flatMap(CardChip.verdictFix) == .openDisplaySettings {
+                .openSystemSettings
+            } else {
+                nil
+            }
+            #expect(row.fix == expected, "\(fixture.rawValue) \(row.name)")
+            #expect(row.canBoost == card.canBoost && row.capMode == card.capMode)
+        }
+    }
+
+    /// "Use extra brightness" records a choice that Done writes (Skip drops it, `SkipAppliesDefaultsTests`); turning
+    /// it on for an OLED asks first, once, and a cancelled notice changes nothing. Turning a switch back leaves no
+    /// choice. The engine is never asked for anything.
+    @Test func theSwitchRecordsAChoiceAndAsksOLEDDisplaysFirst() throws {
         let harness = try WelcomeHarness(.russianNames)
         var asked: [String] = []
-        var answer = false
-        let actions = WelcomeDisplayActions(services: harness.services, confirmOLED: { asked.append($0); return answer },
-                                            openURL: { _ in })
+        let answer = Answer(false)
+        let actions = harness.actions(confirmOLED: { asked.append($0); return answer.value })
         let msi = try harness.row(Keys.mpg322ux)
         #expect(!actions.setExtraBrightness(true, for: msi))                       // Cancel
-        #expect(asked == ["MPG322UX OLED"] && harness.services.settings[DisplaySettings.perDisplay][Keys.mpg322ux] == nil)
+        #expect(asked == ["MPG322UX OLED"] && harness.session.choices.extraBrightness.isEmpty)
         #expect(try !harness.row(Keys.mpg322ux).boostEnabled)
-        answer = true
+        answer.value = true
         #expect(actions.setExtraBrightness(true, for: msi))
-        #expect(try harness.row(Keys.mpg322ux).boostEnabled)
-        let stored = try #require(harness.services.settings[DisplaySettings.perDisplay][Keys.mpg322ux])
-        #expect(stored.boostEnabled == true && stored.oledNoticeAcknowledged)
+        #expect(try harness.row(Keys.mpg322ux).boostEnabled && !harness.row(Keys.mpg322ux).storedBoostEnabled)
+        #expect(harness.session.choices.extraBrightness == [Keys.mpg322ux: true])
+        #expect(harness.services.settings[DisplaySettings.perDisplay][Keys.mpg322ux] == nil)      // not before Done
         #expect(actions.setExtraBrightness(false, for: msi) && actions.setExtraBrightness(true, for: msi))
         #expect(asked.count == 2)                                                 // accepted once: not asked again
 
         #expect(actions.setExtraBrightness(false, for: try harness.row(Keys.builtIn)))    // not OLED: no question
         #expect(try !harness.row(Keys.builtIn).boostEnabled && asked.count == 2)
+        #expect(actions.setExtraBrightness(true, for: try harness.row(Keys.builtIn)))     // back to what is stored
+        #expect(harness.session.choices.extraBrightness == [Keys.mpg322ux: true])
+
+        harness.session.finish()
+        let stored = try #require(harness.services.settings[DisplaySettings.perDisplay][Keys.mpg322ux])
+        #expect(stored.boostEnabled == true && stored.oledNoticeAcknowledged && stored.lastKnownName == "MPG322UX OLED")
+        #expect(harness.services.settings[DisplaySettings.perDisplay][Keys.builtIn] == nil)
         #expect(harness.boost.calls.isEmpty)
     }
 
-    /// A verdict's fix opens Displays settings in System Settings, or Settings ▸ Displays at the Limit row.
+    /// A verdict's fix opens Displays settings in System Settings, or Settings ▸ Displays at the Limit row; its title
+    /// is the verdict's own.
     @Test func fixesOpenTheirDestinations() throws {
         var opened: [URL] = []
         let hdrOff = try WelcomeHarness(.mpg322uxHDROff)
-        WelcomeDisplayActions(services: hdrOff.services, confirmOLED: { _ in false }, openURL: { opened.append($0) })
+        hdrOff.actions(confirmOLED: { _ in false }, openURL: { opened.append($0) })
             .performFix(for: try hdrOff.row(Keys.mpg322ux))
         #expect(opened == [try #require(SettingsLinks.systemDisplays)] && hdrOff.app.calls.isEmpty)
+        #expect(try hdrOff.row(Keys.mpg322ux).text.fixTitle == FixAction.openSystemSettings.title(in: .english()))
 
         let studio = try WelcomeHarness(.studioDisplayXDR)
-        WelcomeDisplayActions(services: studio.services, confirmOLED: { _ in false }, openURL: { opened.append($0) })
+        studio.actions(confirmOLED: { _ in false }, openURL: { opened.append($0) })
             .performFix(for: try studio.row(Keys.studioDisplayXDR))
         #expect(studio.app.calls == ["openSettings(\(SettingsLinks.limit(of: Keys.studioDisplayXDR)))"])
         #expect(opened.count == 1)
-        let row = try studio.row(Keys.studioDisplayXDR)
-        let view = DisplayRowView(row: row, switchTitle: "", actions: WelcomeDisplayActions(services: studio.services))
-        #expect(view.fixTitle(VerdictTextStub.empty) == CardAction.choosePeak.title)
-        #expect(view.fixTitle(VerdictTextStub.with(fix: "Choose Peak…")) == "Choose Peak…")
     }
 
     // MARK: Step 4 · shortcuts
@@ -270,15 +319,15 @@ private typealias Keys = DisplayFixture.Keys
 
     // MARK: Step 5 · Turn On Overbright
 
-    /// Offered only while some display would show extra brightness once Overbright is on (verdict, limit and switch).
+    /// Offered only while some display would show extra brightness once Overbright is on (verdict, limit and switch,
+    /// step 2's pending choice included).
     @Test func turnOnIsOfferedOnlyWhenADisplayWouldBoost() throws {
         #expect(try WelcomeHarness().rows.offersTurnOn)
         #expect(try !WelcomeHarness(.lcdOnly).rows.offersTurnOn)
         #expect(try !WelcomeHarness(.studioDisplayXDR).rows.offersTurnOn)         // Safe adds nothing there
         let oled = try WelcomeHarness(.mpg322uxHDROn)
         #expect(!oled.rows.offersTurnOn)                                          // OLED: extra brightness is opt-in
-        WelcomeDisplayActions(services: oled.services, confirmOLED: { _ in true }, openURL: { _ in })
-            .setExtraBrightness(true, for: try oled.row(Keys.mpg322ux))
+        oled.actions().setExtraBrightness(true, for: try oled.row(Keys.mpg322ux))
         #expect(oled.rows.offersTurnOn)
     }
 
@@ -306,10 +355,4 @@ private typealias Keys = DisplayFixture.Keys
         host.cacheDisplay(in: host.bounds, to: rep)
         return window
     }
-}
-
-/// Verdict texts as Design builds them, for the fix-title fallback.
-private enum VerdictTextStub {
-    static let empty = VerdictText(badge: "", sentence: "", advisories: [], fixTitle: nil)
-    static func with(fix: String) -> VerdictText { VerdictText(badge: "B", sentence: "S", advisories: [], fixTitle: fix) }
 }
