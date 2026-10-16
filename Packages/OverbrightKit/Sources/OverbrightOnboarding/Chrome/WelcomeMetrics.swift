@@ -1,6 +1,7 @@
-// OverbrightOnboarding/Chrome/WelcomeMetrics.swift — the Welcome window's own measurements (DESIGN.md §8). The window
-// is an ordinary system window: system text styles and colours; spacing comes from Design's `Space`. Ported from
-// Cranny's WelcomeMetrics (the owner's MIT code).
+// OverbrightOnboarding/Chrome/WelcomeMetrics.swift — the Welcome window's own measurements (DESIGN.md §8), so no view
+// writes a literal size or opacity (ARCHITECTURE.md §9.2 rule 3). The window is an ordinary system window: system text
+// styles and colours; spacing comes from Design's `Space`, motion from the theme. Ported from Cranny's WelcomeMetrics
+// (the owner's MIT code).
 import CoreGraphics
 import OverbrightDesign
 
@@ -16,4 +17,10 @@ nonisolated enum WelcomeMetrics {
     static let cardRadius = Radius.card
     /// The size of a step's check badge.
     static let badge = Space.xl
+    /// A pressed option card (DESIGN.md §3.1 `press`: scale 0.97; none under Reduce Motion).
+    static let pressScale: CGFloat = 0.97
+    /// The accent wash behind a selected option card.
+    static let selectedWash: Double = 0.08
+    /// The quiet fill of an option card at rest, and under the pointer.
+    static let cardFill: (resting: Double, hovered: Double) = (0.4, 0.7)
 }

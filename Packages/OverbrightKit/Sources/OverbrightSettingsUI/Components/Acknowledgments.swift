@@ -102,7 +102,7 @@ struct AcknowledgmentsSheet: View {
             }
         }
         .padding(Space.xxl)
-        .frame(width: 520, height: 460)
+        .frame(width: SettingsMetrics.acknowledgmentsSize.width, height: SettingsMetrics.acknowledgmentsSize.height)
     }
 }
 

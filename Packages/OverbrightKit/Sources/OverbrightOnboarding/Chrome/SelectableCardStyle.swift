@@ -14,7 +14,7 @@ struct SelectableCardStyle: ButtonStyle {
     }
 
     private struct CardBody: View {
-        @Environment(\.accessibilityReduceMotion) private var reduceMotion
+        @Environment(\.overbright) private var theme
         @Environment(\.isFocused) private var isFocused
         @State private var hovered = false
         let configuration: Configuration
@@ -22,7 +22,6 @@ struct SelectableCardStyle: ButtonStyle {
 
         var body: some View {
             let shape = RoundedRectangle(cornerRadius: WelcomeMetrics.cardRadius, style: .continuous)
-            let theme = OverbrightTheme(reduceMotion: reduceMotion)
             configuration.label
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 .background(shape.fill(fill))
@@ -38,7 +37,7 @@ struct SelectableCardStyle: ButtonStyle {
                     }
                 }
                 .contentShape(shape)
-                .scaleEffect(configuration.isPressed && !reduceMotion ? 0.98 : 1)
+                .scaleEffect(configuration.isPressed && !theme.reduceMotion ? WelcomeMetrics.pressScale : 1)
                 .onHover { hovered = $0 }
                 .animation(theme.animation(.hover), value: hovered)
                 .animation(theme.animation(.press), value: configuration.isPressed)
@@ -46,8 +45,8 @@ struct SelectableCardStyle: ButtonStyle {
         }
 
         private var fill: AnyShapeStyle {
-            if isSelected { return AnyShapeStyle(.tint.opacity(0.08)) }
-            return AnyShapeStyle(.quaternary.opacity(hovered ? 0.7 : 0.4))
+            if isSelected { return AnyShapeStyle(.tint.opacity(WelcomeMetrics.selectedWash)) }
+            return AnyShapeStyle(.quaternary.opacity(hovered ? WelcomeMetrics.cardFill.hovered : WelcomeMetrics.cardFill.resting))
         }
     }
 }

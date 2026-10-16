@@ -27,12 +27,13 @@ struct SliderRow: View {
                     onEditingChanged(editing)
                 }
                 .labelsHidden()
-                .frame(minWidth: 140, idealWidth: 200, maxWidth: 220)
+                .frame(minWidth: SettingsMetrics.sliderWidth.min, idealWidth: SettingsMetrics.sliderWidth.ideal,
+                       maxWidth: SettingsMetrics.sliderWidth.max)
                 .accessibilityValue(Text(verbatim: format(value.wrappedValue)))
                 Text(verbatim: format(value.wrappedValue))
                     .monospacedDigit()
                     .foregroundStyle(.secondary)
-                    .frame(minWidth: 52, alignment: .trailing)
+                    .frame(minWidth: SettingsMetrics.sliderValueMinWidth, alignment: .trailing)
                     .accessibilityHidden(true)
             }
         } label: {

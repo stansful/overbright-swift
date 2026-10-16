@@ -32,7 +32,7 @@ struct ShortcutRecorder: View {
             } label: {
                 Text(verbatim: label)
                     .monospacedDigit()
-                    .frame(minWidth: 96)
+                    .frame(minWidth: SettingsMetrics.recorderMinWidth)
             }
             .buttonStyle(.bordered)
             .tint(isRecording ? .accentColor : nil)

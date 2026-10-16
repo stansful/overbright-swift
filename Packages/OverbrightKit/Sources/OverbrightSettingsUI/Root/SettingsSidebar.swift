@@ -79,7 +79,7 @@ struct RowResultLabel: View {
     let pane: SettingsPane
     var body: some View {
         Label {
-            VStack(alignment: .leading, spacing: 1) {
+            VStack(alignment: .leading, spacing: SettingsMetrics.searchHitLineGap) {
                 Text(verbatim: row.title).lineLimit(1)
                 Text(verbatim: pane.title).font(.caption).foregroundStyle(.secondary).lineLimit(1)
             }

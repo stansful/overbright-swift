@@ -7,7 +7,7 @@ import SwiftUI
 
 /// The Welcome window's progress.
 struct ProgressDots: View {
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.overbright) private var theme
     /// 1-based.
     let current: Int
     let count: Int
@@ -20,7 +20,7 @@ struct ProgressDots: View {
                     .frame(width: index == current ? Space.xxl : Space.s, height: Space.s)
             }
         }
-        .animation(OverbrightTheme(reduceMotion: reduceMotion).animation(.contentSwap), value: current)
+        .animation(theme.animation(.contentSwap), value: current)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(verbatim: Self.label(current: current, count: count)))
     }
