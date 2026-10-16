@@ -3,7 +3,7 @@
 // Event-driven: listeners on every device's running state and on the device list (hot-plug re-registers them); each
 // change re-reads the devices, applies the transport filter and feeds `CameraDebouncer`; one deadline publishes the
 // value once it has held (1 s on, 3 s off). Nothing runs while stopped.
-// Thread: main (CoreMediaIO delivers on the main queue; see `CoreMediaIOCameras`).
+// Thread: main (CoreMediaIO's listener proc hops here through `MainHop`; see `CoreMediaIOCameras`).
 import OverbrightCore
 
 /// Watches the cameras while the camera rule is on.

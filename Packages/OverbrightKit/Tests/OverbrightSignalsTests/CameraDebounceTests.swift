@@ -1,5 +1,6 @@
 // OverbrightSignalsTests/CameraDebounceTests.swift — "a camera is in use": 1 s on / 3 s off, the transport filter, hot-plug,
-// and the rule switch. ARCHITECTURE.md §7.1, §7.3, D12, DESIGN.md §11.
+// the rule switch, and the CoreMediaIO registrations. ARCHITECTURE.md §7.1, §7.3, D12, D22, DESIGN.md §11.
+import CoreMediaIO
 import OverbrightCore
 import Testing
 @testable import OverbrightSignals
@@ -118,5 +119,68 @@ import Testing
         await harness.start()
         #expect(harness.platform.cameraDevices.registrations.isEmpty)
         #expect(!harness.monitor.activeSources.contains(.camera) && !harness.monitor.snapshot.isCameraInUse)
+    }
+}
+
+/// The live cameras' CoreMediaIO registrations, recorded instead of made: every removal names exactly the object,
+/// property, proc and client data its add named (the block variant could not: Swift re-wraps the block at each call),
+/// and cancelling leaves no handler behind (D22: no listener outlives the camera rule).
+@MainActor @Suite struct CameraListenerRegistrationTests {
+    private struct Call: Equatable {
+        var object: CMIOObjectID
+        var selector: CMIOObjectPropertySelector
+        var proc: UnsafeRawPointer
+        var clientData: UnsafeMutableRawPointer?
+    }
+
+    private final class Recorder {
+        var added: [Call] = []
+        var removed: [Call] = []
+    }
+
+    /// Cameras that record every registration; an add on `refused` fails the way CoreMediaIO refuses a gone device.
+    private func cameras(_ recorder: Recorder, refusing refused: CMIOObjectID? = nil) -> CoreMediaIOCameras {
+        func call(_ object: CMIOObjectID, _ address: CMIOObjectPropertyAddress, _ proc: CMIOObjectPropertyListenerProc,
+                  _ clientData: UnsafeMutableRawPointer?) -> Call {
+            Call(object: object, selector: address.mSelector, proc: unsafeBitCast(proc, to: UnsafeRawPointer.self),
+                 clientData: clientData)
+        }
+        return CoreMediaIOCameras(
+            add: { object, address, proc, clientData in
+                if object == refused { return OSStatus(kCMIOHardwareBadObjectError) }
+                recorder.added.append(call(object, address, proc, clientData))
+                return noErr
+            },
+            remove: { object, address, proc, clientData in
+                recorder.removed.append(call(object, address, proc, clientData))
+                return noErr
+            })
+    }
+
+    @Test func everyRemovalNamesWhatItsAddNamed() {
+        let recorder = Recorder()
+        let token = cameras(recorder).observe(devices: [7, 9]) {}
+        let running = CMIOObjectPropertySelector(kCMIODevicePropertyDeviceIsRunningSomewhere)
+        let listed = CMIOObjectPropertySelector(kCMIOHardwarePropertyDevices)
+        #expect(recorder.added.map(\.object) == [7, 9, CMIOObjectID(kCMIOObjectSystemObject)])
+        #expect(recorder.added.map(\.selector) == [running, running, listed])
+        #expect(Set(recorder.added.map(\.clientData)).count == 1 && recorder.removed.isEmpty)
+        let id = UInt(bitPattern: recorder.added[0].clientData)
+        #expect(id != 0 && CameraListenerRegistry.shared.contains(id))
+        token.cancel()
+        #expect(recorder.removed == recorder.added)
+        #expect(!CameraListenerRegistry.shared.contains(id))
+    }
+
+    @Test func aRefusedAddIsNotRemovedAndEachObservationHasItsOwnHandler() {
+        let recorder = Recorder()
+        let cameras = cameras(recorder, refusing: 9)
+        let first = cameras.observe(devices: [7, 9]) {}
+        let second = cameras.observe(devices: [7]) {}                        // a hot-plug re-registration
+        #expect(recorder.added.count == 4)
+        #expect(recorder.added[0].clientData != recorder.added[2].clientData)
+        first.cancel()
+        second.cancel()
+        #expect(recorder.removed == recorder.added)                          // device 9 was never added
     }
 }

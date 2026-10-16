@@ -18,8 +18,8 @@
 // while the master is on and any display would be scaled or dimmed if no automatic pause (battery, idle, full screen,
 // app, schedule) stopped it, so the sources that END those pauses keep running; with the master off nothing does.
 //
-// Thread: main. Entry points the system may call on other threads (thermal, Low Power, IOKit callbacks, CoreMediaIO
-// blocks) are nonisolated and hop through `MainHop` (§8.1 rule 2); each has an off-main test.
+// Thread: main. Entry points the system may call on other threads (thermal, Low Power, IOKit callbacks, the
+// CoreMediaIO listener proc) are nonisolated and hop through `MainHop` (§8.1 rule 2); each has an off-main test.
 import Foundation
 import Observation
 import OverbrightCore

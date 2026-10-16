@@ -93,15 +93,32 @@ private func onBackgroundQueue(_ body: @escaping @Sendable () -> Void) async -> 
 }
 
 @MainActor @Suite struct CameraListenerOffMainTests {
-    @Test func theCoreMediaIOBlockHopsToTheMainActor() async {
+    @Test func theCoreMediaIOProcHopsToTheMainActor() async {
         let flag = Flag()
+        let registry = CameraListenerRegistry.shared
+        let id = registry.add { flag.count += 1 }
         let offMain = await onBackgroundQueue {
-            let block = CoreMediaIOCameras.listenerBlock { flag.count += 1 }   // built and called off the main thread
-            var address = CMIOObjectPropertyAddress()
-            block(0, &address)
+            var address = CMIOObjectPropertyAddress()                         // CoreMediaIO's notification thread
+            _ = CameraListenerRegistry.proc(0, 1, &address, CameraListenerRegistry.clientData(id))
         }
         #expect(offMain)
         #expect(await eventually { flag.count == 1 })
+        registry.remove(id)
+    }
+
+    @Test func aCallStillInFlightAfterRemovalDoesNothing() async {
+        let flag = Flag()
+        let registry = CameraListenerRegistry.shared
+        let id = registry.add { flag.count += 1 }
+        registry.remove(id)
+        let offMain = await onBackgroundQueue {
+            var address = CMIOObjectPropertyAddress()
+            _ = CameraListenerRegistry.proc(0, 1, &address, CameraListenerRegistry.clientData(id))
+            _ = CameraListenerRegistry.proc(0, 1, &address, nil)                  // no client data at all
+        }
+        #expect(offMain)
+        for _ in 0..<25 { await Task.yield() }
+        #expect(flag.count == 0)
     }
 }
 
