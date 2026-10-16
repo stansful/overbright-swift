@@ -86,16 +86,16 @@ import Testing
     @Test func turningExtraBrightnessOnForAnOLEDAsksFirstOnce() throws {
         let (services, boost) = try setup("extra-brightness-off")
         var asked: [String] = []
-        var answer = false
-        let commands = PanelCommands(services: services, source: .panel, confirmOLED: { asked.append($0); return answer },
-                                     openURL: { _ in })
+        let answer = Answer()                                                  // a box: the closure is Sendable
+        let commands = PanelCommands(services: services, source: .panel,
+                                     confirmOLED: { asked.append($0); return answer.value }, openURL: { _ in })
         let model = try card(services, msi)
         #expect(model.isOLED && !model.boostEnabled)
         CardMenu.perform(.level(.brightRoom, isChecked: false), card: model, commands: commands)
         #expect(asked == ["MPG322UX OLED"])
         #expect(commands.preferences(of: msi).boostEnabled != true)            // Cancel: still off, nothing set
         #expect(boost.calls.isEmpty)
-        answer = true
+        answer.value = true
         CardMenu.perform(.level(.brightRoom, isChecked: false), card: model, commands: commands)
         #expect(commands.preferences(of: msi).boostEnabled == true)
         #expect(commands.preferences(of: msi).oledNoticeAcknowledged)
@@ -133,3 +133,6 @@ import Testing
         #expect(boost.calls.last == "resume(panel)")
     }
 }
+
+/// The OLED notice's scripted answer.
+private final class Answer { var value = false }
