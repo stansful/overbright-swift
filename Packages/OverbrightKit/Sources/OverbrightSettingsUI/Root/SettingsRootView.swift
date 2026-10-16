@@ -1,8 +1,9 @@
 // OverbrightSettingsUI/Root/SettingsRootView.swift — the Settings window content (DESIGN.md §7.1, D15): a
 // `NavigationSplitView` with the searchable sidebar of the seven panes, the pane itself and its "Reset ‹Pane›…"
-// footer, the "All settings were reset." banner (10 s) and ⌘Z for Undo Reset until the window closes. Its state lives
-// in a `SettingsSession`, which the window controller keeps and navigates, also while no window exists. Ported from
-// Cranny's SettingsRootView (the owner's MIT code) without the preview stage and the module panes.
+// footer, the "All settings were reset." banner (10 s) and ⌘Z for Undo Reset until the window closes (through the
+// window's undo manager, which the view hands to `ResetAllController`, so a focused text field keeps its own undo).
+// Its state lives in a `SettingsSession`, which the window controller keeps and navigates, also while no window
+// exists. Ported from Cranny's SettingsRootView (the owner's MIT code) without the preview stage and the module panes.
 import Foundation
 import OverbrightCore
 import OverbrightDesign
@@ -13,6 +14,7 @@ public struct SettingsRootView: View {
     private let onPaneChange: (@MainActor (SettingsPaneID) -> Void)?
     @State private var session: SettingsSession
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.undoManager) private var undoManager
 
     /// Shows `session`, which the caller keeps to navigate the open window (`SettingsSession.open(_:)`).
     /// `onPaneChange` reports the pane shown, so the window can restore it next time and take its title.
@@ -47,14 +49,10 @@ public struct SettingsRootView: View {
                     .transition(reduceMotion ? .opacity : .move(edge: .bottom).combined(with: .opacity))
             }
         }
-        .background {
-            // ⌘Z undoes Reset All until the window closes (DESIGN.md §7.8), banner or not.
-            Button { resetAll.undo() } label: { EmptyView() }
-                .keyboardShortcut("z", modifiers: .command)
-                .disabled(!resetAll.canUndo)
-                .opacity(0)
-                .accessibilityHidden(true)
-        }
+        // ⌘Z undoes Reset All until the window closes (DESIGN.md §7.8), banner or not: Edit ▸ Undo through the
+        // responder chain, so the search field's own typing is undone first.
+        .onAppear { resetAll.undoManager = undoManager }
+        .onChange(of: undoManager.map(ObjectIdentifier.init)) { resetAll.undoManager = undoManager }
         .animation(OverbrightTheme(reduceMotion: reduceMotion).animation(.bannerIn), value: resetAll.showsBanner)
         .environment(navigator)
         .environment(resetAll)

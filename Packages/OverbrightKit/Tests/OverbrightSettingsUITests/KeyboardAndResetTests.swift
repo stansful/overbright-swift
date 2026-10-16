@@ -197,6 +197,66 @@ private let marker = BoostMarker(since: Date(timeIntervalSinceReferenceDate: 800
         #expect(controller.takeAnnouncement() && !controller.takeAnnouncement())  // announced once per offer
     }
 
+    /// ⌘Z is Edit ▸ Undo through the responder chain: Reset All sits on the window's undo stack, so the window's undo
+    /// (no hidden key equivalent) restores the settings once.
+    @Test func resetAllIsOnTheWindowsUndoStack() {
+        let services = OverbrightServices.preview()
+        let app = ResettingAppControl(settings: services.settings)
+        services.app = app
+        services.settings[DisplaySettings.linkLevels] = true
+        let manager = UndoManager()
+        manager.groupsByEvent = false                                            // no run loop in a test
+        let controller = ResetAllController(services: services, sleep: { _ in try await Task.sleep(for: .seconds(3600)) })
+        controller.undoManager = manager
+        #expect(!manager.canUndo)
+        controller.resetAll()
+        #expect(manager.canUndo)
+        manager.undo()
+        #expect(app.undos == 1 && !controller.canUndo && services.settings[DisplaySettings.linkLevels])
+        #expect(!manager.canUndo)
+    }
+
+    /// A focused text field (the sidebar search) registers its typing on the same manager after the reset: ⌘Z undoes
+    /// the typing first and leaves Reset All for the next ⌘Z.
+    @Test func aTextFieldsOwnUndoComesFirst() {
+        let services = OverbrightServices.preview()
+        let app = ResettingAppControl(settings: services.settings)
+        services.app = app
+        let manager = UndoManager()
+        manager.groupsByEvent = false
+        let controller = ResetAllController(services: services, sleep: { _ in try await Task.sleep(for: .seconds(3600)) })
+        controller.undoManager = manager
+        controller.resetAll()
+        final class Field { var text = "disp" }
+        let field = Field()
+        manager.beginUndoGrouping()
+        manager.registerUndo(withTarget: field) { $0.text = "" }                 // what typing registers
+        manager.endUndoGrouping()
+        manager.undo()
+        #expect(field.text.isEmpty && app.undos == 0 && controller.canUndo)
+        manager.undo()
+        #expect(app.undos == 1 && !controller.canUndo)
+    }
+
+    /// Undo from the banner or the Undo Reset button, or closing the window, takes the offer off the stack: a later ⌘Z
+    /// does nothing to the settings.
+    @Test func undoByButtonOrClosingLeavesNothingOnTheStack() {
+        let services = OverbrightServices.preview()
+        let app = ResettingAppControl(settings: services.settings)
+        services.app = app
+        let manager = UndoManager()
+        manager.groupsByEvent = false
+        let session = SettingsSession(services: services)
+        session.resetAll.undoManager = manager
+        session.resetAll.resetAll()
+        session.resetAll.undo()                                                  // the button
+        #expect(app.undos == 1 && !manager.canUndo)
+        session.resetAll.resetAll()
+        #expect(manager.canUndo)
+        session.windowDidClose()
+        #expect(!manager.canUndo && app.undos == 1)
+    }
+
     // MARK: Formats (DESIGN.md §12.5)
 
     @Test func valuesCarryTheirUnitsInTheLocale() {

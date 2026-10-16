@@ -4,6 +4,11 @@
 // the offer now outlives the banner, and the reset goes through `AppControl` (`resetAllSettings` /
 // `undoResetAllSettings`), which keeps the snapshot. Records are not settings (ARCHITECTURE.md §3.8, `EngineRecords`):
 // the boost marker survives both the reset and the undo. One sleep to the banner's deadline, no polling.
+//
+// ⌘Z goes through the responder chain: the reset registers its undo with the Settings window's undo manager (the root
+// view hands it over), and the app's Edit ▸ Undo performs it. A focused text field (the sidebar search) registers its
+// typing on the same manager, so ⌘Z undoes the typing first and the field keeps its own undo. Undo from a button, or
+// the window closing, removes the registration.
 import Foundation
 import Observation
 import OverbrightCore
@@ -21,6 +26,14 @@ import OverbrightCore
     @ObservationIgnored private let services: OverbrightServices
     @ObservationIgnored private let bannerTime: Duration
     @ObservationIgnored private let sleep: @Sendable (Duration) async throws -> Void
+    /// The Settings window's undo manager, set by the root view: Reset All registers its undo there (⌘Z).
+    @ObservationIgnored weak var undoManager: UndoManager? {
+        didSet {
+            guard oldValue !== undoManager else { return }
+            oldValue?.removeAllActions(withTarget: self)
+            if canUndo { registerUndo() }
+        }
+    }
 
     /// `sleep` is injectable so tests can end the banner without waiting.
     init(services: OverbrightServices, bannerTime: Duration = SettingsMetrics.undoBannerTime,
@@ -42,6 +55,7 @@ import OverbrightCore
         canUndo = true
         showsBanner = true
         isAnnounced = false
+        registerUndo()
         expiry?.cancel()
         expiry = Task { [weak self, bannerTime, sleep] in
             try? await sleep(bannerTime)
@@ -84,6 +98,17 @@ import OverbrightCore
         dismissBanner()
         localSnapshot = nil
         if canUndo { canUndo = false }
+        // While the undo manager runs this undo, it has already taken the action off its stack.
+        if let undoManager, !undoManager.isUndoing { undoManager.removeAllActions(withTarget: self) }
+    }
+
+    /// Puts this offer on the window's undo stack (one group), replacing an earlier one.
+    private func registerUndo() {
+        guard let undoManager else { return }
+        undoManager.removeAllActions(withTarget: self)
+        undoManager.beginUndoGrouping()
+        undoManager.registerUndo(withTarget: self) { controller in controller.undo() }
+        undoManager.endUndoGrouping()
     }
 
     /// The records that live among the settings but are not settings: written back after a reset or an undo, in the

@@ -1,7 +1,7 @@
 // OverbrightSettingsUI/Components/UndoBanner.swift — "All settings were reset." [Undo] after Reset All (DESIGN.md §7.8,
 // §12.4), floating at the bottom of the window for 10 s. VoiceOver hears it once per offer, also when Settings is
-// closed and opened again while the banner lasts. ⌘Z is the root view's (it works until the window closes). Ported
-// from Cranny's UndoBanner (the owner's MIT code).
+// closed and opened again while the banner lasts. ⌘Z is Edit ▸ Undo through the window's undo manager
+// (`ResetAllController`; it works until the window closes). Ported from Cranny's UndoBanner (the owner's MIT code).
 import Foundation
 import OverbrightCore
 import OverbrightDesign
