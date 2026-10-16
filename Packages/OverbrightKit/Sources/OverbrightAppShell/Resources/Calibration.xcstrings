@@ -66,8 +66,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "%@ का कैलिब्रेशन"
           }
         },
         "hr" : {
@@ -84,8 +84,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "Kalibrasi %@"
           }
         },
         "it" : {
@@ -96,20 +96,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "%@のキャリブレーション"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "‘%@’ 보정"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "Kalibrasi %@"
           }
         },
         "nb" : {
@@ -174,8 +174,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "ปรับเทียบ %@"
           }
         },
         "tr" : {
@@ -192,20 +192,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "Hiệu chỉnh %@"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "校准“%@”"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "校正「%@」"
           }
         }
       }
@@ -275,8 +275,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Overbright सेल्फ़-टेस्ट %@"
           }
         },
         "hr" : {
@@ -293,8 +293,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Uji Mandiri Overbright %@"
           }
         },
         "it" : {
@@ -305,20 +305,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Overbrightセルフテスト %@"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Overbright 자체 테스트 %@"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Ujian Kendiri Overbright %@"
           }
         },
         "nb" : {
@@ -383,8 +383,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "การทดสอบตัวเองของ Overbright %@"
           }
         },
         "tr" : {
@@ -401,20 +401,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Tự kiểm tra Overbright %@"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Overbright自检%@"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Overbright自我測試%@"
           }
         }
       }
@@ -484,8 +484,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "सेल्फ़-टेस्ट"
           }
         },
         "hr" : {
@@ -502,8 +502,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "Uji Mandiri"
           }
         },
         "it" : {
@@ -514,20 +514,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "セルフテスト"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "자체 테스트"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "Ujian Kendiri"
           }
         },
         "nb" : {
@@ -592,8 +592,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "การทดสอบตัวเอง"
           }
         },
         "tr" : {
@@ -610,20 +610,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "Tự kiểm tra"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "自检"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "自我測試"
           }
         }
       }

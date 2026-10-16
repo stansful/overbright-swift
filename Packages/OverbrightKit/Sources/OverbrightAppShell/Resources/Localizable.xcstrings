@@ -66,8 +66,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "Overbright को ऐप्लिकेशन फ़ोल्डर में मूव करें?"
           }
         },
         "hr" : {
@@ -84,8 +84,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "Pindahkan Overbright ke folder Aplikasi?"
           }
         },
         "it" : {
@@ -96,20 +96,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "Overbrightを“アプリケーション”フォルダに移動しますか?"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "Overbright를 응용 프로그램 폴더로 이동하겠습니까?"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "Alih Overbright ke folder Aplikasi?"
           }
         },
         "nb" : {
@@ -174,8 +174,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "ย้าย Overbright ไปยังโฟลเดอร์แอปพลิเคชันหรือไม่"
           }
         },
         "tr" : {
@@ -192,20 +192,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "Di chuyển Overbright vào thư mục Ứng dụng?"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "要将Overbright移到“应用程序”文件夹吗？"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "要將Overbright搬移到「應用程式」檔案夾嗎？"
           }
         }
       }
@@ -275,8 +275,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "ऐप्लिकेशन में मूव करें"
           }
         },
         "hr" : {
@@ -293,8 +293,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "Pindahkan ke Aplikasi"
           }
         },
         "it" : {
@@ -305,20 +305,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "“アプリケーション”に移動"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "응용 프로그램으로 이동"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "Alih ke Aplikasi"
           }
         },
         "nb" : {
@@ -383,8 +383,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "ย้ายไปยังแอปพลิเคชัน"
           }
         },
         "tr" : {
@@ -401,20 +401,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "Di chuyển vào Ứng dụng"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "移到“应用程序”"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "搬移到「應用程式」"
           }
         }
       }
@@ -484,8 +484,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "अभी नहीं"
           }
         },
         "hr" : {
@@ -502,8 +502,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "Nanti"
           }
         },
         "it" : {
@@ -514,20 +514,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "後で"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "나중에"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "Bukan Sekarang"
           }
         },
         "nb" : {
@@ -592,8 +592,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "ไม่ใช่ตอนนี้"
           }
         },
         "tr" : {
@@ -610,20 +610,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "Để sau"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "以后"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "稍後再說"
           }
         }
       }
@@ -693,8 +693,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "OK"
+            "state" : "translated",
+            "value" : "ठीक"
           }
         },
         "hr" : {
@@ -711,8 +711,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "OK"
+            "state" : "translated",
+            "value" : "OKE"
           }
         },
         "it" : {
@@ -723,19 +723,19 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "OK"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "OK"
+            "state" : "translated",
+            "value" : "확인"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "OK"
           }
         },
@@ -801,8 +801,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "OK"
+            "state" : "translated",
+            "value" : "ตกลง"
           }
         },
         "tr" : {
@@ -819,20 +819,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "OK"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "OK"
+            "state" : "translated",
+            "value" : "好"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "OK"
+            "state" : "translated",
+            "value" : "好"
           }
         }
       }
@@ -902,8 +902,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "Overbright को मूव नहीं किया जा सका। इसे Finder में ऐप्लिकेशन फ़ोल्डर में ड्रैग करें।"
           }
         },
         "hr" : {
@@ -920,8 +920,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "Overbright tidak dapat dipindahkan. Seret ke folder Aplikasi di Finder."
           }
         },
         "it" : {
@@ -932,20 +932,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "Overbrightを移動できませんでした。Finderで“アプリケーション”フォルダにドラッグしてください。"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "Overbright를 이동할 수 없습니다. Finder에서 응용 프로그램 폴더로 드래그하십시오."
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "Overbright tidak dapat dialihkan. Seret ke folder Aplikasi dalam Finder."
           }
         },
         "nb" : {
@@ -1010,8 +1010,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "ไม่สามารถย้าย Overbright ได้ ให้ลากไปยังโฟลเดอร์แอปพลิเคชันใน Finder"
           }
         },
         "tr" : {
@@ -1028,20 +1028,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "Không thể di chuyển Overbright. Hãy kéo ứng dụng vào thư mục Ứng dụng trong Finder."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "无法移动Overbright。请在访达中将它拖到“应用程序”文件夹。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "無法搬移Overbright。請在Finder中將其拖移到「應用程式」檔案夾。"
           }
         }
       }
@@ -1320,8 +1320,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "शॉर्टकट ऐप की क्रियाएँ और लॉगइन पर खुलना सिर्फ़ ऐप्लिकेशन फ़ोल्डर से ही काम करते हैं।"
           }
         },
         "hr" : {
@@ -1338,8 +1338,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "Tindakan di app Pintasan dan fitur buka saat masuk hanya berfungsi jika Overbright ada di folder Aplikasi."
           }
         },
         "it" : {
@@ -1350,20 +1350,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "“ショートカット”のアクションとログイン時の起動は、Overbrightが“アプリケーション”フォルダにある場合にのみ機能します。"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "단축어 동작과 로그인 시 열기는 Overbright가 응용 프로그램 폴더에 있을 때만 작동합니다."
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "Tindakan dalam app Pintasan dan ciri buka semasa log masuk hanya berfungsi jika Overbright berada dalam folder Aplikasi."
           }
         },
         "nb" : {
@@ -1428,8 +1428,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "การทำงานในคำสั่งลัดและการเปิดเมื่อเข้าสู่ระบบจะใช้ได้เฉพาะเมื่ออยู่ในแอปพลิเคชันเท่านั้น"
           }
         },
         "tr" : {
@@ -1446,20 +1446,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "Tác vụ trong ứng dụng Phím tắt và việc mở khi đăng nhập chỉ hoạt động khi Overbright nằm trong thư mục Ứng dụng."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "仅当Overbright位于“应用程序”文件夹中时，“快捷指令”操作和登录时打开才能正常工作。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "「捷徑」動作和登入時打開的功能只有在「應用程式」檔案夾中才能使用。"
           }
         }
       }

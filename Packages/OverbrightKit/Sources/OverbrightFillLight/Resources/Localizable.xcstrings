@@ -66,8 +66,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light off"
+            "state" : "translated",
+            "value" : "फ़िल लाइट बंद"
           }
         },
         "hr" : {
@@ -84,8 +84,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light off"
+            "state" : "translated",
+            "value" : "Cahaya Pengisi dimatikan"
           }
         },
         "it" : {
@@ -96,20 +96,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light off"
+            "state" : "translated",
+            "value" : "フィルライトオフ"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light off"
+            "state" : "translated",
+            "value" : "보조 조명 끔"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light off"
+            "state" : "translated",
+            "value" : "Cahaya Pengisi dimatikan"
           }
         },
         "nb" : {
@@ -174,8 +174,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light off"
+            "state" : "translated",
+            "value" : "ปิดแสงเสริมแล้ว"
           }
         },
         "tr" : {
@@ -192,20 +192,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light off"
+            "state" : "translated",
+            "value" : "Đã tắt Đèn phụ"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light off"
+            "state" : "translated",
+            "value" : "补光已关闭"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light off"
+            "state" : "translated",
+            "value" : "補光已關閉"
           }
         }
       }
@@ -275,8 +275,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light on"
+            "state" : "translated",
+            "value" : "फ़िल लाइट चालू"
           }
         },
         "hr" : {
@@ -293,8 +293,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light on"
+            "state" : "translated",
+            "value" : "Cahaya Pengisi dinyalakan"
           }
         },
         "it" : {
@@ -305,20 +305,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light on"
+            "state" : "translated",
+            "value" : "フィルライトオン"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light on"
+            "state" : "translated",
+            "value" : "보조 조명 켬"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light on"
+            "state" : "translated",
+            "value" : "Cahaya Pengisi dihidupkan"
           }
         },
         "nb" : {
@@ -383,8 +383,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light on"
+            "state" : "translated",
+            "value" : "เปิดแสงเสริมแล้ว"
           }
         },
         "tr" : {
@@ -401,20 +401,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light on"
+            "state" : "translated",
+            "value" : "Đã bật Đèn phụ"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light on"
+            "state" : "translated",
+            "value" : "补光已开启"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light on"
+            "state" : "translated",
+            "value" : "補光已開啟"
           }
         }
       }

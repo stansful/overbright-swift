@@ -75,8 +75,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "${applicationName} को मानक पर वापस लाएँ"
           }
         },
         "hr" : {
@@ -93,8 +93,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "${applicationName} kembali ke Standar"
           }
         },
         "it" : {
@@ -105,20 +105,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "${applicationName}を標準に戻す"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "${applicationName}에서 표준으로 돌아가기"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "${applicationName} kembali ke Standard"
           }
         },
         "nb" : {
@@ -183,8 +183,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "กลับสู่มาตรฐานใน ${applicationName}"
           }
         },
         "tr" : {
@@ -201,20 +201,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "${applicationName} trở về Tiêu chuẩn"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "${applicationName}恢复标准"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "${applicationName}回到標準"
           }
         }
       }
@@ -293,8 +293,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "${applicationName} चालू या बंद करें"
           }
         },
         "hr" : {
@@ -311,8 +311,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "Nyalakan atau matikan ${applicationName}"
           }
         },
         "it" : {
@@ -323,20 +323,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "${applicationName}をオン/オフ"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "${applicationName} 켜기/끄기"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "Hidupkan atau matikan ${applicationName}"
           }
         },
         "nb" : {
@@ -401,8 +401,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "เปิดหรือปิดใช้ ${applicationName}"
           }
         },
         "tr" : {
@@ -419,20 +419,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "Bật hoặc tắt ${applicationName}"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "开启或关闭${applicationName}"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "開啟或關閉${applicationName}"
           }
         }
       }

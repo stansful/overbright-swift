@@ -275,8 +275,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "मानक पर वापस जाएँ"
           }
         },
         "hr" : {
@@ -293,8 +293,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "Kembali ke Standar"
           }
         },
         "it" : {
@@ -305,20 +305,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "標準に戻す"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "표준으로 돌아가기"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "Kembali ke Standard"
           }
         },
         "nb" : {
@@ -383,8 +383,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "กลับสู่มาตรฐาน"
           }
         },
         "tr" : {
@@ -401,20 +401,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "Trở về Tiêu chuẩn"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "恢复标准"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "回到標準"
           }
         }
       }
@@ -484,8 +484,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Battery level"
+            "state" : "translated",
+            "value" : "बैटरी का स्तर"
           }
         },
         "hr" : {
@@ -502,8 +502,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Battery level"
+            "state" : "translated",
+            "value" : "Level baterai"
           }
         },
         "it" : {
@@ -514,20 +514,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Battery level"
+            "state" : "translated",
+            "value" : "バッテリー残量"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Battery level"
+            "state" : "translated",
+            "value" : "배터리 잔량"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Battery level"
+            "state" : "translated",
+            "value" : "Paras bateri"
           }
         },
         "nb" : {
@@ -592,8 +592,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Battery level"
+            "state" : "translated",
+            "value" : "ระดับแบตเตอรี่"
           }
         },
         "tr" : {
@@ -610,20 +610,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Battery level"
+            "state" : "translated",
+            "value" : "Mức pin"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Battery level"
+            "state" : "translated",
+            "value" : "电池电量"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Battery level"
+            "state" : "translated",
+            "value" : "電池電量"
           }
         }
       }
@@ -693,8 +693,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Check for updates on GitHub"
+            "state" : "translated",
+            "value" : "GitHub पर अपडेट जाँचें"
           }
         },
         "hr" : {
@@ -711,8 +711,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Check for updates on GitHub"
+            "state" : "translated",
+            "value" : "Periksa pembaruan di GitHub"
           }
         },
         "it" : {
@@ -723,20 +723,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Check for updates on GitHub"
+            "state" : "translated",
+            "value" : "GitHubでアップデートを確認"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Check for updates on GitHub"
+            "state" : "translated",
+            "value" : "GitHub에서 업데이트 확인"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Check for updates on GitHub"
+            "state" : "translated",
+            "value" : "Semak kemas kini di GitHub"
           }
         },
         "nb" : {
@@ -801,8 +801,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Check for updates on GitHub"
+            "state" : "translated",
+            "value" : "ตรวจหารายการอัปเดตบน GitHub"
           }
         },
         "tr" : {
@@ -819,20 +819,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Check for updates on GitHub"
+            "state" : "translated",
+            "value" : "Kiểm tra bản cập nhật trên GitHub"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Check for updates on GitHub"
+            "state" : "translated",
+            "value" : "在GitHub上检查更新"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Check for updates on GitHub"
+            "state" : "translated",
+            "value" : "在GitHub上檢查更新項目"
           }
         }
       }
@@ -902,8 +902,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Click for the panel, right-click for the menu"
+            "state" : "translated",
+            "value" : "पैनल के लिए क्लिक करें, मेन्यू के लिए राइट-क्लिक करें"
           }
         },
         "hr" : {
@@ -920,8 +920,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Click for the panel, right-click for the menu"
+            "state" : "translated",
+            "value" : "Klik untuk panel, klik kanan untuk menu"
           }
         },
         "it" : {
@@ -932,20 +932,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Click for the panel, right-click for the menu"
+            "state" : "translated",
+            "value" : "クリックでパネル、右クリックでメニュー"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Click for the panel, right-click for the menu"
+            "state" : "translated",
+            "value" : "클릭하면 패널, 오른쪽 클릭하면 메뉴"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Click for the panel, right-click for the menu"
+            "state" : "translated",
+            "value" : "Klik untuk panel, klik kanan untuk menu"
           }
         },
         "nb" : {
@@ -1010,8 +1010,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Click for the panel, right-click for the menu"
+            "state" : "translated",
+            "value" : "คลิกเพื่อเปิดแผง คลิกขวาเพื่อเปิดเมนู"
           }
         },
         "tr" : {
@@ -1028,20 +1028,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Click for the panel, right-click for the menu"
+            "state" : "translated",
+            "value" : "Bấm để mở bảng điều khiển, bấm chuột phải để mở menu"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Click for the panel, right-click for the menu"
+            "state" : "translated",
+            "value" : "点按打开面板，右键点按打开菜单"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Click for the panel, right-click for the menu"
+            "state" : "translated",
+            "value" : "按一下打開面板，按右鍵打開選單"
           }
         }
       }
@@ -1320,8 +1320,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue Setup"
+            "state" : "translated",
+            "value" : "सेटअप जारी रखें"
           }
         },
         "hr" : {
@@ -1338,8 +1338,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue Setup"
+            "state" : "translated",
+            "value" : "Lanjutkan Penyiapan"
           }
         },
         "it" : {
@@ -1350,20 +1350,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue Setup"
+            "state" : "translated",
+            "value" : "セットアップを続ける"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue Setup"
+            "state" : "translated",
+            "value" : "설정 계속하기"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue Setup"
+            "state" : "translated",
+            "value" : "Teruskan Persediaan"
           }
         },
         "nb" : {
@@ -1428,8 +1428,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue Setup"
+            "state" : "translated",
+            "value" : "ตั้งค่าต่อ"
           }
         },
         "tr" : {
@@ -1446,20 +1446,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue Setup"
+            "state" : "translated",
+            "value" : "Tiếp tục thiết lập"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue Setup"
+            "state" : "translated",
+            "value" : "继续设置"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue Setup"
+            "state" : "translated",
+            "value" : "繼續設定"
           }
         }
       }
@@ -1529,8 +1529,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim Below Minimum On or Off"
+            "state" : "translated",
+            "value" : "न्यूनतम से नीचे डिम करना चालू या बंद करें"
           }
         },
         "hr" : {
@@ -1547,8 +1547,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim Below Minimum On or Off"
+            "state" : "translated",
+            "value" : "Nyalakan atau Matikan Peredupan di Bawah Minimum"
           }
         },
         "it" : {
@@ -1559,20 +1559,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim Below Minimum On or Off"
+            "state" : "translated",
+            "value" : "最小輝度以下の減光をオン/オフ"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim Below Minimum On or Off"
+            "state" : "translated",
+            "value" : "최소 밝기 이하로 어둡게 하기 켜기/끄기"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim Below Minimum On or Off"
+            "state" : "translated",
+            "value" : "Hidupkan atau Matikan Pemalapan di Bawah Minimum"
           }
         },
         "nb" : {
@@ -1637,8 +1637,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim Below Minimum On or Off"
+            "state" : "translated",
+            "value" : "เปิดหรือปิดใช้การหรี่แสงต่ำกว่าค่าต่ำสุด"
           }
         },
         "tr" : {
@@ -1655,20 +1655,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim Below Minimum On or Off"
+            "state" : "translated",
+            "value" : "Bật hoặc tắt Làm tối dưới mức tối thiểu"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim Below Minimum On or Off"
+            "state" : "translated",
+            "value" : "开启或关闭调暗至最低亮度以下"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim Below Minimum On or Off"
+            "state" : "translated",
+            "value" : "開啟或關閉調暗至最低亮度以下"
           }
         }
       }
@@ -1947,8 +1947,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Don’t open at login"
+            "state" : "translated",
+            "value" : "लॉगइन पर न खोलें"
           }
         },
         "hr" : {
@@ -1965,8 +1965,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Don’t open at login"
+            "state" : "translated",
+            "value" : "Jangan buka saat masuk"
           }
         },
         "it" : {
@@ -1977,20 +1977,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Don’t open at login"
+            "state" : "translated",
+            "value" : "ログイン時に開かない"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Don’t open at login"
+            "state" : "translated",
+            "value" : "로그인 시 열지 않기"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Don’t open at login"
+            "state" : "translated",
+            "value" : "Jangan buka semasa log masuk"
           }
         },
         "nb" : {
@@ -2055,8 +2055,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Don’t open at login"
+            "state" : "translated",
+            "value" : "ไม่ต้องเปิดเมื่อเข้าสู่ระบบ"
           }
         },
         "tr" : {
@@ -2073,20 +2073,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Don’t open at login"
+            "state" : "translated",
+            "value" : "Không mở khi đăng nhập"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Don’t open at login"
+            "state" : "translated",
+            "value" : "登录时不打开"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Don’t open at login"
+            "state" : "translated",
+            "value" : "登入時不要打開"
           }
         }
       }
@@ -2156,8 +2156,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra light uses more power, so Overbright steps back on its own. Choose how it starts."
+            "state" : "translated",
+            "value" : "अतिरिक्त रोशनी ज़्यादा पावर लेती है, इसलिए ज़रूरत पड़ने पर Overbright अपने-आप रुक जाता है। चुनें कि यह कैसे शुरू हो।"
           }
         },
         "hr" : {
@@ -2174,8 +2174,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra light uses more power, so Overbright steps back on its own. Choose how it starts."
+            "state" : "translated",
+            "value" : "Cahaya ekstra memakai lebih banyak daya, jadi Overbright mundur sendiri bila perlu. Pilih cara Overbright dimulai."
           }
         },
         "it" : {
@@ -2186,20 +2186,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra light uses more power, so Overbright steps back on its own. Choose how it starts."
+            "state" : "translated",
+            "value" : "明るくするほど電力を消費するため、Overbrightは必要に応じて自動的に一時停止します。起動時の動作を選んでください。"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra light uses more power, so Overbright steps back on its own. Choose how it starts."
+            "state" : "translated",
+            "value" : "밝기를 높이면 전력을 더 많이 사용하므로 Overbright는 필요할 때 스스로 일시 정지합니다. 시작 방식을 선택하십시오."
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra light uses more power, so Overbright steps back on its own. Choose how it starts."
+            "state" : "translated",
+            "value" : "Cahaya tambahan menggunakan lebih banyak kuasa, jadi Overbright berundur dengan sendirinya. Pilih cara ia bermula."
           }
         },
         "nb" : {
@@ -2264,8 +2264,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra light uses more power, so Overbright steps back on its own. Choose how it starts."
+            "state" : "translated",
+            "value" : "แสงที่เพิ่มขึ้นใช้พลังงานมากขึ้น Overbright จึงลดระดับลงเองเมื่อจำเป็น เลือกว่าจะให้เริ่มทำงานอย่างไร"
           }
         },
         "tr" : {
@@ -2282,20 +2282,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra light uses more power, so Overbright steps back on its own. Choose how it starts."
+            "state" : "translated",
+            "value" : "Thêm ánh sáng thì tốn điện hơn, nên Overbright tự giảm bớt khi cần. Hãy chọn cách Overbright khởi động."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra light uses more power, so Overbright steps back on its own. Choose how it starts."
+            "state" : "translated",
+            "value" : "额外的亮度会消耗更多电量，因此Overbright会在需要时自动暂停。选择它的启动方式。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra light uses more power, so Overbright steps back on its own. Choose how it starts."
+            "state" : "translated",
+            "value" : "額外的光線會耗用更多電量，因此Overbright會在需要時自動暫停。請選擇它的啟動方式。"
           }
         }
       }
@@ -2365,8 +2365,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "How Overbright behaves"
+            "state" : "translated",
+            "value" : "Overbright कैसे काम करता है"
           }
         },
         "hr" : {
@@ -2383,8 +2383,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "How Overbright behaves"
+            "state" : "translated",
+            "value" : "Cara kerja Overbright"
           }
         },
         "it" : {
@@ -2395,20 +2395,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "How Overbright behaves"
+            "state" : "translated",
+            "value" : "Overbrightの動作"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "How Overbright behaves"
+            "state" : "translated",
+            "value" : "Overbright의 작동 방식"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "How Overbright behaves"
+            "state" : "translated",
+            "value" : "Cara Overbright berfungsi"
           }
         },
         "nb" : {
@@ -2473,8 +2473,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "How Overbright behaves"
+            "state" : "translated",
+            "value" : "การทำงานของ Overbright"
           }
         },
         "tr" : {
@@ -2491,20 +2491,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "How Overbright behaves"
+            "state" : "translated",
+            "value" : "Cách Overbright hoạt động"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "How Overbright behaves"
+            "state" : "translated",
+            "value" : "Overbright的运作方式"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "How Overbright behaves"
+            "state" : "translated",
+            "value" : "Overbright的運作方式"
           }
         }
       }
@@ -2574,8 +2574,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "It also backs off when your Mac gets warm."
+            "state" : "translated",
+            "value" : "साथ ही, आपका Mac गर्म होने पर यह ब्राइटनेस कम कर देता है।"
           }
         },
         "hr" : {
@@ -2592,8 +2592,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "It also backs off when your Mac gets warm."
+            "state" : "translated",
+            "value" : "Overbright juga mengurangi kecerahan saat Mac Anda menjadi hangat."
           }
         },
         "it" : {
@@ -2604,20 +2604,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "It also backs off when your Mac gets warm."
+            "state" : "translated",
+            "value" : "Macの温度が上がったときも輝度を抑えます。"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "It also backs off when your Mac gets warm."
+            "state" : "translated",
+            "value" : "Mac의 온도가 올라갈 때도 밝기를 낮춥니다."
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "It also backs off when your Mac gets warm."
+            "state" : "translated",
+            "value" : "Ia juga mengurangkan kecerahan apabila Mac anda menjadi hangat."
           }
         },
         "nb" : {
@@ -2682,8 +2682,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "It also backs off when your Mac gets warm."
+            "state" : "translated",
+            "value" : "และจะลดระดับลงเมื่อ Mac ของคุณร้อนขึ้นด้วย"
           }
         },
         "tr" : {
@@ -2700,20 +2700,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "It also backs off when your Mac gets warm."
+            "state" : "translated",
+            "value" : "Overbright cũng giảm bớt khi máy Mac nóng lên."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "It also backs off when your Mac gets warm."
+            "state" : "translated",
+            "value" : "Mac温度升高时，它也会降低亮度。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "It also backs off when your Mac gets warm."
+            "state" : "translated",
+            "value" : "當你的Mac溫度升高時，它也會自動降低亮度。"
           }
         }
       }
@@ -2783,8 +2783,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "None of your displays has extra range right now. The next step shows why."
+            "state" : "translated",
+            "value" : "अभी आपके किसी भी डिस्प्ले में अतिरिक्त रेंज नहीं है। अगले चरण में इसका कारण दिखेगा।"
           }
         },
         "hr" : {
@@ -2801,8 +2801,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "None of your displays has extra range right now. The next step shows why."
+            "state" : "translated",
+            "value" : "Saat ini tidak ada layar Anda yang memiliki rentang ekstra. Langkah berikutnya menunjukkan alasannya."
           }
         },
         "it" : {
@@ -2813,20 +2813,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "None of your displays has extra range right now. The next step shows why."
+            "state" : "translated",
+            "value" : "現在、輝度の余力があるディスプレイはありません。次のステップで理由を確認できます。"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "None of your displays has extra range right now. The next step shows why."
+            "state" : "translated",
+            "value" : "현재 여유 밝기가 있는 디스플레이가 없습니다. 다음 단계에서 이유를 확인할 수 있습니다."
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "None of your displays has extra range right now. The next step shows why."
+            "state" : "translated",
+            "value" : "Tiada paparan anda yang mempunyai julat tambahan sekarang. Langkah seterusnya menunjukkan sebabnya."
           }
         },
         "nb" : {
@@ -2891,8 +2891,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "None of your displays has extra range right now. The next step shows why."
+            "state" : "translated",
+            "value" : "ขณะนี้ไม่มีจอภาพใดของคุณที่มีช่วงเพิ่มเติม ขั้นตอนถัดไปจะแสดงเหตุผล"
           }
         },
         "tr" : {
@@ -2909,20 +2909,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "None of your displays has extra range right now. The next step shows why."
+            "state" : "translated",
+            "value" : "Hiện chưa màn hình nào của bạn có dải sáng bổ sung. Bước tiếp theo sẽ cho biết lý do."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "None of your displays has extra range right now. The next step shows why."
+            "state" : "translated",
+            "value" : "你的显示器目前都没有亮度余量。下一步会显示原因。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "None of your displays has extra range right now. The next step shows why."
+            "state" : "translated",
+            "value" : "目前你的顯示器都沒有亮度餘裕。下一步會說明原因。"
           }
         }
       }
@@ -2992,8 +2992,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Only this card is brighter. It’s a preview: the real result depends on your display."
+            "state" : "translated",
+            "value" : "सिर्फ़ यह कार्ड ज़्यादा ब्राइट है। यह एक प्रीव्यू है: असली नतीजा आपके डिस्प्ले पर निर्भर करता है।"
           }
         },
         "hr" : {
@@ -3010,8 +3010,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Only this card is brighter. It’s a preview: the real result depends on your display."
+            "state" : "translated",
+            "value" : "Hanya kartu ini yang lebih terang. Ini pratinjau: hasil sebenarnya tergantung pada layar Anda."
           }
         },
         "it" : {
@@ -3022,20 +3022,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Only this card is brighter. It’s a preview: the real result depends on your display."
+            "state" : "translated",
+            "value" : "明るくなるのはこのカードだけです。これはプレビューで、実際の結果はディスプレイによって異なります。"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Only this card is brighter. It’s a preview: the real result depends on your display."
+            "state" : "translated",
+            "value" : "이 카드만 더 밝아집니다. 미리보기이며 실제 결과는 디스플레이에 따라 다릅니다."
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Only this card is brighter. It’s a preview: the real result depends on your display."
+            "state" : "translated",
+            "value" : "Hanya kad ini lebih cerah. Ini pratonton: hasil sebenar bergantung pada paparan anda."
           }
         },
         "nb" : {
@@ -3100,8 +3100,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Only this card is brighter. It’s a preview: the real result depends on your display."
+            "state" : "translated",
+            "value" : "เฉพาะการ์ดนี้เท่านั้นที่สว่างขึ้น นี่เป็นเพียงตัวอย่าง ผลลัพธ์จริงขึ้นอยู่กับจอภาพของคุณ"
           }
         },
         "tr" : {
@@ -3118,20 +3118,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Only this card is brighter. It’s a preview: the real result depends on your display."
+            "state" : "translated",
+            "value" : "Chỉ thẻ này sáng hơn. Đây là bản xem trước: kết quả thực tế tùy thuộc vào màn hình của bạn."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Only this card is brighter. It’s a preview: the real result depends on your display."
+            "state" : "translated",
+            "value" : "只有这张卡片变亮了。这只是预览：实际效果取决于你的显示器。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Only this card is brighter. It’s a preview: the real result depends on your display."
+            "state" : "translated",
+            "value" : "只有這張卡片變亮了。這是預覽：實際效果取決於你的顯示器。"
           }
         }
       }
@@ -3201,8 +3201,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open Overbright again from Finder or Spotlight to see Settings."
+            "state" : "translated",
+            "value" : "सेटिंग देखने के लिए Finder या Spotlight से Overbright फिर से खोलें।"
           }
         },
         "hr" : {
@@ -3219,8 +3219,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open Overbright again from Finder or Spotlight to see Settings."
+            "state" : "translated",
+            "value" : "Buka Overbright lagi dari Finder atau Spotlight untuk melihat Pengaturan."
           }
         },
         "it" : {
@@ -3231,20 +3231,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open Overbright again from Finder or Spotlight to see Settings."
+            "state" : "translated",
+            "value" : "設定を表示するには、FinderまたはSpotlightからOverbrightをもう一度開いてください。"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open Overbright again from Finder or Spotlight to see Settings."
+            "state" : "translated",
+            "value" : "설정을 보려면 Finder 또는 Spotlight에서 Overbright를 다시 여십시오."
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open Overbright again from Finder or Spotlight to see Settings."
+            "state" : "translated",
+            "value" : "Buka Overbright semula daripada Finder atau Spotlight untuk melihat Seting."
           }
         },
         "nb" : {
@@ -3309,8 +3309,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open Overbright again from Finder or Spotlight to see Settings."
+            "state" : "translated",
+            "value" : "เปิด Overbright อีกครั้งจาก Finder หรือ Spotlight เพื่อดูการตั้งค่า"
           }
         },
         "tr" : {
@@ -3327,20 +3327,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open Overbright again from Finder or Spotlight to see Settings."
+            "state" : "translated",
+            "value" : "Mở lại Overbright từ Finder hoặc Spotlight để xem Cài đặt."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open Overbright again from Finder or Spotlight to see Settings."
+            "state" : "translated",
+            "value" : "若要查看设置，请从访达或聚焦再次打开Overbright。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open Overbright again from Finder or Spotlight to see Settings."
+            "state" : "translated",
+            "value" : "從Finder或Spotlight再次打開Overbright來查看設定。"
           }
         }
       }
@@ -3410,8 +3410,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open and turn on"
+            "state" : "translated",
+            "value" : "खोलें और चालू करें"
           }
         },
         "hr" : {
@@ -3428,8 +3428,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open and turn on"
+            "state" : "translated",
+            "value" : "Buka dan nyalakan"
           }
         },
         "it" : {
@@ -3440,20 +3440,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open and turn on"
+            "state" : "translated",
+            "value" : "開いてオンにする"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open and turn on"
+            "state" : "translated",
+            "value" : "열고 켜기"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open and turn on"
+            "state" : "translated",
+            "value" : "Buka dan hidupkan"
           }
         },
         "nb" : {
@@ -3518,8 +3518,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open and turn on"
+            "state" : "translated",
+            "value" : "เปิดและเปิดใช้"
           }
         },
         "tr" : {
@@ -3536,20 +3536,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open and turn on"
+            "state" : "translated",
+            "value" : "Mở và bật"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open and turn on"
+            "state" : "translated",
+            "value" : "打开并开启"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open and turn on"
+            "state" : "translated",
+            "value" : "打開並開啟"
           }
         }
       }
@@ -3619,8 +3619,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open, keep off"
+            "state" : "translated",
+            "value" : "खोलें, बंद रखें"
           }
         },
         "hr" : {
@@ -3637,8 +3637,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open, keep off"
+            "state" : "translated",
+            "value" : "Buka, biarkan mati"
           }
         },
         "it" : {
@@ -3649,20 +3649,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open, keep off"
+            "state" : "translated",
+            "value" : "開いてオフのまま"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open, keep off"
+            "state" : "translated",
+            "value" : "열고 끈 상태 유지"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open, keep off"
+            "state" : "translated",
+            "value" : "Buka, biarkan mati"
           }
         },
         "nb" : {
@@ -3727,8 +3727,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open, keep off"
+            "state" : "translated",
+            "value" : "เปิดแต่ไม่เปิดใช้"
           }
         },
         "tr" : {
@@ -3745,20 +3745,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open, keep off"
+            "state" : "translated",
+            "value" : "Mở, không bật"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open, keep off"
+            "state" : "translated",
+            "value" : "打开但保持关闭"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open, keep off"
+            "state" : "translated",
+            "value" : "打開，保持關閉"
           }
         }
       }
@@ -3828,8 +3828,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright asks GitHub once a day. Nothing else is sent."
+            "state" : "translated",
+            "value" : "Overbright दिन में एक बार GitHub से पूछता है। और कुछ नहीं भेजा जाता।"
           }
         },
         "hr" : {
@@ -3846,8 +3846,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright asks GitHub once a day. Nothing else is sent."
+            "state" : "translated",
+            "value" : "Overbright menghubungi GitHub sekali sehari. Tidak ada data lain yang dikirim."
           }
         },
         "it" : {
@@ -3858,20 +3858,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright asks GitHub once a day. Nothing else is sent."
+            "state" : "translated",
+            "value" : "Overbrightは1日に1回GitHubに問い合わせます。それ以外の情報は送信されません。"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright asks GitHub once a day. Nothing else is sent."
+            "state" : "translated",
+            "value" : "Overbright는 하루에 한 번 GitHub에 확인합니다. 그 외에는 아무것도 전송되지 않습니다."
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright asks GitHub once a day. Nothing else is sent."
+            "state" : "translated",
+            "value" : "Overbright menyemak GitHub sekali sehari. Tiada apa-apa lagi yang dihantar."
           }
         },
         "nb" : {
@@ -3936,8 +3936,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright asks GitHub once a day. Nothing else is sent."
+            "state" : "translated",
+            "value" : "Overbright จะตรวจสอบกับ GitHub วันละครั้ง ไม่มีการส่งข้อมูลอื่นใด"
           }
         },
         "tr" : {
@@ -3954,20 +3954,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright asks GitHub once a day. Nothing else is sent."
+            "state" : "translated",
+            "value" : "Overbright kiểm tra GitHub mỗi ngày một lần. Ngoài ra không gửi gì khác."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright asks GitHub once a day. Nothing else is sent."
+            "state" : "translated",
+            "value" : "Overbright每天向GitHub查询一次。不会发送任何其他信息。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright asks GitHub once a day. Nothing else is sent."
+            "state" : "translated",
+            "value" : "Overbright每天會向GitHub查詢一次。不會傳送其他任何資料。"
           }
         }
       }
@@ -4037,8 +4037,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright checks what each display can do."
+            "state" : "translated",
+            "value" : "Overbright जाँचता है कि हर डिस्प्ले क्या कर सकता है।"
           }
         },
         "hr" : {
@@ -4055,8 +4055,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright checks what each display can do."
+            "state" : "translated",
+            "value" : "Overbright memeriksa kemampuan setiap layar."
           }
         },
         "it" : {
@@ -4067,20 +4067,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright checks what each display can do."
+            "state" : "translated",
+            "value" : "Overbrightは各ディスプレイで何ができるかを確認します。"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright checks what each display can do."
+            "state" : "translated",
+            "value" : "Overbright가 각 디스플레이의 성능을 확인합니다."
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright checks what each display can do."
+            "state" : "translated",
+            "value" : "Overbright menyemak keupayaan setiap paparan."
           }
         },
         "nb" : {
@@ -4145,8 +4145,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright checks what each display can do."
+            "state" : "translated",
+            "value" : "Overbright จะตรวจสอบความสามารถของจอภาพแต่ละจอ"
           }
         },
         "tr" : {
@@ -4163,20 +4163,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright checks what each display can do."
+            "state" : "translated",
+            "value" : "Overbright kiểm tra khả năng của từng màn hình."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright checks what each display can do."
+            "state" : "translated",
+            "value" : "Overbright会检查每台显示器的能力。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright checks what each display can do."
+            "state" : "translated",
+            "value" : "Overbright會檢查每台顯示器的功能。"
           }
         }
       }
@@ -4246,8 +4246,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright lives in the menu bar."
+            "state" : "translated",
+            "value" : "Overbright मेन्यू बार में रहता है।"
           }
         },
         "hr" : {
@@ -4264,8 +4264,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright lives in the menu bar."
+            "state" : "translated",
+            "value" : "Overbright ada di bar menu."
           }
         },
         "it" : {
@@ -4276,20 +4276,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright lives in the menu bar."
+            "state" : "translated",
+            "value" : "Overbrightはメニューバーにあります。"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright lives in the menu bar."
+            "state" : "translated",
+            "value" : "Overbright는 메뉴 막대에 있습니다."
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright lives in the menu bar."
+            "state" : "translated",
+            "value" : "Overbright berada dalam bar menu."
           }
         },
         "nb" : {
@@ -4354,8 +4354,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright lives in the menu bar."
+            "state" : "translated",
+            "value" : "Overbright อยู่ในแถบเมนู"
           }
         },
         "tr" : {
@@ -4372,20 +4372,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright lives in the menu bar."
+            "state" : "translated",
+            "value" : "Overbright nằm trên thanh menu."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright lives in the menu bar."
+            "state" : "translated",
+            "value" : "Overbright位于菜单栏中。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright lives in the menu bar."
+            "state" : "translated",
+            "value" : "Overbright位於選單列中。"
           }
         }
       }
@@ -4455,8 +4455,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright uses its defaults. You can see this again in Settings ▸ About."
+            "state" : "translated",
+            "value" : "Overbright अपनी डिफ़ॉल्ट सेटिंग इस्तेमाल करेगा। आप इसे सेटिंग ▸ परिचय में फिर से देख सकते हैं।"
           }
         },
         "hr" : {
@@ -4473,8 +4473,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright uses its defaults. You can see this again in Settings ▸ About."
+            "state" : "translated",
+            "value" : "Overbright menggunakan pengaturan defaultnya. Anda dapat melihat ini lagi di Pengaturan ▸ Mengenai."
           }
         },
         "it" : {
@@ -4485,20 +4485,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright uses its defaults. You can see this again in Settings ▸ About."
+            "state" : "translated",
+            "value" : "Overbrightはデフォルトの設定を使用します。この画面は設定 ▸ 情報でもう一度表示できます。"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright uses its defaults. You can see this again in Settings ▸ About."
+            "state" : "translated",
+            "value" : "Overbright는 기본 설정을 사용합니다. 설정 ▸ 정보에서 이 화면을 다시 볼 수 있습니다."
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright uses its defaults. You can see this again in Settings ▸ About."
+            "state" : "translated",
+            "value" : "Overbright menggunakan seting lalainya. Anda boleh melihat ini semula dalam Seting ▸ Perihal."
           }
         },
         "nb" : {
@@ -4563,8 +4563,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright uses its defaults. You can see this again in Settings ▸ About."
+            "state" : "translated",
+            "value" : "Overbright จะใช้ค่าเริ่มต้น คุณดูหน้านี้อีกครั้งได้ใน การตั้งค่า ▸ เกี่ยวกับ"
           }
         },
         "tr" : {
@@ -4581,20 +4581,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright uses its defaults. You can see this again in Settings ▸ About."
+            "state" : "translated",
+            "value" : "Overbright dùng cài đặt mặc định. Bạn có thể xem lại phần này trong Cài đặt ▸ Giới thiệu."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright uses its defaults. You can see this again in Settings ▸ About."
+            "state" : "translated",
+            "value" : "Overbright将使用默认设置。你可以在“设置”▸“关于”中再次查看此内容。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright uses its defaults. You can see this again in Settings ▸ About."
+            "state" : "translated",
+            "value" : "Overbright會使用預設值。你可以在「設定」▸「關於」中再次查看。"
           }
         }
       }
@@ -4664,8 +4664,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for full-screen video"
+            "state" : "translated",
+            "value" : "फ़ुल स्क्रीन वीडियो पर पॉज़ करें"
           }
         },
         "hr" : {
@@ -4682,8 +4682,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for full-screen video"
+            "state" : "translated",
+            "value" : "Jeda untuk video layar penuh"
           }
         },
         "it" : {
@@ -4694,20 +4694,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for full-screen video"
+            "state" : "translated",
+            "value" : "全画面ビデオで一時停止"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for full-screen video"
+            "state" : "translated",
+            "value" : "전체 화면 비디오 재생 시 일시 정지"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for full-screen video"
+            "state" : "translated",
+            "value" : "Jeda bagi video skrin penuh"
           }
         },
         "nb" : {
@@ -4772,8 +4772,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for full-screen video"
+            "state" : "translated",
+            "value" : "หยุดพักเมื่อเล่นวิดีโอเต็มหน้าจอ"
           }
         },
         "tr" : {
@@ -4790,20 +4790,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for full-screen video"
+            "state" : "translated",
+            "value" : "Tạm dừng khi có video toàn màn hình"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for full-screen video"
+            "state" : "translated",
+            "value" : "全屏视频时暂停"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for full-screen video"
+            "state" : "translated",
+            "value" : "全螢幕影片時暫停"
           }
         }
       }
@@ -4873,8 +4873,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause in Low Power Mode"
+            "state" : "translated",
+            "value" : "निम्न पावर मोड में पॉज़ करें"
           }
         },
         "hr" : {
@@ -4891,8 +4891,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause in Low Power Mode"
+            "state" : "translated",
+            "value" : "Jeda dalam Mode Daya Rendah"
           }
         },
         "it" : {
@@ -4903,20 +4903,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause in Low Power Mode"
+            "state" : "translated",
+            "value" : "低電力モードで一時停止"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause in Low Power Mode"
+            "state" : "translated",
+            "value" : "저전력 모드에서 일시 정지"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause in Low Power Mode"
+            "state" : "translated",
+            "value" : "Jeda dalam Mod Kuasa Rendah"
           }
         },
         "nb" : {
@@ -4981,8 +4981,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause in Low Power Mode"
+            "state" : "translated",
+            "value" : "หยุดพักในโหมดประหยัดพลังงาน"
           }
         },
         "tr" : {
@@ -4999,20 +4999,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause in Low Power Mode"
+            "state" : "translated",
+            "value" : "Tạm dừng trong Chế độ nguồn điện thấp"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause in Low Power Mode"
+            "state" : "translated",
+            "value" : "低电量模式下暂停"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause in Low Power Mode"
+            "state" : "translated",
+            "value" : "在「低耗電模式」下暫停"
           }
         }
       }
@@ -5082,8 +5082,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause on battery below"
+            "state" : "translated",
+            "value" : "बैटरी इससे कम होने पर पॉज़ करें"
           }
         },
         "hr" : {
@@ -5100,8 +5100,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause on battery below"
+            "state" : "translated",
+            "value" : "Jeda saat baterai di bawah"
           }
         },
         "it" : {
@@ -5112,20 +5112,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause on battery below"
+            "state" : "translated",
+            "value" : "次のバッテリー残量未満で一時停止"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause on battery below"
+            "state" : "translated",
+            "value" : "배터리 잔량이 다음 미만일 때 일시 정지"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause on battery below"
+            "state" : "translated",
+            "value" : "Jeda semasa menggunakan bateri di bawah"
           }
         },
         "nb" : {
@@ -5190,8 +5190,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause on battery below"
+            "state" : "translated",
+            "value" : "หยุดพักเมื่อแบตเตอรี่ต่ำกว่า"
           }
         },
         "tr" : {
@@ -5208,20 +5208,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause on battery below"
+            "state" : "translated",
+            "value" : "Tạm dừng khi dùng pin dưới"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause on battery below"
+            "state" : "translated",
+            "value" : "电池电量低于以下值时暂停"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause on battery below"
+            "state" : "translated",
+            "value" : "電池電量低於以下值時暫停"
           }
         }
       }
@@ -5291,7 +5291,7 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright बंद करें"
           }
         },
@@ -5309,7 +5309,7 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Tutup Overbright"
           }
         },
@@ -5321,19 +5321,19 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbrightを終了"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright 종료"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Keluar daripada Overbright"
           }
         },
@@ -5399,7 +5399,7 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "ออกจาก Overbright"
           }
         },
@@ -5417,19 +5417,19 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Thoát Overbright"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "退出Overbright"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "結束Overbright"
           }
         }
@@ -5500,8 +5500,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Recommended"
+            "state" : "translated",
+            "value" : "अनुशंसित"
           }
         },
         "hr" : {
@@ -5518,8 +5518,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Recommended"
+            "state" : "translated",
+            "value" : "Direkomendasikan"
           }
         },
         "it" : {
@@ -5530,20 +5530,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Recommended"
+            "state" : "translated",
+            "value" : "おすすめ"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Recommended"
+            "state" : "translated",
+            "value" : "추천"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Recommended"
+            "state" : "translated",
+            "value" : "Disyorkan"
           }
         },
         "nb" : {
@@ -5608,8 +5608,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Recommended"
+            "state" : "translated",
+            "value" : "แนะนำ"
           }
         },
         "tr" : {
@@ -5626,20 +5626,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Recommended"
+            "state" : "translated",
+            "value" : "Đề xuất"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Recommended"
+            "state" : "translated",
+            "value" : "推荐"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Recommended"
+            "state" : "translated",
+            "value" : "建議"
           }
         }
       }
@@ -5709,8 +5709,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts app and Control Center"
+            "state" : "translated",
+            "value" : "शॉर्टकट ऐप और कंट्रोल सेंटर"
           }
         },
         "hr" : {
@@ -5727,8 +5727,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts app and Control Center"
+            "state" : "translated",
+            "value" : "App Pintasan dan Pusat Kontrol"
           }
         },
         "it" : {
@@ -5739,20 +5739,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts app and Control Center"
+            "state" : "translated",
+            "value" : "“ショートカット”Appとコントロールセンター"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts app and Control Center"
+            "state" : "translated",
+            "value" : "단축어 앱 및 제어 센터"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts app and Control Center"
+            "state" : "translated",
+            "value" : "App Pintasan dan Pusat Kawalan"
           }
         },
         "nb" : {
@@ -5817,8 +5817,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts app and Control Center"
+            "state" : "translated",
+            "value" : "แอปคำสั่งลัดและศูนย์ควบคุม"
           }
         },
         "tr" : {
@@ -5835,20 +5835,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts app and Control Center"
+            "state" : "translated",
+            "value" : "Ứng dụng Phím tắt và Trung tâm điều khiển"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts app and Control Center"
+            "state" : "translated",
+            "value" : "“快捷指令”App和控制中心"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts app and Control Center"
+            "state" : "translated",
+            "value" : "「捷徑」App和「控制中心」"
           }
         }
       }
@@ -6551,8 +6551,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To put Overbright in Control Center or the menu bar, make a shortcut with Turn Overbright On or Off, then add Control Center’s Run Shortcut control."
+            "state" : "translated",
+            "value" : "Overbright को कंट्रोल सेंटर या मेन्यू बार में रखने के लिए “Overbright चालू या बंद करें” के साथ एक शॉर्टकट बनाएँ, फिर कंट्रोल सेंटर का “शॉर्टकट चलाएँ” कंट्रोल जोड़ें।"
           }
         },
         "hr" : {
@@ -6569,8 +6569,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To put Overbright in Control Center or the menu bar, make a shortcut with Turn Overbright On or Off, then add Control Center’s Run Shortcut control."
+            "state" : "translated",
+            "value" : "Untuk menempatkan Overbright di Pusat Kontrol atau bar menu, buat pintasan dengan tindakan “Nyalakan atau Matikan Overbright”, lalu tambahkan kontrol “Jalankan Pintasan” di Pusat Kontrol."
           }
         },
         "it" : {
@@ -6581,20 +6581,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To put Overbright in Control Center or the menu bar, make a shortcut with Turn Overbright On or Off, then add Control Center’s Run Shortcut control."
+            "state" : "translated",
+            "value" : "Overbrightをコントロールセンターやメニューバーに追加するには、“Overbrightをオン/オフ”アクションを使ったショートカットを作成し、コントロールセンターの“ショートカットを実行”コントロールを追加します。"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To put Overbright in Control Center or the menu bar, make a shortcut with Turn Overbright On or Off, then add Control Center’s Run Shortcut control."
+            "state" : "translated",
+            "value" : "Overbright를 제어 센터나 메뉴 막대에 추가하려면 ‘Overbright 켜기/끄기’ 동작으로 단축어를 만든 다음 제어 센터의 ‘단축어 실행’ 제어 항목을 추가하십시오."
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To put Overbright in Control Center or the menu bar, make a shortcut with Turn Overbright On or Off, then add Control Center’s Run Shortcut control."
+            "state" : "translated",
+            "value" : "Untuk meletakkan Overbright dalam Pusat Kawalan atau bar menu, buat pintasan dengan tindakan “Hidupkan atau Matikan Overbright”, kemudian tambah kawalan “Jalankan Pintasan” dalam Pusat Kawalan."
           }
         },
         "nb" : {
@@ -6659,8 +6659,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To put Overbright in Control Center or the menu bar, make a shortcut with Turn Overbright On or Off, then add Control Center’s Run Shortcut control."
+            "state" : "translated",
+            "value" : "หากต้องการใส่ Overbright ในศูนย์ควบคุมหรือแถบเมนู ให้สร้างคำสั่งลัดด้วย “เปิดหรือปิดใช้ Overbright” แล้วเพิ่มตัวควบคุม “สั่งทำงานคำสั่งลัด” ของศูนย์ควบคุม"
           }
         },
         "tr" : {
@@ -6677,20 +6677,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To put Overbright in Control Center or the menu bar, make a shortcut with Turn Overbright On or Off, then add Control Center’s Run Shortcut control."
+            "state" : "translated",
+            "value" : "Để đưa Overbright vào Trung tâm điều khiển hoặc thanh menu, hãy tạo một phím tắt có tác vụ “Bật hoặc tắt Overbright”, rồi thêm điều khiển “Chạy phím tắt” của Trung tâm điều khiển."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To put Overbright in Control Center or the menu bar, make a shortcut with Turn Overbright On or Off, then add Control Center’s Run Shortcut control."
+            "state" : "translated",
+            "value" : "若要将Overbright添加到控制中心或菜单栏，请使用“开启或关闭Overbright”操作创建一个快捷指令，然后添加控制中心的“运行快捷指令”控制。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To put Overbright in Control Center or the menu bar, make a shortcut with Turn Overbright On or Off, then add Control Center’s Run Shortcut control."
+            "state" : "translated",
+            "value" : "若要將Overbright加入控制中心或選單列，請使用「開啟或關閉Overbright」建立捷徑，然後在控制中心加入「執行捷徑」控制項目。"
           }
         }
       }
@@ -6760,8 +6760,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Overbright चालू करें"
           }
         },
         "hr" : {
@@ -6778,8 +6778,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Nyalakan Overbright"
           }
         },
         "it" : {
@@ -6790,20 +6790,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Overbrightをオンにする"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Overbright 켜기"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Hidupkan Overbright"
           }
         },
         "nb" : {
@@ -6868,8 +6868,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "เปิดใช้ Overbright"
           }
         },
         "tr" : {
@@ -6886,20 +6886,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Bật Overbright"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "开启Overbright"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "開啟Overbright"
           }
         }
       }
@@ -6969,8 +6969,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn on or off"
+            "state" : "translated",
+            "value" : "चालू या बंद करें"
           }
         },
         "hr" : {
@@ -6987,8 +6987,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn on or off"
+            "state" : "translated",
+            "value" : "Nyalakan atau matikan"
           }
         },
         "it" : {
@@ -6999,20 +6999,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn on or off"
+            "state" : "translated",
+            "value" : "オン/オフ"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn on or off"
+            "state" : "translated",
+            "value" : "켜기/끄기"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn on or off"
+            "state" : "translated",
+            "value" : "Hidupkan atau matikan"
           }
         },
         "nb" : {
@@ -7077,8 +7077,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn on or off"
+            "state" : "translated",
+            "value" : "เปิดหรือปิดใช้"
           }
         },
         "tr" : {
@@ -7095,20 +7095,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn on or off"
+            "state" : "translated",
+            "value" : "Bật hoặc tắt"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn on or off"
+            "state" : "translated",
+            "value" : "开启或关闭"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn on or off"
+            "state" : "translated",
+            "value" : "開啟或關閉"
           }
         }
       }
@@ -7178,8 +7178,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use extra brightness"
+            "state" : "translated",
+            "value" : "अतिरिक्त ब्राइटनेस इस्तेमाल करें"
           }
         },
         "hr" : {
@@ -7196,8 +7196,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use extra brightness"
+            "state" : "translated",
+            "value" : "Gunakan kecerahan ekstra"
           }
         },
         "it" : {
@@ -7208,20 +7208,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use extra brightness"
+            "state" : "translated",
+            "value" : "追加の輝度を使用"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use extra brightness"
+            "state" : "translated",
+            "value" : "추가 밝기 사용"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use extra brightness"
+            "state" : "translated",
+            "value" : "Guna kecerahan tambahan"
           }
         },
         "nb" : {
@@ -7286,8 +7286,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use extra brightness"
+            "state" : "translated",
+            "value" : "ใช้ความสว่างเพิ่มเติม"
           }
         },
         "tr" : {
@@ -7304,20 +7304,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use extra brightness"
+            "state" : "translated",
+            "value" : "Dùng độ sáng bổ sung"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use extra brightness"
+            "state" : "translated",
+            "value" : "使用额外亮度"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use extra brightness"
+            "state" : "translated",
+            "value" : "使用額外亮度"
           }
         }
       }
@@ -7387,8 +7387,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use your display’s extra range"
+            "state" : "translated",
+            "value" : "अपने डिस्प्ले की अतिरिक्त रेंज इस्तेमाल करें"
           }
         },
         "hr" : {
@@ -7405,8 +7405,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use your display’s extra range"
+            "state" : "translated",
+            "value" : "Gunakan rentang ekstra layar Anda"
           }
         },
         "it" : {
@@ -7417,20 +7417,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use your display’s extra range"
+            "state" : "translated",
+            "value" : "ディスプレイの輝度の余力を活用"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use your display’s extra range"
+            "state" : "translated",
+            "value" : "디스플레이의 여유 밝기 활용하기"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use your display’s extra range"
+            "state" : "translated",
+            "value" : "Guna julat tambahan paparan anda"
           }
         },
         "nb" : {
@@ -7495,8 +7495,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use your display’s extra range"
+            "state" : "translated",
+            "value" : "ใช้ช่วงเพิ่มเติมของจอภาพคุณ"
           }
         },
         "tr" : {
@@ -7513,20 +7513,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use your display’s extra range"
+            "state" : "translated",
+            "value" : "Dùng dải sáng bổ sung của màn hình"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use your display’s extra range"
+            "state" : "translated",
+            "value" : "利用显示器的亮度余量"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use your display’s extra range"
+            "state" : "translated",
+            "value" : "善用顯示器的亮度餘裕"
           }
         }
       }
@@ -7596,7 +7596,7 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright में आपका स्वागत है"
           }
         },
@@ -7614,7 +7614,7 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Selamat Datang di Overbright"
           }
         },
@@ -7626,19 +7626,19 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbrightへようこそ"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright 시작하기"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Selamat Datang ke Overbright"
           }
         },
@@ -7704,7 +7704,7 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "ยินดีต้อนรับสู่ Overbright"
           }
         },
@@ -7722,19 +7722,19 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Chào mừng bạn đến với Overbright"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "欢迎使用Overbright"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "歡迎使用Overbright"
           }
         }
@@ -7805,8 +7805,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "When you log in"
+            "state" : "translated",
+            "value" : "जब आप लॉग इन करें"
           }
         },
         "hr" : {
@@ -7823,8 +7823,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "When you log in"
+            "state" : "translated",
+            "value" : "Saat Anda masuk"
           }
         },
         "it" : {
@@ -7835,20 +7835,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "When you log in"
+            "state" : "translated",
+            "value" : "ログイン時"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "When you log in"
+            "state" : "translated",
+            "value" : "로그인 시"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "When you log in"
+            "state" : "translated",
+            "value" : "Apabila anda log masuk"
           }
         },
         "nb" : {
@@ -7913,8 +7913,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "When you log in"
+            "state" : "translated",
+            "value" : "เมื่อคุณเข้าสู่ระบบ"
           }
         },
         "tr" : {
@@ -7931,20 +7931,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "When you log in"
+            "state" : "translated",
+            "value" : "Khi bạn đăng nhập"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "When you log in"
+            "state" : "translated",
+            "value" : "登录时"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "When you log in"
+            "state" : "translated",
+            "value" : "登入時"
           }
         }
       }
@@ -8014,8 +8014,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Where to find Overbright"
+            "state" : "translated",
+            "value" : "Overbright कहाँ मिलेगा"
           }
         },
         "hr" : {
@@ -8032,8 +8032,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Where to find Overbright"
+            "state" : "translated",
+            "value" : "Tempat menemukan Overbright"
           }
         },
         "it" : {
@@ -8044,20 +8044,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Where to find Overbright"
+            "state" : "translated",
+            "value" : "Overbrightの場所"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Where to find Overbright"
+            "state" : "translated",
+            "value" : "Overbright가 있는 곳"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Where to find Overbright"
+            "state" : "translated",
+            "value" : "Tempat mencari Overbright"
           }
         },
         "nb" : {
@@ -8122,8 +8122,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Where to find Overbright"
+            "state" : "translated",
+            "value" : "จะหา Overbright ได้ที่ไหน"
           }
         },
         "tr" : {
@@ -8140,20 +8140,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Where to find Overbright"
+            "state" : "translated",
+            "value" : "Tìm Overbright ở đâu"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Where to find Overbright"
+            "state" : "translated",
+            "value" : "在哪里找到Overbright"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Where to find Overbright"
+            "state" : "translated",
+            "value" : "在哪裡找到Overbright"
           }
         }
       }
@@ -8223,8 +8223,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your display can show light brighter than ordinary white. Overbright lets everyday content use that range, so the screen stays readable in a bright room or in sunlight. For the most light, turn your display brightness all the way up first; Overbright adds to it. Drag the divider to compare."
+            "state" : "translated",
+            "value" : "आपका डिस्प्ले साधारण सफ़ेद से ज़्यादा ब्राइट रोशनी दिखा सकता है। Overbright रोज़मर्रा की सामग्री को उस रेंज का इस्तेमाल करने देता है, ताकि तेज़ रोशनी वाले कमरे में या धूप में भी स्क्रीन पढ़ने लायक रहे। सबसे ज़्यादा रोशनी के लिए पहले डिस्प्ले की ब्राइटनेस पूरी बढ़ाएँ; Overbright उसमें और जोड़ता है। तुलना करने के लिए डिवाइडर को ड्रैग करें।"
           }
         },
         "hr" : {
@@ -8241,8 +8241,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your display can show light brighter than ordinary white. Overbright lets everyday content use that range, so the screen stays readable in a bright room or in sunlight. For the most light, turn your display brightness all the way up first; Overbright adds to it. Drag the divider to compare."
+            "state" : "translated",
+            "value" : "Layar Anda dapat menampilkan cahaya yang lebih terang dari putih biasa. Overbright memungkinkan konten sehari-hari menggunakan rentang tersebut, sehingga layar tetap mudah dibaca di ruangan terang atau di bawah sinar matahari. Agar paling terang, maksimalkan dulu kecerahan layar; Overbright menambah di atasnya. Seret pembatas untuk membandingkan."
           }
         },
         "it" : {
@@ -8253,20 +8253,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your display can show light brighter than ordinary white. Overbright lets everyday content use that range, so the screen stays readable in a bright room or in sunlight. For the most light, turn your display brightness all the way up first; Overbright adds to it. Drag the divider to compare."
+            "state" : "translated",
+            "value" : "お使いのディスプレイは、通常の白よりも明るい光を表示できます。Overbrightを使うと普段のコンテンツでもその範囲を活用できるため、明るい部屋や日差しの下でも画面が見やすくなります。最も明るくするには、まずディスプレイの輝度を最大にしてください。Overbrightはそこに上乗せします。区切り線をドラッグして比較してみてください。"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your display can show light brighter than ordinary white. Overbright lets everyday content use that range, so the screen stays readable in a bright room or in sunlight. For the most light, turn your display brightness all the way up first; Overbright adds to it. Drag the divider to compare."
+            "state" : "translated",
+            "value" : "디스플레이는 일반적인 흰색보다 밝은 빛을 표시할 수 있습니다. Overbright를 사용하면 일상적인 콘텐츠에서도 이 범위를 활용할 수 있어 밝은 방이나 햇빛 아래에서도 화면을 잘 읽을 수 있습니다. 최대한 밝게 하려면 먼저 디스플레이 밝기를 끝까지 높이십시오. Overbright는 그 위에 밝기를 더합니다. 구분선을 드래그하여 비교해 보십시오."
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your display can show light brighter than ordinary white. Overbright lets everyday content use that range, so the screen stays readable in a bright room or in sunlight. For the most light, turn your display brightness all the way up first; Overbright adds to it. Drag the divider to compare."
+            "state" : "translated",
+            "value" : "Paparan anda boleh menunjukkan cahaya yang lebih cerah daripada putih biasa. Overbright membenarkan kandungan harian menggunakan julat itu, supaya skrin kekal mudah dibaca dalam bilik terang atau di bawah cahaya matahari. Untuk paling cerah, maksimumkan kecerahan paparan dahulu; Overbright menambah di atasnya. Seret pembahagi untuk membandingkan."
           }
         },
         "nb" : {
@@ -8331,8 +8331,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your display can show light brighter than ordinary white. Overbright lets everyday content use that range, so the screen stays readable in a bright room or in sunlight. For the most light, turn your display brightness all the way up first; Overbright adds to it. Drag the divider to compare."
+            "state" : "translated",
+            "value" : "จอภาพของคุณแสดงแสงที่สว่างกว่าสีขาวปกติได้ Overbright ช่วยให้เนื้อหาทั่วไปใช้ช่วงนั้นได้ หน้าจอจึงยังอ่านง่ายในห้องที่สว่างหรือกลางแสงแดด เพื่อให้ได้แสงมากที่สุด ให้เพิ่มความสว่างของจอภาพจนสุดก่อน Overbright จะเพิ่มต่อจากนั้น ลากเส้นแบ่งเพื่อเปรียบเทียบ"
           }
         },
         "tr" : {
@@ -8349,20 +8349,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your display can show light brighter than ordinary white. Overbright lets everyday content use that range, so the screen stays readable in a bright room or in sunlight. For the most light, turn your display brightness all the way up first; Overbright adds to it. Drag the divider to compare."
+            "state" : "translated",
+            "value" : "Màn hình của bạn có thể hiển thị ánh sáng sáng hơn màu trắng thông thường. Overbright cho phép nội dung hằng ngày dùng dải sáng đó, để màn hình vẫn dễ đọc trong phòng sáng hoặc dưới ánh nắng. Để sáng nhất, trước hết hãy tăng độ sáng màn hình lên tối đa; Overbright cộng thêm vào đó. Kéo đường phân chia để so sánh."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your display can show light brighter than ordinary white. Overbright lets everyday content use that range, so the screen stays readable in a bright room or in sunlight. For the most light, turn your display brightness all the way up first; Overbright adds to it. Drag the divider to compare."
+            "state" : "translated",
+            "value" : "你的显示器可以显示比普通白色更亮的光。Overbright让日常内容也能利用这一范围，使屏幕在明亮房间或阳光下依然清晰可读。要获得最大亮度，请先将显示器亮度调到最高；Overbright会在此基础上增加亮度。拖移分隔线进行比较。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your display can show light brighter than ordinary white. Overbright lets everyday content use that range, so the screen stays readable in a bright room or in sunlight. For the most light, turn your display brightness all the way up first; Overbright adds to it. Drag the divider to compare."
+            "state" : "translated",
+            "value" : "你的顯示器能顯示比一般白色更亮的光線。Overbright讓日常內容也能使用這個範圍，讓螢幕在明亮的房間或陽光下仍清晰可讀。若要取得最大亮度，請先將顯示器亮度調到最高；Overbright會在此基礎上增加亮度。拖移分隔線來比較。"
           }
         }
       }
@@ -8432,8 +8432,8 @@
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your displays"
+            "state" : "translated",
+            "value" : "आपके डिस्प्ले"
           }
         },
         "hr" : {
@@ -8450,8 +8450,8 @@
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your displays"
+            "state" : "translated",
+            "value" : "Layar Anda"
           }
         },
         "it" : {
@@ -8462,20 +8462,20 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your displays"
+            "state" : "translated",
+            "value" : "お使いのディスプレイ"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your displays"
+            "state" : "translated",
+            "value" : "디스플레이"
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your displays"
+            "state" : "translated",
+            "value" : "Paparan anda"
           }
         },
         "nb" : {
@@ -8540,8 +8540,8 @@
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your displays"
+            "state" : "translated",
+            "value" : "จอภาพของคุณ"
           }
         },
         "tr" : {
@@ -8558,20 +8558,20 @@
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your displays"
+            "state" : "translated",
+            "value" : "Màn hình của bạn"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your displays"
+            "state" : "translated",
+            "value" : "你的显示器"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your displays"
+            "state" : "translated",
+            "value" : "你的顯示器"
           }
         }
       }
