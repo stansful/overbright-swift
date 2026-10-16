@@ -36,8 +36,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "Επιπλέον φωτεινότητα"
           }
         },
         "es" : {
@@ -48,8 +48,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "Lisäkirkkaus"
           }
         },
         "fr" : {
@@ -78,8 +78,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "Extra fényerő"
           }
         },
         "id" : {
@@ -180,8 +180,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "Ek Parlaklık"
           }
         },
         "uk" : {
@@ -245,8 +245,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra brightness"
+            "state" : "translated",
+            "value" : "Επιπλέον φωτεινότητα"
           }
         },
         "es" : {
@@ -257,8 +257,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra brightness"
+            "state" : "translated",
+            "value" : "Lisäkirkkaus"
           }
         },
         "fr" : {
@@ -287,8 +287,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra brightness"
+            "state" : "translated",
+            "value" : "Extra fényerő"
           }
         },
         "id" : {
@@ -389,8 +389,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra brightness"
+            "state" : "translated",
+            "value" : "Ek parlaklık"
           }
         },
         "uk" : {
@@ -454,7 +454,7 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },
@@ -466,7 +466,7 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },
@@ -496,7 +496,7 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },
@@ -598,7 +598,7 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },

@@ -40,8 +40,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "All Displays"
+            "state" : "translated",
+            "value" : "Όλες οι οθόνες"
           }
         },
         "es" : {
@@ -52,8 +52,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "All Displays"
+            "state" : "translated",
+            "value" : "Kaikki näytöt"
           }
         },
         "fr" : {
@@ -82,8 +82,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "All Displays"
+            "state" : "translated",
+            "value" : "Összes kijelző"
           }
         },
         "id" : {
@@ -184,8 +184,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "All Displays"
+            "state" : "translated",
+            "value" : "Tüm Ekranlar"
           }
         },
         "uk" : {
@@ -249,8 +249,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "Επιστροφή στο Τυπικό"
           }
         },
         "es" : {
@@ -261,8 +261,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "Takaisin vakiotasolle"
           }
         },
         "fr" : {
@@ -291,8 +291,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "Vissza az alapszintre"
           }
         },
         "id" : {
@@ -393,8 +393,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "Standart’a Dön"
           }
         },
         "uk" : {
@@ -458,8 +458,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Bright Room"
+            "state" : "translated",
+            "value" : "Φωτεινό δωμάτιο"
           }
         },
         "es" : {
@@ -470,8 +470,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Bright Room"
+            "state" : "translated",
+            "value" : "Valoisa huone"
           }
         },
         "fr" : {
@@ -500,8 +500,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Bright Room"
+            "state" : "translated",
+            "value" : "Világos szoba"
           }
         },
         "id" : {
@@ -602,8 +602,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Bright Room"
+            "state" : "translated",
+            "value" : "Aydınlık Oda"
           }
         },
         "uk" : {
@@ -667,8 +667,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Brightness"
+            "state" : "translated",
+            "value" : "Φωτεινότητα"
           }
         },
         "es" : {
@@ -679,8 +679,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Brightness"
+            "state" : "translated",
+            "value" : "Kirkkaus"
           }
         },
         "fr" : {
@@ -709,8 +709,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Brightness"
+            "state" : "translated",
+            "value" : "Fényerő"
           }
         },
         "id" : {
@@ -811,8 +811,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Brightness"
+            "state" : "translated",
+            "value" : "Parlaklık"
           }
         },
         "uk" : {
@@ -876,8 +876,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim ${display} to ${percent}"
+            "state" : "translated",
+            "value" : "Χαμήλωμα: ${display} στο ${percent}"
           }
         },
         "es" : {
@@ -888,8 +888,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim ${display} to ${percent}"
+            "state" : "translated",
+            "value" : "Himmennä ${display} tasolle ${percent}"
           }
         },
         "fr" : {
@@ -918,8 +918,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim ${display} to ${percent}"
+            "state" : "translated",
+            "value" : "${display} sötétítése erre: ${percent}"
           }
         },
         "id" : {
@@ -1020,8 +1020,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim ${display} to ${percent}"
+            "state" : "translated",
+            "value" : "${display} öğesini ${percent} düzeyine karart"
           }
         },
         "uk" : {
@@ -1085,8 +1085,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim Displays"
+            "state" : "translated",
+            "value" : "Χαμήλωμα οθονών"
           }
         },
         "es" : {
@@ -1097,8 +1097,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim Displays"
+            "state" : "translated",
+            "value" : "Himmennä näyttöjä"
           }
         },
         "fr" : {
@@ -1127,8 +1127,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim Displays"
+            "state" : "translated",
+            "value" : "Kijelzők sötétítése"
           }
         },
         "id" : {
@@ -1229,8 +1229,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim Displays"
+            "state" : "translated",
+            "value" : "Ekranları Karart"
           }
         },
         "uk" : {
@@ -1294,8 +1294,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dims a display, or every display, below the macOS minimum."
+            "state" : "translated",
+            "value" : "Χαμηλώνει μία ή όλες τις οθόνες κάτω από το ελάχιστο του macOS."
           }
         },
         "es" : {
@@ -1306,8 +1306,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dims a display, or every display, below the macOS minimum."
+            "state" : "translated",
+            "value" : "Himmentää yhden tai kaikki näytöt alle macOS:n minimin."
           }
         },
         "fr" : {
@@ -1336,8 +1336,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dims a display, or every display, below the macOS minimum."
+            "state" : "translated",
+            "value" : "Egy vagy az összes kijelzőt a macOS minimuma alá sötétíti."
           }
         },
         "id" : {
@@ -1438,8 +1438,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dims a display, or every display, below the macOS minimum."
+            "state" : "translated",
+            "value" : "Bir ekranı ya da tüm ekranları macOS minimumunun altına karartır."
           }
         },
         "uk" : {
@@ -1503,8 +1503,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Display"
+            "state" : "translated",
+            "value" : "Οθόνη"
           }
         },
         "es" : {
@@ -1515,8 +1515,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Display"
+            "state" : "translated",
+            "value" : "Näyttö"
           }
         },
         "fr" : {
@@ -1545,8 +1545,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Display"
+            "state" : "translated",
+            "value" : "Kijelző"
           }
         },
         "id" : {
@@ -1647,8 +1647,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Display"
+            "state" : "translated",
+            "value" : "Ekran"
           }
         },
         "uk" : {
@@ -1712,8 +1712,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Duration"
+            "state" : "translated",
+            "value" : "Διάρκεια"
           }
         },
         "es" : {
@@ -1724,8 +1724,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Duration"
+            "state" : "translated",
+            "value" : "Kesto"
           }
         },
         "fr" : {
@@ -1754,8 +1754,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Duration"
+            "state" : "translated",
+            "value" : "Időtartam"
           }
         },
         "id" : {
@@ -1856,8 +1856,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Duration"
+            "state" : "translated",
+            "value" : "Süre"
           }
         },
         "uk" : {
@@ -1921,8 +1921,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ends a pause."
+            "state" : "translated",
+            "value" : "Τερματίζει μια παύση."
           }
         },
         "es" : {
@@ -1933,8 +1933,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ends a pause."
+            "state" : "translated",
+            "value" : "Päättää tauon."
           }
         },
         "fr" : {
@@ -1963,8 +1963,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ends a pause."
+            "state" : "translated",
+            "value" : "Befejezi a szüneteltetést."
           }
         },
         "id" : {
@@ -2065,8 +2065,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ends a pause."
+            "state" : "translated",
+            "value" : "Duraklatmayı sonlandırır."
           }
         },
         "uk" : {
@@ -2130,8 +2130,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "Επιπλέον φωτεινότητα"
           }
         },
         "es" : {
@@ -2142,8 +2142,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "Lisäkirkkaus"
           }
         },
         "fr" : {
@@ -2172,8 +2172,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "Extra fényerő"
           }
         },
         "id" : {
@@ -2274,8 +2274,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "Ek Parlaklık"
           }
         },
         "uk" : {
@@ -2339,8 +2339,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Get Overbright State"
+            "state" : "translated",
+            "value" : "Λήψη κατάστασης Overbright"
           }
         },
         "es" : {
@@ -2351,8 +2351,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Get Overbright State"
+            "state" : "translated",
+            "value" : "Hae Overbrightin tila"
           }
         },
         "fr" : {
@@ -2381,8 +2381,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Get Overbright State"
+            "state" : "translated",
+            "value" : "Az Overbright állapotának lekérése"
           }
         },
         "id" : {
@@ -2483,8 +2483,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Get Overbright State"
+            "state" : "translated",
+            "value" : "Overbright Durumunu Al"
           }
         },
         "uk" : {
@@ -2548,8 +2548,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Indoor"
+            "state" : "translated",
+            "value" : "Εσωτερικός χώρος"
           }
         },
         "es" : {
@@ -2560,8 +2560,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Indoor"
+            "state" : "translated",
+            "value" : "Sisätila"
           }
         },
         "fr" : {
@@ -2590,8 +2590,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Indoor"
+            "state" : "translated",
+            "value" : "Beltéri"
           }
         },
         "id" : {
@@ -2692,8 +2692,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Indoor"
+            "state" : "translated",
+            "value" : "İç Mekân"
           }
         },
         "uk" : {
@@ -2757,8 +2757,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Leave Alone"
+            "state" : "translated",
+            "value" : "Καμία αλλαγή"
           }
         },
         "es" : {
@@ -2769,8 +2769,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Leave Alone"
+            "state" : "translated",
+            "value" : "Ei muutoksia"
           }
         },
         "fr" : {
@@ -2799,8 +2799,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Leave Alone"
+            "state" : "translated",
+            "value" : "Változatlan"
           }
         },
         "id" : {
@@ -2901,8 +2901,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Leave Alone"
+            "state" : "translated",
+            "value" : "Olduğu Gibi Bırak"
           }
         },
         "uk" : {
@@ -2966,8 +2966,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Level"
+            "state" : "translated",
+            "value" : "Επίπεδο"
           }
         },
         "es" : {
@@ -2978,8 +2978,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Level"
+            "state" : "translated",
+            "value" : "Taso"
           }
         },
         "fr" : {
@@ -3008,8 +3008,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Level"
+            "state" : "translated",
+            "value" : "Szint"
           }
         },
         "id" : {
@@ -3110,8 +3110,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Level"
+            "state" : "translated",
+            "value" : "Düzey"
           }
         },
         "uk" : {
@@ -3175,8 +3175,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Max"
+            "state" : "translated",
+            "value" : "Μέγιστο"
           }
         },
         "es" : {
@@ -3187,8 +3187,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Max"
+            "state" : "translated",
+            "value" : "Maksimi"
           }
         },
         "fr" : {
@@ -3217,8 +3217,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Max"
+            "state" : "translated",
+            "value" : "Maximum"
           }
         },
         "id" : {
@@ -3319,8 +3319,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Max"
+            "state" : "translated",
+            "value" : "Maksimum"
           }
         },
         "uk" : {
@@ -3384,8 +3384,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Multiplier"
+            "state" : "translated",
+            "value" : "Πολλαπλασιαστής"
           }
         },
         "es" : {
@@ -3396,8 +3396,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Multiplier"
+            "state" : "translated",
+            "value" : "Kerroin"
           }
         },
         "fr" : {
@@ -3426,8 +3426,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Multiplier"
+            "state" : "translated",
+            "value" : "Szorzó"
           }
         },
         "id" : {
@@ -3528,8 +3528,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Multiplier"
+            "state" : "translated",
+            "value" : "Çarpan"
           }
         },
         "uk" : {
@@ -3593,8 +3593,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off"
+            "state" : "translated",
+            "value" : "Απενεργοποίηση"
           }
         },
         "es" : {
@@ -3605,8 +3605,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off"
+            "state" : "translated",
+            "value" : "Laita pois päältä"
           }
         },
         "fr" : {
@@ -3635,8 +3635,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off"
+            "state" : "translated",
+            "value" : "Ki"
           }
         },
         "id" : {
@@ -3737,8 +3737,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off"
+            "state" : "translated",
+            "value" : "Kapat"
           }
         },
         "uk" : {
@@ -3802,8 +3802,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "On"
+            "state" : "translated",
+            "value" : "Ενεργοποίηση"
           }
         },
         "es" : {
@@ -3814,8 +3814,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "On"
+            "state" : "translated",
+            "value" : "Laita päälle"
           }
         },
         "fr" : {
@@ -3844,8 +3844,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "On"
+            "state" : "translated",
+            "value" : "Be"
           }
         },
         "id" : {
@@ -3946,8 +3946,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "On"
+            "state" : "translated",
+            "value" : "Aç"
           }
         },
         "uk" : {
@@ -4011,7 +4011,7 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },
@@ -4023,7 +4023,7 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },
@@ -4053,7 +4053,7 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },
@@ -4155,7 +4155,7 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },
@@ -4220,8 +4220,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: Leave Alone"
+            "state" : "translated",
+            "value" : "Overbright: καμία αλλαγή"
           }
         },
         "es" : {
@@ -4232,8 +4232,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: Leave Alone"
+            "state" : "translated",
+            "value" : "Overbright: ei muutoksia"
           }
         },
         "fr" : {
@@ -4262,8 +4262,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: Leave Alone"
+            "state" : "translated",
+            "value" : "Overbright: változatlan"
           }
         },
         "id" : {
@@ -4364,8 +4364,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: Leave Alone"
+            "state" : "translated",
+            "value" : "Overbright: olduğu gibi bırak"
           }
         },
         "uk" : {
@@ -4429,8 +4429,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: Off"
+            "state" : "translated",
+            "value" : "Overbright: ανενεργό"
           }
         },
         "es" : {
@@ -4441,8 +4441,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: Off"
+            "state" : "translated",
+            "value" : "Overbright: pois päältä"
           }
         },
         "fr" : {
@@ -4471,8 +4471,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: Off"
+            "state" : "translated",
+            "value" : "Overbright: ki"
           }
         },
         "id" : {
@@ -4573,8 +4573,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: Off"
+            "state" : "translated",
+            "value" : "Overbright: kapalı"
           }
         },
         "uk" : {
@@ -4638,8 +4638,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Bright Room"
+            "state" : "translated",
+            "value" : "Overbright: ενεργό, «Φωτεινό δωμάτιο»"
           }
         },
         "es" : {
@@ -4650,8 +4650,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Bright Room"
+            "state" : "translated",
+            "value" : "Overbright: päällä, Valoisa huone"
           }
         },
         "fr" : {
@@ -4680,8 +4680,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Bright Room"
+            "state" : "translated",
+            "value" : "Overbright: be, „Világos szoba”"
           }
         },
         "id" : {
@@ -4782,8 +4782,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Bright Room"
+            "state" : "translated",
+            "value" : "Overbright: açık, Aydınlık Oda"
           }
         },
         "uk" : {
@@ -4847,8 +4847,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Indoor"
+            "state" : "translated",
+            "value" : "Overbright: ενεργό, «Εσωτερικός χώρος»"
           }
         },
         "es" : {
@@ -4859,8 +4859,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Indoor"
+            "state" : "translated",
+            "value" : "Overbright: päällä, Sisätila"
           }
         },
         "fr" : {
@@ -4889,8 +4889,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Indoor"
+            "state" : "translated",
+            "value" : "Overbright: be, „Beltéri”"
           }
         },
         "id" : {
@@ -4991,8 +4991,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Indoor"
+            "state" : "translated",
+            "value" : "Overbright: açık, İç Mekân"
           }
         },
         "uk" : {
@@ -5056,8 +5056,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Max"
+            "state" : "translated",
+            "value" : "Overbright: ενεργό, «Μέγιστο»"
           }
         },
         "es" : {
@@ -5068,8 +5068,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Max"
+            "state" : "translated",
+            "value" : "Overbright: päällä, Maksimi"
           }
         },
         "fr" : {
@@ -5098,8 +5098,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Max"
+            "state" : "translated",
+            "value" : "Overbright: be, „Maximum”"
           }
         },
         "id" : {
@@ -5200,8 +5200,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Max"
+            "state" : "translated",
+            "value" : "Overbright: açık, Maksimum"
           }
         },
         "uk" : {
@@ -5265,8 +5265,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Sunlight"
+            "state" : "translated",
+            "value" : "Overbright: ενεργό, «Ηλιακό φως»"
           }
         },
         "es" : {
@@ -5277,8 +5277,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Sunlight"
+            "state" : "translated",
+            "value" : "Overbright: päällä, Auringonvalo"
           }
         },
         "fr" : {
@@ -5307,8 +5307,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Sunlight"
+            "state" : "translated",
+            "value" : "Overbright: be, „Napfény”"
           }
         },
         "id" : {
@@ -5409,8 +5409,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Sunlight"
+            "state" : "translated",
+            "value" : "Overbright: açık, Güneş Işığı"
           }
         },
         "uk" : {
@@ -5474,8 +5474,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Overbright"
+            "state" : "translated",
+            "value" : "Παύση Overbright"
           }
         },
         "es" : {
@@ -5486,8 +5486,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Overbright"
+            "state" : "translated",
+            "value" : "Tauota Overbright"
           }
         },
         "fr" : {
@@ -5516,8 +5516,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Overbright"
+            "state" : "translated",
+            "value" : "Az Overbright szüneteltetése"
           }
         },
         "id" : {
@@ -5618,8 +5618,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Overbright"
+            "state" : "translated",
+            "value" : "Overbright’ı Duraklat"
           }
         },
         "uk" : {
@@ -5683,8 +5683,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Overbright for ${duration}"
+            "state" : "translated",
+            "value" : "Παύση Overbright για ${duration}"
           }
         },
         "es" : {
@@ -5695,8 +5695,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Overbright for ${duration}"
+            "state" : "translated",
+            "value" : "Tauota Overbright: ${duration}"
           }
         },
         "fr" : {
@@ -5725,8 +5725,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Overbright for ${duration}"
+            "state" : "translated",
+            "value" : "Az Overbright szüneteltetése ennyi időre: ${duration}"
           }
         },
         "id" : {
@@ -5827,8 +5827,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Overbright for ${duration}"
+            "state" : "translated",
+            "value" : "Overbright’ı şu süre duraklat: ${duration}"
           }
         },
         "uk" : {
@@ -5892,8 +5892,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pauses extra brightness for a while."
+            "state" : "translated",
+            "value" : "Θέτει σε παύση την επιπλέον φωτεινότητα για λίγο."
           }
         },
         "es" : {
@@ -5904,8 +5904,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pauses extra brightness for a while."
+            "state" : "translated",
+            "value" : "Tauottaa lisäkirkkauden hetkeksi."
           }
         },
         "fr" : {
@@ -5934,8 +5934,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pauses extra brightness for a while."
+            "state" : "translated",
+            "value" : "Egy időre szünetelteti az extra fényerőt."
           }
         },
         "id" : {
@@ -6036,8 +6036,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pauses extra brightness for a while."
+            "state" : "translated",
+            "value" : "Ek parlaklığı bir süreliğine duraklatır."
           }
         },
         "uk" : {
@@ -6101,8 +6101,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Resume Overbright"
+            "state" : "translated",
+            "value" : "Συνέχιση Overbright"
           }
         },
         "es" : {
@@ -6113,8 +6113,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Resume Overbright"
+            "state" : "translated",
+            "value" : "Jatka Overbrightia"
           }
         },
         "fr" : {
@@ -6143,8 +6143,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Resume Overbright"
+            "state" : "translated",
+            "value" : "Az Overbright folytatása"
           }
         },
         "id" : {
@@ -6245,8 +6245,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Resume Overbright"
+            "state" : "translated",
+            "value" : "Overbright’ı Sürdür"
           }
         },
         "uk" : {
@@ -6310,8 +6310,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set Extra Brightness"
+            "state" : "translated",
+            "value" : "Ορισμός επιπλέον φωτεινότητας"
           }
         },
         "es" : {
@@ -6322,8 +6322,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set Extra Brightness"
+            "state" : "translated",
+            "value" : "Aseta lisäkirkkaus"
           }
         },
         "fr" : {
@@ -6352,8 +6352,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set Extra Brightness"
+            "state" : "translated",
+            "value" : "Extra fényerő beállítása"
           }
         },
         "id" : {
@@ -6454,8 +6454,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set Extra Brightness"
+            "state" : "translated",
+            "value" : "Ek Parlaklığı Ayarla"
           }
         },
         "uk" : {
@@ -6519,8 +6519,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set extra brightness of ${display} to ${level}"
+            "state" : "translated",
+            "value" : "Ορισμός επιπλέον φωτεινότητας για ${display} σε ${level}"
           }
         },
         "es" : {
@@ -6531,8 +6531,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set extra brightness of ${display} to ${level}"
+            "state" : "translated",
+            "value" : "Aseta kohteen ${display} lisäkirkkaudeksi ${level}"
           }
         },
         "fr" : {
@@ -6561,8 +6561,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set extra brightness of ${display} to ${level}"
+            "state" : "translated",
+            "value" : "${display} extra fényerejének beállítása erre: ${level}"
           }
         },
         "id" : {
@@ -6663,8 +6663,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set extra brightness of ${display} to ${level}"
+            "state" : "translated",
+            "value" : "${display} için ek parlaklığı ${level} olarak ayarla"
           }
         },
         "uk" : {
@@ -6728,8 +6728,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set extra brightness of ${display} to ${level} ×${multiplier}"
+            "state" : "translated",
+            "value" : "Ορισμός επιπλέον φωτεινότητας για ${display} σε ${level} ×${multiplier}"
           }
         },
         "es" : {
@@ -6740,8 +6740,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set extra brightness of ${display} to ${level} ×${multiplier}"
+            "state" : "translated",
+            "value" : "Aseta kohteen ${display} lisäkirkkaudeksi ${level} ×${multiplier}"
           }
         },
         "fr" : {
@@ -6770,8 +6770,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set extra brightness of ${display} to ${level} ×${multiplier}"
+            "state" : "translated",
+            "value" : "${display} extra fényerejének beállítása erre: ${level} ×${multiplier}"
           }
         },
         "id" : {
@@ -6872,8 +6872,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set extra brightness of ${display} to ${level} ×${multiplier}"
+            "state" : "translated",
+            "value" : "${display} için ek parlaklığı ${level} ×${multiplier} olarak ayarla"
           }
         },
         "uk" : {
@@ -6937,8 +6937,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sets the extra brightness of a display, or of every display. Each display stops at its own limit."
+            "state" : "translated",
+            "value" : "Ορίζει την επιπλέον φωτεινότητα μίας ή όλων των οθονών. Κάθε οθόνη σταματά στο δικό της όριο."
           }
         },
         "es" : {
@@ -6949,8 +6949,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sets the extra brightness of a display, or of every display. Each display stops at its own limit."
+            "state" : "translated",
+            "value" : "Asettaa yhden tai kaikkien näyttöjen lisäkirkkauden. Kukin näyttö pysähtyy omaan rajaansa."
           }
         },
         "fr" : {
@@ -6979,8 +6979,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sets the extra brightness of a display, or of every display. Each display stops at its own limit."
+            "state" : "translated",
+            "value" : "Beállítja egy vagy az összes kijelző extra fényerejét. Minden kijelző a saját határánál áll meg."
           }
         },
         "id" : {
@@ -7081,8 +7081,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sets the extra brightness of a display, or of every display. Each display stops at its own limit."
+            "state" : "translated",
+            "value" : "Bir ekranın ya da tüm ekranların ek parlaklığını ayarlar. Her ekran kendi sınırında durur."
           }
         },
         "uk" : {
@@ -7146,8 +7146,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sunlight"
+            "state" : "translated",
+            "value" : "Ηλιακό φως"
           }
         },
         "es" : {
@@ -7158,8 +7158,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sunlight"
+            "state" : "translated",
+            "value" : "Auringonvalo"
           }
         },
         "fr" : {
@@ -7188,8 +7188,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sunlight"
+            "state" : "translated",
+            "value" : "Napfény"
           }
         },
         "id" : {
@@ -7290,8 +7290,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sunlight"
+            "state" : "translated",
+            "value" : "Güneş Işığı"
           }
         },
         "uk" : {
@@ -7355,8 +7355,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Tells whether Overbright is on, and the level of each display."
+            "state" : "translated",
+            "value" : "Ενημερώνει αν το Overbright είναι ενεργό και ποιο είναι το επίπεδο κάθε οθόνης."
           }
         },
         "es" : {
@@ -7367,8 +7367,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Tells whether Overbright is on, and the level of each display."
+            "state" : "translated",
+            "value" : "Kertoo, onko Overbright päällä, ja kunkin näytön tason."
           }
         },
         "fr" : {
@@ -7397,8 +7397,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Tells whether Overbright is on, and the level of each display."
+            "state" : "translated",
+            "value" : "Megmondja, hogy be van-e kapcsolva az Overbright, és mi az egyes kijelzők szintje."
           }
         },
         "id" : {
@@ -7499,8 +7499,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Tells whether Overbright is on, and the level of each display."
+            "state" : "translated",
+            "value" : "Overbright’ın açık olup olmadığını ve her ekranın düzeyini bildirir."
           }
         },
         "uk" : {
@@ -7564,8 +7564,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Off Overbright"
+            "state" : "translated",
+            "value" : "Απενεργοποίηση Overbright"
           }
         },
         "es" : {
@@ -7576,8 +7576,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Off Overbright"
+            "state" : "translated",
+            "value" : "Laita Overbright pois päältä"
           }
         },
         "fr" : {
@@ -7606,8 +7606,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Off Overbright"
+            "state" : "translated",
+            "value" : "Az Overbright kikapcsolása"
           }
         },
         "id" : {
@@ -7708,8 +7708,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Off Overbright"
+            "state" : "translated",
+            "value" : "Overbright’ı Kapat"
           }
         },
         "uk" : {
@@ -7773,8 +7773,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Ενεργοποίηση Overbright"
           }
         },
         "es" : {
@@ -7785,8 +7785,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Laita Overbright päälle"
           }
         },
         "fr" : {
@@ -7815,8 +7815,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Az Overbright bekapcsolása"
           }
         },
         "id" : {
@@ -7917,8 +7917,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Overbright’ı Aç"
           }
         },
         "uk" : {
@@ -7982,8 +7982,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On or Off"
+            "state" : "translated",
+            "value" : "Ενεργοποίηση ή απενεργοποίηση"
           }
         },
         "es" : {
@@ -7994,8 +7994,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On or Off"
+            "state" : "translated",
+            "value" : "Päälle tai pois"
           }
         },
         "fr" : {
@@ -8024,8 +8024,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On or Off"
+            "state" : "translated",
+            "value" : "Be- és kikapcsolás"
           }
         },
         "id" : {
@@ -8126,8 +8126,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On or Off"
+            "state" : "translated",
+            "value" : "Aç veya Kapat"
           }
         },
         "uk" : {
@@ -8191,8 +8191,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Overbright On or Off"
+            "state" : "translated",
+            "value" : "Ενεργοποίηση ή απενεργοποίηση Overbright"
           }
         },
         "es" : {
@@ -8203,8 +8203,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Overbright On or Off"
+            "state" : "translated",
+            "value" : "Laita Overbright päälle tai pois"
           }
         },
         "fr" : {
@@ -8233,8 +8233,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Overbright On or Off"
+            "state" : "translated",
+            "value" : "Az Overbright be- és kikapcsolása"
           }
         },
         "id" : {
@@ -8335,8 +8335,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Overbright On or Off"
+            "state" : "translated",
+            "value" : "Overbright’ı Aç veya Kapat"
           }
         },
         "uk" : {
@@ -8400,8 +8400,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright off at once. Your levels are kept for next time."
+            "state" : "translated",
+            "value" : "Απενεργοποιεί αμέσως το Overbright. Τα επίπεδά σας διατηρούνται για την επόμενη φορά."
           }
         },
         "es" : {
@@ -8412,8 +8412,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright off at once. Your levels are kept for next time."
+            "state" : "translated",
+            "value" : "Laittaa Overbrightin heti pois päältä. Tasosi säilyvät seuraavaa kertaa varten."
           }
         },
         "fr" : {
@@ -8442,8 +8442,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright off at once. Your levels are kept for next time."
+            "state" : "translated",
+            "value" : "Azonnal kikapcsolja az Overbrightot. A szintek megmaradnak a következő alkalomra."
           }
         },
         "id" : {
@@ -8544,8 +8544,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright off at once. Your levels are kept for next time."
+            "state" : "translated",
+            "value" : "Overbright’ı hemen kapatır. Düzeyleriniz bir sonraki sefer için korunur."
           }
         },
         "uk" : {
@@ -8609,8 +8609,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright off. Your displays return to Standard."
+            "state" : "translated",
+            "value" : "Απενεργοποιεί το Overbright. Οι οθόνες σας επιστρέφουν στο Τυπικό."
           }
         },
         "es" : {
@@ -8621,8 +8621,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright off. Your displays return to Standard."
+            "state" : "translated",
+            "value" : "Laittaa Overbrightin pois päältä. Näytöt palaavat vakiotasolle."
           }
         },
         "fr" : {
@@ -8651,8 +8651,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright off. Your displays return to Standard."
+            "state" : "translated",
+            "value" : "Kikapcsolja az Overbrightot. A kijelzők visszaállnak alapszintre."
           }
         },
         "id" : {
@@ -8753,8 +8753,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright off. Your displays return to Standard."
+            "state" : "translated",
+            "value" : "Overbright’ı kapatır. Ekranlarınız Standart’a döner."
           }
         },
         "uk" : {
@@ -8818,8 +8818,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright on. Each display uses its own level."
+            "state" : "translated",
+            "value" : "Ενεργοποιεί το Overbright. Κάθε οθόνη χρησιμοποιεί το δικό της επίπεδο."
           }
         },
         "es" : {
@@ -8830,8 +8830,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright on. Each display uses its own level."
+            "state" : "translated",
+            "value" : "Laittaa Overbrightin päälle. Kukin näyttö käyttää omaa tasoaan."
           }
         },
         "fr" : {
@@ -8860,8 +8860,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright on. Each display uses its own level."
+            "state" : "translated",
+            "value" : "Bekapcsolja az Overbrightot. Minden kijelző a saját szintjét használja."
           }
         },
         "id" : {
@@ -8962,8 +8962,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright on. Each display uses its own level."
+            "state" : "translated",
+            "value" : "Overbright’ı açar. Her ekran kendi düzeyini kullanır."
           }
         },
         "uk" : {
@@ -9027,8 +9027,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns extra brightness on or off."
+            "state" : "translated",
+            "value" : "Ενεργοποιεί ή απενεργοποιεί την επιπλέον φωτεινότητα."
           }
         },
         "es" : {
@@ -9039,8 +9039,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns extra brightness on or off."
+            "state" : "translated",
+            "value" : "Laittaa lisäkirkkauden päälle tai pois."
           }
         },
         "fr" : {
@@ -9069,8 +9069,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns extra brightness on or off."
+            "state" : "translated",
+            "value" : "Be- vagy kikapcsolja az extra fényerőt."
           }
         },
         "id" : {
@@ -9171,8 +9171,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns extra brightness on or off."
+            "state" : "translated",
+            "value" : "Ek parlaklığı açar veya kapatır."
           }
         },
         "uk" : {

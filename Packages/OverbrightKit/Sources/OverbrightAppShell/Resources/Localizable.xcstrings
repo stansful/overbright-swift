@@ -36,8 +36,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "Να μετακινηθεί το Overbright στον φάκελο «Εφαρμογές»;"
           }
         },
         "es" : {
@@ -48,8 +48,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "Siirretäänkö Overbright Apit-kansioon?"
           }
         },
         "fr" : {
@@ -78,8 +78,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "Áthelyezi az Overbrightot az Alkalmazások mappába?"
           }
         },
         "id" : {
@@ -180,8 +180,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "Overbright, Uygulamalar klasörüne taşınsın mı?"
           }
         },
         "uk" : {
@@ -245,8 +245,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "Μετακίνηση στις «Εφαρμογές»"
           }
         },
         "es" : {
@@ -257,8 +257,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "Siirrä Apit-kansioon"
           }
         },
         "fr" : {
@@ -287,8 +287,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "Áthelyezés az Alkalmazásokba"
           }
         },
         "id" : {
@@ -389,8 +389,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "Uygulamalar Klasörüne Taşı"
           }
         },
         "uk" : {
@@ -454,8 +454,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "Όχι τώρα"
           }
         },
         "es" : {
@@ -466,8 +466,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "Ei nyt"
           }
         },
         "fr" : {
@@ -496,8 +496,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "Most nem"
           }
         },
         "id" : {
@@ -598,8 +598,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "Şimdi Değil"
           }
         },
         "uk" : {
@@ -663,7 +663,7 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "OK"
           }
         },
@@ -675,7 +675,7 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "OK"
           }
         },
@@ -705,7 +705,7 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "OK"
           }
         },
@@ -807,8 +807,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "OK"
+            "state" : "translated",
+            "value" : "Tamam"
           }
         },
         "uk" : {
@@ -872,8 +872,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "Δεν ήταν δυνατή η μετακίνηση του Overbright. Σύρετέ το στον φάκελο «Εφαρμογές» στο Finder."
           }
         },
         "es" : {
@@ -884,8 +884,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "Overbrightia ei voitu siirtää. Vedä se Finderissa Apit-kansioon."
           }
         },
         "fr" : {
@@ -914,8 +914,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "Az Overbright nem helyezhető át. Húzza az Alkalmazások mappába a Finderben."
           }
         },
         "id" : {
@@ -1016,8 +1016,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "Overbright taşınamadı. Finder’da Uygulamalar klasörüne sürükleyin."
           }
         },
         "uk" : {
@@ -1290,8 +1290,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "Οι ενέργειες στις «Συντομεύσεις» και το άνοιγμα κατά την είσοδο λειτουργούν μόνο από τον φάκελο «Εφαρμογές»."
           }
         },
         "es" : {
@@ -1302,8 +1302,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "Pikakomennot-apin toiminnot ja avaaminen sisäänkirjauduttaessa toimivat vain Apit-kansiosta."
           }
         },
         "fr" : {
@@ -1332,8 +1332,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "A Parancsok app műveletei és a bejelentkezéskori megnyitás csak az Alkalmazások mappából működnek."
           }
         },
         "id" : {
@@ -1434,8 +1434,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "Kestirmeler eylemleri ve oturum açıldığında açılma yalnızca Uygulamalar klasöründeyken çalışır."
           }
         },
         "uk" : {

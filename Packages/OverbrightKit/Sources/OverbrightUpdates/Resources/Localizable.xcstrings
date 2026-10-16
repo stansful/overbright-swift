@@ -454,7 +454,7 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Το GitHub δεν βρήκε τις εκδόσεις του Overbright. Δοκιμάστε ξανά αργότερα."
           }
         },
@@ -466,8 +466,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "GitHub ei löytänyt Overbrightn julkaisuja. Yritä myöhemmin uudelleen."
+            "state" : "translated",
+            "value" : "GitHub ei löytänyt Overbrightin julkaisuja. Yritä myöhemmin uudelleen."
           }
         },
         "fr" : {
@@ -496,8 +496,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "A GitHub nem találta a Overbright kiadásait. Próbálja újra később."
+            "state" : "translated",
+            "value" : "A GitHub nem találta az Overbright kiadásait. Próbálja újra később."
           }
         },
         "id" : {
@@ -598,8 +598,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "GitHub, Overbright’nin sürümlerini bulamadı. Daha sonra yeniden deneyin."
+            "state" : "translated",
+            "value" : "GitHub, Overbright’ın sürümlerini bulamadı. Daha sonra yeniden deneyin."
           }
         },
         "uk" : {

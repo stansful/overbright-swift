@@ -36,7 +36,7 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
@@ -54,7 +54,7 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
@@ -84,7 +84,7 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
@@ -186,7 +186,7 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
@@ -251,8 +251,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Το Overbright είναι απενεργοποιημένο."
           }
         },
         "es" : {
@@ -263,8 +263,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright on pois päältä."
           }
         },
         "fr" : {
@@ -293,8 +293,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Az Overbright ki van kapcsolva."
           }
         },
         "id" : {
@@ -395,8 +395,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright kapalı."
           }
         },
         "uk" : {
@@ -460,8 +460,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Το Overbright είναι ενεργοποιημένο."
           }
         },
         "es" : {
@@ -472,8 +472,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright on päällä."
           }
         },
         "fr" : {
@@ -502,8 +502,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Az Overbright be van kapcsolva."
           }
         },
         "id" : {
@@ -604,8 +604,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright açık."
           }
         },
         "uk" : {
@@ -669,8 +669,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Το Overbright δεν έχει ξεκινήσει ακόμα. Δοκιμάστε ξανά σε λίγο."
           }
         },
         "es" : {
@@ -681,8 +681,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright käynnistyy vielä. Yritä hetken kuluttua uudelleen."
           }
         },
         "fr" : {
@@ -711,8 +711,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Az Overbright még indul. Próbálja újra egy pillanat múlva."
           }
         },
         "id" : {
@@ -813,8 +813,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright hâlâ başlatılıyor. Birazdan yeniden deneyin."
           }
         },
         "uk" : {
@@ -878,8 +878,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Αυτή η οθόνη δεν είναι συνδεδεμένη."
           }
         },
         "es" : {
@@ -890,8 +890,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Näyttöä ei ole liitetty."
           }
         },
         "fr" : {
@@ -920,8 +920,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Ez a kijelző nincs csatlakoztatva."
           }
         },
         "id" : {
@@ -1022,8 +1022,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Bu ekran bağlı değil."
           }
         },
         "uk" : {
@@ -1087,8 +1087,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Αυτή η οθόνη δεν μπορεί να χαμηλώσει."
           }
         },
         "es" : {
@@ -1099,8 +1099,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Tätä näyttöä ei voi himmentää."
           }
         },
         "fr" : {
@@ -1129,8 +1129,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Ez a kijelző nem sötétíthető."
           }
         },
         "id" : {
@@ -1231,8 +1231,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Bu ekran karartılamaz."
           }
         },
         "uk" : {
@@ -1296,8 +1296,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Αυτή η οθόνη δεν μπορεί να δείξει επιπλέον φωτεινότητα."
           }
         },
         "es" : {
@@ -1308,8 +1308,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Tämä näyttö ei voi näyttää lisäkirkkautta."
           }
         },
         "fr" : {
@@ -1338,8 +1338,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Ez a kijelző nem tud extra fényerőt megjeleníteni."
           }
         },
         "id" : {
@@ -1440,8 +1440,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Bu ekran ek parlaklık gösteremez."
           }
         },
         "uk" : {

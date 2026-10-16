@@ -36,8 +36,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "Βαθμονόμηση: %@"
           }
         },
         "es" : {
@@ -48,8 +48,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "Kalibrointi: %@"
           }
         },
         "fr" : {
@@ -78,8 +78,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "%@ kalibrálása"
           }
         },
         "id" : {
@@ -180,8 +180,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "Kalibrasyon: %@"
           }
         },
         "uk" : {
@@ -245,8 +245,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Αυτοέλεγχος Overbright %@"
           }
         },
         "es" : {
@@ -257,8 +257,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Overbright-itsetesti %@"
           }
         },
         "fr" : {
@@ -287,8 +287,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Overbright-önteszt %@"
           }
         },
         "id" : {
@@ -389,8 +389,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Overbright Öz Testi %@"
           }
         },
         "uk" : {
@@ -454,8 +454,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "Αυτοέλεγχος"
           }
         },
         "es" : {
@@ -466,8 +466,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "Itsetesti"
           }
         },
         "fr" : {
@@ -496,8 +496,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "Önteszt"
           }
         },
         "id" : {
@@ -598,8 +598,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "Öz Test"
           }
         },
         "uk" : {

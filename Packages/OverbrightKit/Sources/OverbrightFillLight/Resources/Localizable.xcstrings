@@ -36,8 +36,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light off"
+            "state" : "translated",
+            "value" : "Ο φωτισμός προσώπου απενεργοποιήθηκε"
           }
         },
         "es" : {
@@ -48,8 +48,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light off"
+            "state" : "translated",
+            "value" : "Täytevalo pois päältä"
           }
         },
         "fr" : {
@@ -78,8 +78,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light off"
+            "state" : "translated",
+            "value" : "Arcmegvilágítás kikapcsolva"
           }
         },
         "id" : {
@@ -180,8 +180,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light off"
+            "state" : "translated",
+            "value" : "Yüz Işığı kapandı"
           }
         },
         "uk" : {
@@ -245,8 +245,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light on"
+            "state" : "translated",
+            "value" : "Ο φωτισμός προσώπου ενεργοποιήθηκε"
           }
         },
         "es" : {
@@ -257,8 +257,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light on"
+            "state" : "translated",
+            "value" : "Täytevalo päällä"
           }
         },
         "fr" : {
@@ -287,8 +287,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light on"
+            "state" : "translated",
+            "value" : "Arcmegvilágítás bekapcsolva"
           }
         },
         "id" : {
@@ -389,8 +389,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light on"
+            "state" : "translated",
+            "value" : "Yüz Işığı açıldı"
           }
         },
         "uk" : {

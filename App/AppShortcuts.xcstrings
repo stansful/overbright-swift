@@ -37,8 +37,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "Επιστροφή στο Τυπικό με το ${applicationName}"
           }
         },
         "en" : {
@@ -57,8 +57,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "${applicationName} takaisin vakiotasolle"
           }
         },
         "fr" : {
@@ -87,8 +87,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "${applicationName} vissza az alapszintre"
           }
         },
         "id" : {
@@ -189,8 +189,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "${applicationName} ile Standart’a dön"
           }
         },
         "uk" : {
@@ -255,8 +255,8 @@
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "Ενεργοποίηση ή απενεργοποίηση του ${applicationName}"
           }
         },
         "en" : {
@@ -275,8 +275,8 @@
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "${applicationName} päälle tai pois"
           }
         },
         "fr" : {
@@ -305,8 +305,8 @@
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "${applicationName} be- és kikapcsolása"
           }
         },
         "id" : {
@@ -407,8 +407,8 @@
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "${applicationName} uygulamasını aç veya kapat"
           }
         },
         "uk" : {
