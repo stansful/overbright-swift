@@ -35,7 +35,8 @@ private struct HostedHello: View {
 }
 
 @MainActor @Suite struct HelloStepHoldTests {
-    @Test func theCardHoldsTheWindowsDisplayOnlyWhileItCouldShowExtraRange() async throws {
+    @Test(.enabled(if: NSScreen.main != nil, "needs a screen (CI runners are headless)"))
+    func theCardHoldsTheWindowsDisplayOnlyWhileItCouldShowExtraRange() async throws {
         let services = servicesWithRealDirectory()
         #expect(!WelcomeCard.simulates(services, arguments: LaunchArguments(["Overbright"])))
         let session = WelcomeSession(services: services, recordsOutcome: false) { _ in }
