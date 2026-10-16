@@ -1,5 +1,6 @@
-// OverbrightOnboardingTests/WelcomePlanTests.swift — the Welcome window's steps and navigation (DESIGN.md §8). Ported
-// from Cranny's WelcomePlanTests (the owner's MIT code) onto Overbright's five steps; WP12 extends them.
+// OverbrightOnboardingTests/WelcomePlanTests.swift — the Welcome window's steps and navigation, and what the plan says
+// they offer (DESIGN.md §8): the update switch only with a repository, step 4's shortcuts, the card's level. Ported
+// from Cranny's WelcomePlanTests (the owner's MIT code) onto Overbright's five steps; extended by WP12.
 import Foundation
 import OverbrightCore
 import Testing
@@ -21,6 +22,27 @@ private final class BundleMarker {}
     @Test func theUpdateToggleOnlyWhenConfigured() {
         #expect(!WelcomePlan(updatesConfigured: false).showsUpdateToggle)
         #expect(WelcomePlan(updatesConfigured: true).showsUpdateToggle)
+    }
+
+    /// A session follows the plan: the update switch with the repository it was built with.
+    @Test func theSessionsPlanFollowsTheBuild() throws {
+        #expect(try WelcomeHarness(updatesConfigured: true).session.plan.showsUpdateToggle)
+        #expect(try !WelcomeHarness(updatesConfigured: false).session.plan.showsUpdateToggle)
+    }
+
+    /// Step 4: Turn on or off, Back to Standard, Dim Below Minimum On or Off, in this order (DESIGN.md §8); never the
+    /// shortcuts without a default or the step shortcuts.
+    @Test func stepFourNamesThreeShortcuts() {
+        #expect(WelcomePlan.shortcuts == [.toggle, .standard, .dimToggle])
+        let defaults = Set(ShortcutCatalog.all.filter { $0.defaultCombo != nil }.map(\.id))
+        #expect(Set(WelcomePlan.shortcuts).isSubset(of: defaults))
+    }
+
+    /// Step 1's card shows Bright room, the default level of a newly enabled display (ARCHITECTURE.md §3.2).
+    @Test func theCardShowsBrightRoom() {
+        #expect(WelcomeCard.level == .brightRoom && WelcomeCard.level.position == DisplayPreferences().level)
+        #expect(WelcomeCard.gain(top: 1) == 1)                                    // nothing to show without a top
+        #expect(abs(WelcomeCard.gain(top: 4) - 2) < 1e-9)                        // half way in stops
     }
 
     @Test func navigationStopsAtBothEnds() {
