@@ -16,6 +16,10 @@
 #   scripts/smoke.sh                       # uses build/Overbright.app
 #   APP=/path/Overbright.app scripts/smoke.sh
 #   CONTROLS=1 scripts/smoke.sh            # after `CONTROLS=1 make build`
+#   SIMULATE=1 scripts/smoke.sh            # agents (D24, CONTRIBUTING): never launches on the real ports. A Debug build
+#                                          # reports over `--qa-simulate`'s fakes; a Release build (which refuses the
+#                                          # switch) gets the static checks and the refusal check only, and the
+#                                          # read-only report on the real ports is left to CI and the owner.
 source "$(dirname "$0")/lib.sh"
 
 APP="${APP:-$BUILD_DIR/$APP_NAME.app}"
@@ -32,17 +36,26 @@ grep -q "com.apple.security.get-task-allow" "$ENTITLEMENTS" && debug_build=1 || 
 # (`--qa-defaults-suite`), never from the user's. A Release build gets no QA switch: it would refuse to start.
 qa_args=()
 (( debug_build )) && qa_args=(--qa-defaults-suite app.overbright.Overbright.smoke)
-/usr/bin/perl -e 'alarm shift; exec @ARGV' 60 "$APP/Contents/MacOS/$APP_NAME" \
-  ${qa_args[@]+"${qa_args[@]}"} --diagnostics "$OUT" >/dev/null 2>&1 \
-  || die "$APP_NAME --diagnostics failed or timed out"
-[[ -s "$OUT" ]] || die "no diagnostics written"
+simulate="${SIMULATE:-0}"
+(( debug_build )) && [[ "$simulate" == 1 ]] && qa_args+=(--qa-simulate builtin-xdr-lid-open)
+report=1
+if [[ "$simulate" == 1 ]] && (( ! debug_build )); then
+  report=0
+  warn "SIMULATE=1 on a Release build: the --diagnostics report on the real ports is skipped (CI and the owner run it)"
+else
+  /usr/bin/perl -e 'alarm shift; exec @ARGV' 60 "$APP/Contents/MacOS/$APP_NAME" \
+    ${qa_args[@]+"${qa_args[@]}"} --diagnostics "$OUT" >/dev/null 2>&1 \
+    || die "$APP_NAME --diagnostics failed or timed out"
+  [[ -s "$OUT" ]] || die "no diagnostics written"
+fi
 
 # A Release build never ignores a Debug-only switch (it would then run on the real ports): it exits with
 # EX_USAGE (64) before anything starts, so not even the read-only report is written.
 if (( ! debug_build )); then
   set +e
   /usr/bin/perl -e 'alarm shift; exec @ARGV' 60 "$APP/Contents/MacOS/$APP_NAME" \
-    --qa-simulate builtin-xdr-lid-open --diagnostics "$REFUSED_OUT" >/dev/null 2>&1
+    --qa-simulate builtin-xdr-lid-open --qa-defaults-suite app.overbright.Overbright.smoke \
+    --diagnostics "$REFUSED_OUT" >/dev/null 2>&1
   status=$?
   set -e
   (( status == 64 )) || die "a Release build must refuse --qa-simulate with exit 64, got $status"
@@ -130,11 +143,14 @@ print("\n".join(problems) or "privacy OK: no entitlements, no usage strings, LSU
 sys.exit(1 if problems else 0)
 PY
 
+if (( report )); then
 expected=$(find "$PACKAGE_DIR/Sources" -mindepth 2 -maxdepth 2 -name Resources -type d | wc -l | tr -d ' ')
-/usr/bin/python3 -I - "$OUT" "$expected" <<'PY' || die "smoke test failed (see $OUT)"
+/usr/bin/python3 -I - "$OUT" "$expected" "$simulate" <<'PY' || die "smoke test failed (see $OUT)"
 import json, sys
-r = json.load(open(sys.argv[1])); expected = int(sys.argv[2])
+r = json.load(open(sys.argv[1])); expected = int(sys.argv[2]); simulate = sys.argv[3] == "1"
 problems = []
+if simulate and not r.get("simulatedFixture"):
+    problems.append("SIMULATE=1 but the report did not come from the simulated ports")
 bundles = r.get("resourceBundles", [])
 if len(bundles) != expected:
     problems.append(f"resource bundles {len(bundles)} != {expected} (Sources/*/Resources)")
@@ -150,4 +166,5 @@ print("\n".join(problems) or "smoke OK: %d bundles, Edit menu present, diagnosti
       "privacy: none" % (expected, len(r["displays"])))
 sys.exit(1 if problems else 0)
 PY
-log "Smoke test passed ($OUT)"
+fi
+if (( report )); then log "Smoke test passed ($OUT)"; else log "Smoke test passed (static and refusal checks; no report on real ports)"; fi
