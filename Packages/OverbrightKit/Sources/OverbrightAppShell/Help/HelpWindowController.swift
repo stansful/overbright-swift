@@ -31,7 +31,7 @@ final class HelpWindowController {
 
     /// Shows Help, scrolled to `anchor` ("no-extra-range", "control-center", …; an unknown one opens at the top).
     func show(anchor: String?) {
-        self.anchor = HelpView.resolve(anchor)
+        prepare(anchor: anchor)
         log.info("Help at \(self.anchor ?? "-", privacy: .public)")
         let window = self.window ?? makeWindow()
         self.window = window
@@ -44,9 +44,15 @@ final class HelpWindowController {
     /// Closes the window.
     func close() { window?.orderOut(nil) }
 
+    /// Remembers where the window opens (a known anchor, else the top).
+    func prepare(anchor: String?) { self.anchor = HelpView.resolve(anchor) }
+
+    /// The live key caps of Back to Standard that answer 3 names (nil: cleared or not registered).
+    var backToStandardKeys: String? { services.shortcuts.displayString(.standard) }
+
     /// The window's content now (the live shortcut in answer 3).
     func content() -> some View {
-        HelpView(anchor: anchor, backToStandardKeys: services.shortcuts.displayString(.standard))
+        HelpView(anchor: anchor, backToStandardKeys: backToStandardKeys)
             .overbrightThemeRoot()
     }
 

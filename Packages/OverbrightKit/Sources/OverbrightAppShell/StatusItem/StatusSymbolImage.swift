@@ -27,7 +27,7 @@ enum StatusSymbolImage {
 
     /// "Overbright, on": the label VoiceOver reads for the status item in `state`.
     static func accessibilityLabel(for state: StatusSymbolState) -> String {
-        StatusMenuText.symbolLabel(StatusMenuText.stateWord(state))
+        StatusMenuText.symbolLabel(state)
     }
 
     /// `off`, kept for the WP0a callers.

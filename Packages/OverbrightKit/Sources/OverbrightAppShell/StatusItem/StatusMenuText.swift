@@ -8,25 +8,22 @@ import OverbrightCore
 enum StatusMenuText {
     // MARK: Status item
 
-    /// The state word of VoiceOver's value ("On", "Needs attention").
-    static func stateWord(_ state: StatusSymbolState) -> String {
+    /// The status item's VoiceOver label in `state` (DESIGN.md §4.1, exact).
+    static func symbolLabel(_ state: StatusSymbolState) -> String {
         switch state {
-        case .off: String(localized: "Off", table: "StatusMenu", bundle: .module, comment: "VoiceOver: status item state")
-        case .on: String(localized: "On", table: "StatusMenu", bundle: .module, comment: "VoiceOver: status item state")
-        case .preparing: String(localized: "Preparing", table: "StatusMenu", bundle: .module,
-                                comment: "VoiceOver: status item state while a display waits for extra range")
-        case .dimming: String(localized: "Dimmed", table: "StatusMenu", bundle: .module,
-                              comment: "VoiceOver: status item state while displays are dimmed")
-        case .paused: String(localized: "Paused", table: "StatusMenu", bundle: .module, comment: "VoiceOver: status item state")
-        case .attention: String(localized: "Needs attention", table: "StatusMenu", bundle: .module,
-                                comment: "VoiceOver: status item state while a conflict or a stop needs the user")
+        case .off: String(localized: "Overbright, off", table: "StatusMenu", bundle: .module,
+                          comment: "VoiceOver: the status item while Overbright is off")
+        case .on: String(localized: "Overbright, on", table: "StatusMenu", bundle: .module,
+                         comment: "VoiceOver: the status item while Overbright is on")
+        case .preparing: String(localized: "Overbright, preparing", table: "StatusMenu", bundle: .module,
+                                comment: "VoiceOver: the status item while a display waits for extra range")
+        case .dimming: String(localized: "Overbright, dimmed", table: "StatusMenu", bundle: .module,
+                              comment: "VoiceOver: the status item while displays are dimmed")
+        case .paused: String(localized: "Overbright, paused", table: "StatusMenu", bundle: .module,
+                             comment: "VoiceOver: the status item while extra brightness is paused")
+        case .attention: String(localized: "Overbright, needs attention", table: "StatusMenu", bundle: .module,
+                                comment: "VoiceOver: the status item while a conflict or a stop needs the user")
         }
-    }
-
-    /// "Overbright, on".
-    static func symbolLabel(_ state: String) -> String {
-        String(localized: "Overbright, \(state)", table: "StatusMenu", bundle: .module,
-               comment: "VoiceOver: the status item’s label; the placeholder is its state")
     }
 
     /// "Overbright on" / "Overbright off" after a click on the icon toggled it.
