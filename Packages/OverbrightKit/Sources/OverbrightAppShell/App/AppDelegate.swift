@@ -43,6 +43,8 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
     private var opening = LaunchUI.Opening.user
     private var hasShownLaunchUI = false
     private var urlOpenedDuringLaunch = false
+    /// URLs that arrived before the controllers existed (a launch by a URL can deliver it that early).
+    private var pendingURLs: [URL] = []
     #if DEBUG
     private var scenario: Task<Void, Never>?
     #endif
@@ -110,6 +112,10 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
     /// decided makes the launch a background one (§7.6).
     public func application(_ application: NSApplication, open urls: [URL]) {
         if !hasShownLaunchUI { urlOpenedDuringLaunch = true }
+        guard appControl != nil else {
+            pendingURLs += urls                                            // handled once the controllers exist
+            return
+        }
         for url in urls {
             switch URLRoute.parse(url) {
             case .settings(let pane): appControl?.openSettings(pane)
@@ -213,6 +219,11 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
         lowLevelPrompt.start()
         self.appControl = appControl; self.icon = icon; self.panel = panel; self.welcome = welcome
         self.dock = dock; self.hud = hud; self.lowLevelPrompt = lowLevelPrompt
+        if !pendingURLs.isEmpty {
+            let urls = pendingURLs
+            pendingURLs = []
+            application(NSApplication.shared, open: urls)
+        }
     }
 
     /// The signal handlers, then `LaunchGate`: the launch check and every service, in order.
