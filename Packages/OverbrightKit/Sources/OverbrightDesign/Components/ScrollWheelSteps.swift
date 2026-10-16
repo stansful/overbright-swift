@@ -9,13 +9,18 @@
 // (`ScrollWheelAnchor` tells it where that is), and it stops when that window resigns key, closes or is hidden.
 //
 // Over the control, a trackpad's small deltas add up to notches; the ones that do not make a whole notch yet are taken
-// too while the control can still move that way, so the card list behind never scrolls between two steps. Horizontal
-// scrolling follows the layout: right to left (boost end on the left) a scroll to the right lowers the level.
+// too while the control can still move that way, so the card list behind never scrolls between two steps. A notch
+// follows the hand, not the scroll direction setting: rolling the wheel away or pushing two fingers up raises the
+// level with natural scrolling on (the macOS default, `isDirectionInvertedFromDevice`) or off. Horizontal scrolling
+// follows the layout: right to left (boost end on the left) a swipe to the right lowers the level.
+//
+// The monitor and the window observers go through `ScrollWheelRegistrations`, which counts them, so a test sees a
+// listener that goes away take all of them down.
 import AppKit
 import SwiftUI
 
 /// Turns scroll-wheel events over one control into whole notches while installed (positive: up, or toward the
-/// layout's trailing end).
+/// layout's trailing end, as the hand moved).
 @MainActor final class ScrollWheelSteps {
     /// What the control does with scrolling.
     struct Target {
@@ -32,6 +37,7 @@ import SwiftUI
 
     /// The view that covers the control in its window; nil while the control is not in a window.
     private(set) weak var anchor: NSView?
+    private let registrations: ScrollWheelRegistrations
     private var monitor: Any?
     private var target: Target?
     private var windowObservers: [any NSObjectProtocol] = []
@@ -40,12 +46,17 @@ import SwiftUI
     /// Whether the monitor is installed.
     var isListening: Bool { monitor != nil }
 
+    /// A listener whose monitor and window observers go through `registrations`.
+    init(registrations: ScrollWheelRegistrations = .system) {
+        self.registrations = registrations
+    }
+
     /// Starts listening (or keeps listening with a new target). Events elsewhere always pass through.
     func start(_ target: Target) {
         self.target = target
         guard monitor == nil else { return }
         // Local monitors run on the main thread, inside the app's event dispatch.
-        monitor = NSEvent.addLocalMonitorForEvents(matching: .scrollWheel) { [weak self] event in
+        monitor = registrations.addMonitor { [weak self] event in
             guard let self else { return event }
             return self.handle(event, in: event.window, at: event.locationInWindow)
         }
@@ -59,7 +70,7 @@ import SwiftUI
 
     /// Stops listening.
     func stop() {
-        if let monitor { NSEvent.removeMonitor(monitor) }
+        if let monitor { registrations.removeMonitor(monitor) }
         monitor = nil
         target = nil
         accumulated = 0
@@ -74,14 +85,13 @@ import SwiftUI
             stop()
             return
         }
-        let center = NotificationCenter.default
         for name in [NSWindow.didResignKeyNotification, NSWindow.willCloseNotification] {
-            windowObservers.append(center.addObserver(forName: name, object: window, queue: .main) { [weak self] _ in
+            windowObservers.append(registrations.observe(name, of: window) { [weak self] _ in
                 MainActor.assumeIsolated { self?.stop() }                                // queue: .main
             })
         }
-        windowObservers.append(center.addObserver(forName: NSWindow.didChangeOcclusionStateNotification, object: window,
-                                                  queue: .main) { [weak self, weak window] _ in
+        windowObservers.append(registrations.observe(NSWindow.didChangeOcclusionStateNotification, of: window) {
+            [weak self, weak window] _ in
             MainActor.assumeIsolated {                                                   // queue: .main
                 guard let window, !window.occlusionState.contains(.visible) else { return }
                 self?.stop()
@@ -91,7 +101,7 @@ import SwiftUI
 
     /// A listener that goes away while it listens takes its monitor and its window observers with it.
     isolated deinit {
-        if let monitor { NSEvent.removeMonitor(monitor) }
+        if let monitor { registrations.removeMonitor(monitor) }
         removeWindowObservers()
     }
 
@@ -115,11 +125,21 @@ import SwiftUI
         return anchor.bounds.contains(anchor.convert(point, from: nil))
     }
 
-    /// The scroll of `event` along the control (positive: up, or toward the trailing end of `direction`): its larger
-    /// axis, horizontal deltas mirrored right to left.
+    /// The scroll of `event` along the control, as the hand moved (`delta(dx:dy:invertedFromDevice:direction:)`).
     func delta(of event: NSEvent, direction: LayoutDirection) -> CGFloat {
-        let dy = event.scrollingDeltaY, dx = event.scrollingDeltaX
-        return abs(dy) >= abs(dx) ? dy : direction.alongLayout(dx)
+        Self.delta(dx: event.scrollingDeltaX, dy: event.scrollingDeltaY,
+                   invertedFromDevice: event.isDirectionInvertedFromDevice, direction: direction)
+    }
+
+    /// A scroll's motion along the control, positive up (the wheel rolled away, two fingers pushed up) or toward the
+    /// trailing end of `direction`: the deltas turned back into the hand's motion first, whatever the scroll direction
+    /// setting (natural scrolling inverts them, `invertedFromDevice`; AppKit's positive x is a scroll to the left),
+    /// then the larger axis, horizontal motion mirrored right to left.
+    nonisolated static func delta(dx: CGFloat, dy: CGFloat, invertedFromDevice: Bool,
+                                  direction: LayoutDirection) -> CGFloat {
+        let up = invertedFromDevice ? -dy : dy
+        let right = invertedFromDevice ? dx : -dx
+        return abs(dy) >= abs(dx) ? up : direction.alongLayout(right)
     }
 
     /// The whole notches after `delta` more points of precise scrolling (one per 12 points); a turn the other way
@@ -133,7 +153,7 @@ import SwiftUI
     }
 
     private func removeWindowObservers() {
-        for observer in windowObservers { NotificationCenter.default.removeObserver(observer) }
+        for observer in windowObservers { registrations.removeObserver(observer) }
         windowObservers = []
     }
 }
