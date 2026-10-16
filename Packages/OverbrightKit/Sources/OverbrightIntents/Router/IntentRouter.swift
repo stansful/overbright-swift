@@ -79,6 +79,9 @@ public final class IntentRouter {
     /// Turn Off Overbright.
     public func turnOff() async throws { try await ready().setOn(false, source: .intent) }
 
+    /// The Control Center toggle's new value (`BoostControlIntent` in the app process): on or off, as the user set it.
+    public func setOn(_ on: Bool) async throws { try await ready().setOn(on, source: .intent) }
+
     /// Set Extra Brightness: a preset or a light multiplier (at least ×1; each display stops at its own limit), for
     /// `display` or every display (nil).
     public func setExtraBrightness(_ request: ExtraBrightnessRequest, display: DisplayKey?) async throws {
@@ -143,7 +146,7 @@ public final class IntentRouter {
             log.error("control route refused: set=on without the app's token")
             return false
         }
-        if on { try await turnOn() } else { try await turnOff() }
+        try await setOn(on)
         return true
     }
 

@@ -33,12 +33,13 @@ import Testing
         try await router.pause(for: .seconds(60))
         try await router.resume()
         try await router.returnToStandard()
+        try await router.setOn(true)                                   // the Control Center toggle
         #expect(boost.calls == ["toggle(intent)", "setOn(true,intent)", "setOn(false,intent)",
                                 "setExtraBrightness(sunlight,\(display.rawValue),intent)", "setExtraBrightness(×1.3,all,intent)",
                                 "setDimLight(0.25,\(display.rawValue),intent)",
                                 "pause(\(time.wallClock.addingTimeInterval(60).timeIntervalSinceReferenceDate),intent)",
-                                "resume(intent)", "returnToStandard(intent)"])
-        #expect(try await router.state().isOn == false)
+                                "resume(intent)", "returnToStandard(intent)", "setOn(true,intent)"])
+        #expect(try await router.state().isOn == true)
     }
 
     @Test func valuesOutsideTheirRangeAreClamped() async throws {
