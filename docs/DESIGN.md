@@ -667,6 +667,12 @@ The compiled icon, "Overbright", version and build; **Check for Updates** with t
 
 The calibration check is not part of Welcome: it asks for changes that are unsafe while boosted and only makes sense once extra brightness is in use. It is offered once, as the calibration tip card, after the first boost (§5.3).
 
+**As built (WP12, confirmed by the contract owner in WP14).** Four details settled differently from the text above, each kept:
+- **Step 2 has no stage band.** Its rows are its stage: the step uses the whole page, the headline under the title bar and the rows below it down to the footer, so two or three displays show at once (more scroll visibly). A half-height stage would leave room for barely one row.
+- **The rows are Welcome's own views over `DisplayCardModel`**, not PanelUI's `DisplayCardView`: step 2 shows a glyph, name, verdict, fix and switch, never a slider, and the model gives it the panel's own limit, switch default and top, so the two never disagree.
+- **Done applies the choices of steps 2 and 3.** The "Use extra brightness" switches wait with step 3's choices; Skip and the close button drop them, so Skip still applies every default and nothing else.
+- **Step 2 shows only two advisories,** Compatibility mode and OLED care (§12.1). "Not calibrated" would repeat on every row of a first run while calibration is not part of Welcome, and the auto-brightness advisory is Settings only (§7.4).
+
 ---
 
 ## 9. Calibration
@@ -736,7 +742,7 @@ The supported sentence quotes the display's current limit (Safe by default) and,
 | `noGammaTable` | Not supported | "macOS doesn't let apps adjust this display." | — |
 | `checking` | Checking… | "Overbright is reading this display." | — |
 
-Advisories (a second line under the verdict): `compatibilityModeAdvised` "On this Mac, macOS ignores color table changes, so Overbright uses Compatibility mode." · `oledCare` "OLED display: extra brightness stays lower and pauses after 5 minutes without input." · `autoBrightnessInteracts` (Settings only, §7.4) · `notCalibrated` "Not calibrated. Numbers are estimates, and Overbright uses a safe default."
+Advisories (a second line under the verdict): `compatibilityModeAdvised` "On this Mac, macOS ignores color table changes, so Overbright uses Compatibility mode." · `oledCare` "OLED display: extra brightness stays lower and pauses after 5 minutes without input." · `autoBrightnessInteracts` (Settings only, §7.4) · `notCalibrated` (not in Welcome step 2, §8) "Not calibrated. Numbers are estimates, and Overbright uses a safe default."
 
 "High Dynamic Range", "Displays", "Automatically adjust brightness", "True Tone", "Night Shift", "Preset", "Menu Bar", "Allow in the Menu Bar", "Battery", "Focus" and "Login Items" are macOS's own names and must match macOS in every language (German: "Hochkontrastbild" for High Dynamic Range).
 
