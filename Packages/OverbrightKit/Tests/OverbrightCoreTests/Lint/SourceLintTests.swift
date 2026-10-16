@@ -47,31 +47,40 @@ import Testing
         #expect(hits.isEmpty, "competitor names outside the D3 allowlist: \(hits)")
     }
 
-    /// D24, §2.1 rule 6: exactly one file calls the CoreGraphics table setters and the global ColorSync restore.
+    /// D24, §2.1 rule 6: exactly one file calls the CoreGraphics table setters and the global ColorSync restore. The
+    /// scan covers the scripts too (`render-icon.swift` runs with `xcrun swift`; Python could reach the setters
+    /// through `ctypes`, a shell script through either).
     @Test func noSecondDisplayStateWriter() {
         let setters = ["CGSet" + "DisplayTransferByTable", "CGSet" + "DisplayTransferByFormula",
                        "CGSet" + "DisplayTransferByByteTable", "CGDisplay" + "RestoreColorSyncSettings"]
         let writer = "\(sources)/OverbrightDisplays/Gamma/CoreGraphicsGamma.swift"
         let files = SourceScan.files(in: code + [SourceScan.tests], extensions: ["swift", "m", "c", "h"])
+            + SourceScan.files(in: ["scripts"], extensions: ["swift", "py", "sh"])
         let hits = lines(in: files.filter { $0.path != writer }) { line in setters.contains(where: line.contains) }
         #expect(files.contains { $0.path == writer })
+        for script in ["scripts/render-icon.swift", "scripts/run.sh", "scripts/lint-copy.py"] {
+            #expect(files.contains { $0.path == script }, "\(script)")
+        }
         #expect(hits.isEmpty, "only CoreGraphicsGamma.swift may change display state: \(hits)")
     }
 
     /// §4.5 invariant 3: only `TableWriter` and `LaunchRescue` call `GammaPort.write` and the global restore
-    /// (the hang watchdog and the signal handlers write through `TableWriter.writeBaselines(fromLedger:)`).
+    /// (the hang watchdog and the signal handlers write through `TableWriter.writeBaselines(fromLedger:)`), with or
+    /// without a receiver, or reference them.
     @Test func onlyTableWriterAndRescueWrite() {
-        let restore = ".restoreSystem" + "ColorSettings("
         let allowed: Set<String> = ["\(sources)/OverbrightBoost/Writer/TableWriter.swift",
                                     "\(sources)/OverbrightBoost/Safety/LaunchRescue.swift"]
         let files = SourceScan.files(in: code, extensions: ["swift"]).filter { !allowed.contains($0.path) }
-        let hits = gammaWrites(in: files) + lines(in: files) { line in line.contains(restore) }
+        let hits = gammaWrites(in: files)
+        #expect(files.contains { $0.path == "\(sources)/OverbrightCore/Ports/GammaPort.swift" })   // declarations only
         #expect(hits.isEmpty, "GammaPort writes outside TableWriter and LaunchRescue: \(hits)")
     }
 
     /// The write scan finds the shapes WP4 and WP5 write (a call in the first argument, a subscript, a call over
-    /// several lines) and leaves `Data.write(to:)` alone.
+    /// several lines, implicit `self`, method references, the restore) and leaves `Data.write(to:)`, declarations,
+    /// other `write` methods, enum cases, comments and strings alone.
     @Test func gammaWriteScanFindsEveryShape() {
+        let restore = "restoreSystem" + "ColorSettings"
         let calls = ["try gamma.write(baseline, to: display.id)",
                      "try gamma.write(baseline.scaled(by: f), to: display.id)",
                      "try gamma.write(GammaTable.identity(count: n), to: id)",
@@ -80,9 +89,30 @@ import Testing
                      "try gamma.write(table,to:id)",
                      "try gamma.write(\n    table,\n    to: display.id)",
                      "try gamma.write(table\n    , to: id)",
-                     "try gamma.write(label(\"a)\"), to: id)"]
+                     "try gamma.write(label(\"a)\"), to: id)",
+                     "try gamma.write(table, to : id)",
+                     "try gamma.write(table, to:id,)",
+                     "try gamma.write(table, /* the base */ to: id)",
+                     "try gamma?.write(flag ? a : b, to: id)",
+                     "try write(table, to: id)",
+                     "try self.write(table, to: id)",
+                     "try gamma.write (table, to: id)",
+                     "displays.forEach { try? gamma.write(base, to: $0) }",
+                     "let w = gamma.write(_:to:)",
+                     "let w = write(_ : to :)",
+                     "let w = gamma.write",
+                     "ids.forEach(gamma.write)",
+                     "gamma.\(restore)()",
+                     "\(restore)()",
+                     "self.\(restore)()",
+                     "let r = gamma.\(restore)",
+                     "try gamma.write(table, to: id) // try gamma.write(table, to: id)"]
         for call in calls { #expect(SourceScan.gammaWriteLines(in: call) == [1], "\(call)") }
         #expect(SourceScan.gammaWriteLines(in: "let a = 1\n\ntry gamma.write(\n    table, to: id)\nlet b = 2") == [3])
+        #expect(SourceScan.gammaWriteLines(in: "try gamma\n    .write(table, to: id)") == [2])
+        let wrapper = "extension GammaPort {\n    func reset(_ id: CGDirectDisplayID) throws {\n"
+            + "        try write(.identity, to: id)\n        \(restore)()\n    }\n}"
+        #expect(SourceScan.gammaWriteLines(in: wrapper) == [3, 4])
         let others = ["try data.write(to: url, options: .atomic)",
                       "try data.write(to: url)",
                       "FileHandle.standardOutput.write(Data((line + \"\\n\").utf8))",
@@ -90,23 +120,38 @@ import Testing
                       "try data.write(to: url(for: name, in: folder))",
                       "handle.write(contentsOf: data)",
                       "try \"x\".write(toFile: path, atomically: true, encoding: .utf8)",
-                      "log.write(\"a, to: b\")"]
+                      "log.write(\"a, to: b\")",
+                      "func write(_ table: GammaTable, to display: CGDirectDisplayID) throws",
+                      "public func write(_ table: GammaTable, to display: CGDirectDisplayID) throws {",
+                      "public func \(restore)() {}",
+                      "try write(value, revision: revision)",
+                      "let outcome = writer.write(request, to: display, reading: reading, epoch: epoch)",
+                      "try overwrite(table, to: id)",
+                      "let count = gamma.writeCount",
+                      "case .write: break",
+                      "let kinds: [Kind] = [.write, .read]",
+                      "var write = false",
+                      "log.info(\"gamma.write(table, to: id) and \(restore)()\")",
+                      "let a = 1 // try gamma.write(table, to: id)",
+                      "/* try gamma.write(table, to: id) */ let a = 1",
+                      "let s = \"\"\"\n    try gamma.write(table, to: id)\n    \"\"\""]
         for other in others { #expect(SourceScan.gammaWriteLines(in: other).isEmpty, "\(other)") }
     }
 
-    /// D24: tests never construct a writing real port, and suites gated by `OVERBRIGHT_HARDWARE` only read.
+    /// D24: tests never construct a real display port (a writing one once WP2 lands), not even through
+    /// `CompositionRoot.livePorts`, and suites gated by `OVERBRIGHT_HARDWARE` only read.
     @Test func noWritesInHardwareTests() {
-        let restore = "restoreSystem" + "ColorSettings("
-        let realPort = "CoreGraphics" + "Gamma("
+        let realPorts = ["CoreGraphics" + "Gamma(", "System" + "HeadroomPort(", "System" + "DisplayDirectory(",
+                         "live" + "Ports("]
         let files = SourceScan.files(in: [SourceScan.tests], extensions: ["swift"])
         let gated = files.filter { file in file.codeLines.contains { $0.text.contains("OVERBRIGHT_" + "HARDWARE") } }
-        let writes = gammaWrites(in: gated) + lines(in: gated) { line in line.contains(restore) }
-        let realPorts = lines(in: files.filter { file in !gated.contains { $0.path == file.path } }) { line in
-            line.contains(realPort)
+        let writes = gammaWrites(in: gated)
+        let constructions = lines(in: files.filter { file in !gated.contains { $0.path == file.path } }) { line in
+            realPorts.contains(where: line.contains)
         }
         #expect(files.count > 20)
         #expect(writes.isEmpty, "hardware-gated suites must only read: \(writes)")
-        #expect(realPorts.isEmpty, "the real gamma port only in hardware-gated suites: \(realPorts)")
+        #expect(constructions.isEmpty, "the real display ports only in hardware-gated suites: \(constructions)")
     }
 
     /// §2.1 rule 6: EDR layer properties and `AVPlayerLayer` only in Triggers, FillLight and Design's
