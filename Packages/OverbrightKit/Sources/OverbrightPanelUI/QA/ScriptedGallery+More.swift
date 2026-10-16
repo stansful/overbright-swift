@@ -23,13 +23,21 @@ extension ScriptedGallery {
             banner("banner-paused", .userPaused(until: until), .userPaused(until: until), pausedUntil: until),
             banner("banner-focus", .focusOff, .focusOff),
             banner("banner-schedule", .outsideSchedule, .outsideSchedule(schedule)),
-            banner("conflict-booster", .conflict(booster), .conflict(booster), symbol: .attention),
-            banner("conflict-color-app", .conflict(colorApp), .conflict(colorApp), symbol: .attention),
         ]
     }
 
+    /// The conflict banners (a long app name; a right-to-left one).
+    static func conflictStates(booster: ConflictingApp, colorApp: ConflictingApp) -> [ScriptedState] {
+        [booster, colorApp].map { app in
+            ScriptedState(name: app.severity == .booster ? "conflict-booster" : "conflict-color-app",
+                          status: P.status(P.held([P.builtInBoosted(1.291), P.msiStandard()], by: .conflict(app)),
+                                           symbol: .attention, banner: .conflict(app)),
+                          facts: pair, configure: builtInBrightRoom)
+        }
+    }
+
     /// Per-display reasons: chips while the other display boosts.
-    static func perDisplayStates(mayInterfere: ConflictingApp) -> [ScriptedState] {
+    static func perDisplayStates(mayInterfere: ConflictingApp, conflicts: [ScriptedState]) -> [ScriptedState] {
         let msiBoosting = P.msiBoosted(1.14)
         func paused(_ name: String, _ reason: LimitReason) -> ScriptedState {
             ScriptedState(name: name, status: P.status(P.held([P.builtInBoosted(1.291)], by: reason) + [msiBoosting]),
@@ -45,6 +53,7 @@ extension ScriptedGallery {
             ScriptedState(name: "heat-cap", status: P.status([P.builtInBoosted(1.2, reasons: [.thermalSerious], requested: 1.291),
                                                               P.msiStandard()]),
                           facts: pair, configure: builtInBrightRoom),
+        ] + conflicts + [
             ScriptedState(name: "conflict-may-interfere",
                           status: P.status([P.builtInBoosted(1.291, reasons: [.conflict(mayInterfere)]), P.msiStandard()]),
                           facts: pair, configure: builtInBrightRoom),

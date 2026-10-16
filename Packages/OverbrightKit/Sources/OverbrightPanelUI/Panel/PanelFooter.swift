@@ -1,32 +1,48 @@
 // OverbrightPanelUI/Panel/PanelFooter.swift — the footer's guard chips in one 292-pt row; when the row would not fit
-// (a long translation), every chip drops to glyph + value. DESIGN.md §5.9, §16 ("Length").
+// (a long translation, or the widest settings), every chip drops to glyph + value, and as a last resort to its glyph
+// (the setting stays in its menu and VoiceOver label). DESIGN.md §5.9, §16 ("Length").
 import OverbrightCore
 import OverbrightDesign
 import SwiftUI
 
 /// The footer row.
 struct PanelFooter: View {
+    /// How much of each chip shows.
+    enum Style: CaseIterable { case full, compact, glyphs }
+
     let chips: [FooterChip]
-    let focus: FocusState<PanelFocus?>.Binding
+    /// The panel's focus (nil outside the panel: tests measure the row alone).
+    let focus: FocusState<PanelFocus?>.Binding?
 
     var body: some View {
         ViewThatFits(in: .horizontal) {
-            row(compact: false)
-            row(compact: true)
+            row(.full)
+            row(.compact)
+            row(.glyphs)
         }
         .frame(maxWidth: PanelLayout.footerWidth, alignment: .leading)
         .frame(height: PanelLayout.barHeight)
     }
 
-    private func row(compact: Bool) -> some View {
+    /// The row in `style`.
+    func row(_ style: Style) -> some View {
         HStack(spacing: PanelLayout.footerChipGap) {
             ForEach(chips, id: \.kind) { chip in
-                GuardChip(compact ? chip.compact : chip.model, menu: chip.menu)
+                GuardChip(Self.model(of: chip, style), menu: chip.menu)
                     .frame(minWidth: HitTarget.footerChipWidth)
                     .panelFocus(focus, Self.focus(for: chip.kind), cornerRadius: HitTarget.minimum.height / 2)
             }
         }
         .fixedSize()
+    }
+
+    /// The chip's model in `style`.
+    static func model(of chip: FooterChip, _ style: Style) -> GuardChipModel {
+        switch style {
+        case .full: chip.model
+        case .compact: chip.compact
+        case .glyphs: GuardChipModel(symbol: chip.compact.symbol, text: "", accessibilityLabel: chip.model.accessibilityLabel)
+        }
     }
 
     /// The focus value of a chip.

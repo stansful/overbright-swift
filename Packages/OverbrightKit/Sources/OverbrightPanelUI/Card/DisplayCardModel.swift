@@ -121,11 +121,12 @@ public struct DisplayCardModel: Hashable {
 
     /// A top below this disables the boost half for the cap mode (ARCHITECTURE.md §5.3).
     public static let minimumTop = 1.05
-    /// Below this Max gain the value tag adds "small gain on this display" (ARCHITECTURE.md §5.3).
+    /// Up to this Max gain the value tag adds "small gain on this display" (ARCHITECTURE.md §5.3; DESIGN.md §5.13's
+    /// `small-gain` state is the OLED's Safe top of exactly ×1.3).
     public static let smallGainTop = 1.3
 
-    /// Max is below ×1.3 on this display.
-    public var hasSmallGain: Bool { top < Self.smallGainTop && top >= Self.minimumTop }
+    /// Max is at most ×1.3 on this display.
+    public var hasSmallGain: Bool { top <= Self.smallGainTop + 1e-9 && top >= Self.minimumTop }
 
     /// The display failed (Try Again belongs in the context menu).
     public var isFailed: Bool {

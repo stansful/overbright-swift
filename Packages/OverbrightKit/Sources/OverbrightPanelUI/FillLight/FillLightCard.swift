@@ -49,9 +49,7 @@ public struct FillLightCard: View {
                    valueText: settings[FillLightSettings.brightness].formatted(.percent.precision(.fractionLength(0))))
             slider(PanelText.warmth, value: settings.binding(FillLightSettings.warmth), in: Self.warmthRange,
                    focusValue: .fillLightWarmth,
-                   valueText: Measurement(value: Self.kelvin(warmth: settings[FillLightSettings.warmth]),
-                                          unit: UnitTemperature.kelvin)
-                       .formatted(.measurement(width: .abbreviated, numberFormatStyle: .number.precision(.fractionLength(0)))))
+                   valueText: Self.kelvinText(warmth: settings[FillLightSettings.warmth]))
         }
         .padding(PanelLayout.cardPadding)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -92,4 +90,11 @@ public struct FillLightCard: View {
 
     /// The colour temperature of `warmth` (0 = 6,500 K … 1 = 3,000 K), for the value text.
     static func kelvin(warmth: Double) -> Double { 6500 - min(max(warmth, 0), 1) * 3500 }
+
+    /// "5,100 K": always kelvin, never converted to the locale's temperature unit (DESIGN.md §12.5).
+    static func kelvinText(warmth: Double) -> String {
+        Measurement(value: kelvin(warmth: warmth), unit: UnitTemperature.kelvin)
+            .formatted(.measurement(width: .abbreviated, usage: .asProvided,
+                                    numberFormatStyle: .number.precision(.fractionLength(0))))
+    }
 }

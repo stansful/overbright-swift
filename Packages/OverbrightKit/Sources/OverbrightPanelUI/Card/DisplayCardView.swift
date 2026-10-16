@@ -108,11 +108,15 @@ public struct DisplayCardView: View {
 
     @ViewBuilder
     private func readoutRow(_ model: DisplayCardModel) -> some View {
-        ReadoutText(model.readout)
-            .lineLimit(1)
-            .frame(maxWidth: PanelLayout.readoutWidth, alignment: .leading)
-            .help(model.readout.isEstimate ? PanelText.readoutHelp + "\n" + PanelText.notCalibratedHelp
-                  : PanelText.readoutHelp)
+        // One line of at most 200 pt: when a long translation does not fit, the preset name gives way to the numbers.
+        ViewThatFits(in: .horizontal) {
+            ReadoutText(model.readout)
+            ReadoutText(Self.withoutPreset(model.readout))
+        }
+        .lineLimit(1)
+        .frame(maxWidth: PanelLayout.readoutWidth, alignment: .leading)
+        .help(model.readout.isEstimate ? PanelText.readoutHelp + "\n" + PanelText.notCalibratedHelp
+              : PanelText.readoutHelp)
         if model.isCompatibilityMode {
             Text(verbatim: PanelText.compatibilityMode)
                 .font(.caption)
@@ -121,14 +125,27 @@ public struct DisplayCardView: View {
         }
     }
 
+    /// The readout without its preset name (the fallback of a readout that does not fit its line).
+    static func withoutPreset(_ values: ReadoutValues) -> ReadoutValues {
+        var values = values
+        values.preset = nil
+        return values
+    }
+
     @ViewBuilder
     private func chipLine(_ model: DisplayCardModel) -> some View {
-        if let chip = CardChip.model(for: model, isMasterOn: isMasterOn) {
+        let chip = CardChip.model(for: model, isMasterOn: isMasterOn)
+        let offersTurnOn = isMasterOn && model.chipReason == .boostNotEnabled
+        if chip != nil || offersTurnOn {
             HStack(spacing: Space.s) {
-                StatusChip(chip, actions: CardChip.actions(for: model, isMasterOn: isMasterOn, commands: commands))
-                    .frame(maxWidth: PanelLayout.cardInnerWidth, alignment: .leading)
-                    .panelFocus(focus, .chip(model.key), cornerRadius: HitTarget.minimum.height / 2)
-                if model.chipReason == .boostNotEnabled {
+                if let chip {
+                    StatusChip(chip, actions: CardChip.actions(for: model, isMasterOn: isMasterOn, commands: commands))
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+                        .frame(maxWidth: PanelLayout.cardInnerWidth, alignment: .leading)
+                        .panelFocus(focus, .chip(model.key), cornerRadius: HitTarget.minimum.height / 2)
+                }
+                if offersTurnOn {
                     Button { commands.perform(.turnOnExtraBrightness, on: model) } label: {
                         Text(verbatim: CardAction.turnOnExtraBrightness.title)
                     }

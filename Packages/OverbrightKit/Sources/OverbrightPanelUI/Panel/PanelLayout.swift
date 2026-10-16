@@ -22,6 +22,8 @@ public nonisolated enum PanelLayout {
     public static let footerWidth: CGFloat = 292
     /// The gap between footer chips.
     public static let footerChipGap: CGFloat = 6
+    /// A chip's width beyond its text: the 12-pt glyph, a 4-pt gap and 8 pt of padding on each side (DESIGN.md §5.7).
+    public static let chipChrome: CGFloat = 12 + 4 + 2 * 8
     /// The header and the footer.
     public static let barHeight: CGFloat = 44
     /// The gap between cards.

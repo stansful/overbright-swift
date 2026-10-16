@@ -121,7 +121,8 @@ enum ScriptedGallery {
                               msiOn(0.5)(settings)
                           }),
         ] + bannerStates(booster: booster, colorApp: colorApp, schedule: schedule)
-            + perDisplayStates(mayInterfere: mayInterfere) + edgeStates
+            + perDisplayStates(mayInterfere: mayInterfere,
+                               conflicts: conflictStates(booster: booster, colorApp: colorApp)) + edgeStates
     }
 
     /// The built-in after the ladder failed `tries` times (the compatibility advisory from the second on).
