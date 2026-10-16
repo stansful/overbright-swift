@@ -28,14 +28,15 @@ final class ServiceRunner {
     }
 
     /// The launch work after the launch check (§7.4): every service in start order; `beforeBoost` runs right before
-    /// the engine starts (the launch check's outcome reaches it while the directory already lists the displays). A
-    /// stop that arrives meanwhile ends it: the service whose start was under way is stopped once its start returns.
-    func start(beforeBoost: () -> Void = {}) async {
+    /// the engine starts (the launch check's outcome reaches it while the directory already lists the displays, and a
+    /// check skipped off the console may run again there). A stop that arrives meanwhile ends it: the service whose
+    /// start was under way is stopped once its start returns.
+    func start(beforeBoost: () async -> Void = {}) async {
         guard phase == .idle else { return }
         phase = .starting
         for role in ServiceStack.Role.allCases {
             guard let service = stack.service(role) else { continue }
-            if role == .boost { beforeBoost() }
+            if role == .boost { await beforeBoost() }
             if phase != .starting { return }                        // a stop (signal) arrived meanwhile
             await service.start()
             guard phase == .starting else {                         // the stop came while it started: it missed it

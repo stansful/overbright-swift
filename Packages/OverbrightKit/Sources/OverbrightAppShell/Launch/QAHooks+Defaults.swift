@@ -3,11 +3,13 @@
 // Cranny's QAHooks+Defaults.swift (the owner's MIT code). ARCHITECTURE.md §8.2, §8.5. Seeded by WP0a; WP0b owns
 // `Launch/`.
 //
-// With the switch, `ShellDefaults.forLaunch` hands `UserDefaults(suiteName: name)` to every writer in the app, so the
-// standard domain is never written by Overbright's code. The suite keeps its values between runs; `defaults delete
-// <name>` starts over. Settings seeded as `-overbright.<namespace>.<name> <data>` launch arguments still apply: the
-// argument domain is part of a suite's search list. A name that would be the app's own domain or a global one is
-// refused, and the run keeps its settings in memory instead (never in the standard domain).
+// With the switch, `ShellDefaults.forLaunch` hands `UserDefaults(suiteName: name)` to every writer in the app, and the
+// control's channel (its token and snapshot live in the app's domain) stays silent, also on the real ports
+// (`CompositionRoot.controlOutlet(for:)`), so the standard domain is never written by Overbright's code. The suite
+// keeps its values between runs; `defaults delete <name>` starts over. Settings seeded as
+// `-overbright.<namespace>.<name> <data>` launch arguments still apply: the argument domain is part of a suite's search
+// list. A name that would be the app's own domain or a global one is refused, and the run keeps its settings in memory
+// instead (never in the standard domain).
 //
 // This is the only code that creates a preferences suite on purpose; Core's `noCodeCreatesAPreferencesSuite` test
 // allows this file by name.

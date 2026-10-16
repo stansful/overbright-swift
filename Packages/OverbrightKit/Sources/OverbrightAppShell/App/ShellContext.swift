@@ -20,12 +20,16 @@ struct ShellContext {
     let ownEDRSurfaces: OwnEDRSurfaces
     /// VoiceOver announcements with the app-wide limit.
     let announcer: Announcer
+    /// The `--qa-defaults-suite` of a Debug QA run (`ShellDefaults.qaSuite`), nil for the standard domain: such a run
+    /// writes nothing to the app's own preferences domain, the control's channel included.
+    let qaSuite: String?
 
     /// A context with a fresh journal, own-EDR registry and announcer.
     init(settings: SettingsStore, paths: AppPaths, machine: MachineIdentity, time: any TimeSource,
          journal: any DiagnosticsJournal = RingBufferJournal(), ownEDRSurfaces: OwnEDRSurfaces = OwnEDRSurfaces(),
-         announcer: Announcer = Announcer()) {
+         announcer: Announcer = Announcer(), qaSuite: String? = nil) {
         self.settings = settings; self.paths = paths; self.machine = machine; self.time = time
         self.journal = journal; self.ownEDRSurfaces = ownEDRSurfaces; self.announcer = announcer
+        self.qaSuite = qaSuite
     }
 }

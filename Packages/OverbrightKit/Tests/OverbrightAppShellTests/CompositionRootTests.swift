@@ -67,6 +67,20 @@ import Testing
         #expect(shell.engine == nil && shell.signalHandlers == nil)
     }
 
+    /// A Debug run with its own `--qa-defaults-suite` on the real ports (the owner's hardware session) keeps the
+    /// control's token and snapshot out of the app's preferences domain: its outlet is silent (QAHooks+Defaults'
+    /// promise). Only a launch on the standard domain publishes. Decided on the context alone: no real port is built.
+    @Test func aQASuiteKeepsTheControlChannelSilent() {
+        func context(_ suite: String?) -> ShellContext {
+            CompositionRoot.context(defaults: ShellDefaults(defaults: InMemoryDefaults(), qaSuite: suite),
+                                    fixture: .builtinXDRLidOpen, time: ManualTimeSource())
+        }
+        #expect(context("app.overbright.Overbright.hw").qaSuite == "app.overbright.Overbright.hw")
+        #expect(CompositionRoot.controlOutlet(for: context("app.overbright.Overbright.hw")) is QuietControlOutlet)
+        #expect(CompositionRoot.controlOutlet(for: context("memory")) is QuietControlOutlet)
+        #expect(CompositionRoot.controlOutlet(for: context(nil)) is SystemControlOutlet)
+    }
+
     /// D24: `--qa-simulate` wires only Core fakes, whatever follows it: a known fixture, an unknown name, another
     /// switch or nothing at all (the switch last) all get a fixture, never the real ports.
     @Test func simulationNeverUsesRealPorts() {

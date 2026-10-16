@@ -6,8 +6,10 @@
 //   so the directory's read checks get the same instance), `SystemDisplayDirectory`, `SystemHeadroomPort`,
 //   `SystemTriggerFactory`, `RunningAppsConflictProbe` over Policy's catalogue, `SignalsMonitor`, `FillLightController`
 //   with EDR frame windows, `HotKeyCenter`, `UpdateChecker`, the app's `SMAppService` login item and the control's real
-//   outlet. Displays' reconfiguration and screen events are relayed into Signals' event stream synchronously, so a
-//   `displayRemoved` reaches every display controller before the reconfiguration callback returns (§4.3, §7.1).
+//   outlet (a silent one in a Debug run with its own `--qa-defaults-suite`, which never writes the app's preferences
+//   domain: `controlOutlet(for:)`). Displays' reconfiguration and screen events are relayed into Signals' event stream
+//   synchronously, so a `displayRemoved` reaches every display controller before the reconfiguration callback returns
+//   (§4.3, §7.1).
 // - `--qa-simulate [fixture]` (a Debug switch): every display port is a Core fake over the fixture (`FakeGammaPort`,
 //   `ScriptedHeadroom`, `FakeDisplayDirectory`, `FakeTriggerFactory`), with fake signals and conflicts, Fill Light's
 //   SDR stand-in windows, an in-memory login item and a silent control outlet; the shortcuts and the update check are
@@ -17,7 +19,9 @@
 //   configuration, so it does not depend on the Release refusal below having run first.
 // Constructing either wiring does no I/O, hardware or network access (test `constructingServicesTouchesNoHardware`);
 // `ServiceLifecycle.start()` does. Lifecycle order: Displays → Triggers → Signals → FillLight → HotKeys → Updates →
-// Intents → Boost last; stop in reverse, Boost first (D7, `ServiceStack`).
+// Intents → Boost last; stop in reverse, Boost first (D7, `ServiceStack`). The launch check runs before the first
+// service; one skipped off the console runs again right before the engine starts if the session is on the console by
+// then (D27: a return to the console before Signals listened would otherwise reach nobody).
 //
 // A Release build never falls back silently: it refuses to start when given a Debug-only switch (`refusedSwitches`),
 // so a QA command meant for the simulated ports never runs on the real ones. The D27 single-instance exemption
@@ -89,7 +93,14 @@ enum CompositionRoot {
     /// folders and the fixture's Mac.
     static func context(defaults: ShellDefaults, fixture: DisplayFixture?, time: any TimeSource) -> ShellContext {
         ShellContext(settings: SettingsStore(defaults: defaults.defaults), paths: fixture == nil ? .live : .temporary(),
-                     machine: fixture?.machine ?? .current(), time: time)
+                     machine: fixture?.machine ?? .current(), time: time, qaSuite: defaults.qaSuite)
+    }
+
+    /// The control's outlet on the real ports: the system's (notifyd, the app's preferences domain, Control Center),
+    /// or a silent one when the launch keeps its settings in a QA suite (`QAHooks+Defaults`: such a run never writes
+    /// the standard domain, and the control's token and snapshot live there).
+    static func controlOutlet(for context: ShellContext) -> any ControlStateOutlet {
+        context.qaSuite == nil ? SystemControlOutlet() : QuietControlOutlet()
     }
 
     /// The ports for this launch: the simulated ones whenever `--qa-simulate` is present (in any build; a Release
@@ -155,7 +166,7 @@ enum CompositionRoot {
         return ShellPorts(gamma: gamma, headroom: headroom, displays: directory, triggers: triggers, signals: signals,
                           launchCheckSignals: launchCheckSignals, conflicts: conflicts, fillLight: fillLight,
                           shortcuts: hotKeys, hotKeys: hotKeys, updates: updates, loginItems: MainAppLoginItem(),
-                          controlOutlet: SystemControlOutlet(),
+                          controlOutlet: controlOutlet(for: context),
                           readDisplays: { SystemDisplayDirectory.onlineDisplays() },
                           profileHasVCGT: { gamma.profileHasVCGT(of: $0) },
                           backlightMilliNits: { IORegistryFacts.read().builtIn?.backlightMilliNits },
@@ -216,10 +227,30 @@ enum CompositionRoot {
     }
 
     /// The launch work (§7.4): the launch check, then every service in order; its outcome reaches the engine right
-    /// before the engine starts, when the directory lists the displays.
+    /// before the engine starts, when the directory lists the displays. A check skipped off the console (D27) runs
+    /// again there when the session is on the console by then (`launchCheckBeforeBoost`).
     static func runLaunchWork(_ shell: Shell) async {
         let outcome = await shell.rescue.runLaunchCheck()
         log.info("launch check: \(String(describing: outcome), privacy: .public)")
-        await shell.runner.start(beforeBoost: { shell.engine?.applyLaunchCheck(outcome) })
+        await shell.runner.start(beforeBoost: {
+            let latest = await launchCheckBeforeBoost(shell, first: outcome)
+            shell.engine?.applyLaunchCheck(latest)
+        })
+    }
+
+    /// The outcome the engine gets as it starts: the newest one. The rescue runs a skipped check by itself on
+    /// `sessionBecameActive`, but a return to the console between the skipped check and Signals' start posts nothing
+    /// Signals hears (`SignalsMonitor` reads the session state when it starts, as no event), so that check would never
+    /// run: a leftover table would only trip the engine (`foreignTableAtLaunch`) and the boost marker would stay. When
+    /// the check was skipped, no deferred check is under way and Signals now says the session is on the console, it
+    /// runs here.
+    static func launchCheckBeforeBoost(_ shell: Shell, first: RescueOutcome) async -> RescueOutcome {
+        let rescue = shell.rescue
+        let latest = rescue.lastOutcome ?? first
+        guard latest == .skippedNotOnConsole, rescue.deferredCheck == nil,
+              shell.ports.signals.snapshot.isSessionActive else { return latest }
+        let outcome = await rescue.runLaunchCheck()
+        log.info("launch check, on the console by the engine's start: \(String(describing: outcome), privacy: .public)")
+        return outcome
     }
 }
