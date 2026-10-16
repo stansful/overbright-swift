@@ -1,14 +1,15 @@
 // OverbrightAppShell/App/AppDelegate.swift — a thin orchestrator. ARCHITECTURE.md §7.4 (launch, quit), §7.6 (launch UI),
 // §8.5 (launch arguments), §10.0 (shared shell file), §10.15; D7, D13, D24, D27.
 //
-// Launch order (`LaunchSequence`): a Release build given a Debug-only switch (`--qa-…`) exits with `EX_USAGE` before
-// anything else → `ShellDefaults` → the composition root builds the hub (no I/O) → command-line modes (`--diagnostics`,
-// `--monitor`, `--restore-gamma`) run and quit here, before any service starts, any window opens or any preference is
-// written → single instance (skipped for CLI modes and launches wired to the simulated ports) → move to Applications →
-// settings upgrade → controllers, router connection, status item, Dock and HUD → `LaunchGate` runs the launch check,
-// then starts the services (Displays first, Boost last) → QA hooks → launch UI (anchored to the placed status item; see
-// `PanelPlacement` for the item MenuBarAgent has not placed yet; silent for a login launch and a launch by a URL or an
-// intent).
+// Launch order: what opened the app is read first, from the current Apple event (§7.6; AppKit dispatches it only after
+// `applicationWillFinishLaunching`), then `LaunchSequence`: a Release build given a Debug-only switch (`--qa-…`)
+// exits with `EX_USAGE` before anything else → `ShellDefaults` → the composition root builds the hub (no I/O) →
+// command-line modes (`--diagnostics`, `--monitor`, `--restore-gamma`) run and quit here, before any service starts,
+// any window opens or any preference is written → single instance (skipped for CLI modes and launches wired to the
+// simulated ports) → move to Applications → settings upgrade → controllers, router connection, status item, Dock and
+// HUD → `LaunchGate` runs the launch check, then starts the services (Displays first, Boost last) → QA hooks → launch
+// UI (anchored to the placed status item; see `PanelPlacement` for the item MenuBarAgent has not placed yet; silent
+// for a login launch and a launch by a URL or an intent).
 // Quit (`QuitFlow`): a quit from inside the app is cancelled once, the services stop in reverse (Boost first) within
 // `EngineTiming.quitTimeout`, then the app terminates (not `.terminateLater`, see `QuitFlow`); a quit Apple Event (a
 // script, the Dock, Activity Monitor, log out, restart, shut down) terminates at once; `applicationWillTerminate`
@@ -40,7 +41,13 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
     private var dock: DockMenuController?
     private var quitFlow: QuitFlow?
     private let launchGate = LaunchGate()
-    private var opening = LaunchUI.Opening.user
+    /// The current Apple event, read first thing in `applicationDidFinishLaunching` (tests inject one).
+    private let currentAppleEvent: () -> NSAppleEventDescriptor?
+    /// Runs the launch order (`LaunchSequence.run`; tests record instead).
+    private let runLaunch: (LaunchSequence.Effects) -> Void
+    /// What opened this launch (§7.6), read from the first Apple event.
+    private(set) var opening = LaunchUI.Opening.user
+    private var openingReading: LaunchUI.Reading?
     private var hasShownLaunchUI = false
     private var urlOpenedDuringLaunch = false
     /// URLs that arrived before the controllers existed (a launch by a URL can deliver it that early).
@@ -54,18 +61,25 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
     private static let placementWait: Duration = .seconds(1)
 
     /// Created by `@NSApplicationDelegateAdaptor`; everything starts in `applicationDidFinishLaunching`.
-    override public init() { super.init() }
-
-    /// Reads what opened the app (login, URL, the user) while the first Apple event is current.
-    public func applicationWillFinishLaunching(_ notification: Notification) {
-        opening = LaunchUI.currentOpening()
+    override public convenience init() {
+        self.init(currentAppleEvent: { NSAppleEventManager.shared().currentAppleEvent },
+                  runLaunch: { _ = LaunchSequence.run($0) })
     }
 
-    /// The launch order of the file header.
+    /// A delegate that reads the first Apple event through `currentAppleEvent` and runs the launch through
+    /// `runLaunch` (tests).
+    init(currentAppleEvent: @escaping () -> NSAppleEventDescriptor?,
+         runLaunch: @escaping (LaunchSequence.Effects) -> Void) {
+        self.currentAppleEvent = currentAppleEvent; self.runLaunch = runLaunch
+        super.init()
+    }
+
+    /// The launch order of the file header: what opened the app first, while the open-application event is current.
     public func applicationDidFinishLaunching(_ notification: Notification) {
+        readOpening()
         let arguments = LaunchArguments.current
         let time = SystemTimeSource()
-        LaunchSequence.run(LaunchSequence.Effects(
+        runLaunch(LaunchSequence.Effects(
             refusedSwitches: { CompositionRoot.refusedSwitches(arguments) },
             refuse: { Self.refuse($0) },
             makeShell: { self.makeShell(arguments, time: time) },
@@ -129,6 +143,15 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
     func openSettings() { appControl?.openSettings(nil) }
 
     // MARK: Launch steps
+
+    /// What opened the app (login, URL, the user), from the current Apple event: logged with the event's class and
+    /// ID, journaled when the launch UI decides ([HW: H-L2] reads both).
+    private func readOpening() {
+        let reading = LaunchUI.currentReading(event: currentAppleEvent())
+        openingReading = reading
+        opening = reading.opening
+        log.info("launch opening: \(reading.logDescription, privacy: .public)")
+    }
 
     private static func refuse(_ refused: [String]) {
         let switches = refused.joined(separator: " ")
@@ -255,10 +278,18 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func showLaunchSurface() {
-        guard let appControl, let settings = shell?.services.settings else { return }
+        guard let appControl, let services = shell?.services else { return }
+        let settings = services.settings
         hasShownLaunchUI = true
         let background = LaunchUI.isBackgroundLaunch(opening: opening, openedURLDuringLaunch: urlOpenedDuringLaunch,
                                                      intentRequests: Self.intentRouter?.requestCount ?? 0)
+        if let reading = openingReading {
+            var values = reading.journalValues
+            values["background"] = background ? 1 : 0
+            services.journal.record(JournalEvent(seconds: services.time.now.sinceOrigin.timeInterval,
+                                                 category: LogCategory.app.rawValue, display: nil,
+                                                 code: "launch.\(reading.opening)", values: values))
+        }
         let surface = LaunchUI.surface(isLoginLaunch: opening == .login, isBackgroundLaunch: background,
                                        welcomeFinished: settings[OnboardingSettings.completedVersion] != nil,
                                        iconVisibility: appControl.iconVisibility)
