@@ -13,6 +13,7 @@ extension DisplayController {
     /// trigger is kept for `triggerLinger` (removed at once off the console).
     func shield(_ cause: SuspendCause) {
         if cause == .notOnConsole { isOffConsole = true }
+        pendingResume = nil                                               // the wake or unlock that ends it comes later
         switch phase {
         case .idle, .failed:
             if cause == .notOnConsole { removeWindows() }

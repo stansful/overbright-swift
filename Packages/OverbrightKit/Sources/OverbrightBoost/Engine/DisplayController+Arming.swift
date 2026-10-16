@@ -28,6 +28,7 @@ extension DisplayController {
             rampSlot.cancel()
         }
         backoff = nil
+        pendingResume = nil
         rungs = plannedRungs(backoff: false)
         currentRung = nil
         phase = .arming(rung: rungs.first?.number ?? 0)
