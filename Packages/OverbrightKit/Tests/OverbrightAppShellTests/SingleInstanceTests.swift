@@ -89,6 +89,37 @@ private let me = SingleInstance.Instance(processIdentifier: 200, bundleURL: URL(
         #expect(system.reopened == [300])
     }
 
+    /// An agent's QA run on the simulated ports writes no table: the owner's copy never hands over to it.
+    @Test func aSimulatedInstanceIsNotAnEngine() {
+        let system = FakeSystem()
+        let qa = SingleInstance.Instance(processIdentifier: 300, bundleURL: nil, isSimulated: true)
+        system.running = [qa, me]
+        #expect(!SingleInstance.handOverIfRunning(arguments: LaunchArguments(["Overbright"]),
+                                                  environment: system.environment()))
+        system.running = [qa, installed, me]
+        #expect(SingleInstance.handOverIfRunning(arguments: LaunchArguments(["Overbright"]),
+                                                 environment: system.environment()))
+        #expect(system.reopened == [installed.processIdentifier])               // the real one, never the QA run
+    }
+
+    /// `KERN_PROCARGS2`: argc, the executable path, padding, then the arguments (the environment after them).
+    @Test func processArgumentsParse() throws {
+        var bytes: [UInt8] = [3, 0, 0, 0]
+        bytes += Array("/Applications/Overbright.app/Contents/MacOS/Overbright".utf8) + [0, 0, 0, 0]
+        for argument in ["/Applications/Overbright.app/Contents/MacOS/Overbright", "--qa-simulate", "lcd-only"] {
+            bytes += Array(argument.utf8) + [0]
+        }
+        bytes += Array("HOME=/Users/me".utf8) + [0]
+        let arguments = try #require(ProcessArguments.parse(bytes))
+        #expect(arguments.count == 3 && arguments[1] == "--qa-simulate")
+        #expect(LaunchArguments(arguments).qaSimulates)
+        #expect(ProcessArguments.parse([1, 0]) == nil)                          // too short
+        #expect(ProcessArguments.parse([2, 0, 0, 0, 65, 0, 66, 0]) == nil)      // argc says 2, one argument
+        // This test process can read its own arguments (the same user).
+        let own = try #require(ProcessArguments.of(ProcessInfo.processInfo.processIdentifier))
+        #expect(own == ProcessInfo.processInfo.arguments)
+    }
+
     /// If the moved copy never quits, it is still an engine: hand over to it rather than run two.
     @Test func aMovedCopyThatDoesNotQuitIsHandedOverTo() {
         let system = FakeSystem()

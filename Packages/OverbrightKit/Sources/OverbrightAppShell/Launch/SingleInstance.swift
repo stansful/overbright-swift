@@ -13,7 +13,8 @@
 // entitlement, and the app has none). When both copies share one bundle path (`open -n`), LaunchServices picks the
 // instance [U: WP16 checks it on the owner's Mac]. A relaunch after "Move to Applications" names the old process
 // with `--after-move <pid>`: that one is quitting, so this launch waits for it (at most `moveWait`) instead of handing
-// over to it.
+// over to it. An instance started with `--qa-simulate` (a Debug QA run on the simulated ports, which writes no table)
+// is not an engine either: the owner's copy never hands over to an agent's QA run (`ProcessArguments`).
 import AppKit
 import Foundation
 import OverbrightCore
@@ -29,6 +30,8 @@ enum SingleInstance {
         let processIdentifier: pid_t
         /// Where it runs from (nil when LaunchServices does not say).
         let bundleURL: URL?
+        /// Started with `--qa-simulate`: simulated ports, no table writes, not an engine to hand over to.
+        var isSimulated = false
     }
 
     /// What the check reads and does; `live` is the real system, tests pass fakes.
@@ -52,7 +55,11 @@ enum SingleInstance {
                 running: { id in
                     NSRunningApplication.runningApplications(withBundleIdentifier: id)
                         .filter { !$0.isTerminated }
-                        .map { Instance(processIdentifier: $0.processIdentifier, bundleURL: $0.bundleURL) }
+                        .map { app in
+                            let arguments = ProcessArguments.of(app.processIdentifier).map(LaunchArguments.init)
+                            return Instance(processIdentifier: app.processIdentifier, bundleURL: app.bundleURL,
+                                            isSimulated: arguments?.qaSimulates ?? false)
+                        }
                 },
                 reopen: { instance in
                     guard let url = instance.bundleURL else { return false }
@@ -84,7 +91,8 @@ enum SingleInstance {
     /// The check over `environment` (tests: `secondInstanceHandsOverAndExits`).
     static func handOverIfRunning(arguments: LaunchArguments, environment: Environment) -> Bool {
         guard !arguments.isCommandLineMode, let bundleID = environment.bundleIdentifier else { return false }
-        var others = environment.running(bundleID).filter { $0.processIdentifier != environment.processIdentifier }
+        var others = environment.running(bundleID)
+            .filter { $0.processIdentifier != environment.processIdentifier && !$0.isSimulated }
         if let moved = arguments.int(after: afterMoveArgument).map(pid_t.init),
            others.contains(where: { $0.processIdentifier == moved }) {
             // The copy that moved itself is quitting: it is not an engine to hand over to.
