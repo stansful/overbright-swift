@@ -1,6 +1,6 @@
-// OverbrightCore/Additions/WP0b-KeyCaps.swift — key caps of a `KeyCombo` in a keyboard layout. ARCHITECTURE.md §3.7,
-// §8.8 ("Key caps are never literal"), §10.0 rule 4 (Additions); DESIGN.md §12.5, §16. Staged by WP0b: new nested
-// types and extension methods only (no case, requirement or stored property); WP13 folds it into Shortcuts/.
+// OverbrightCore/Shortcuts/KeyCombo+KeyCaps.swift — key caps of a `KeyCombo` in a keyboard layout. ARCHITECTURE.md
+// §3.7, §8.8 ("Key caps are never literal"); DESIGN.md §12.5, §16. Staged by WP0b in Additions/ (new nested types and
+// extension methods only); folded here by WP13.
 //
 // `KeyCombo.keyCode` is a key POSITION (kVK_*). What the key cap shows depends on the keyboard layout: the key that
 // sits at kVK_ANSI_Equal reads "=" on a US layout, "´" on a German one and "-" on a French one. One function renders

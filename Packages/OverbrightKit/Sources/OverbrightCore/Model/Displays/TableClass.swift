@@ -9,6 +9,8 @@ public nonisolated enum TableClass: Hashable, Sendable {
     case scaled(ratio: Double?)
     /// Neither: a per-channel curve (warm-light tool, calibration loader, accessibility filter).
     case foreign
-    /// Not monotonic, starts above 0.1 or ends below 0.9 (e.g. an all-zero table from a failed restore).
+    /// Not monotonic, a channel all ≈ 0 (e.g. an all-zero table from a failed restore), or black lifted above 0.1
+    /// where the base starts below it. "Ends ≥ 0.9" is not part of it (a dimmed table ends lower): only the
+    /// post-restore check `TableClassifier.isPlausibleRestore` asks for it (§7.4).
     case invalid
 }
