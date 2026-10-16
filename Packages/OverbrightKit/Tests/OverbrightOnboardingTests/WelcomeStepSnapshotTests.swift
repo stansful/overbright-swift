@@ -1,9 +1,10 @@
 // OverbrightOnboardingTests/WelcomeStepSnapshotTests.swift — every Welcome step in the whole window (DESIGN.md §8), in
 // Light, Dark and the Increase Contrast appearance (ARCHITECTURE.md §9.1 UI row, §9.3 #5), plus step pages under an
 // Increase Contrast theme (the window's own theme root reads the system setting, so only a page shows the theme): step
-// 1 with its card and without a capable display, step 2 with two, three and five displays and with HDR off, step 3,
-// step 4 with US, German and French key caps (§10.14: "US, German and French key caps on step 4"; read from the layouts
-// installed with macOS, nothing selected), step 5 with Turn On Overbright and the update switch. Rendered in-process in
+// 1 with its card, without a capable display and on a display without extra range while another has it, step 2 with
+// two, three and five displays, with HDR off and in Russian (the switch on its own line), step 3, step 4 with US,
+// German and French key caps (§10.14: "US, German and French key caps on step 4"; read from the layouts installed with
+// macOS, nothing selected), step 5 with its summary, Turn On Overbright and the update switch. Rendered in-process in
 // a window that is never ordered in; the card is the SDR stand-in. PNGs only with `OVERBRIGHT_SNAPSHOT_DIR=<dir>`
 // (into `<dir>/Onboarding/`).
 import AppKit
@@ -107,6 +108,38 @@ import Testing
             #expect(ChromeSnapshot.backgroundBrightness(light) > ChromeSnapshot.backgroundBrightness(dark) + 0.3)
             try ChromeSnapshot.write(contrast, "page-\(step.rawValue)", .increaseContrast)
         }
+    }
+
+    /// Step 1 on a display without extra range while another display has it (WP14 C-ONBOARD-4): the illustration and
+    /// the sentence that asks to move the window, in the page's split.
+    @Test(arguments: ChromeAppearance.allCases)
+    func stepOneOnADisplayWithoutExtraRange(_ appearance: ChromeAppearance) throws {
+        let page = StepLayout {
+            StepStage { HelloStage(card: .otherDisplay, divider: .constant(0.5), simulated: true) }
+        } content: {
+            HelloLower(copy: .localized, card: .otherDisplay)
+        }
+        .environment(\.isStaticSnapshot, true)
+        let rep = try ChromeSnapshot.render(page, appearance,
+                                            size: CGSize(width: WelcomeMetrics.window.width,
+                                                         height: WelcomeStepFitTests.pageHeight))
+        #expect(ChromeSnapshot.inkFraction(rep) > 0.01, "\(appearance.rawValue): nothing drawn")
+        try ChromeSnapshot.write(rep, "page-hello-other-display", appearance)
+    }
+
+    /// Step 2 in Russian with the owner's three displays (WP14 C-ONBOARD-1): a long name next to the long switch label
+    /// puts the switch on its own line, and every row still shows at once.
+    @Test(arguments: ChromeAppearance.allCases)
+    func stepTwoInRussian(_ appearance: ChromeAppearance) throws {
+        var copy = DisplaysStep.Copy.localized(in: onboardingBundle("ru"))
+        copy.verdictLanguage = CopyLanguage.named("ru") ?? .english()
+        let session = Self.session(WelcomePreview.threeDisplays, .displays)
+        let page = DisplaysStep(session: session, copy: copy).environment(\.isStaticSnapshot, true)
+        let rep = try ChromeSnapshot.render(page, appearance,
+                                            size: CGSize(width: WelcomeMetrics.window.width,
+                                                         height: WelcomeStepFitTests.pageHeight))
+        #expect(ChromeSnapshot.inkFraction(rep) > 0.01, "\(appearance.rawValue): nothing drawn")
+        try ChromeSnapshot.write(rep, "page-displays-three-ru", appearance)
     }
 
     /// A step's page alone (no footer), under the snapshot's theme root.

@@ -11,8 +11,14 @@ nonisolated enum WelcomeMetrics {
     static let window = CGSize(width: 640, height: 480)
     /// The stage on top (the before/after card or an illustration); the rest holds copy, controls and the footer.
     static let stageHeight: CGFloat = 200
+    /// The compact stage of a step whose controls need the room (step 2's display rows, step 3's switches and login
+    /// cards): a band of glyphs as high as the hidden title bar and a margin, so the headline still sits at the stage
+    /// boundary.
+    static let compactStageHeight: CGFloat = Space.huge + Space.m
     /// Side inset of the lower half.
     static let inset = Space.huge
+    /// The space between the stage's divider and the step's headline.
+    static let copyTopPadding = Space.xl
     /// Corner radius of option and display cards in the window.
     static let cardRadius = Radius.card
     /// The size of a step's check badge.

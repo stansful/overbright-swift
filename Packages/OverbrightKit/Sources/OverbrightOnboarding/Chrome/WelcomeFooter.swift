@@ -1,10 +1,12 @@
 // OverbrightOnboarding/Chrome/WelcomeFooter.swift — the bottom row of every step (DESIGN.md §8): Quit Overbright
-// bottom-leading, the progress dots, then Back (⌘[) and Continue (↩); the last step ends with Done, and with Turn On
-// Overbright as the primary button when a display can boost. Ported from Cranny's WelcomeFooter (the owner's MIT code).
-// The row must fit the window's width between its insets in every language (`WelcomeFooterFitTests`: English and the
-// pseudo-long locale through `Labels`; every language in WP15). When long titles leave no room on the last step (Quit,
-// Back, Done and Turn On Overbright), the progress dots step aside: the footer never truncates a button, and VoiceOver
-// still hears the step from its header.
+// bottom-leading, Back (⌘[) and Continue (↩) trailing; the last step ends with Done, and with Turn On Overbright as the
+// primary button when a display can boost. The progress dots sit in the centre of the window, whatever the widths of
+// the two button groups (`CentredRow`), so they stay in one place from step to step (WP14 C-ONBOARD-1; they drifted
+// with the buttons between two spacers). Ported from Cranny's WelcomeFooter (the owner's MIT code). The row must fit
+// the window's width between its insets in every language (`WelcomeFooterFitTests`: English, the pseudo-long locale
+// and every shipped language). When a button group would reach the centre (the last step with Turn On Overbright:
+// Back, Done and Turn On Overbright), the progress dots step aside: the footer never truncates a button or moves the
+// dots off centre, and VoiceOver still hears the step from its header.
 import Foundation
 import OverbrightCore
 import OverbrightDesign
@@ -59,16 +61,33 @@ struct WelcomeFooter: View {
         .controlSize(.large)
     }
 
-    /// The row, with or without the progress dots (only the one that fits is shown, so its shortcuts are the live ones).
-    func row(showsDots: Bool) -> some View {
-        HStack(spacing: Space.m) {
-            Button { session.quit() } label: { Text(verbatim: labels.quit) }
-                .buttonStyle(OverbrightLinkButtonStyle())
-            Spacer(minLength: Space.l)
-            if showsDots {
+    /// The row, with the progress dots centred in it or without them (only the one that fits is shown, so its
+    /// shortcuts are the live ones).
+    @ViewBuilder func row(showsDots: Bool) -> some View {
+        if showsDots {
+            CentredRow(spacing: Space.l) {
+                quitButton
                 ProgressDots(current: session.stepNumber, count: session.stepCount)
-                Spacer(minLength: Space.l)
+                buttons
             }
+        } else {
+            HStack(spacing: Space.m) {
+                quitButton
+                Spacer(minLength: Space.l)
+                buttons
+            }
+        }
+    }
+
+    /// Quit Overbright, bottom-leading.
+    private var quitButton: some View {
+        Button { session.quit() } label: { Text(verbatim: labels.quit) }
+            .buttonStyle(OverbrightLinkButtonStyle())
+    }
+
+    /// Back and Continue, or Back, Done and Turn On Overbright on the last step.
+    private var buttons: some View {
+        HStack(spacing: Space.m) {
             if session.canGoBack {
                 Button { session.goBack() } label: { Text(verbatim: labels.back) }
                     .keyboardShortcut("[", modifiers: .command)
@@ -87,6 +106,36 @@ struct WelcomeFooter: View {
                     .keyboardShortcut(.defaultAction)
             }
         }
+    }
+}
+
+/// Three views in a row: the first at the leading edge, the last at the trailing edge, and the middle one centred in
+/// the row whatever the widths of the other two. Every view takes its ideal size (no button is ever truncated). Its
+/// ideal width keeps the middle view `spacing` clear of the wider side on both sides, so in a `ViewThatFits` the row
+/// gives way as soon as a side would reach the centre. SwiftUI mirrors it for right-to-left languages.
+struct CentredRow: Layout {
+    /// The least space between the middle view and either side.
+    var spacing: CGFloat
+
+    /// The width the row needs: twice the wider side, the middle view, and `spacing` on both sides of it.
+    static func idealWidth(leading: CGFloat, middle: CGFloat, trailing: CGFloat, spacing: CGFloat) -> CGFloat {
+        2 * max(leading, trailing) + middle + 2 * spacing
+    }
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        guard subviews.count == 3 else { return .zero }
+        let sizes = subviews.map { $0.sizeThatFits(.unspecified) }
+        let ideal = Self.idealWidth(leading: sizes[0].width, middle: sizes[1].width, trailing: sizes[2].width,
+                                    spacing: spacing)
+        let width = proposal.width.flatMap { $0.isFinite ? max($0, ideal) : nil } ?? ideal
+        return CGSize(width: width, height: sizes.map(\.height).max() ?? 0)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        guard subviews.count == 3 else { return }
+        subviews[0].place(at: CGPoint(x: bounds.minX, y: bounds.midY), anchor: .leading, proposal: .unspecified)
+        subviews[1].place(at: CGPoint(x: bounds.midX, y: bounds.midY), anchor: .center, proposal: .unspecified)
+        subviews[2].place(at: CGPoint(x: bounds.maxX, y: bounds.midY), anchor: .trailing, proposal: .unspecified)
     }
 }
 

@@ -1,9 +1,10 @@
 // OverbrightOnboardingTests/WelcomeFooterFitTests.swift — the Welcome footer row (Quit Overbright, the progress dots,
 // Back and Continue, or Done and Turn On Overbright) fits the 640-pt window between its side insets (DESIGN.md §8, §16:
 // "constrained strings are measured … English and a pseudo-long locale during development, all 35 in WP15";
-// ARCHITECTURE.md §9.1 UI row). Measured, never counted: the row's ideal width as SwiftUI lays it out. In English every
-// row fits with its progress dots; a long translation may only push the dots out, never a button (measured in every
-// language Overbright ships, WP15).
+// ARCHITECTURE.md §9.1 UI row). Measured, never counted: the row's ideal width as SwiftUI lays it out. The dots sit in
+// the centre of the window (`CentredRow`, WP14 C-ONBOARD-1), so they need the centre free of both button groups: in
+// English every footer has them but the last step's with Turn On Overbright, whose three buttons reach the centre; a
+// long translation may only push the dots out, never a button (measured in every language Overbright ships, WP15).
 import Foundation
 import OverbrightCore
 import OverbrightDesign
@@ -30,8 +31,14 @@ private final class EnglishMarker {}
 
     @Test func everyFooterFitsWithItsDotsInEnglish() {
         for (name, session) in Self.sessions() {
-            let width = FitMeasure.idealWidth(WelcomeFooter(session: session, labels: Self.english).row(showsDots: true))
-            #expect(width > 0 && width <= Self.budget, "\(name): \(width) pt of \(Self.budget)")
+            let footer = WelcomeFooter(session: session, labels: Self.english)
+            let width = FitMeasure.idealWidth(footer.row(showsDots: true))
+            if name == "last, Turn On" {
+                #expect(width > Self.budget, "\(name): the dots would need the centre the buttons take")
+                #expect(FitMeasure.idealWidth(footer.row(showsDots: false)) <= Self.budget, "\(name)")
+            } else {
+                #expect(width > 0 && width <= Self.budget, "\(name): \(width) pt of \(Self.budget)")
+            }
         }
     }
 

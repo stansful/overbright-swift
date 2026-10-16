@@ -7950,7 +7950,7 @@
       }
     },
     "When you log in" : {
-      "comment" : "VoiceOver: Welcome ▸ Defaults, the group of the three login option cards",
+      "comment" : "Welcome ▸ Defaults and Done: VoiceOver’s name of the three login option cards, and the label before the chosen card’s title in the Done step’s summary",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
