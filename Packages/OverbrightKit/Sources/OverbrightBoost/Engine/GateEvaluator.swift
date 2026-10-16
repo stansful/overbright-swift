@@ -6,19 +6,19 @@ import OverbrightPolicy
 
 /// Decides, from headroom samples, whether a rung moved headroom, whether the gate is ready, and whether a rung or the
 /// gate timed out.
-public nonisolated enum GateEvaluator {
+nonisolated enum GateEvaluator {
     /// One headroom sample.
-    public struct Sample: Hashable, Sendable {
+    struct Sample: Hashable, Sendable {
         /// When it was read.
-        public var time: MonotonicInstant
+        var time: MonotonicInstant
         /// H.
-        public var headroom: Double
+        var headroom: Double
         /// A sample.
-        public init(time: MonotonicInstant, headroom: Double) { self.time = time; self.headroom = headroom }
+        init(time: MonotonicInstant, headroom: Double) { self.time = time; self.headroom = headroom }
     }
 
     /// Which gate applies.
-    public enum Path: Hashable, Sendable {
+    enum Path: Hashable, Sendable {
         /// Movement above the idle headroom, then `max(1.1, H0 + 0.1)` and stable.
         case normal
         /// Something already holds EDR: no movement test, `H ≥ 1.1` and stable (D6).
@@ -26,7 +26,7 @@ public nonisolated enum GateEvaluator {
     }
 
     /// The outcome of one tick.
-    public enum Verdict: Hashable, Sendable {
+    enum Verdict: Hashable, Sendable {
         /// Keep polling.
         case waiting
         /// The first movement (normal path): arming → gating.
@@ -44,7 +44,7 @@ public nonisolated enum GateEvaluator {
     /// - Parameters:
     ///   - idleReads: the baseline reads (H0 is their maximum).
     ///   - gain: the light gain the level asks for.
-    public static func isPreHeld(idleReads: [Double], gain: Double, ownSurface: Bool) -> Bool {
+    static func isPreHeld(idleReads: [Double], gain: Double, ownSurface: Bool) -> Bool {
         if ownSurface { return true }
         guard let h0 = idleReads.max(), let low = idleReads.min() else { return false }
         if h0 >= max(EngineTiming.preHeldMinimum, gain / FactorMath.headroomMargin) { return true }
@@ -52,7 +52,7 @@ public nonisolated enum GateEvaluator {
     }
 
     /// The headroom the gate needs: `max(1.1, H0 + 0.1)` on the normal path, `1.1` pre-held.
-    public static func readyThreshold(path: Path, idle: Double) -> Double {
+    static func readyThreshold(path: Path, idle: Double) -> Double {
         switch path {
         case .normal: max(EngineTiming.readyMinimum, idle + EngineTiming.readyAboveIdle)
         case .preHeld: EngineTiming.readyMinimum
@@ -60,13 +60,13 @@ public nonisolated enum GateEvaluator {
     }
 
     /// Whether `headroom` is a movement above the idle headroom (`H ≥ H0 + 0.05`).
-    public static func isMovement(_ headroom: Double, idle: Double) -> Bool {
+    static func isMovement(_ headroom: Double, idle: Double) -> Bool {
         headroom >= idle + EngineTiming.movementThreshold - 1e-12
     }
 
     /// Whether the samples ending at `now` have stayed within the stability band (±0.05: a range of at most 0.1) for
     /// the whole stability window (the run of in-band samples must reach back at least `stabilityWindow`).
-    public static func isStable(_ samples: [Sample], now: MonotonicInstant) -> Bool {
+    static func isStable(_ samples: [Sample], now: MonotonicInstant) -> Bool {
         guard let latest = samples.last else { return false }
         var low = latest.headroom, high = latest.headroom
         var earliest = latest.time
@@ -86,7 +86,7 @@ public nonisolated enum GateEvaluator {
     ///   - presentedAt: the rung's first successful present (the rung timeout's start).
     ///   - movedAt: the first movement on the normal path; the arming instant on the pre-held path (the gate
     ///     timeout's start); nil while waiting for movement.
-    public static func evaluate(path: Path, samples: [Sample], idle: Double, presentedAt: MonotonicInstant,
+    static func evaluate(path: Path, samples: [Sample], idle: Double, presentedAt: MonotonicInstant,
                                 movedAt: MonotonicInstant?, now: MonotonicInstant) -> Verdict {
         guard let latest = samples.last else {
             return now - presentedAt >= EngineTiming.rungTimeout && path == .normal ? .rungTimedOut : .waiting
