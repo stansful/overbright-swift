@@ -66,6 +66,7 @@ sleep 5
 kill "$top_pid" 2>/dev/null || true
 for _ in $(seq 1 40); do kill -0 "$pid" 2>/dev/null || break; sleep 1; done
 defaults delete "$SUITE" >/dev/null 2>&1 || true
+rm -f "$HOME/Library/Preferences/$SUITE.plist"
 /usr/bin/python3 -I - "$OUT" "$LEAK_MB" <<'PY' || die "soak failed (see $OUT)"
 import datetime, json, re, sys
 out, leak_mb = sys.argv[1], float(sys.argv[2])

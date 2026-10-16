@@ -32,6 +32,7 @@ run() {
     --qa-snapshot-at 12 --qa-script "$SCRIPT" --qa-status "$OUT/$fixture.jsonl" \
     || warn "$fixture did not quit in time"
   defaults delete "$SUITE.$fixture" >/dev/null 2>&1 || true
+  rm -f "$HOME/Library/Preferences/$SUITE.$fixture.plist"
   log "$fixture done"
 }
 
