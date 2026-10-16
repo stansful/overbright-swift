@@ -2,6 +2,9 @@
 // ARCHITECTURE.md §7.4 (launch check first, then the services, Displays first and Boost last; the ramped stop in
 // reverse, Boost first, within `EngineTiming.quitTimeout`; `stopNow()` as the synchronous fallback), D7, D27.
 // MainActor. The quit (`QuitFlow`) and the signal handlers (`SignalHandlers`' main-actor stop) both stop through it.
+// A stop that arrives while a service's `start()` is suspended reaches that service before it has started (the engine,
+// for one, ignores a stop until its start finished); so a start that finishes after a stop is followed by that
+// service's `stopNow()`, and nothing runs after the stop.
 import OverbrightBoost
 import OverbrightCore
 import os
@@ -25,7 +28,8 @@ final class ServiceRunner {
     }
 
     /// The launch work after the launch check (§7.4): every service in start order; `beforeBoost` runs right before
-    /// the engine starts (the launch check's outcome reaches it while the directory already lists the displays).
+    /// the engine starts (the launch check's outcome reaches it while the directory already lists the displays). A
+    /// stop that arrives meanwhile ends it: the service whose start was under way is stopped once its start returns.
     func start(beforeBoost: () -> Void = {}) async {
         guard phase == .idle else { return }
         phase = .starting
@@ -34,6 +38,11 @@ final class ServiceRunner {
             if role == .boost { beforeBoost() }
             if phase != .starting { return }                        // a stop (signal) arrived meanwhile
             await service.start()
+            guard phase == .starting else {                         // the stop came while it started: it missed it
+                log.info("\(service.serviceName, privacy: .public) started after the stop; stopping it now")
+                service.stopNow()
+                return
+            }
             log.info("started \(service.serviceName, privacy: .public)")
         }
         if phase == .starting { phase = .started }

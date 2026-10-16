@@ -1,7 +1,8 @@
 // OverbrightAppShellTests/LifecycleOrderTests.swift — the services start Displays → Triggers → Signals → FillLight →
 // HotKeys → Updates → Intents → Boost last and stop in reverse, Boost first (ARCHITECTURE.md §7.4, §10.15, D7); the
-// launch check's outcome reaches the engine before it starts; a hung stop never holds the quit past its limit; Displays'
-// events reach every display controller before the relay returns (§4.3, §7.1, WP2's acceptance item).
+// launch check's outcome reaches the engine before it starts; a hung stop never holds the quit past its limit; a stop
+// during a service's start stops that service once it started; Displays' events reach every display controller before
+// the relay returns (§4.3, §7.1, WP2's acceptance item).
 import Foundation
 import OverbrightBoost
 import OverbrightCore
@@ -15,17 +16,23 @@ import Testing
     let serviceName: String
     let log: CallLog
     var hangsOnStop = false
+    var suspendsOnStart = false
     private var hung: CheckedContinuation<Void, Never>?
+    private var starting: CheckedContinuation<Void, Never>?
 
     init(_ name: String, log: CallLog) { serviceName = name; self.log = log }
 
-    func start() async { log.calls.append("start \(serviceName)") }
+    func start() async {
+        log.calls.append("start \(serviceName)")
+        if suspendsOnStart { await withCheckedContinuation { starting = $0 } }    // like the engine's cache attach
+    }
     func stop() async {
         log.calls.append("stop \(serviceName)")
         if hangsOnStop { await withCheckedContinuation { hung = $0 } }
     }
     func stopNow() { log.calls.append("stopNow \(serviceName)") }
     func release() { hung?.resume(); hung = nil }
+    func finishStart() { starting?.resume(); starting = nil }
 }
 
 @MainActor private final class CallLog { var calls: [String] = [] }
@@ -91,6 +98,24 @@ import Testing
         runner.stopNow()
         #expect(log.calls.contains("stopNow displays"))
         services[.signals]?.release()
+    }
+
+    /// A stop (a signal, a quit) while a service's `start()` is suspended reaches that service before it has started;
+    /// once its start returns, the runner stops it (`stopNow()`) and starts nothing after it.
+    @Test func aStopDuringAStartStopsThatServiceOnceItStarted() async {
+        let log = CallLog()
+        let (stack, services) = stack(log)
+        services[.signals]?.suspendsOnStart = true
+        let runner = ServiceRunner(stack: stack, time: ManualTimeSource(), journal: RingBufferJournal())
+        let starting = Task { await runner.start() }
+        #expect(await eventually { log.calls.last == "start signals" })
+        #expect(await runner.stop(within: .seconds(1)))
+        #expect(log.calls.contains("stop signals") && runner.phase == .stopped)
+        log.calls = []
+        services[.signals]?.finishStart()
+        await starting.value
+        #expect(log.calls == ["stopNow signals"])                           // nothing started after the stop
+        #expect(runner.phase == .stopped)
     }
 
     /// The launch work: the launch check runs before any service, and its outcome reaches the engine after the
