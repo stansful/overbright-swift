@@ -53,7 +53,7 @@ extension BoostEngine {
     /// manipulation is intent; a guard is not lifted), asks "Keep this level?" when it gets very dark.
     public func setLevel(_ level: LevelPosition, for display: DisplayKey?, source: ControlSource) {
         let keys = display.map { [$0] } ?? displays.displays.map(\.ref.key)
-        applyLevels(Dictionary(uniqueKeysWithValues: keys.map { ($0, level) }), source: source, display: display)
+        applyLevels(Self.byKey(keys.map { ($0, level) }), source: source, display: display)
     }
 
     /// A preset's position, or a multiplier mapped through each display's own top (§4.9).
@@ -71,7 +71,7 @@ extension BoostEngine {
             }
             let keys = display.map { [$0] } ?? displays.displays.map(\.ref.key)
             let levels = keys.map { ($0, LevelMapping.position(forGain: gain, top: top(for: $0))) }
-            applyLevels(Dictionary(uniqueKeysWithValues: levels), source: source, display: display)
+            applyLevels(Self.byKey(levels), source: source, display: display)
         }
     }
 
@@ -82,7 +82,7 @@ extension BoostEngine {
         settings[DisplaySettings.lastDimLight] = clamped
         let position = LevelMapping.position(forDimLight: clamped)
         let keys = display.map { [$0] } ?? dimmableKeys()
-        applyLevels(Dictionary(uniqueKeysWithValues: keys.map { ($0, position) }), source: source, display: display)
+        applyLevels(Self.byKey(keys.map { ($0, position) }), source: source, display: display)
     }
 
     /// Brighter / Less Bright: one step in stops (`shortcuts.stepSize`) from the level of the display under the
@@ -107,7 +107,7 @@ extension BoostEngine {
             if linked { linkedDimMemory = settings[DisplaySettings.linkedLevel] }
             for key in keys { dimMemory[key] = storedLevel(of: key) }
             let position = LevelMapping.position(forDimLight: settings[DisplaySettings.lastDimLight])
-            applyLevels(Dictionary(uniqueKeysWithValues: keys.map { ($0, position) }), source: source, display: nil)
+            applyLevels(Self.byKey(keys.map { ($0, position) }), source: source, display: nil)
         } else {
             var levels: [DisplayKey: LevelPosition] = [:]
             for key in keys { levels[key] = linked ? (linkedDimMemory ?? .standard) : (dimMemory[key] ?? .standard) }
@@ -179,13 +179,19 @@ extension BoostEngine {
 
     // MARK: Helpers
 
+    /// `pairs` by display key; a key seen twice keeps its first value. Display keys are not guaranteed unique (two
+    /// monitors with identical EDIDs can share a CoreGraphics UUID), and a request must never trap (§9.2).
+    static func byKey<Value>(_ pairs: [(DisplayKey, Value)]) -> [DisplayKey: Value] {
+        Dictionary(pairs, uniquingKeysWith: { first, _ in first })
+    }
+
     /// Stores levels (the linked level when linked), turns on, ends a user pause, checks the low-level rule, reduces.
     func applyLevels(_ levels: [DisplayKey: LevelPosition], source: ControlSource, display: DisplayKey?) {
         guard let first = levels.first else { return }
         let linked = settings[DisplaySettings.linkLevels]
         let keys = linked ? displays.displays.map(\.ref.key) : Array(levels.keys)
-        let priorStored = Dictionary(uniqueKeysWithValues: keys.map { ($0, storedLevel(of: $0)) })
-        let priorLight = Dictionary(uniqueKeysWithValues: keys.map { ($0, isMasterOn ? light(of: storedLevel(of: $0)) : 1) })
+        let priorStored = Self.byKey(keys.map { ($0, storedLevel(of: $0)) })
+        let priorLight = Self.byKey(keys.map { ($0, isMasterOn ? light(of: storedLevel(of: $0)) : 1) })
         if linked {
             settings[DisplaySettings.linkedLevel] = display.flatMap { levels[$0] } ?? first.value
         } else {

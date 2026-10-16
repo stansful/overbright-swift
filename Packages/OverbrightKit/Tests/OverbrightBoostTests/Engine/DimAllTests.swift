@@ -80,6 +80,26 @@ import Testing
         #expect(h.triggers.made.isEmpty)
     }
 
+    /// Two monitors with identical EDIDs can share a CoreGraphics UUID, so display keys may repeat: requests over
+    /// every display never trap (§9.2).
+    @Test func duplicateDisplayKeysNeverTrap() async throws {
+        let h = EngineHarness(fixture: .russianNames)
+        let shared = h.builtIn
+        h.directory.setDisplays(h.directory.displays.map { facts in
+            var facts = facts
+            facts.ref.key = shared
+            return facts
+        })
+        await h.start()
+        h.engine.setLevel(LevelPreset.max.position, for: nil, source: .panel)
+        h.engine.setExtraBrightness(.multiplier(1.5), for: nil, source: .panel)
+        h.engine.setDimLight(0.5, for: nil, source: .menu)
+        h.engine.toggleDim(source: .menu)
+        h.engine.toggleDim(source: .menu)
+        await h.advance(.seconds(1))
+        #expect(h.engine.status.isOn && h.engine.status.displays.count == 2)
+    }
+
     @Test func linkedDimAllUsesTheLinkedLevel() async throws {
         let h = EngineHarness(fixture: .russianNames)
         h.settings[DisplaySettings.linkLevels] = true
