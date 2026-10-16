@@ -17,7 +17,7 @@ debug:           ## Debug build (host arch) -> build/Overbright.app
 run:             ## Debug build + launch with --off --qa-simulate (never boosts); scripts/run.sh -- <args> overrides
 	@scripts/run.sh
 
-smoke:           ## Run build/Overbright.app --diagnostics: bundles, Edit menu, privacy none, intents, nothing written
+smoke:           ## Run build/Overbright.app --diagnostics: bundles + translations, Edit menu, privacy none, intents, nothing written
 	@scripts/smoke.sh
 
 qa-matrix:       ## Debug app under --qa-simulate: every fixture's scenario, symbol/banner/chips checked (after make debug)

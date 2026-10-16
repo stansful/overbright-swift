@@ -5,7 +5,9 @@
 #   - the report: gammaWrites == 0 and triggerWindows == 0 (nothing touched the displays), `displays` is a list
 #     (CI VMs have none), every OverbrightKit resource bundle is embedded, the Edit menu exists;
 #   - privacy: no entitlement except Debug's get-task-allow, no *UsageDescription key, LSUIElement is true;
-#   - languages: CFBundleLocalizations lists exactly the languages of scripts/l10n/languages.json;
+#   - languages: CFBundleLocalizations lists exactly the languages of scripts/l10n/languages.json; every translation
+#     the String Catalogs hold is compiled into its bundle and no stale .lproj is left (scripts/check-lproj.py); the
+#     report's Design sentence in Russian is Russian (a package bundle without its table falls back to English);
 #   - the Controls extension (D18): Contents/PlugIns holds OverbrightControls.appex exactly when CONTROLS=1, and the
 #     extension's entitlements are the sandbox and the read-only preference exception only;
 #   - App Intents: Contents/Resources/Metadata.appintents lists every intent of §7.7 and the Focus filter
@@ -143,6 +145,8 @@ print("\n".join(problems) or "privacy OK: no entitlements, no usage strings, LSU
 sys.exit(1 if problems else 0)
 PY
 
+/usr/bin/python3 -I "$ROOT/scripts/check-lproj.py" "$APP" || die "the app lacks compiled translations (see above)"
+
 if (( report )); then
 expected=$(find "$PACKAGE_DIR/Sources" -mindepth 2 -maxdepth 2 -name Resources -type d | wc -l | tr -d ' ')
 /usr/bin/python3 -I - "$OUT" "$expected" "$simulate" <<'PY' || die "smoke test failed (see $OUT)"
@@ -162,6 +166,12 @@ for key in ("gammaWrites", "triggerWindows"):
         problems.append(f"{key} is {r.get(key, '(missing)')}, must be 0 (diagnostics must not touch the displays)")
 if not isinstance(r.get("displays"), list):
     problems.append("displays is missing or not a list")
+# The catalog wiring: Design's bundle answers in Russian. "(no bundle)", "(no ru localization)", "(missing)" or the
+# English key itself mean the bundle's ru table did not ship, and every Russian user would read English.
+english = "Overbright is reading this display."
+russian = r.get("designString.ru")
+if not isinstance(russian, str) or russian == english or (russian.startswith("(") and russian.endswith(")")):
+    problems.append(f"designString.ru is {russian!r}: Design's Russian table is not in the app")
 print("\n".join(problems) or "smoke OK: %d bundles, Edit menu present, diagnostics read-only (%d displays), "
       "privacy: none" % (expected, len(r["displays"])))
 sys.exit(1 if problems else 0)
