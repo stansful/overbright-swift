@@ -1,4 +1,5 @@
-// OverbrightPolicyTests/LevelMappingTests.swift — the slider, steps and preset visibility. ARCHITECTURE.md §5.3, §5.6, §9.1.
+// OverbrightPolicyTests/LevelMappingTests.swift — the slider: level ↔ light gain, the dim half and the named dim stops.
+// ARCHITECTURE.md §5.3, §5.6, §9.1. Steps: StepMathTests; ticks: PresetVisibilityTests.
 import Foundation
 import OverbrightCore
 import OverbrightTestSupport
@@ -61,60 +62,5 @@ import Testing
         #expect(LevelMapping.position(forGain: 2, top: 1) == .standard)                       // no boost half
         #expect(LevelMapping.preset(at: LevelPosition(0.51)) == .brightRoom)
         #expect(LevelMapping.preset(at: LevelPosition(0.6)) == nil && LevelMapping.preset(at: .standard) == .standard)
-    }
-
-    /// §5.3 "Steps per class": presses of Brighter (¼ stop) and of the arrow keys (1/12 stop) from Standard to the top.
-    @Test func stepsPerClass() {
-        func presses(top: Double, stops: Double, dim: Bool = false) -> Int {
-            var level = LevelPosition.standard
-            var count = 0
-            while count < 1000 && (dim ? level.value > -1 + 1e-9 : level.value < 1 - 1e-9) {
-                level = StepMath.step(from: level, by: dim ? -stops : stops, top: top)
-                count += 1
-            }
-            return count
-        }
-        let rows: [(top: Double, brighter: Int, arrows: Int)] = [
-            (safeM4, 3, 9), (peakM4, 6, 17), (2.0, 4, 12), (1.3, 2, 5), (0.97 * 465.49 / 265.05, 4, 10),
-        ]
-        for row in rows {
-            #expect(presses(top: row.top, stops: StepSize.regular.stops) == row.brighter, "\(row.top)")
-            #expect(presses(top: row.top, stops: StepMath.arrowKeyStops) == row.arrows, "\(row.top)")
-        }
-        #expect(presses(top: safeM4, stops: StepSize.regular.stops, dim: true) == 23)          // dim half: 5.64 stops
-        #expect(presses(top: safeM4, stops: StepMath.arrowKeyStops, dim: true) == 68)
-    }
-
-    /// No arrow, scroll or Brighter / Less Bright step exceeds ½ stop, and no step crosses Standard.
-    @Test func noStepExceedsHalfAStopOrCrossesStandard() {
-        var random = SeededGenerator(seed: 0xD1A1)
-        for _ in 0..<20_000 {
-            let top = Double.random(in: 1.0001...16, using: &random)
-            let level = LevelPosition(Double.random(in: -1...1, using: &random))
-            let size = [StepSize.regular.stops, StepSize.fine.stops, StepMath.arrowKeyStops].randomElement(using: &random) ?? 0.25
-            let delta = Bool.random(using: &random) ? size : -size
-            let next = StepMath.step(from: level, by: delta, top: top)
-            let moved = abs(StepMath.stops(at: next, top: top) - StepMath.stops(at: level, top: top))
-            #expect(moved <= StepMath.maximumSingleStepStops + 1e-9)
-            #expect(!(level.isBoost && next.isDim) && !(level.isDim && next.isBoost))
-        }
-        // A step that would cross Standard stops at Standard first.
-        let nearDetent = StepMath.level(atStops: 0.1, top: safeM4)
-        #expect(StepMath.step(from: nearDetent, by: -0.25, top: safeM4) == .standard)
-        #expect(StepMath.step(from: .standard, by: -0.25, top: safeM4).isDim)
-        #expect(StepMath.level(atStops: 3, top: 1) == .standard)                                // no boost half
-    }
-
-    /// §5.3 "Presets per class" and D0 note #54 (merging walks down from Max).
-    @Test func presetVisibilityPerClass() {
-        let all: [LevelPreset] = [.indoor, .brightRoom, .sunlight, .max]
-        #expect(PresetVisibility.visiblePresets(top: safeM4) == all)
-        #expect(PresetVisibility.visiblePresets(top: peakM4) == all)
-        #expect(PresetVisibility.visiblePresets(top: 2.0) == all && PresetVisibility.visiblePresets(top: 3.104) == all)
-        #expect(PresetVisibility.visiblePresets(top: 1.940) == all)                             // Studio Display XDR Peak
-        #expect(PresetVisibility.visiblePresets(top: 1.3) == [.brightRoom, .max])                // MSI OLED Safe
-        #expect(PresetVisibility.visiblePresets(top: 1.704) == all)                              // MSI OLED Peak
-        #expect(PresetVisibility.visiblePresets(top: 1.2) == [.max])                             // DisplayHDR 600 at SDR 300
-        #expect(PresetVisibility.visiblePresets(top: 1) == [.max])
     }
 }
