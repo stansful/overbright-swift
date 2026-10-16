@@ -6,6 +6,9 @@
 // matrix, 10-bit, 16 × 16 px, one frame, about 1 KB) by `encode(_:into:)` in HLGStillAsset+Encoding.swift and checked
 // by `inspect(_:)` in HLGStillReport.swift. HEVC Main10 is tried first, ProRes 422 (a software encoder on every Mac)
 // second [VERIFIED: 24/24 codec × level × size combinations, also with the software HEVC encoder].
+//
+// Errors are logged with a path-free summary in `.public` and their description (which can hold the cache path, i.e.
+// the user's home folder name) in `.private` only (§9.2 rule 8).
 import Darwin
 import Foundation
 import OverbrightCore
@@ -65,7 +68,8 @@ nonisolated enum HLGStillAsset {
         var fileName: String { "hlg-still-v1-\(codec.rawValue)-\(level.rawValue)-\(edge).mov" }
     }
 
-    /// Why a still could not be made.
+    /// Why a still could not be made. The `String` payloads are writer error descriptions and may hold paths: log
+    /// them `.private` only.
     nonisolated enum Failure: Error, Sendable {
         case cannotAddInput
         case pixelBuffer
@@ -75,7 +79,23 @@ nonisolated enum HLGStillAsset {
         case noVideoTrack
         case verificationFailed(HLGStillReport)
         case moveFailed(Int32)
+        /// One path-free "<codec>: <summary>" entry per codec tried.
         case allCodecsFailed([String])
+
+        /// The case name and its numbers, without any description or path: safe for a `.public` log.
+        var publicSummary: String {
+            switch self {
+            case .cannotAddInput: "cannotAddInput"
+            case .pixelBuffer: "pixelBuffer"
+            case .startFailed: "startFailed"
+            case .appendFailed: "appendFailed"
+            case .finishFailed: "finishFailed"
+            case .noVideoTrack: "noVideoTrack"
+            case .verificationFailed: "verificationFailed"
+            case .moveFailed(let code): "moveFailed(errno \(code))"
+            case .allCodecsFailed(let failures): "allCodecsFailed(\(failures.joined(separator: "; ")))"
+            }
+        }
     }
 
     private static let log = Log.logger(.trigger)
@@ -107,8 +127,9 @@ nonisolated enum HLGStillAsset {
                 return (destination, report)
             } catch {
                 try? fm.removeItem(at: temporary)
-                log.error("HLG still \(spec.fileName, privacy: .public) failed: \(String(describing: error), privacy: .public)")
-                failures.append("\(codec.rawValue): \(error)")
+                let summary = LoggedError.publicSummary(error), detail = String(describing: error)
+                log.error("HLG still \(spec.fileName, privacy: .public) failed: \(summary, privacy: .public) (\(detail, privacy: .private))")
+                failures.append("\(codec.rawValue): \(summary)")
             }
         }
         throw Failure.allCodecsFailed(failures)

@@ -1,6 +1,7 @@
 // OverbrightTriggers/Assets/HLGStillCache.swift — the factory's view of the HLG stills: one generation per level at a
-// time, verified once per launch. ARCHITECTURE.md §4.7 ("HLG still asset"), §8.2 (Caches). Thread: main; the work runs
-// in `HLGStillAsset.ensureCached`, off the main actor.
+// time, verified once per launch. ARCHITECTURE.md §4.7 ("HLG still asset"), §8.2 (Caches), §9.2 rule 8 (an error's
+// description, which can hold the cache path, is logged `.private` only). Thread: main; the work runs in
+// `HLGStillAsset.ensureCached`, off the main actor.
 import Foundation
 import OverbrightCore
 import os
@@ -35,7 +36,8 @@ final class HLGStillCache {
             do {
                 return try await HLGStillAsset.ensureCached(level: level, codecs: codecs, in: directory).url
             } catch {
-                log.error("No HLG still for \(level.rawValue, privacy: .public): \(String(describing: error), privacy: .public)")
+                let summary = LoggedError.publicSummary(error), detail = String(describing: error)
+                log.error("No HLG still for \(level.rawValue, privacy: .public): \(summary, privacy: .public) (\(detail, privacy: .private))")
                 return nil
             }
         }

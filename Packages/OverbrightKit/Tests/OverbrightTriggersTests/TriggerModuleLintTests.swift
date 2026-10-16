@@ -1,7 +1,8 @@
 // OverbrightTriggersTests/TriggerModuleLintTests.swift — source scans for the module's own acceptance rules
 // (ARCHITECTURE.md §10.5): no `.metal` file and no Metal library, function or pipeline API (D22); only the system
 // presenter orders a window in, and no test can reach it (§9.1, D24); EDR layer properties stay in this module's
-// strategy, surface and overlay files. API names are split in two here, so this file never matches its own scans.
+// strategy, surface and overlay files; no error description reaches a `.public` log (§9.2 rule 8). API names are split
+// in two here, so this file never matches its own scans.
 import Foundation
 import Testing
 
@@ -63,6 +64,20 @@ import Testing
         let gated = "MetalClearPassTests.swift"   // OVERBRIGHT_HARDWARE only: an off-screen texture, no window
         let found = hits(real, in: files(under: Self.tests), except: [gated])
         #expect(found.isEmpty, "no test may put a window or an EDR request on screen: \(found)")
+    }
+
+    @Test func errorDescriptionsNeverReachAPublicLog() throws {
+        // A description can hold a path (a CocoaError's NSFilePath); only `LoggedError` summaries go out `.public`.
+        let patterns = [#"describing:[^)]*\)\s*,\s*privacy:\s*\.public"#,
+                        #"\\\(\s*error[\w.]*\s*,\s*privacy:\s*\.public"#,
+                        #"localizedDescription\s*,\s*privacy:\s*\.public"#]
+        let regexes = try patterns.map { try Regex($0) }
+        let sources = files(under: Self.sources)
+        let found = sources.flatMap { file in
+            file.lines.filter { _, line in regexes.contains { line.contains($0) } }.map { "\(file.path):\($0.0)" }
+        }
+        #expect(found.isEmpty, "error descriptions are logged .private only: \(found)")
+        #expect(sources.contains { $0.lines.contains { $0.1.contains("LoggedError.publicSummary") } })
     }
 
     @Test func edrLayerPropertiesStayInTheStrategyFiles() {

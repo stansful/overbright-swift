@@ -86,7 +86,7 @@ final class MetalClearTrigger: TriggerHandle, RegisteredWindowOwner {
             do {
                 try host.show(layer: surface.layer, blend: request.blend)
             } catch {
-                log.error("T2 window failed on display \(self.host.display.id): \(String(describing: error), privacy: .public)")
+                log.error("T2 window failed on display \(self.host.display.id): \(LoggedError.publicSummary(error), privacy: .public)")
                 return false
             }
         }

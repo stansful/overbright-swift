@@ -108,7 +108,7 @@ final class CompatibilityOverlay: OverlayHandle, RegisteredWindowOwner {
         do {
             try apply(factor: factor, headroomRequest: headroomRequest)
         } catch {
-            log.error("Overlay re-present failed on display \(self.host.display.id): \(String(describing: error), privacy: .public)")
+            log.error("Overlay re-present failed on display \(self.host.display.id): \(LoggedError.publicSummary(error), privacy: .public)")
         }
     }
 

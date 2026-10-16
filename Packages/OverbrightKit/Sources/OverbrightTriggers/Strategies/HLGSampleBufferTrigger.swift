@@ -97,7 +97,7 @@ final class HLGSampleBufferTrigger: TriggerHandle, RegisteredWindowOwner {
             do {
                 try host.show(layer: layer, blend: request.blend)
             } catch {
-                log.error("T4-alt window failed on display \(self.host.display.id): \(String(describing: error), privacy: .public)")
+                log.error("T4-alt window failed on display \(self.host.display.id): \(LoggedError.publicSummary(error), privacy: .public)")
                 return false
             }
             displayLayer = layer

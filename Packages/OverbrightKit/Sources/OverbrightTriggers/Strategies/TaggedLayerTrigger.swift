@@ -102,7 +102,7 @@ final class TaggedLayerTrigger: TriggerHandle, RegisteredWindowOwner {
             shownPixel = pixel
             return true
         } catch {
-            log.error("T1 present failed on display \(self.host.display.id): \(String(describing: error), privacy: .public)")
+            log.error("T1 present failed on display \(self.host.display.id): \(LoggedError.publicSummary(error), privacy: .public)")
             return false
         }
     }
@@ -144,7 +144,7 @@ final class TaggedLayerTrigger: TriggerHandle, RegisteredWindowOwner {
             try commit { try Self.apply(pixel: shownPixel, headroomTag: headroomTag, to: layer,
                                          allowsLegacyPath: allowsLegacyPath) }
         } catch {
-            log.error("T1 re-colour failed on display \(self.host.display.id): \(String(describing: error), privacy: .public)")
+            log.error("T1 re-colour failed on display \(self.host.display.id): \(LoggedError.publicSummary(error), privacy: .public)")
         }
     }
 
