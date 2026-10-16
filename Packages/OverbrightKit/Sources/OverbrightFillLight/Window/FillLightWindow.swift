@@ -64,8 +64,7 @@ final class FillLightWindow: FillLightSurface {
 
     func refresh() {
         guard style != nil else { return }
-        let shown = layout()
-        if rendering == .metalClear, !(shown && layers.showColor()) { retryPresent() }
+        if !layout() { retryPresent() }   // the layout re-presents the Metal drawable too
     }
 
     func remove() {
