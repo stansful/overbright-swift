@@ -1,6 +1,7 @@
 // OverbrightFillLight/Style/FillLightStyle.swift — what a frame window shows, from settings and headroom (pure).
-// ARCHITECTURE.md §7.6 ("value = brightness × min(0.97 × H, 2.0), else ≤ 1.0"), D5 (the 0.97 margin), D6
-// (our own EDR content holds headroom); DESIGN.md §7.7 (ranges), §11 ("up to 2× white").
+// ARCHITECTURE.md §7.6 ("value = brightness × min(0.97 × H, 2.0), else ≤ 1.0"), §4.7 (tag policies A and B; tags
+// ≥ 1.01), D5 (the 0.97 margin), D6 (our own EDR content holds headroom); DESIGN.md §7.7 (ranges), §11 ("up to 2×
+// white").
 import OverbrightCore
 
 /// Everything a `FillLightSurface` needs to draw the light: the band's width, the colour and its value, whether to ask
@@ -39,13 +40,21 @@ public nonisolated struct FillLightStyle: Hashable, Sendable {
     /// The colour the surface shows: `color × value`, in extended linear sRGB.
     public var displayedColor: LinearRGB { color.scaled(by: value) }
 
+    /// The headroom at which the value formula reaches `maximumGain`: `2 ÷ 0.97` (≈ 2.062). Above it, more headroom
+    /// changes nothing.
+    public static var fullGainHeadroom: Double { maximumGain / headroomMargin }
+
     /// The style for the current settings on a display whose latest headroom reading is `reading` (nil: no reading,
     /// e.g. a display without its own screen), drawn by a surface that renders with `rendering`.
     ///
-    /// With extra range (a surface that shows EDR and a potential above 1): the frame asks for
-    /// `brightness × 2 ÷ 0.97` of headroom (at least 1.01, at most the potential) and shows
-    /// `brightness × min(0.97 × H, 2)`, never less than `brightness` (SDR white needs no headroom), so it follows the
-    /// grant as macOS raises it and never exceeds 97 % of it. Without: `brightness`, no request.
+    /// With extra range (a surface that shows EDR and a potential above 1) the frame shows
+    /// `brightness × min(0.97 × H, 2)` (§7.6), never less than `brightness` (SDR white needs no headroom), so it
+    /// follows the grant as macOS raises it and never exceeds 97 % of it. It asks for `fullGainHeadroom` (≥ 1.01, at
+    /// most the potential): the headroom the formula can use in full, whatever the Brightness. So the tag never caps
+    /// what the formula needs (§4.7 policy A's property) whether macOS grants the potential or about what the tag
+    /// asks (policy B's case): either way the light settles at `2 × brightness` and the slider stays linear. More
+    /// headroom from another source (Boost's trigger, HDR video) changes nothing, and the visible colour (≤ 2) stays
+    /// within the tag, so a granted tag never tone-maps it. Without extra range: `brightness`, no request.
     public static func make(width: Double, warmth: Double, brightness: Double, reading: HeadroomReading?,
                             rendering: FillLightRendering, reachesTop: Bool) -> FillLightStyle {
         let b = brightness.isFinite ? min(max(brightness, brightnessRange.lowerBound), brightnessRange.upperBound)
@@ -57,8 +66,7 @@ public nonisolated struct FillLightStyle: Hashable, Sendable {
         }
         let current = reading.current.isFinite ? reading.current : 1
         let gain = min(max(headroomMargin * current, 1), maximumGain)
-        let request = min(max(b * maximumGain / headroomMargin, minimumHeadroomRequest),
-                          max(reading.potential, minimumHeadroomRequest))
+        let request = max(min(fullGainHeadroom, reading.potential), minimumHeadroomRequest)
         return FillLightStyle(width: width, color: color, value: rounded(b * gain, .down),
                               headroomRequest: rounded(request, .up), reachesTop: reachesTop)
     }

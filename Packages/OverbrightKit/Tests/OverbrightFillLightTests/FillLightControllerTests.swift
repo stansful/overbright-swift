@@ -84,9 +84,10 @@ private let msi = DisplayFixture.Keys.mpg322ux
         #expect(style?.width == 48)
         #expect(style?.color == ColorTemperature.linearSRGB(warmth: 0.4))
         #expect(style?.reachesTop == false)
-        // Idle headroom 1.0 before macOS answers: SDR white × brightness; the request asks for 2 × 0.8 ÷ 0.97.
+        // Idle headroom 1.0 before macOS answers: SDR white × brightness; the request asks for 2 ÷ 0.97, the headroom
+        // the value formula uses in full.
         #expect(style.map { abs($0.value - 0.8) < 1e-9 } == true)
-        #expect(style?.headroomRequest.map { abs($0 - 1.65) < 1e-9 } == true)
+        #expect(style?.headroomRequest.map { abs($0 - 2.07) < 1e-9 } == true)
     }
 
     @Test func valueFollowsTheGrantUpToTwiceWhite() async {
@@ -101,6 +102,37 @@ private let msi = DisplayFixture.Keys.mpg322ux
         await h.settle()
         #expect(h.style.map { abs($0.value - 2.0) < 1e-9 } == true)
         #expect(h.style.map { $0.displayedColor.maximum <= 0.97 * 16 / 6 } == true)
+    }
+
+    @Test func grantingTheOwnRequestSettlesAtTwiceTheBrightness() async throws {
+        // §4.7 policy B's case: macOS grants about what the tag asks, and no more.
+        let h = await on()
+        for brightness in [0.2, 0.5, 0.8, 1] {
+            h.settings[FillLightSettings.brightness] = brightness
+            await h.settle()
+            let request = try #require(h.style?.headroomRequest)
+            h.headroom.setOverride(request, for: builtIn)
+            h.signals.emit(.screenParametersChanged)
+            #expect(h.style.map { abs($0.value - 2 * brightness) < 1e-9 } == true, "brightness \(brightness)")
+            #expect(h.style?.headroomRequest == request)
+        }
+    }
+
+    @Test func headroomFromAnotherSourceAboveTheRequestChangesNothing() async throws {
+        let h = await on()
+        let request = try #require(h.style?.headroomRequest)
+        h.headroom.setOverride(request, for: builtIn)
+        h.signals.emit(.screenParametersChanged)
+        let settled = h.style
+        #expect(settled.map { abs($0.value - 1.6) < 1e-9 } == true)
+        let styles = h.factory.current?.styles.count
+        for raised in [2.4, 3.2, 16.0 / 6, 4.6] {                   // Boost's trigger, an HDR video
+            h.headroom.setOverride(raised, for: builtIn)
+            h.signals.emit(.screenParametersChanged)
+            #expect(h.style == settled, "H \(raised)")
+        }
+        #expect(h.factory.current?.styles.count == styles)        // nothing re-applied
+        #expect(h.journalCodes.filter { $0 == "fillLight.shown" }.count == 1)
     }
 
     @Test func valueNeverExceedsNinetySevenPercentOfTheGrant() async {
@@ -249,7 +281,7 @@ private let msi = DisplayFixture.Keys.mpg322ux
         let shown = events[1]
         #expect(shown.display == builtIn.rawValue)
         #expect(shown.values["rendering"] == FillLightRendering.taggedLayer.journalCode)
-        #expect(shown.values["request"].map { abs($0 - 1.65) < 1e-9 } == true)
+        #expect(shown.values["request"].map { abs($0 - 2.07) < 1e-9 } == true)
     }
 
     @Test func isObservable() async {
