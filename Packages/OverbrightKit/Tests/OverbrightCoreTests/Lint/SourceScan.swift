@@ -11,11 +11,16 @@ struct ScannedFile {
 
     /// The lines that are code, with their 1-based numbers: comment lines (`//`, `///`, `*`) are left out.
     var codeLines: [(number: Int, text: String)] {
-        lines.enumerated().compactMap { index, line in
-            let trimmed = line.trimmingCharacters(in: .whitespaces)
-            if trimmed.hasPrefix("//") || trimmed.hasPrefix("*") || trimmed.hasPrefix("/*") { return nil }
-            return (index + 1, line)
-        }
+        lines.enumerated().compactMap { index, line in Self.isComment(line) ? nil : (index + 1, line) }
+    }
+
+    /// The file's code as one text, comment lines blanked so line numbers stay: scans that follow a statement over
+    /// several lines read this.
+    var codeText: String { lines.map { Self.isComment($0) ? "" : $0 }.joined(separator: "\n") }
+
+    private static func isComment(_ line: String) -> Bool {
+        let trimmed = line.trimmingCharacters(in: .whitespaces)
+        return trimmed.hasPrefix("//") || trimmed.hasPrefix("*") || trimmed.hasPrefix("/*")
     }
 
     /// Whether the file lives under `folder` (a repository-relative path prefix).
@@ -81,6 +86,59 @@ enum SourceScan {
     static func matches(_ pattern: NSRegularExpression, in text: String) -> [String] {
         let range = NSRange(text.startIndex..., in: text)
         return pattern.matches(in: text, range: range).compactMap { Range($0.range, in: text).map { String(text[$0]) } }
+    }
+
+    /// The 1-based line numbers of the calls shaped like `GammaPort.write(_:to:)` in `text`: a `.write(` whose own
+    /// argument list has a comma followed by the label `to:`. The scan follows the call over lines and through nested
+    /// parentheses, brackets, braces and string literals, so `gamma.write(base.scaled(by: f), to: id)` and a call
+    /// split over lines match, while `data.write(to: url)` (the label on the first argument) does not.
+    static func gammaWriteLines(in text: String) -> [Int] {
+        let bytes = Array(text.utf8)
+        let call = Array(".write(".utf8)
+        var found: [Int] = []
+        var line = 1
+        var index = 0
+        while index < bytes.count {
+            if bytes[index] == UInt8(ascii: "\n") {
+                line += 1
+            } else if bytes[index...].starts(with: call) {
+                if argumentList(of: bytes, from: index + call.count, hasLabel: Array("to:".utf8)) { found.append(line) }
+                index += call.count
+                continue
+            }
+            index += 1
+        }
+        return found
+    }
+
+    /// Whether the argument list that starts at `start` (just after its opening parenthesis) has `label` right after
+    /// one of its own commas (whitespace and line breaks between them are skipped).
+    private static func argumentList(of bytes: [UInt8], from start: Int, hasLabel label: [UInt8]) -> Bool {
+        let opening: Set<UInt8> = [UInt8(ascii: "("), UInt8(ascii: "["), UInt8(ascii: "{")]
+        let closing: Set<UInt8> = [UInt8(ascii: ")"), UInt8(ascii: "]"), UInt8(ascii: "}")]
+        let space: Set<UInt8> = [UInt8(ascii: " "), UInt8(ascii: "\t"), UInt8(ascii: "\n"), UInt8(ascii: "\r")]
+        var depth = 1
+        var index = start
+        while index < bytes.count {
+            let byte = bytes[index]
+            if byte == UInt8(ascii: "\"") {                                // skip a string literal
+                index += 1
+                while index < bytes.count, bytes[index] != UInt8(ascii: "\"") {
+                    index += bytes[index] == UInt8(ascii: "\\") ? 2 : 1
+                }
+            } else if opening.contains(byte) {
+                depth += 1
+            } else if closing.contains(byte) {
+                depth -= 1
+                if depth == 0 { return false }
+            } else if byte == UInt8(ascii: ","), depth == 1 {
+                var next = index + 1
+                while next < bytes.count, space.contains(bytes[next]) { next += 1 }
+                if bytes[next...].starts(with: label) { return true }
+            }
+            index += 1
+        }
+        return false
     }
 
     private static func collect(_ node: Any) -> [String] {

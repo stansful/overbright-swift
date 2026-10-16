@@ -60,28 +60,47 @@ import Testing
 
     /// §4.5 invariant 3: only `TableWriter` and `LaunchRescue` call `GammaPort.write` and the global restore
     /// (the hang watchdog and the signal handlers write through `TableWriter.writeBaselines(fromLedger:)`).
-    @Test func onlyTableWriterAndRescueWrite() throws {
-        let gammaWrite = try NSRegularExpression(pattern: "\\.write\\(\\s*[^,()]+,\\s*to:")
+    @Test func onlyTableWriterAndRescueWrite() {
         let restore = ".restoreSystem" + "ColorSettings("
         let allowed: Set<String> = ["\(sources)/OverbrightBoost/Writer/TableWriter.swift",
                                     "\(sources)/OverbrightBoost/Safety/LaunchRescue.swift"]
-        let files = SourceScan.files(in: code, extensions: ["swift"])
-        let hits = lines(in: files.filter { !allowed.contains($0.path) }) { line in
-            !SourceScan.matches(gammaWrite, in: line).isEmpty || line.contains(restore)
-        }
-        #expect(SourceScan.matches(gammaWrite, in: "try gamma.write(baseline, to: display.id)").count == 1)
-        #expect(SourceScan.matches(gammaWrite, in: "try data.write(to: url, options: .atomic)").isEmpty)
+        let files = SourceScan.files(in: code, extensions: ["swift"]).filter { !allowed.contains($0.path) }
+        let hits = gammaWrites(in: files) + lines(in: files) { line in line.contains(restore) }
         #expect(hits.isEmpty, "GammaPort writes outside TableWriter and LaunchRescue: \(hits)")
     }
 
+    /// The write scan finds the shapes WP4 and WP5 write (a call in the first argument, a subscript, a call over
+    /// several lines) and leaves `Data.write(to:)` alone.
+    @Test func gammaWriteScanFindsEveryShape() {
+        let calls = ["try gamma.write(baseline, to: display.id)",
+                     "try gamma.write(baseline.scaled(by: f), to: display.id)",
+                     "try gamma.write(GammaTable.identity(count: n), to: id)",
+                     "try gamma.write(GammaTable.identity(count: max(n, 2)), to: id)",
+                     "try gamma.write(tables[key], to: id)",
+                     "try gamma.write(table,to:id)",
+                     "try gamma.write(\n    table,\n    to: display.id)",
+                     "try gamma.write(table\n    , to: id)",
+                     "try gamma.write(label(\"a)\"), to: id)"]
+        for call in calls { #expect(SourceScan.gammaWriteLines(in: call) == [1], "\(call)") }
+        #expect(SourceScan.gammaWriteLines(in: "let a = 1\n\ntry gamma.write(\n    table, to: id)\nlet b = 2") == [3])
+        let others = ["try data.write(to: url, options: .atomic)",
+                      "try data.write(to: url)",
+                      "FileHandle.standardOutput.write(Data((line + \"\\n\").utf8))",
+                      "try data.write(to: url)\nlet range = clamp(a, to: b)",
+                      "try data.write(to: url(for: name, in: folder))",
+                      "handle.write(contentsOf: data)",
+                      "try \"x\".write(toFile: path, atomically: true, encoding: .utf8)",
+                      "log.write(\"a, to: b\")"]
+        for other in others { #expect(SourceScan.gammaWriteLines(in: other).isEmpty, "\(other)") }
+    }
+
     /// D24: tests never construct a writing real port, and suites gated by `OVERBRIGHT_HARDWARE` only read.
-    @Test func noWritesInHardwareTests() throws {
-        let gammaWrite = try NSRegularExpression(pattern: "\\.write\\(\\s*[^,()]+,\\s*to:")
+    @Test func noWritesInHardwareTests() {
         let restore = "restoreSystem" + "ColorSettings("
         let realPort = "CoreGraphics" + "Gamma("
         let files = SourceScan.files(in: [SourceScan.tests], extensions: ["swift"])
         let gated = files.filter { file in file.codeLines.contains { $0.text.contains("OVERBRIGHT_" + "HARDWARE") } }
-        let writes = lines(in: gated) { line in !SourceScan.matches(gammaWrite, in: line).isEmpty || line.contains(restore) }
+        let writes = gammaWrites(in: gated) + lines(in: gated) { line in line.contains(restore) }
         let realPorts = lines(in: files.filter { file in !gated.contains { $0.path == file.path } }) { line in
             line.contains(realPort)
         }
@@ -169,5 +188,10 @@ import Testing
         files.flatMap { file in
             file.codeLines.filter { matches($0.text) }.map { "\(file.path):\($0.number)" }
         }
+    }
+
+    /// "path:line" of every `GammaPort.write(_:to:)`-shaped call in the code of `files` (whole statements, not lines).
+    private func gammaWrites(in files: [ScannedFile]) -> [String] {
+        files.flatMap { file in SourceScan.gammaWriteLines(in: file.codeText).map { "\(file.path):\($0)" } }
     }
 }
