@@ -76,6 +76,7 @@ controls_enabled() {
 drop_controls_extension() {
   local app="$1" appex="$1/Contents/PlugIns/$CONTROLS_APPEX" identity
   [[ -d "$appex" ]] || return 0
+  pluginkit -r "$appex" >/dev/null 2>&1 || true     # Xcode registered it with PlugInKit when it built it
   rm -rf "$appex"
   rmdir "$app/Contents/PlugIns" 2>/dev/null || true
   identity="${SIGN_IDENTITY:--}"

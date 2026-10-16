@@ -74,6 +74,9 @@ if controls_enabled; then
   [[ -d "$extension_dsym" ]] && ditto "$extension_dsym" "$BUILD_DIR/$CONTROLS_APPEX.dSYM"
 else
   drop_controls_extension "$APP"
+  # Xcode registers every built extension with PlugInKit; forget the DerivedData copy too, so a dev control never
+  # shows up in the Control Center gallery (F1 risk 5).
+  pluginkit -r "$PRODUCT/Contents/PlugIns/$CONTROLS_APPEX" >/dev/null 2>&1 || true
   controls="removed (CONTROLS=1 keeps it)"
 fi
 if [[ "$CONFIGURATION" == Release ]]; then
