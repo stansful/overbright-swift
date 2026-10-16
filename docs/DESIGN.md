@@ -731,7 +731,7 @@ The supported sentence quotes the display's current limit (Safe by default) and,
 | `mirrored` | Mirrored | "This display mirrors another one, so Overbright can only dim it." | — |
 | `virtualDisplay` | Not supported | "Sidecar and AirPlay displays can't be adjusted." | — |
 | `noGammaTable` | Not supported | "macOS doesn't let apps adjust this display." | — |
-| `checking` | Checking… | "Overbright is reading this display." | — |
+| `checking` (no reading yet, or no panel peak or SDR maximum to back a gain: never "Little gain" without a number) | Checking… | "Overbright is reading this display." | — |
 
 Advisories (a second line under the verdict): `compatibilityModeAdvised` "On this Mac, macOS ignores color table changes, so Overbright uses Compatibility mode." · `oledCare` "OLED display: extra brightness stays lower and pauses after 5 minutes without input." · `autoBrightnessInteracts` (Settings only, §7.4) · `notCalibrated` "Not calibrated. Numbers are estimates, and Overbright uses a safe default."
 

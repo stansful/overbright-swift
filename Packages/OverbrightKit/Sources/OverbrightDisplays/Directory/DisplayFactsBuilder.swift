@@ -10,6 +10,8 @@ import OverbrightCore
 nonisolated enum DisplayFactsBuilder {
     /// macOS's placeholder vendor (`'unkn'`) for displays without a real EDID vendor (AirPlay, Sidecar, placeholders).
     static let placeholderVendor: UInt32 = 0x756e_6b6e
+    /// Nits per unit of potential: `maximumPotential…` ≈ preset peak ÷ 100 nits (D8).
+    static let nitsPerPotential = 100.0
 
     /// The online displays as `DisplayFacts`, built-in first, then by key. A built-in display is left out while the
     /// lid is closed (clamshell: its panel is dark and macOS removes it from the online list moments later).
@@ -26,8 +28,9 @@ nonisolated enum DisplayFactsBuilder {
         let virtual = isVirtual(raw, external: external, registry: registry)
         // An Apple XDR external's SDR maximum comes from the product, never from its frame average (§5.1).
         let xdr = raw.isBuiltIn || virtual ? nil : AppleXDRProducts.product(vendor: raw.vendor, product: raw.model)
-        let peak = raw.isBuiltIn ? builtIn?.panelPeakNits : external?.maxNits ?? xdr?.peakNits
         let potential = builtIn?.potentialHeadroom ?? raw.screen?.potential
+        let registryPeak = raw.isBuiltIn ? builtIn?.panelPeakNits : external?.maxNits ?? xdr?.peakNits
+        let peak = registryPeak ?? (virtual ? nil : potentialPeakNits(potential))
         return DisplayFacts(
             ref: DisplayRef(key: raw.key, id: raw.id),
             name: raw.screen?.name ?? external?.productName ?? "",
@@ -46,6 +49,18 @@ nonisolated enum DisplayFactsBuilder {
                                                  vendor: raw.vendor == 0 ? nil : raw.vendor, potential: potential,
                                                  peakNits: peak, minNits: external?.minNits,
                                                  supportsPQ: external?.supportsPQ))
+    }
+
+    /// The documented fallback of a panel peak that neither the IORegistry nor the product gives (D8, §9.2 rule 6):
+    /// potential × 100 nits, for a display with extra range (potential above the LCD limit of 2; an LCD built-in's
+    /// fixed 2.0 says nothing about its peak). `maximumPotential…` reads ≈ preset peak ÷ 100 [VERIFIED: 16 on the M4
+    /// Max, 4.6549 on the MSI], and macOS grants no more than the preset's peak, so the live Safe bound
+    /// (`capNits × H ÷ panelPeak`) still holds with it below macOS's cap of 16 (a brighter panel reads 16; Apple's
+    /// 2000-nit Studio Display XDR has its peak from `AppleXDRProducts`).
+    static func potentialPeakNits(_ potential: Double?) -> Double? {
+        guard let potential, potential.isFinite,
+              potential > PanelClassifier.lcdPotentialLimit + PanelClassifier.epsilon else { return nil }
+        return potential * nitsPerPotential
     }
 
     /// Virtual (Sidecar, AirPlay, placeholder, a display without a real framebuffer): no transfer table

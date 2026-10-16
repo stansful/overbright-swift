@@ -60,7 +60,7 @@
 |---|---|---|---|
 | built-in `backlight` node | `EDRPotentialHeadroom` | 16.16 fixed | panel peak = value × 100 |
 | built-in `backlight` node | `user-accessible-max-nits` | 16.16 fixed | SDR maximum |
-| `AppleARMBacklight` → `IODisplayParameters` | `BrightnessMilliNits` {min, value, max} | integers | SDR white **only if** H-N1 confirms it tracks SDR white |
+| `AppleARMBacklight` → `IODisplayParameters` | `BrightnessMilliNits` {min, value, max} | integers | SDR white **only if** H-N1 confirms it tracks SDR white; never the panel peak (without `EDRPotentialHeadroom` the peak is NSScreen's potential × 100) |
 | external `IOMobileFramebufferShim` → `DisplayAttributes` | `Luminance` {Max, MaxFrameAverage, Min} | 16.16 fixed | peak, HDR-mode SDR white (not on Apple XDR externals: there MaxFrameAverage is the full-screen sustained HDR level), OLED detection |
 | same | `SupportsPQEOTF`, `SupportsHLGEOTF` | bool | "Turn on HDR" verdict |
 | same | `ProductAttributes` vendor/product IDs | integers | Apple external detection, diagnostics |

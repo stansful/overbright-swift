@@ -2,7 +2,8 @@
 
 /// What a display can do (D8), from Policy's `EligibilityClassifier`. Design owns the sentences.
 public nonisolated enum DisplayVerdict: Hashable, Codable, Sendable {
-    /// Transient potential < 1 or no reading yet: re-check later.
+    /// Transient potential < 1 or no reading yet, or a display with extra range whose panel peak or SDR maximum no
+    /// source gives (no number to back a verdict): re-check later.
     case checking
     /// Boost possible. `safeGain`/`peakGain`: the slider tops at full brightness (Safe may be nil: no Safe boost).
     case supported(safeGain: Double?, peakGain: Double)

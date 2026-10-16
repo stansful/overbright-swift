@@ -43,7 +43,8 @@ import Testing
         let noServices = IORegistryFacts(builtIn: nil, externals: [], hasFramebufferServices: false)
         let facts = DisplayFactsBuilder.facts(for: intel, registry: noServices)
         #expect(facts.panelClass == .hdrExternal)                     // from NSScreen potential 4.65, PQ unknown
-        #expect(facts.supportsPQ == nil && facts.panelPeakNits == nil)
+        #expect(facts.supportsPQ == nil)
+        #expect(abs((facts.panelPeakNits ?? 0) - 465.49) < 1e-9)      // potential × 100 (D8), no IORegistry
         // A built-in display never needs an external framebuffer service.
         let builtIn = DisplayFactsBuilder.facts(for: RawDisplayFixtures.builtIn(),
                                                 registry: IORegistryFacts(hasFramebufferServices: true))

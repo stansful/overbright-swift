@@ -97,6 +97,38 @@ import Testing
         #expect(DisplayFactsBuilder.facts(for: RawDisplayFixtures.msi(), registry: registry).sdrMaxNits == nil)
     }
 
+    /// A panel peak no IORegistry key or product gives falls back to the documented potential × 100 (D8, §9.2 rule 6),
+    /// only on a display with extra range; the built-in's backlight maximum never stands in (C-PLATFORM-3, -5).
+    @Test func aMissingPanelPeakFallsBackToThePotential() throws {
+        // The built-in without its backlight node (keys renamed): NSScreen's 16 in P3-1600, not the 1599.999 nits
+        // of `BrightnessMilliNits.max`.
+        let backlightOnly = BuiltInPanelFacts.parse(backlight: nil,
+                                                    displayParameters: OwnerIORegistry.builtInDisplayParameters)
+        let registry = IORegistryFacts(builtIn: backlightOnly, hasFramebufferServices: true)
+        let builtIn = DisplayFactsBuilder.facts(for: RawDisplayFixtures.builtIn(), registry: registry)
+        #expect(builtIn.panelPeakNits == 1600 && builtIn.panelClass == .builtInXDR && builtIn.sdrMaxNits == nil)
+        // In a lower preset the potential is the preset's peak, which is all macOS will grant there.
+        #expect(DisplayFactsBuilder.facts(for: RawDisplayFixtures.builtIn(potential: 6), registry: registry)
+            .panelPeakNits == 600)
+        // An LCD built-in's fixed 2.0, an SDR preset and HDR off say nothing about the peak.
+        for potential in [2.0, 2.005, 1.0] {
+            #expect(DisplayFactsBuilder.facts(for: RawDisplayFixtures.builtIn(potential: potential), registry: .unknown)
+                .panelPeakNits == nil, "\(potential)")
+        }
+        #expect(DisplayFactsBuilder.facts(for: RawDisplayFixtures.msi(potential: 1), registry: .unknown)
+            .panelPeakNits == nil)
+        // An external without attributes (Intel Mac): EDID max ÷ 100 is what NSScreen reports.
+        let msi = DisplayFactsBuilder.facts(for: RawDisplayFixtures.msi(), registry: .unknown)
+        #expect(abs(try #require(msi.panelPeakNits) - 465.49) < 1e-9)
+        // A measured value always wins; a virtual display never gets one.
+        let measured = DisplayFactsBuilder.facts(for: RawDisplayFixtures.msi(potential: 6),
+                                                 registry: RawDisplayFixtures.ownerRegistry())
+        #expect(abs(try #require(measured.panelPeakNits) - 465.49) < 0.01)
+        var virtual = RawDisplayFixtures.msi()
+        virtual.gammaCapacity = 0
+        #expect(DisplayFactsBuilder.facts(for: virtual, registry: .unknown).panelPeakNits == nil)
+    }
+
     @Test func theOwnersMSIMatchesCoresFixture() throws {
         for (hdr, fixture) in [(true, DisplayFixture.mpg322uxHDROn), (false, .mpg322uxHDROff)] {
             let raw = RawDisplayFixtures.msi(potential: hdr ? 4.6549 : 1)

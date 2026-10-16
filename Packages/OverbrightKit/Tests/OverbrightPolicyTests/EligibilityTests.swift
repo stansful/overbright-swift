@@ -86,9 +86,22 @@ import Testing
         #expect(verdict(none, potential: 4) == .noGainAtFullBrightness(peakGain: 1))
         #expect(verdict(external(.hdrExternal, pq: true, peak: 400, frameAverage: 350), potential: 4)
                 == .supported(safeGain: nil, peakGain: 0.97 * 400 / 350))                          // ×1.109
-        // Unknown panel facts never become a claim: the boost half is answered as ×1.
+        // Unknown panel facts never become a claim (C-PLATFORM-3): no "little gain" without a number behind it; the
+        // verdict waits like an unread display, and the boost half is answered as ×1.
         let unknown = external(.hdrExternal, pq: true, peak: nil, frameAverage: nil)
-        #expect(verdict(unknown, potential: 6) == .noGainAtFullBrightness(peakGain: 1))
+        #expect(verdict(unknown, potential: 6) == .checking)
+        #expect(GainCeiling.sliderTop(facts: unknown.facts, capMode: .peak, isOLED: false) == 1)
+        #expect(verdict(external(.hdrExternal, pq: true, peak: 600, frameAverage: nil), potential: 6) == .checking)
+        #expect(verdict(external(.oledExternal, pq: true, peak: nil, frameAverage: 265), potential: 4.65) == .checking)
+        var noSDRMax = builtIn
+        noSDRMax.facts.sdrMaxNits = nil                                                            // key missing
+        #expect(verdict(noSDRMax) == .checking)
+        var futureXDR = DisplayFixture.proDisplayXDR.displays[0]
+        futureXDR.facts.sdrMaxNits = nil                                    // a product AppleXDRProducts lacks
+        #expect(verdict(futureXDR) == .checking)
+        // A class that never boosts keeps its own verdict, and known facts keep theirs.
+        #expect(verdict(external(.sdrExternal, pq: false, peak: nil, frameAverage: nil), potential: 1) == .notHDR)
+        #expect(gains(verdict(DisplayFixture.proDisplayXDR.displays[0])) != nil)
     }
 
     /// OLED by IORegistry minimum luminance or the user's override, never by name (D8); defaults per class.

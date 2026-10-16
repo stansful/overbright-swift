@@ -1,6 +1,7 @@
 // OverbrightPolicy/Eligibility/EligibilityClassifier.swift — what a display can do (D8). ARCHITECTURE.md §3.10, §5.2,
 // §5.3, §6.1 steps 1 and 4, §7.5; DESIGN.md §12.1. Locale-independent: names are never compared, and every IORegistry
-// input is optional (a missing panel peak or SDR maximum gives a top of 1, never a guess).
+// input is optional (a panel peak or SDR maximum that no fallback supplies gives a top of 1 and the verdict
+// `.checking`, never a guess and never a "little gain" claim).
 import OverbrightCore
 
 /// D8 classifier: tolerant comparisons, no name strings in logic, IORegistry inputs optional. `preferences` carries
@@ -101,6 +102,11 @@ public nonisolated enum EligibilityClassifier {
         let presetPeak = reading.potential * nitsPerPotential
         if let panelPeak = facts.panelPeakNits, presetPeak < presetLimitShare * panelPeak {
             return .presetLimits(presetPeakNits: presetPeak, panelPeakNits: panelPeak)
+        }
+        // No backed number: the facts' fallbacks are exhausted (§9.2 rule 6), so no "little gain" claim either.
+        // The facts are rebuilt at every reconfiguration and screen-parameter change, which re-checks.
+        if GainCeiling.boostClasses.contains(facts.panelClass), !GainCeiling.hasBackedTop(facts: facts) {
+            return .checking
         }
         let peakTop = GainCeiling.sliderTop(facts: facts, capMode: .peak, isOLED: isOLED)
         if peakTop < minimumPeakGain { return .noGainAtFullBrightness(peakGain: peakTop) }
