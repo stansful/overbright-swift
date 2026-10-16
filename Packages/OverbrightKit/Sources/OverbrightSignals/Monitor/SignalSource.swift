@@ -20,6 +20,7 @@ public nonisolated enum SignalSource: String, Sendable, CaseIterable {
     /// IOKit's every-change notification for the battery percent: boost-only, on battery only.
     case batteryPercent
     /// One deadline for the OLED idle pause (`threshold − idle`, then every 2 s while idle): boost-only, OLED only.
+    /// Once idle, the 2 s input poll outlasts the boost until input returns (the pause itself ends the boost).
     case idleDeadline
     /// The 2 s full-screen and playback re-check (catches borderless games and players starting or stopping):
     /// boost-only, while a full-screen or "while playing" rule is on.

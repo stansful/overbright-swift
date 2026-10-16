@@ -1,9 +1,13 @@
 // OverbrightSignals/Monitor/SignalsMonitor+BoostSources.swift — the sources that run only while the boost is active,
 // and the settings that shape them. ARCHITECTURE.md §6.5, §7.1 (boost-only rows), §7.3, D10, D22.
 // - battery percent: IOKit's every-change source, only on battery (the source switch itself is always on);
-// - OLED idle: one deadline (`IdleScheduler`), only when an OLED display is online;
+// - OLED idle: one deadline (`IdleScheduler`), only when an OLED display is online; once idle, the 2 s input poll runs
+//   until input returns even after the boost went inactive (the idle pause itself makes every OLED neutral; stopping
+//   the poll then would clear the flag, re-boost and pause again every few seconds while the user is away);
 // - full-screen watch: the 2 s re-check while a full-screen or "while playing" rule is on (borderless games, players
-//   starting or stopping without a Space change);
+//   starting or stopping without a Space change). While the boost is inactive only events re-check (Space, app,
+//   screen, wake), so a pause that made every display neutral and whose player then stops without any such event
+//   lasts until the next one: keeping the watch then would mean a 2 s timer with the master off (§17);
 // - schedule boundary: one sleep towards the next boundary (`ScheduleTimer`), only while a schedule is set.
 // `applyBoostSources()` reconciles all four with the state; it runs on every change that could matter.
 // Thread: main.
@@ -18,7 +22,7 @@ extension SignalsMonitor {
     func applyBoostSources() {
         let boosting = isStarted && isBoostActive
         setBatteryPercent(boosting && snapshot.power.source == .battery)
-        setIdleTracking(boosting && anyOLED)
+        setIdleTracking(isStarted && anyOLED && (isBoostActive || snapshot.isIdleBeyondThreshold))
         setWatching(boosting && watchRuleIsOn)
         setSchedule(boosting && settings[AutomationSettings.schedule] != nil)
     }
@@ -44,6 +48,8 @@ extension SignalsMonitor {
 
     // MARK: OLED idle
 
+    /// `on`: started, an OLED online, and the boost active or an idle pause in effect. Off with the flag still set means
+    /// the OLED went away or Signals stopped: the pause ends with the source.
     private func setIdleTracking(_ on: Bool) {
         if on, !isIdleTracking {
             isIdleTracking = true
@@ -51,11 +57,16 @@ extension SignalsMonitor {
         } else if !on, isIdleTracking {
             isIdleTracking = false
             idleTimer.cancel()
+        }
+        if !on, snapshot.isIdleBeyondThreshold {
+            record("signals.idle", ["idle": 0])
             update { $0.isIdleBeyondThreshold = false }
         }
     }
 
-    /// Reads the idle time, publishes the decision and sets the one next deadline.
+    /// Reads the idle time, publishes the decision and sets the one next deadline. When input returns while the boost
+    /// is inactive (the idle pause held every display neutral), the source stops: the engine re-reduces on the cleared
+    /// flag, and its `setBoostActive(true)` starts the source again with a fresh deadline.
     func evaluateIdle() {
         guard isIdleTracking else { return }
         let threshold = IdleScheduler.threshold(minutes: settings[AutomationSettings.oledIdleMinutes])
@@ -64,6 +75,12 @@ extension SignalsMonitor {
                                               displayHeldAwake: heldAwake)
         if decision.isIdle != snapshot.isIdleBeyondThreshold { record("signals.idle", ["idle": decision.isIdle ? 1 : 0]) }
         update { $0.isIdleBeyondThreshold = decision.isIdle }
+        guard isIdleTracking else { return }                     // an observer stopped Signals meanwhile
+        guard isBoostActive || decision.isIdle else {
+            isIdleTracking = false
+            idleTimer.cancel()
+            return
+        }
         idleTimer.schedule(after: decision.nextCheck) { [weak self] in self?.evaluateIdle() }
     }
 

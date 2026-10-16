@@ -12,11 +12,14 @@
 // reached the engine, which goes neutral inside its handler, when the notification handler returns (§4.1).
 //
 // Energy (D22, DESIGN.md §17): while the boost is inactive only event notifications run (`SignalSource.isAlwaysOn`,
-// plus the CoreMediaIO listeners while Fill Light's camera rule is on); no timer, task or IOPS percent source. The
+// plus the CoreMediaIO listeners while Fill Light's camera rule is on); no timer or IOPS percent source. The
 // boost-only sources (battery percent on battery, the OLED idle deadline, the 2 s full-screen re-check, the schedule
-// boundary) start in `setBoostActive(true)` and stop in `setBoostActive(false)`. The engine keeps the boost active
-// while the master is on and any display would be scaled or dimmed if no automatic pause (battery, idle, full screen,
-// app, schedule) stopped it, so the sources that END those pauses keep running; with the master off nothing does.
+// boundary) start in `setBoostActive(true)` and stop in `setBoostActive(false)`, which follows the displays (§7.1:
+// active while at least one is scaled or dimmed). One exception keeps that stable: an idle pause in effect keeps its
+// 2 s input poll until input returns, because the pause itself turns the boost off (see `applyBoostSources`). Two
+// event-driven pieces also run while the boost is inactive, as §7.1's table lists them with the notifications: the
+// full-screen re-check 0.6 s after a Space, app or screen event (≈ 3 ms of reads; it is what ends a full-screen or
+// per-app pause) and the one re-check when a sticky menu-bar absence expires.
 //
 // Thread: main. Entry points the system may call on other threads (thermal, Low Power, IOKit callbacks, the
 // CoreMediaIO listener proc) are nonisolated and hop through `MainHop` (§8.1 rule 2); each has an off-main test.

@@ -1,5 +1,6 @@
 // OverbrightSignalsTests/IdleSchedulerTests.swift — the OLED idle pause: one deadline, a 2 s input poll while idle,
-// video keeps it awake, OLED-only and boost-only. ARCHITECTURE.md §7.1, §7.3, D10, D22.
+// video keeps it awake, OLED-only (Policy's OLED rule) and boost-only, and stable when the pause itself turns the boost
+// off. ARCHITECTURE.md §7.1, §7.3, D10, D22.
 import Foundation
 import OverbrightCore
 import OverbrightPolicy
@@ -116,17 +117,93 @@ import Testing
         #expect(harness.monitor.snapshot.isIdleBeyondThreshold)
     }
 
-    @MainActor @Test func boostInactiveClearsIdleAndStopsReading() async {
+    @MainActor @Test func boostInactiveWhileNotIdleStopsReading() async {
+        let harness = SignalsHarness(fixture: .mpg322uxHDROn)
+        await harness.start()
+        harness.platform.idleSeconds = 10
+        harness.monitor.setBoostActive(true)
+        #expect(harness.monitor.activeSources.contains(.idleDeadline))
+        harness.monitor.setBoostActive(false)                                 // the master went off
+        #expect(!harness.monitor.activeSources.contains(.idleDeadline))
+        let reads = harness.platform.idleReads
+        harness.platform.idleSeconds = 4000
+        await harness.advance(.seconds(600))
+        #expect(harness.platform.idleReads == reads && !harness.monitor.snapshot.isIdleBeyondThreshold)
+        #expect(harness.time.sleeperCount == 0)
+    }
+
+    @MainActor @Test func anIdlePauseOutlastsTheBoostUntilInputReturns() async {
         let harness = SignalsHarness(fixture: .mpg322uxHDROn)
         await harness.start()
         harness.platform.idleSeconds = 4000
         harness.monitor.setBoostActive(true)
         #expect(harness.monitor.snapshot.isIdleBeyondThreshold)
-        harness.monitor.setBoostActive(false)
-        #expect(!harness.monitor.snapshot.isIdleBeyondThreshold)
+        harness.monitor.setBoostActive(false)                                 // the pause made every OLED neutral
+        #expect(harness.monitor.snapshot.isIdleBeyondThreshold)
+        #expect(harness.monitor.activeSources.contains(.idleDeadline))
         let reads = harness.platform.idleReads
+        await harness.advance(.seconds(10))
+        #expect(harness.platform.idleReads == reads + 5)                     // the 2 s input poll goes on
+        harness.platform.idleSeconds = 0.5                                    // the user is back
+        await harness.advance(.seconds(2))
+        #expect(!harness.monitor.snapshot.isIdleBeyondThreshold)
+        #expect(!harness.monitor.activeSources.contains(.idleDeadline))
         await harness.advance(.seconds(600))
+        #expect(harness.platform.idleReads == reads + 6 && harness.time.sleeperCount == 0)
+    }
+
+    @MainActor @Test func anIdlePauseNeverFlapsUnderAnEngineThatFollowsTheDisplays() async {
+        // The engine of §7.1: the boost is active while a display is scaled or dimmed, and the idle pause makes the one
+        // OLED neutral. Twenty minutes away must give ONE pause, not a pause every few seconds.
+        let harness = SignalsHarness(fixture: .mpg322uxHDROn)
+        let monitor = harness.monitor
+        await harness.start()
+        var transitions: [Bool] = []
+        let engine = observe({ monitor.snapshot.isIdleBeyondThreshold }) { idle in
+            transitions.append(!idle)
+            monitor.setBoostActive(!idle)
+        }
+        harness.platform.idleSeconds = 299
+        monitor.setBoostActive(true)
+        harness.platform.idleSeconds = 300.2                                  // nobody touches the Mac from here on
+        await harness.advance(.seconds(2))
+        #expect(monitor.snapshot.isIdleBeyondThreshold && !monitor.isBoostActive)
+        for _ in 0..<600 {                                                    // twenty minutes, two seconds at a time
+            await harness.advance(.seconds(2))
+        }
+        #expect(transitions == [false])
+        #expect(monitor.snapshot.isIdleBeyondThreshold && !monitor.isBoostActive)
+        #expect(harness.journal.snapshot().filter { $0.code == "signals.boostActive" }.count == 2)
+        harness.platform.idleSeconds = 0.3                                    // the user is back
+        await harness.advance(.seconds(2))
+        await harness.settle()
+        #expect(transitions == [false, true] && monitor.isBoostActive && !monitor.snapshot.isIdleBeyondThreshold)
+        #expect(monitor.activeSources.contains(.idleDeadline))                // one deadline again, no poll
+        let reads = harness.platform.idleReads
+        await harness.advance(.seconds(60))
         #expect(harness.platform.idleReads == reads)
+        engine.cancel()
+    }
+
+    @MainActor @Test func anIdlePauseEndsWhenTheOLEDGoesAwayOrSignalsStops() async {
+        let harness = SignalsHarness(fixture: .mpg322uxHDROn)
+        await harness.start()
+        harness.platform.idleSeconds = 4000
+        harness.monitor.setBoostActive(true)
+        harness.monitor.setBoostActive(false)
+        #expect(harness.monitor.snapshot.isIdleBeyondThreshold)
+        let notOLED = DisplayPreferences(oled: .notOLED)
+        harness.settings[DisplaySettings.perDisplay] = [DisplayFixture.Keys.mpg322ux: notOLED]
+        await harness.settle()
+        #expect(!harness.monitor.snapshot.isIdleBeyondThreshold)
+        #expect(!harness.monitor.activeSources.contains(.idleDeadline))
+        harness.settings[DisplaySettings.perDisplay] = [:]
+        await harness.settle()
+        harness.monitor.setBoostActive(true)
+        #expect(harness.monitor.snapshot.isIdleBeyondThreshold)
+        harness.monitor.setBoostActive(false)
+        harness.monitor.stopNow()
+        #expect(!harness.monitor.snapshot.isIdleBeyondThreshold && harness.monitor.activeSources.isEmpty)
     }
 
     @MainActor @Test func aShorterThresholdAppliesAtOnce() async {

@@ -75,6 +75,24 @@ import Testing
         #expect(harness.time.sleeperCount == 0)
     }
 
+    @Test func anIdlePauseInEffectIsTheOnlySourceThatOutlastsTheBoost() async {
+        // The pause itself turns the boost off (§7.1: no display scaled); its input poll runs until the user is back.
+        let harness = SignalsHarness(fixture: .mpg322uxHDROn)
+        harness.platform.power = PowerState(source: .battery, batteryPercent: 50, isLowPowerMode: false)
+        harness.settings[AutomationSettings.schedule] = ScheduleWindow(startMinute: 0, endMinute: 60)
+        harness.platform.idleSeconds = 4000
+        await harness.start()
+        harness.monitor.setBoostActive(true)
+        harness.monitor.setBoostActive(false)
+        #expect(harness.monitor.activeSources == alwaysOn.union([.idleDeadline]))
+        #expect(harness.platform.batterySources == 0)
+        harness.platform.idleSeconds = 1
+        await harness.advance(.seconds(2))
+        #expect(harness.monitor.activeSources == alwaysOn)
+        await harness.advance(.seconds(1))
+        #expect(harness.time.sleeperCount == 0)
+    }
+
     @Test func aPlayerRuleAloneKeepsTheWatch() async {
         let harness = SignalsHarness()
         harness.settings[AutomationSettings.pauseForFullScreenVideo] = false
