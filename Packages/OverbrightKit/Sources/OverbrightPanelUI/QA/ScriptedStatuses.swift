@@ -8,7 +8,7 @@ import OverbrightCore
 /// The named statuses of DESIGN.md §5.13, each a `BoostStatus` that drives `PreviewBoostControl`.
 public enum ScriptedStatuses {
     /// Every name, in gallery order.
-    public static var names: [String] { states.map(\.name) }
+    public static var names: [String] { states.map(\.id) }
 
     /// The status called `name`, or nil for an unknown name.
     public static func status(named name: String) -> BoostStatus? { state(named: name)?.status }
@@ -38,11 +38,12 @@ public enum ScriptedStatuses {
     public static func expandsWhy(named name: String) -> Bool { state(named: name)?.expandsWhy ?? false }
 
     /// The names of the HUD and Keep-this-level states (their snapshots are the shell's HUD windows).
-    public static var hudNames: [String] { ScriptedGallery.hudStates.map(\.name) }
+    public static var hudNames: [String] { states.filter(\.isHUDState).map(\.id) }
 
     // MARK: Private
 
-    static var states: [ScriptedState] { ScriptedGallery.panelStates + ScriptedGallery.hudStates }
+    /// Every state, built once.
+    static let states: [ScriptedState] = ScriptedGallery.panelStates + ScriptedGallery.hudStates
 
-    static func state(named name: String) -> ScriptedState? { states.first { $0.name == name } }
+    static func state(named name: String) -> ScriptedState? { states.first { $0.id == name } }
 }

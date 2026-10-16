@@ -11,7 +11,7 @@ extension ScriptedGallery {
         let pairStatuses = [P.builtInBoosted(1.291), P.msiStandard()]
         func banner(_ name: String, _ reason: LimitReason, _ banner: Banner, symbol: StatusSymbolState = .paused,
                     pausedUntil: Date? = nil) -> ScriptedState {
-            ScriptedState(name: name, status: P.status(P.held(pairStatuses, by: reason), symbol: symbol, banner: banner,
+            ScriptedState(id: name, status: P.status(P.held(pairStatuses, by: reason), symbol: symbol, banner: banner,
                                                        pausedUntil: pausedUntil),
                           facts: pair, configure: builtInBrightRoom)
         }
@@ -29,7 +29,7 @@ extension ScriptedGallery {
     /// The conflict banners (a long app name; a right-to-left one).
     static func conflictStates(booster: ConflictingApp, colorApp: ConflictingApp) -> [ScriptedState] {
         [booster, colorApp].map { app in
-            ScriptedState(name: app.severity == .booster ? "conflict-booster" : "conflict-color-app",
+            ScriptedState(id: app.severity == .booster ? "conflict-booster" : "conflict-color-app",
                           status: P.status(P.held([P.builtInBoosted(1.291), P.msiStandard()], by: .conflict(app)),
                                            symbol: .attention, banner: .conflict(app)),
                           facts: pair, configure: builtInBrightRoom)
@@ -40,7 +40,7 @@ extension ScriptedGallery {
     static func perDisplayStates(mayInterfere: ConflictingApp, conflicts: [ScriptedState]) -> [ScriptedState] {
         let msiBoosting = P.msiBoosted(1.14)
         func paused(_ name: String, _ reason: LimitReason) -> ScriptedState {
-            ScriptedState(name: name, status: P.status(P.held([P.builtInBoosted(1.291)], by: reason) + [msiBoosting]),
+            ScriptedState(id: name, status: P.status(P.held([P.builtInBoosted(1.291)], by: reason) + [msiBoosting]),
                           facts: pair, configure: { settings in builtInBrightRoom(settings); msiOn(0.5)(settings) })
         }
         let flicker = P.display(P.builtIn, phase: .failed(.oscillation), reasons: [.tripped(.oscillation)],
@@ -50,25 +50,25 @@ extension ScriptedGallery {
         var oledIdle = P.held([msiBoosting], by: .oledIdle)
         oledIdle.insert(P.builtInBoosted(1.291), at: 0)
         return [
-            ScriptedState(name: "heat-cap", status: P.status([P.builtInBoosted(1.2, reasons: [.thermalSerious], requested: 1.291),
+            ScriptedState(id: "heat-cap", status: P.status([P.builtInBoosted(1.2, reasons: [.thermalSerious], requested: 1.291),
                                                               P.msiStandard()]),
                           facts: pair, configure: builtInBrightRoom),
         ] + conflicts + [
-            ScriptedState(name: "conflict-may-interfere",
+            ScriptedState(id: "conflict-may-interfere",
                           status: P.status([P.builtInBoosted(1.291, reasons: [.conflict(mayInterfere)]), P.msiStandard()]),
                           facts: pair, configure: builtInBrightRoom),
-            ScriptedState(name: "flicker-stop", status: P.status([flicker, P.msiStandard()], symbol: .attention,
+            ScriptedState(id: "flicker-stop", status: P.status([flicker, P.msiStandard()], symbol: .attention,
                                                                  banner: .flickerStop(display: P.builtIn.ref.key)),
                           facts: pair, configure: builtInBrightRoom),
-            ScriptedState(name: "foreign-table", status: P.status([foreign, P.msiStandard()], symbol: .attention,
+            ScriptedState(id: "foreign-table", status: P.status([foreign, P.msiStandard()], symbol: .attention,
                                                                   banner: .foreignTableAtLaunch),
                           facts: pair, configure: builtInBrightRoom),
             paused("full-screen-video", .fullScreenVideo),
             paused("full-screen", .fullScreenApp),
             paused("paused-app", .pausedApp(bundleID: "com.example.long-named-video-player-for-testing")),
-            ScriptedState(name: "oled-idle", status: P.status(oledIdle), facts: pair,
+            ScriptedState(id: "oled-idle", status: P.status(oledIdle), facts: pair,
                           configure: { settings in builtInBrightRoom(settings); msiOn(0.5)(settings) }),
-            ScriptedState(name: "compatibility",
+            ScriptedState(id: "compatibility",
                           status: P.status([P.display(P.builtIn, phase: .boosted, target: .boost(gain: 1.291),
                                                       eligibility: P.eligibility(P.builtInVerdict,
                                                                                  advisories: [.compatibilityModeAdvised, .notCalibrated],
@@ -92,31 +92,31 @@ extension ScriptedGallery {
                             reading: P.reading(P.proDisplay, current: 3.2, potential: 16))
         let studio = P.display(P.studioDisplay, eligibility: P.eligibility(P.studioVerdict, advisories: [.notCalibrated]))
         return [
-            ScriptedState(name: "why-expanded", status: P.status([P.builtInBoosted(1.291), sidecar]),
+            ScriptedState(id: "why-expanded", status: P.status([P.builtInBoosted(1.291), sidecar]),
                           facts: [P.builtIn, P.sidecar], configure: builtInBrightRoom, expandsWhy: true),
-            ScriptedState(name: "nothing-capable", status: P.status([lcd, msiOff, sidecar]),
+            ScriptedState(id: "nothing-capable", status: P.status([lcd, msiOff, sidecar]),
                           facts: [P.lcd, P.msiHDROff, P.sidecar], configure: levels([P.lcd.ref.key: 0, P.msi.ref.key: 0]),
                           expandsWhy: true),
-            ScriptedState(name: "two-identical-externals", status: P.status([P.builtInBoosted(1.291), P.msiStandard(), twin]),
+            ScriptedState(id: "two-identical-externals", status: P.status([P.builtInBoosted(1.291), P.msiStandard(), twin]),
                           facts: [P.builtIn, P.msi, P.msiTwin],
                           configure: levels([P.builtIn.ref.key: 0.5, P.msi.ref.key: 0, P.msiTwin.ref.key: 0])),
-            ScriptedState(name: "long-russian-name",
+            ScriptedState(id: "long-russian-name",
                           status: P.status([P.builtInBoosted(1.291, facts: P.builtInRussian), P.msiStandard()]),
                           facts: [P.builtInRussian, P.msi], configure: builtInBrightRoom),
-            ScriptedState(name: "fill-light-card", status: P.status([P.builtInBoosted(1.291), P.msiStandard()]),
+            ScriptedState(id: "fill-light-card", status: P.status([P.builtInBoosted(1.291), P.msiStandard()]),
                           facts: pair, configure: builtInBrightRoom, fillLightOn: true),
-            ScriptedState(name: "calibration-tip", status: P.status([P.builtInBoosted(1.291), P.msiStandard()]),
+            ScriptedState(id: "calibration-tip", status: P.status([P.builtInBoosted(1.291), P.msiStandard()]),
                           facts: pair, configure: { settings in
                               builtInBrightRoom(settings)
                               settings[OnboardingSettings.calibrationTipShown] = false
                           }),
-            ScriptedState(name: "four-displays", status: P.status([P.builtInBoosted(1.291), P.msiStandard(), pro, studio]),
+            ScriptedState(id: "four-displays", status: P.status([P.builtInBoosted(1.291), P.msiStandard(), pro, studio]),
                           facts: [P.builtIn, P.msi, P.proDisplay, P.studioDisplay],
                           configure: levels([P.builtIn.ref.key: 0.5, P.msi.ref.key: 0, P.proDisplay.ref.key: 0.5,
                                              P.studioDisplay.ref.key: 0])),
-            ScriptedState(name: "menubar-hidden", status: P.status([P.builtInBoosted(1.291)]), facts: [P.builtIn],
+            ScriptedState(id: "menubar-hidden", status: P.status([P.builtInBoosted(1.291)]), facts: [P.builtIn],
                           configure: builtInBrightRoom),
-            ScriptedState(name: "move-to-applications",
+            ScriptedState(id: "move-to-applications",
                           status: P.status([P.display(P.builtIn, eligibility: P.eligibility(P.builtInVerdict))], isOn: false),
                           facts: [P.builtIn]),
         ]
@@ -132,7 +132,7 @@ extension ScriptedGallery {
                                   eligibility: P.eligibility(P.builtInVerdict, advisories: [.notCalibrated]), requested: 1.291)
         func hud(_ name: String, _ displays: [DisplayStatus], _ change: LevelChange, isOn: Bool = true,
                  symbol: StatusSymbolState? = nil, levels: [DisplayKey: Double] = [P.builtIn.ref.key: 0.5]) -> ScriptedState {
-            ScriptedState(name: name, status: P.status(displays, isOn: isOn, symbol: symbol, lastChange: change),
+            ScriptedState(id: name, status: P.status(displays, isOn: isOn, symbol: symbol, lastChange: change),
                           facts: displays.map(\.key).compactMap { k in [P.builtIn, P.msi].first { $0.ref.key == k } },
                           configure: ScriptedGallery.levels(levels))
         }
@@ -159,7 +159,7 @@ extension ScriptedGallery {
             hud("hud-automation-schedule", P.held([P.builtInBoosted(1.291)], by: .outsideSchedule),
                 P.change(.automationStopped(.outsideSchedule), source: .automation), symbol: .paused),
             hud("hud-automation-back", [P.builtInBoosted(1.291)], P.change(.automationResumed, source: .automation)),
-            ScriptedState(name: "keep-level",
+            ScriptedState(id: "keep-level",
                           status: P.status([P.display(P.builtIn, phase: .dimmed, target: .dim(light: 0.05),
                                                       eligibility: P.eligibility(P.builtInVerdict), gain: 0.05)],
                                            symbol: .dimming, pendingLowLevel: low),

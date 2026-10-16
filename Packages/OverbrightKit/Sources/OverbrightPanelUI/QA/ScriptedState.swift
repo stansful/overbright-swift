@@ -7,7 +7,7 @@ import OverbrightCore
 /// A named state of the panel, the menu or the HUD.
 struct ScriptedState {
     /// The `--qa-state` name.
-    let name: String
+    let id: String
     /// What the engine publishes.
     let status: BoostStatus
     /// The displays the directory lists (the status's displays, with their facts).
@@ -18,6 +18,9 @@ struct ScriptedState {
     var fillLightOn = false
     /// The "Why?" row is expanded.
     var expandsWhy = false
+
+    /// A HUD or Keep-this-level state (DESIGN.md §5.13's last row).
+    var isHUDState: Bool { id.hasPrefix("hud-") || id == "keep-level" }
 }
 
 /// Settings edits the gallery uses.

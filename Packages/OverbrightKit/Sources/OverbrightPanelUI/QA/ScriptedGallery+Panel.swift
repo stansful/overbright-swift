@@ -46,21 +46,21 @@ enum ScriptedGallery {
         let mayInterfere = P.app("Display Tuner", severity: .conditional)
         let schedule = ScheduleWindow(startMinute: 480, endMinute: 1200)
         return [
-            ScriptedState(name: "off", status: P.status(P.held([P.display(P.builtIn, eligibility: P.eligibility(P.builtInVerdict)),
+            ScriptedState(id: "off", status: P.status(P.held([P.display(P.builtIn, eligibility: P.eligibility(P.builtInVerdict)),
                                                                   P.msiStandard()], by: .masterOff), isOn: false),
                           facts: pair),
-            ScriptedState(name: "standard", status: P.status([P.display(P.builtIn, eligibility: P.eligibility(P.builtInVerdict)),
+            ScriptedState(id: "standard", status: P.status([P.display(P.builtIn, eligibility: P.eligibility(P.builtInVerdict)),
                                                               P.msiStandard()]),
                           facts: pair, configure: levels([P.builtIn.ref.key: 0, P.msi.ref.key: 0])),
-            ScriptedState(name: "boosting", status: P.status([P.builtInBoosted(1.291, advisories: []), P.msiStandard()],
+            ScriptedState(id: "boosting", status: P.status([P.builtInBoosted(1.291, advisories: []), P.msiStandard()],
                                                              autoOffAt: P.now.addingTimeInterval(23 * 60)),
                           facts: pair, configure: { settings in
                               calibratedBuiltIn(settings)
                               settings[AutomationSettings.autoOffMinutes] = 30
                           }),
-            ScriptedState(name: "boosting-uncalibrated", status: P.status([builtInBR, P.msiStandard()]), facts: pair,
+            ScriptedState(id: "boosting-uncalibrated", status: P.status([builtInBR, P.msiStandard()]), facts: pair,
                           configure: builtInBrightRoom),
-            ScriptedState(name: "boosting-nits",
+            ScriptedState(id: "boosting-nits",
                           status: P.status([builtInBR, P.msiBoosted(1.218, sdrWhite: SDRWhiteEstimate(nits: 265.05, source: .hdrFrameAverage),
                                                                     advisories: [.oledCare])]),
                           facts: pair, configure: { settings in
@@ -70,7 +70,7 @@ enum ScriptedGallery {
                                   $0.calibration = ScriptedSettings.calibration(potential: 4.6549)
                               }
                           }),
-            ScriptedState(name: "limited-by-macos",
+            ScriptedState(id: "limited-by-macos",
                           status: P.status([P.builtInBoosted(0.97 * 1.6, headroom: 1.6, reasons: [.headroom], requested: 1000.0 / 600),
                                             P.msiStandard()]),
                           facts: pair, configure: { settings in
@@ -79,10 +79,10 @@ enum ScriptedGallery {
                               }
                               levels([P.msi.ref.key: 0])(settings)
                           }),
-            ScriptedState(name: "safe-limit", status: P.status([P.builtInBoosted(1000.0 / 600, reasons: [.safeLimit]),
+            ScriptedState(id: "safe-limit", status: P.status([P.builtInBoosted(1000.0 / 600, reasons: [.safeLimit]),
                                                                 P.msiStandard()]),
                           facts: pair, configure: levels([P.builtIn.ref.key: 1, P.msi.ref.key: 0])),
-            ScriptedState(name: "safe-limit-hdr-external",
+            ScriptedState(id: "safe-limit-hdr-external",
                           status: P.status([P.display(P.hdrExternal, phase: .boosted, target: .boost(gain: 1.4),
                                                       reasons: [.safeLimit],
                                                       eligibility: P.eligibility(P.hdrExternalVerdict, advisories: [.notCalibrated]),
@@ -90,32 +90,32 @@ enum ScriptedGallery {
                           facts: [P.hdrExternal], configure: { settings in
                               ScriptedSettings.set(settings, P.hdrExternal.ref.key) { $0.boostEnabled = true; $0.level = LevelPosition(1) }
                           }),
-            ScriptedState(name: "safe-limit-oled", status: P.status([P.msiBoosted(1.3, reasons: [.oledLimit])]),
+            ScriptedState(id: "safe-limit-oled", status: P.status([P.msiBoosted(1.3, reasons: [.oledLimit])]),
                           facts: [P.msi], configure: msiOn(1)),
-            ScriptedState(name: "small-gain", status: P.status([P.msiBoosted(1.14)]), facts: [P.msi], configure: msiOn(0.5)),
-            ScriptedState(name: "below-full-brightness",
+            ScriptedState(id: "small-gain", status: P.status([P.msiBoosted(1.14)]), facts: [P.msi], configure: msiOn(0.5)),
+            ScriptedState(id: "below-full-brightness",
                           status: P.status([P.builtInBoosted(1.12, headroom: 3.2, reasons: [.nearFullBrightnessOnly], requested: 1.291),
                                             P.msiStandard()]),
                           facts: pair, configure: builtInBrightRoom),
-            ScriptedState(name: "preparing",
+            ScriptedState(id: "preparing",
                           status: P.status([P.display(P.builtIn, phase: .arming(rung: 1), target: .boost(gain: 1.291),
                                                       reasons: [.waitingForHeadroom],
                                                       eligibility: P.eligibility(P.builtInVerdict, advisories: [.notCalibrated]),
                                                       requested: 1.291), P.msiStandard()], symbol: .preparing),
                           facts: pair, configure: builtInBrightRoom),
-            ScriptedState(name: "no-extra-range", status: P.status([failed(tries: 1), P.msiStandard()], symbol: .attention),
+            ScriptedState(id: "no-extra-range", status: P.status([failed(tries: 1), P.msiStandard()], symbol: .attention),
                           facts: pair, configure: builtInBrightRoom),
-            ScriptedState(name: "still-no-extra-range", status: P.status([failed(tries: 2), P.msiStandard()], symbol: .attention),
+            ScriptedState(id: "still-no-extra-range", status: P.status([failed(tries: 2), P.msiStandard()], symbol: .attention),
                           facts: pair, configure: builtInBrightRoom),
-            ScriptedState(name: "dimmed",
+            ScriptedState(id: "dimmed",
                           status: P.status([P.display(P.builtIn, phase: .dimmed, target: .dim(light: 0.25),
                                                       eligibility: P.eligibility(P.builtInVerdict, advisories: [.notCalibrated]),
                                                       gain: 0.25), P.msiStandard()], symbol: .dimming),
                           facts: pair, configure: levels([P.builtIn.ref.key: P.dimmed25.value, P.msi.ref.key: 0])),
-            ScriptedState(name: "extra-brightness-off",
+            ScriptedState(id: "extra-brightness-off",
                           status: P.status([builtInBR, P.msiStandard(reasons: [.boostNotEnabled])]), facts: pair,
                           configure: levels([P.builtIn.ref.key: 0.5, P.msi.ref.key: 0.5])),
-            ScriptedState(name: "linked", status: P.status([builtInBR, P.msiBoosted(1.14)]), facts: pair,
+            ScriptedState(id: "linked", status: P.status([builtInBR, P.msiBoosted(1.14)]), facts: pair,
                           configure: { settings in
                               settings[DisplaySettings.linkLevels] = true
                               msiOn(0.5)(settings)
