@@ -9,6 +9,10 @@ import QuartzCore
 /// the same headroom-tagged background colour as the T1 trigger) or a clear-only `CAMetalLayer` (14–25), so only the
 /// frame's pixels are lit and nothing is redrawn until the style or the display changes.
 @MainActor final class FillLightLayers {
+    /// The Metal path's present: clears one drawable to the colour (`wantsEDR`: the layer asks for EDR) and presents
+    /// it, `MetalFrameContent.present`; false when no drawable was free.
+    typealias MetalPresent = @MainActor (_ rgb: LinearRGB, _ wantsEDR: Bool) -> Bool
+
     /// The window's hosting layer.
     let root = CALayer()
     /// The coloured layer (a `CAMetalLayer` on the Metal path).
@@ -17,12 +21,13 @@ import QuartzCore
     let mask = CAShapeLayer()
     /// The colour path actually used (a requested path the system cannot provide falls back: tagged → Metal → SDR).
     let rendering: FillLightRendering
-    private let metal: MetalFrameContent?
+    /// The Metal path's present (it owns the `MetalFrameContent`); nil on the other paths.
+    private let present: MetalPresent?
     /// The style shown last.
     private(set) var style: FillLightStyle?
 
     /// The layers for `display`, rendering with `requested` where this Mac supports it.
-    init(rendering requested: FillLightRendering, display: CGDirectDisplayID) {
+    convenience init(rendering requested: FillLightRendering, display: CGDirectDisplayID) {
         var rendering = requested
         if rendering == .taggedLayer {
             if #unavailable(macOS 26.0) { rendering = .metalClear }
@@ -32,9 +37,20 @@ import QuartzCore
             metal = MetalFrameContent(display: display)
             if metal == nil { rendering = .sdr }
         }
+        var present: MetalPresent?
+        if let metal { present = { rgb, wantsEDR in metal.present(rgb, wantsEDR: wantsEDR) } }
+        self.init(rendering: rendering, content: metal?.layer ?? CALayer(), present: present)
+    }
+
+    /// The Metal path over `content` with `present` standing in for the drawable (tests: no device, no window).
+    convenience init(metalContent content: CALayer, present: @escaping MetalPresent) {
+        self.init(rendering: .metalClear, content: content, present: present)
+    }
+
+    private init(rendering: FillLightRendering, content: CALayer, present: MetalPresent?) {
         self.rendering = rendering
-        self.metal = metal
-        content = metal?.layer ?? CALayer()
+        self.content = content
+        self.present = present
         root.isOpaque = false
         mask.fillRule = .evenOdd
         mask.fillColor = CGColor(gray: 0, alpha: 1)   // a mask uses alpha only
@@ -83,7 +99,7 @@ import QuartzCore
             // nextDrawable() can wait up to 1 s on the main thread when no drawable is free (a hidden window's are
             // not released), so the caller presents only while the window is visible.
             guard presentsDrawable else { return true }
-            return metal?.present(rgb, wantsEDR: style.headroomRequest != nil) ?? true
+            return present?(rgb, style.headroomRequest != nil) ?? true
         case .sdr:
             content.backgroundColor = EDRColor.untagged(rgb)
             return true

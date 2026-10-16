@@ -127,6 +127,32 @@ import Testing
         #expect(layers.showColor(presentsDrawable: false))
     }
 
+    /// The Metal path's gate (C-PLATFORM-11): with `presentsDrawable` false (hidden, or not ordered in yet) the layers
+    /// lay the frame out but never ask for a drawable, whose `nextDrawable()` can block the main thread for 1 s; when
+    /// asked, one present per call, carrying the style's EDR flag, and a missing drawable is reported for the retry.
+    @Test func theMetalPathPresentsADrawableOnlyWhenAsked() {
+        let presents = MetalPresents()
+        let layers = FillLightLayers(metalContent: CAMetalLayer()) { rgb, wantsEDR in
+            presents.calls.append((red: rgb.red, wantsEDR: wantsEDR))
+            return presents.drawableFree
+        }
+        #expect(layers.rendering == .metalClear)
+        #expect(layers.showColor())                                         // no style yet: nothing to present
+        #expect(layers.apply(edrStyle(), geometry: geometry, scale: 2, presentsDrawable: false))
+        #expect(layers.showColor(presentsDrawable: false))
+        #expect(presents.calls.isEmpty, "no drawable is asked for while presentsDrawable is false")
+        #expect(layers.mask.path == geometry.path && layers.content.mask === layers.mask)   // laid out all the same
+        #expect(layers.content.backgroundColor == nil)                      // the Metal path never sets a colour layer
+        #expect(layers.showColor())
+        #expect(presents.calls.count == 1 && presents.calls.first?.wantsEDR == true)
+        #expect(abs((presents.calls.first?.red ?? 0) - 1.6) < 1e-9)
+        presents.drawableFree = false
+        #expect(!layers.apply(edrStyle(value: 0.8, request: nil), geometry: geometry, scale: 2))
+        #expect(presents.calls.count == 2 && presents.calls.last?.wantsEDR == false)
+        #expect(layers.apply(edrStyle(), geometry: geometry, scale: 2, presentsDrawable: false))
+        #expect(presents.calls.count == 2)
+    }
+
     @Test func changingTheStyleRecoloursInPlace() throws {
         guard #available(macOS 26.0, *) else { return }
         let layers = FillLightLayers(rendering: .taggedLayer, display: 0)
@@ -143,4 +169,10 @@ import Testing
 /// The display IDs a window reported as its new screen.
 @MainActor private final class ScreenReports {
     var ids: [CGDirectDisplayID?] = []
+}
+
+/// The presents a Metal-path stand-in received, and whether it has a free drawable.
+@MainActor private final class MetalPresents {
+    var calls: [(red: Double, wantsEDR: Bool)] = []
+    var drawableFree = true
 }
