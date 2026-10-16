@@ -11,7 +11,9 @@
 //   frontmost app; accessory and agent apps (overlay shades, other apps' overlays) and window owners NSWorkspace does
 //   not list at all never count unless frontmost; our own PID and the Dock never count (our Compatibility overlay,
 //   Fill Light and calibration windows are full-screen windows of ours);
-// - the menu-bar window is matched by the WindowServer's PID, never by its owner name (names are localized);
+// - the menu-bar window is matched by the WindowServer's PID, never by its owner name (names are localized); with
+//   "Displays have separate Spaces" off only the main display has one, so on the others only exact-and-frontmost
+//   counts;
 // - full-screen video: the covering window's owner holds a display-sleep assertion (`PlaybackAssertions`);
 // - the displays that show the frontmost app's topmost layer-0 window (per-app rules pause only those, §6.5).
 // The locked screen's loginwindow windows sit at layers 2001/2004 and never count.
@@ -98,14 +100,22 @@ nonisolated enum FullScreenDetector {
     /// Whether the WindowServer's menu-bar window is on each display: a menu-bar-layer window owned by
     /// `windowServerPID` at the display's top-left corner with its width. Unknown PID (libproc could not tell, see
     /// `WindowListSnapshot`) → present everywhere (the conservative answer: only the exact-and-frontmost rule can then
-    /// match).
-    static func observedMenuBar(windows: [Window], displays: [Display], windowServerPID: Int32?) -> [DisplayKey: Bool] {
+    /// match). `separateSpaces` false ("Displays have separate Spaces" off): only the main display has a menu bar, so
+    /// every other display counts as present for the same reason (its missing menu bar says nothing).
+    static func observedMenuBar(windows: [Window], displays: [Display], windowServerPID: Int32?,
+                                separateSpaces: Bool = true) -> [DisplayKey: Bool] {
         var result: [DisplayKey: Bool] = [:]
         for display in displays {
-            guard let windowServerPID else { result[display.key] = true; continue }
+            guard let windowServerPID, separateSpaces || isMain(display) else { result[display.key] = true; continue }
             result[display.key] = windows.contains { isMenuBar($0, of: display.bounds, windowServerPID: windowServerPID) }
         }
         return result
+    }
+
+    /// The main display: the one at the origin of the global display space (`CGMainDisplayID`'s definition), which
+    /// carries the only menu bar while Spaces span all displays.
+    static func isMain(_ display: Display) -> Bool {
+        abs(display.bounds.minX) < 1 && abs(display.bounds.minY) < 1
     }
 
     /// The WindowServer's menu-bar window of THIS display: same top-left corner and width (two displays side by side
@@ -120,9 +130,11 @@ nonisolated enum FullScreenDetector {
 
     /// Evaluates every display with the observed menu bar (no sticky absence; `FullScreenTracker` passes the sticky
     /// presence through the other overload).
-    static func evaluate(windows: [Window], displays: [Display], context: Context, windowServerPID: Int32?) -> Result {
+    static func evaluate(windows: [Window], displays: [Display], context: Context, windowServerPID: Int32?,
+                         separateSpaces: Bool = true) -> Result {
         evaluate(windows: windows, displays: displays, context: context,
-                 menuBarPresent: observedMenuBar(windows: windows, displays: displays, windowServerPID: windowServerPID))
+                 menuBarPresent: observedMenuBar(windows: windows, displays: displays, windowServerPID: windowServerPID,
+                                                 separateSpaces: separateSpaces))
     }
 
     /// Evaluates every display. `windows` is front to back (the window server's order); `menuBarPresent` is the

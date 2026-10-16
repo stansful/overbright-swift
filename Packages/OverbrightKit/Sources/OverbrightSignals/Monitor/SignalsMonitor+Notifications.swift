@@ -5,7 +5,8 @@
 // `SignalsPlatform.observeDistributed` (immediate delivery, `DistributedObserver`). Thermal state and Low Power Mode
 // are posted on ANY thread: they use `queue: nil` and a `@Sendable` block that hops through `MainHop`, never a
 // main-actor `@objc` selector (§8.1 rule 2; `ThermalOffMainTests`, `LowPowerOffMainTests`). The handlers update the
-// snapshot first, then post the event (synchronous delivery).
+// snapshot first, then post the event (synchronous delivery); a shield's handlers then stop or resume the boost-only
+// sources (`shieldChanged`). Launches and terminations go through `SignalsMonitor+Apps.swift`.
 import AppKit
 import Foundation
 import OverbrightCore
@@ -37,6 +38,7 @@ extension SignalsMonitor {
         onMain(.workspaceNotifications, workspace, NSWorkspace.willSleepNotification) { monitor, _ in
             monitor.update { $0.isSystemSleeping = true }
             monitor.post(.willSleep)
+            monitor.shieldChanged()
         }
         onMain(.workspaceNotifications, workspace, NSWorkspace.didWakeNotification) { monitor, _ in
             monitor.update { $0.isSystemSleeping = false }
@@ -46,19 +48,23 @@ extension SignalsMonitor {
         onMain(.workspaceNotifications, workspace, NSWorkspace.screensDidSleepNotification) { monitor, _ in
             monitor.update { $0.areDisplaysAsleep = true }
             monitor.post(.screensDidSleep)
+            monitor.shieldChanged()
         }
         onMain(.workspaceNotifications, workspace, NSWorkspace.screensDidWakeNotification) { monitor, _ in
             monitor.update { $0.areDisplaysAsleep = false }
             monitor.post(.screensDidWake)
+            monitor.shieldChanged()
             monitor.fullScreen.request()
         }
         onMain(.workspaceNotifications, workspace, NSWorkspace.sessionDidResignActiveNotification) { monitor, _ in
             monitor.update { $0.isSessionActive = false }
             monitor.post(.sessionResigned)
+            monitor.shieldChanged()
         }
         onMain(.workspaceNotifications, workspace, NSWorkspace.sessionDidBecomeActiveNotification) { monitor, _ in
             monitor.update { $0.isSessionActive = true }
             monitor.post(.sessionBecameActive)
+            monitor.shieldChanged()
             monitor.fullScreen.request()
         }
         onMain(.workspaceNotifications, workspace, NSWorkspace.activeSpaceDidChangeNotification) { monitor, _ in
@@ -69,15 +75,14 @@ extension SignalsMonitor {
             monitor.post(.appActivated(bundleID: app?.bundleID))
             monitor.fullScreen.request()
         }
+        // Regular apps only; agent and accessory apps reach `appsChanged` through the running list's KVO.
         onMain(.workspaceNotifications, workspace, NSWorkspace.didLaunchApplicationNotification) { monitor, app in
-            monitor.refreshConflicts(launched: app, terminatedPID: nil)
-            monitor.post(.appLaunched(bundleID: app?.bundleID))
+            monitor.appLaunchNotified(app)
         }
         onMain(.workspaceNotifications, workspace, NSWorkspace.didTerminateApplicationNotification) { monitor, app in
-            monitor.refreshConflicts(launched: nil, terminatedPID: app?.processID)
-            monitor.post(.appTerminated(bundleID: app?.bundleID, processID: app?.processID ?? 0))
-            monitor.fullScreen.request()
+            monitor.appTerminationNotified(app)
         }
+        observeRunningApplications()
         let accessibility = NSWorkspace.accessibilityDisplayOptionsDidChangeNotification
         onMain(.workspaceNotifications, workspace, accessibility) { monitor, _ in
             let reduceMotion = monitor.platform.reduceMotion()
@@ -88,18 +93,22 @@ extension SignalsMonitor {
         onDistributed(DistributedName.locked) { monitor in
             monitor.update { $0.isScreenLocked = true }
             monitor.post(.locked)
+            monitor.shieldChanged()
         }
         onDistributed(DistributedName.unlocked) { monitor in
             monitor.update { $0.isScreenLocked = false }
             monitor.post(.unlocked)
+            monitor.shieldChanged()
         }
         onDistributed(DistributedName.screensaverStarted) { monitor in
             monitor.update { $0.isScreensaverRunning = true }
             monitor.post(.screensaverStarted)
+            monitor.shieldChanged()
         }
         onDistributed(DistributedName.screensaverStopped) { monitor in
             monitor.update { $0.isScreensaverRunning = false }
             monitor.post(.screensaverStopped)
+            monitor.shieldChanged()
         }
         onDistributed(DistributedName.displayProfile) { monitor in
             monitor.post(.colorProfileChanged)
@@ -160,22 +169,14 @@ extension SignalsMonitor {
         post(suppressed ? .hdrSuppressionBegan : .hdrSuppressionEnded)
     }
 
-    /// After a system wake: the power source may have changed, Spaces settle, and the deadlines measured across the
-    /// sleep are re-read.
+    /// After a system wake: the power source may have changed, Spaces settle, and the boost-only sources follow the
+    /// shield (`willSleep` suspended them; reading the power re-applies them, and idle tracking that resumes reads the
+    /// idle time). A deadline that ran across the sleep (no `willSleep` seen) is re-read too.
     func didWake() {
+        let wasTracking = isIdleTracking
         powerSourceChanged()
         fullScreen.request()
-        if isIdleTracking { evaluateIdle() }
-    }
-
-    /// Re-reads the running conflicts after a launch or termination and publishes them.
-    func refreshConflicts(launched: RunningAppInfo?, terminatedPID: Int32?) {
-        guard let conflictProbe else { return }
-        let conflicts = conflictProbe.runningConflicts(launched: launched, terminatedPID: terminatedPID)
-        guard conflicts != snapshot.conflicts else { return }
-        update { $0.conflicts = conflicts }
-        record("conflicts.changed", ["count": Double(conflicts.count)])
-        log.info("conflicts: \(conflicts.map(\.entryID).joined(separator: ","), privacy: .public)")
+        if wasTracking { evaluateIdle() }
     }
 
     // MARK: Registration

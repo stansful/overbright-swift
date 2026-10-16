@@ -981,9 +981,9 @@ Displays use more power when brighter: that is the product, and the README says 
 
 | State | Allowed work | Target |
 |---|---|---|
-| Off (nothing dimmed) | event notifications only, and the one-shot work an event asks for (the full-screen re-check 0.6 s after a Space, app or screen event, which ends a full-screen or app pause); no periodic timers or tasks, no windows, Metal devices or IOPS percent source | 0 wake-ups/s; Energy Impact 0.0; < 40 MB resident |
+| Off (nothing dimmed) | event notifications only (with the KVO of the running-app list, which catches agent apps' launches), and the one-shot work an event asks for (the full-screen re-check 0.6 s after a Space, app or screen event, which ends a full-screen or app pause); no periodic timers or tasks, no windows, Metal devices or IOPS percent source | 0 wake-ups/s; Energy Impact 0.0; < 40 MB resident |
 | Preparing (first arm) | 10 Hz headroom reads; ≤ 7 rungs × 2.5 s once per display and macOS build, then ≈ 1–3 s | — |
-| Boosted, steady (T1/T2) | 2 s drift check (one table read, one headroom read, ≤ 2 ms window list when a full-screen rule is on) + the 2 s hang ping; a ≤ 3 s 10 Hz poll burst only after a raise that waits for range | ≤ 1.5 wake-ups/s; < 0.1 % CPU; no GPU work after the first frame |
+| Boosted, steady (T1/T2) | 2 s drift check (one table read, one headroom read) + the 2 s hang ping + Signals' 2 s full-screen and playback watch (≤ 2 ms window list) while a full-screen or "while playing" rule is on: its own timer by decision, not a ride on the drift check (ARCHITECTURE.md §7.1 "Playing video"; the sleeps' 10 % tolerance lets the system coalesce them); Signals' boost-only work stops while the screen is shielded; a ≤ 3 s 10 Hz poll burst only after a raise that waits for range | ≤ 1.5 wake-ups/s; < 0.1 % CPU; no GPU work after the first frame |
 | Boosted with T3 | + one tiny present every 5 s | measured and reported in the release notes |
 | Ramping | ≈ 60 table writes/s for ≤ 0.4 s | — |
 | Panel open | redraw on change only; the allowed-now marker ≤ 4 Hz | < 2 % CPU while dragging |

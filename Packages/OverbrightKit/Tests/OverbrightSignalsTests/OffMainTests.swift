@@ -138,6 +138,32 @@ private func onBackgroundQueue(_ body: @escaping @Sendable () -> Void) async -> 
     }
 }
 
+@MainActor @Suite struct RunningAppsObserverOffMainTests {
+    @Test func aChangeReportedOnABackgroundThreadHopsToTheMainActor() async {
+        let log = ChangeLog()
+        let me = NSRunningApplication.current
+        let offMain = await onBackgroundQueue {
+            RunningAppsObserver.deliver(kind: .insertion, old: nil, new: [me]) { @MainActor change in
+                log.changes.append(change)
+            }
+        }
+        #expect(offMain)
+        #expect(await eventually { log.changes == [RunningAppsChange(added: [RunningAppInfo(me)], removed: [])] })
+    }
+
+    @Test func theKVOChangeHandlerSurvivesAListChangedOffTheMainThread() async {
+        // KVO notifies on the changing thread: the handler built in the nonisolated `changeHandler` must not trap.
+        let list = ScriptedRunningList()
+        let log = ChangeLog()
+        let token = RunningAppsObserver.observe(list, \.apps) { log.changes.append($0) }
+        let me = NSRunningApplication.current
+        let offMain = await onBackgroundQueue { list.insert(me) }
+        #expect(offMain)
+        #expect(await eventually { log.changes == [RunningAppsChange(added: [RunningAppInfo(me)], removed: [])] })
+        token.cancel()
+    }
+}
+
 @MainActor @Suite struct MainHopOffMainTests {
     @Test func offMainItHopsAndOnMainItRunsAtOnce() async {
         let flag = Flag()

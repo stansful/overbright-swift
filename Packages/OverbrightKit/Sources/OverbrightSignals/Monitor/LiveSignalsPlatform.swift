@@ -1,8 +1,9 @@
 // OverbrightSignals/Monitor/LiveSignalsPlatform.swift — the real `SignalsPlatform`. ARCHITECTURE.md §7.1, §7.3.
 // Every read is public and permission-free: the session dictionary, IOKit power sources, `ProcessInfo`, `NSWorkspace`,
-// `NSScreen`, the window list (bounds, layers, PIDs, alpha only), power assertions, the idle timestamp
-// (`CGEventSource.secondsSinceLastEventType`, no Input Monitoring) and Info.plist categories. Nothing here writes,
-// and constructing it touches nothing (`constructingServicesTouchesNoHardware`).
+// `NSScreen` (and its separate-Spaces preference), the running list's KVO, the window list (bounds, layers, PIDs, alpha
+// only), power assertions, the idle timestamp (`CGEventSource.secondsSinceLastEventType`, no Input Monitoring) and
+// Info.plist categories. Nothing here writes, and constructing it touches nothing
+// (`constructingServicesTouchesNoHardware`).
 // Thread: main, except `windowList(windowServerPID:)`, whose read runs off the main actor.
 import AppKit
 import CoreGraphics
@@ -63,6 +64,12 @@ final class LiveSignalsPlatform: SignalsPlatform {
     /// `NSWorkspace.runningApplications`.
     func runningApplications() -> [RunningAppInfo] { NSWorkspace.shared.runningApplications.map(RunningAppInfo.init) }
 
+    /// KVO on `NSWorkspace.shared.runningApplications` (AppKit updates it on the main run loop).
+    func observeRunningApplications(_ handler: @escaping @MainActor @Sendable (RunningAppsChange) -> Void)
+        -> ObservationToken {
+        RunningAppsObserver.observe(NSWorkspace.shared, \.runningApplications, handler)
+    }
+
     /// `NSWorkspace.applicationUserInfoKey` of a workspace notification (`NSRunningApplication` is thread-safe).
     nonisolated func application(in notification: Notification) -> RunningAppInfo? {
         (notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication).map(RunningAppInfo.init)
@@ -86,6 +93,9 @@ final class LiveSignalsPlatform: SignalsPlatform {
             return FullScreenDetector.Display(key: key, bounds: CGDisplayBounds(id), notchBand: screen.safeAreaInsets.top)
         }
     }
+
+    /// `NSScreen.screensHaveSeparateSpaces` (a login-session preference; cheap to read).
+    func screensHaveSeparateSpaces() -> Bool { NSScreen.screensHaveSeparateSpaces }
 
     /// The window list, read off the main actor.
     func windowList(windowServerPID: Int32?) async -> WindowListSnapshot {
