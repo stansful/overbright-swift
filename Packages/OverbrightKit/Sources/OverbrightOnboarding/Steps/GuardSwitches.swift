@@ -80,8 +80,9 @@ struct GuardSwitches: View {
 }
 
 #Preview("Guard switches") {
-    GuardSwitches(choices: WelcomeChoices(), settings: SettingsStore(defaults: InMemoryDefaults()),
-                  copy: DefaultsStep.Copy.localized)
+    let services = WelcomePreview.services()
+    GuardSwitches(choices: WelcomeChoices(), settings: services.settings, copy: DefaultsStep.Copy.localized)
         .padding(WelcomeMetrics.inset)
         .frame(width: WelcomeMetrics.window.width)
+        .overbrightThemeRoot()
 }

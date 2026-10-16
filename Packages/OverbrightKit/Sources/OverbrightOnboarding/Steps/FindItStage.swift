@@ -1,8 +1,8 @@
 // OverbrightOnboarding/Steps/FindItStage.swift — step 4's stage (DESIGN.md §8): a strip of menu bar with Overbright's
 // symbol at its trailing end (the menu bar extras' side; it follows the layout direction), the caption "Click for the
 // panel, right-click for the menu", and one row per registered shortcut: its live key caps (Design's `KeyCap`, text
-// from `ShortcutCenter.displayString`) and what it does. The sun is `sun.max`, the status symbol's own fallback
-// (§4.1): the code-drawn symbol belongs to the shell.
+// from `ShortcutCenter.displayString`) and what it does; VoiceOver reads what it does as the label and the key caps as
+// the value. The sun is `sun.max`, the status symbol's own fallback (§4.1): the code-drawn symbol belongs to the shell.
 import OverbrightCore
 import OverbrightDesign
 import SwiftUI
@@ -35,7 +35,8 @@ struct FindItStage: View {
                                 .fixedSize(horizontal: false, vertical: true)
                         }
                         .accessibilityElement(children: .ignore)
-                        .accessibilityLabel(Text(verbatim: "\(copy.title(of: shortcut.id)), \(shortcut.keys)"))
+                        .accessibilityLabel(Text(verbatim: copy.title(of: shortcut.id)))
+                        .accessibilityValue(Text(verbatim: shortcut.keys))
                     }
                 }
             }
@@ -50,19 +51,21 @@ private struct MenuBarStrip: View {
         HStack(spacing: Space.l) {
             Spacer(minLength: 0)
             Image(symbol: .sunMax)
-                .font(.system(size: StepMetrics.menuBarSymbol, weight: .medium))
+                .font(.body.weight(.medium))
                 .frame(width: StepMetrics.menuBarHighlight.width, height: StepMetrics.menuBarHighlight.height)
                 .background(.quaternary, in: RoundedRectangle(cornerRadius: Radius.control, style: .continuous))
         }
         .padding(.horizontal, Space.s)
         .frame(height: StepMetrics.menuBarHeight)
-        .stepCard(cornerRadius: Radius.control, fillOpacity: StepMetrics.menuBarFill)
+        .stepCard(cornerRadius: Radius.control)
         .accessibilityHidden(true)
     }
 }
 
 #Preview("Find it stage") {
-    FindItStage(shortcuts: FindItShortcut.rows(PreviewShortcutCenter()), copy: FindItStep.Copy.localized)
+    let services = WelcomePreview.services()
+    FindItStage(shortcuts: FindItShortcut.rows(services.shortcuts), copy: FindItStep.Copy.localized)
         .padding(WelcomeMetrics.inset)
         .frame(width: WelcomeMetrics.window.width, height: WelcomeMetrics.stageHeight)
+        .overbrightThemeRoot()
 }

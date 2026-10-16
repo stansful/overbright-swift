@@ -4,6 +4,7 @@
 // and its CoreGraphics UUID, nothing else.
 import AppKit
 import OverbrightCore
+import OverbrightDesign
 import SwiftUI
 
 /// Reports the display its window is on (nil while it has no window or screen).
@@ -56,4 +57,15 @@ struct WindowScreenReader: NSViewRepresentable {
             return DisplayKey.of(number.uint32Value)
         }
     }
+}
+
+#Preview("Window screen reader") {
+    @Previewable @State var display: DisplayKey?
+    let services = WelcomePreview.services()
+    // The preview hub's displays are fixtures, so a real screen shows its key rather than a fixture's name.
+    Text(verbatim: display.map { services.displays.facts(for: $0)?.name ?? $0.rawValue } ?? "—")
+        .font(.callout)
+        .padding(Space.xl)
+        .background { WindowScreenReader { display = $0 } }
+        .overbrightThemeRoot()
 }

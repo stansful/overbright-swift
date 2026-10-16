@@ -46,8 +46,9 @@ struct LoginOptions: View {
 }
 
 #Preview("Login options") {
-    LoginOptions(choices: WelcomeChoices(), settings: SettingsStore(defaults: InMemoryDefaults()),
-                 copy: DefaultsStep.Copy.localized)
+    let services = WelcomePreview.services()
+    LoginOptions(choices: WelcomeChoices(), settings: services.settings, copy: DefaultsStep.Copy.localized)
         .padding(WelcomeMetrics.inset)
         .frame(width: WelcomeMetrics.window.width)
+        .overbrightThemeRoot()
 }
