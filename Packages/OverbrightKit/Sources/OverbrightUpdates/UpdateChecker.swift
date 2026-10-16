@@ -192,7 +192,9 @@ private let log = Log.logger(.updates)
                 if let etag = response.value(forHTTPHeaderField: "ETag") {
                     let entry = ReleaseCache(repository: repository, endpoint: endpoint, etag: etag, releases: releases)
                     do { try await cache.save(entry) } catch {
-                        log.error("release cache not saved: \(error.localizedDescription, privacy: .public)")
+                        // The description names the cache path (the user's home folder): `.private` only (§9.2 rule 8).
+                        let failure = error as NSError
+                        log.error("release cache not saved: \(failure.domain, privacy: .public) \(failure.code, privacy: .public) (\(failure.localizedDescription, privacy: .private))")
                     }
                 }
                 return .success(releases)

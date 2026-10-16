@@ -102,7 +102,8 @@ private let log = Log.logger(.app)
                 try service.register()
                 log.info("login item registered")
             } catch {
-                log.error("login item not registered: \(error.localizedDescription, privacy: .public)")
+                let failure = error as NSError
+                log.error("login item not registered: \(failure.domain, privacy: .public) \(failure.code, privacy: .public) (\(failure.localizedDescription, privacy: .private))")
             }
             let after = Self.state(for: service.status)
             if after == .disabled || after == .unavailable { set(.unavailable, reason: .refused) } else { set(after, reason: nil) }
@@ -112,7 +113,8 @@ private let log = Log.logger(.app)
                 try service.unregister()
                 log.info("login item unregistered")
             } catch {
-                log.error("login item not unregistered: \(error.localizedDescription, privacy: .public)")
+                let failure = error as NSError
+                log.error("login item not unregistered: \(failure.domain, privacy: .public) \(failure.code, privacy: .public) (\(failure.localizedDescription, privacy: .private))")
             }
             set(Self.state(for: service.status), reason: nil)
         }

@@ -174,7 +174,8 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
         do {
             try rep.representation(using: .png, properties: [:])?.write(to: url)
         } catch {
-            log.error("QA: settings snapshot failed: \(error.localizedDescription, privacy: .public)")
+            let failure = error as NSError
+            log.error("QA: settings snapshot failed: \(failure.domain, privacy: .public) \(failure.code, privacy: .public) (\(failure.localizedDescription, privacy: .private))")
         }
     }
     #endif
