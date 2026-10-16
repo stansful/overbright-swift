@@ -15,6 +15,10 @@ final class IconVisibilityMonitor {
     private let statusItem: NSStatusItem
     private var observers: [any NSObjectProtocol] = []
     private var firstCheck: Task<Void, Never>?
+    /// Screen and occlusion events check only after the first check: right after `install()` the button's window
+    /// changes occlusion before MenuBarAgent has placed it, and that early check reads "not visible" (WP13 found it in
+    /// a QA run: the icon-not-visible window showed at launch and used up its once-per-version notice).
+    private var hasRunFirstCheck = false
 
     /// The result of the last check (visible until the first check ran).
     private(set) var visibility: MenuBarIconVisibility = .visible
@@ -39,17 +43,24 @@ final class IconVisibilityMonitor {
         firstCheck = Task { [weak self] in
             try? await Task.sleep(for: Self.firstCheckDelay)
             guard !Task.isCancelled else { return }
+            self?.hasRunFirstCheck = true
             self?.check()
         }
         let center = NotificationCenter.default
         observers.append(center.addObserver(forName: NSApplication.didChangeScreenParametersNotification, object: nil,
                                             queue: .main) { [weak self] _ in
-            MainActor.assumeIsolated { self?.check() }                                       // queue: .main
+            MainActor.assumeIsolated { self?.eventChanged() }                                // queue: .main
         })
         observers.append(center.addObserver(forName: NSWindow.didChangeOcclusionStateNotification,
                                             object: statusItem.button?.window, queue: .main) { [weak self] _ in
-            MainActor.assumeIsolated { self?.check() }                                       // queue: .main
+            MainActor.assumeIsolated { self?.eventChanged() }                                // queue: .main
         })
+    }
+
+    /// A screen or occlusion change: checks again, once the first check after launch has run.
+    func eventChanged() {
+        guard hasRunFirstCheck else { return }
+        check()
     }
 
     /// Checks now and reports a change.
