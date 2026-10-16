@@ -111,9 +111,60 @@ import Testing
         let timer = GuardChipMenus.timer(minutes: nil, set: { _ in }, in: english)
         if case let .submenu(title, items) = timer[0] {
             #expect(title == "Turn Off After" && items.count == 5)
+            let rows = items.compactMap { item -> String? in
+                if case let .item(title, _, _) = item { return title }
+                return nil
+            }
+            #expect(rows == ["Never", "15 Minutes", "30 Minutes", "1 Hour", "2 Hours"], "title case (DESIGN.md §5.9)")
         } else {
             Issue.record("the timer menu is one submenu")
         }
+        #expect(GuardChipMenus.timerTitle(minutes: 1, in: english) == "1 Minute")
+        #expect(GuardChipMenus.timerTitle(minutes: 45, in: english) == "45 Minutes")
+        #expect(GuardChipMenus.timerTitle(minutes: 90, in: english) == "1 Hour, 30 Minutes")
+    }
+
+    /// The shortcuts' names in Settings ▸ Shortcuts and the commands they stand for in menus (DESIGN.md §4.3, §4.4,
+    /// §7.6, §16).
+    @Test func shortcutsAndTheirCommands() {
+        let ids: [ShortcutID] = ShortcutCatalog.all.map(\.id)
+        #expect(ids.compactMap { $0.localizedName(in: english) }
+                == ["Turn Overbright on or off", "Brighter", "Less Bright", "Max", "Back to Standard",
+                    "Dim Below Minimum On or Off", "Fill Light"])
+        #expect(ids.compactMap { $0.menuTitle(in: english) }
+                == ["Turn On Overbright", "Brighter", "Less Bright", "Max", "Back to Standard", "Dim All Displays",
+                    "Fill Light"])
+        #expect(ShortcutID.toggle.menuTitle(isActive: true, in: english) == "Turn Off Overbright")
+        #expect(ShortcutID.dimToggle.menuTitle(isActive: true, in: english) == "Stop Dimming")
+        #expect(ShortcutID("boost.unknown").localizedName(in: english) == nil)
+        #expect(ShortcutID("boost.unknown").menuTitle(in: english) == nil)
+        #expect(StepDirection.brighter.localizedName(in: english) == "Brighter")
+        #expect(StepDirection.lessBright.localizedName(in: english) == "Less Bright")
+        distinct(ids.compactMap { $0.localizedName(in: english) }, "shortcut names")
+        for id in ids {
+            for name in [id.localizedName(in: english), id.menuTitle(in: english)].compactMap({ $0 }) {
+                #expect(!name.localizedCaseInsensitiveContains("Dimmer"), "\(name) (DESIGN.md §16)")
+            }
+        }
+    }
+
+    /// The inline results of Settings ▸ Advanced ▸ Reset Display Colors (DESIGN.md §12.4).
+    @Test func resetDisplayColorsResults() {
+        let app = ConflictingApp(entryID: "s2", severity: .gammaWriter, bundleID: "com.example.colors", processID: 2,
+                                 displayName: "Colors")
+        let display = DisplayKey(rawValue: "A")
+        let rows: [(RescueOutcome, String)] = [
+            (.restored(displays: 2), "Display colors reset."),
+            (.alreadyNeutral, "Display colors were already normal."),
+            (.repairedInvalidRestore(displays: [display]),
+             "Display colors reset. Some displays were set back to their color profile directly."),
+            (.skippedBecauseTableWriterRuns(app), "Another brightness or color app is running. Quit it first."),
+            (.residueRemains(displays: [display]),
+             "Some colors couldn’t be reset. Change the color profile in Displays settings and back, or log out."),
+            (.skippedNotOnConsole, "Display colors can be reset only from the session shown on the displays."),
+        ]
+        for (outcome, sentence) in rows { #expect(outcome.localizedResult(in: english) == sentence, "\(outcome)") }
+        distinct(rows.map { $0.0.localizedResult(in: english) }, "rescue results")
     }
 
     /// The three English footer chips fit the 292-pt footer row in their default settings, and their compact forms

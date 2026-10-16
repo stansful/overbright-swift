@@ -51,7 +51,7 @@ public enum GuardChipMenus {
         ]
     }
 
-    /// Turn Off After ▸ Never · 15 minutes · 30 minutes · 1 hour · 2 hours (plus the current value when it is another
+    /// Turn Off After ▸ Never · 15 Minutes · 30 Minutes · 1 Hour · 2 Hours (plus the current value when it is another
     /// one). `minutes` nil is Never.
     public static func timer(minutes: Int?, set: @escaping @MainActor (Int?) -> Void,
                              in language: CopyLanguage = .app) -> [GuardChipMenuItem] {
@@ -62,11 +62,30 @@ public enum GuardChipMenus {
         if let minutes, !choices.contains(minutes) { choices = (choices + [minutes]).sorted() }
         let rows: [GuardChipMenuItem] = [.item(title: never, isChecked: minutes == nil, perform: { set(nil) })]
             + choices.map { value in
-                .item(title: CopyFormat.spokenDuration(minutes: value, in: language), isChecked: value == minutes,
-                      perform: { set(value) })
+                .item(title: timerTitle(minutes: value, in: language), isChecked: value == minutes, perform: { set(value) })
             }
         let title = String(localized: "Turn Off After", bundle: b, locale: l,
                            comment: "Panel ▸ Footer chip: Timer chip submenu of auto-off durations (title case)")
         return [.submenu(title: title, items: rows)]
+    }
+
+    /// "15 Minutes" · "1 Hour" · "2 Hours" · "1 Hour, 30 Minutes": a timer duration as a menu row. Menus are title
+    /// case (DESIGN.md §5.9, §12), which `Duration.UnitsFormatStyle` does not write, so the units are plural keys and
+    /// every language writes its own forms and capitalization.
+    public static func timerTitle(minutes: Int, in language: CopyLanguage = .app) -> String {
+        let (b, l) = (language.bundle, language.locale)
+        let total = max(minutes, 0)
+        let hours = total / 60, rest = total % 60
+        func hourText() -> String {
+            String(localized: "\(hours) Hours", bundle: b, locale: l,
+                   comment: "Panel ▸ Footer chip: Timer chip menu item, a duration in whole hours such as 1 Hour or 2 Hours (title case)")
+        }
+        func minuteText() -> String {
+            String(localized: "\(rest) Minutes", bundle: b, locale: l,
+                   comment: "Panel ▸ Footer chip: Timer chip menu item, a duration in minutes such as 15 Minutes (title case)")
+        }
+        if hours == 0 { return minuteText() }
+        if rest == 0 { return hourText() }
+        return CopyFormat.spokenParts(hourText(), minuteText(), in: language)
     }
 }
