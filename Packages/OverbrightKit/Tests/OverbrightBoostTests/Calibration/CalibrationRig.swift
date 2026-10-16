@@ -12,6 +12,8 @@ import OverbrightCore
     let key: DisplayKey
     /// Number of `onEnd` calls.
     private(set) var endings = 0
+    /// The session's state when `onEnd` ran.
+    private(set) var stateAtEnd: CalibrationState?
 
     init(_ fixture: DisplayFixture = .builtinXDRLidOpen, key: DisplayKey = DisplayFixture.Keys.builtIn,
          machine: MachineIdentity? = nil) {
@@ -21,7 +23,11 @@ import OverbrightCore
         let writer = TableWriter(gamma: rig.gamma, ledger: SafetyLedger(), time: rig.time, journal: rig.journal)
         controller = CalibrationController(display: key, driver: driver, writer: writer, time: rig.time,
                                            machine: machine ?? fixture.machine)
-        controller.onEnd = { [weak self] in self?.endings += 1 }
+        controller.onEnd = { [weak self] in
+            guard let self else { return }
+            self.endings += 1
+            self.stateAtEnd = self.controller.state
+        }
     }
 
     /// Lets started tasks run up to their first sleep without moving the clock.

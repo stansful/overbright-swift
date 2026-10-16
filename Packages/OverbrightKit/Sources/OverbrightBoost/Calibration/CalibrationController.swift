@@ -325,7 +325,10 @@ private let log = Log.logger(.engine)
         if case .finished = state { return record }
         end()
         state = .finished
-        guard brighter != nil || sweepRan || measuredSDRWhite != nil else { return nil }
+        guard brighter != nil || sweepRan || measuredSDRWhite != nil else {
+            notifyEnd()
+            return nil
+        }
         let h = sweepHeadroom ?? readyHeadroom ?? headroom ?? 1
         let outcome: CalibrationRecord.Outcome = brighter == false ? .notBrighter
             : CalibrationMath.outcome(merge: sweepRan ? mergeFactor : nil, headroom: h, linearConfirmed: linearConfirmed)
@@ -337,6 +340,7 @@ private let log = Log.logger(.engine)
             osBuild: machine.osBuild, measuredAt: time.wallClock)
         record = result
         journal("calibration.finished.\(outcome.rawValue)", values: ["headroom": h, "merge": mergeFactor ?? 0])
+        notifyEnd()
         return result
     }
 
@@ -352,6 +356,7 @@ private let log = Log.logger(.engine)
         state = .aborted(reason)
         journal("calibration.aborted.\(reason.rawValue)")
         log.info("calibration aborted: \(reason.rawValue, privacy: .public)")
+        notifyEnd()
     }
 
     /// Shield events and the removal of this display end the session (DESIGN.md §9: any lock).
@@ -373,7 +378,7 @@ private let log = Log.logger(.engine)
 
     // MARK: Helpers
 
-    /// Stops every task, returns the display to Standard and calls `onEnd`, once.
+    /// Stops every task and returns the display to Standard, once.
     private func end() {
         guard !ended else { return }
         ended = true
@@ -385,6 +390,10 @@ private let log = Log.logger(.engine)
         isSweepPausedAtLimit = false
         if began { driver.returnToStandard() }
         currentFactor = 1
+    }
+
+    /// Calls `onEnd` once, after the final state is set.
+    private func notifyEnd() {
         let callback = onEnd
         onEnd = nil
         callback?()

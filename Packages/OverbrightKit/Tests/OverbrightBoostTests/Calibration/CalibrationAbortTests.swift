@@ -14,7 +14,7 @@ import Testing
         #expect(c.driver.calls.last == .returnToStandard && !c.driver.isArmed)
         #expect(c.rig.gamma.table(of: c.driver.display.id) == c.driver.baseline)
         #expect(c.codes.contains("calibration.aborted.\(reason.rawValue)"))
-        #expect(c.endings == 1)
+        #expect(c.endings == 1 && c.stateAtEnd == .aborted(reason))
         let calls = c.driver.calls.count
         await c.advance(.seconds(10))
         #expect(c.driver.calls.count == calls)

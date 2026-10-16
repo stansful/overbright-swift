@@ -97,7 +97,7 @@ import Testing
         #expect(abs((record.mergeFactor ?? 0) - 1.62) < 1e-9)
         #expect(record.osBuild == DisplayFixture.ownerMachine.osBuild && record.mechanism == .table)
         #expect(abs(record.headroomAtTest - h) < 0.01 && record.potentialAtTest == 16)
-        #expect(c.controller.state == .finished && c.endings == 1)
+        #expect(c.controller.state == .finished && c.endings == 1 && c.stateAtEnd == .finished)
     }
 
     @Test func aMergeNearTheLinearPredictionRecordsLinearOnlyWhenConfirmed() async throws {
