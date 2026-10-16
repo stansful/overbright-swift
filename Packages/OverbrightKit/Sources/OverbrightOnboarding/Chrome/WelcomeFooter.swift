@@ -63,7 +63,7 @@ struct WelcomeFooter: View {
     func row(showsDots: Bool) -> some View {
         HStack(spacing: Space.m) {
             Button { session.quit() } label: { Text(verbatim: labels.quit) }
-                .buttonStyle(OverbrightDesign.LinkButtonStyle())   // SwiftUI has a LinkButtonStyle too
+                .buttonStyle(OverbrightLinkButtonStyle())
             Spacer(minLength: Space.l)
             if showsDots {
                 ProgressDots(current: session.stepNumber, count: session.stepCount)

@@ -22,7 +22,7 @@ struct NonCapableRow: View {
                     .foregroundStyle(.secondary)
                 Text(verbatim: "·").foregroundStyle(.secondary).accessibilityHidden(true)
                 Button(action: toggle) { Text(verbatim: PanelText.why) }
-                    .buttonStyle(OverbrightDesign.LinkButtonStyle())
+                    .buttonStyle(OverbrightLinkButtonStyle())
                     .panelFocus(focus, .why, activate: toggle)
             }
             if isExpanded {
@@ -58,7 +58,7 @@ struct NonCapableRow: View {
                     .panelFocus(focus, .fix(display.key)) { commands.openSystemSettings(SettingsLinks.systemDisplays) }
                 }
                 Button { commands.showHelp(HelpEntry.Anchor.noExtraRange) } label: { Text(verbatim: PanelText.learnMore) }
-                    .buttonStyle(OverbrightDesign.LinkButtonStyle())
+                    .buttonStyle(OverbrightLinkButtonStyle())
                     .panelFocus(focus, .learnMore(display.key)) { commands.showHelp(HelpEntry.Anchor.noExtraRange) }
             }
         }

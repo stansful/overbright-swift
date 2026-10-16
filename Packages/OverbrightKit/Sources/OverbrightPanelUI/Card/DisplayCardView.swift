@@ -153,7 +153,7 @@ public struct DisplayCardView: View {
                     Button { commands.perform(.turnOnExtraBrightness, on: model) } label: {
                         Text(verbatim: CardAction.turnOnExtraBrightness.title)
                     }
-                    .buttonStyle(OverbrightDesign.LinkButtonStyle())
+                    .buttonStyle(OverbrightLinkButtonStyle())
                     .panelFocus(focus, .turnOn(model.key)) { commands.perform(.turnOnExtraBrightness, on: model) }
                 }
             }

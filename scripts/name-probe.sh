@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
-# SDK name-collision probe (ARCHITECTURE.md §8.7, §9.2 rule 4). Regenerates one probe per L0 target that other modules
+# SDK name-collision probe (ARCHITECTURE.md §8.7, §9.2 rule 4). Regenerates one probe per target that other modules
 # import everywhere:
 #   Packages/OverbrightKit/Tests/OverbrightCoreTests/SDKNameCollisionProbe.swift     (OverbrightCore's names)
 #   Packages/OverbrightKit/Tests/OverbrightPolicyTests/SDKNameCollisionProbe.swift   (OverbrightPolicy's names)
+#   Packages/OverbrightKit/Tests/OverbrightDesignTests/SDKNameCollisionProbe.swift   (OverbrightDesign's names: every UI
+#                                                                                    module imports it with SwiftUI;
+#                                                                                    added by WP13 after WP9's note)
 # Each file imports every Apple framework the modules use plus the module (Policy's also Core) and aliases every
 # top-level public type. A name that an SDK also exports (`Clock`, `Settings`) becomes an "ambiguous" compile error in
 # `swift test`, before any module trips over it. Each probe lives in its own module's test target, so each owner
@@ -40,7 +43,7 @@ generate() {
 }
 
 failed=0
-for spec in "OverbrightCore:" "OverbrightPolicy:OverbrightCore"; do
+for spec in "OverbrightCore:" "OverbrightPolicy:OverbrightCore" "OverbrightDesign:OverbrightCore OverbrightPolicy"; do
   module="${spec%%:*}"
   extra="${spec#*:}"
   probe="$PACKAGE_DIR/Tests/${module}Tests/SDKNameCollisionProbe.swift"

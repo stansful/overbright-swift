@@ -34,11 +34,11 @@ public struct PausedBanner: View {
                         Spacer(minLength: 0)
                         if let title = model.primaryTitle, let primary {
                             Button(action: primary) { Text(verbatim: title).font(OverbrightFont.banner.font.weight(.semibold)) }
-                                .buttonStyle(LinkButtonStyle())
+                                .buttonStyle(OverbrightLinkButtonStyle())
                         }
                         if let title = model.secondaryTitle, let secondary {
                             Button(action: secondary) { Text(verbatim: title).font(OverbrightFont.banner.font) }
-                                .buttonStyle(LinkButtonStyle())
+                                .buttonStyle(OverbrightLinkButtonStyle())
                         }
                     }
                 }

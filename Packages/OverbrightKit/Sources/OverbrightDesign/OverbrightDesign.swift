@@ -7,7 +7,7 @@
 //   Theme/       `OverbrightTheme` and `.overbrightThemeRoot(_:)`, the right-to-left rules, `HapticFeedback`
 //   Components/  `BoostSlider` (+ `BoostSliderModel`, its rules), `StatusChip`, `GuardChip`, `PausedBanner`,
 //                `ReadoutText`, `EDRPreviewSurface`, `StepWedgeView`, `KeyCap`
-//   Styles/      `ChipButtonStyle`, `IconButtonStyle`, `LinkButtonStyle`, `.overbrightFocusRing`
+//   Styles/      `ChipButtonStyle`, `IconButtonStyle`, `OverbrightLinkButtonStyle`, `.overbrightFocusRing`
 //   Settings/    `SettingRowConventions`, `SettingsStore.binding(_:)`
 //   Copy/        the only producers of engine-state copy: `ChipModel`, `VerdictText`, `BannerModel`, `ValueText`,
 //                `HUDText`, `SafeLimitText`, the names of Core enums, `FixAction`, announcements and confirmations,
