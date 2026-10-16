@@ -226,6 +226,90 @@ import Testing
         #expect(!model(top: 1.3).isSmallGain)
         #expect(ValueText.smallGain(in: english) == "small gain on this display")
     }
+
+    // MARK: Value tag and VoiceOver defaults
+
+    /// The tag sits over the thumb but never past an end of the 240-pt track: at Max and at the dim floor it shifts
+    /// inward, so the panel cannot clip it (a ~95-pt "Max · ≈ ×2.59" used to end 26 pt past the slider).
+    @Test func theValueTagStaysInsideTheTrack() {
+        let track = BoostSliderTrack.width
+        #expect(BoostSliderValueTag.center(thumbX: 120, tagWidth: 95, trackWidth: track) == 120, "centred mid-track")
+        #expect(BoostSliderValueTag.center(thumbX: track, tagWidth: 95, trackWidth: track) == track - 47.5, "at Max")
+        #expect(BoostSliderValueTag.center(thumbX: 0, tagWidth: 95, trackWidth: track) == 47.5, "at the dim floor")
+        #expect(BoostSliderValueTag.center(thumbX: 230, tagWidth: 40, trackWidth: track) == 220)
+        #expect(BoostSliderValueTag.center(thumbX: 200, tagWidth: track, trackWidth: track) == track / 2, "a full-width tag")
+        for x in stride(from: 0.0, through: track, by: 10) {
+            for width in [30.0, 95, 180, 240] {
+                let center = BoostSliderValueTag.center(thumbX: x, tagWidth: width, trackWidth: track)
+                #expect(center - width / 2 >= 0 && center + width / 2 <= track, "x \(x), width \(width)")
+            }
+        }
+    }
+
+    /// Without `.spokenValue`, VoiceOver still hears canonical units when the host shows the canonical text, and the
+    /// host's own words (a guard) otherwise (DESIGN.md §5.5, §12.7).
+    @Test func voiceOverHearsTheSpokenFormByDefault() {
+        let level = LevelPreset.brightRoom.position
+        func spoken(_ shown: String, at level: LevelPosition = LevelPreset.brightRoom.position) -> String {
+            BoostSlider.spoken(shown, at: level, top: Self.safeTop, presets: Self.allPresets, in: english)
+        }
+        let estimate = ValueText.forLevel(level, top: Self.safeTop, presets: Self.allPresets, isEstimate: true, in: english)
+        #expect(spoken(estimate.text) == "Bright room, about 1.29 times, not calibrated")
+        let calibrated = ValueText.forLevel(level, top: Self.safeTop, presets: Self.allPresets, isEstimate: false,
+                                            in: english)
+        #expect(spoken(calibrated.text) == "Bright room, 1.29 times")
+        let dimmed = LevelMapping.position(forDimLight: 0.25)
+        let dimText = ValueText.forLevel(dimmed, top: Self.safeTop, presets: Self.allPresets, isEstimate: false, in: english)
+        #expect(spoken(dimText.text, at: dimmed) == dimText.accessibilityText)
+        #expect(spoken("Standard", at: .standard) == "Standard")
+        #expect(spoken("Paused: Low Power Mode") == "Paused: Low Power Mode", "a guard is read as shown")
+    }
+
+    /// Each half's help tag is its own: an unavailable boost half says why over the boost half only, a disabled dim
+    /// half says why over the dim half only, and VoiceOver hears both reasons as the hint (DESIGN.md §5.5).
+    @Test func eachHalfHasItsOwnHelpTag() {
+        let noDim = "macOS doesn’t let apps adjust this display."
+        let blocked = model(half: .unavailable(reason: "HDR is off"))
+        #expect(BoostSlider.helpTags(blocked, dimReason: noDim, extraRange: nil) == (nil, "HDR is off"), "dim half works")
+        let both = model(dim: false, half: .unavailable(reason: "HDR is off"))
+        #expect(BoostSlider.helpTags(both, dimReason: noDim, extraRange: nil) == (noDim, "HDR is off"))
+        #expect(BoostSlider.disabledHint(both, dimReason: noDim, in: english) == "HDR is off \(noDim)")
+        #expect(BoostSlider.disabledHint(model(dim: false), dimReason: noDim, in: english) == noDim)
+        #expect(BoostSlider.disabledHint(model(), dimReason: noDim, in: english).isEmpty, "both halves work")
+        // While the marker shows, the boost half's tag says what macOS allows now; nothing without a marker.
+        let limited = model(top: Self.peakTop, allowed: 1.55)
+        let range = BoostSlider.extraRange(limited, given: nil)
+        #expect(range?.text == ValueText.extraRange(allowed: 1.55, peak: nil).text)
+        #expect(BoostSlider.helpTags(limited, dimReason: nil, extraRange: range) == (nil, range?.text))
+        #expect(BoostSlider.helpTags(model(), dimReason: nil, extraRange: range) == (nil, nil), "no marker")
+    }
+
+    /// Without `.extraRange`, VoiceOver's "Extra range" still says what macOS allows while extra light is on screen
+    /// with a reading; the host's text (with the Peak sentence) wins.
+    @Test func extraRangeHasADefault() {
+        #expect(BoostSlider.extraRange(model(allowed: 1.4), given: nil)?.accessibilityText
+                == ValueText.extraRange(allowed: 1.4, peak: nil).accessibilityText)
+        #expect(BoostSlider.extraRange(model(allowed: nil), given: nil) == nil, "no reading")
+        #expect(BoostSlider.extraRange(model(allowed: 1.4, half: .inactive), given: nil) == nil, "off or paused")
+        let host = ValueText.extraRange(allowed: 1.4, peak: 2.6, in: english)
+        #expect(BoostSlider.extraRange(model(allowed: 1.4), given: host) == host)
+    }
+
+    /// While a guard pauses the display the tag names it; a user pause, a cap and per-display reasons do not
+    /// (DESIGN.md §5.5 "Paused").
+    @Test func theValueTagNamesTheGuard() {
+        #expect(ValueText.guarded(by: .lowPowerMode, in: english)?.text == "Paused: Low Power Mode")
+        #expect(ValueText.guarded(by: .battery(percent: 12, threshold: 20), in: english)?.text
+                == "Paused: battery below 20%")
+        #expect(ValueText.guarded(by: .onBattery, in: english)?.text == "Paused: on battery")
+        #expect(ValueText.guarded(by: .thermalCritical, in: english)?.text == "Paused: Mac is hot")
+        #expect(ValueText.guarded(by: .outsideSchedule, in: english)?.text == "Paused: outside set hours")
+        #expect(ValueText.guarded(by: .focusOff, in: english)?.accessibilityText == "Off for this Focus")
+        for reason in [LimitReason.userPaused(until: Date(timeIntervalSince1970: 0)), .thermalSerious, .fullScreenVideo,
+                       .masterOff, .headroom, .boostNotEnabled] {
+            #expect(ValueText.guarded(by: reason, in: english) == nil, "\(reason)")
+        }
+    }
 }
 
 /// The slider drawn: warm only while extra light is on screen, the marker, the hatch.
@@ -253,6 +337,26 @@ import Testing
         let pixels = try render(slider(0.8, half: .active), size: Self.size, theme: theme)
         let strong = OverbrightColor.boostWarm(dark: false, highContrast: true)
         #expect(pixels.count { $0.isClose(to: strong, tolerance: 0.04) } > 100)
+    }
+
+    /// The value tag drawn over a track 30 pt in from each side of a 300-pt canvas: at either end, in either direction
+    /// and with the longest English text, its ink stays over the track (DESIGN.md §5.5; ARCHITECTURE.md §8.8 valueTag).
+    @Test(arguments: [(0.0, LayoutDirection.leftToRight), (240, .leftToRight), (0, .rightToLeft), (240, .rightToLeft)])
+    func theValueTagIsDrawnOverTheTrack(thumbX: Double, direction: LayoutDirection) throws {
+        let track = Color.clear
+            .frame(width: BoostSliderTrack.width, height: HitTarget.sliderThumb)
+            .overlay(alignment: .topLeading) {
+                BoostSliderValueTag(text: "Max · ≈ ×1.20 · small gain on this display", thumbX: thumbX)
+            }
+            .padding(.top, 50)
+        let pixels = try render(track, size: CGSize(width: 300, height: 120), direction: direction)
+        let ink = try #require(pixels.xRange { $0.r < 0.6 && $0.g < 0.6 && $0.b < 0.6 })
+        #expect(ink.lowerBound >= 30 && ink.upperBound <= 270, "x \(thumbX) \(direction): ink at \(ink)")
+        let short = try render(Color.clear.frame(width: BoostSliderTrack.width, height: HitTarget.sliderThumb)
+            .overlay(alignment: .topLeading) { BoostSliderValueTag(text: "Max · ≈ ×2.59", thumbX: thumbX) }
+            .padding(.top, 50), size: CGSize(width: 300, height: 120), direction: direction)
+        let shortInk = try #require(short.xRange { $0.r < 0.6 && $0.g < 0.6 && $0.b < 0.6 })
+        #expect(shortInk.lowerBound >= 30 && shortInk.upperBound <= 270, "x \(thumbX) \(direction): ink at \(shortInk)")
     }
 
     /// The marker stands where `allowedNow` puts the thumb's stop: ×1.55 of a ×2.587 top is 46 % of the boost half.

@@ -1,8 +1,9 @@
 // OverbrightDesign/Components/BoostSlider.swift — the one per-display level control. DESIGN.md §5.5, §12.7, §13.2,
 // App. A. Seam written by WP0a (ARCHITECTURE.md §10.0): the initializer is fixed (the allowed-now marker is part of the
 // slider); WP9 builds the control: detent, shown ticks, fills over the track, hatch, value tag, snapping with haptics,
-// steps in stops, one adjustable VoiceOver element with named stops, right-to-left mirroring, disabled halves. The rules
-// live in `BoostSliderModel`, the drawing in `BoostSliderTrack`.
+// steps in stops, one adjustable VoiceOver element with named stops, right-to-left mirroring, disabled halves with their
+// help tags. The rules live in `BoostSliderModel`, the drawing in `BoostSliderTrack` and `BoostSliderValueTag`, the
+// VoiceOver words in `BoostSlider+Accessibility`.
 import Foundation
 import OverbrightCore
 import OverbrightPolicy
@@ -21,6 +22,7 @@ public struct BoostSlider: View {
     private let onCommit: (LevelPosition) -> Void
     private var spokenValue: ((LevelPosition) -> String)?
     private var extraRangeText: ValueText?
+    private var dimHalfReason: String?
     private var dimmedLevel = LevelMapping.position(forDimLight: 0.25)
 
     @Environment(\.overbright) private var theme
@@ -28,6 +30,7 @@ public struct BoostSlider: View {
     @Environment(\.layoutDirection) private var direction
     @State private var isDragging = false
     @State private var isHoveringThumb = false
+    @State private var isPointerOver = false
     @State private var scroll = ScrollWheelSteps()
     @FocusState private var isFocused: Bool
 
@@ -39,7 +42,8 @@ public struct BoostSlider: View {
     ///   - dimEnabled: whether the dim half works (a transfer table or the overlay).
     ///   - boostHalf: how the boost half draws and behaves.
     ///   - accessibilityName: the display name in "Level, ‹display name›".
-    ///   - valueText: the canonical value text of a position (value tag and VoiceOver value).
+    ///   - valueText: the value text of a position (value tag and VoiceOver value): the canonical text
+    ///     (`ValueText.forLevel`), or the guard that holds the display (`ValueText.guarded(by:)`).
     ///   - onCommit: called once when a drag or a key step ends.
     public init(level: Binding<LevelPosition>, top: Double, allowedNow: Double?, presets: [LevelPreset],
                 dimEnabled: Bool, boostHalf: BoostHalfState, accessibilityName: String,
@@ -50,17 +54,27 @@ public struct BoostSlider: View {
         self.valueText = valueText; self.onCommit = onCommit
     }
 
-    /// The VoiceOver value of a position ("Bright room, 1.29 times"); without it VoiceOver reads `valueText`.
+    /// The VoiceOver value of a position ("Bright room, 1.29 times"). Without it VoiceOver hears the spoken form of
+    /// `valueText` when that is the canonical text of `ValueText.forLevel`, else `valueText` itself.
     public func spokenValue(_ text: @escaping (LevelPosition) -> String) -> BoostSlider {
         var copy = self
         copy.spokenValue = text
         return copy
     }
 
-    /// The allowed-now marker's help tag and VoiceOver "Extra range" content (`ValueText.extraRange(allowed:peak:)`).
+    /// The allowed-now marker's help tag and VoiceOver "Extra range" content (`ValueText.extraRange(allowed:peak:)`,
+    /// with the display's Peak ceiling). Without it the slider says what macOS allows now, without the Peak sentence.
     public func extraRange(_ text: ValueText?) -> BoostSlider {
         var copy = self
         copy.extraRangeText = text
+        return copy
+    }
+
+    /// The help tag of a disabled dim half (DESIGN.md §5.5): why the display cannot be dimmed, already localized
+    /// (its verdict sentence, `VerdictText`). Shown only while `dimEnabled` is false.
+    public func dimHalfReason(_ reason: String?) -> BoostSlider {
+        var copy = self
+        copy.dimHalfReason = reason
         return copy
     }
 
@@ -82,23 +96,26 @@ public struct BoostSlider: View {
         HStack(spacing: Space.s) {
             endGlyph(.sunMin)
             BoostSliderTrack(model: model, level: level, isDragging: isDragging)
+                .overlay { halfHelp(model) }
                 .contentShape(Rectangle())
                 .gesture(drag(model))
                 .onContinuousHover { phase in hover(phase) }
                 .overlay(alignment: .topLeading) { valueTag(model) }
             endGlyph(.sunMaxFill)
         }
-        .help(helpText(model))
+        .background { if isPointerOver { ScrollWheelAnchor(steps: scroll) } }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(verbatim: Self.label(accessibilityName)))
-        .accessibilityValue(Text(verbatim: spokenValue?(level) ?? valueText(level)))
+        .accessibilityValue(Text(verbatim: spokenValue?(level) ?? Self.spoken(valueText(level), at: level, top: top,
+                                                                               presets: presets)))
+        .accessibilityHint(Text(verbatim: disabledHint(model)))
         .accessibilityAdjustableAction { direction in
             let increment = direction == .increment
             guard direction == .increment || direction == .decrement else { return }
             set(model.adjusted(level, increment: increment), commit: true)
         }
         .accessibilityActions { actions(model) }
-        .modifier(ExtraRangeContent(text: extraRangeText))
+        .modifier(BoostSliderExtraRange(text: extraRange(model)))
         .focusable()
         .focused($isFocused)
         .overbrightFocusRing(cornerRadius: Radius.control, isFocused: isFocused)
@@ -108,10 +125,11 @@ public struct BoostSlider: View {
             set(model.level(after: key, from: level), commit: true)
             return .handled
         }
-        .onHover { inside in
-            if inside { scroll.start { notches in scrolled(notches) } } else { scroll.stop() }
+        .onContinuousHover { phase in pointer(phase) }
+        .onDisappear {
+            isPointerOver = false
+            scroll.stop()
         }
-        .onDisappear { scroll.stop() }
     }
 
     // MARK: Pieces
@@ -127,25 +145,36 @@ public struct BoostSlider: View {
     @ViewBuilder private func valueTag(_ model: BoostSliderModel) -> some View {
         if isDragging || isHoveringThumb {
             let base = valueText(level)
-            let x = thumbX
-            let lift = Space.s - (HitTarget.sliderThumb - BoostSliderTrack.thumbSize) / 2
             let text = model.isSmallGain && level.isBoost ? CopyFormat.parts(base, ValueText.smallGain()) : base
-            Text(verbatim: text)
-                .font(OverbrightFont.valueTag.font)
-                .multilineTextAlignment(.center)
-                .fixedSize(horizontal: false, vertical: true)
-                .padding(.horizontal, Space.s)
-                .padding(.vertical, Space.xxs)
-                .background(theme.color(.panelBackground), in: Capsule(style: .continuous))
-                .overlay(Capsule(style: .continuous).strokeBorder(theme.color(.cardStroke), lineWidth: StrokeWidth.regular))
-                .shadow(color: .black.opacity(0.15), radius: 2, y: 1)
-                .frame(maxWidth: BoostSliderTrack.width)
-                .fixedSize()
-                .alignmentGuide(.leading) { d in d.width / 2 - x }
-                .alignmentGuide(.top) { d in d.height + lift }
-                .allowsHitTesting(false)
-                .accessibilityHidden(true)
+            BoostSliderValueTag(text: text, thumbX: thumbX)
         }
+    }
+
+    /// The help tags of the halves, each over its own half only (`helpTags`); the leading half is the dim one, and the
+    /// HStack mirrors right to left with the track.
+    private func halfHelp(_ model: BoostSliderModel) -> some View {
+        let tags = Self.helpTags(model, dimReason: dimHalfReason, extraRange: extraRange(model))
+        return HStack(spacing: 0) {
+            helpRegion(tags.dim)
+            helpRegion(tags.boost)
+        }
+        .frame(width: BoostSliderTrack.width)
+    }
+
+    @ViewBuilder private func helpRegion(_ text: String?) -> some View {
+        if let text, !text.isEmpty {
+            Rectangle().fill(.clear).contentShape(Rectangle()).help(text)
+        } else {
+            Color.clear
+        }
+    }
+
+    private func disabledHint(_ model: BoostSliderModel) -> String {
+        Self.disabledHint(model, dimReason: dimHalfReason)
+    }
+
+    private func extraRange(_ model: BoostSliderModel) -> ValueText? {
+        Self.extraRange(model, given: extraRangeText)
     }
 
     @ViewBuilder private func actions(_ model: BoostSliderModel) -> some View {
@@ -195,6 +224,19 @@ public struct BoostSlider: View {
         }
     }
 
+    /// The pointer over the whole control: scroll notches step the level while it is there. Every move (re)starts the
+    /// listener, so it comes back after its window resigned key or was hidden under the pointer.
+    private func pointer(_ phase: HoverPhase) {
+        switch phase {
+        case .active:
+            if !isPointerOver { isPointerOver = true }
+            scroll.start { notches in scrolled(notches) }
+        case .ended:
+            isPointerOver = false
+            scroll.stop()
+        }
+    }
+
     private func scrolled(_ notches: Int) -> Bool {
         let next = model.step(from: level, by: notches)
         guard next != level else { return false }
@@ -206,11 +248,6 @@ public struct BoostSlider: View {
         if let pattern = model.haptic(from: level, to: next) { haptics.play(pattern) }
         level = next
         if commit { onCommit(next) }
-    }
-
-    private func helpText(_ model: BoostSliderModel) -> String {
-        if case let .unavailable(reason) = boostHalf { return reason }
-        return model.markerLevel != nil ? extraRangeText?.text ?? "" : ""
     }
 
     /// The key of a press: ← and → toward the side they point at (a right-to-left slider has its boost end on the
@@ -225,35 +262,6 @@ public struct BoostSlider: View {
         case (true, true): return .nextStop
         case (false, true): return .previousStop
         }
-    }
-
-    /// "Level, ‹display name›".
-    static func label(_ name: String, in language: CopyLanguage = .app) -> String {
-        let name = name.overbrightIsolated
-        return String(localized: "Level, \(name)", bundle: language.bundle, locale: language.locale,
-                      comment: "VoiceOver: label of a display’s level slider; the argument is the display’s name")
-    }
-}
-
-/// VoiceOver's "Extra range" content of the slider, when there is a reading.
-private struct ExtraRangeContent: ViewModifier {
-    let text: ValueText?
-
-    func body(content: Content) -> some View {
-        if let text {
-            content.accessibilityCustomContent(Text(verbatim: BoostSlider.extraRangeLabel()),
-                                               Text(verbatim: text.accessibilityText))
-        } else {
-            content
-        }
-    }
-}
-
-extension BoostSlider {
-    /// "Extra range": the label of the slider's VoiceOver custom content.
-    static func extraRangeLabel(in language: CopyLanguage = .app) -> String {
-        String(localized: "Extra range", bundle: language.bundle, locale: language.locale,
-               comment: "VoiceOver: label of the slider’s custom content that says how much extra range macOS allows")
     }
 }
 
@@ -274,6 +282,9 @@ extension BoostSlider {
         BoostSlider(level: .constant(.standard), top: 1, allowedNow: nil, presets: [], dimEnabled: true,
                     boostHalf: .unavailable(reason: "HDR is off"), accessibilityName: "Studio Display",
                     valueText: text, onCommit: { _ in })
+        BoostSlider(level: .constant(.standard), top: 2.587, allowedNow: nil, presets: presets, dimEnabled: false,
+                    boostHalf: .inactive, accessibilityName: "Sidecar Display", valueText: text, onCommit: { _ in })
+            .dimHalfReason("macOS doesn’t let apps adjust this display.")
     }
     .padding()
     .frame(width: 320)
