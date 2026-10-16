@@ -12,8 +12,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "Vols moure l’Overbright a la carpeta Apps?"
           }
         },
         "cs" : {
@@ -42,8 +42,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "¿Mover Overbright a la carpeta Aplicaciones?"
           }
         },
         "fi" : {
@@ -54,8 +54,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "Déplacer Overbright dans le dossier Applications ?"
           }
         },
         "he" : {
@@ -90,8 +90,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "Spostare Overbright nella cartella Applicazioni?"
           }
         },
         "ja" : {
@@ -132,20 +132,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "Mover o Overbright para a pasta Aplicativos?"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "Mover o Overbright para a pasta Aplicações?"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "Mutați Overbright în dosarul Aplicații?"
           }
         },
         "ru" : {
@@ -221,8 +221,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "Mou a la carpeta Apps"
           }
         },
         "cs" : {
@@ -251,8 +251,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "Mover a Aplicaciones"
           }
         },
         "fi" : {
@@ -263,8 +263,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "Déplacer dans Applications"
           }
         },
         "he" : {
@@ -299,8 +299,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "Sposta in Applicazioni"
           }
         },
         "ja" : {
@@ -341,20 +341,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "Mover para Aplicativos"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "Mover para Aplicações"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "Mutați în Aplicații"
           }
         },
         "ru" : {
@@ -430,8 +430,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "Ara no"
           }
         },
         "cs" : {
@@ -460,8 +460,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "Ahora no"
           }
         },
         "fi" : {
@@ -472,8 +472,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "Plus tard"
           }
         },
         "he" : {
@@ -508,8 +508,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "Non ora"
           }
         },
         "ja" : {
@@ -550,20 +550,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "Agora Não"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "Agora não"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "Nu acum"
           }
         },
         "ru" : {
@@ -639,8 +639,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "OK"
+            "state" : "translated",
+            "value" : "D’acord"
           }
         },
         "cs" : {
@@ -669,8 +669,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "OK"
+            "state" : "translated",
+            "value" : "Aceptar"
           }
         },
         "fi" : {
@@ -681,7 +681,7 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "OK"
           }
         },
@@ -717,7 +717,7 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "OK"
           }
         },
@@ -759,19 +759,19 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "OK"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "OK"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "OK"
           }
         },
@@ -848,8 +848,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "No s’ha pogut moure l’Overbright. Arrossega’l a la carpeta Apps al Finder."
           }
         },
         "cs" : {
@@ -878,8 +878,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "No se ha podido mover Overbright. Arrástralo a la carpeta Aplicaciones en el Finder."
           }
         },
         "fi" : {
@@ -890,8 +890,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "Impossible de déplacer Overbright. Faites-le glisser dans le dossier Applications depuis le Finder."
           }
         },
         "he" : {
@@ -926,8 +926,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "Impossibile spostare Overbright. Trascinalo nella cartella Applicazioni nel Finder."
           }
         },
         "ja" : {
@@ -968,20 +968,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "Não foi possível mover o Overbright. Arraste-o para a pasta Aplicativos no Finder."
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "Não foi possível mover o Overbright. Arraste‑o para a pasta Aplicações no Finder."
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "Overbright nu a putut fi mutat. Trageți‑l în dosarul Aplicații din Finder."
           }
         },
         "ru" : {
@@ -1266,8 +1266,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "Les accions de l’app Dreceres i l’obertura en iniciar sessió només funcionen des de la carpeta Apps."
           }
         },
         "cs" : {
@@ -1296,8 +1296,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "Las acciones de la app Atajos y la apertura al iniciar sesión solo funcionan si Overbright está en Aplicaciones."
           }
         },
         "fi" : {
@@ -1308,8 +1308,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "Les actions de Raccourcis et l’ouverture avec la session ne fonctionnent que depuis le dossier Applications."
           }
         },
         "he" : {
@@ -1344,8 +1344,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "Le azioni di Comandi Rapidi e l’apertura al login funzionano solo se Overbright si trova in Applicazioni."
           }
         },
         "ja" : {
@@ -1386,20 +1386,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "As ações do app Atalhos e a abertura no início da sessão só funcionam se o Overbright estiver em Aplicativos."
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "As ações da aplicação Atalhos e a abertura ao iniciar sessão só funcionam a partir da pasta Aplicações."
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "Acțiunile din Scurtături și deschiderea la login funcționează numai din dosarul Aplicații."
           }
         },
         "ru" : {

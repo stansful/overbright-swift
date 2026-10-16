@@ -12,8 +12,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light off"
+            "state" : "translated",
+            "value" : "Llum de farciment desactivada"
           }
         },
         "cs" : {
@@ -42,8 +42,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light off"
+            "state" : "translated",
+            "value" : "Luz de relleno desactivada"
           }
         },
         "fi" : {
@@ -54,8 +54,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light off"
+            "state" : "translated",
+            "value" : "Lumière d’appoint désactivée"
           }
         },
         "he" : {
@@ -90,8 +90,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light off"
+            "state" : "translated",
+            "value" : "Luce di riempimento disattivata"
           }
         },
         "ja" : {
@@ -132,20 +132,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light off"
+            "state" : "translated",
+            "value" : "Luz de Preenchimento desativada"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light off"
+            "state" : "translated",
+            "value" : "Luz de preenchimento desativada"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light off"
+            "state" : "translated",
+            "value" : "Lumină pentru față dezactivată"
           }
         },
         "ru" : {
@@ -221,8 +221,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light on"
+            "state" : "translated",
+            "value" : "Llum de farciment activada"
           }
         },
         "cs" : {
@@ -251,8 +251,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light on"
+            "state" : "translated",
+            "value" : "Luz de relleno activada"
           }
         },
         "fi" : {
@@ -263,8 +263,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light on"
+            "state" : "translated",
+            "value" : "Lumière d’appoint activée"
           }
         },
         "he" : {
@@ -299,8 +299,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light on"
+            "state" : "translated",
+            "value" : "Luce di riempimento attivata"
           }
         },
         "ja" : {
@@ -341,20 +341,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light on"
+            "state" : "translated",
+            "value" : "Luz de Preenchimento ativada"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light on"
+            "state" : "translated",
+            "value" : "Luz de preenchimento ativada"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light on"
+            "state" : "translated",
+            "value" : "Lumină pentru față activată"
           }
         },
         "ru" : {

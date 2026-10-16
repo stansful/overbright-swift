@@ -13,8 +13,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "Torna a Estàndard amb l’${applicationName}"
           }
         },
         "cs" : {
@@ -51,8 +51,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "Volver a Estándar en ${applicationName}"
           }
         },
         "fi" : {
@@ -63,8 +63,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "Revenir au standard dans ${applicationName}"
           }
         },
         "he" : {
@@ -99,8 +99,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "Torna a Standard in ${applicationName}"
           }
         },
         "ja" : {
@@ -141,20 +141,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "Voltar ao Padrão no ${applicationName}"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "Voltar ao padrão com o ${applicationName}"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "Reveniți la Standard în ${applicationName}"
           }
         },
         "ru" : {
@@ -231,8 +231,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "Activa o desactiva l’${applicationName}"
           }
         },
         "cs" : {
@@ -269,8 +269,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "Activar o desactivar ${applicationName}"
           }
         },
         "fi" : {
@@ -281,8 +281,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "Activer ou désactiver ${applicationName}"
           }
         },
         "he" : {
@@ -317,8 +317,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "Attiva o disattiva ${applicationName}"
           }
         },
         "ja" : {
@@ -359,20 +359,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "Ativar ou desativar ${applicationName}"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "Ativar ou desativar o ${applicationName}"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "Activați sau dezactivați ${applicationName}"
           }
         },
         "ru" : {

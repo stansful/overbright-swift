@@ -430,8 +430,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "El GitHub no ha trobat les versions del Overbright. Torna‑ho a provar més tard."
+            "state" : "translated",
+            "value" : "El GitHub no ha trobat les versions de l’Overbright. Torna‑ho a provar més tard."
           }
         },
         "cs" : {
@@ -460,7 +460,7 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub no ha encontrado las versiones de Overbright. Inténtalo de nuevo más tarde."
           }
         },
@@ -472,8 +472,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "GitHub n’a pas trouvé les versions de Overbright. Réessayez plus tard."
+            "state" : "translated",
+            "value" : "GitHub n’a pas trouvé les versions d’Overbright. Réessayez plus tard."
           }
         },
         "he" : {
@@ -508,7 +508,7 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub non ha trovato le versioni di Overbright. Riprova più tardi."
           }
         },
@@ -550,19 +550,19 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "O GitHub não encontrou as versões do Overbright. Tente novamente mais tarde."
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "O GitHub não encontrou as versões do Overbright. Volte a tentar mais tarde."
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub nu a găsit versiunile Overbright. Reîncercați mai târziu."
           }
         },

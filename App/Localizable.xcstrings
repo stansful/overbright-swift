@@ -16,8 +16,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "All Displays"
+            "state" : "translated",
+            "value" : "Totes les pantalles"
           }
         },
         "cs" : {
@@ -46,8 +46,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "All Displays"
+            "state" : "translated",
+            "value" : "Todas las pantallas"
           }
         },
         "fi" : {
@@ -58,8 +58,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "All Displays"
+            "state" : "translated",
+            "value" : "Tous les écrans"
           }
         },
         "he" : {
@@ -94,8 +94,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "All Displays"
+            "state" : "translated",
+            "value" : "Tutti gli schermi"
           }
         },
         "ja" : {
@@ -136,20 +136,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "All Displays"
+            "state" : "translated",
+            "value" : "Todas as Telas"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "All Displays"
+            "state" : "translated",
+            "value" : "Todos os monitores"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "All Displays"
+            "state" : "translated",
+            "value" : "Toate afișajele"
           }
         },
         "ru" : {
@@ -225,8 +225,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "Torna a Estàndard"
           }
         },
         "cs" : {
@@ -255,8 +255,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "Volver a Estándar"
           }
         },
         "fi" : {
@@ -267,8 +267,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "Revenir au standard"
           }
         },
         "he" : {
@@ -303,8 +303,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "Torna a Standard"
           }
         },
         "ja" : {
@@ -345,20 +345,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "Voltar ao Padrão"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "Voltar ao padrão"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "Reveniți la Standard"
           }
         },
         "ru" : {
@@ -434,8 +434,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Bright Room"
+            "state" : "translated",
+            "value" : "Sala lluminosa"
           }
         },
         "cs" : {
@@ -464,8 +464,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Bright Room"
+            "state" : "translated",
+            "value" : "Luz intensa"
           }
         },
         "fi" : {
@@ -476,8 +476,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Bright Room"
+            "state" : "translated",
+            "value" : "Pièce claire"
           }
         },
         "he" : {
@@ -512,8 +512,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Bright Room"
+            "state" : "translated",
+            "value" : "Luce intensa"
           }
         },
         "ja" : {
@@ -554,20 +554,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Bright Room"
+            "state" : "translated",
+            "value" : "Luz Intensa"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Bright Room"
+            "state" : "translated",
+            "value" : "Luz forte"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Bright Room"
+            "state" : "translated",
+            "value" : "Cameră luminoasă"
           }
         },
         "ru" : {
@@ -643,8 +643,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Brightness"
+            "state" : "translated",
+            "value" : "Brillantor"
           }
         },
         "cs" : {
@@ -673,8 +673,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Brightness"
+            "state" : "translated",
+            "value" : "Brillo"
           }
         },
         "fi" : {
@@ -685,8 +685,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Brightness"
+            "state" : "translated",
+            "value" : "Luminosité"
           }
         },
         "he" : {
@@ -721,8 +721,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Brightness"
+            "state" : "translated",
+            "value" : "Luminosità"
           }
         },
         "ja" : {
@@ -763,20 +763,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Brightness"
+            "state" : "translated",
+            "value" : "Brilho"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Brightness"
+            "state" : "translated",
+            "value" : "Brilho"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Brightness"
+            "state" : "translated",
+            "value" : "Luminozitate"
           }
         },
         "ru" : {
@@ -852,8 +852,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim ${display} to ${percent}"
+            "state" : "translated",
+            "value" : "Atenua ${display} fins al ${percent}"
           }
         },
         "cs" : {
@@ -882,8 +882,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim ${display} to ${percent}"
+            "state" : "translated",
+            "value" : "Atenuar ${display} al ${percent}"
           }
         },
         "fi" : {
@@ -894,8 +894,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim ${display} to ${percent}"
+            "state" : "translated",
+            "value" : "Assombrir ${display} à ${percent}"
           }
         },
         "he" : {
@@ -930,8 +930,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim ${display} to ${percent}"
+            "state" : "translated",
+            "value" : "Oscura ${display} al ${percent}"
           }
         },
         "ja" : {
@@ -972,20 +972,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim ${display} to ${percent}"
+            "state" : "translated",
+            "value" : "Escurecer ${display} para ${percent}"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim ${display} to ${percent}"
+            "state" : "translated",
+            "value" : "Escurecer ${display} para ${percent}"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim ${display} to ${percent}"
+            "state" : "translated",
+            "value" : "Întunecați ${display} la ${percent}"
           }
         },
         "ru" : {
@@ -1061,8 +1061,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim Displays"
+            "state" : "translated",
+            "value" : "Atenua les pantalles"
           }
         },
         "cs" : {
@@ -1091,8 +1091,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim Displays"
+            "state" : "translated",
+            "value" : "Atenuar pantallas"
           }
         },
         "fi" : {
@@ -1103,8 +1103,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim Displays"
+            "state" : "translated",
+            "value" : "Assombrir les écrans"
           }
         },
         "he" : {
@@ -1139,8 +1139,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim Displays"
+            "state" : "translated",
+            "value" : "Oscura schermi"
           }
         },
         "ja" : {
@@ -1181,20 +1181,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim Displays"
+            "state" : "translated",
+            "value" : "Escurecer Telas"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim Displays"
+            "state" : "translated",
+            "value" : "Escurecer monitores"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim Displays"
+            "state" : "translated",
+            "value" : "Întunecați afișajele"
           }
         },
         "ru" : {
@@ -1270,8 +1270,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dims a display, or every display, below the macOS minimum."
+            "state" : "translated",
+            "value" : "Atenua una pantalla, o totes, per sota del mínim del macOS."
           }
         },
         "cs" : {
@@ -1300,8 +1300,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dims a display, or every display, below the macOS minimum."
+            "state" : "translated",
+            "value" : "Atenúa una pantalla, o todas, por debajo del mínimo de macOS."
           }
         },
         "fi" : {
@@ -1312,8 +1312,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dims a display, or every display, below the macOS minimum."
+            "state" : "translated",
+            "value" : "Assombrit un écran, ou tous les écrans, sous le minimum de macOS."
           }
         },
         "he" : {
@@ -1348,8 +1348,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dims a display, or every display, below the macOS minimum."
+            "state" : "translated",
+            "value" : "Oscura uno schermo, o tutti, sotto il minimo di macOS."
           }
         },
         "ja" : {
@@ -1390,20 +1390,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dims a display, or every display, below the macOS minimum."
+            "state" : "translated",
+            "value" : "Escurece uma tela, ou todas, abaixo do mínimo do macOS."
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dims a display, or every display, below the macOS minimum."
+            "state" : "translated",
+            "value" : "Escurece um monitor, ou todos, abaixo do mínimo do macOS."
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dims a display, or every display, below the macOS minimum."
+            "state" : "translated",
+            "value" : "Întunecă un afișaj sau toate afișajele sub minimul macOS."
           }
         },
         "ru" : {
@@ -1479,8 +1479,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Display"
+            "state" : "translated",
+            "value" : "Pantalla"
           }
         },
         "cs" : {
@@ -1509,8 +1509,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Display"
+            "state" : "translated",
+            "value" : "Pantalla"
           }
         },
         "fi" : {
@@ -1521,8 +1521,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Display"
+            "state" : "translated",
+            "value" : "Écran"
           }
         },
         "he" : {
@@ -1557,8 +1557,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Display"
+            "state" : "translated",
+            "value" : "Schermo"
           }
         },
         "ja" : {
@@ -1599,20 +1599,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Display"
+            "state" : "translated",
+            "value" : "Tela"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Display"
+            "state" : "translated",
+            "value" : "Monitor"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Display"
+            "state" : "translated",
+            "value" : "Afișaj"
           }
         },
         "ru" : {
@@ -1688,8 +1688,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Duration"
+            "state" : "translated",
+            "value" : "Durada"
           }
         },
         "cs" : {
@@ -1718,8 +1718,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Duration"
+            "state" : "translated",
+            "value" : "Duración"
           }
         },
         "fi" : {
@@ -1730,8 +1730,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Duration"
+            "state" : "translated",
+            "value" : "Durée"
           }
         },
         "he" : {
@@ -1766,8 +1766,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Duration"
+            "state" : "translated",
+            "value" : "Durata"
           }
         },
         "ja" : {
@@ -1808,20 +1808,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Duration"
+            "state" : "translated",
+            "value" : "Duração"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Duration"
+            "state" : "translated",
+            "value" : "Duração"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Duration"
+            "state" : "translated",
+            "value" : "Durată"
           }
         },
         "ru" : {
@@ -1897,8 +1897,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ends a pause."
+            "state" : "translated",
+            "value" : "Acaba una pausa."
           }
         },
         "cs" : {
@@ -1927,8 +1927,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ends a pause."
+            "state" : "translated",
+            "value" : "Termina una pausa."
           }
         },
         "fi" : {
@@ -1939,8 +1939,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ends a pause."
+            "state" : "translated",
+            "value" : "Met fin à une pause."
           }
         },
         "he" : {
@@ -1975,8 +1975,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ends a pause."
+            "state" : "translated",
+            "value" : "Termina una pausa."
           }
         },
         "ja" : {
@@ -2017,20 +2017,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ends a pause."
+            "state" : "translated",
+            "value" : "Encerra uma pausa."
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ends a pause."
+            "state" : "translated",
+            "value" : "Termina uma pausa."
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ends a pause."
+            "state" : "translated",
+            "value" : "Încheie o pauză."
           }
         },
         "ru" : {
@@ -2106,8 +2106,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "Brillantor extra"
           }
         },
         "cs" : {
@@ -2136,8 +2136,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "Brillo extra"
           }
         },
         "fi" : {
@@ -2148,8 +2148,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "Luminosité +"
           }
         },
         "he" : {
@@ -2184,8 +2184,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "Luminosità extra"
           }
         },
         "ja" : {
@@ -2226,20 +2226,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "Brilho Extra"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "Brilho extra"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "Luminozitate+"
           }
         },
         "ru" : {
@@ -2315,8 +2315,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Get Overbright State"
+            "state" : "translated",
+            "value" : "Obtén l’estat de l’Overbright"
           }
         },
         "cs" : {
@@ -2345,8 +2345,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Get Overbright State"
+            "state" : "translated",
+            "value" : "Obtener estado de Overbright"
           }
         },
         "fi" : {
@@ -2357,8 +2357,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Get Overbright State"
+            "state" : "translated",
+            "value" : "Obtenir l’état d’Overbright"
           }
         },
         "he" : {
@@ -2393,8 +2393,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Get Overbright State"
+            "state" : "translated",
+            "value" : "Ottieni stato di Overbright"
           }
         },
         "ja" : {
@@ -2435,20 +2435,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Get Overbright State"
+            "state" : "translated",
+            "value" : "Obter Estado do Overbright"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Get Overbright State"
+            "state" : "translated",
+            "value" : "Obter estado do Overbright"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Get Overbright State"
+            "state" : "translated",
+            "value" : "Obțineți starea Overbright"
           }
         },
         "ru" : {
@@ -2524,8 +2524,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Indoor"
+            "state" : "translated",
+            "value" : "Interior"
           }
         },
         "cs" : {
@@ -2554,8 +2554,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Indoor"
+            "state" : "translated",
+            "value" : "Interior"
           }
         },
         "fi" : {
@@ -2566,8 +2566,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Indoor"
+            "state" : "translated",
+            "value" : "Intérieur"
           }
         },
         "he" : {
@@ -2602,8 +2602,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Indoor"
+            "state" : "translated",
+            "value" : "Interni"
           }
         },
         "ja" : {
@@ -2644,20 +2644,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Indoor"
+            "state" : "translated",
+            "value" : "Ambiente Interno"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Indoor"
+            "state" : "translated",
+            "value" : "Interior"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Indoor"
+            "state" : "translated",
+            "value" : "Interior"
           }
         },
         "ru" : {
@@ -2733,8 +2733,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Leave Alone"
+            "state" : "translated",
+            "value" : "Sense canvis"
           }
         },
         "cs" : {
@@ -2763,8 +2763,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Leave Alone"
+            "state" : "translated",
+            "value" : "No cambiar"
           }
         },
         "fi" : {
@@ -2775,8 +2775,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Leave Alone"
+            "state" : "translated",
+            "value" : "Ne pas modifier"
           }
         },
         "he" : {
@@ -2811,8 +2811,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Leave Alone"
+            "state" : "translated",
+            "value" : "Non modificare"
           }
         },
         "ja" : {
@@ -2853,20 +2853,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Leave Alone"
+            "state" : "translated",
+            "value" : "Não Alterar"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Leave Alone"
+            "state" : "translated",
+            "value" : "Não alterar"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Leave Alone"
+            "state" : "translated",
+            "value" : "Nu modificați"
           }
         },
         "ru" : {
@@ -2942,8 +2942,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Level"
+            "state" : "translated",
+            "value" : "Nivell"
           }
         },
         "cs" : {
@@ -2972,8 +2972,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Level"
+            "state" : "translated",
+            "value" : "Nivel"
           }
         },
         "fi" : {
@@ -2984,8 +2984,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Level"
+            "state" : "translated",
+            "value" : "Niveau"
           }
         },
         "he" : {
@@ -3020,8 +3020,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Level"
+            "state" : "translated",
+            "value" : "Livello"
           }
         },
         "ja" : {
@@ -3062,20 +3062,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Level"
+            "state" : "translated",
+            "value" : "Nível"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Level"
+            "state" : "translated",
+            "value" : "Nível"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Level"
+            "state" : "translated",
+            "value" : "Nivel"
           }
         },
         "ru" : {
@@ -3151,8 +3151,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Max"
+            "state" : "translated",
+            "value" : "Màxim"
           }
         },
         "cs" : {
@@ -3181,8 +3181,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Max"
+            "state" : "translated",
+            "value" : "Máximo"
           }
         },
         "fi" : {
@@ -3193,8 +3193,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Max"
+            "state" : "translated",
+            "value" : "Maximum"
           }
         },
         "he" : {
@@ -3229,8 +3229,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Max"
+            "state" : "translated",
+            "value" : "Massimo"
           }
         },
         "ja" : {
@@ -3271,20 +3271,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Max"
+            "state" : "translated",
+            "value" : "Máximo"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Max"
+            "state" : "translated",
+            "value" : "Máximo"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Max"
+            "state" : "translated",
+            "value" : "Maxim"
           }
         },
         "ru" : {
@@ -3360,8 +3360,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Multiplier"
+            "state" : "translated",
+            "value" : "Multiplicador"
           }
         },
         "cs" : {
@@ -3390,8 +3390,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Multiplier"
+            "state" : "translated",
+            "value" : "Multiplicador"
           }
         },
         "fi" : {
@@ -3402,8 +3402,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Multiplier"
+            "state" : "translated",
+            "value" : "Multiplicateur"
           }
         },
         "he" : {
@@ -3438,8 +3438,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Multiplier"
+            "state" : "translated",
+            "value" : "Moltiplicatore"
           }
         },
         "ja" : {
@@ -3480,20 +3480,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Multiplier"
+            "state" : "translated",
+            "value" : "Multiplicador"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Multiplier"
+            "state" : "translated",
+            "value" : "Multiplicador"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Multiplier"
+            "state" : "translated",
+            "value" : "Multiplicator"
           }
         },
         "ru" : {
@@ -3569,8 +3569,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off"
+            "state" : "translated",
+            "value" : "Desactiva"
           }
         },
         "cs" : {
@@ -3599,8 +3599,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off"
+            "state" : "translated",
+            "value" : "Desactivar"
           }
         },
         "fi" : {
@@ -3611,8 +3611,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off"
+            "state" : "translated",
+            "value" : "Désactiver"
           }
         },
         "he" : {
@@ -3647,8 +3647,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off"
+            "state" : "translated",
+            "value" : "Disattiva"
           }
         },
         "ja" : {
@@ -3689,20 +3689,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off"
+            "state" : "translated",
+            "value" : "Desativar"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off"
+            "state" : "translated",
+            "value" : "Desativar"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off"
+            "state" : "translated",
+            "value" : "Dezactivare"
           }
         },
         "ru" : {
@@ -3778,8 +3778,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "On"
+            "state" : "translated",
+            "value" : "Activa"
           }
         },
         "cs" : {
@@ -3808,8 +3808,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "On"
+            "state" : "translated",
+            "value" : "Activar"
           }
         },
         "fi" : {
@@ -3820,8 +3820,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "On"
+            "state" : "translated",
+            "value" : "Activer"
           }
         },
         "he" : {
@@ -3856,8 +3856,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "On"
+            "state" : "translated",
+            "value" : "Attiva"
           }
         },
         "ja" : {
@@ -3898,20 +3898,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "On"
+            "state" : "translated",
+            "value" : "Ativar"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "On"
+            "state" : "translated",
+            "value" : "Ativar"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "On"
+            "state" : "translated",
+            "value" : "Activare"
           }
         },
         "ru" : {
@@ -3987,7 +3987,7 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },
@@ -4017,7 +4017,7 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },
@@ -4029,7 +4029,7 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },
@@ -4065,7 +4065,7 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },
@@ -4107,19 +4107,19 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },
@@ -4196,8 +4196,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: Leave Alone"
+            "state" : "translated",
+            "value" : "Overbright: sense canvis"
           }
         },
         "cs" : {
@@ -4226,8 +4226,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: Leave Alone"
+            "state" : "translated",
+            "value" : "Overbright: no cambiar"
           }
         },
         "fi" : {
@@ -4238,8 +4238,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: Leave Alone"
+            "state" : "translated",
+            "value" : "Overbright : ne pas modifier"
           }
         },
         "he" : {
@@ -4274,8 +4274,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: Leave Alone"
+            "state" : "translated",
+            "value" : "Overbright: non modificare"
           }
         },
         "ja" : {
@@ -4316,20 +4316,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: Leave Alone"
+            "state" : "translated",
+            "value" : "Overbright: Não Alterar"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: Leave Alone"
+            "state" : "translated",
+            "value" : "Overbright: não alterar"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: Leave Alone"
+            "state" : "translated",
+            "value" : "Overbright: nemodificat"
           }
         },
         "ru" : {
@@ -4405,8 +4405,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: Off"
+            "state" : "translated",
+            "value" : "Overbright: desactivat"
           }
         },
         "cs" : {
@@ -4435,8 +4435,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: Off"
+            "state" : "translated",
+            "value" : "Overbright: desactivado"
           }
         },
         "fi" : {
@@ -4447,8 +4447,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: Off"
+            "state" : "translated",
+            "value" : "Overbright : désactivé"
           }
         },
         "he" : {
@@ -4483,8 +4483,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: Off"
+            "state" : "translated",
+            "value" : "Overbright: disattivato"
           }
         },
         "ja" : {
@@ -4525,20 +4525,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: Off"
+            "state" : "translated",
+            "value" : "Overbright: Desativado"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: Off"
+            "state" : "translated",
+            "value" : "Overbright: desativado"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: Off"
+            "state" : "translated",
+            "value" : "Overbright: dezactivat"
           }
         },
         "ru" : {
@@ -4614,8 +4614,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Bright Room"
+            "state" : "translated",
+            "value" : "Overbright: activat, Sala lluminosa"
           }
         },
         "cs" : {
@@ -4644,8 +4644,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Bright Room"
+            "state" : "translated",
+            "value" : "Overbright: activado en “Luz intensa”"
           }
         },
         "fi" : {
@@ -4656,8 +4656,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Bright Room"
+            "state" : "translated",
+            "value" : "Overbright : activé, « Pièce claire »"
           }
         },
         "he" : {
@@ -4692,8 +4692,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Bright Room"
+            "state" : "translated",
+            "value" : "Overbright: attivo su “Luce intensa”"
           }
         },
         "ja" : {
@@ -4734,20 +4734,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Bright Room"
+            "state" : "translated",
+            "value" : "Overbright: Ativado em “Luz Intensa”"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Bright Room"
+            "state" : "translated",
+            "value" : "Overbright: ativado em “Luz forte”"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Bright Room"
+            "state" : "translated",
+            "value" : "Overbright: activat, „Cameră luminoasă”"
           }
         },
         "ru" : {
@@ -4823,8 +4823,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Indoor"
+            "state" : "translated",
+            "value" : "Overbright: activat, Interior"
           }
         },
         "cs" : {
@@ -4853,8 +4853,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Indoor"
+            "state" : "translated",
+            "value" : "Overbright: activado en “Interior”"
           }
         },
         "fi" : {
@@ -4865,8 +4865,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Indoor"
+            "state" : "translated",
+            "value" : "Overbright : activé, « Intérieur »"
           }
         },
         "he" : {
@@ -4901,8 +4901,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Indoor"
+            "state" : "translated",
+            "value" : "Overbright: attivo su “Interni”"
           }
         },
         "ja" : {
@@ -4943,20 +4943,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Indoor"
+            "state" : "translated",
+            "value" : "Overbright: Ativado em “Ambiente Interno”"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Indoor"
+            "state" : "translated",
+            "value" : "Overbright: ativado em “Interior”"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Indoor"
+            "state" : "translated",
+            "value" : "Overbright: activat, „Interior”"
           }
         },
         "ru" : {
@@ -5032,8 +5032,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Max"
+            "state" : "translated",
+            "value" : "Overbright: activat, Màxim"
           }
         },
         "cs" : {
@@ -5062,8 +5062,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Max"
+            "state" : "translated",
+            "value" : "Overbright: activado en “Máximo”"
           }
         },
         "fi" : {
@@ -5074,8 +5074,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Max"
+            "state" : "translated",
+            "value" : "Overbright : activé, « Maximum »"
           }
         },
         "he" : {
@@ -5110,8 +5110,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Max"
+            "state" : "translated",
+            "value" : "Overbright: attivo su “Massimo”"
           }
         },
         "ja" : {
@@ -5152,20 +5152,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Max"
+            "state" : "translated",
+            "value" : "Overbright: Ativado em “Máximo”"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Max"
+            "state" : "translated",
+            "value" : "Overbright: ativado em “Máximo”"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Max"
+            "state" : "translated",
+            "value" : "Overbright: activat, „Maxim”"
           }
         },
         "ru" : {
@@ -5241,8 +5241,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Sunlight"
+            "state" : "translated",
+            "value" : "Overbright: activat, Llum solar"
           }
         },
         "cs" : {
@@ -5271,8 +5271,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Sunlight"
+            "state" : "translated",
+            "value" : "Overbright: activado en “Luz solar”"
           }
         },
         "fi" : {
@@ -5283,8 +5283,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Sunlight"
+            "state" : "translated",
+            "value" : "Overbright : activé, « Plein soleil »"
           }
         },
         "he" : {
@@ -5319,8 +5319,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Sunlight"
+            "state" : "translated",
+            "value" : "Overbright: attivo su “Luce solare”"
           }
         },
         "ja" : {
@@ -5361,20 +5361,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Sunlight"
+            "state" : "translated",
+            "value" : "Overbright: Ativado em “Luz do Sol”"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Sunlight"
+            "state" : "translated",
+            "value" : "Overbright: ativado em “Luz solar”"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Sunlight"
+            "state" : "translated",
+            "value" : "Overbright: activat, „Lumină solară”"
           }
         },
         "ru" : {
@@ -5450,8 +5450,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Overbright"
+            "state" : "translated",
+            "value" : "Posa l’Overbright en pausa"
           }
         },
         "cs" : {
@@ -5480,8 +5480,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Overbright"
+            "state" : "translated",
+            "value" : "Pausar Overbright"
           }
         },
         "fi" : {
@@ -5492,8 +5492,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Overbright"
+            "state" : "translated",
+            "value" : "Suspendre Overbright"
           }
         },
         "he" : {
@@ -5528,8 +5528,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Overbright"
+            "state" : "translated",
+            "value" : "Metti in pausa Overbright"
           }
         },
         "ja" : {
@@ -5570,20 +5570,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Overbright"
+            "state" : "translated",
+            "value" : "Pausar Overbright"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Overbright"
+            "state" : "translated",
+            "value" : "Pausar o Overbright"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Overbright"
+            "state" : "translated",
+            "value" : "Puneți Overbright pe pauză"
           }
         },
         "ru" : {
@@ -5659,8 +5659,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Overbright for ${duration}"
+            "state" : "translated",
+            "value" : "Posa l’Overbright en pausa durant ${duration}"
           }
         },
         "cs" : {
@@ -5689,8 +5689,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Overbright for ${duration}"
+            "state" : "translated",
+            "value" : "Pausar Overbright durante ${duration}"
           }
         },
         "fi" : {
@@ -5701,8 +5701,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Overbright for ${duration}"
+            "state" : "translated",
+            "value" : "Suspendre Overbright pendant ${duration}"
           }
         },
         "he" : {
@@ -5737,8 +5737,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Overbright for ${duration}"
+            "state" : "translated",
+            "value" : "Metti in pausa Overbright per ${duration}"
           }
         },
         "ja" : {
@@ -5779,20 +5779,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Overbright for ${duration}"
+            "state" : "translated",
+            "value" : "Pausar Overbright por ${duration}"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Overbright for ${duration}"
+            "state" : "translated",
+            "value" : "Pausar o Overbright durante ${duration}"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Overbright for ${duration}"
+            "state" : "translated",
+            "value" : "Puneți Overbright pe pauză pentru ${duration}"
           }
         },
         "ru" : {
@@ -5868,8 +5868,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pauses extra brightness for a while."
+            "state" : "translated",
+            "value" : "Posa en pausa la brillantor extra durant una estona."
           }
         },
         "cs" : {
@@ -5898,8 +5898,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pauses extra brightness for a while."
+            "state" : "translated",
+            "value" : "Pausa el brillo extra durante un tiempo."
           }
         },
         "fi" : {
@@ -5910,8 +5910,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pauses extra brightness for a while."
+            "state" : "translated",
+            "value" : "Met la luminosité supplémentaire en pause pendant un moment."
           }
         },
         "he" : {
@@ -5946,8 +5946,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pauses extra brightness for a while."
+            "state" : "translated",
+            "value" : "Mette in pausa la luminosità extra per un po’."
           }
         },
         "ja" : {
@@ -5988,20 +5988,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pauses extra brightness for a while."
+            "state" : "translated",
+            "value" : "Pausa o brilho extra por um tempo."
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pauses extra brightness for a while."
+            "state" : "translated",
+            "value" : "Coloca o brilho extra em pausa durante algum tempo."
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pauses extra brightness for a while."
+            "state" : "translated",
+            "value" : "Pune pe pauză luminozitatea suplimentară pentru un timp."
           }
         },
         "ru" : {
@@ -6077,8 +6077,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Resume Overbright"
+            "state" : "translated",
+            "value" : "Reprèn l’Overbright"
           }
         },
         "cs" : {
@@ -6107,8 +6107,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Resume Overbright"
+            "state" : "translated",
+            "value" : "Reanudar Overbright"
           }
         },
         "fi" : {
@@ -6119,8 +6119,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Resume Overbright"
+            "state" : "translated",
+            "value" : "Reprendre Overbright"
           }
         },
         "he" : {
@@ -6155,8 +6155,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Resume Overbright"
+            "state" : "translated",
+            "value" : "Riprendi Overbright"
           }
         },
         "ja" : {
@@ -6197,20 +6197,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Resume Overbright"
+            "state" : "translated",
+            "value" : "Retomar Overbright"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Resume Overbright"
+            "state" : "translated",
+            "value" : "Retomar o Overbright"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Resume Overbright"
+            "state" : "translated",
+            "value" : "Reluați Overbright"
           }
         },
         "ru" : {
@@ -6286,8 +6286,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set Extra Brightness"
+            "state" : "translated",
+            "value" : "Ajusta la brillantor extra"
           }
         },
         "cs" : {
@@ -6316,8 +6316,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set Extra Brightness"
+            "state" : "translated",
+            "value" : "Ajustar brillo extra"
           }
         },
         "fi" : {
@@ -6328,8 +6328,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set Extra Brightness"
+            "state" : "translated",
+            "value" : "Régler la luminosité supplémentaire"
           }
         },
         "he" : {
@@ -6364,8 +6364,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set Extra Brightness"
+            "state" : "translated",
+            "value" : "Imposta luminosità extra"
           }
         },
         "ja" : {
@@ -6406,20 +6406,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set Extra Brightness"
+            "state" : "translated",
+            "value" : "Definir Brilho Extra"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set Extra Brightness"
+            "state" : "translated",
+            "value" : "Definir brilho extra"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set Extra Brightness"
+            "state" : "translated",
+            "value" : "Setați luminozitatea suplimentară"
           }
         },
         "ru" : {
@@ -6495,8 +6495,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set extra brightness of ${display} to ${level}"
+            "state" : "translated",
+            "value" : "Ajusta la brillantor extra de ${display} a ${level}"
           }
         },
         "cs" : {
@@ -6525,8 +6525,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set extra brightness of ${display} to ${level}"
+            "state" : "translated",
+            "value" : "Ajustar el brillo extra de ${display} a ${level}"
           }
         },
         "fi" : {
@@ -6537,8 +6537,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set extra brightness of ${display} to ${level}"
+            "state" : "translated",
+            "value" : "Régler la luminosité supplémentaire de ${display} sur ${level}"
           }
         },
         "he" : {
@@ -6573,8 +6573,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set extra brightness of ${display} to ${level}"
+            "state" : "translated",
+            "value" : "Imposta la luminosità extra di ${display} su ${level}"
           }
         },
         "ja" : {
@@ -6615,20 +6615,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set extra brightness of ${display} to ${level}"
+            "state" : "translated",
+            "value" : "Definir o brilho extra de ${display} como ${level}"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set extra brightness of ${display} to ${level}"
+            "state" : "translated",
+            "value" : "Definir brilho extra de ${display} para ${level}"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set extra brightness of ${display} to ${level}"
+            "state" : "translated",
+            "value" : "Setați luminozitatea suplimentară pentru ${display} la ${level}"
           }
         },
         "ru" : {
@@ -6704,8 +6704,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set extra brightness of ${display} to ${level} ×${multiplier}"
+            "state" : "translated",
+            "value" : "Ajusta la brillantor extra de ${display} a ${level} ×${multiplier}"
           }
         },
         "cs" : {
@@ -6734,8 +6734,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set extra brightness of ${display} to ${level} ×${multiplier}"
+            "state" : "translated",
+            "value" : "Ajustar el brillo extra de ${display} a ${level} ×${multiplier}"
           }
         },
         "fi" : {
@@ -6746,8 +6746,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set extra brightness of ${display} to ${level} ×${multiplier}"
+            "state" : "translated",
+            "value" : "Régler la luminosité supplémentaire de ${display} sur ${level} ×${multiplier}"
           }
         },
         "he" : {
@@ -6782,8 +6782,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set extra brightness of ${display} to ${level} ×${multiplier}"
+            "state" : "translated",
+            "value" : "Imposta la luminosità extra di ${display} su ${level} ×${multiplier}"
           }
         },
         "ja" : {
@@ -6824,20 +6824,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set extra brightness of ${display} to ${level} ×${multiplier}"
+            "state" : "translated",
+            "value" : "Definir o brilho extra de ${display} como ${level} ×${multiplier}"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set extra brightness of ${display} to ${level} ×${multiplier}"
+            "state" : "translated",
+            "value" : "Definir brilho extra de ${display} para ${level} ×${multiplier}"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set extra brightness of ${display} to ${level} ×${multiplier}"
+            "state" : "translated",
+            "value" : "Setați luminozitatea suplimentară pentru ${display} la ${level} ×${multiplier}"
           }
         },
         "ru" : {
@@ -6913,8 +6913,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sets the extra brightness of a display, or of every display. Each display stops at its own limit."
+            "state" : "translated",
+            "value" : "Ajusta la brillantor extra d’una pantalla o de totes. Cada pantalla s’atura al seu propi límit."
           }
         },
         "cs" : {
@@ -6943,8 +6943,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sets the extra brightness of a display, or of every display. Each display stops at its own limit."
+            "state" : "translated",
+            "value" : "Ajusta el brillo extra de una pantalla o de todas. Cada pantalla se detiene en su propio límite."
           }
         },
         "fi" : {
@@ -6955,8 +6955,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sets the extra brightness of a display, or of every display. Each display stops at its own limit."
+            "state" : "translated",
+            "value" : "Règle la luminosité supplémentaire d’un écran ou de tous les écrans. Chaque écran s’arrête à sa propre limite."
           }
         },
         "he" : {
@@ -6991,8 +6991,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sets the extra brightness of a display, or of every display. Each display stops at its own limit."
+            "state" : "translated",
+            "value" : "Imposta la luminosità extra di uno schermo o di tutti. Ogni schermo si ferma al proprio limite."
           }
         },
         "ja" : {
@@ -7033,20 +7033,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sets the extra brightness of a display, or of every display. Each display stops at its own limit."
+            "state" : "translated",
+            "value" : "Define o brilho extra de uma tela ou de todas. Cada tela para no próprio limite."
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sets the extra brightness of a display, or of every display. Each display stops at its own limit."
+            "state" : "translated",
+            "value" : "Define o brilho extra de um monitor ou de todos. Cada monitor para no seu próprio limite."
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sets the extra brightness of a display, or of every display. Each display stops at its own limit."
+            "state" : "translated",
+            "value" : "Setează luminozitatea suplimentară a unui afișaj sau a tuturor afișajelor. Fiecare afișaj se oprește la propria limită."
           }
         },
         "ru" : {
@@ -7122,8 +7122,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sunlight"
+            "state" : "translated",
+            "value" : "Llum solar"
           }
         },
         "cs" : {
@@ -7152,8 +7152,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sunlight"
+            "state" : "translated",
+            "value" : "Luz solar"
           }
         },
         "fi" : {
@@ -7164,8 +7164,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sunlight"
+            "state" : "translated",
+            "value" : "Plein soleil"
           }
         },
         "he" : {
@@ -7200,8 +7200,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sunlight"
+            "state" : "translated",
+            "value" : "Luce solare"
           }
         },
         "ja" : {
@@ -7242,20 +7242,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sunlight"
+            "state" : "translated",
+            "value" : "Luz do Sol"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sunlight"
+            "state" : "translated",
+            "value" : "Luz solar"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sunlight"
+            "state" : "translated",
+            "value" : "Lumină solară"
           }
         },
         "ru" : {
@@ -7331,8 +7331,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Tells whether Overbright is on, and the level of each display."
+            "state" : "translated",
+            "value" : "Indica si l’Overbright està activat i el nivell de cada pantalla."
           }
         },
         "cs" : {
@@ -7361,8 +7361,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Tells whether Overbright is on, and the level of each display."
+            "state" : "translated",
+            "value" : "Indica si Overbright está activado y el nivel de cada pantalla."
           }
         },
         "fi" : {
@@ -7373,8 +7373,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Tells whether Overbright is on, and the level of each display."
+            "state" : "translated",
+            "value" : "Indique si Overbright est activé, ainsi que le niveau de chaque écran."
           }
         },
         "he" : {
@@ -7409,8 +7409,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Tells whether Overbright is on, and the level of each display."
+            "state" : "translated",
+            "value" : "Indica se Overbright è attivo e il livello di ogni schermo."
           }
         },
         "ja" : {
@@ -7451,20 +7451,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Tells whether Overbright is on, and the level of each display."
+            "state" : "translated",
+            "value" : "Informa se o Overbright está ativado e o nível de cada tela."
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Tells whether Overbright is on, and the level of each display."
+            "state" : "translated",
+            "value" : "Indica se o Overbright está ativado e o nível de cada monitor."
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Tells whether Overbright is on, and the level of each display."
+            "state" : "translated",
+            "value" : "Arată dacă Overbright este activat și nivelul fiecărui afișaj."
           }
         },
         "ru" : {
@@ -7540,8 +7540,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Off Overbright"
+            "state" : "translated",
+            "value" : "Desactiva l’Overbright"
           }
         },
         "cs" : {
@@ -7570,8 +7570,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Off Overbright"
+            "state" : "translated",
+            "value" : "Desactivar Overbright"
           }
         },
         "fi" : {
@@ -7582,8 +7582,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Off Overbright"
+            "state" : "translated",
+            "value" : "Désactiver Overbright"
           }
         },
         "he" : {
@@ -7618,8 +7618,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Off Overbright"
+            "state" : "translated",
+            "value" : "Disattiva Overbright"
           }
         },
         "ja" : {
@@ -7660,20 +7660,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Off Overbright"
+            "state" : "translated",
+            "value" : "Desativar Overbright"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Off Overbright"
+            "state" : "translated",
+            "value" : "Desativar o Overbright"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Off Overbright"
+            "state" : "translated",
+            "value" : "Dezactivați Overbright"
           }
         },
         "ru" : {
@@ -7749,8 +7749,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Activa l’Overbright"
           }
         },
         "cs" : {
@@ -7779,8 +7779,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Activar Overbright"
           }
         },
         "fi" : {
@@ -7791,8 +7791,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Activer Overbright"
           }
         },
         "he" : {
@@ -7827,8 +7827,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Attiva Overbright"
           }
         },
         "ja" : {
@@ -7869,20 +7869,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Ativar Overbright"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Ativar o Overbright"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Activați Overbright"
           }
         },
         "ru" : {
@@ -7958,8 +7958,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On or Off"
+            "state" : "translated",
+            "value" : "Activa o desactiva"
           }
         },
         "cs" : {
@@ -7988,8 +7988,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On or Off"
+            "state" : "translated",
+            "value" : "Activar o desactivar"
           }
         },
         "fi" : {
@@ -8000,8 +8000,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On or Off"
+            "state" : "translated",
+            "value" : "Activer ou désactiver"
           }
         },
         "he" : {
@@ -8036,8 +8036,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On or Off"
+            "state" : "translated",
+            "value" : "Attiva o disattiva"
           }
         },
         "ja" : {
@@ -8078,20 +8078,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On or Off"
+            "state" : "translated",
+            "value" : "Ativar ou Desativar"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On or Off"
+            "state" : "translated",
+            "value" : "Ativar ou desativar"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On or Off"
+            "state" : "translated",
+            "value" : "Activați sau dezactivați"
           }
         },
         "ru" : {
@@ -8167,8 +8167,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Overbright On or Off"
+            "state" : "translated",
+            "value" : "Activa o desactiva l’Overbright"
           }
         },
         "cs" : {
@@ -8197,8 +8197,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Overbright On or Off"
+            "state" : "translated",
+            "value" : "Activar o desactivar Overbright"
           }
         },
         "fi" : {
@@ -8209,8 +8209,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Overbright On or Off"
+            "state" : "translated",
+            "value" : "Activer ou désactiver Overbright"
           }
         },
         "he" : {
@@ -8245,8 +8245,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Overbright On or Off"
+            "state" : "translated",
+            "value" : "Attiva o disattiva Overbright"
           }
         },
         "ja" : {
@@ -8287,20 +8287,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Overbright On or Off"
+            "state" : "translated",
+            "value" : "Ativar ou Desativar Overbright"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Overbright On or Off"
+            "state" : "translated",
+            "value" : "Ativar ou desativar o Overbright"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Overbright On or Off"
+            "state" : "translated",
+            "value" : "Activați sau dezactivați Overbright"
           }
         },
         "ru" : {
@@ -8376,8 +8376,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright off at once. Your levels are kept for next time."
+            "state" : "translated",
+            "value" : "Desactiva l’Overbright a l’instant. Els teus nivells es conserven per a la propera vegada."
           }
         },
         "cs" : {
@@ -8406,8 +8406,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright off at once. Your levels are kept for next time."
+            "state" : "translated",
+            "value" : "Desactiva Overbright al instante. Tus niveles se conservan para la próxima vez."
           }
         },
         "fi" : {
@@ -8418,8 +8418,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright off at once. Your levels are kept for next time."
+            "state" : "translated",
+            "value" : "Désactive Overbright immédiatement. Vos niveaux sont conservés pour la prochaine fois."
           }
         },
         "he" : {
@@ -8454,8 +8454,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright off at once. Your levels are kept for next time."
+            "state" : "translated",
+            "value" : "Disattiva subito Overbright. I tuoi livelli vengono conservati per la prossima volta."
           }
         },
         "ja" : {
@@ -8496,20 +8496,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright off at once. Your levels are kept for next time."
+            "state" : "translated",
+            "value" : "Desativa o Overbright imediatamente. Seus níveis são mantidos para a próxima vez."
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright off at once. Your levels are kept for next time."
+            "state" : "translated",
+            "value" : "Desativa o Overbright de imediato. Os níveis são guardados para a próxima vez."
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright off at once. Your levels are kept for next time."
+            "state" : "translated",
+            "value" : "Dezactivează imediat Overbright. Nivelurile dvs. sunt păstrate pentru data viitoare."
           }
         },
         "ru" : {
@@ -8585,8 +8585,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright off. Your displays return to Standard."
+            "state" : "translated",
+            "value" : "Desactiva l’Overbright. Les pantalles tornen a Estàndard."
           }
         },
         "cs" : {
@@ -8615,8 +8615,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright off. Your displays return to Standard."
+            "state" : "translated",
+            "value" : "Desactiva Overbright. Tus pantallas vuelven a Estándar."
           }
         },
         "fi" : {
@@ -8627,8 +8627,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright off. Your displays return to Standard."
+            "state" : "translated",
+            "value" : "Désactive Overbright. Vos écrans reviennent au niveau Standard."
           }
         },
         "he" : {
@@ -8663,8 +8663,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright off. Your displays return to Standard."
+            "state" : "translated",
+            "value" : "Disattiva Overbright. I tuoi schermi tornano a Standard."
           }
         },
         "ja" : {
@@ -8705,20 +8705,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright off. Your displays return to Standard."
+            "state" : "translated",
+            "value" : "Desativa o Overbright. Suas telas voltam ao Padrão."
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright off. Your displays return to Standard."
+            "state" : "translated",
+            "value" : "Desativa o Overbright. Os monitores voltam a “Padrão”."
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright off. Your displays return to Standard."
+            "state" : "translated",
+            "value" : "Dezactivează Overbright. Afișajele revin la Standard."
           }
         },
         "ru" : {
@@ -8794,8 +8794,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright on. Each display uses its own level."
+            "state" : "translated",
+            "value" : "Activa l’Overbright. Cada pantalla fa servir el seu propi nivell."
           }
         },
         "cs" : {
@@ -8824,8 +8824,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright on. Each display uses its own level."
+            "state" : "translated",
+            "value" : "Activa Overbright. Cada pantalla usa su propio nivel."
           }
         },
         "fi" : {
@@ -8836,8 +8836,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright on. Each display uses its own level."
+            "state" : "translated",
+            "value" : "Active Overbright. Chaque écran utilise son propre niveau."
           }
         },
         "he" : {
@@ -8872,8 +8872,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright on. Each display uses its own level."
+            "state" : "translated",
+            "value" : "Attiva Overbright. Ogni schermo usa il proprio livello."
           }
         },
         "ja" : {
@@ -8914,20 +8914,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright on. Each display uses its own level."
+            "state" : "translated",
+            "value" : "Ativa o Overbright. Cada tela usa o próprio nível."
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright on. Each display uses its own level."
+            "state" : "translated",
+            "value" : "Ativa o Overbright. Cada monitor usa o seu próprio nível."
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright on. Each display uses its own level."
+            "state" : "translated",
+            "value" : "Activează Overbright. Fiecare afișaj folosește propriul nivel."
           }
         },
         "ru" : {
@@ -9003,8 +9003,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns extra brightness on or off."
+            "state" : "translated",
+            "value" : "Activa o desactiva la brillantor extra."
           }
         },
         "cs" : {
@@ -9033,8 +9033,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns extra brightness on or off."
+            "state" : "translated",
+            "value" : "Activa o desactiva el brillo extra."
           }
         },
         "fi" : {
@@ -9045,8 +9045,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns extra brightness on or off."
+            "state" : "translated",
+            "value" : "Active ou désactive la luminosité supplémentaire."
           }
         },
         "he" : {
@@ -9081,8 +9081,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns extra brightness on or off."
+            "state" : "translated",
+            "value" : "Attiva o disattiva la luminosità extra."
           }
         },
         "ja" : {
@@ -9123,20 +9123,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns extra brightness on or off."
+            "state" : "translated",
+            "value" : "Ativa ou desativa o brilho extra."
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns extra brightness on or off."
+            "state" : "translated",
+            "value" : "Ativa ou desativa o brilho extra."
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns extra brightness on or off."
+            "state" : "translated",
+            "value" : "Activează sau dezactivează luminozitatea suplimentară."
           }
         },
         "ru" : {

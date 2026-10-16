@@ -12,8 +12,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "Calibratge: %@"
           }
         },
         "cs" : {
@@ -42,8 +42,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "Calibración: %@"
           }
         },
         "fi" : {
@@ -54,8 +54,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "Calibrer « %@ »"
           }
         },
         "he" : {
@@ -90,8 +90,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "Calibrazione: %@"
           }
         },
         "ja" : {
@@ -132,20 +132,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "Calibração: %@"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "Calibrar %@"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "Calibrare: %@"
           }
         },
         "ru" : {
@@ -221,8 +221,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Autoprova de l’Overbright %@"
           }
         },
         "cs" : {
@@ -251,8 +251,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Autoprueba de Overbright %@"
           }
         },
         "fi" : {
@@ -263,8 +263,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Autotest Overbright %@"
           }
         },
         "he" : {
@@ -299,8 +299,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Autotest di Overbright %@"
           }
         },
         "ja" : {
@@ -341,20 +341,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Autoteste do Overbright %@"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Autoteste do Overbright %@"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Autotest Overbright %@"
           }
         },
         "ru" : {
@@ -430,8 +430,8 @@
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "Autoprova"
           }
         },
         "cs" : {
@@ -460,8 +460,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "Autoprueba"
           }
         },
         "fi" : {
@@ -472,8 +472,8 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "Autotest"
           }
         },
         "he" : {
@@ -508,8 +508,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "Autotest"
           }
         },
         "ja" : {
@@ -550,20 +550,20 @@
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "Autoteste"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "Autoteste"
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "Autotest"
           }
         },
         "ru" : {
