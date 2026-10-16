@@ -12,14 +12,22 @@ public nonisolated enum BoostColor {
     /// #8F4A00 / #FFC65C.
     public static let warm = Color(nsColor: warmNSColor)
 
-    /// `warm` for AppKit drawing (the HUD bar, the status symbol's glow is a template and never uses it).
+    /// `warm` for AppKit drawing (the HUD bar, the status symbol's glow is a template and never uses it). AppKit may
+    /// run the provider on any thread that resolves the colour; it only reads its argument and constants.
     public static let warmNSColor = NSColor(name: "OverbrightBoostWarm") { appearance in
-        let match = appearance.bestMatch(from: [.aqua, .darkAqua, .accessibilityHighContrastAqua,
-                                                .accessibilityHighContrastDarkAqua])
-        let dark = match == .darkAqua || match == .accessibilityHighContrastDarkAqua
-        let highContrast = match == .accessibilityHighContrastAqua || match == .accessibilityHighContrastDarkAqua
-        let value = OverbrightColor.boostWarm(dark: dark, highContrast: highContrast)
+        let value = warm(matching: appearance.bestMatch(from: appearanceNames))
         return NSColor(srgbRed: value.red, green: value.green, blue: value.blue, alpha: 1)
+    }
+
+    /// The appearances `warmNSColor` tells apart.
+    static let appearanceNames: [NSAppearance.Name] = [.aqua, .darkAqua, .accessibilityHighContrastAqua,
+                                                       .accessibilityHighContrastDarkAqua]
+
+    /// The warm colour for an appearance's best match among `appearanceNames` (nil: light).
+    static func warm(matching name: NSAppearance.Name?) -> SRGBA {
+        let dark = name == .darkAqua || name == .accessibilityHighContrastDarkAqua
+        let highContrast = name == .accessibilityHighContrastAqua || name == .accessibilityHighContrastDarkAqua
+        return OverbrightColor.boostWarm(dark: dark, highContrast: highContrast)
     }
 
     /// The slider track.
