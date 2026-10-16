@@ -1,7 +1,1475 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-
+    "%@: %@." : {
+      "comment" : "Shortcuts app: one display in Get Overbright State’s answer. %1$@ = the display’s name, %2$@ = its level as the panel shows it (“Bright room · ×1.29”, “Dimmed · 25 %”).",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@: %2$@."
+          }
+        }
+      }
+    },
+    "Overbright is off." : {
+      "comment" : "Shortcuts app: Get Overbright State’s answer while Overbright is off.",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is off."
+          }
+        }
+      }
+    },
+    "Overbright is on." : {
+      "comment" : "Shortcuts app: first sentence of Get Overbright State’s answer while Overbright is on; each display’s level follows.",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is on."
+          }
+        }
+      }
+    },
+    "Overbright is still starting. Try again in a moment." : {
+      "comment" : "Shortcuts app: error when an action runs before Overbright finished starting (5 s).",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Overbright is still starting. Try again in a moment."
+          }
+        }
+      }
+    },
+    "That display isn’t connected." : {
+      "comment" : "Shortcuts app: error when the chosen display is not connected.",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "That display isn’t connected."
+          }
+        }
+      }
+    },
+    "This display can’t be dimmed." : {
+      "comment" : "Shortcuts app: error of Dim Displays on a display without a color table.",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t be dimmed."
+          }
+        }
+      }
+    },
+    "This display can’t show extra brightness." : {
+      "comment" : "Shortcuts app: error of Set Extra Brightness on a display without extra range.",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "This display can’t show extra brightness."
+          }
+        }
+      }
+    }
   },
   "version" : "1.0"
 }

@@ -1,14 +1,20 @@
-// App/Intents/ReturnToStandardIntent.swift — "Back to Standard" (DESIGN.md §12.8). ARCHITECTURE.md §7.7, §10.1, §10.10; D18.
-// Placeholder written by WP0a with the final type name, so `make smoke`'s metadata check finds every intent from the
-// start; WP8 owns App/Intents/** and writes the real declaration (parameters, `supportedModes`,
-// `allowedExecutionTargets`, strings in App/Localizable.xcstrings). `perform()` stays a one-line forward to the router.
+// App/Intents/ReturnToStandardIntent.swift — "Back to Standard" (DESIGN.md §12.8). ARCHITECTURE.md §4.9, §7.4, §7.7,
+// §10.10; D18. A one-line adapter over `IntentRouter`; also the "Back to Standard" App Shortcut.
 import AppIntents
 import OverbrightIntents
 
-/// Back to Standard.
+/// Back to Standard: master off at once, dims undone, levels kept.
 struct ReturnToStandardIntent: AppIntent {
     static let title: LocalizedStringResource = "Back to Standard"
     static let description = IntentDescription("Turns Overbright off at once. Your levels are kept for next time.")
+
+    /// Runs in the background: the app is never brought to the front.
+    @available(macOS 26.0, *)
+    static var supportedModes: IntentModes { .background }
+
+    /// Always in the app process.
+    @available(macOS 27.0, *)
+    static var allowedExecutionTargets: IntentExecutionTargets { .main }
 
     @Dependency private var router: IntentRouter
 

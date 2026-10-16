@@ -16,6 +16,8 @@ struct OverbrightApp: App {
         let router = IntentRouter()
         AppDependencyManager.shared.add(dependency: router)
         AppDelegate.intentRouter = router
+        // v1 has no extension to receive a Focus change while Overbright is quit: read the active filter once (§7.7).
+        Task { await router.applyLaunchFocus(OverbrightFocusFilter.launchDirective) }
     }
 
     var body: some Scene {

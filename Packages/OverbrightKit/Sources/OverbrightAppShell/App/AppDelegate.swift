@@ -195,12 +195,13 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
         return false
     }
 
-    /// `overbright://` URLs (§7.7): the settings route opens Settings; the control route is WP8's.
+    /// `overbright://` URLs (§7.7): the settings route opens Settings; the control route goes to the router (`off`
+    /// always, `on` only with the app's token, both through the policy).
     public func application(_ application: NSApplication, open urls: [URL]) {
         for url in urls {
             switch URLRoute.parse(url) {
             case .settings(let pane): appControl?.openSettings(pane)
-            case .control: log.info("control route received; WP8 handles it")
+            case .control(let on, let token): Task { _ = try? await Self.intentRouter?.control(on: on, token: token) }
             case nil: log.error("ignored URL with scheme \(url.scheme ?? "-", privacy: .public)")
             }
         }
