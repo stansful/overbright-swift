@@ -6,9 +6,10 @@
 // any preference is written → single instance (skipped for CLI modes and `--qa-simulate`) → move to Applications →
 // settings upgrade → controllers, router connection and status item → `LaunchGate` runs the launch check, then
 // starts the services (Displays first, Boost last) → QA hooks → launch UI.
-// Quit: a user quit is cancelled once, the services stop in reverse (Boost first) within `EngineTiming.quitTimeout`,
-// then the app terminates (see `applicationShouldTerminate` for why not `.terminateLater`); a system quit (log out,
-// restart, shut down) terminates at once; `applicationWillTerminate` runs `stopNow()` as the synchronous fallback.
+// Quit: a quit from inside the app is cancelled once, the services stop in reverse (Boost first) within
+// `EngineTiming.quitTimeout`, then the app terminates (see `applicationShouldTerminate` for why not
+// `.terminateLater`); a quit Apple Event (a script, the Dock, Activity Monitor, log out, restart, shut down)
+// terminates at once; `applicationWillTerminate` runs `stopNow()`, which writes the baselines synchronously.
 import AppKit
 import CoreServices
 import Foundation
@@ -128,14 +129,16 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    /// A user quit while the services are still starting waits for them (at most `LaunchGate.quitWait`); then the
-    /// services stop in reverse order, Boost first, within `EngineTiming.quitTimeout`, and the app terminates.
+    /// A quit from inside the app (⌘Q, the panel, the menu, `NSApp.terminate`) while the services are still starting
+    /// waits for them (at most `LaunchGate.quitWait`); then the services stop in reverse order, Boost first, within
+    /// `EngineTiming.quitTimeout`, and the app terminates.
     ///
     /// Not `.terminateLater`: on macOS 27.0.1 AppKit's wait for `reply(toApplicationShouldTerminate:)` serves neither
     /// the main dispatch queue nor the main actor [VERIFIED in this app, WP0a], so the ramped stop could never run there.
-    /// A user quit is therefore cancelled, the stop runs, and the app terminates again. A quit sent by the system (log
-    /// out, restart, shut down: the quit event has a reason) is never cancelled: it terminates at once and
-    /// `applicationWillTerminate` writes the baselines synchronously.
+    /// Such a quit is therefore cancelled, the stop runs, and the app terminates again. A quit Apple Event (another app,
+    /// a script, the Dock, Activity Monitor, log out, restart, shut down) is never cancelled, so its sender never sees
+    /// "User canceled" and a logout is never held up: it terminates at once and `applicationWillTerminate` writes the
+    /// baselines synchronously (`stopNow()`).
     public func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         guard launchGate.runsTerminateHooks, let lifecycle = shell?.lifecycle else { return .terminateNow }
         switch quit {
@@ -144,7 +147,7 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
         case .stopping:
             return .terminateCancel
         case .running:
-            if Self.isSystemQuit() { return .terminateNow }
+            if Self.isQuitEvent() { return .terminateNow }
             quit = .stopping
             log.info("quit: stopping \(lifecycle.count, privacy: .public) services")
             let stopThenTerminate = { [weak self] in
@@ -236,13 +239,11 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
         return DiagnosticsReport.json(DiagnosticsReport.build(CompositionRoot.diagnosticsInputs(shell, forClipboard: true)))
     }
 
-    /// A quit the system sends at log out, restart or shut down (the quit event carries a reason).
-    private static func isSystemQuit() -> Bool {
-        guard let event = NSAppleEventManager.shared().currentAppleEvent,
-              event.eventClass == AEEventClass(kCoreEventClass), event.eventID == AEEventID(kAEQuitApplication) else {
-            return false
-        }
-        return event.attributeDescriptor(forKeyword: AEKeyword(kAEQuitReason)) != nil
+    /// The quit came as an Apple Event (`kAEQuitApplication`): from another app, a script, the Dock, Activity Monitor,
+    /// or the system at log out, restart or shut down.
+    private static func isQuitEvent() -> Bool {
+        guard let event = NSAppleEventManager.shared().currentAppleEvent else { return false }
+        return event.eventClass == AEEventClass(kCoreEventClass) && event.eventID == AEEventID(kAEQuitApplication)
     }
 
     /// Stops `services` in reverse order, giving up waiting after `limit`.
