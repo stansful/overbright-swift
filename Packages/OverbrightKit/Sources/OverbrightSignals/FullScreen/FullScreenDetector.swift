@@ -7,8 +7,10 @@
 // window is gone from that display). Window bounds, layers, alpha and owner PIDs need no Screen Recording permission.
 // Extended for Overbright:
 // - Split View: two or more full-height, non-overlapping layer-0 windows tile ≥ 98 % of the display, menu bar absent;
-// - accessory and agent apps (overlay shades, other apps' overlays) never count unless frontmost; our own PID and the
-//   Dock never count (our Compatibility overlay, Fill Light and calibration windows are full-screen windows of ours);
+// - only regular apps count (an allowlist: the PIDs NSWorkspace lists with the `.regular` activation policy), plus the
+//   frontmost app; accessory and agent apps (overlay shades, other apps' overlays) and window owners NSWorkspace does
+//   not list at all never count unless frontmost; our own PID and the Dock never count (our Compatibility overlay,
+//   Fill Light and calibration windows are full-screen windows of ours);
 // - the menu-bar window is matched by the WindowServer's PID, never by its owner name (names are localized);
 // - full-screen video: the covering window's owner holds a display-sleep assertion (`PlaybackAssertions`);
 // - the displays that show the frontmost app's topmost layer-0 window (per-app rules pause only those, §6.5).
@@ -47,8 +49,9 @@ nonisolated enum FullScreenDetector {
         var frontmostPID: Int32?
         /// Never count: our own process and the Dock.
         var ignoredPIDs: Set<Int32>
-        /// Accessory and agent apps: they count only while frontmost.
-        var nonRegularPIDs: Set<Int32>
+        /// Regular apps (`NSRunningApplication.activationPolicy == .regular`): only their windows count, and the
+        /// frontmost app's.
+        var regularPIDs: Set<Int32>
         /// Processes holding a display-sleep assertion (playing video or presenting).
         var displaySleepHolders: Set<Int32>
     }
@@ -161,12 +164,12 @@ nonisolated enum FullScreenDetector {
         return nil
     }
 
-    /// A window that may cover a display: layer 0, visible, larger than a point, not ours or the Dock's, and from a
-    /// regular app unless it is the frontmost one.
+    /// A window that may cover a display: layer 0, visible, larger than a point, not ours or the Dock's, and owned by
+    /// a regular app or the frontmost one (an owner that is neither, listed or not, never counts).
     static func counts(_ window: Window, _ context: Context) -> Bool {
         window.layer == 0 && window.alpha > 0 && window.bounds.width > 1 && window.bounds.height > 1
             && !context.ignoredPIDs.contains(window.ownerPID)
-            && (!context.nonRegularPIDs.contains(window.ownerPID) || window.ownerPID == context.frontmostPID)
+            && (context.regularPIDs.contains(window.ownerPID) || window.ownerPID == context.frontmostPID)
     }
 
     /// Split View: walking front to back, full-height windows that do not overlap an earlier tile tile ≥ 98 % of the

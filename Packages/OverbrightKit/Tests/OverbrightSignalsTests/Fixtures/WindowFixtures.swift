@@ -58,9 +58,14 @@ enum WindowFixtures {
         window(loginWindow, -15000, -15000, 30000, 30000, layer: 2001),
     ] + msiDesktop
 
-    /// A context with nothing special: `frontmost` in front, our PID and the Dock ignored.
-    static func context(frontmost: Int32?, nonRegular: Set<Int32> = [], holders: Set<Int32> = []) -> FullScreenDetector.Context {
-        FullScreenDetector.Context(frontmostPID: frontmost, ignoredPIDs: [ourPID, dock], nonRegularPIDs: nonRegular,
+    /// The fixtures' regular (Dock) apps; the WindowServer, loginwindow, WindowManager and the shade are not.
+    static let regularApps: Set<Int32> = [chrome, editor, player, notes]
+
+    /// A context with nothing special: `frontmost` in front, our PID and the Dock ignored, `regular` listed by
+    /// NSWorkspace as regular apps.
+    static func context(frontmost: Int32?, regular: Set<Int32> = regularApps,
+                        holders: Set<Int32> = []) -> FullScreenDetector.Context {
+        FullScreenDetector.Context(frontmostPID: frontmost, ignoredPIDs: [ourPID, dock], regularPIDs: regular,
                                    displaySleepHolders: holders)
     }
 }

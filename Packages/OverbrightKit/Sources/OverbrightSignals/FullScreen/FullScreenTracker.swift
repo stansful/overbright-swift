@@ -93,7 +93,7 @@ final class FullScreenTracker {
         let holders = platform.displaySleepHolders()
         let ignored = Set([platform.ownProcessID] + [platform.dockProcessID()].compactMap { $0 })
         let context = FullScreenDetector.Context(frontmostPID: front?.processID, ignoredPIDs: ignored,
-                                                 nonRegularPIDs: Set(apps.filter { !$0.isRegular }.map(\.processID)),
+                                                 regularPIDs: Set(apps.filter(\.isRegular).map(\.processID)),
                                                  displaySleepHolders: holders ?? [])
         let observed = FullScreenDetector.observedMenuBar(windows: list.windows, displays: screens,
                                                           windowServerPID: list.windowServerPID)

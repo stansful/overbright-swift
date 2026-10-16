@@ -79,11 +79,25 @@ import Testing
     }
 
     @Test func accessoryAppsCountOnlyWhileFrontmost() {
-        let shade = F.window(F.shade, 0, 0, 2560, 1440)
-        let background = evaluate([shade], [F.msiAlone], F.context(frontmost: F.editor, nonRegular: [F.shade]))
+        let shade = F.window(F.shade, 0, 0, 2560, 1440)                 // listed by NSWorkspace, not a regular app
+        let background = evaluate([shade], [F.msiAlone], F.context(frontmost: F.editor))
         #expect(background.fullScreenDisplays.isEmpty)
-        let front = evaluate([shade], [F.msiAlone], F.context(frontmost: F.shade, nonRegular: [F.shade]))
+        let front = evaluate([shade], [F.msiAlone], F.context(frontmost: F.shade))
         #expect(front.fullScreenDisplays == [msiKey])
+    }
+
+    @Test func ownersNSWorkspaceDoesNotListNeverCountUnlessFrontmost() {
+        // The regular-app rule is an allowlist: a window server client NSWorkspace does not list at all is not a
+        // regular app, whatever covers the display.
+        let unlisted: Int32 = 7000
+        let cover = F.window(unlisted, 0, 0, 2560, 1440)
+        #expect(evaluate([cover], [F.msiAlone], F.context(frontmost: F.editor)).fullScreenDisplays.isEmpty)
+        #expect(evaluate([F.window(unlisted, 0, 0, 1277, 1440), F.window(F.player, 1283, 0, 1277, 1440)], [F.msiAlone],
+                         F.context(frontmost: F.editor)).fullScreenDisplays.isEmpty)      // nor a Split View tile
+        #expect(evaluate([cover], [F.msiAlone], F.context(frontmost: unlisted)).fullScreenDisplays == [msiKey])
+        // The same window of a regular app counts without the menu bar.
+        #expect(evaluate([cover], [F.msiAlone], F.context(frontmost: F.editor, regular: [unlisted]))
+                    .fullScreenDisplays == [msiKey])
     }
 
     @Test func transparentAndTitleBarWindowsNeverCount() {
