@@ -4,9 +4,12 @@
 //
 // - F > 1 boosts: the overlay is itself the EDR request, so this mode has no trigger window. Request first, then
 //   boost: the engine shows factor 1 with `headroomRequest = target ÷ 0.97`, waits for the gate, then ramps the factor.
-// - F < 1 dims without any EDR request (an untagged colour), so dimming works where table writes are ignored.
+// - F < 1 dims without any EDR request (an untagged colour, `.standard`; the Metal surface's EDR flag off), whatever
+//   `headroomRequest` says, so dimming works where table writes are ignored and never holds EDR. A ramp from boost to
+//   dim drops the request at the first factor below 1; factor 1 with a request above 1 still requests (arming).
 // - Factor 1 at the begin phase of a reconfiguration: after the first call (which builds and orders in the window),
-//   `setFactor` changes only the layer's colour (or presents one clear frame); it never queries a display.
+//   `setFactor` changes only the layer's colour (or presents one clear frame); it never queries a display. Factor 1
+//   without a request on an overlay never shown is a no-op: nothing to undo, so no window and no screen query.
 // - Surfaces: a headroom-tagged `CALayer` colour on macOS 26+ (no Metal); a 4 × 4 px clear-only `CAMetalLayer`
 //   drawable stretched with nearest filtering on 14–25.
 // The multiply-overlay idea is credited to xdr-boost (MIT); this code is independent.
@@ -36,7 +39,7 @@ final class CompatibilityOverlay: OverlayHandle, RegisteredWindowOwner {
     let surface: Surface
     /// The factor on screen (1 before the first call).
     private(set) var factor: Double = 1
-    /// The headroom asked for now (≥ `factor`; 1 means no EDR request).
+    /// The headroom asked for now: ≥ `factor` from factor 1 up, always 1 below it; 1 means no EDR request.
     private(set) var headroomRequest: Double = 1
     /// `remove()` ran.
     private(set) var isRemoved = false
@@ -67,9 +70,17 @@ final class CompatibilityOverlay: OverlayHandle, RegisteredWindowOwner {
         clearSurface?.release()
     }
 
-    /// Whether an overlay colour for (`factor`, `request`) requests EDR: only a request above 1.
+    /// Whether an overlay colour for (`factor`, `headroomRequest`) requests EDR: a factor of at least 1 with a factor
+    /// or request above 1. A factor below 1 dims and never requests, whatever the request (OverlayHandle contract).
     nonisolated static func wantsEDR(factor: Double, headroomRequest: Double) -> Bool {
-        max(factor, headroomRequest) > 1
+        factor >= 1 && max(factor, headroomRequest) > 1
+    }
+
+    /// The request an overlay records for (`factor`, `headroomRequest`): 1 (none) for a factor below 1, else at least
+    /// the factor. Non-finite requests count as 1.
+    nonisolated static func effectiveRequest(factor: Double, headroomRequest: Double) -> Double {
+        guard factor >= 1 else { return 1 }
+        return max(factor, headroomRequest.isFinite ? headroomRequest : 1)
     }
 
     // MARK: OverlayHandle
@@ -87,15 +98,21 @@ final class CompatibilityOverlay: OverlayHandle, RegisteredWindowOwner {
         set { host.onScreenChange = newValue }
     }
 
-    /// Multiplies the screen by `factor` and asks for at least `headroomRequest` (kept ≥ `factor`). The first call
-    /// builds the full-screen window and orders it in (throws `TriggerError.displayGone` without a screen,
-    /// `.colorUnavailable` without the colour space, `.needsNewerMacOS(26)` for a tagged surface before 26); later
-    /// calls change the colour at once. A factor above the granted headroom only clips at H; it never flashes.
+    /// Multiplies the screen by `factor`. From factor 1 up it asks for at least `headroomRequest` (kept ≥ `factor`);
+    /// below 1 it dims with no EDR request and ignores `headroomRequest`. The first call that changes anything builds
+    /// the full-screen window and orders it in (throws `TriggerError.displayGone` without a screen, `.colorUnavailable`
+    /// without the colour space, `.needsNewerMacOS(26)` for a tagged surface before 26); factor 1 without a request
+    /// before that is a no-op. Later calls change the colour at once. A factor above the granted headroom only clips
+    /// at H; it never flashes.
     func setFactor(_ factor: Double, headroomRequest: Double) throws {
         guard !isRemoved else { throw TriggerError.displayGone }
         let newFactor = factor.isFinite ? max(factor, 0) : 1
-        let newRequest = max(newFactor, headroomRequest.isFinite ? headroomRequest : 1)
-        if layer == nil { try show() }
+        let newRequest = Self.effectiveRequest(factor: newFactor, headroomRequest: headroomRequest)
+        if layer == nil {
+            // Nothing on screen and nothing to show (e.g. the begin phase of a reconfiguration): no window, no query.
+            if newFactor == 1 && newRequest <= 1 { return }
+            try show()
+        }
         try apply(factor: newFactor, headroomRequest: newRequest)
         self.factor = newFactor
         self.headroomRequest = newRequest

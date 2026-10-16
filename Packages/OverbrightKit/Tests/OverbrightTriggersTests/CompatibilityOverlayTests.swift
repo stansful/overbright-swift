@@ -1,7 +1,7 @@
 // OverbrightTriggersTests/CompatibilityOverlayTests.swift — technique C: a full-screen multiply overlay that requests
-// first and boosts second, dims without EDR, goes to factor 1 without a display query, and draws with a tagged colour
-// (macOS 26+) or a 4 × 4 clear-only Metal frame. ARCHITECTURE.md §4.3 (overlay rows), §7.5, §10.5. The presenter only
-// records and the Metal surface is scripted.
+// first and boosts second, dims without EDR whatever the request, goes to factor 1 without a display query, and draws
+// with a tagged colour (macOS 26+) or a 4 × 4 clear-only Metal frame. ARCHITECTURE.md §3.6 (`OverlayHandle`), §4.2
+// (dimmed row), §4.3 (overlay rows), §7.5, §10.5. The presenter only records and the Metal surface is scripted.
 import AppKit
 import CoreGraphics
 import Foundation
@@ -63,6 +63,30 @@ import Testing
     }
 
     @Test(.enabled(if: onTwentySix))
+    func aFactorBelowOneNeverAsksForExtendedRangeWhateverTheRequest() throws {
+        guard #available(macOS 26.0, *) else { return }
+        let bed = TriggerTestBed()
+        let overlay = try overlay(bed)
+        // The engine may keep the request while it lowers the factor (a ramp from boost to dim, tag policy B).
+        try overlay.setFactor(0.6, headroomRequest: 1.5)
+        let layer = try #require(overlay.layer)
+        #expect(layer.preferredDynamicRange == .standard)
+        #expect(layer.backgroundColor?.contentHeadroom == 0)
+        #expect(layer.backgroundColor?.components?.first == 0.6)
+        #expect(overlay.headroomRequest == 1)
+        try overlay.setFactor(1.3, headroomRequest: 1.44)
+        #expect(layer.preferredDynamicRange == .high)
+        try overlay.setFactor(0.9, headroomRequest: 1.44)
+        #expect(layer.preferredDynamicRange == .standard, "the request ends at the first factor below 1")
+        #expect(layer.backgroundColor?.contentHeadroom == 0)
+        #expect(overlay.headroomRequest == 1)
+        try overlay.setFactor(1, headroomRequest: 1.44)
+        #expect(layer.preferredDynamicRange == .high, "factor 1 with a request still requests (arming, §7.5)")
+        #expect(abs(tag(layer) - 1.44) < 1e-3)
+        overlay.remove()
+    }
+
+    @Test(.enabled(if: onTwentySix))
     func theRequestNeverFallsBelowTheFactor() throws {
         guard #available(macOS 26.0, *) else { return }
         let bed = TriggerTestBed()
@@ -92,6 +116,28 @@ import Testing
         overlay.remove()
     }
 
+    @Test func factorOneWithoutARequestOnANeverShownOverlayDoesNothing() throws {
+        let bed = TriggerTestBed(overlaySurface: .metal)
+        let overlay = try overlay(bed)
+        let surface = try #require(bed.surfaces.first)
+        let lookups = bed.screens.geometryLookups
+        // The begin phase of a reconfiguration reaches an overlay that was never shown: nothing to undo.
+        bed.screens.screens = [:]
+        try overlay.setFactor(1, headroomRequest: 1)
+        try overlay.setFactor(1, headroomRequest: 0.5)
+        try overlay.setFactor(.nan, headroomRequest: 1)
+        #expect(bed.screens.geometryLookups == lookups, "no screen query")
+        #expect(bed.presenter.orderedIn.isEmpty)
+        #expect(overlay.layer == nil)
+        #expect(surface.presentedValues.isEmpty && surface.wantsEDRCalls.isEmpty)
+        #expect(bed.factory.openWindowCount == 0)
+        bed.screens.screens[TriggerTestBed.builtIn.id] = TriggerTestBed.builtInGeometry
+        try overlay.setFactor(1, headroomRequest: 1.2)
+        #expect(bed.presenter.orderedIn.count == 1, "a request shows it")
+        #expect(surface.wantsEDRCalls == [true])
+        overlay.remove()
+    }
+
     @Test func metalSurfaceClearsItsFourPixelDrawableToTheFactor() throws {
         let bed = TriggerTestBed(overlaySurface: .metal)
         let overlay = try overlay(bed)
@@ -110,6 +156,21 @@ import Testing
         #expect(surface.wantsEDRCalls == [true, true, false])
         overlay.remove()
         #expect(surface.isReleased)
+    }
+
+    @Test func aMetalDimNeverAsksForExtendedRangeWhateverTheRequest() throws {
+        let bed = TriggerTestBed(overlaySurface: .metal)
+        let overlay = try overlay(bed)
+        let surface = try #require(bed.surfaces.first)
+        try overlay.setFactor(0.6, headroomRequest: 1.5)
+        #expect(surface.wantsEDRCalls == [false])
+        #expect(surface.presentedValues == [0.6])
+        #expect(overlay.headroomRequest == 1)
+        try overlay.setFactor(1.2, headroomRequest: 1.5)
+        try overlay.setFactor(0.8, headroomRequest: 1.5)
+        #expect(surface.wantsEDRCalls == [false, true, false])
+        #expect(surface.presentedValues == [0.6, 1.2, 0.8])
+        overlay.remove()
     }
 
     @Test func aMetalFrameThatFailsIsRetried() async throws {
@@ -188,10 +249,16 @@ import Testing
         #expect(throws: TriggerError.noMetalDevice) { _ = try metalBed.factory.makeOverlay(on: TriggerTestBed.builtIn) }
     }
 
-    @Test func onlyARequestAboveOneAsksForExtendedRange() {
+    @Test func onlyAFactorFromOneUpWithARequestAboveOneAsksForExtendedRange() {
         #expect(!CompatibilityOverlay.wantsEDR(factor: 1, headroomRequest: 1))
         #expect(!CompatibilityOverlay.wantsEDR(factor: 0.5, headroomRequest: 1))
+        #expect(!CompatibilityOverlay.wantsEDR(factor: 0.6, headroomRequest: 1.5))
+        #expect(!CompatibilityOverlay.wantsEDR(factor: 0.999, headroomRequest: 4))
         #expect(CompatibilityOverlay.wantsEDR(factor: 1, headroomRequest: 1.2))
         #expect(CompatibilityOverlay.wantsEDR(factor: 1.1, headroomRequest: 1))
+        #expect(CompatibilityOverlay.effectiveRequest(factor: 0.6, headroomRequest: 1.5) == 1)
+        #expect(CompatibilityOverlay.effectiveRequest(factor: 1, headroomRequest: 1.5) == 1.5)
+        #expect(CompatibilityOverlay.effectiveRequest(factor: 2, headroomRequest: 1.5) == 2)
+        #expect(CompatibilityOverlay.effectiveRequest(factor: 1.2, headroomRequest: .nan) == 1.2)
     }
 }
