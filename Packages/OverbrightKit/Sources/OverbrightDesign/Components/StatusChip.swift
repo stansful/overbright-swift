@@ -27,6 +27,7 @@ public struct StatusChip: View {
     public var body: some View {
         Button { isShowingPopover.toggle() } label: { label }
             .buttonStyle(ChipButtonStyle())
+            .focusEffectDisabled()
             .help(model.accessibilityLabel == model.text ? "" : model.accessibilityLabel)
             .popover(isPresented: $isShowingPopover, arrowEdge: .bottom) {
                 ChipPopover(explanation: model.explanation, actions: actions) { isShowingPopover = false }
@@ -34,7 +35,6 @@ public struct StatusChip: View {
             }
             .accessibilityLabel(Text(verbatim: model.accessibilityLabel))
             .accessibilityHint(Text(verbatim: Self.hint()))
-            .overbrightFocusRing(cornerRadius: Self.height / 2)
     }
 
     private var label: some View {

@@ -101,8 +101,7 @@ public struct BoostSlider: View {
         .modifier(ExtraRangeContent(text: extraRangeText))
         .focusable()
         .focused($isFocused)
-        .focusEffectDisabled()
-        .overbrightFocusRing(cornerRadius: Radius.control)
+        .overbrightFocusRing(cornerRadius: Radius.control, isFocused: isFocused)
         .onKeyPress(keys: [.leftArrow, .rightArrow, .home, .end], phases: [.down, .repeat]) { press in
             guard let key = Self.key(for: press.key, option: press.modifiers.contains(.option), direction: direction)
             else { return .ignored }

@@ -95,6 +95,13 @@ import Testing
         #expect(theme.reduceMotion && theme.colorScheme == .dark && theme.layoutDirection == .rightToLeft)
     }
 
+    /// The ring shows only for keyboard focus (DESIGN.md §5.12).
+    @Test func theFocusRingNeedsTheKeyboard() {
+        #expect(OverbrightFocusRing.showsRing(isFocused: true, keyboardActive: true))
+        #expect(!OverbrightFocusRing.showsRing(isFocused: true, keyboardActive: false), "focused by a click")
+        #expect(!OverbrightFocusRing.showsRing(isFocused: false, keyboardActive: true))
+    }
+
     @Test func keyboardInteractionFollowsTheLastEvent() {
         let keyboard = KeyboardInteraction()
         #expect(!keyboard.isActive)

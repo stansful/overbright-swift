@@ -27,6 +27,7 @@ private struct IconButtonBody: View {
             .frame(minWidth: HitTarget.minimum.width, minHeight: HitTarget.minimum.height)
             .background(shape.fill(Color(nsColor: .quaternarySystemFill)).opacity(isHovered || configuration.isPressed ? 1 : 0))
             .contentShape(shape)
+            .overbrightFocusRing(cornerRadius: Radius.control)
             .opacity(isEnabled ? 1 : 0.5)
             .onHover { inside in
                 withAnimation(theme.animation(.hover)) { isHovered = inside }

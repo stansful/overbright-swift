@@ -136,7 +136,6 @@ final class EDRWhiteView: NSView {
             forName: NSWindow.didChangeOcclusionStateNotification, object: window, queue: .main) { [weak self] _ in
             MainActor.assumeIsolated { self?.refresh() }                         // queue: .main
         }
-        queue = nil
         refresh()
     }
 
@@ -149,7 +148,7 @@ final class EDRWhiteView: NSView {
     private func refresh() {
         guard let layer else { return }
         let visible = window?.occlusionState.contains(.visible) == true
-        layer.isHidden = !visible
+        if isHidden == visible { isHidden = !visible }
         guard visible else { return }
         let value = max(gain, 1)
         if #available(macOS 26, *) {
@@ -169,8 +168,9 @@ final class EDRWhiteView: NSView {
     private func presentClear(_ value: Double) {
         guard let metalLayer, let screen = window?.screen,
               let number = screen.deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as? NSNumber else { return }
-        if metalLayer.device == nil {
-            guard let device = CGDirectDisplayCopyCurrentMetalDevice(number.uint32Value) else { return }
+        // The device that drives this screen (never the system default, which could wake a discrete GPU).
+        guard let device = CGDirectDisplayCopyCurrentMetalDevice(number.uint32Value) else { return }
+        if metalLayer.device !== device || queue == nil {
             metalLayer.device = device
             queue = device.makeCommandQueue()
         }

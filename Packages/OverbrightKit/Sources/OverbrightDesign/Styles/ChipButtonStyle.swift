@@ -3,7 +3,7 @@
 // an outer frame (Cranny gotcha); the press scales to 0.97 with the `press` spring, not under Reduce Motion.
 import SwiftUI
 
-/// A capsule button with the minimum hit target and the `press` feedback.
+/// A capsule button with the minimum hit target, the `press` feedback and the capsule focus ring.
 public struct ChipButtonStyle: ButtonStyle {
     @Environment(\.overbright) private var theme
 
@@ -15,6 +15,7 @@ public struct ChipButtonStyle: ButtonStyle {
         configuration.label
             .frame(minWidth: HitTarget.minimum.width, minHeight: HitTarget.minimum.height)
             .contentShape(Capsule(style: .continuous))
+            .overbrightCapsuleFocusRing()
             .scaleEffect(configuration.isPressed && theme.allowsScale ? OverbrightMotion.pressScale : 1)
             .animation(theme.animation(.press), value: configuration.isPressed)
     }

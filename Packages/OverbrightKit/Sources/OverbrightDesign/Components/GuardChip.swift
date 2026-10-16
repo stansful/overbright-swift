@@ -60,12 +60,13 @@ public struct GuardChip: View {
             .frame(minWidth: HitTarget.footerChipWidth, minHeight: Self.height)
             .background(SemanticColor.neutral.tint, in: Capsule(style: .continuous))
             .contentShape(Capsule(style: .continuous))
+            .overbrightCapsuleFocusRing()
         }
         .menuStyle(.button)
         .buttonStyle(.plain)
         .menuIndicator(.hidden)
+        .focusEffectDisabled()
         .fixedSize()
-        .overbrightFocusRing(cornerRadius: Self.height / 2)
     }
 }
 
