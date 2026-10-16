@@ -19,6 +19,7 @@ public struct EDRPreviewSurface: View {
     @Binding private var divider: Double
     private let simulated: Bool
     @Environment(\.layoutDirection) private var direction
+    @Environment(\.overbright) private var theme
 
     /// - Parameters:
     ///   - gain: the light gain of the "after" part.
@@ -40,12 +41,12 @@ public struct EDRPreviewSurface: View {
                 if simulated { Color.white } else { EDRWhiteLayer(gain: gain) }
                 Color(white: simulated ? Self.standInGrey(gain: gain) : 1).frame(width: split)
                 SamplePage().padding(Space.xl)
-                Rectangle().fill(Color.black.opacity(0.35)).frame(width: 1).offset(x: split)
+                Rectangle().fill(Color.black.opacity(0.35)).frame(width: StrokeWidth.regular).offset(x: split)
                 Circle()
-                    .fill(Color.white)
-                    .shadow(color: .black.opacity(0.3), radius: 1, y: 0.5)
-                    .frame(width: 20, height: 20)
-                    .offset(x: split - 10)
+                    .fill(theme.color(.thumb))
+                    .overbrightShadow(.thumb)
+                    .frame(width: BoostSliderTrack.thumbSize, height: BoostSliderTrack.thumbSize)
+                    .offset(x: split - BoostSliderTrack.thumbSize / 2)
                     .accessibilityHidden(true)
             }
             .contentShape(Rectangle())

@@ -61,9 +61,9 @@ struct BoostSliderTrack: View {
     /// transient controls), never under Reduce Transparency or Increase Contrast.
     @ViewBuilder private var thumb: some View {
         let circle = Circle()
-            .fill(Color.white)
+            .fill(theme.color(.thumb))
             .frame(width: Self.thumbSize, height: Self.thumbSize)
-            .shadow(color: .black.opacity(0.3), radius: 1, y: 0.5)
+            .overbrightShadow(.thumb)
         if #available(macOS 26, *), isDragging, theme.usesGlass {
             circle.glassEffect(.regular, in: Circle())
         } else {

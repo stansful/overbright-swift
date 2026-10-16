@@ -53,7 +53,7 @@ public struct GuardChip: View {
             ForEach(Array(menu.enumerated()), id: \.offset) { _, item in GuardChipMenuRow(item: item) }
         } label: {
             HStack(spacing: Space.xs) {
-                Image(symbol: model.symbol).font(.system(size: 12)).foregroundStyle(.secondary)
+                Image(symbol: model.symbol).font(.system(size: GlyphSize.chip)).foregroundStyle(.secondary)
                 if let text { Text(verbatim: text).font(OverbrightFont.chip.font).lineLimit(1) }
             }
             .padding(.horizontal, Space.m)

@@ -25,7 +25,7 @@ struct BoostSliderValueTag: View {
             .padding(.vertical, Space.xxs)
             .background(theme.color(.panelBackground), in: Capsule(style: .continuous))
             .overlay(Capsule(style: .continuous).strokeBorder(theme.color(.cardStroke), lineWidth: StrokeWidth.regular))
-            .shadow(color: .black.opacity(0.15), radius: 2, y: 1)
+            .overbrightShadow(.valueTag)
             .alignmentGuide(.leading) { d in
                 d.width / 2 - Self.center(thumbX: x, tagWidth: d.width, trackWidth: trackWidth)
             }

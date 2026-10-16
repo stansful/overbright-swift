@@ -40,10 +40,10 @@ public struct StatusChip: View {
     private var label: some View {
         HStack(spacing: Space.xs) {
             if model.showsProgress {
-                ProgressView().controlSize(.mini).frame(width: 12, height: 12)
+                ProgressView().controlSize(.mini).frame(width: GlyphSize.chip, height: GlyphSize.chip)
             } else {
                 Image(symbol: model.symbol)
-                    .font(.system(size: 12))
+                    .font(.system(size: GlyphSize.chip))
                     .foregroundStyle(model.color.glyph(in: theme))
             }
             Text(verbatim: model.text)

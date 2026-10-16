@@ -21,7 +21,7 @@ public struct PausedBanner: View {
     public var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: Space.m) {
             Image(symbol: model.symbol)
-                .font(.system(size: 14))
+                .font(.system(size: GlyphSize.banner))
                 .foregroundStyle(model.color.glyph(in: theme))
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: Space.s) {
