@@ -34,4 +34,6 @@ nonisolated enum StepMetrics {
     static let keyCapColumn: CGFloat = 92
     /// Step 3's login option cards.
     static let optionCardHeight: CGFloat = 44
+    /// Step 2's fade at the bottom edge of its rows while they scroll.
+    static let scrollFade = Space.xxxl
 }

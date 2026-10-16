@@ -8,14 +8,23 @@ import OverbrightPolicy
 
 /// Preview services for Welcome.
 enum WelcomePreview {
-    /// A preview hub over `fixture` whose engine status carries a classified decision per display; with
-    /// `updatesConfigured` the build behaves as if it had a repository (the update switch of step 5).
-    static func services(_ fixture: DisplayFixture = .builtinXDRLidOpen,
+    /// A preview hub over `fixture`, plus the `adding` displays (step 2 with three or more displays), whose engine
+    /// status carries a classified decision per display; with `updatesConfigured` the build behaves as if it had a
+    /// repository (the update switch of step 5).
+    static func services(_ fixture: DisplayFixture = .builtinXDRLidOpen, adding extra: [FixtureDisplay] = [],
                          updatesConfigured: Bool = false) -> OverbrightServices {
         let services = OverbrightServices.preview(fixture: fixture)
         (services.updates as? PreviewUpdateChecking)?.isConfigured = updatesConfigured
-        classify(services, machine: fixture.machine, scripts: fixture.displays)
+        if let directory = services.displays as? FakeDisplayDirectory {
+            for display in extra { directory.add(display.facts) }
+        }
+        classify(services, machine: fixture.machine, scripts: fixture.displays + extra)
         return services
+    }
+
+    /// The owner's two displays (`.russianNames`) and a Studio Display XDR: step 2's three-display setup.
+    static var threeDisplays: OverbrightServices {
+        services(.russianNames, adding: DisplayFixture.studioDisplayXDR.displays)
     }
 
     /// Replaces the preview engine's display statuses with classified ones for `displays` (no-op for a real engine).

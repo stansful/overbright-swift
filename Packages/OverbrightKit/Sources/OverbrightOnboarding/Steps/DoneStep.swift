@@ -1,8 +1,8 @@
 // OverbrightOnboarding/Steps/DoneStep.swift — Welcome step 5 Done (DESIGN.md §8): the app icon on the stage (§14: Welcome
 // shows the compiled icon), "You're set", and the "Check for updates on GitHub" switch (off; only when this build has a
 // repository, `WelcomePlan.showsUpdateToggle`, D2). The footer offers Turn On Overbright (primary) only while a display
-// would show extra brightness once it is on (`offersTurnOn`), next to Done. Seeded by WP0b with its headline; built by
-// WP12 (ARCHITECTURE.md §10.14).
+// would show extra brightness once it is on (`offersTurnOn`, step 2's switches included: Done writes them before it
+// turns Overbright on), next to Done. Seeded by WP0b with its headline; built by WP12 (ARCHITECTURE.md §10.14).
 import AppKit
 import Foundation
 import OverbrightCore
@@ -43,7 +43,7 @@ struct DoneStep: View {
     }
 
     var body: some View {
-        let offersTurnOn = WelcomeDisplayRow.rows(in: session.services).offersTurnOn
+        let offersTurnOn = WelcomeDisplayRow.rows(in: session.services, choices: session.choices).offersTurnOn
         StepLayout {
             StepStage {
                 Image(nsImage: NSApplication.shared.applicationIconImage)

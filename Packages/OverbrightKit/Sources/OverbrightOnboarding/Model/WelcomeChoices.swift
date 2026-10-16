@@ -1,14 +1,16 @@
 // OverbrightOnboarding/Model/WelcomeChoices.swift — what Done and Skip apply (DESIGN.md §8: "Skip (and closing the
 // window) applies every default, including the login item ('Open Overbright, keep it off', registered with
 // SMAppService.mainApp). Done applies the choices of step 3."; D16). Seeded by WP0b (ARCHITECTURE.md §10.2) with the
-// launch behaviour and the update switch; owned by WP12 (§10.14), which adds the guards of step 3.
+// launch behaviour and the update switch; owned by WP12 (§10.14), which adds the guards of step 3 and step 2's
+// "Use extra brightness" switches.
 //
 // A choice is nil until the person touches it, and a step shows the stored setting meanwhile: on a first run every
 // setting is at its default, so the steps show the defaults; Welcome opened again from Settings ▸ About shows what the
-// person has. Done writes the touched choices and applies the launch behaviour (the login item follows it through
-// `AppControl`). Skip and the close button drop every choice made in Welcome and apply the stored launch behaviour,
-// which on a first run is the default: the login item is registered and nothing else changes. A later Skip never
-// resets what the person set in Settings; resetting is Reset All's job, with its confirmation and Undo (DESIGN.md §7.8).
+// person has. Done writes the touched choices (step 2's switches with the OLED notices accepted for them, step 3's
+// guards, step 5's update switch) and applies the launch behaviour (the login item follows it through `AppControl`).
+// Skip and the close button drop every choice made in Welcome and apply the stored launch behaviour, which on a first
+// run is the default: the login item is registered and nothing else changes. A later Skip never resets what the
+// person set in Settings; resetting is Reset All's job, with its confirmation and Undo (DESIGN.md §7.8).
 import Foundation
 import Observation
 import OverbrightCore
@@ -27,6 +29,10 @@ import OverbrightCore
     var pauseForFullScreenVideo: Bool?
     /// Step 5's "Check for updates on GitHub" (shown only when the build has a repository); nil = stored (default off).
     var checksForUpdates: Bool?
+    /// Step 2's "Use extra brightness" switches that differ from what is stored, by display.
+    private(set) var extraBrightness: [DisplayKey: Bool] = [:]
+    /// The displays whose OLED notice was accepted in step 2; stored with the switch on Done.
+    private(set) var acceptedOLEDNotices: Set<DisplayKey> = []
 
     /// The battery levels the pop-up offers (DESIGN.md §7.5: 5–95 % in steps of 5).
     static let batteryThresholds = Array(stride(from: 5, through: 95, by: 5))
@@ -78,11 +84,19 @@ import OverbrightCore
         if batteryGuard(in: settings) == .off { batteryGuard = .belowThreshold }
     }
 
+    /// Turns step 2's switch of `row`'s display on or off; turning it back to what is stored leaves no choice.
+    /// `acceptedOLEDNotice` records that the OLED notice was just accepted for it.
+    func setExtraBrightness(_ enabled: Bool, for row: WelcomeDisplayRow, acceptedOLEDNotice: Bool = false) {
+        extraBrightness[row.key] = enabled == row.storedBoostEnabled ? nil : enabled
+        if acceptedOLEDNotice { acceptedOLEDNotices.insert(row.key) }
+    }
+
     // MARK: Ending
 
     /// Done: the touched choices apply, then the launch behaviour (registering the login item for both "Open" choices).
     func applyOnDone(to services: OverbrightServices) {
         let settings = services.settings
+        applyExtraBrightness(to: services)
         if let batteryGuard { settings[AutomationSettings.batteryGuard] = batteryGuard }
         if let batteryThreshold { settings[AutomationSettings.batteryThreshold] = batteryThreshold }
         if let pauseInLowPowerMode { settings[AutomationSettings.pauseInLowPowerMode] = pauseInLowPowerMode }
@@ -95,5 +109,20 @@ import OverbrightCore
     /// default on a first run, so the login item is registered as "Open Overbright, keep it off").
     func applyDefaults(to services: OverbrightServices) {
         services.app?.setLaunchBehavior(services.settings[GeneralSettings.launchBehavior])
+    }
+
+    /// Step 2's switches: each changed display's preference, with the OLED notice accepted for it, as Settings ▸
+    /// Displays writes them.
+    private func applyExtraBrightness(to services: OverbrightServices) {
+        guard !extraBrightness.isEmpty else { return }
+        var all = services.settings[DisplaySettings.perDisplay]
+        for (key, enabled) in extraBrightness {
+            var preferences = all[key] ?? DisplayPreferences()
+            preferences.boostEnabled = enabled
+            if enabled, acceptedOLEDNotices.contains(key) { preferences.oledNoticeAcknowledged = true }
+            if let name = services.displays.facts(for: key)?.name { preferences.lastKnownName = name }
+            all[key] = preferences
+        }
+        services.settings[DisplaySettings.perDisplay] = all
     }
 }
