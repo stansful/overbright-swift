@@ -5,6 +5,10 @@
 // AVFoundation shows HLG video as EDR without any app code, so a paused HDR frame on screen is a Metal-free trigger.
 // `play()` is never called, the player never holds a display-sleep assertion, and HLG content implies its own
 // headroom (1000 ÷ 203 ≈ 4.93), so `requestHeadroom(_:)` has nothing to change.
+//
+// Readiness: a present succeeds only when the player shows the item this present asked for, that item is ready to
+// play and the layer has a frame ready for display. After a level switch (`replaceCurrentItem`) the layer may still
+// report the previous item's frame as ready, so the first check waits one poll interval.
 import AVFoundation
 import CoreGraphics
 import OverbrightCore
@@ -26,17 +30,22 @@ final class HLGStillTrigger: TriggerHandle, RegisteredWindowOwner {
     private let stills: HLGStillCache
     private let time: any TimeSource
     private weak var registry: TriggerWindowRegistry?
-    private var player: AVPlayer?
+    private let makeLayer: (AVPlayer) -> AVPlayerLayer
+    private(set) var player: AVPlayer?
     private var playerLayer: AVPlayerLayer?
     private var generation: UInt64 = 0
 
+    /// `makeLayer` builds the layer around the player (a plain `AVPlayerLayer`; tests substitute one whose readiness
+    /// they control).
     init(request: TriggerRequest, host: TriggerHost, stills: HLGStillCache, time: any TimeSource,
-         registry: TriggerWindowRegistry?) {
+         registry: TriggerWindowRegistry?,
+         makeLayer: @escaping (AVPlayer) -> AVPlayerLayer = { AVPlayerLayer(player: $0) }) {
         self.request = request
         self.host = host
         self.stills = stills
         self.time = time
         self.registry = registry
+        self.makeLayer = makeLayer
         registry?.register(self)
     }
 
@@ -62,9 +71,9 @@ final class HLGStillTrigger: TriggerHandle, RegisteredWindowOwner {
     }
 
     /// Shows the still for `pixel` (black, reference white or peak): waits for the verified asset, puts it in a
-    /// paused player (ordering the window in on the first call), then waits up to 2 s for the layer to have a frame
-    /// ready for display. False when no still could be made, the window could not be placed, the frame never became
-    /// ready, a newer present superseded this one, or after `remove()`.
+    /// paused player (ordering the window in on the first call), then waits up to 2 s for that item to be on screen
+    /// (ready to play, and the layer ready for display). False when no still could be made, the window could not be
+    /// placed, the frame never became ready, a newer present superseded this one, or after `remove()`.
     func present(_ pixel: TriggerPixel) async -> Bool {
         guard !isRemoved else { return false }
         generation &+= 1
@@ -73,9 +82,11 @@ final class HLGStillTrigger: TriggerHandle, RegisteredWindowOwner {
         guard let url = await stills.url(for: level) else { return false }
         guard current == generation, !isRemoved else { return false }
         if let player, let playerLayer {
-            if shownLevel != level { player.replaceCurrentItem(with: AVPlayerItem(url: url)) }
+            if shownLevel == level { return await waitUntilReady(playerLayer, generation: current, checkAtOnce: true) }
+            player.replaceCurrentItem(with: AVPlayerItem(url: url))
             shownLevel = level
-            return await waitUntilReady(playerLayer, generation: current)
+            // The layer can still report the previous item's frame: never trust a check made before a poll interval.
+            return await waitUntilReady(playerLayer, generation: current, checkAtOnce: false)
         }
         let item = AVPlayerItem(url: url)
         let newPlayer = AVPlayer(playerItem: item)
@@ -83,7 +94,7 @@ final class HLGStillTrigger: TriggerHandle, RegisteredWindowOwner {
         newPlayer.actionAtItemEnd = .pause
         newPlayer.preventsDisplaySleepDuringVideoPlayback = false   // never a display-sleep assertion
         newPlayer.allowsExternalPlayback = false
-        let layer = AVPlayerLayer(player: newPlayer)
+        let layer = makeLayer(newPlayer)
         layer.videoGravity = .resizeAspectFill
         do {
             try host.show(layer: layer, blend: request.blend)
@@ -94,7 +105,7 @@ final class HLGStillTrigger: TriggerHandle, RegisteredWindowOwner {
         player = newPlayer
         playerLayer = layer
         shownLevel = level
-        return await waitUntilReady(layer, generation: current)
+        return await waitUntilReady(layer, generation: current, checkAtOnce: true)
     }
 
     /// Follows the screen geometry and seeks back to frame 0, which shows it again.
@@ -127,13 +138,21 @@ final class HLGStillTrigger: TriggerHandle, RegisteredWindowOwner {
 
     // MARK: Private
 
-    private func waitUntilReady(_ layer: AVPlayerLayer, generation current: UInt64) async -> Bool {
-        for poll in 0...TriggerTiming.readinessPolls {
+    /// Whether `layer` shows its player's current item: the item is ready to play and the layer has a frame ready.
+    static func isShowingCurrentItem(_ layer: AVPlayerLayer) -> Bool {
+        guard let item = layer.player?.currentItem, item.status == .readyToPlay else { return false }
+        return layer.isReadyForDisplay
+    }
+
+    /// Polls every 50 ms for up to 2 s (`TriggerTiming`). `checkAtOnce` false skips the check before the first sleep
+    /// (after `replaceCurrentItem`), so the 2 s limit holds either way.
+    private func waitUntilReady(_ layer: AVPlayerLayer, generation current: UInt64, checkAtOnce: Bool) async -> Bool {
+        for poll in (checkAtOnce ? 0 : 1)...TriggerTiming.readinessPolls {
             if poll > 0 {
                 do { try await time.sleep(for: TriggerTiming.readinessPollInterval) } catch { return false }
             }
             guard current == generation, !isRemoved else { return false }
-            if layer.isReadyForDisplay { return true }
+            if Self.isShowingCurrentItem(layer) { return true }
         }
         log.error("T4 still never became ready on display \(self.host.display.id)")
         return false
