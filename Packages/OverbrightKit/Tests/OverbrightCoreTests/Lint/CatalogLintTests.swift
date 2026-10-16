@@ -25,16 +25,19 @@ import Testing
     }
 
     /// DESIGN.md §16: "Open System Settings" goes to System Settings; a button into Overbright names the action
-    /// ("Choose Peak…", "Settings for This Display…"), never "‹X› Settings…".
+    /// ("Choose Peak…", "Settings for This Display…"), never "‹X› Settings…". DESIGN.md §7.8's "Reset All Settings…"
+    /// has the shape but names an action on every setting, not a place: the one exemption, by its exact key.
     @Test func noSettingsDestinationLabels() throws {
         let destination = try NSRegularExpression(pattern: "\\p{L}+\\s+[Ss]ettings…")
+        let actions: Set<String> = ["Reset All Settings…"]
         #expect(!SourceScan.matches(destination, in: "Menu Bar Settings…").isEmpty)
         #expect(SourceScan.matches(destination, in: "Settings for This Display…").isEmpty)
         #expect(SourceScan.matches(destination, in: "Settings…").isEmpty)
         #expect(SourceScan.matches(destination, in: "Open System Settings").isEmpty)
+        #expect(!SourceScan.matches(destination, in: "Reset All Settings…").isEmpty)        // exempt by name only
         var hits: [String] = []
         for (path, strings) in SourceScan.catalogs() {
-            for (key, entry) in strings {
+            for (key, entry) in strings where !actions.contains(key) {
                 let english = SourceScan.values(of: entry as? [String: Any] ?? [:]).filter { $0.language == "en" }.map(\.text)
                 if ([key] + english).contains(where: { !SourceScan.matches(destination, in: $0).isEmpty }) {
                     hits.append("\(path): \(key)")
