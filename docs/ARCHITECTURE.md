@@ -3375,7 +3375,7 @@ Each item has a step in `docs/HARDWARE-TEST.md`.
 | H-E2, H-E3 | (WP2) Sidecar and AirPlay facts (vendor, capacity, virtual); do an external panel's `DisplayAttributes` exist before the 0.5 s pass after a hot-plug | virtual-display rule, reconfiguration passes |
 | H-X2 | (WP2) CoreGraphics transfer calls from the watchdog's and the signal queue's threads: no fault, no crash | D7 background writes |
 | H-FS1 | Full-screen heuristic on the notched built-in, Split View, auto-hidden menu bar | full-screen rules |
-| H-FS2 | (WP6) "Displays have separate Spaces" off: which displays a full-screen video pauses | full-screen rules |
+| H-FS2 | (WP6, C-SIGNALS-5) "Displays have separate Spaces" off: only the main display has a menu bar, so elsewhere only an exact, frontmost window is full screen; does a full-screen video pause exactly its display | full-screen rules |
 | (WP11) | the paused-app suggestions' bundle IDs (Prime Video, Infuse, GeForce NOW, Moonlight) | the suggestion list |
 | H-AI-1–3 | Intents and Focus filter appear and run; localized in German and Russian; Run Shortcut control | D18 |
 | H-CC-1–2 | Ad-hoc control listed, rendered, survives a rebuild, follows the system language (English, then French); stale state after `kill -9` | D18 promotion |
