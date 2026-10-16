@@ -42,4 +42,13 @@ import Observation
     func beginCalibration(of display: DisplayKey) -> (any CalibrationSession)?
     /// Advanced ▸ Reset Display Colors (dirty-then-restore, D7).
     func rescueDisplayColors() async -> RescueOutcome
+    /// Advanced ▸ Forget Learned Methods: clears the strategy cache (the rung each display learned per macOS build,
+    /// its failure records and lowest ready headroom, ARCHITECTURE.md §4.7), so the next arm walks the ladder again.
+    /// Added through the contract lane (WP11).
+    func forgetLearnedMethods()
+}
+
+public extension BoostControl {
+    /// Nothing is learned (the §10.0 default for a requirement added after WP0a; the engine implements it).
+    func forgetLearnedMethods() {}
 }

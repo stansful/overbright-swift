@@ -83,9 +83,13 @@ private let log = Log.logger(.app)
         NSPasteboard.general.setString(String(decoding: data, as: UTF8.self), forType: .string)
     }
 
-    /// Saves a self-test log through a Save panel. WP0a: logged only (WP11 adds the panel).
+    /// Saves a self-test log through a Save panel (WP11's `SelfTestSheetPresenter.saveLog`).
     func saveSelfTestLog(_ report: SelfTestReport) {
-        log.info("save self-test log requested (\(report.displays.count, privacy: .public) displays); WP11")
+        guard let controllers else {
+            log.info("save self-test log requested before the windows exist (\(report.displays.count, privacy: .public) displays)")
+            return
+        }
+        controllers.selfTest.saveLog(report)
     }
 
     /// Reset All, with Undo until the Settings window closes.

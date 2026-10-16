@@ -114,6 +114,8 @@ import Observation
         record("rescueDisplayColors")
         return rescueOutcome
     }
+    /// Records the call.
+    public func forgetLearnedMethods() { record("forgetLearnedMethods") }
 
     private func record(_ call: String) { calls.append(call) }
 

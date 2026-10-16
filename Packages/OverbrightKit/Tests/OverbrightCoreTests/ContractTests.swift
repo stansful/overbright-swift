@@ -114,6 +114,15 @@ import Testing
         #expect(updates.repositoryURL == nil)
     }
 
+    /// Contract lane (WP11): `BoostControl.forgetLearnedMethods()` came after WP0a with a default, so conformers that
+    /// learn nothing compile unchanged; the preview control records the call for Settings ▸ Advanced's tests.
+    @MainActor @Test func forgetLearnedMethodsReachesTheEngine() {
+        let preview = PreviewBoostControl(fixture: .builtinXDRLidOpen)
+        let boost: any BoostControl = preview
+        boost.forgetLearnedMethods()
+        #expect(preview.calls == ["forgetLearnedMethods"])
+    }
+
     @Test func machineIdentityRoundTripsAsJSON() throws {
         let machine = MachineIdentity(model: "Mac16,5", osBuild: "26A434", osMajor: 27, osMinor: 0, osPatch: 1)
         #expect(try JSONDecoder().decode(MachineIdentity.self, from: JSONEncoder().encode(machine)) == machine)

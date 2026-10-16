@@ -1458,6 +1458,8 @@ public protocol GammaPort: Sendable {
     func beginCalibration(of display: DisplayKey) -> (any CalibrationSession)?
     /// Advanced ▸ Reset Display Colors (dirty-then-restore, D7).
     func rescueDisplayColors() async -> RescueOutcome
+    /// Advanced ▸ Forget Learned Methods: clears the strategy cache (§4.7).
+    func forgetLearnedMethods()   // contract lane (WP11): default no-op in a protocol extension
 }
 
 // MARK: - Other features
