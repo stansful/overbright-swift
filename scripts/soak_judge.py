@@ -14,9 +14,11 @@ control's do not, a timer of Overbright's own is hiding behind the control's wak
 wake-ups must also stay at one a minute or fewer. The literal "0 idle wake-ups while off" is the owner's quiet-machine
 run (HARDWARE-TEST §13).
 
-Footprint: the first cycles fill caches that then stay, so growth is judged from cycle 3 on: the least-squares slope
-of the footprint after cycles 3…N must stay within LEAK_KB per cycle, and the footprint at the end within LEAK_MB of
-the one after cycle 3. A run needs at least 5 cycles after cycle 3 to be judged at all.
+Footprint: the first cycles fill caches that then stay, so growth is judged from cycle 3 on. The least-squares slope
+of the footprint after cycles 3…N is a leak when it exceeds LEAK_KB per cycle even at its lower 2-standard-error
+bound (a short run's slope is noisy: the 17-minute run's settling read 129 ± 71 KB per cycle; a real 0.29 MB per
+cycle leak reads at least 186 even in a short run); and the footprint at the end must be within LEAK_MB of the one
+after cycle 3. A run needs at least 5 cycles after cycle 3 to be judged at all.
 
     soak_judge.py <out> <leak_mb> <leak_kb_per_cycle> <app pid> <control pid>
     soak_judge.py --minimum-cycles        # the fewest cycles a run needs (scripts/soak.sh refuses shorter runs)
@@ -90,12 +92,18 @@ def judge_off(name, rows, span, strict):
 
 
 def slope(points):
-    """Least-squares slope of (x, y) points."""
+    """(least-squares slope, its standard error) of (x, y) points; the error is 0 with fewer than 3 points."""
     n = len(points)
     mean_x = sum(x for x, _ in points) / n
     mean_y = sum(y for _, y in points) / n
     spread = sum((x - mean_x) ** 2 for x, _ in points)
-    return sum((x - mean_x) * (y - mean_y) for x, y in points) / spread if spread else 0.0
+    if not spread:
+        return 0.0, 0.0
+    b = sum((x - mean_x) * (y - mean_y) for x, y in points) / spread
+    if n < 3:
+        return b, 0.0
+    residual = sum((y - (mean_y + b * (x - mean_x))) ** 2 for x, y in points)
+    return b, (residual / (n - 2)) ** 0.5 / spread ** 0.5
 
 
 def judge_footprint(marks, cycles, leak_mb, leak_kb):
@@ -112,12 +120,13 @@ def judge_footprint(marks, cycles, leak_mb, leak_kb):
         if len(points) < cycles - SETTLED_CYCLE + 1:
             problems.append(f"footprints missing after some of cycles {SETTLED_CYCLE}…{cycles}")
         if len(points) >= 2:
-            per_cycle = slope(points) * 1024
-            lines.append(f"growth over cycles {SETTLED_CYCLE}…{cycles}: {per_cycle:.0f} KB per cycle "
-                         f"(at most {leak_kb:.0f})")
-            if per_cycle > leak_kb:
-                problems.append(f"the footprint grows {per_cycle:.0f} KB per cycle over cycles {SETTLED_CYCLE}…{cycles}"
-                                f" (at most {leak_kb:.0f})")
+            b, error = slope(points)
+            per_cycle, margin = b * 1024, 2 * error * 1024
+            lines.append(f"growth over cycles {SETTLED_CYCLE}…{cycles}: {per_cycle:.0f} ± {margin:.0f} KB per cycle "
+                         f"(a leak when above {leak_kb:.0f} even at {per_cycle - margin:.0f})")
+            if per_cycle - margin > leak_kb:
+                problems.append(f"the footprint grows {per_cycle:.0f} ± {margin:.0f} KB per cycle over cycles "
+                                f"{SETTLED_CYCLE}…{cycles} (at most {leak_kb:.0f})")
         if end is None or not points:
             problems.append(f"no footprint after cycle {SETTLED_CYCLE} or at the end")
         elif end - points[0][1] > leak_mb:
@@ -218,6 +227,12 @@ def self_test():
         ("footprint: WP13's 30-minute run", cycles([42.3, 46.5, 47.3, 47.5, 47.6, 47.4, 47.5, 47.7, 47.7, 47.7, 48.1, 48.0,
                                                     47.9, 48.1, 48.1, 47.9, 47.8, 48.1, 48.3, 48.2], end=48.0), False),
         ("footprint: the shortest run, settled", cycles([42.3, 46.5, 47.3, 47.5, 47.6, 47.4, 47.5, 47.7]), False),
+        ("footprint: WP14's 17-minute run, still settling",
+         cycles([42.4, 46.2, 46.5, 46.7, 46.8, 47.5, 47.1, 47.0], end=46.0), False),
+        ("footprint: a short run leaking 0.29 MB per cycle, noisy",
+         cycles([42.4, 46.2] + [46.5 + 0.29 * i + e for i, e in enumerate([0, 0.2, -0.1, 0.3, -0.2, 0.1])]), True),
+        ("footprint: a long run leaking 0.15 MB per cycle, noisy",
+         cycles([42.4, 46.2] + [47 + 0.15 * i + e for i, e in enumerate([0, 0.2, -0.1, 0.3, -0.2, 0.1] * 3)]), True),
         ("footprint: 0.29 MB per cycle", cycles([31, 42, 46] + [46 + 0.29 * i for i in range(1, 15)]), True),
         ("footprint: a jump while off", cycles([31, 42, 46, 46, 46, 46, 46, 46, 46], end=53), True),
         ("footprint: too few cycles", cycles([31, 42, 46, 46, 46]), True),

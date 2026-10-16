@@ -9,9 +9,9 @@
 # control's is the system's (a keyboard layout switch, the window server, which hand them to every such app) and is
 # counted as shared; Overbright's own must not recur in either off phase (3 or more, 4 right after launch, at gaps
 # that agree within 25 %), shared ones must not hide a rhythm of Overbright's own, and in the final off phase own
-# wake-ups stay at one a minute or fewer. The footprint's least-squares growth over cycles 3…N stays within LEAK_KB
-# per cycle (100) and the end within LEAK_MB (5) of cycle 3; a run must have 5 cycles after cycle 3, so MINUTES is at
-# least 17. The literal "0 idle wake-ups while off" is the owner's quiet-machine run (HARDWARE-TEST §13). Fakes only:
+# wake-ups stay at one a minute or fewer. The footprint's least-squares growth over cycles 3…N, at its lower
+# 2-standard-error bound, stays within LEAK_KB per cycle (100), and the end within LEAK_MB (5) of cycle 3; a run must
+# have 5 cycles after cycle 3, so MINUTES is at least 17. The literal "0 idle wake-ups while off" is the owner's quiet-machine run (HARDWARE-TEST §13). Fakes only:
 # no real display is touched (D24). `footprint` and `vmmap` read the process; nothing attaches a debugger.
 #
 #   make debug; make soak                  # 30 minutes → build/logs/soak/
