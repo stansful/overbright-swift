@@ -32,8 +32,8 @@ public nonisolated enum SelfTestLog {
         return date.formatted(style).replacingOccurrences(of: ":", with: "-") + ".json"
     }
 
-    /// Writes `report` as JSON to `url` (Save Log…, through the app's Save panel).
-    @concurrent public static func write(_ report: SelfTestReport, to url: URL) async throws {
+    /// Saves `report` as JSON at `url` (Save Log…, through the app's Save panel).
+    @concurrent public static func save(_ report: SelfTestReport, to url: URL) async throws {
         try data(report).write(to: url, options: .atomic)
     }
 

@@ -118,8 +118,7 @@ private struct AddPausedAppMenu: View {
                      comment: "Settings ▸ Automations ▸ Add App: opens a file panel in Applications (title case)")
             }
             let suggestions = PausedAppsList.suggestions(for: rules) { id in
-                let identity = AppIdentityResolver.shared.identity(of: id)
-                return identity.isInstalled && identity.name != nil
+                AppIdentityResolver.shared.identity(of: id).isInstalled     // an installed app always has its name
             }
             if !suggestions.isEmpty {
                 Menu {

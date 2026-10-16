@@ -76,7 +76,7 @@ final class SelfTestSheetPresenter: NSObject, NSWindowDelegate {
             guard response == .OK, let url = panel.url else { return }
             Task {
                 do {
-                    try await SelfTestLog.write(report, to: url)
+                    try await SelfTestLog.save(report, to: url)
                     log.info("self-test log saved")
                 } catch {
                     let failure = error as NSError
