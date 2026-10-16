@@ -24,14 +24,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "Vil du flytte Overbright til mappen Apps?"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "Overbright in den Ordner „Apps“ verschieben?"
           }
         },
         "el" : {
@@ -114,14 +114,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "Vil du flytte Overbright til Apper-mappen?"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "Overbright naar de map Apps verplaatsen?"
           }
         },
         "pl" : {
@@ -168,8 +168,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "Vill du flytta Overbright till mappen Appar?"
           }
         },
         "th" : {
@@ -233,14 +233,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "Flyt til Apps"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "In „Apps“ verschieben"
           }
         },
         "el" : {
@@ -323,14 +323,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "Flytt til Apper"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "Verplaats naar Apps"
           }
         },
         "pl" : {
@@ -377,8 +377,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "Flytta till Appar"
           }
         },
         "th" : {
@@ -442,14 +442,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "Ikke nu"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "Nicht jetzt"
           }
         },
         "el" : {
@@ -532,14 +532,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "Ikke nå"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "Niet nu"
           }
         },
         "pl" : {
@@ -586,8 +586,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "Inte nu"
           }
         },
         "th" : {
@@ -651,13 +651,13 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "OK"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "OK"
           }
         },
@@ -741,13 +741,13 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "OK"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "OK"
           }
         },
@@ -795,7 +795,7 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "OK"
           }
         },
@@ -860,14 +860,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "Overbright kunne ikke flyttes. Træk appen til mappen Apps i Finder."
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "Overbright konnte nicht verschoben werden. Ziehe es im Finder in den Ordner „Apps“."
           }
         },
         "el" : {
@@ -950,14 +950,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "Kunne ikke flytte Overbright. Dra den til Apper-mappen i Finder."
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "Overbright kan niet worden verplaatst. Sleep het naar de map Apps in de Finder."
           }
         },
         "pl" : {
@@ -1004,8 +1004,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "Det gick inte att flytta Overbright. Dra appen till mappen Appar i Finder."
           }
         },
         "th" : {
@@ -1278,14 +1278,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "Handlinger i Genveje og åbning ved login virker kun, når appen ligger i mappen Apps."
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "Kurzbefehle-Aktionen und das Öffnen bei der Anmeldung funktionieren nur aus dem Ordner „Apps“."
           }
         },
         "el" : {
@@ -1368,14 +1368,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "Handlinger i Snarveier og åpning ved pålogging fungerer bare fra Apper-mappen."
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "Acties in Opdrachten en openen bij inloggen werken alleen vanuit de map Apps."
           }
         },
         "pl" : {
@@ -1422,8 +1422,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "Åtgärder i Genvägar och öppning vid inloggning fungerar bara när appen ligger i mappen Appar."
           }
         },
         "th" : {

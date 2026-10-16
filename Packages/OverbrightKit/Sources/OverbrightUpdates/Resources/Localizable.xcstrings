@@ -442,13 +442,13 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub kunne ikke finde Overbrights udgivelser. Prøv igen senere."
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub hat keine Versionen von Overbright gefunden. Versuche es später erneut."
           }
         },
@@ -532,13 +532,13 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub fant ikke Overbrights utgivelser. Prøv igjen senere."
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub kan de releases van Overbright niet vinden. Probeer het later opnieuw."
           }
         },
@@ -586,7 +586,7 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub hittade inga versioner av Overbright. Försök igen senare."
           }
         },

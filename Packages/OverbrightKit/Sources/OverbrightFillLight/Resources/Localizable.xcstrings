@@ -24,14 +24,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light off"
+            "state" : "translated",
+            "value" : "Udfyldningslys fra"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light off"
+            "state" : "translated",
+            "value" : "Aufhelllicht aus"
           }
         },
         "el" : {
@@ -114,14 +114,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light off"
+            "state" : "translated",
+            "value" : "Fyllys av"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light off"
+            "state" : "translated",
+            "value" : "Invullicht uit"
           }
         },
         "pl" : {
@@ -168,8 +168,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light off"
+            "state" : "translated",
+            "value" : "Fyllnadsljus av"
           }
         },
         "th" : {
@@ -233,14 +233,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light on"
+            "state" : "translated",
+            "value" : "Udfyldningslys til"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light on"
+            "state" : "translated",
+            "value" : "Aufhelllicht ein"
           }
         },
         "el" : {
@@ -323,14 +323,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light on"
+            "state" : "translated",
+            "value" : "Fyllys på"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light on"
+            "state" : "translated",
+            "value" : "Invullicht aan"
           }
         },
         "pl" : {
@@ -377,8 +377,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light on"
+            "state" : "translated",
+            "value" : "Fyllnadsljus på"
           }
         },
         "th" : {

@@ -24,13 +24,13 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@ (%2$@)"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@ (%2$@)"
           }
         },
@@ -120,13 +120,13 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@ (%2$@)"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@ (%2$@)"
           }
         },
@@ -174,7 +174,7 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@ (%2$@)"
           }
         },
@@ -239,14 +239,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "%@ · small gain on this display"
+            "state" : "translated",
+            "value" : "%@ · lille forøgelse på denne skærm"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "%@ · small gain on this display"
+            "state" : "translated",
+            "value" : "%@ · hier nur geringer Zuwachs"
           }
         },
         "el" : {
@@ -329,14 +329,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "%@ · small gain on this display"
+            "state" : "translated",
+            "value" : "%@ · liten gevinst på denne skjermen"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "%@ · small gain on this display"
+            "state" : "translated",
+            "value" : "%@ · weinig effect op dit beeldscherm"
           }
         },
         "pl" : {
@@ -383,8 +383,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "%@ · small gain on this display"
+            "state" : "translated",
+            "value" : "%@ · liten ökning på den här skärmen"
           }
         },
         "th" : {
@@ -448,13 +448,13 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@, %2$@"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@, %2$@"
           }
         },
@@ -544,13 +544,13 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@, %2$@"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@, %2$@"
           }
         },
@@ -598,7 +598,7 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@, %2$@"
           }
         },
@@ -744,14 +744,14 @@
             "plural" : {
               "one" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld display can’t be adjusted"
+                  "state" : "translated",
+                  "value" : "%lld skærm kan ikke justeres"
                 }
               },
               "other" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld displays can’t be adjusted"
+                  "state" : "translated",
+                  "value" : "%lld skærme kan ikke justeres"
                 }
               }
             }
@@ -762,14 +762,14 @@
             "plural" : {
               "one" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld display can’t be adjusted"
+                  "state" : "translated",
+                  "value" : "%lld Display kann nicht angepasst werden"
                 }
               },
               "other" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld displays can’t be adjusted"
+                  "state" : "translated",
+                  "value" : "%lld Displays können nicht angepasst werden"
                 }
               }
             }
@@ -1038,14 +1038,14 @@
             "plural" : {
               "one" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld display can’t be adjusted"
+                  "state" : "translated",
+                  "value" : "%lld skjerm kan ikke justeres"
                 }
               },
               "other" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld displays can’t be adjusted"
+                  "state" : "translated",
+                  "value" : "%lld skjermer kan ikke justeres"
                 }
               }
             }
@@ -1056,14 +1056,14 @@
             "plural" : {
               "one" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld display can’t be adjusted"
+                  "state" : "translated",
+                  "value" : "%lld beeldscherm kan niet worden aangepast"
                 }
               },
               "other" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld displays can’t be adjusted"
+                  "state" : "translated",
+                  "value" : "%lld beeldschermen kunnen niet worden aangepast"
                 }
               }
             }
@@ -1266,14 +1266,14 @@
             "plural" : {
               "one" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld display can’t be adjusted"
+                  "state" : "translated",
+                  "value" : "%lld skärm kan inte justeras"
                 }
               },
               "other" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld displays can’t be adjusted"
+                  "state" : "translated",
+                  "value" : "%lld skärmar kan inte justeras"
                 }
               }
             }
@@ -1400,14 +1400,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "A one-minute check makes sure extra brightness is right for %@."
+            "state" : "translated",
+            "value" : "Et tjek på et minut sikrer, at ekstra lysstyrke passer til %@."
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "A one-minute check makes sure extra brightness is right for %@."
+            "state" : "translated",
+            "value" : "Eine einminütige Prüfung stellt sicher, dass die Zusatzhelligkeit für „%@“ richtig ist."
           }
         },
         "el" : {
@@ -1490,14 +1490,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "A one-minute check makes sure extra brightness is right for %@."
+            "state" : "translated",
+            "value" : "En kontroll på ett minutt sikrer at ekstra lysstyrke blir riktig for %@."
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "A one-minute check makes sure extra brightness is right for %@."
+            "state" : "translated",
+            "value" : "Een controle van een minuut zorgt ervoor dat extra helderheid juist is voor ‘%@’."
           }
         },
         "pl" : {
@@ -1544,8 +1544,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "A one-minute check makes sure extra brightness is right for %@."
+            "state" : "translated",
+            "value" : "En kontroll på en minut ser till att extra ljusstyrka blir rätt för %@."
           }
         },
         "th" : {
@@ -1609,14 +1609,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Adapter only"
+            "state" : "translated",
+            "value" : "Kun på strøm"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Adapter only"
+            "state" : "translated",
+            "value" : "Nur am Netzteil"
           }
         },
         "el" : {
@@ -1699,14 +1699,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Adapter only"
+            "state" : "translated",
+            "value" : "Kun nettstrøm"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Adapter only"
+            "state" : "translated",
+            "value" : "Alleen netstroom"
           }
         },
         "pl" : {
@@ -1753,8 +1753,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Adapter only"
+            "state" : "translated",
+            "value" : "Bara nätström"
           }
         },
         "th" : {
@@ -1818,14 +1818,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Add Overbright to Control Center"
+            "state" : "translated",
+            "value" : "Føj Overbright til Kontrolcenter"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Add Overbright to Control Center"
+            "state" : "translated",
+            "value" : "Overbright zum Kontrollzentrum hinzufügen"
           }
         },
         "el" : {
@@ -1908,14 +1908,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Add Overbright to Control Center"
+            "state" : "translated",
+            "value" : "Legg Overbright til i Kontrollsenter"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Add Overbright to Control Center"
+            "state" : "translated",
+            "value" : "Overbright toevoegen aan het Bedieningspaneel"
           }
         },
         "pl" : {
@@ -1962,8 +1962,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Add Overbright to Control Center"
+            "state" : "translated",
+            "value" : "Lägg till Overbright i Kontrollcenter"
           }
         },
         "th" : {
@@ -2027,14 +2027,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Any charge"
+            "state" : "translated",
+            "value" : "Uanset opladning"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Any charge"
+            "state" : "translated",
+            "value" : "Jeder Ladestand"
           }
         },
         "el" : {
@@ -2117,14 +2117,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Any charge"
+            "state" : "translated",
+            "value" : "Uansett nivå"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Any charge"
+            "state" : "translated",
+            "value" : "Elk laadniveau"
           }
         },
         "pl" : {
@@ -2171,8 +2171,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Any charge"
+            "state" : "translated",
+            "value" : "Oavsett laddning"
           }
         },
         "th" : {
@@ -2236,14 +2236,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Auto-pause"
+            "state" : "translated",
+            "value" : "Autopause"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Auto-pause"
+            "state" : "translated",
+            "value" : "Auto-Pause"
           }
         },
         "el" : {
@@ -2326,14 +2326,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Auto-pause"
+            "state" : "translated",
+            "value" : "Autopause"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Auto-pause"
+            "state" : "translated",
+            "value" : "Autopauze"
           }
         },
         "pl" : {
@@ -2380,8 +2380,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Auto-pause"
+            "state" : "translated",
+            "value" : "Autopaus"
           }
         },
         "th" : {
@@ -2445,14 +2445,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Auto-pause · Off"
+            "state" : "translated",
+            "value" : "Autopause · Fra"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Auto-pause · Off"
+            "state" : "translated",
+            "value" : "Auto-Pause · Aus"
           }
         },
         "el" : {
@@ -2535,14 +2535,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Auto-pause · Off"
+            "state" : "translated",
+            "value" : "Autopause · Av"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Auto-pause · Off"
+            "state" : "translated",
+            "value" : "Autopauze · Uit"
           }
         },
         "pl" : {
@@ -2589,8 +2589,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Auto-pause · Off"
+            "state" : "translated",
+            "value" : "Autopaus · Av"
           }
         },
         "th" : {
@@ -2654,14 +2654,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Battery Level"
+            "state" : "translated",
+            "value" : "Batteriniveau"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Battery Level"
+            "state" : "translated",
+            "value" : "Ladestand"
           }
         },
         "el" : {
@@ -2744,14 +2744,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Battery Level"
+            "state" : "translated",
+            "value" : "Batterinivå"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Battery Level"
+            "state" : "translated",
+            "value" : "Batterijniveau"
           }
         },
         "pl" : {
@@ -2798,8 +2798,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Battery Level"
+            "state" : "translated",
+            "value" : "Batterinivå"
           }
         },
         "th" : {
@@ -2863,14 +2863,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Battery limit"
+            "state" : "translated",
+            "value" : "Batterigrænse"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Battery limit"
+            "state" : "translated",
+            "value" : "Batteriegrenze"
           }
         },
         "el" : {
@@ -2953,14 +2953,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Battery limit"
+            "state" : "translated",
+            "value" : "Batterigrense"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Battery limit"
+            "state" : "translated",
+            "value" : "Batterijlimiet"
           }
         },
         "pl" : {
@@ -3007,8 +3007,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Battery limit"
+            "state" : "translated",
+            "value" : "Batterigräns"
           }
         },
         "th" : {
@@ -3072,14 +3072,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Below %@"
+            "state" : "translated",
+            "value" : "Under %@"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Below %@"
+            "state" : "translated",
+            "value" : "Unter %@"
           }
         },
         "el" : {
@@ -3162,14 +3162,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Below %@"
+            "state" : "translated",
+            "value" : "Under %@"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Below %@"
+            "state" : "translated",
+            "value" : "Onder %@"
           }
         },
         "pl" : {
@@ -3216,8 +3216,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Below %@"
+            "state" : "translated",
+            "value" : "Under %@"
           }
         },
         "th" : {
@@ -3281,14 +3281,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Bright Room"
+            "state" : "translated",
+            "value" : "Lyst rum"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Bright Room"
+            "state" : "translated",
+            "value" : "Heller Raum"
           }
         },
         "el" : {
@@ -3371,14 +3371,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Bright Room"
+            "state" : "translated",
+            "value" : "Lyst rom"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Bright Room"
+            "state" : "translated",
+            "value" : "Lichte ruimte"
           }
         },
         "pl" : {
@@ -3425,8 +3425,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Bright Room"
+            "state" : "translated",
+            "value" : "Ljust rum"
           }
         },
         "th" : {
@@ -3490,14 +3490,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Bright content that stays in one place for a long time, like the menu bar, can wear OLED panels unevenly. Overbright keeps extra brightness lower on OLED displays and pauses it after 5 minutes without input."
+            "state" : "translated",
+            "value" : "Lyst indhold, der står samme sted i lang tid, f.eks. menulinjen, kan slide OLED-paneler ujævnt. Overbright holder ekstra lysstyrke lavere på OLED-skærme og sætter den på pause efter 5 minutter uden aktivitet."
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Bright content that stays in one place for a long time, like the menu bar, can wear OLED panels unevenly. Overbright keeps extra brightness lower on OLED displays and pauses it after 5 minutes without input."
+            "state" : "translated",
+            "value" : "Helle Inhalte, die lange an derselben Stelle bleiben, etwa die Menüleiste, können OLED-Panels ungleichmäßig altern lassen. Overbright hält die Zusatzhelligkeit auf OLED-Displays niedriger und pausiert sie nach 5 Minuten ohne Eingabe."
           }
         },
         "el" : {
@@ -3580,14 +3580,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Bright content that stays in one place for a long time, like the menu bar, can wear OLED panels unevenly. Overbright keeps extra brightness lower on OLED displays and pauses it after 5 minutes without input."
+            "state" : "translated",
+            "value" : "Lyst innhold som blir stående på samme sted lenge, som menylinjen, kan slite OLED-paneler ujevnt. Overbright holder ekstra lysstyrke lavere på OLED-skjermer og setter den på pause etter 5 minutter uten aktivitet."
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Bright content that stays in one place for a long time, like the menu bar, can wear OLED panels unevenly. Overbright keeps extra brightness lower on OLED displays and pauses it after 5 minutes without input."
+            "state" : "translated",
+            "value" : "Heldere inhoud die lang op één plek blijft, zoals de menubalk, kan OLED-panelen ongelijkmatig laten slijten. Overbright houdt extra helderheid lager op OLED-beeldschermen en pauzeert die na 5 minuten zonder invoer."
           }
         },
         "pl" : {
@@ -3634,8 +3634,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Bright content that stays in one place for a long time, like the menu bar, can wear OLED panels unevenly. Overbright keeps extra brightness lower on OLED displays and pauses it after 5 minutes without input."
+            "state" : "translated",
+            "value" : "Ljust innehåll som stannar på samma plats länge, som menyraden, kan slita ojämnt på OLED-paneler. Overbright håller den extra ljusstyrkan lägre på OLED-skärmar och pausar den efter 5 minuter utan aktivitet."
           }
         },
         "th" : {
@@ -3699,14 +3699,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Brightens through an overlay. The pointer isn’t brightened, and screen recordings may show the overlay."
+            "state" : "translated",
+            "value" : "Gør skærmen lysere med en overlejring. Markøren bliver ikke lysere, og skærmoptagelser kan vise overlejringen."
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Brightens through an overlay. The pointer isn’t brightened, and screen recordings may show the overlay."
+            "state" : "translated",
+            "value" : "Hellt über eine Überlagerung auf. Der Zeiger wird nicht aufgehellt, und Bildschirmaufnahmen können die Überlagerung zeigen."
           }
         },
         "el" : {
@@ -3789,14 +3789,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Brightens through an overlay. The pointer isn’t brightened, and screen recordings may show the overlay."
+            "state" : "translated",
+            "value" : "Gjør lysere med et overlegg. Pekeren blir ikke lysere, og skjermopptak kan vise overlegget."
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Brightens through an overlay. The pointer isn’t brightened, and screen recordings may show the overlay."
+            "state" : "translated",
+            "value" : "Maakt helderder via een laag over het scherm. De aanwijzer wordt niet helderder en schermopnamen kunnen die laag tonen."
           }
         },
         "pl" : {
@@ -3843,8 +3843,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Brightens through an overlay. The pointer isn’t brightened, and screen recordings may show the overlay."
+            "state" : "translated",
+            "value" : "Gör skärmen ljusare med ett överlägg. Pekaren blir inte ljusare och skärminspelningar kan visa överlägget."
           }
         },
         "th" : {
@@ -3908,14 +3908,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Brightness"
+            "state" : "translated",
+            "value" : "Lysstyrke"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Brightness"
+            "state" : "translated",
+            "value" : "Helligkeit"
           }
         },
         "el" : {
@@ -3998,14 +3998,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Brightness"
+            "state" : "translated",
+            "value" : "Lysstyrke"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Brightness"
+            "state" : "translated",
+            "value" : "Helderheid"
           }
         },
         "pl" : {
@@ -4052,8 +4052,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Brightness"
+            "state" : "translated",
+            "value" : "Ljusstyrka"
           }
         },
         "th" : {
@@ -4117,14 +4117,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate…"
+            "state" : "translated",
+            "value" : "Kalibrer…"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate…"
+            "state" : "translated",
+            "value" : "Kalibrieren …"
           }
         },
         "el" : {
@@ -4207,14 +4207,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate…"
+            "state" : "translated",
+            "value" : "Kalibrer…"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate…"
+            "state" : "translated",
+            "value" : "Kalibreer…"
           }
         },
         "pl" : {
@@ -4261,8 +4261,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate…"
+            "state" : "translated",
+            "value" : "Kalibrera…"
           }
         },
         "th" : {
@@ -4326,14 +4326,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Cancel"
+            "state" : "translated",
+            "value" : "Annuller"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Cancel"
+            "state" : "translated",
+            "value" : "Abbrechen"
           }
         },
         "el" : {
@@ -4416,14 +4416,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Cancel"
+            "state" : "translated",
+            "value" : "Avbryt"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Cancel"
+            "state" : "translated",
+            "value" : "Annuleer"
           }
         },
         "pl" : {
@@ -4470,8 +4470,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Cancel"
+            "state" : "translated",
+            "value" : "Avbryt"
           }
         },
         "th" : {
@@ -4535,14 +4535,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change rules…"
+            "state" : "translated",
+            "value" : "Rediger regler…"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change rules…"
+            "state" : "translated",
+            "value" : "Regeln ändern …"
           }
         },
         "el" : {
@@ -4625,14 +4625,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change rules…"
+            "state" : "translated",
+            "value" : "Endre regler…"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change rules…"
+            "state" : "translated",
+            "value" : "Wijzig regels…"
           }
         },
         "pl" : {
@@ -4679,8 +4679,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change rules…"
+            "state" : "translated",
+            "value" : "Ändra regler…"
           }
         },
         "th" : {
@@ -4744,14 +4744,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change setting…"
+            "state" : "translated",
+            "value" : "Vis indstilling…"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change setting…"
+            "state" : "translated",
+            "value" : "Einstellung ändern …"
           }
         },
         "el" : {
@@ -4834,14 +4834,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change setting…"
+            "state" : "translated",
+            "value" : "Endre innstilling…"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change setting…"
+            "state" : "translated",
+            "value" : "Wijzig instelling…"
           }
         },
         "pl" : {
@@ -4888,8 +4888,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change setting…"
+            "state" : "translated",
+            "value" : "Ändra inställning…"
           }
         },
         "th" : {
@@ -4953,14 +4953,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change the display preset in Displays settings and back, or log out. If another color app was running, quit it. Settings ▸ Advanced ▸ Reset Display Colors can also help."
+            "state" : "translated",
+            "value" : "Skift skærmens forindstilling i indstillingerne til Skærm og tilbage igen, eller log ud. Hvis en anden farveapp kørte, så slut den. Indstillinger ▸ Avanceret ▸ Nulstil skærmfarver kan også hjælpe."
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change the display preset in Displays settings and back, or log out. If another color app was running, quit it. Settings ▸ Advanced ▸ Reset Display Colors can also help."
+            "state" : "translated",
+            "value" : "Wechsle in den Systemeinstellungen unter „Displays“ die Voreinstellung des Displays und wieder zurück, oder melde dich ab. Falls eine andere Farb-App lief, beende sie. Auch „Displayfarben zurücksetzen …“ unter Einstellungen ▸ Erweitert kann helfen."
           }
         },
         "el" : {
@@ -5043,14 +5043,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change the display preset in Displays settings and back, or log out. If another color app was running, quit it. Settings ▸ Advanced ▸ Reset Display Colors can also help."
+            "state" : "translated",
+            "value" : "Bytt forhåndsinnstilling for skjermen i Skjermer-innstillingene og tilbake igjen, eller logg ut. Hvis en annen fargeapp kjørte, avslutter du den. Innstillinger ▸ Avansert ▸ Nullstill skjermfarger kan også hjelpe."
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change the display preset in Displays settings and back, or log out. If another color app was running, quit it. Settings ▸ Advanced ▸ Reset Display Colors can also help."
+            "state" : "translated",
+            "value" : "Wijzig de voorinstelling van het beeldscherm in de instellingen voor ‘Beeldschermen’ en zet die daarna terug, of log uit. Als er een andere kleurenapp actief was, stop die dan. Instellingen ▸ Geavanceerd ▸ Stel beeldschermkleuren opnieuw in kan ook helpen."
           }
         },
         "pl" : {
@@ -5097,8 +5097,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change the display preset in Displays settings and back, or log out. If another color app was running, quit it. Settings ▸ Advanced ▸ Reset Display Colors can also help."
+            "state" : "translated",
+            "value" : "Byt skärmens förinställning i inställningarna för Bildskärmar och byt sedan tillbaka, eller logga ut. Om en annan färgapp var igång avslutar du den. Inställningar ▸ Avancerat ▸ Återställ skärmfärger kan också hjälpa."
           }
         },
         "th" : {
@@ -5162,14 +5162,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Check that it works"
+            "state" : "translated",
+            "value" : "Tjek, at det virker"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Check that it works"
+            "state" : "translated",
+            "value" : "Prüfe, ob es funktioniert"
           }
         },
         "el" : {
@@ -5252,14 +5252,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Check that it works"
+            "state" : "translated",
+            "value" : "Sjekk at det fungerer"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Check that it works"
+            "state" : "translated",
+            "value" : "Controleer of het werkt"
           }
         },
         "pl" : {
@@ -5306,8 +5306,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Check that it works"
+            "state" : "translated",
+            "value" : "Kontrollera att det fungerar"
           }
         },
         "th" : {
@@ -5371,14 +5371,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Choose Peak…"
+            "state" : "translated",
+            "value" : "Vælg Top…"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Choose Peak…"
+            "state" : "translated",
+            "value" : "„Spitze“ wählen …"
           }
         },
         "el" : {
@@ -5461,14 +5461,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Choose Peak…"
+            "state" : "translated",
+            "value" : "Velg Topp…"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Choose Peak…"
+            "state" : "translated",
+            "value" : "Kies ‘Piek’…"
           }
         },
         "pl" : {
@@ -5515,8 +5515,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Choose Peak…"
+            "state" : "translated",
+            "value" : "Välj Topp…"
           }
         },
         "th" : {
@@ -5580,14 +5580,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Choose Turn Off Overbright in the menu or the panel. If Overbright stops responding, Force Quit it: macOS restores your displays at once."
+            "state" : "translated",
+            "value" : "Vælg “Slå Overbright fra” i menuen eller panelet. Hvis Overbright holder op med at svare, så brug “Afbryd” i Apple-menuen: macOS gendanner straks dine skærme."
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Choose Turn Off Overbright in the menu or the panel. If Overbright stops responding, Force Quit it: macOS restores your displays at once."
+            "state" : "translated",
+            "value" : "Wähle „Overbright ausschalten“ im Menü oder im Panel. Falls Overbright nicht mehr reagiert, verwende „Sofort beenden“: macOS stellt deine Displays umgehend wieder her."
           }
         },
         "el" : {
@@ -5670,14 +5670,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Choose Turn Off Overbright in the menu or the panel. If Overbright stops responding, Force Quit it: macOS restores your displays at once."
+            "state" : "translated",
+            "value" : "Velg «Slå av Overbright» i menyen eller panelet. Hvis Overbright slutter å svare, kan du tvangsavslutte den – macOS gjenoppretter skjermene med en gang."
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Choose Turn Off Overbright in the menu or the panel. If Overbright stops responding, Force Quit it: macOS restores your displays at once."
+            "state" : "translated",
+            "value" : "Kies ‘Schakel Overbright uit’ in het menu of het paneel. Als Overbright niet meer reageert, gebruik dan ‘Forceer stop’: macOS herstelt je beeldschermen meteen."
           }
         },
         "pl" : {
@@ -5724,8 +5724,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Choose Turn Off Overbright in the menu or the panel. If Overbright stops responding, Force Quit it: macOS restores your displays at once."
+            "state" : "translated",
+            "value" : "Välj ”Stäng av Overbright” i menyn eller panelen. Om Overbright slutar svara tvångsavslutar du den – macOS återställer dina skärmar direkt."
           }
         },
         "th" : {
@@ -5789,14 +5789,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Colors look washed out, or HDR video looks flat"
+            "state" : "translated",
+            "value" : "Farverne ser udvaskede ud, eller HDR-video ser flad ud"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Colors look washed out, or HDR video looks flat"
+            "state" : "translated",
+            "value" : "Farben wirken blass oder HDR-Videos flach"
           }
         },
         "el" : {
@@ -5879,14 +5879,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Colors look washed out, or HDR video looks flat"
+            "state" : "translated",
+            "value" : "Fargene ser bleke ut, eller HDR-video ser flat ut"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Colors look washed out, or HDR video looks flat"
+            "state" : "translated",
+            "value" : "Kleuren zien er flets uit of HDR-video ziet er vlak uit"
           }
         },
         "pl" : {
@@ -5933,8 +5933,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Colors look washed out, or HDR video looks flat"
+            "state" : "translated",
+            "value" : "Färgerna ser urblekta ut eller HDR-video ser platt ut"
           }
         },
         "th" : {
@@ -5998,14 +5998,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Compatibility mode"
+            "state" : "translated",
+            "value" : "Kompatibilitetstilstand"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Compatibility mode"
+            "state" : "translated",
+            "value" : "Kompatibilitätsmodus"
           }
         },
         "el" : {
@@ -6088,14 +6088,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Compatibility mode"
+            "state" : "translated",
+            "value" : "Kompatibilitetsmodus"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Compatibility mode"
+            "state" : "translated",
+            "value" : "Compatibiliteitsmodus"
           }
         },
         "pl" : {
@@ -6142,8 +6142,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Compatibility mode"
+            "state" : "translated",
+            "value" : "Kompatibilitetsläge"
           }
         },
         "th" : {
@@ -6207,14 +6207,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue anyway"
+            "state" : "translated",
+            "value" : "Fortsæt alligevel"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue anyway"
+            "state" : "translated",
+            "value" : "Trotzdem fortfahren"
           }
         },
         "el" : {
@@ -6297,14 +6297,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue anyway"
+            "state" : "translated",
+            "value" : "Fortsett likevel"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue anyway"
+            "state" : "translated",
+            "value" : "Ga toch door"
           }
         },
         "pl" : {
@@ -6351,8 +6351,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue anyway"
+            "state" : "translated",
+            "value" : "Fortsätt ändå"
           }
         },
         "th" : {
@@ -6416,14 +6416,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim All Displays"
+            "state" : "translated",
+            "value" : "Dæmp alle skærme"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim All Displays"
+            "state" : "translated",
+            "value" : "Alle Displays abdunkeln"
           }
         },
         "el" : {
@@ -6506,14 +6506,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim All Displays"
+            "state" : "translated",
+            "value" : "Demp alle skjermer"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim All Displays"
+            "state" : "translated",
+            "value" : "Dim alle beeldschermen"
           }
         },
         "pl" : {
@@ -6560,8 +6560,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim All Displays"
+            "state" : "translated",
+            "value" : "Tona ned alla skärmar"
           }
         },
         "th" : {
@@ -6625,13 +6625,13 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Display"
+            "state" : "translated",
+            "value" : "Skærm"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Display"
           }
         },
@@ -6715,14 +6715,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Display"
+            "state" : "translated",
+            "value" : "Skjerm"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Display"
+            "state" : "translated",
+            "value" : "Beeldscherm"
           }
         },
         "pl" : {
@@ -6769,8 +6769,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Display"
+            "state" : "translated",
+            "value" : "Skärm"
           }
         },
         "th" : {
@@ -6834,14 +6834,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Does it use more battery?"
+            "state" : "translated",
+            "value" : "Bruger det mere batteri?"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Does it use more battery?"
+            "state" : "translated",
+            "value" : "Belastet es die Batterie stärker?"
           }
         },
         "el" : {
@@ -6924,14 +6924,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Does it use more battery?"
+            "state" : "translated",
+            "value" : "Bruker det mer batteri?"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Does it use more battery?"
+            "state" : "translated",
+            "value" : "Kost het meer batterij?"
           }
         },
         "pl" : {
@@ -6978,8 +6978,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Does it use more battery?"
+            "state" : "translated",
+            "value" : "Drar det mer batteri?"
           }
         },
         "th" : {
@@ -7043,14 +7043,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Don’t Use on This Display"
+            "state" : "translated",
+            "value" : "Brug ikke på denne skærm"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Don’t Use on This Display"
+            "state" : "translated",
+            "value" : "Auf diesem Display nicht verwenden"
           }
         },
         "el" : {
@@ -7133,14 +7133,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Don’t Use on This Display"
+            "state" : "translated",
+            "value" : "Ikke bruk på denne skjermen"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Don’t Use on This Display"
+            "state" : "translated",
+            "value" : "Gebruik niet op dit beeldscherm"
           }
         },
         "pl" : {
@@ -7187,8 +7187,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Don’t Use on This Display"
+            "state" : "translated",
+            "value" : "Använd inte på den här skärmen"
           }
         },
         "th" : {
@@ -7252,14 +7252,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Edit Apps…"
+            "state" : "translated",
+            "value" : "Rediger apps…"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Edit Apps…"
+            "state" : "translated",
+            "value" : "Apps bearbeiten …"
           }
         },
         "el" : {
@@ -7342,14 +7342,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Edit Apps…"
+            "state" : "translated",
+            "value" : "Rediger apper…"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Edit Apps…"
+            "state" : "translated",
+            "value" : "Wijzig lijst…"
           }
         },
         "pl" : {
@@ -7396,8 +7396,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Edit Apps…"
+            "state" : "translated",
+            "value" : "Redigera appar…"
           }
         },
         "th" : {
@@ -7461,14 +7461,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Edit apps…"
+            "state" : "translated",
+            "value" : "Rediger apps…"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Edit apps…"
+            "state" : "translated",
+            "value" : "Apps bearbeiten …"
           }
         },
         "el" : {
@@ -7551,14 +7551,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Edit apps…"
+            "state" : "translated",
+            "value" : "Rediger apper…"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Edit apps…"
+            "state" : "translated",
+            "value" : "Wijzig lijst…"
           }
         },
         "pl" : {
@@ -7605,8 +7605,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Edit apps…"
+            "state" : "translated",
+            "value" : "Redigera appar…"
           }
         },
         "th" : {
@@ -7670,14 +7670,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light"
+            "state" : "translated",
+            "value" : "Udfyldningslys"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light"
+            "state" : "translated",
+            "value" : "Aufhelllicht"
           }
         },
         "el" : {
@@ -7760,14 +7760,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light"
+            "state" : "translated",
+            "value" : "Fyllys"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light"
+            "state" : "translated",
+            "value" : "Invullicht"
           }
         },
         "pl" : {
@@ -7814,8 +7814,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light"
+            "state" : "translated",
+            "value" : "Fyllnadsljus"
           }
         },
         "th" : {
@@ -7879,14 +7879,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "For the most light, turn your display brightness all the way up first; Overbright adds to it."
+            "state" : "translated",
+            "value" : "Skru først helt op for skærmens lysstyrke for at få mest lys. Overbright lægger lys oven i."
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "For the most light, turn your display brightness all the way up first; Overbright adds to it."
+            "state" : "translated",
+            "value" : "Für maximales Licht stelle zuerst die Displayhelligkeit ganz hoch; Overbright erhöht sie zusätzlich."
           }
         },
         "el" : {
@@ -7969,14 +7969,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "For the most light, turn your display brightness all the way up first; Overbright adds to it."
+            "state" : "translated",
+            "value" : "Få mest mulig lys ved å skru lysstyrken på skjermen helt opp først – Overbright legger til mer."
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "For the most light, turn your display brightness all the way up first; Overbright adds to it."
+            "state" : "translated",
+            "value" : "Zet voor het meeste licht eerst de helderheid van je beeldscherm helemaal omhoog; Overbright voegt daar licht aan toe."
           }
         },
         "pl" : {
@@ -8023,8 +8023,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "For the most light, turn your display brightness all the way up first; Overbright adds to it."
+            "state" : "translated",
+            "value" : "Höj först skärmens ljusstyrka hela vägen för mest ljus. Overbright lägger till ljus ovanpå."
           }
         },
         "th" : {
@@ -8088,14 +8088,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Help"
+            "state" : "translated",
+            "value" : "Hjælp"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Help"
+            "state" : "translated",
+            "value" : "Hilfe"
           }
         },
         "el" : {
@@ -8178,13 +8178,13 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Help"
+            "state" : "translated",
+            "value" : "Hjelp"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Help"
           }
         },
@@ -8232,8 +8232,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Help"
+            "state" : "translated",
+            "value" : "Hjälp"
           }
         },
         "th" : {
@@ -8297,14 +8297,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "How do I get back to normal right away?"
+            "state" : "translated",
+            "value" : "Hvordan kommer jeg straks tilbage til det normale?"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "How do I get back to normal right away?"
+            "state" : "translated",
+            "value" : "Wie komme ich sofort zum Normalzustand zurück?"
           }
         },
         "el" : {
@@ -8387,14 +8387,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "How do I get back to normal right away?"
+            "state" : "translated",
+            "value" : "Hvordan kommer jeg tilbake til det normale med en gang?"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "How do I get back to normal right away?"
+            "state" : "translated",
+            "value" : "Hoe ga ik meteen terug naar normaal?"
           }
         },
         "pl" : {
@@ -8441,8 +8441,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "How do I get back to normal right away?"
+            "state" : "translated",
+            "value" : "Hur kommer jag tillbaka till det normala direkt?"
           }
         },
         "th" : {
@@ -8506,14 +8506,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "If the menu bar is full or macOS hides the icon, open Overbright from Finder or Spotlight to see Settings. In Menu Bar settings, check that Overbright is turned on under Allow in the Menu Bar."
+            "state" : "translated",
+            "value" : "Hvis menulinjen er fuld, eller macOS skjuler symbolet, kan du åbne Overbright fra Finder eller Spotlight for at se indstillingerne. Tjek i indstillingerne til Menulinje, at Overbright er slået til under “Tillad på menulinjen”."
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "If the menu bar is full or macOS hides the icon, open Overbright from Finder or Spotlight to see Settings. In Menu Bar settings, check that Overbright is turned on under Allow in the Menu Bar."
+            "state" : "translated",
+            "value" : "Wenn die Menüleiste voll ist oder macOS das Symbol ausblendet, öffne Overbright über den Finder oder Spotlight, um die Einstellungen zu sehen. Prüfe in den Systemeinstellungen unter „Menüleiste“, ob Overbright bei „In Menüleiste erlauben“ aktiviert ist."
           }
         },
         "el" : {
@@ -8596,14 +8596,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "If the menu bar is full or macOS hides the icon, open Overbright from Finder or Spotlight to see Settings. In Menu Bar settings, check that Overbright is turned on under Allow in the Menu Bar."
+            "state" : "translated",
+            "value" : "Hvis menylinjen er full eller macOS skjuler symbolet, åpner du Overbright fra Finder eller Spotlight for å se Innstillinger. I Menylinje-innstillingene kontrollerer du at Overbright er slått på under «Tillat i menylinjen»."
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "If the menu bar is full or macOS hides the icon, open Overbright from Finder or Spotlight to see Settings. In Menu Bar settings, check that Overbright is turned on under Allow in the Menu Bar."
+            "state" : "translated",
+            "value" : "Als de menubalk vol is of macOS het symbool verbergt, open je Overbright vanuit de Finder of Spotlight om de instellingen te zien. Controleer in de instellingen voor ‘Menubalk’ of Overbright is ingeschakeld bij ‘Sta toe in de menubalk’."
           }
         },
         "pl" : {
@@ -8650,8 +8650,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "If the menu bar is full or macOS hides the icon, open Overbright from Finder or Spotlight to see Settings. In Menu Bar settings, check that Overbright is turned on under Allow in the Menu Bar."
+            "state" : "translated",
+            "value" : "Om menyraden är full eller om macOS döljer symbolen öppnar du Overbright från Finder eller Spotlight för att se inställningarna. Kontrollera i inställningarna för Menyrad att Overbright är påslagen under ”Tillåt i menyraden”."
           }
         },
         "th" : {
@@ -8715,14 +8715,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Indoor"
+            "state" : "translated",
+            "value" : "Indendørs"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Indoor"
+            "state" : "translated",
+            "value" : "Drinnen"
           }
         },
         "el" : {
@@ -8805,14 +8805,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Indoor"
+            "state" : "translated",
+            "value" : "Innendørs"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Indoor"
+            "state" : "translated",
+            "value" : "Binnen"
           }
         },
         "pl" : {
@@ -8859,8 +8859,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Indoor"
+            "state" : "translated",
+            "value" : "Inomhus"
           }
         },
         "th" : {
@@ -8924,14 +8924,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Keep Boosting"
+            "state" : "translated",
+            "value" : "Ingen pause"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Keep Boosting"
+            "state" : "translated",
+            "value" : "Nicht pausieren"
           }
         },
         "el" : {
@@ -9014,14 +9014,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Keep Boosting"
+            "state" : "translated",
+            "value" : "Ikke sett på pause"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Keep Boosting"
+            "state" : "translated",
+            "value" : "Niet pauzeren"
           }
         },
         "pl" : {
@@ -9068,8 +9068,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Keep Boosting"
+            "state" : "translated",
+            "value" : "Pausa inte"
           }
         },
         "th" : {
@@ -9133,14 +9133,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Learn more"
+            "state" : "translated",
+            "value" : "Læs mere"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Learn more"
+            "state" : "translated",
+            "value" : "Weitere Infos"
           }
         },
         "el" : {
@@ -9223,14 +9223,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Learn more"
+            "state" : "translated",
+            "value" : "Finn ut mer"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Learn more"
+            "state" : "translated",
+            "value" : "Meer informatie"
           }
         },
         "pl" : {
@@ -9277,8 +9277,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Learn more"
+            "state" : "translated",
+            "value" : "Läs mer"
           }
         },
         "th" : {
@@ -9342,14 +9342,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Little gain at full brightness"
+            "state" : "translated",
+            "value" : "Lille forøgelse ved fuld lysstyrke"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Little gain at full brightness"
+            "state" : "translated",
+            "value" : "Geringer Zuwachs bei voller Helligkeit"
           }
         },
         "el" : {
@@ -9432,14 +9432,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Little gain at full brightness"
+            "state" : "translated",
+            "value" : "Liten gevinst ved full lysstyrke"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Little gain at full brightness"
+            "state" : "translated",
+            "value" : "Weinig effect op volle helderheid"
           }
         },
         "pl" : {
@@ -9486,8 +9486,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Little gain at full brightness"
+            "state" : "translated",
+            "value" : "Liten ökning vid full ljusstyrka"
           }
         },
         "th" : {
@@ -9551,14 +9551,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Max"
+            "state" : "translated",
+            "value" : "Maks."
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Max"
+            "state" : "translated",
+            "value" : "Maximum"
           }
         },
         "el" : {
@@ -9641,14 +9641,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Max"
+            "state" : "translated",
+            "value" : "Maks"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Max"
+            "state" : "translated",
+            "value" : "Maximum"
           }
         },
         "pl" : {
@@ -9695,7 +9695,7 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Max"
           }
         },
@@ -9760,14 +9760,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "More"
+            "state" : "translated",
+            "value" : "Mere"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "More"
+            "state" : "translated",
+            "value" : "Mehr"
           }
         },
         "el" : {
@@ -9850,14 +9850,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "More"
+            "state" : "translated",
+            "value" : "Mer"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "More"
+            "state" : "translated",
+            "value" : "Meer"
           }
         },
         "pl" : {
@@ -9904,8 +9904,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "More"
+            "state" : "translated",
+            "value" : "Mer"
           }
         },
         "th" : {
@@ -9969,14 +9969,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Never"
+            "state" : "translated",
+            "value" : "Aldrig"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Never"
+            "state" : "translated",
+            "value" : "Nie"
           }
         },
         "el" : {
@@ -10059,14 +10059,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Never"
+            "state" : "translated",
+            "value" : "Aldri"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Never"
+            "state" : "translated",
+            "value" : "Nooit"
           }
         },
         "pl" : {
@@ -10113,8 +10113,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Never"
+            "state" : "translated",
+            "value" : "Aldrig"
           }
         },
         "th" : {
@@ -10178,14 +10178,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "No Extra Brightness on This Display"
+            "state" : "translated",
+            "value" : "Ingen ekstra lysstyrke på denne skærm"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "No Extra Brightness on This Display"
+            "state" : "translated",
+            "value" : "Keine Zusatzhelligkeit auf diesem Display"
           }
         },
         "el" : {
@@ -10268,14 +10268,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "No Extra Brightness on This Display"
+            "state" : "translated",
+            "value" : "Ingen ekstra lysstyrke på denne skjermen"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "No Extra Brightness on This Display"
+            "state" : "translated",
+            "value" : "Geen extra helderheid op dit beeldscherm"
           }
         },
         "pl" : {
@@ -10322,8 +10322,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "No Extra Brightness on This Display"
+            "state" : "translated",
+            "value" : "Ingen extra ljusstyrka på den här skärmen"
           }
         },
         "th" : {
@@ -10387,14 +10387,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "No timer"
+            "state" : "translated",
+            "value" : "Ingen timer"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "No timer"
+            "state" : "translated",
+            "value" : "Kein Timer"
           }
         },
         "el" : {
@@ -10477,14 +10477,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "No timer"
+            "state" : "translated",
+            "value" : "Ingen tidtaker"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "No timer"
+            "state" : "translated",
+            "value" : "Geen timer"
           }
         },
         "pl" : {
@@ -10531,8 +10531,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "No timer"
+            "state" : "translated",
+            "value" : "Ingen timer"
           }
         },
         "th" : {
@@ -10596,14 +10596,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "None of your displays can show extra brightness right now."
+            "state" : "translated",
+            "value" : "Ingen af dine skærme kan vise ekstra lysstyrke lige nu."
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "None of your displays can show extra brightness right now."
+            "state" : "translated",
+            "value" : "Keines deiner Displays kann gerade Zusatzhelligkeit anzeigen."
           }
         },
         "el" : {
@@ -10686,14 +10686,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "None of your displays can show extra brightness right now."
+            "state" : "translated",
+            "value" : "Ingen av skjermene dine kan vise ekstra lysstyrke akkurat nå."
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "None of your displays can show extra brightness right now."
+            "state" : "translated",
+            "value" : "Geen van je beeldschermen kan op dit moment extra helderheid tonen."
           }
         },
         "pl" : {
@@ -10740,8 +10740,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "None of your displays can show extra brightness right now."
+            "state" : "translated",
+            "value" : "Ingen av dina skärmar kan visa extra ljusstyrka just nu."
           }
         },
         "th" : {
@@ -10805,14 +10805,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not calibrated: this is an estimate."
+            "state" : "translated",
+            "value" : "Ikke kalibreret: dette er et skøn."
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not calibrated: this is an estimate."
+            "state" : "translated",
+            "value" : "Nicht kalibriert: geschätzter Wert."
           }
         },
         "el" : {
@@ -10895,14 +10895,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not calibrated: this is an estimate."
+            "state" : "translated",
+            "value" : "Ikke kalibrert: dette er et anslag."
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not calibrated: this is an estimate."
+            "state" : "translated",
+            "value" : "Niet gekalibreerd: een schatting."
           }
         },
         "pl" : {
@@ -10949,8 +10949,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not calibrated: this is an estimate."
+            "state" : "translated",
+            "value" : "Inte kalibrerad: uppskattat värde."
           }
         },
         "th" : {
@@ -11014,14 +11014,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not now"
+            "state" : "translated",
+            "value" : "Ikke nu"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not now"
+            "state" : "translated",
+            "value" : "Nicht jetzt"
           }
         },
         "el" : {
@@ -11104,14 +11104,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not now"
+            "state" : "translated",
+            "value" : "Ikke nå"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not now"
+            "state" : "translated",
+            "value" : "Niet nu"
           }
         },
         "pl" : {
@@ -11158,8 +11158,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not now"
+            "state" : "translated",
+            "value" : "Inte nu"
           }
         },
         "th" : {
@@ -11223,14 +11223,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off"
+            "state" : "translated",
+            "value" : "Fra"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off"
+            "state" : "translated",
+            "value" : "Aus"
           }
         },
         "el" : {
@@ -11313,14 +11313,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off"
+            "state" : "translated",
+            "value" : "Av"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off"
+            "state" : "translated",
+            "value" : "Uit"
           }
         },
         "pl" : {
@@ -11367,8 +11367,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off"
+            "state" : "translated",
+            "value" : "Av"
           }
         },
         "th" : {
@@ -11432,14 +11432,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off after %@"
+            "state" : "translated",
+            "value" : "Fra efter %@"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off after %@"
+            "state" : "translated",
+            "value" : "Aus nach %@"
           }
         },
         "el" : {
@@ -11522,14 +11522,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off after %@"
+            "state" : "translated",
+            "value" : "Av etter %@"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off after %@"
+            "state" : "translated",
+            "value" : "Uit na %@"
           }
         },
         "pl" : {
@@ -11576,8 +11576,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off after %@"
+            "state" : "translated",
+            "value" : "Av efter %@"
           }
         },
         "th" : {
@@ -11641,14 +11641,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off in %@"
+            "state" : "translated",
+            "value" : "Fra om %@"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off in %@"
+            "state" : "translated",
+            "value" : "Aus in %@"
           }
         },
         "el" : {
@@ -11731,14 +11731,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off in %@"
+            "state" : "translated",
+            "value" : "Av om %@"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off in %@"
+            "state" : "translated",
+            "value" : "Uit over %@"
           }
         },
         "pl" : {
@@ -11785,8 +11785,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off in %@"
+            "state" : "translated",
+            "value" : "Av om %@"
           }
         },
         "th" : {
@@ -11850,14 +11850,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "On"
+            "state" : "translated",
+            "value" : "Til"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "On"
+            "state" : "translated",
+            "value" : "Ein"
           }
         },
         "el" : {
@@ -11940,14 +11940,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "On"
+            "state" : "translated",
+            "value" : "På"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "On"
+            "state" : "translated",
+            "value" : "Aan"
           }
         },
         "pl" : {
@@ -11994,8 +11994,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "On"
+            "state" : "translated",
+            "value" : "På"
           }
         },
         "th" : {
@@ -12059,14 +12059,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open System Settings"
+            "state" : "translated",
+            "value" : "Åbn Systemindstillinger"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open System Settings"
+            "state" : "translated",
+            "value" : "Systemeinstellungen öffnen"
           }
         },
         "el" : {
@@ -12149,14 +12149,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open System Settings"
+            "state" : "translated",
+            "value" : "Åpne Systeminnstillinger"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open System Settings"
+            "state" : "translated",
+            "value" : "Open Systeeminstellingen"
           }
         },
         "pl" : {
@@ -12203,8 +12203,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open System Settings"
+            "state" : "translated",
+            "value" : "Öppna Systeminställningar"
           }
         },
         "th" : {
@@ -12268,14 +12268,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Below a Level"
+            "state" : "translated",
+            "value" : "Pause under niveau"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Below a Level"
+            "state" : "translated",
+            "value" : "Unter Ladestand pausieren"
           }
         },
         "el" : {
@@ -12358,14 +12358,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Below a Level"
+            "state" : "translated",
+            "value" : "Sett på pause under et nivå"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Below a Level"
+            "state" : "translated",
+            "value" : "Pauzeer onder een niveau"
           }
         },
         "pl" : {
@@ -12412,8 +12412,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Below a Level"
+            "state" : "translated",
+            "value" : "Pausa under en nivå"
           }
         },
         "th" : {
@@ -12477,14 +12477,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for Apps in the List"
+            "state" : "translated",
+            "value" : "Pause for apps på listen"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for Apps in the List"
+            "state" : "translated",
+            "value" : "Für Apps in der Liste pausieren"
           }
         },
         "el" : {
@@ -12567,14 +12567,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for Apps in the List"
+            "state" : "translated",
+            "value" : "Sett på pause for apper i listen"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for Apps in the List"
+            "state" : "translated",
+            "value" : "Pauzeer voor apps in de lijst"
           }
         },
         "pl" : {
@@ -12621,8 +12621,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for Apps in the List"
+            "state" : "translated",
+            "value" : "Pausa för appar i listan"
           }
         },
         "th" : {
@@ -12686,14 +12686,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for Every Full-Screen App"
+            "state" : "translated",
+            "value" : "Pause for alle fuldskærmsapps"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for Every Full-Screen App"
+            "state" : "translated",
+            "value" : "Bei jeder Vollbild-App pausieren"
           }
         },
         "el" : {
@@ -12776,14 +12776,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for Every Full-Screen App"
+            "state" : "translated",
+            "value" : "Sett på pause for alle apper i fullskjerm"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for Every Full-Screen App"
+            "state" : "translated",
+            "value" : "Pauzeer bij elke schermvullende app"
           }
         },
         "pl" : {
@@ -12830,8 +12830,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for Every Full-Screen App"
+            "state" : "translated",
+            "value" : "Pausa för alla appar i helskärm"
           }
         },
         "th" : {
@@ -12895,14 +12895,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for Full-Screen Video"
+            "state" : "translated",
+            "value" : "Pause for fuldskærmsvideo"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for Full-Screen Video"
+            "state" : "translated",
+            "value" : "Bei Vollbildvideo pausieren"
           }
         },
         "el" : {
@@ -12985,14 +12985,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for Full-Screen Video"
+            "state" : "translated",
+            "value" : "Sett på pause ved video i fullskjerm"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for Full-Screen Video"
+            "state" : "translated",
+            "value" : "Pauzeer bij schermvullende video"
           }
         },
         "pl" : {
@@ -13039,8 +13039,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for Full-Screen Video"
+            "state" : "translated",
+            "value" : "Pausa för video i helskärm"
           }
         },
         "th" : {
@@ -13104,14 +13104,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause on Battery"
+            "state" : "translated",
+            "value" : "Pause på batteri"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause on Battery"
+            "state" : "translated",
+            "value" : "Im Batteriebetrieb pausieren"
           }
         },
         "el" : {
@@ -13194,14 +13194,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause on Battery"
+            "state" : "translated",
+            "value" : "Sett på pause på batteri"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause on Battery"
+            "state" : "translated",
+            "value" : "Pauzeer op batterij"
           }
         },
         "pl" : {
@@ -13248,8 +13248,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause on Battery"
+            "state" : "translated",
+            "value" : "Pausa på batteri"
           }
         },
         "th" : {
@@ -13313,14 +13313,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Press %@, or choose Turn Off Overbright. If Overbright stops responding, Force Quit it: macOS restores your displays at once."
+            "state" : "translated",
+            "value" : "Tryk på %@, eller vælg “Slå Overbright fra”. Hvis Overbright holder op med at svare, så brug “Afbryd” i Apple-menuen: macOS gendanner straks dine skærme."
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Press %@, or choose Turn Off Overbright. If Overbright stops responding, Force Quit it: macOS restores your displays at once."
+            "state" : "translated",
+            "value" : "Drücke %@ oder wähle „Overbright ausschalten“. Falls Overbright nicht mehr reagiert, verwende „Sofort beenden“: macOS stellt deine Displays umgehend wieder her."
           }
         },
         "el" : {
@@ -13403,14 +13403,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Press %@, or choose Turn Off Overbright. If Overbright stops responding, Force Quit it: macOS restores your displays at once."
+            "state" : "translated",
+            "value" : "Trykk på %@, eller velg «Slå av Overbright». Hvis Overbright slutter å svare, kan du tvangsavslutte den – macOS gjenoppretter skjermene med en gang."
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Press %@, or choose Turn Off Overbright. If Overbright stops responding, Force Quit it: macOS restores your displays at once."
+            "state" : "translated",
+            "value" : "Druk op %@ of kies ‘Schakel Overbright uit’. Als Overbright niet meer reageert, gebruik dan ‘Forceer stop’: macOS herstelt je beeldschermen meteen."
           }
         },
         "pl" : {
@@ -13457,8 +13457,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Press %@, or choose Turn Off Overbright. If Overbright stops responding, Force Quit it: macOS restores your displays at once."
+            "state" : "translated",
+            "value" : "Tryck på %@ eller välj ”Stäng av Overbright”. Om Overbright slutar svara tvångsavslutar du den – macOS återställer dina skärmar direkt."
           }
         },
         "th" : {
@@ -13522,14 +13522,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Quit Overbright"
+            "state" : "translated",
+            "value" : "Slut Overbright"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Quit Overbright"
+            "state" : "translated",
+            "value" : "Overbright beenden"
           }
         },
         "el" : {
@@ -13612,14 +13612,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Quit Overbright"
+            "state" : "translated",
+            "value" : "Avslutt Overbright"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Quit Overbright"
+            "state" : "translated",
+            "value" : "Stop Overbright"
           }
         },
         "pl" : {
@@ -13666,8 +13666,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Quit Overbright"
+            "state" : "translated",
+            "value" : "Avsluta Overbright"
           }
         },
         "th" : {
@@ -13731,14 +13731,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Run Self-Test…"
+            "state" : "translated",
+            "value" : "Kør selvtest…"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Run Self-Test…"
+            "state" : "translated",
+            "value" : "Selbsttest ausführen …"
           }
         },
         "el" : {
@@ -13821,14 +13821,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Run Self-Test…"
+            "state" : "translated",
+            "value" : "Kjør selvtest…"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Run Self-Test…"
+            "state" : "translated",
+            "value" : "Voer zelftest uit…"
           }
         },
         "pl" : {
@@ -13875,8 +13875,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Run Self-Test…"
+            "state" : "translated",
+            "value" : "Kör självtest…"
           }
         },
         "th" : {
@@ -13940,14 +13940,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Run self-test…"
+            "state" : "translated",
+            "value" : "Kør selvtest…"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Run self-test…"
+            "state" : "translated",
+            "value" : "Selbsttest ausführen …"
           }
         },
         "el" : {
@@ -14030,14 +14030,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Run self-test…"
+            "state" : "translated",
+            "value" : "Kjør selvtest…"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Run self-test…"
+            "state" : "translated",
+            "value" : "Voer zelftest uit…"
           }
         },
         "pl" : {
@@ -14084,8 +14084,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Run self-test…"
+            "state" : "translated",
+            "value" : "Kör självtest…"
           }
         },
         "th" : {
@@ -14149,14 +14149,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Safe limit reached: choose Peak for more"
+            "state" : "translated",
+            "value" : "Grænsen Sikker er nået – vælg Top for mere"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Safe limit reached: choose Peak for more"
+            "state" : "translated",
+            "value" : "Grenze „Sicher“ erreicht: Wähle „Spitze“ für mehr Helligkeit"
           }
         },
         "el" : {
@@ -14239,14 +14239,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Safe limit reached: choose Peak for more"
+            "state" : "translated",
+            "value" : "Trygg grense er nådd: velg «Topp» for mer"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Safe limit reached: choose Peak for more"
+            "state" : "translated",
+            "value" : "Limiet ‘Veilig’ bereikt: kies ‘Piek’ voor meer"
           }
         },
         "pl" : {
@@ -14293,8 +14293,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Safe limit reached: choose Peak for more"
+            "state" : "translated",
+            "value" : "Gränsen Säker är nådd – välj Topp för mer"
           }
         },
         "th" : {
@@ -14358,14 +14358,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Same level on all displays"
+            "state" : "translated",
+            "value" : "Samme niveau på alle skærme"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Same level on all displays"
+            "state" : "translated",
+            "value" : "Gleiche Stufe auf allen Displays"
           }
         },
         "el" : {
@@ -14448,14 +14448,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Same level on all displays"
+            "state" : "translated",
+            "value" : "Samme nivå på alle skjermer"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Same level on all displays"
+            "state" : "translated",
+            "value" : "Zelfde niveau op alle beeldschermen"
           }
         },
         "pl" : {
@@ -14502,8 +14502,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Same level on all displays"
+            "state" : "translated",
+            "value" : "Samma nivå på alla skärmar"
           }
         },
         "th" : {
@@ -14567,14 +14567,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Settings for This Display…"
+            "state" : "translated",
+            "value" : "Indstillinger til denne skærm…"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Settings for This Display…"
+            "state" : "translated",
+            "value" : "Einstellungen für dieses Display …"
           }
         },
         "el" : {
@@ -14657,14 +14657,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Settings for This Display…"
+            "state" : "translated",
+            "value" : "Innstillinger for denne skjermen…"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Settings for This Display…"
+            "state" : "translated",
+            "value" : "Instellingen voor dit beeldscherm…"
           }
         },
         "pl" : {
@@ -14711,8 +14711,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Settings for This Display…"
+            "state" : "translated",
+            "value" : "Inställningar för den här skärmen…"
           }
         },
         "th" : {
@@ -14776,14 +14776,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Settings…"
+            "state" : "translated",
+            "value" : "Indstillinger…"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Settings…"
+            "state" : "translated",
+            "value" : "Einstellungen …"
           }
         },
         "el" : {
@@ -14866,14 +14866,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Settings…"
+            "state" : "translated",
+            "value" : "Innstillinger…"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Settings…"
+            "state" : "translated",
+            "value" : "Instellingen…"
           }
         },
         "pl" : {
@@ -14920,8 +14920,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Settings…"
+            "state" : "translated",
+            "value" : "Inställningar…"
           }
         },
         "th" : {
@@ -14985,13 +14985,13 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Standard"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Standard"
           }
         },
@@ -15075,14 +15075,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Standard"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Standard"
+            "state" : "translated",
+            "value" : "Standaard"
           }
         },
         "pl" : {
@@ -15129,7 +15129,7 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Standard"
           }
         },
@@ -15194,14 +15194,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Stop Dimming"
+            "state" : "translated",
+            "value" : "Stop dæmpning"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Stop Dimming"
+            "state" : "translated",
+            "value" : "Abdunkeln beenden"
           }
         },
         "el" : {
@@ -15284,14 +15284,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Stop Dimming"
+            "state" : "translated",
+            "value" : "Stopp demping"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Stop Dimming"
+            "state" : "translated",
+            "value" : "Stop dimmen"
           }
         },
         "pl" : {
@@ -15338,8 +15338,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Stop Dimming"
+            "state" : "translated",
+            "value" : "Sluta tona ned"
           }
         },
         "th" : {
@@ -15403,14 +15403,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sunlight"
+            "state" : "translated",
+            "value" : "Sollys"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sunlight"
+            "state" : "translated",
+            "value" : "Sonnenlicht"
           }
         },
         "el" : {
@@ -15493,14 +15493,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sunlight"
+            "state" : "translated",
+            "value" : "Sollys"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sunlight"
+            "state" : "translated",
+            "value" : "Zonlicht"
           }
         },
         "pl" : {
@@ -15547,8 +15547,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sunlight"
+            "state" : "translated",
+            "value" : "Solljus"
           }
         },
         "th" : {
@@ -15612,14 +15612,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "The display looks wrong even after quitting"
+            "state" : "translated",
+            "value" : "Skærmen ser forkert ud, selv efter at Overbright er afsluttet"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "The display looks wrong even after quitting"
+            "state" : "translated",
+            "value" : "Das Display sieht auch nach dem Beenden falsch aus"
           }
         },
         "el" : {
@@ -15702,14 +15702,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "The display looks wrong even after quitting"
+            "state" : "translated",
+            "value" : "Skjermen ser feil ut selv etter at Overbright er avsluttet"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "The display looks wrong even after quitting"
+            "state" : "translated",
+            "value" : "Het beeldscherm ziet er ook na het stoppen verkeerd uit"
           }
         },
         "pl" : {
@@ -15756,8 +15756,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "The display looks wrong even after quitting"
+            "state" : "translated",
+            "value" : "Skärmen ser fel ut även efter att Overbright har avslutats"
           }
         },
         "th" : {
@@ -15821,14 +15821,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "The screen didn’t get brighter"
+            "state" : "translated",
+            "value" : "Skærmen blev ikke lysere"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "The screen didn’t get brighter"
+            "state" : "translated",
+            "value" : "Der Bildschirm wurde nicht heller"
           }
         },
         "el" : {
@@ -15911,14 +15911,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "The screen didn’t get brighter"
+            "state" : "translated",
+            "value" : "Skjermen ble ikke lysere"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "The screen didn’t get brighter"
+            "state" : "translated",
+            "value" : "Het scherm werd niet helderder"
           }
         },
         "pl" : {
@@ -15965,8 +15965,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "The screen didn’t get brighter"
+            "state" : "translated",
+            "value" : "Skärmen blev inte ljusare"
           }
         },
         "th" : {
@@ -16030,13 +16030,13 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Timer"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Timer"
           }
         },
@@ -16120,13 +16120,13 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Timer"
+            "state" : "translated",
+            "value" : "Tidtaker"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Timer"
           }
         },
@@ -16174,7 +16174,7 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Timer"
           }
         },
@@ -16239,14 +16239,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To put Overbright in Control Center or the menu bar, make a shortcut with Turn Overbright On or Off, then add Control Center’s Run Shortcut control."
+            "state" : "translated",
+            "value" : "Hvis du vil have Overbright i Kontrolcenter eller på menulinjen, skal du oprette en genvej med “Slå Overbright til eller fra” og derefter tilføje betjeningsmuligheden “Start genvej” i Kontrolcenter."
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To put Overbright in Control Center or the menu bar, make a shortcut with Turn Overbright On or Off, then add Control Center’s Run Shortcut control."
+            "state" : "translated",
+            "value" : "Um Overbright ins Kontrollzentrum oder in die Menüleiste zu bringen, erstelle einen Kurzbefehl mit „Overbright ein- oder ausschalten“ und füge dann im Kontrollzentrum das Steuerelement „Kurzbefehl ausführen“ hinzu."
           }
         },
         "el" : {
@@ -16329,14 +16329,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To put Overbright in Control Center or the menu bar, make a shortcut with Turn Overbright On or Off, then add Control Center’s Run Shortcut control."
+            "state" : "translated",
+            "value" : "For å legge Overbright i Kontrollsenter eller menylinjen lager du en snarvei med «Slå Overbright på eller av» og legger så til Kontrollsenter-kontrollen «Utfør snarvei»."
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To put Overbright in Control Center or the menu bar, make a shortcut with Turn Overbright On or Off, then add Control Center’s Run Shortcut control."
+            "state" : "translated",
+            "value" : "Om Overbright in het Bedieningspaneel of de menubalk te zetten, maak je een opdracht met ‘Schakel Overbright in of uit’ en voeg je daarna de regelaar ‘Voer opdracht uit’ toe aan het Bedieningspaneel."
           }
         },
         "pl" : {
@@ -16383,8 +16383,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To put Overbright in Control Center or the menu bar, make a shortcut with Turn Overbright On or Off, then add Control Center’s Run Shortcut control."
+            "state" : "translated",
+            "value" : "Om du vill lägga Overbright i Kontrollcenter eller menyraden skapar du en genväg med ”Slå på eller stäng av Overbright” och lägger sedan till reglaget ”Kör genväg” i Kontrollcenter."
           }
         },
         "th" : {
@@ -16448,14 +16448,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Try Again"
+            "state" : "translated",
+            "value" : "Prøv igen"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Try Again"
+            "state" : "translated",
+            "value" : "Wiederholen"
           }
         },
         "el" : {
@@ -16538,14 +16538,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Try Again"
+            "state" : "translated",
+            "value" : "Prøv igjen"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Try Again"
+            "state" : "translated",
+            "value" : "Probeer opnieuw"
           }
         },
         "pl" : {
@@ -16592,8 +16592,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Try Again"
+            "state" : "translated",
+            "value" : "Försök igen"
           }
         },
         "th" : {
@@ -16657,14 +16657,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Try again"
+            "state" : "translated",
+            "value" : "Prøv igen"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Try again"
+            "state" : "translated",
+            "value" : "Wiederholen"
           }
         },
         "el" : {
@@ -16747,14 +16747,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Try again"
+            "state" : "translated",
+            "value" : "Prøv igjen"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Try again"
+            "state" : "translated",
+            "value" : "Probeer opnieuw"
           }
         },
         "pl" : {
@@ -16801,8 +16801,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Try again"
+            "state" : "translated",
+            "value" : "Försök igen"
           }
         },
         "th" : {
@@ -16866,14 +16866,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Off After"
+            "state" : "translated",
+            "value" : "Slå fra efter"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Off After"
+            "state" : "translated",
+            "value" : "Ausschalten nach"
           }
         },
         "el" : {
@@ -16956,14 +16956,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Off After"
+            "state" : "translated",
+            "value" : "Slå av etter"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Off After"
+            "state" : "translated",
+            "value" : "Schakel uit na"
           }
         },
         "pl" : {
@@ -17010,8 +17010,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Off After"
+            "state" : "translated",
+            "value" : "Stäng av efter"
           }
         },
         "th" : {
@@ -17075,14 +17075,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On"
+            "state" : "translated",
+            "value" : "Slå til"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On"
+            "state" : "translated",
+            "value" : "Einschalten"
           }
         },
         "el" : {
@@ -17165,14 +17165,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On"
+            "state" : "translated",
+            "value" : "Slå på"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On"
+            "state" : "translated",
+            "value" : "Schakel in"
           }
         },
         "pl" : {
@@ -17219,8 +17219,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On"
+            "state" : "translated",
+            "value" : "Slå på"
           }
         },
         "th" : {
@@ -17284,14 +17284,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn off"
+            "state" : "translated",
+            "value" : "Slå fra"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn off"
+            "state" : "translated",
+            "value" : "Ausschalten"
           }
         },
         "el" : {
@@ -17374,14 +17374,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn off"
+            "state" : "translated",
+            "value" : "Slå av"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn off"
+            "state" : "translated",
+            "value" : "Schakel uit"
           }
         },
         "pl" : {
@@ -17428,8 +17428,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn off"
+            "state" : "translated",
+            "value" : "Stäng av"
           }
         },
         "th" : {
@@ -17493,14 +17493,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn on"
+            "state" : "translated",
+            "value" : "Slå til"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn on"
+            "state" : "translated",
+            "value" : "Einschalten"
           }
         },
         "el" : {
@@ -17583,14 +17583,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn on"
+            "state" : "translated",
+            "value" : "Slå på"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn on"
+            "state" : "translated",
+            "value" : "Schakel in"
           }
         },
         "pl" : {
@@ -17637,8 +17637,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn on"
+            "state" : "translated",
+            "value" : "Slå på"
           }
         },
         "th" : {
@@ -17702,14 +17702,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn the display brightness all the way up; Overbright adds to it. Check the display’s verdict in Settings ▸ Displays. On a MacBook Pro, use the 1600-nit preset. On some Macs, macOS ignores color table changes: choose Calibrate… to check, or try Compatibility mode. Run Self-Test… shows what macOS reports."
+            "state" : "translated",
+            "value" : "Skru helt op for skærmens lysstyrke – Overbright lægger lys oven i. Tjek skærmens status under Indstillinger ▸ Skærme. På en MacBook Pro skal du bruge forindstillingen med 1600 nits. På nogle Mac-computere ignorerer macOS ændringer i farvetabellen: Vælg Kalibrer… for at tjekke det, eller prøv kompatibilitetstilstand. Kør selvtest… viser, hvad macOS rapporterer."
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn the display brightness all the way up; Overbright adds to it. Check the display’s verdict in Settings ▸ Displays. On a MacBook Pro, use the 1600-nit preset. On some Macs, macOS ignores color table changes: choose Calibrate… to check, or try Compatibility mode. Run Self-Test… shows what macOS reports."
+            "state" : "translated",
+            "value" : "Stelle die Displayhelligkeit ganz hoch; Overbright erhöht sie zusätzlich. Prüfe die Bewertung des Displays unter Einstellungen ▸ Displays. Verwende auf einem MacBook Pro die Voreinstellung mit 1600 Nits. Auf manchen Macs ignoriert macOS Änderungen der Farbtabelle: Wähle „Kalibrieren …“, um das zu prüfen, oder probiere den Kompatibilitätsmodus. „Selbsttest ausführen …“ zeigt, was macOS meldet."
           }
         },
         "el" : {
@@ -17792,14 +17792,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn the display brightness all the way up; Overbright adds to it. Check the display’s verdict in Settings ▸ Displays. On a MacBook Pro, use the 1600-nit preset. On some Macs, macOS ignores color table changes: choose Calibrate… to check, or try Compatibility mode. Run Self-Test… shows what macOS reports."
+            "state" : "translated",
+            "value" : "Skru lysstyrken på skjermen helt opp – Overbright legger til mer. Sjekk skjermens vurdering i Innstillinger ▸ Skjermer. På en MacBook Pro bruker du forhåndsinnstillingen med 1600 nit. På noen Macer ignorerer macOS endringer i fargetabellen: velg «Kalibrer…» for å sjekke, eller prøv kompatibilitetsmodus. «Kjør selvtest…» viser hva macOS rapporterer."
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn the display brightness all the way up; Overbright adds to it. Check the display’s verdict in Settings ▸ Displays. On a MacBook Pro, use the 1600-nit preset. On some Macs, macOS ignores color table changes: choose Calibrate… to check, or try Compatibility mode. Run Self-Test… shows what macOS reports."
+            "state" : "translated",
+            "value" : "Zet de helderheid van het beeldscherm helemaal omhoog; Overbright voegt daar licht aan toe. Bekijk de beoordeling van het beeldscherm in Instellingen ▸ Beeldschermen. Gebruik op een MacBook Pro de voorinstelling van 1600 nits. Op sommige Macs negeert macOS wijzigingen in de kleurentabel: kies ‘Kalibreer…’ om dit te controleren, of probeer de compatibiliteitsmodus. ‘Voer zelftest uit…’ laat zien wat macOS rapporteert."
           }
         },
         "pl" : {
@@ -17846,8 +17846,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn the display brightness all the way up; Overbright adds to it. Check the display’s verdict in Settings ▸ Displays. On a MacBook Pro, use the 1600-nit preset. On some Macs, macOS ignores color table changes: choose Calibrate… to check, or try Compatibility mode. Run Self-Test… shows what macOS reports."
+            "state" : "translated",
+            "value" : "Höj skärmens ljusstyrka hela vägen – Overbright lägger till ljus ovanpå. Kontrollera skärmens status i Inställningar ▸ Skärmar. På en MacBook Pro använder du förinställningen för 1600 cd/㎡. På vissa Mac-datorer ignorerar macOS ändringar i färgtabellen – välj Kalibrera… för att kontrollera, eller prova kompatibilitetsläge. Kör självtest… visar vad macOS rapporterar."
           }
         },
         "th" : {
@@ -17911,14 +17911,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use Compatibility mode"
+            "state" : "translated",
+            "value" : "Brug kompatibilitetstilstand"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use Compatibility mode"
+            "state" : "translated",
+            "value" : "Kompatibilitätsmodus nutzen"
           }
         },
         "el" : {
@@ -18001,14 +18001,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use Compatibility mode"
+            "state" : "translated",
+            "value" : "Bruk kompatibilitetsmodus"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use Compatibility mode"
+            "state" : "translated",
+            "value" : "Gebruik compatibiliteitsmodus"
           }
         },
         "pl" : {
@@ -18055,8 +18055,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use Compatibility mode"
+            "state" : "translated",
+            "value" : "Använd kompatibilitetsläge"
           }
         },
         "th" : {
@@ -18120,14 +18120,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use Extra Brightness on This Display"
+            "state" : "translated",
+            "value" : "Brug ekstra lysstyrke på denne skærm"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use Extra Brightness on This Display"
+            "state" : "translated",
+            "value" : "Zusatzhelligkeit auf diesem Display verwenden"
           }
         },
         "el" : {
@@ -18210,14 +18210,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use Extra Brightness on This Display"
+            "state" : "translated",
+            "value" : "Bruk ekstra lysstyrke på denne skjermen"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use Extra Brightness on This Display"
+            "state" : "translated",
+            "value" : "Gebruik extra helderheid op dit beeldscherm"
           }
         },
         "pl" : {
@@ -18264,8 +18264,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use Extra Brightness on This Display"
+            "state" : "translated",
+            "value" : "Använd extra ljusstyrka på den här skärmen"
           }
         },
         "th" : {
@@ -18329,14 +18329,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use extra brightness on this OLED display?"
+            "state" : "translated",
+            "value" : "Vil du bruge ekstra lysstyrke på denne OLED-skærm?"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use extra brightness on this OLED display?"
+            "state" : "translated",
+            "value" : "Zusatzhelligkeit auf diesem OLED-Display verwenden?"
           }
         },
         "el" : {
@@ -18419,14 +18419,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use extra brightness on this OLED display?"
+            "state" : "translated",
+            "value" : "Vil du bruke ekstra lysstyrke på denne OLED-skjermen?"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use extra brightness on this OLED display?"
+            "state" : "translated",
+            "value" : "Extra helderheid gebruiken op dit OLED-beeldscherm?"
           }
         },
         "pl" : {
@@ -18473,8 +18473,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use extra brightness on this OLED display?"
+            "state" : "translated",
+            "value" : "Vill du använda extra ljusstyrka på den här OLED-skärmen?"
           }
         },
         "th" : {
@@ -18538,14 +18538,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Warmth"
+            "state" : "translated",
+            "value" : "Varme"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Warmth"
+            "state" : "translated",
+            "value" : "Wärme"
           }
         },
         "el" : {
@@ -18628,14 +18628,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Warmth"
+            "state" : "translated",
+            "value" : "Varme"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Warmth"
+            "state" : "translated",
+            "value" : "Warmte"
           }
         },
         "pl" : {
@@ -18682,8 +18682,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Warmth"
+            "state" : "translated",
+            "value" : "Värme"
           }
         },
         "th" : {
@@ -18747,14 +18747,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Where is the menu bar icon?"
+            "state" : "translated",
+            "value" : "Hvor er symbolet på menulinjen?"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Where is the menu bar icon?"
+            "state" : "translated",
+            "value" : "Wo ist das Symbol in der Menüleiste?"
           }
         },
         "el" : {
@@ -18837,14 +18837,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Where is the menu bar icon?"
+            "state" : "translated",
+            "value" : "Hvor er symbolet i menylinjen?"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Where is the menu bar icon?"
+            "state" : "translated",
+            "value" : "Waar is het menubalksymbool?"
           }
         },
         "pl" : {
@@ -18891,8 +18891,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Where is the menu bar icon?"
+            "state" : "translated",
+            "value" : "Var är symbolen i menyraden?"
           }
         },
         "th" : {
@@ -18956,14 +18956,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "While extra brightness is on, HDR highlights can’t go above the brightened white. Overbright pauses for full-screen video and for video players; add other apps in Settings ▸ Automations."
+            "state" : "translated",
+            "value" : "Når ekstra lysstyrke er slået til, kan HDR-højlys ikke blive lysere end den forstærkede hvide farve. Overbright holder pause ved video på fuld skærm og for videoafspillere – tilføj andre apps under Indstillinger ▸ Automatiseringer."
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "While extra brightness is on, HDR highlights can’t go above the brightened white. Overbright pauses for full-screen video and for video players; add other apps in Settings ▸ Automations."
+            "state" : "translated",
+            "value" : "Solange die Zusatzhelligkeit aktiv ist, können HDR-Spitzlichter nicht heller als das aufgehellte Weiß werden. Overbright pausiert bei Vollbildvideos und in Videoplayern; weitere Apps kannst du unter Einstellungen ▸ Automationen hinzufügen."
           }
         },
         "el" : {
@@ -19046,14 +19046,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "While extra brightness is on, HDR highlights can’t go above the brightened white. Overbright pauses for full-screen video and for video players; add other apps in Settings ▸ Automations."
+            "state" : "translated",
+            "value" : "Mens ekstra lysstyrke er på, kan ikke de lyseste HDR-partiene bli lysere enn det forsterkede hvite. Overbright settes på pause for video i fullskjerm og for videospillere – legg til andre apper i Innstillinger ▸ Automatiseringer."
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "While extra brightness is on, HDR highlights can’t go above the brightened white. Overbright pauses for full-screen video and for video players; add other apps in Settings ▸ Automations."
+            "state" : "translated",
+            "value" : "Als extra helderheid is ingeschakeld, kunnen de hoge lichten van HDR niet boven het versterkte wit uitkomen. Overbright pauzeert bij schermvullende video en bij videospelers; voeg andere apps toe in Instellingen ▸ Automatisering."
           }
         },
         "pl" : {
@@ -19100,8 +19100,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "While extra brightness is on, HDR highlights can’t go above the brightened white. Overbright pauses for full-screen video and for video players; add other apps in Settings ▸ Automations."
+            "state" : "translated",
+            "value" : "När extra ljusstyrka är på kan HDR-högdagrar inte bli ljusare än det förstärkta vita. Overbright pausar för video i helskärm och för videospelare – lägg till andra appar i Inställningar ▸ Automatiseringar."
           }
         },
         "th" : {
@@ -19165,14 +19165,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Why does extra brightness fade when I lower the brightness?"
+            "state" : "translated",
+            "value" : "Hvorfor aftager den ekstra lysstyrke, når jeg skruer ned for lysstyrken?"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Why does extra brightness fade when I lower the brightness?"
+            "state" : "translated",
+            "value" : "Warum lässt die Zusatzhelligkeit nach, wenn ich die Helligkeit verringere?"
           }
         },
         "el" : {
@@ -19255,14 +19255,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Why does extra brightness fade when I lower the brightness?"
+            "state" : "translated",
+            "value" : "Hvorfor avtar ekstra lysstyrke når jeg senker lysstyrken?"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Why does extra brightness fade when I lower the brightness?"
+            "state" : "translated",
+            "value" : "Waarom neemt extra helderheid af als ik de helderheid verlaag?"
           }
         },
         "pl" : {
@@ -19309,8 +19309,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Why does extra brightness fade when I lower the brightness?"
+            "state" : "translated",
+            "value" : "Varför avtar den extra ljusstyrkan när jag sänker ljusstyrkan?"
           }
         },
         "th" : {
@@ -19374,14 +19374,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Why is extra brightness limited?"
+            "state" : "translated",
+            "value" : "Hvorfor er den ekstra lysstyrke begrænset?"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Why is extra brightness limited?"
+            "state" : "translated",
+            "value" : "Warum ist die Zusatzhelligkeit begrenzt?"
           }
         },
         "el" : {
@@ -19464,14 +19464,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Why is extra brightness limited?"
+            "state" : "translated",
+            "value" : "Hvorfor er ekstra lysstyrke begrenset?"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Why is extra brightness limited?"
+            "state" : "translated",
+            "value" : "Waarom is extra helderheid beperkt?"
           }
         },
         "pl" : {
@@ -19518,8 +19518,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Why is extra brightness limited?"
+            "state" : "translated",
+            "value" : "Varför är den extra ljusstyrkan begränsad?"
           }
         },
         "th" : {
@@ -19583,14 +19583,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Why?"
+            "state" : "translated",
+            "value" : "Hvorfor?"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Why?"
+            "state" : "translated",
+            "value" : "Warum?"
           }
         },
         "el" : {
@@ -19673,14 +19673,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Why?"
+            "state" : "translated",
+            "value" : "Hvorfor?"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Why?"
+            "state" : "translated",
+            "value" : "Waarom?"
           }
         },
         "pl" : {
@@ -19727,8 +19727,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Why?"
+            "state" : "translated",
+            "value" : "Varför?"
           }
         },
         "th" : {
@@ -19792,14 +19792,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "With Add extra brightness only near full brightness on, Overbright adds light only when the display is near full brightness, so the brightness keys keep their normal range. Turn it off in Settings ▸ Displays to multiply any brightness."
+            "state" : "translated",
+            "value" : "Når “Tilføj kun ekstra lysstyrke nær fuld lysstyrke” er slået til, tilføjer Overbright kun lys, når skærmen er tæt på fuld lysstyrke, så lysstyrketasterne beholder deres normale område. Slå indstillingen fra under Indstillinger ▸ Skærme for at forstærke enhver lysstyrke."
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "With Add extra brightness only near full brightness on, Overbright adds light only when the display is near full brightness, so the brightness keys keep their normal range. Turn it off in Settings ▸ Displays to multiply any brightness."
+            "state" : "translated",
+            "value" : "Wenn „Zusatzhelligkeit nur nahe voller Helligkeit hinzufügen“ aktiv ist, fügt Overbright nur Licht hinzu, wenn das Display nahe voller Helligkeit ist, sodass die Helligkeitstasten ihren normalen Bereich behalten. Deaktiviere die Option unter Einstellungen ▸ Displays, um jede Helligkeit zu verstärken."
           }
         },
         "el" : {
@@ -19882,14 +19882,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "With Add extra brightness only near full brightness on, Overbright adds light only when the display is near full brightness, so the brightness keys keep their normal range. Turn it off in Settings ▸ Displays to multiply any brightness."
+            "state" : "translated",
+            "value" : "Med «Legg til ekstra lysstyrke bare nær full lysstyrke» på legger Overbright bare til lys når skjermen er nær full lysstyrke, så lysstyrketastene beholder sitt vanlige område. Slå den av i Innstillinger ▸ Skjermer for å forsterke lysstyrken på alle nivåer."
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "With Add extra brightness only near full brightness on, Overbright adds light only when the display is near full brightness, so the brightness keys keep their normal range. Turn it off in Settings ▸ Displays to multiply any brightness."
+            "state" : "translated",
+            "value" : "Als ‘Voeg alleen extra helderheid toe bij bijna volle helderheid’ is ingeschakeld, voegt Overbright alleen licht toe als het beeldscherm bijna op volle helderheid staat, zodat de helderheidstoetsen hun normale bereik houden. Schakel dit uit in Instellingen ▸ Beeldschermen om elke helderheid te vermenigvuldigen."
           }
         },
         "pl" : {
@@ -19936,8 +19936,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "With Add extra brightness only near full brightness on, Overbright adds light only when the display is near full brightness, so the brightness keys keep their normal range. Turn it off in Settings ▸ Displays to multiply any brightness."
+            "state" : "translated",
+            "value" : "När ”Lägg bara till extra ljusstyrka nära full ljusstyrka” är på lägger Overbright bara till ljus när skärmen är nära full ljusstyrka, så att ljusstyrketangenterna behåller sitt vanliga omfång. Stäng av inställningen i Inställningar ▸ Skärmar för att förstärka all ljusstyrka."
           }
         },
         "th" : {
@@ -20001,14 +20001,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Yes. More light takes more power, roughly in proportion. By default Overbright pauses below %@ battery and in Low Power Mode."
+            "state" : "translated",
+            "value" : "Ja. Mere lys kræver mere strøm, omtrent proportionalt. Som standard holder Overbright pause, når batteriet er under %@, og når Energibesparende funktion er slået til."
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Yes. More light takes more power, roughly in proportion. By default Overbright pauses below %@ battery and in Low Power Mode."
+            "state" : "translated",
+            "value" : "Ja. Mehr Licht braucht mehr Energie, ungefähr proportional. Standardmäßig pausiert Overbright bei einem Ladestand unter %@ und im Stromsparmodus."
           }
         },
         "el" : {
@@ -20091,14 +20091,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Yes. More light takes more power, roughly in proportion. By default Overbright pauses below %@ battery and in Low Power Mode."
+            "state" : "translated",
+            "value" : "Ja. Mer lys krever mer strøm, omtrent i samme forhold. Som standard settes Overbright på pause når batteriet er under %@, og i Spareblussmodus."
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Yes. More light takes more power, roughly in proportion. By default Overbright pauses below %@ battery and in Low Power Mode."
+            "state" : "translated",
+            "value" : "Ja. Meer licht kost meer energie, ongeveer naar verhouding. In de standaardinstellingen pauzeert Overbright als de batterij onder %@ komt en in de energiebesparingsmodus."
           }
         },
         "pl" : {
@@ -20145,8 +20145,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Yes. More light takes more power, roughly in proportion. By default Overbright pauses below %@ battery and in Low Power Mode."
+            "state" : "translated",
+            "value" : "Ja. Mer ljus drar mer ström, ungefär proportionellt. Som standard pausar Overbright när batterinivån är under %@ och när strömsparläget är på."
           }
         },
         "th" : {
@@ -20210,14 +20210,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "macOS decides how much extra range a display gets. It gives less when the surroundings are already bright, the display is warm or the battery is low. The chip on each display says what limits it."
+            "state" : "translated",
+            "value" : "macOS bestemmer, hvor stor en lysreserve en skærm får. Den bliver mindre, når omgivelserne allerede er lyse, skærmen er varm, eller batteriniveauet er lavt. Etiketten på hver skærm viser, hvad der begrænser den."
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "macOS decides how much extra range a display gets. It gives less when the surroundings are already bright, the display is warm or the battery is low. The chip on each display says what limits it."
+            "state" : "translated",
+            "value" : "macOS entscheidet, wie viel Helligkeitsreserve ein Display bekommt. Es gibt weniger, wenn die Umgebung bereits hell, das Display warm oder die Batterie schwach ist. Der Hinweis auf der Karte jedes Displays nennt die Ursache."
           }
         },
         "el" : {
@@ -20300,14 +20300,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "macOS decides how much extra range a display gets. It gives less when the surroundings are already bright, the display is warm or the battery is low. The chip on each display says what limits it."
+            "state" : "translated",
+            "value" : "macOS bestemmer hvor mye lysreserve en skjerm får. Den gir mindre når omgivelsene allerede er lyse, skjermen er varm eller batterinivået er lavt. Merket på hver skjerm viser hva som begrenser den."
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "macOS decides how much extra range a display gets. It gives less when the surroundings are already bright, the display is warm or the battery is low. The chip on each display says what limits it."
+            "state" : "translated",
+            "value" : "macOS bepaalt hoeveel extra bereik een beeldscherm krijgt. Het geeft minder als de omgeving al licht is, het beeldscherm warm is of de batterij bijna leeg is. Het label bij elk beeldscherm geeft aan wat het beperkt."
           }
         },
         "pl" : {
@@ -20354,8 +20354,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "macOS decides how much extra range a display gets. It gives less when the surroundings are already bright, the display is warm or the battery is low. The chip on each display says what limits it."
+            "state" : "translated",
+            "value" : "macOS avgör hur stor ljusreserv en skärm får. Den blir mindre när omgivningen redan är ljus, skärmen är varm eller batterinivån är låg. Etiketten på varje skärm visar vad som begränsar den."
           }
         },
         "th" : {

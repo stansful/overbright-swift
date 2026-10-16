@@ -24,14 +24,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "Ekstra lysstyrke"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "Zusatzhelligkeit"
           }
         },
         "el" : {
@@ -114,14 +114,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "Ekstra lysstyrke"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "Extra helderheid"
           }
         },
         "pl" : {
@@ -168,8 +168,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "Extra ljusstyrka"
           }
         },
         "th" : {
@@ -233,14 +233,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra brightness"
+            "state" : "translated",
+            "value" : "Ekstra lysstyrke"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra brightness"
+            "state" : "translated",
+            "value" : "Zusatzhelligkeit"
           }
         },
         "el" : {
@@ -323,14 +323,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra brightness"
+            "state" : "translated",
+            "value" : "Ekstra lysstyrke"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra brightness"
+            "state" : "translated",
+            "value" : "Extra helderheid"
           }
         },
         "pl" : {
@@ -377,8 +377,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra brightness"
+            "state" : "translated",
+            "value" : "Extra ljusstyrka"
           }
         },
         "th" : {
@@ -442,13 +442,13 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },
@@ -532,13 +532,13 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },
@@ -586,7 +586,7 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },

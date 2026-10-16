@@ -25,14 +25,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "Tilbage til Standard i ${applicationName}"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "${applicationName} zurück zu Standard"
           }
         },
         "el" : {
@@ -123,14 +123,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "Tilbake til Standard i ${applicationName}"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "${applicationName} terug naar Standaard"
           }
         },
         "pl" : {
@@ -177,8 +177,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "Tillbaka till Standard i ${applicationName}"
           }
         },
         "th" : {
@@ -243,14 +243,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "Slå ${applicationName} til eller fra"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "${applicationName} ein- oder ausschalten"
           }
         },
         "el" : {
@@ -341,14 +341,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "Slå ${applicationName} på eller av"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "Schakel ${applicationName} in of uit"
           }
         },
         "pl" : {
@@ -395,8 +395,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "Slå på eller stäng av ${applicationName}"
           }
         },
         "th" : {

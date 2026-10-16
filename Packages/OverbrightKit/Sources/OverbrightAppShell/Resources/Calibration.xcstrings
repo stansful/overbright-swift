@@ -24,14 +24,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "Kalibrer %@"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "„%@“ kalibrieren"
           }
         },
         "el" : {
@@ -114,14 +114,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "Kalibrering av %@"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "%@ kalibreren"
           }
         },
         "pl" : {
@@ -168,8 +168,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "Kalibrera %@"
           }
         },
         "th" : {
@@ -233,14 +233,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Overbright-selvtest %@"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Overbright-Selbsttest %@"
           }
         },
         "el" : {
@@ -323,14 +323,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Overbright-selvtest %@"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Overbright-zelftest %@"
           }
         },
         "pl" : {
@@ -377,8 +377,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Overbright-självtest %@"
           }
         },
         "th" : {
@@ -442,14 +442,14 @@
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "Selvtest"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "Selbsttest"
           }
         },
         "el" : {
@@ -532,14 +532,14 @@
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "Selvtest"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "Zelftest"
           }
         },
         "pl" : {
@@ -586,8 +586,8 @@
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "Självtest"
           }
         },
         "th" : {
