@@ -1,8 +1,9 @@
 // OverbrightSettingsUI/Components/AboutContent.swift — Settings ▸ About (DESIGN.md §7.9): the compiled icon as the system
 // renders it (`NSApp.applicationIconImage`, so Tinted and Clear apply), "Overbright", version and build; Check for
 // Updates with the result inline (only when configured); "Free and open source under the MIT License."; Acknowledgments…;
-// the privacy statement; Show Welcome…; Help; a GitHub link (only when configured). Ported from Cranny's AboutPane (the
-// owner's MIT code) without the tutorial. WP11's About pane shows it.
+// the privacy statement; Show Welcome…; Help; a GitHub link to the repository the update check asks (only when
+// configured, `UpdateChecking.repositoryURL`). Ported from Cranny's AboutPane (the owner's MIT code) without the
+// tutorial. WP11's About pane shows it.
 import AppKit
 import Foundation
 import OverbrightCore
@@ -59,11 +60,10 @@ struct AboutContent: View {
                comment: "Settings search: keyword that finds the About pane and the update check")
     }
 
-    /// "owner/repo" from Info.plist (`OverbrightGitHubRepository`); empty or missing = no link and no update check.
-    static var repository: URL? {
-        guard let slug = Bundle.main.object(forInfoDictionaryKey: "OverbrightGitHubRepository") as? String,
-              !slug.trimmingCharacters(in: .whitespaces).isEmpty else { return nil }
-        return URL(string: "https://github.com/\(slug.trimmingCharacters(in: .whitespaces))")
+    /// The GitHub link: only while the update check is configured, to the page of the repository it asks (the same
+    /// validated slug, so the link and the update rows always agree).
+    static func repository(_ updates: any UpdateChecking) -> URL? {
+        updates.isConfigured ? updates.repositoryURL : nil
     }
 
     var body: some View {
@@ -95,7 +95,7 @@ struct AboutContent: View {
                 Button { services.app?.showHelp(anchor: nil) } label: { Text(verbatim: Self.help.title) }
                     .searchTarget(Self.help)
                 Spacer(minLength: 0)
-                if let repository = Self.repository {
+                if let repository = Self.repository(services.updates) {
                     Link(destination: repository) { Text(verbatim: Self.gitHub) }
                 }
             }

@@ -30,6 +30,11 @@ nonisolated struct UpdateConfiguration: Equatable, Sendable {
         return UpdateConfiguration(repository: repository, currentVersion: AppInfo.current(bundle).version)
     }
 
+    /// The repository's page on GitHub, nil while update checks are off in this build.
+    var repositoryURL: URL? {
+        repository.flatMap { URL(string: "https://github.com/\($0)") }
+    }
+
     /// GitHub's owner and repository name rules, loosely: letters, digits, "-", "_" and "." in two parts.
     static func validRepository(_ raw: String) -> String? {
         let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines)

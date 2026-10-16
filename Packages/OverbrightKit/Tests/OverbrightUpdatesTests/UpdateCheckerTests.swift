@@ -142,6 +142,11 @@ private func available(_ tag: String) throws -> UpdateState {
             #expect(UpdateConfiguration.validRepository(bad) == nil, "\(bad)")
         }
         #expect(UpdateConfiguration(repository: "", currentVersion: "0.1.0").repository == nil)   // empty key: off
+        // About's link comes from the same validated slug: none for a bad or empty key.
+        #expect(UpdateConfiguration(repository: " octo/overbright ", currentVersion: "0.1.0").repositoryURL
+                == URL(string: "https://github.com/octo/overbright"))
+        #expect(UpdateConfiguration(repository: "octo/overbright?x=1", currentVersion: "0.1.0").repositoryURL == nil)
+        #expect(UpdateConfiguration(repository: nil, currentVersion: "0.1.0").repositoryURL == nil)
         #expect(UpdateConfiguration.repositoryInfoKey == "OverbrightGitHubRepository")
     }
 

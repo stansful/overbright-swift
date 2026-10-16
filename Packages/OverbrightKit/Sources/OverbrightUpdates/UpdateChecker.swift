@@ -19,6 +19,8 @@ private let log = Log.logger(.updates)
     public private(set) var state: UpdateState = .idle
     /// False when this build has no repository: no request is ever made.
     public var isConfigured: Bool { configuration.repository != nil }
+    /// The configured repository's page (Settings ▸ About links to it), from the same validated slug.
+    public var repositoryURL: URL? { configuration.repositoryURL }
 
     @ObservationIgnored let configuration: UpdateConfiguration
     @ObservationIgnored private let settings: SettingsStore
