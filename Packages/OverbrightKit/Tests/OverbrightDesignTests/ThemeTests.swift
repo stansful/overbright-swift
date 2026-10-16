@@ -65,7 +65,7 @@ import Testing
                 == [2, 4, 6, 8, 12, 16, 20, 24, 32])
         #expect(StrokeWidth.detent == CGSize(width: 1.5, height: 8))
         #expect(StrokeWidth.presetTick == CGSize(width: 1, height: 5))
-        #expect(StrokeWidth.allowedMarker == CGSize(width: 2, height: 10))
+        #expect(StrokeWidth.allowedMarker == CGSize(width: 2, height: 24))
         #expect(StrokeWidth.hairline(scale: 2) == 0.5)
     }
 
