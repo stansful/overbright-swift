@@ -1,6 +1,7 @@
 // OverbrightSettingsUI/Calibration/CalibrationModel.swift — the steps of the calibration window (DESIGN.md §9;
 // ARCHITECTURE.md §5.2) over a `CalibrationSession`, which owns every table write: the checklist (with the optional
-// colorimeter value), step 1 (the display switches between Standard and ×1.3 light three times, at most once per 1.5 s,
+// colorimeter value, checked against the range the engine accepts), step 1 (the display switches between Standard and
+// ×1.3 light three times, at most once per 1.5 s, each change announced to VoiceOver; `ComparisonSequence` paces them;
 // then "Did the screen get brighter…?"; No offers Compatibility mode, which repeats step 1 with a new session), step 2
 // (the sweep on the black surround with its pause, ended by Space), step 3 (only after a merge near the linear
 // prediction: the 2-s confirmation frame and its question), and the results with the "turn them back on" line. The
@@ -16,38 +17,6 @@ private let log = Log.logger(.engine)
 
 /// The calibration window's state.
 @Observable public final class CalibrationModel {
-    /// Where the window is.
-    public enum Step: Hashable {
-        /// No session: the display cannot be calibrated now.
-        case unavailable
-        /// "Before starting".
-        case checklist
-        /// Step 1: the comparison and its question.
-        case comparison
-        /// Step 1 answered No: Compatibility mode, or keep the color table.
-        case notBrighter
-        /// Step 2, before the sweep starts.
-        case sweepIntro
-        /// Step 2: the sweep runs (or waits at its pause).
-        case sweep
-        /// Step 3: the confirmation frame and its question.
-        case confirmation
-        /// The result.
-        case results
-    }
-
-    /// What the results say.
-    public enum Ending: Hashable {
-        /// "Standard curve confirmed."
-        case encoded
-        /// "This display responds in linear light."
-        case linear
-        /// "The result wasn't clear, so Overbright keeps its safe default."
-        case inconclusive
-        /// The screen did not get brighter and the color table was kept.
-        case keptColorTable
-    }
-
     /// The display under test.
     public let display: DisplayKey
     /// Its name (the window's title and VoiceOver).
@@ -56,10 +25,8 @@ private let log = Log.logger(.engine)
     public private(set) var step: Step
     /// The running session (nil once none could start).
     public private(set) var session: (any CalibrationSession)?
-    /// Step 1's sequence is running.
-    private(set) var isFlipping = false
-    /// Changes shown in the current sequence (Brighter, Standard, … six in all).
-    private(set) var flips = 0
+    /// Step 1's sequence.
+    let comparison = ComparisonSequence()
     /// The result, once the steps ended.
     private(set) var ending: Ending?
     /// Why the session ended early, when it did.
@@ -73,17 +40,13 @@ private let log = Log.logger(.engine)
 
     @ObservationIgnored private let services: OverbrightServices
     @ObservationIgnored private let begin: @MainActor () -> (any CalibrationSession)?
-    @ObservationIgnored private var flipTask: Task<Void, Never>?
     @ObservationIgnored private var stateToken: ObservationToken?
     /// The answer of step 1, once given.
     @ObservationIgnored private var brighter: Bool?
 
-    /// Step 1 shows Brighter and Standard three times each.
-    static let flipsPerSequence = 6
-    /// At most one change per 1.5 s (DESIGN.md §3.4, §9).
-    static let flipInterval: Duration = .milliseconds(1500)
-    /// How often step 1 looks whether the session is ready (it shows a trigger and waits for extra range first).
-    static let readinessPoll: Duration = .milliseconds(100)
+    /// SDR white a colorimeter can plausibly read at Standard, in nits. The engine ignores any other value (Boost's
+    /// `CalibrationMath.plausibleSDRWhite`), so the field says so and Start waits (WP14).
+    static let plausibleSDRWhite: ClosedRange<Double> = 20...4000
 
     /// A model for `display`, starting with the session `begin` returns (nil: the display cannot be calibrated now).
     public init(display: DisplayKey, name: String, services: OverbrightServices,
@@ -106,8 +69,19 @@ private let log = Log.logger(.engine)
 
     /// What the checklist reads live (the power source, other apps, the thermal state).
     var systemSnapshot: SystemSnapshot { services.signals.snapshot }
-    /// The live checklist can be passed.
-    var canStart: Bool { step == .checklist && CalibrationChecklist.canStart(services.signals.snapshot) }
+    /// The live checklist can be passed, and an open colorimeter field holds nothing the engine would ignore.
+    var canStart: Bool {
+        step == .checklist && !colorimeterValueIsImplausible && CalibrationChecklist.canStart(services.signals.snapshot)
+    }
+    /// The open colorimeter field holds a value outside `plausibleSDRWhite` (an empty field is fine: no reading).
+    var colorimeterValueIsImplausible: Bool {
+        guard showsColorimeter, let nits = colorimeterNits else { return false }
+        return !(nits.isFinite && Self.plausibleSDRWhite.contains(nits))
+    }
+    /// Step 1's sequence is running.
+    var isFlipping: Bool { comparison.isRunning }
+    /// Changes shown in step 1's sequence.
+    var flips: Int { comparison.flips }
     /// The session prepares the display (a trigger, waiting for extra range).
     var isPreparing: Bool { session?.state == .preparing }
     /// The display shows the boosted comparison now.
@@ -241,30 +215,19 @@ private let log = Log.logger(.engine)
     private func runComparison() {
         guard let session else { return }
         stopComparison()
-        flips = 0
-        isFlipping = true
-        let time = services.time
         session.showComparison(boosted: false)                       // begins the session when it has not yet
-        flipTask = Task { [weak self] in
-            do {
-                while self?.session?.state == .preparing { try await time.sleep(for: Self.readinessPoll) }
-                for flip in 0..<Self.flipsPerSequence {
-                    if flip > 0 { try await time.sleep(for: Self.flipInterval) }
-                    guard let self, self.step == .comparison else { return }
-                    self.session?.showComparison(boosted: flip.isMultiple(of: 2))
-                    self.flips = flip + 1
-                }
-            } catch {
-                return                                                   // cancelled
-            }
-            self?.isFlipping = false
+        comparison.start(time: services.time, isPreparing: { [weak self] in self?.session?.state == .preparing }) {
+            [weak self] brighter in
+            guard let self, self.step == .comparison, let session = self.session else { return false }
+            session.showComparison(boosted: brighter)
+            // Said as well as shown (DESIGN.md §15: the flips are slow and announced): the user's own check.
+            self.services.announcer.announce(brighter ? CalibrationCopy.brighter : CalibrationCopy.standard, kind: .feedback)
+            return true
         }
     }
 
     private func stopComparison() {
-        flipTask?.cancel()
-        flipTask = nil
-        isFlipping = false
+        comparison.stop()
         if step == .comparison, showsBrighter { session?.showComparison(boosted: false) }
     }
 

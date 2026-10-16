@@ -39,11 +39,13 @@ import Testing
         let paused = model { model, session in
             model.start(); model.answerBrighter(true); model.startSweep(); session.isSweepPausedAtLimit = true
         }
+        let colorimeter = model { model, _ in model.showsColorimeter = true; model.colorimeterNits = 9000 }
         let results = model { model, session in
             session.record = FakeCalibrationSession.record(.encoded)
             model.start(); model.answerBrighter(false); model.keepColorTable()
         }
-        return [("calibration-checklist", checklist), ("calibration-comparison", comparison),
+        return [("calibration-checklist", checklist), ("calibration-colorimeter-range", colorimeter),
+                ("calibration-comparison", comparison),
                 ("calibration-sweep-paused", paused), ("calibration-results", results)]
             .map { ($0.0, AnyView(CalibrationView(model: $0.1))) }
     }

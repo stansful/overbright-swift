@@ -61,6 +61,13 @@ enum CalibrationCopy {
     static var nitsUnit: String {
         String(localized: "nits (measured at Standard)", bundle: .module, comment: "Calibration: the unit after the SDR white field")
     }
+    /// The line under the SDR white field while its value is outside the range Overbright accepts.
+    static func sdrWhiteRange(locale: Locale = .autoupdatingCurrent) -> String {
+        let range = CalibrationModel.plausibleSDRWhite
+        let low = range.lowerBound.formatted(.number.locale(locale)), high = range.upperBound.formatted(.number.locale(locale))
+        return String(localized: "Use a value from \(low) to \(high).", bundle: .module,
+                      comment: "Calibration: under the SDR white field when its value is outside the range Overbright accepts; the arguments are numbers of nits such as 20 and 4,000 (the unit follows the field)")
+    }
     static var start: String {
         String(localized: "calibration.start", defaultValue: "Start", bundle: .module,
                comment: "Calibration: starts the checks, or the next step (title case)")

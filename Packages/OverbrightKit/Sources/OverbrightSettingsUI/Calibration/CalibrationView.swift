@@ -181,13 +181,24 @@ private struct CalibrationChecklistView: View {
                 row(item)
             }
             DisclosureGroup(isExpanded: $model.showsColorimeter) {
-                HStack(spacing: Space.m) {
-                    Text(verbatim: CalibrationCopy.sdrWhite)
-                    TextField(value: $model.colorimeterNits, format: .number) { Text(verbatim: CalibrationCopy.sdrWhite) }
-                        .labelsHidden()
-                        .frame(width: SettingsMetrics.recorderMinWidth)
-                        .multilineTextAlignment(.trailing)
-                    Text(verbatim: CalibrationCopy.nitsUnit).foregroundStyle(.secondary)
+                VStack(alignment: .leading, spacing: Space.xs) {
+                    HStack(spacing: Space.m) {
+                        Text(verbatim: CalibrationCopy.sdrWhite)
+                        TextField(value: $model.colorimeterNits, format: .number) { Text(verbatim: CalibrationCopy.sdrWhite) }
+                            .labelsHidden()
+                            .frame(width: SettingsMetrics.recorderMinWidth)
+                            .multilineTextAlignment(.trailing)
+                        Text(verbatim: CalibrationCopy.nitsUnit).foregroundStyle(.secondary)
+                    }
+                    if model.colorimeterValueIsImplausible {                   // the engine would ignore it; Start waits
+                        Label {
+                            Text(verbatim: CalibrationCopy.sdrWhiteRange())
+                        } icon: {
+                            Image(symbol: .exclamationMarkTriangleFill)
+                                .foregroundStyle(SemanticColor.warning.glyph(in: theme))
+                        }
+                        .font(.callout)
+                    }
                 }
                 .padding(.top, Space.xs)
             } label: {
@@ -229,6 +240,15 @@ private struct CalibrationChecklistView: View {
     model.start()
     model.answerBrighter(true)
     model.startSweep()
+    return CalibrationView(model: model)
+        .frame(width: 900, height: 600)
+}
+
+#Preview("Calibration · colorimeter value out of range") {
+    let model = CalibrationModel(display: DisplayFixture.Keys.builtIn, name: "Built-in Display",
+                                 services: .preview()) { PreviewCalibrationSession() }
+    model.showsColorimeter = true
+    model.colorimeterNits = 9000
     return CalibrationView(model: model)
         .frame(width: 900, height: 600)
 }
