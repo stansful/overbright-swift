@@ -1,0 +1,169 @@
+// OverbrightBoost/Engine/DisplayController.swift — the per-display state machine. ARCHITECTURE.md §4.2 (states),
+// §4.3 (transitions), §4.5 (invariants), §4.6 (generations and the hang epoch). MainActor.
+// This file holds the state; decisions live in `DisplayController+Decisions.swift`, trips and shared helpers in
+// `+Support`, arming in `+Arming`, the gate and re-gating in `+Gate`, capture in `+Capture`, ramps and raises in
+// `+Ramping`, failed writes in `+WriteFailure`, events in `+Events`, re-basing in `+Rebase`, the drift check in
+// `+Drift`, and the self-test and calibration seam in `+Driving`.
+import Foundation
+import OverbrightCore
+import OverbrightPolicy
+
+/// One display's engine: trigger or overlay handle, baseline, applied factor, generation, epoch stamp and its tasks
+/// (gate poll, poll burst, ramp, drift check, linger, re-base). Every table write goes through `TableWriter`.
+@MainActor final class DisplayController {
+    /// The ports and shared state every controller uses (the engine owns them).
+    struct Dependencies {
+        let gamma: any GammaPort
+        let writer: TableWriter
+        let ledger: SafetyLedger
+        let headroom: any HeadroomPort
+        let triggers: any TriggerFactory
+        let conflicts: any ConflictProbe
+        let time: any TimeSource
+        let journal: any DiagnosticsJournal
+        let cache: StrategyCache
+        let ownEDRSurfaces: OwnEDRSurfaces
+        let machine: MachineIdentity
+    }
+
+    /// What ended a shield, which decides how a suspended display comes back (§4.3).
+    enum ResumeKind: Hashable, Sendable {
+        /// Wake or lid open: settle 1 s, then the cached rung only, with backoff.
+        case wake
+        /// Unlock or screensaver stop: the cached rung only, with backoff.
+        case unlock
+    }
+
+    /// Who asked for a change, for the rate limiter and the oscillation detector.
+    typealias Origin = FlickerGuard.Origin
+
+    let deps: Dependencies
+    /// The display (its ID changes after a reconfiguration).
+    var ref: DisplayRef
+    /// Its facts.
+    var facts: DisplayFacts
+    /// Called after every change the engine publishes; `true` asks for a re-reduction (the feedback changed).
+    var onChange: ((Bool) -> Void)?
+
+    // MARK: Decision
+
+    var decision: DisplayDecision?
+    var parameters = WriteParameters()
+    var target: BoostTarget = .neutral
+    var phase: EnginePhase = .idle {
+        didSet { if phase != oldValue { phaseChanged(from: oldValue) } }
+    }
+    var trip: TripCause?
+    var failedTries = 0
+    /// The potential when the display last failed for lack of headroom (a change retries, §4.3).
+    var potentialAtFailure: Double?
+
+    // MARK: Tables
+
+    var baseline: GammaTable?
+    var appliedGain = 1.0
+    var appliedFactor = 1.0
+    var appliedLimit: LimitReason?
+    var mechanism: Mechanism = .table
+    var domain: TransferDomain = .encoded
+    /// Sessions off the console write nothing (D27); set by the session events, mirrored from the snapshot.
+    var isOffConsole = false
+    /// A mechanism change waits for the display to reach idle, then asks for a re-reduction.
+    var switchesMechanism = false
+    /// The baseline and factor of our latest table write (what the re-base and the drift check expect to read).
+    var lastWrite: (baseline: GammaTable, factor: Double)?
+    /// A re-base waits for WindowServer's table: the drift check stands aside meanwhile.
+    var isRebasing = false
+    /// A reconfiguration, ColorSync or accessibility event that no re-base has judged yet (a shield or a stop cut it
+    /// short): resuming restarts it, reaching idle or failed judges it at once (§4.8).
+    var pendingRebase: ReapplyCause?
+    /// The self-test or a calibration drives this display (`DisplayControllerDriving`): decisions are stored, not
+    /// applied, until it is handed back. A driven session starts from a freshly captured baseline.
+    var isDriven = false {
+        didSet { if isDriven, !oldValue { refreshBaseline() } }
+    }
+
+    // MARK: Trigger, overlay and the gate
+
+    var trigger: (any TriggerHandle)?
+    var overlay: (any OverlayHandle)?
+    var rungs: [LadderRung] = []
+    var rungPosition = 0
+    var currentRung: LadderRung?
+    var idleHeadroom = 1.0
+    var gatePath: GateEvaluator.Path = .normal
+    var samples: [GateEvaluator.Sample] = []
+    var presentedAt: MonotonicInstant?
+    var movedAt: MonotonicInstant?
+    var armedPreHeld = false
+    var preHeldHeadroom: Double?
+    var lastReading: HeadroomReading?
+    var backoff: (kind: ResumeKind, step: Int)?
+    var pendingResume: ResumeKind?
+    var quarantineUntil: MonotonicInstant?
+    var cachedRungFailedThisArm = false
+    var belowNeededSince: MonotonicInstant?
+
+    // MARK: Async state
+
+    var generation: UInt64 = 0
+    var rampSerial: UInt64 = 0
+    var epochStamp: UInt64 = 0
+    let armSlot = TaskSlot()
+    let rampSlot = TaskSlot()
+    let driftSlot = TaskSlot()
+    let burstSlot = TaskSlot()
+    let lingerSlot = TaskSlot()
+    let checkSlot = TaskSlot()
+    let rebaseSlot = TaskSlot()
+    var flicker = FlickerGuard()
+    var repairs: [MonotonicInstant] = []
+    var unexplainedAdoptions: [MonotonicInstant] = []
+    var lastBaseEventAt: MonotonicInstant?
+
+    /// A controller for `facts`; constructing it does nothing.
+    init(facts: DisplayFacts, dependencies: Dependencies) {
+        self.facts = facts
+        self.ref = facts.ref
+        self.deps = dependencies
+        epochStamp = dependencies.ledger.hangEpoch
+    }
+
+    // MARK: Reading state
+
+    /// The display's key.
+    var key: DisplayKey { ref.key }
+    /// The table (or overlay) differs from the baseline: scaled or dimmed.
+    var isScaledOrDimmed: Bool { abs(appliedFactor - 1) > TableWriter.neutralTolerance }
+    /// Any phase that does work or holds a window (everything but idle and failed).
+    var isActive: Bool {
+        switch phase {
+        case .idle, .failed: false
+        default: true
+        }
+    }
+    /// Arming or gating: preparing.
+    var isPreparing: Bool {
+        switch phase {
+        case .arming, .gating: true
+        default: false
+        }
+    }
+    /// Number of tasks alive (zero while idle, §4.5 invariant 4).
+    var activeTaskCount: Int {
+        [armSlot, rampSlot, driftSlot, burstSlot, lingerSlot, checkSlot, rebaseSlot].filter(\.isRunning).count
+    }
+    /// The boost the current target asks for (nil when the target is not a boost).
+    var targetGain: Double? {
+        if case .boost(let gain) = target { return gain }
+        return nil
+    }
+
+    /// What the UI reads.
+    func status() -> DisplayStatus {
+        DisplayStatus(key: key, name: facts.name, phase: phase, decision: decision, appliedGain: appliedGain,
+                      appliedFactor: appliedFactor, mechanism: mechanism,
+                      strategy: trigger != nil ? currentRung?.strategy : nil, lastReading: lastReading,
+                      sdrWhite: parameters.sdrWhite, failedTries: failedTries)
+    }
+}

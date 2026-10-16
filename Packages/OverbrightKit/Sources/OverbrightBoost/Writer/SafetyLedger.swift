@@ -1,6 +1,6 @@
 // OverbrightBoost/Writer/SafetyLedger.swift — what must be restored if the main thread hangs or a signal arrives.
 // ARCHITECTURE.md §4.1, §4.5 invariant 9, §4.6, §7.4, §8.1 rule 4; D7.
-// Seeded by WP0a with the fixed signatures (§10.0) and a minimal working body; owned by WP4 afterwards.
+// Seeded by WP0a with the fixed signatures (§10.0) and a minimal working body; owned by WP4.
 // Nonisolated and lock-protected: the hang watchdog's queue and the signal queue use it off the main actor. An
 // `NSLock` (not an unfair lock), because `TableWriter` holds it across a WindowServer call.
 import Foundation
@@ -63,4 +63,7 @@ public nonisolated final class SafetyLedger: @unchecked Sendable {
     public func entries() -> [Entry] {
         withLock { $0.entries.values.sorted { $0.display.key < $1.display.key } }
     }
+
+    /// Whether `display` is recorded as scaled or dimmed.
+    public func isMarked(_ display: DisplayKey) -> Bool { withLock { $0.entries[display] != nil } }
 }

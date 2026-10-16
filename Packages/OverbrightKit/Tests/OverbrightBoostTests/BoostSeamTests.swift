@@ -1,6 +1,7 @@
 // OverbrightBoostTests/BoostSeamTests.swift — the WP0a seams of OverbrightBoost (ARCHITECTURE.md §10.0): the fixed
-// initializers compile against the Core fakes, the seeded writer refuses every write (nothing before WP4 can change a
-// display), the ledger keeps baselines and the hang epoch, and the seeded engine publishes idle displays.
+// initializers compile against the Core fakes, the writer refuses a boost without a reading, the ledger keeps
+// baselines and the hang epoch, and the started engine publishes idle displays. WP4's bodies are tested in
+// Engine/, Ladder/ and Writer/; WP5's in Safety/, SelfTest/ and Calibration/.
 import Foundation
 import OverbrightCore
 import OverbrightPolicy
@@ -23,8 +24,9 @@ import Testing
         #expect(ledger.entries().isEmpty)
     }
 
-    /// WP0a's writer refuses every scaled and calibration write and writes no baseline: the fake port sees nothing.
-    @Test func theSeededWriterNeverWrites() throws {
+    /// The writer's fixed signatures (WP4 owns the bodies, `TableWriterTests`): without a reading of the display a
+    /// boost is refused and nothing reaches the port; a calibration factor needs a ledger baseline first.
+    @Test func theWriterRefusesWithoutAReading() throws {
         let gamma = FakeGammaPort(fixture: fixture)
         let time = ManualTimeSource()
         let ledger = SafetyLedger()
@@ -35,19 +37,18 @@ import Testing
                                           capMode: .safe, isOLED: false, sdrWhite: nil, taper: true,
                                           fullBrightnessHeadroom: nil)
         #expect(throws: GammaError.writeRefused) {
-            _ = try writer.write(request, to: facts.ref, reading: reading, epoch: ledger.hangEpoch)
+            _ = try writer.write(request, to: facts.ref, reading: nil, epoch: ledger.hangEpoch)
         }
         #expect(throws: GammaError.writeRefused) {
             try writer.writeCalibrationFactor(1.1, to: facts.ref, reading: reading, maxFactor: 1.2)
         }
-        ledger.markScaled(facts.ref, baseline: .identity(count: 1024))
         #expect(ledger.withLock { writer.writeBaselines(fromLedger: $0) } == 0)
         #expect(gamma.writeCount == 0 && gamma.writes.isEmpty)
     }
 
     /// The engine's seam initializers; started, it publishes every display idle at Standard and touches no table or
-    /// trigger.
-    @Test func theSeededEnginePublishesIdleDisplays() async {
+    /// trigger until something asks for a level (WP4's suites cover the rest).
+    @Test func theEnginePublishesIdleDisplaysAtStart() async {
         let services = OverbrightServices.preview(fixture: .sidecar)
         let gamma = FakeGammaPort(fixture: .sidecar)
         let headroom = ScriptedHeadroom(fixture: .sidecar, time: services.time)
@@ -59,7 +60,6 @@ import Testing
         #expect(engine.status.isReady && !engine.status.isOn)
         #expect(engine.status.displays.map(\.key) == services.displays.displays.map(\.ref.key))
         #expect(engine.status.displays.allSatisfy { $0.phase == .idle && $0.appliedGain == 1 })
-        engine.setOn(true, source: .panel)
         await engine.stop()
         engine.stopNow()
         #expect(gamma.writeCount == 0 && triggers.openWindowCount == 0 && triggers.made.isEmpty)
