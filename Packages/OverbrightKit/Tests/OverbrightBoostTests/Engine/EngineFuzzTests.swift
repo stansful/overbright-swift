@@ -44,10 +44,11 @@ import Testing
     private static let step = Duration.milliseconds(100)
     private static let yields = 1
 
-    func run(seed: UInt64) async -> Outcome {
+    /// One sequence over `decide` (the reference reducer by default).
+    func run(seed: UInt64, decide: ((PolicyInput) -> PolicyDecision)? = nil) async -> Outcome {
         var random = SeededGenerator(seed: seed)
         let fixture = Self.fixtures[Int.random(in: 0..<Self.fixtures.count, using: &random)]
-        let h = EngineHarness(fixture: fixture)
+        let h = EngineHarness(fixture: fixture, decide: decide)
         if Bool.random(using: &random) { h.setPreferences { $0.capMode = .peak } }
         h.gamma.clampsReadBack = Bool.random(using: &random)
         let keys = h.directory.displays.map(\.ref.key)
