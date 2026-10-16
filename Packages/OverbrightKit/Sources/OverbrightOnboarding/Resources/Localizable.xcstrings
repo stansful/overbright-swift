@@ -6373,7 +6373,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ステップ%1$lld/%2$lld"
+            "value" : "ステップ%1$lld / %2$lld"
           }
         },
         "ko" : {
@@ -6457,7 +6457,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Adım %1$lld/%2$lld"
+            "value" : "Adım %1$lld / %2$lld"
           }
         },
         "uk" : {

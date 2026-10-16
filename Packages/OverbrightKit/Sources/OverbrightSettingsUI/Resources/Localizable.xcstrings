@@ -22896,7 +22896,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "色を反転"
+            "value" : "カラーを反転"
           }
         },
         "ko" : {
@@ -43169,7 +43169,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "スペース"
+            "value" : "Space"
           }
         },
         "ko" : {

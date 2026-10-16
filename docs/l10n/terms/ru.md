@@ -54,7 +54,7 @@ confirmed in WP15: the table below shows every name as the catalogs ship it.
 | Do Not Disturb | Не беспокоить |
 | Camera | Камера |
 | Open Anyway | Все равно открыть |
-| Applications | Приложения |
+| Applications | Программы |
 | Reduce motion | Уменьшить движение |
 | Reduce transparency | Понизить прозрачность |
 | Increase contrast | Увеличить контрастность |

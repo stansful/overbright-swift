@@ -104,3 +104,5 @@ Register and style, following macOS 27 Arabic:
 | App not installed | التطبيق غير مثبّت |  |
 | Never (a timeout of 0) | مطلقًا | Apple |
 | Off / On (values) | إيقاف / تشغيل; VoiceOver states متوقف / مشغّل |  |
+| OK (button) | موافق | Apple’s macOS OK (AppKit, loginwindow); «حسنًا» is iOS |
+| sleep (the Mac’s) | الإسبات | Apple’s Sleep (loginwindow «إسبات»); never «السكون» |

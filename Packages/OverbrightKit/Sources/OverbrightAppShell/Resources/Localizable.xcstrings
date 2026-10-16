@@ -31,7 +31,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Overbright in den Ordner „Apps“ verschieben?"
+            "value" : "Overbright in den Ordner „Programme“ verschieben?"
           }
         },
         "el" : {
@@ -240,7 +240,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "In „Apps“ verschieben"
+            "value" : "In „Programme“ verschieben"
           }
         },
         "el" : {
@@ -634,7 +634,7 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "حسنًا"
+            "value" : "موافق"
           }
         },
         "ca" : {
@@ -867,7 +867,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Overbright konnte nicht verschoben werden. Ziehe es im Finder in den Ordner „Apps“."
+            "value" : "Overbright konnte nicht verschoben werden. Ziehe es im Finder in den Ordner „Programme“."
           }
         },
         "el" : {
@@ -1285,7 +1285,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kurzbefehle-Aktionen und das Öffnen bei der Anmeldung funktionieren nur aus dem Ordner „Apps“."
+            "value" : "Kurzbefehle-Aktionen und das Öffnen bei der Anmeldung funktionieren nur aus dem Ordner „Programme“."
           }
         },
         "el" : {

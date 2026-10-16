@@ -56,7 +56,7 @@ dash (English "—"); "&" only where Apple uses it (pane names). Nouns capitaliz
 | Do Not Disturb | Nicht stören |
 | Camera | Kamera |
 | Open Anyway | Dennoch öffnen |
-| Applications | Apps |
+| Applications | Programme |
 | Reduce motion | Bewegung reduzieren |
 | Reduce transparency | Transparenz reduzieren |
 | Increase contrast | Kontrast erhöhen |

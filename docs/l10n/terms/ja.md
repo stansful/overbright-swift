@@ -112,3 +112,6 @@ Reviewed 2026-10-14 (independent review).
 | App not installed | インストールされていないアプリ |  |
 | Never (timeout 0) | しない |  |
 | Try again / Retry | 再試行 |  |
+| Space (the space bar in key caps) | Space | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable), so Settings and Welcome show the same key caps as the menu; the physical key in running text is スペースバー |
+| Step X of Y (VoiceOver) | ステップ%1$lld / %2$lld | a spaced slash, as Apple’s VoiceOver (ページ%1$d / %2$d); “3/5” is read as a fraction |
+| Invert colors (macOS shortcut) | カラーを反転 | Apple’s name in Keyboard Shortcuts and Accessibility |

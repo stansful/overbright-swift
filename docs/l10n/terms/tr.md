@@ -115,3 +115,4 @@ Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its
 | Login Items · Launch at login | Oturum Açma Öğeleri · Oturum açıldığında aç | “Sistem Ayarları’ndaki Oturum Açma Öğeleri bölümünde” (one locative chain, not “Ayarları’nda … bölümünde”) |
 | Undo | Geri al |  |
 | Check for Updates | Güncellemeleri Denetle | update check = güncelleme denetimi |
+| Step X of Y (VoiceOver) | Adım %1$lld / %2$lld | a spaced slash, as Apple’s VoiceOver (Sayfa %1$d / %2$d); “3/5” is read as a fraction |
