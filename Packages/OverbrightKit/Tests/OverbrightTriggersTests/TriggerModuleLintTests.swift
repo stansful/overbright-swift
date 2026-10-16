@@ -1,8 +1,8 @@
 // OverbrightTriggersTests/TriggerModuleLintTests.swift — source scans for the module's own acceptance rules
 // (ARCHITECTURE.md §10.5): no `.metal` file and no Metal library, function or pipeline API (D22); only the system
 // presenter orders a window in, and no test can reach it (§9.1, D24); EDR layer properties stay in this module's
-// strategy, surface and overlay files; no error description reaches a `.public` log (§9.2 rule 8). API names are split
-// in two here, so this file never matches its own scans.
+// strategy, surface and overlay files; only allowlisted values reach a `.public` log, so no error description does
+// (§9.2 rule 8). API names are split in two here, so this file never matches its own scans.
 import Foundation
 import Testing
 
@@ -67,17 +67,47 @@ import Testing
     }
 
     @Test func errorDescriptionsNeverReachAPublicLog() throws {
-        // A description can hold a path (a CocoaError's NSFilePath); only `LoggedError` summaries go out `.public`.
-        let patterns = [#"describing:[^)]*\)\s*,\s*privacy:\s*\.public"#,
-                        #"\\\(\s*error[\w.]*\s*,\s*privacy:\s*\.public"#,
-                        #"localizedDescription\s*,\s*privacy:\s*\.public"#]
-        let regexes = try patterns.map { try Regex($0) }
+        // A description can hold a path (a CocoaError's NSFilePath): only allowlisted values go out `.public`, so a
+        // description bound to a name first (`let detail = String(describing: error)`) is caught too.
         let sources = files(under: Self.sources)
-        let found = sources.flatMap { file in
-            file.lines.filter { _, line in regexes.contains { line.contains($0) } }.map { "\(file.path):\($0.0)" }
+        let found = try sources.flatMap { file in
+            try PublicLogLint.violations(in: file.lines).map { "\(file.path):\($0)" }
         }
-        #expect(found.isEmpty, "error descriptions are logged .private only: \(found)")
+        #expect(found.isEmpty, "only LoggedError summaries, raw values, file names, IDs and counts go out .public: \(found)")
         #expect(sources.contains { $0.lines.contains { $0.1.contains("LoggedError.publicSummary") } })
+        #expect(sources.contains { $0.lines.contains { $0.1.contains("privacy: .public") } }, "the scan sees the logs")
+    }
+
+    /// The lint itself (C-PLATFORM-10): it flags every `.public` interpolation off the allowlist, whatever the value
+    /// was called, and passes the module's own permitted forms.
+    @Test func thePublicLogLintFlagsEverythingOffItsAllowlist() throws {
+        func lines(_ code: String) -> [(Int, String)] {
+            code.components(separatedBy: "\n").enumerated().map { ($0.offset + 1, $0.element) }
+        }
+        let flagged = [
+            #"let detail = String(describing: error)"# + "\n" + #"log.error("failed: \(detail, privacy: .public)")"#,
+            #"let text = error.localizedDescription"# + "\n" + #"log.error("\(text, privacy:.public)")"#,
+            #"log.error("failed: \(error, privacy: .public)")"#,
+            #"log.error("\(String(describing: error), privacy: .public)")"#,
+            #"log.error("\(failure.localizedDescription, privacy: .public)")"#,
+            #"log.info("at \(url.path, privacy: .public)")"#,
+            #"log.info("\(spec.fileName + detail, privacy: .public)")"#,
+            #"let summary = String(describing: error)"# + "\n" + #"log.error("\(summary, privacy: .public)")"#,
+        ]
+        for code in flagged {
+            #expect(try !PublicLogLint.violations(in: lines(code)).isEmpty, "\(code)")
+        }
+        let allowed = [
+            #"log.error("T4 failed: \(LoggedError.publicSummary(error), privacy: .public)")"#,
+            #"let summary = LoggedError.publicSummary(error), detail = String(describing: error)"# + "\n"
+                + #"log.error("\(level.rawValue, privacy: .public): \(summary, privacy: .public) (\(detail, privacy: .private))")"#,
+            #"log.info("HLG still generated: \(spec.fileName, privacy: .public), \(report.fileBytes) bytes")"#,
+            #"log.info("display \(self.host.display.id, privacy: .public), \(windows.count, privacy: .public) windows")"#,
+            #"log.info("Removed \(count, privacy: .public) trigger windows")"#,
+        ]
+        for code in allowed {
+            #expect(try PublicLogLint.violations(in: lines(code)).isEmpty, "\(code)")
+        }
     }
 
     @Test func edrLayerPropertiesStayInTheStrategyFiles() {
@@ -88,5 +118,68 @@ import Testing
                                     "Overlay/CompatibilityOverlay.swift"]
         let found = hits(properties, in: files(under: Self.sources), except: allowed)
         #expect(found.isEmpty, "EDR surfaces are built only by the strategies, surfaces and the overlay: \(found)")
+    }
+}
+
+/// The `.public` log allowlist of this module (§9.2 rule 8): every `\(value, privacy: .public)` interpolation must be a
+/// `LoggedError` summary (inline, or a name bound to one in the same file), a case's raw value, one of our asset file
+/// names, an ID or a count. Anything else, a description bound to a name first included, is a violation.
+enum PublicLogLint {
+    /// The line numbers of `.public` interpolations off the allowlist in one file's code lines.
+    static func violations(in lines: [(Int, String)]) throws -> [Int] {
+        let binding = try Regex(#"(\w+)\s*=\s*LoggedError\.publicSummary\("#)
+        var summaries = Set<String>()
+        for (_, line) in lines {
+            for match in line.matches(of: binding) {
+                if let name = match.output[1].substring { summaries.insert(String(name)) }
+            }
+        }
+        return lines.filter { _, line in
+            interpolations(in: line).contains { arguments in
+                arguments.count > 1 && isPublic(arguments.last ?? "") && !isAllowed(arguments[0], summaries: summaries)
+            }
+        }.map(\.0)
+    }
+
+    /// Whether an interpolation argument is `privacy: .public`.
+    static func isPublic(_ argument: String) -> Bool {
+        argument.filter { !$0.isWhitespace } == "privacy:.public"
+    }
+
+    /// Whether `expression` may be logged `.public`.
+    static func isAllowed(_ expression: String, summaries: Set<String>) -> Bool {
+        let value = expression.trimmingCharacters(in: .whitespaces)
+        if value.hasPrefix("LoggedError.publicSummary(") && value.hasSuffix(")") && !value.contains("+") { return true }
+        if summaries.contains(value) || value == "count" { return true }
+        let path = value.split(separator: ".", omittingEmptySubsequences: false)
+        guard path.count > 1, path.allSatisfy({ !$0.isEmpty && $0.allSatisfy { $0.isLetter || $0.isNumber || $0 == "_" } })
+        else { return false }
+        return ["rawValue", "fileName", "id", "count"].contains(String(path[path.count - 1]))
+    }
+
+    /// The top-level, comma-separated arguments of every `\( … )` interpolation in `line`.
+    static func interpolations(in line: String) -> [[String]] {
+        let characters = Array(line)
+        var found: [[String]] = []
+        var index = 0
+        while index + 1 < characters.count {
+            guard characters[index] == "\\", characters[index + 1] == "(" else { index += 1; continue }
+            var depth = 1, cursor = index + 2, current = "", arguments: [String] = []
+            while cursor < characters.count, depth > 0 {
+                let character = characters[cursor]
+                if character == "(" { depth += 1 }
+                if character == ")" { depth -= 1 }
+                if depth == 1, character == "," {
+                    arguments.append(current); current = ""
+                } else if depth > 0 {
+                    current.append(character)
+                }
+                cursor += 1
+            }
+            arguments.append(current)
+            found.append(arguments)
+            index = cursor
+        }
+        return found
     }
 }

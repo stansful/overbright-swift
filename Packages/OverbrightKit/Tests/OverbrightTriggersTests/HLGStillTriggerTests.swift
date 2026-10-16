@@ -46,16 +46,20 @@ import Testing
         return outcome
     }
 
-    /// Lets the present finish: each time it sleeps, the manual clock moves one poll interval on, after a short real
-    /// pause in which AVFoundation can load the item. At most the 2 s readiness limit's worth of polls.
-    private func finish(_ outcome: PresentOutcome, _ bed: TriggerTestBed) async -> Bool? {
+    /// Lets the present finish without tying the manual clock to real time (§9.1): once the present is polling, wait
+    /// (up to `eventually`'s 30 s of real time) until AVFoundation has loaded the item it asked for, then move the
+    /// clock one poll interval on, so the present's next check sees the loaded item. However slowly the item
+    /// loads, the present never runs out of polls; a failed load ends the wait at once and the present's own limit
+    /// answers.
+    private func finish(_ outcome: PresentOutcome, _ trigger: HLGStillTrigger, _ bed: TriggerTestBed) async -> Bool? {
         for _ in 0...TriggerTiming.readinessPolls {
             _ = await eventually { outcome.value != nil || bed.time.sleeperCount > 0 }
             if let value = outcome.value { return value }
-            try? await Task.sleep(for: .milliseconds(20))
+            _ = await eventually { outcome.value != nil || trigger.player?.currentItem?.status != .unknown }
+            if let value = outcome.value { return value }
             await bed.time.advance(by: TriggerTiming.readinessPollInterval)
         }
-        _ = await eventually(timeout: .seconds(5)) { outcome.value != nil }
+        _ = await eventually { outcome.value != nil }
         return outcome.value
     }
 
@@ -70,7 +74,7 @@ import Testing
         // The layer says "ready" from the start; the item still has to load before the present trusts it.
         #expect(await eventually { bed.time.sleeperCount == 1 }, "the first check failed: the item was not loaded")
         #expect(outcome.value == nil)
-        #expect(await finish(outcome, bed) == true)
+        #expect(await finish(outcome, trigger, bed) == true)
         let item = try #require(trigger.player?.currentItem)
         #expect(item.status == .readyToPlay)
         #expect(fileName(of: item) == "hlg-still-v1-proRes422-black-16.mov")
@@ -82,7 +86,7 @@ import Testing
     @Test func aLevelSwitchNeverTrustsTheReadinessOfThePreviousItem() async throws {
         let bed = TriggerTestBed(codecs: [.proRes422])
         let trigger = trigger(bed)
-        #expect(await finish(start(trigger, .black), bed) == true)
+        #expect(await finish(start(trigger, .black), trigger, bed) == true)
         let black = try #require(trigger.player?.currentItem)
         #expect(black.status == .readyToPlay)
         // Switch to peak while the layer still reports the black frame as ready.
@@ -92,7 +96,7 @@ import Testing
         let peak = try #require(trigger.player?.currentItem)
         #expect(peak !== black)
         #expect(fileName(of: peak) == "hlg-still-v1-proRes422-peak-16.mov")
-        #expect(await finish(outcome, bed) == true)
+        #expect(await finish(outcome, trigger, bed) == true)
         #expect(peak.status == .readyToPlay)
         #expect(trigger.shownLevel == .peak)
         #expect(bed.presenter.orderedIn.count == 1, "one window for both levels")
@@ -102,7 +106,7 @@ import Testing
     @Test func theSameLevelAgainChecksAtOnce() async throws {
         let bed = TriggerTestBed(codecs: [.proRes422])
         let trigger = trigger(bed)
-        #expect(await finish(start(trigger, .sdrWhite), bed) == true)
+        #expect(await finish(start(trigger, .sdrWhite), trigger, bed) == true)
         let item = trigger.player?.currentItem
         let outcome = start(trigger, .sdrWhite)
         #expect(await eventually { outcome.value != nil })
