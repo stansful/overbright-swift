@@ -1,5 +1,5 @@
 // OverbrightBoost/Engine/DisplayController+Decisions.swift — the reducer's decision for one display: boost, dim or
-// neutral from every phase. ARCHITECTURE.md §4.3 (the target rows), §4.9, §5.7. MainActor.
+// neutral from every phase. ARCHITECTURE.md §4.3 (the target rows), §4.9, §5.7, §5.8. MainActor.
 import Foundation
 import OverbrightCore
 import OverbrightPolicy
@@ -39,7 +39,9 @@ extension DisplayController {
             break
         }
         if !changed {
-            if parametersChanged, case .boost(let gain) = target, phase == .boosted { adjustBoost(gain, requested: true) }
+            if parametersChanged, case .boost(let gain) = target, phase == .boosted {
+                followParameters(gain, requested: requested)
+            }
             return
         }
         switch target {
@@ -51,6 +53,24 @@ extension DisplayController {
 
     /// The ramp duration for policy and user changes now (Reduce Motion shortens it, never to a snap).
     var rampKind: RampPlanner.Kind { parameters.reduceMotion ? .reduceMotion : .standard }
+
+    /// The same boost target, but what the interlock allows moved with the write parameters (cap mode, the SDR-white
+    /// estimate, HDR suppression ending). A user's request raises at once (§4.3 user-raise row); anything else lowers
+    /// with a ramp, or raises only through the headroom-recovery path (≥ 1.05 × applied, 1.5 s stable, counted by the
+    /// oscillation detector, §5.7, §5.8).
+    func followParameters(_ gain: Double, requested: Bool) {
+        if requested {
+            adjustBoost(gain, requested: true)
+            return
+        }
+        guard let allowed = allowedGain(for: gain) else { return }
+        if allowed < appliedGain - 1e-6 {
+            burstSlot.cancel()
+            startRamp(to: allowed, origin: .automatic, finalPhase: .boosted)
+        } else if allowed >= appliedGain * EngineTiming.raiseHysteresis - 1e-9 {
+            startBurst(.recovery)
+        }
+    }
 
     func goBoost(_ gain: Double, requested: Bool) {
         switch phase {
