@@ -141,16 +141,16 @@ No hook posts input or asks for a permission. Launch arguments (`LaunchArguments
 |---|---|
 | `--qa-simulate [fixture]` | Core fakes for every display port over a fixture of ARCHITECTURE.md §3.9 (`builtin-xdr-lid-open`, `mpg322ux-hdr-on`, `lcd-only`, `hardware-mirror`, …); a missing or unknown name falls back to `builtin-xdr-lid-open`, never to the real ports. |
 | `--qa-defaults-suite <name>` | Keeps every setting the run writes in that suite (`Launch/QAHooks+Defaults.swift`); the app's own domain or a global one is refused and the run keeps its settings in memory. The Settings window's frame is not autosaved then. |
-| `--qa-state <name>` | Drives the panel with a named status of PanelUI's `ScriptedStatuses` (every chip, banner, phase and HUD of DESIGN.md §5.13). |
+| `--qa-state <name>` | Drives the panel with a named status of PanelUI's `ScriptedStatuses` (every chip, banner, phase and HUD of DESIGN.md §5.13); the state's settings go into the run's suite (in memory without one), and its Fill Light and "Why?" row show too. |
 | `--qa-panel`, `--qa-menu`, `--qa-hud <level>` | Opens the panel, the status menu (its rows go to `qa-trace.txt`), the HUD (under `--qa-simulate` at that level; on the real displays only its generic change, never a level). |
 | `--qa-settings <pane[#row]>` | Opens Settings at a pane (`general`, `displays`, `automations`, `shortcuts`, `fillLight`, `advanced`, `about`), scrolled to and highlighting a row. |
 | `--qa-welcome <step>` | Opens Welcome at `hello`, `displays`, `defaults`, `findIt` or `done`; takes no focus and records nothing. |
 | `--qa-calibration <display>`, `--qa-help <anchor>` | Opens the calibration window or Help at an anchor. |
-| `--qa-snapshot <dir>` [`--qa-snapshot-at <s>`] | Renders every visible window in-process into `<dir>` (works while the display sleeps; menus cannot be rendered). |
+| `--qa-snapshot <dir>` [`--qa-snapshot-at <s>`] | Renders every visible window in-process into `<dir>` (works while the display sleeps; menus cannot be rendered): each window's SwiftUI root, opaque, in the window's appearance; timed from the end of the launch work (3 s; 2 s with `--qa-hud`, 1 s for a HUD state). |
 | `--qa-exit-after <s>`, `--qa-update-check` | Quits after that many seconds; runs the update check at once. |
 | `--qa-hang-main <delay>,<duration>` | Blocks the main thread (hang-watchdog test H-X1, the owner's session only). |
 
-Settings-window defaults: `-OverbrightQAAppearance light|dark`, `-OverbrightQASnapshot <file.png>`
+`-OverbrightQAAppearance light|dark` pins the whole app's appearance. Settings-window defaults: `-OverbrightQASnapshot <file.png>`
 [`-OverbrightQASnapshotDelay <s>`], `-OverbrightQASearch "<text>"`, `-OverbrightQACloseAfter <s>` (closes Settings as
 its close button would), `-OverbrightQASettingsMenuItem <s>` (performs the app menu's ⌘, item after that many
 seconds, as the key would; no input is synthesized), and `-OverbrightQAKeyboardLayout <id>` (key caps

@@ -79,6 +79,21 @@ private func overbrightState(in defaults: UserDefaults) -> [String: String] {
         }
     }
 
+    /// `--qa-state` writes its state's settings (levels, switches, records): without a suite of its own the run keeps
+    /// them in memory, never in the user's preferences.
+    @Test func aScriptedStateWithoutASuiteKeepsItsSettingsInMemory() throws {
+        let qa = try #require(QAHooks.defaults(LaunchArguments(["Overbright", "--qa-simulate", "--qa-state", "dimmed"]),
+                                               ownDomain: "app.overbright.Overbright") { _ in
+            Issue.record("opened a suite without --qa-defaults-suite")
+            return nil
+        })
+        #expect(qa.defaults is InMemoryDefaults && qa.qaSuite == "memory")
+        let named = try #require(QAHooks.defaults(LaunchArguments(["Overbright", "--qa-state", "dimmed",
+                                                                   "--qa-defaults-suite", suiteName]),
+                                                  ownDomain: "app.overbright.Overbright") { _ in RecordingDefaults() })
+        #expect(named.qaSuite == suiteName)                                  // a named suite still wins
+    }
+
     /// With the switch on, the settings store the composition root builds, the one-time upgrade, setting writes,
     /// Reset All and its Undo all land in the suite, and the standard domain gets nothing.
     @Test func withTheSwitchTheStandardDomainIsNeverWritten() throws {

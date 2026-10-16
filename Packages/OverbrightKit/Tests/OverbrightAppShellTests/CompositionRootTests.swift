@@ -81,6 +81,16 @@ import Testing
         #expect(CompositionRoot.controlOutlet(for: context(nil)) is SystemControlOutlet)
     }
 
+    /// `--qa-state` also swaps Fill Light for a preview that is on when the state says so (no window ever shows).
+    @Test func aScriptedStateHasAFillLightPreview() {
+        let context = TestShell.context()
+        let ports = TestShell.ports(context: context)
+        let on = CompositionRoot.makeShell(context, ports: ports, scriptedStatus: .initial, scriptedFillLightOn: true)
+        #expect(on.services.fillLight is PreviewFillLightControl && on.services.fillLight.isOn)
+        #expect(!CompositionRoot.makeShell(context, ports: ports, scriptedStatus: .initial).services.fillLight.isOn)
+        #expect(!(shell().services.fillLight is PreviewFillLightControl))              // the engine's run: the real one
+    }
+
     /// D24: `--qa-simulate` wires only Core fakes, whatever follows it: a known fixture, an unknown name, another
     /// switch or nothing at all (the switch last) all get a fixture, never the real ports.
     @Test func simulationNeverUsesRealPorts() {

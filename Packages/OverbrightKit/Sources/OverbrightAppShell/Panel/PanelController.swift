@@ -4,6 +4,8 @@
 // §3.1 (`panelIn` / `panelOut`), §3.2 (Reduce Motion: cross-fade only); D13. Seeded by WP0a: `init(services:)` and
 // `toggle(from:)` are fixed; anchored to the status button's window frame (never `NSStatusBar.system.thickness`),
 // with `PanelPlacement` keeping it on screen while the button is not placed yet and following the button's window.
+// Every close is logged with its cause. Debug QA: `--qa-panel` keeps the panel open on clicks elsewhere (a mouse-down
+// anywhere in the session closed it before the capture), and `--qa-state` can open it with the "Why?" row expanded.
 import AppKit
 import OverbrightCore
 import OverbrightDesign
@@ -15,6 +17,22 @@ private let log = Log.logger(.panel)
 
 /// Owns the panel window.
 final class PanelController {
+    /// Why the panel closed (logged).
+    enum CloseCause: String {
+        /// A second click on the status item.
+        case toggle
+        /// A click in another app or another window of ours.
+        case outsideClick
+        /// Esc.
+        case escape
+        /// ⌘W, or ⌘, and ⌘Q before what they open or do.
+        case command
+        /// A control of the panel that opens another window.
+        case action
+        /// The app (a QA scenario's `panel close`).
+        case request
+    }
+
     /// The panel's width (DESIGN.md §5.1).
     static let width: CGFloat = PanelLayout.width
     /// The downward settle of `panelIn` (DESIGN.md §3.1).
@@ -29,6 +47,12 @@ final class PanelController {
     private var anchorObservers: [any NSObjectProtocol] = []
     private var isClosing = false
 
+    /// False keeps the panel open on clicks elsewhere: no outside-click monitor is installed (Debug QA `--qa-panel`,
+    /// `QAHooks.keepsPanelOpen`).
+    var closesOnOutsideClicks = true
+    /// The panel opens with the "Why?" row expanded (Debug QA `--qa-state`, `ScriptedStatuses.expandsWhy(named:)`).
+    var expandsWhy = false
+
     /// A controller for the app's services. Constructing it opens nothing.
     init(services: OverbrightServices) { self.services = services }
 
@@ -39,7 +63,7 @@ final class PanelController {
     /// click (the keyboard, VoiceOver's press) gives the panel keyboard focus (DESIGN.md §5.1).
     func toggle(from anchor: NSView?) {
         if isShown {
-            close()
+            close(.toggle)
         } else {
             show(from: anchor, takingFocus: ClickRouting.isKeyboardOrAccessibility(NSApp.currentEvent)
                     || NSWorkspace.shared.isVoiceOverEnabled)
@@ -77,9 +101,10 @@ final class PanelController {
         follow(anchor)
     }
 
-    /// Closes the panel (`panelOut`: a fade).
-    func close() {
+    /// Closes the panel (`panelOut`: a fade), logging `cause`.
+    func close(_ cause: CloseCause = .request) {
         guard let panel, panel.isVisible, !isClosing else { return }
+        log.info("panel closes: \(cause.rawValue, privacy: .public)")
         isClosing = true
         removeMonitors()
         stopFollowingAnchor()
@@ -101,7 +126,7 @@ final class PanelController {
 
     private func makePanel() -> OverbrightPanel {
         let panel = OverbrightPanel(frame: CGRect(x: 0, y: 0, width: Self.width, height: 120))
-        panel.onCancel = { [weak self] in self?.close() }
+        panel.onCancel = { [weak self] in self?.close(.escape) }
         panel.onCommand = { [weak self] command in self?.perform(command) }
         return panel
     }
@@ -109,7 +134,7 @@ final class PanelController {
     /// The SwiftUI content (a fresh view per opening: focus and the "Why?" row start over).
     private func content(takingFocus: Bool) -> AnyView {
         AnyView(PanelView(services: services, symbol: { Image(nsImage: StatusSymbolImage.image(for: $0)) },
-                          takesFocus: takingFocus, close: { [weak self] in self?.close() })
+                          takesFocus: takingFocus, expandsWhy: expandsWhy, close: { [weak self] in self?.close(.action) })
             .overbrightThemeRoot())
     }
 
@@ -155,15 +180,11 @@ final class PanelController {
     }
 
     private func perform(_ command: OverbrightPanel.Command) {
+        close(.command)
         switch command {
-        case .close:
-            close()
-        case .settings:
-            close()
-            services.app?.openSettings(nil)
-        case .quit:
-            close()
-            services.app?.quit()
+        case .close: break
+        case .settings: services.app?.openSettings(nil)
+        case .quit: services.app?.quit()
         }
     }
 
@@ -187,11 +208,12 @@ final class PanelController {
         anchorObservers = []
     }
 
-    /// Closes on a click in another app, or in another window of ours (the status button toggles by itself).
+    /// Closes on a click in another app, or in another window of ours (the status button toggles by itself); never
+    /// while `closesOnOutsideClicks` is false.
     private func installMonitors() {
-        guard monitors.isEmpty else { return }
+        guard closesOnOutsideClicks, monitors.isEmpty else { return }
         if let global = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown],
-                                                          handler: { [weak self] _ in self?.close() }) {
+                                                          handler: { [weak self] _ in self?.close(.outsideClick) }) {
             monitors.append(global)
         }
         if let local = NSEvent.addLocalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown],
@@ -201,7 +223,7 @@ final class PanelController {
             if let window = event.window, window !== self.panel, window !== self.anchor?.window,
                window.parent !== self.panel,
                !(window is NSPanel && window.level.rawValue >= NSWindow.Level.popUpMenu.rawValue) {
-                self.close()
+                self.close(.outsideClick)
             }
             return event
         }) {
@@ -213,6 +235,9 @@ final class PanelController {
         for monitor in monitors { NSEvent.removeMonitor(monitor) }
         monitors = []
     }
+
+    /// Whether outside clicks are being watched now (only while the panel is open and `closesOnOutsideClicks`).
+    var watchesOutsideClicks: Bool { !monitors.isEmpty }
 }
 
 private extension OverbrightMotion.Kind {

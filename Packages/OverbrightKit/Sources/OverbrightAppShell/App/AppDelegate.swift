@@ -7,9 +7,10 @@
 // command-line modes (`--diagnostics`, `--monitor`, `--restore-gamma`) run and quit here, before any service starts,
 // any window opens or any preference is written → single instance (skipped for CLI modes and launches wired to the
 // simulated ports) → move to Applications → settings upgrade → controllers, router connection, status item, Dock and
-// HUD → `LaunchGate` runs the launch check, then starts the services (Displays first, Boost last) → QA hooks → launch
-// UI (anchored to the placed status item; see `PanelPlacement` for the item MenuBarAgent has not placed yet; silent
-// for a login launch and a launch by a URL or an intent).
+// HUD → `LaunchGate` runs the launch check, then starts the services (Displays first, Boost last) → QA hooks (Debug;
+// their surfaces show once the launch work is done) → launch UI (anchored to the placed status item; see
+// `PanelPlacement` for the item MenuBarAgent has not placed yet; silent for a login launch and a launch by a URL or an
+// intent).
 // Quit (`QuitFlow`): a quit from inside the app is cancelled once, the services stop in reverse (Boost first) within
 // `EngineTiming.quitTimeout`, then the app terminates (not `.terminateLater`, see `QuitFlow`); a quit Apple Event (a
 // script, the Dock, Activity Monitor, log out, restart, shut down) terminates at once; `applicationWillTerminate`
@@ -54,6 +55,10 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
     private var pendingURLs: [URL] = []
     #if DEBUG
     private var scenario: Task<Void, Never>?
+    /// `--qa-state`: the panel opens with the "Why?" row expanded.
+    private var qaExpandsWhy = false
+    /// `--qa-panel`: the panel stays open on clicks elsewhere.
+    private var qaKeepsPanelOpen = false
     #endif
 
     /// How long the launch UI waits for MenuBarAgent to place the status item before the panel opens at the top-right
@@ -168,10 +173,18 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
         let context = CompositionRoot.context(defaults: defaults, fixture: fixture, time: time)
         let ports = CompositionRoot.ports(fixture: fixture, context: context)
         var scriptedStatus: BoostStatus?
+        var scriptedFillLightOn = false
         #if DEBUG
-        scriptedStatus = QAHooks.scriptedStatus(arguments)
+        QAHooks.applyAppearance(defaults.defaults)
+        qaKeepsPanelOpen = QAHooks.keepsPanelOpen(arguments)
+        if let state = QAHooks.scriptedState(arguments, settings: context.settings, qaSuite: defaults.qaSuite) {
+            scriptedStatus = state.status
+            scriptedFillLightOn = state.fillLightOn
+            qaExpandsWhy = state.expandsWhy
+        }
         #endif
-        let shell = CompositionRoot.makeShell(context, ports: ports, scriptedStatus: scriptedStatus)
+        let shell = CompositionRoot.makeShell(context, ports: ports, scriptedStatus: scriptedStatus,
+                                              scriptedFillLightOn: scriptedFillLightOn)
         self.shell = shell
         quitFlow = QuitFlow(gate: launchGate, runner: shell.runner)
         return shell
@@ -225,6 +238,10 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
         let statusItem = StatusItemController(services: services)
         let icon = StatusIconPresence(services: services, statusItem: statusItem)
         let panel = PanelController(services: services)
+        #if DEBUG
+        panel.closesOnOutsideClicks = !qaKeepsPanelOpen
+        panel.expandsWhy = qaExpandsWhy
+        #endif
         let welcome = WelcomeWindowController(services: services)
         statusItem.onClick = { [weak panel, weak statusItem] in panel?.toggle(from: statusItem?.button) }
         appControl.connect(ShellAppControl.Controllers(

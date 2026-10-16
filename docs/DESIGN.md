@@ -443,7 +443,7 @@ A 2-pt accent focus ring, concentric (radius + 3, outset 3), shows only after ke
 
 ### 5.13 States gallery (snapshot names)
 
-Every state below is a named status in PanelUI's `ScriptedStatuses` (`--qa-state <name>`, ARCHITECTURE.md §8.5) and has a snapshot in Light, Dark and Increase Contrast: in English and a pseudo-long locale while the UI is built (WP10), in Russian once WP15 has translated it, and in all 35 languages for the fit tests. Fixtures from ARCHITECTURE.md §3.9.
+Every state below is a named status in PanelUI's `ScriptedStatuses` (`--qa-state <name>`, ARCHITECTURE.md §8.5; in the app the state's levels, switches, links, calibration records, Fill Light and "Why?" row come with it, so its thumbs and HUD bars agree with its readouts) and has a snapshot in Light, Dark and Increase Contrast: in English and a pseudo-long locale while the UI is built (WP10), in Russian once WP15 has translated it, and in all 35 languages for the fit tests. Fixtures from ARCHITECTURE.md §3.9.
 
 | Name | Shows |
 |---|---|

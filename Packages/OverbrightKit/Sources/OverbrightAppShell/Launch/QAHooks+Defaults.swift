@@ -9,7 +9,8 @@
 // keeps its values between runs; `defaults delete <name>` starts over. Settings seeded as
 // `-overbright.<namespace>.<name> <data>` launch arguments still apply: the argument domain is part of a suite's search
 // list. A name that would be the app's own domain or a global one is refused, and the run keeps its settings in memory
-// instead (never in the standard domain).
+// instead (never in the standard domain). So does a run with `--qa-state` and no suite: the state writes its settings
+// (levels, switches, records), never into the user's.
 //
 // This is the only code that creates a preferences suite on purpose; Core's `noCodeCreatesAPreferencesSuite` test
 // allows this file by name.
@@ -28,13 +29,22 @@ extension QAHooks {
     /// opens the suite (tests pass in-memory stand-ins, so no test writes a preferences file).
     static func defaults(_ arguments: LaunchArguments, ownDomain: String? = Bundle.main.bundleIdentifier,
                          makeSuite: (String) -> UserDefaults? = { UserDefaults(suiteName: $0) }) -> ShellDefaults? {
-        guard arguments.contains(defaultsSuiteArgument) else { return nil }
+        guard arguments.contains(defaultsSuiteArgument) else {
+            guard arguments.qaState != nil else { return nil }
+            log.info("QA: --qa-state without \(defaultsSuiteArgument, privacy: .public); settings stay in memory")
+            return inMemory()
+        }
         let name = arguments.value(after: defaultsSuiteArgument)?.trimmingCharacters(in: .whitespaces) ?? ""
         if isAllowedSuite(name, ownDomain: ownDomain), let suite = makeSuite(name) {
             log.info("QA: settings are kept in the suite \(name, privacy: .public), not in the app's preferences")
             return ShellDefaults(defaults: suite, qaSuite: name)
         }
         log.error("QA: \(defaultsSuiteArgument, privacy: .public) needs a suite name of its own; settings stay in memory")
+        return inMemory()
+    }
+
+    /// In-memory defaults that still read the launch arguments' settings.
+    private static func inMemory() -> ShellDefaults {
         let memory = InMemoryDefaults()
         memory.register(defaults: UserDefaults.standard.volatileDomain(forName: UserDefaults.argumentDomain))   // reads
         return ShellDefaults(defaults: memory, qaSuite: "memory")

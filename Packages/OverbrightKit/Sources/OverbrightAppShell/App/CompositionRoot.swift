@@ -185,11 +185,15 @@ enum CompositionRoot {
     }
 
     /// The hub, the ordered services and the safety net over `ports`. `scriptedStatus` (`--qa-state`) replaces the
-    /// engine with a `PreviewBoostControl` showing that status.
-    static func makeShell(_ context: ShellContext, ports: ShellPorts, scriptedStatus: BoostStatus? = nil) -> Shell {
+    /// engine with a `PreviewBoostControl` showing that status, and Fill Light with a `PreviewFillLightControl` that is
+    /// on when `scriptedFillLightOn` (no window shows; the state's settings are `QAHooks.scriptedState`'s).
+    static func makeShell(_ context: ShellContext, ports: ShellPorts, scriptedStatus: BoostStatus? = nil,
+                          scriptedFillLightOn: Bool = false) -> Shell {
         var stack = ports.services
         let boost: any BoostControl
         var engine: BoostEngine?
+        let fillLight: any FillLightControl = scriptedStatus == nil ? ports.fillLight
+            : PreviewFillLightControl(isOn: scriptedFillLightOn)
         if let scriptedStatus {
             boost = PreviewBoostControl(status: scriptedStatus, machine: context.machine)
         } else {
@@ -206,9 +210,8 @@ enum CompositionRoot {
         let services = OverbrightServices(settings: context.settings, paths: context.paths, machine: context.machine,
                                           time: context.time, journal: context.journal, announcer: context.announcer,
                                           ownEDRSurfaces: context.ownEDRSurfaces, displays: ports.displays,
-                                          signals: ports.signals, boost: boost, fillLight: ports.fillLight,
+                                          signals: ports.signals, boost: boost, fillLight: fillLight,
                                           shortcuts: ports.shortcuts, updates: ports.updates)
-        let fillLight = ports.fillLight
         ports.hotKeys?.onPress = { [weak boost] shortcut in
             guard let boost else { return }
             ShortcutActions.perform(shortcut, boost: boost, fillLight: fillLight)
