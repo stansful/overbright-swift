@@ -51,7 +51,20 @@ STAGE="$(mktemp -d "${TMPDIR:-/tmp}/overbright-dmg.XXXXXX")"
 trap 'rm -rf "$STAGE"' EXIT
 ditto "$APP" "$STAGE/Overbright.app"
 ln -s /Applications "$STAGE/Applications"
-hdiutil create -volname "Overbright $VERSION" -srcfolder "$STAGE" -fs APFS -format UDZO -ov "$DIST/$NAME.dmg" >/dev/null
+# macOS 27 deprecates `hdiutil create` in favour of `diskutil image create from` (an APFS volume from a folder); older
+# systems (the macOS 14/15 CI images) have no `diskutil image` and keep the hdiutil form. The progress lines are
+# shown only when the step fails, so the log carries real problems only.
+if diskutil image create from --help >/dev/null 2>&1; then
+  dmg_tool=(diskutil image create from --format UDZO --volumeName "Overbright $VERSION" "$STAGE" "$DIST/$NAME.dmg")
+else
+  dmg_tool=(hdiutil create -volname "Overbright $VERSION" -srcfolder "$STAGE" -fs APFS -format UDZO -ov "$DIST/$NAME.dmg")
+fi
+dmg_log="$(mktemp "${TMPDIR:-/tmp}/overbright-dmg-log.XXXXXX")"
+if ! "${dmg_tool[@]}" >"$dmg_log" 2>&1; then
+  cat "$dmg_log" >&2; rm -f "$dmg_log"
+  die "${dmg_tool[0]} could not create $NAME.dmg"
+fi
+rm -f "$dmg_log"
 if [[ -n "${SIGN_IDENTITY:-}" ]]; then
   codesign --force --sign "$SIGN_IDENTITY" --timestamp "$DIST/$NAME.dmg"
   if [[ -n "${NOTARY_PROFILE:-}" ]]; then
