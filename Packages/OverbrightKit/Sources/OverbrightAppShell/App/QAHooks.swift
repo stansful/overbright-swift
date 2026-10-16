@@ -1,19 +1,24 @@
 // OverbrightAppShell/App/QAHooks.swift — DEBUG-only visual QA launch arguments. ARCHITECTURE.md §8.5; Cranny's
-// QAHooks (the owner's MIT code). Shared shell file (contract owner). The whole file is compiled out of Release.
+// QAHooks (the owner's MIT code). Shared shell file. The whole file is compiled out of Release.
 //
 //   --qa-simulate [fixture]          fakes for every display port (CompositionRoot; with no or an unknown name,
 //                                    builtin-xdr-lid-open); mandatory for agents
 //   --qa-defaults-suite <name>       settings in that suite (QAHooks+Defaults.swift)
 //   --qa-state <name>                drive `PreviewBoostControl` with PanelUI's `ScriptedStatuses` (CompositionRoot)
 //   --qa-panel                       open the panel
-//   --qa-menu, --qa-hud <level>      the status menu and the HUD (WP10; logged until then)
+//   --qa-menu                        write the status menu's rows to qa-trace.txt (next to --qa-snapshot), open it
+//   --qa-hud <level>                 set every display to that level as a shortcut would, so the HUD shows it
+//                                    (bright-room, max, -0.5, …; anything else: the HUD's generic level change)
 //   --qa-settings <pane[#row]>, --qa-welcome <step>, --qa-calibration <display>, --qa-help <anchor>
+//   --qa-script "<steps>"            run a scenario over the simulated ports once the services started
+//                                    (`ScenarioScript`; e.g. "on; wait 6; dump boosted; low-power on; dump paused")
+//   --qa-status <file>               where the scenario's `dump` lines go (JSON lines; else the log)
 //   --qa-snapshot <dir> [--qa-snapshot-at <s>]   render every visible window in-process into <dir> (default 3 s)
 //   --qa-exit-after <s>              quit after that many seconds
 //   --qa-update-check                run the update check at once
 //   --qa-hang-main <delay>,<duration>  block the main thread (hang-watchdog test H-X1; the owner's session only)
 //
-// QA hooks never synthesize input and never ask for permissions.
+// QA hooks never synthesize input and never ask for permissions. A scenario runs only over the simulated ports.
 #if DEBUG
 import AppKit
 import Foundation
@@ -27,9 +32,11 @@ private let log = Log.logger(.app)
 enum QAHooks {
     /// What the hooks act on.
     struct Targets {
-        let services: OverbrightServices
+        let shell: Shell
         let appControl: ShellAppControl
         let welcome: WelcomeWindowController
+        let statusItem: StatusItemController
+        let hud: HUDController
     }
 
     /// The status `--qa-state <name>` asks for, nil without the switch or for an unknown name.
@@ -42,20 +49,22 @@ enum QAHooks {
         return status
     }
 
-    /// Applies every hook of `arguments`.
-    static func apply(_ arguments: LaunchArguments, to targets: Targets) {
+    /// Applies every hook of `arguments`; returns the running scenario, if any (the app cancels it at quit).
+    static func apply(_ arguments: LaunchArguments, to targets: Targets) -> Task<Void, Never>? {
         let control = targets.appControl
+        let snapshotDirectory = arguments.qaSnapshotDirectory.map { URL(fileURLWithPath: $0, isDirectory: true) }
         if arguments.qaOpensPanel { after(.milliseconds(500)) { control.showPanel() } }
-        if arguments.qaOpensMenu { log.info("QA: --qa-menu lands with WP10") }
-        if let level = arguments.qaHUDLevel { log.info("QA: --qa-hud \(level, privacy: .public) lands with WP10") }
+        if arguments.qaOpensMenu {
+            after(.seconds(1)) { targets.statusItem.runMenuQA(traceDirectory: snapshotDirectory) }
+        }
+        if let level = arguments.qaHUDLevel { after(.seconds(1)) { showHUD(level, targets: targets) } }
         if let pane = arguments.qaSettingsPane { control.openSettings(pane) }
         if let step = arguments.qaWelcomeStep { targets.welcome.show(step: step) }
         if let display = arguments.qaCalibrationDisplay { control.showCalibration(for: DisplayKey(rawValue: display)) }
         if let anchor = arguments.qaHelpAnchor { control.showHelp(anchor: anchor) }
-        if arguments.qaRunsUpdateCheck { targets.services.updates.checkNow() }
-        if let path = arguments.qaSnapshotDirectory {
-            let directory = URL(fileURLWithPath: path, isDirectory: true)
-            after(seconds(arguments.qaSnapshotAt ?? 3)) { capture(into: directory) }
+        if arguments.qaRunsUpdateCheck { targets.shell.services.updates.checkNow() }
+        if let snapshotDirectory {
+            after(seconds(arguments.qaSnapshotAt ?? 3)) { capture(into: snapshotDirectory) }
         }
         if let exit = arguments.qaExitAfter, exit > 0 {
             after(seconds(exit)) {
@@ -68,6 +77,42 @@ enum QAHooks {
                 log.info("QA: blocking the main thread for \(hang.duration.timeInterval, privacy: .public) s")
                 Thread.sleep(forTimeInterval: hang.duration.timeInterval)
             }
+        }
+        guard let script = arguments.qaScript else { return nil }
+        return runScenario(script, statusFile: arguments.qaStatusFile, shell: targets.shell)
+    }
+
+    /// `--qa-hud <level>`: a level the scenario script can name ("bright-room", "max", "-0.5") is set on every display
+    /// as a shortcut would, so the HUD shows that level for real; anything else shows the HUD's generic level change.
+    static func showHUD(_ level: String, targets: Targets) {
+        if case .level(let position)? = try? ScenarioScript.parse("level \(level)").first {
+            targets.shell.services.boost.setLevel(position, for: nil, source: .shortcut)
+        } else {
+            targets.hud.showForQA(level)
+        }
+    }
+
+    /// Parses `script` and runs it over the simulated ports once the engine is ready; nil (logged) when it cannot run.
+    static func runScenario(_ script: String, statusFile: String?, shell: Shell) -> Task<Void, Never>? {
+        guard let rig = ScenarioRunner.Rig(shell: shell) else {
+            log.error("QA: --qa-script needs --qa-simulate; nothing runs")
+            return nil
+        }
+        let steps: [ScenarioStep]
+        do { steps = try ScenarioScript.parse(script) } catch {
+            log.error("QA: \(String(describing: error), privacy: .public)")
+            return nil
+        }
+        let output = statusFile.map { URL(fileURLWithPath: $0) }
+        if let output { try? Data().write(to: output) }                      // a fresh file per run
+        let runner = ScenarioRunner(rig: rig, wait: { duration in try? await Task.sleep(for: duration) },
+                                    record: { summary in append(summary.jsonLine, to: output) },
+                                    quit: { NSApp.terminate(nil) })
+        let boost = shell.services.boost
+        return Task {
+            while !boost.status.isReady, !Task.isCancelled { try? await Task.sleep(for: .milliseconds(100)) }
+            log.info("QA: scenario of \(steps.count, privacy: .public) steps starts")
+            await runner.run(steps)
         }
     }
 
@@ -95,6 +140,17 @@ enum QAHooks {
                 log.error("QA: snapshot failed: \(error.localizedDescription, privacy: .public)")
             }
         }
+    }
+
+    private static func append(_ line: String, to url: URL?) {
+        guard let url else {
+            log.info("QA: \(line, privacy: .public)")
+            return
+        }
+        guard let handle = try? FileHandle(forWritingTo: url) else { return }
+        defer { try? handle.close() }
+        _ = try? handle.seekToEnd()
+        try? handle.write(contentsOf: Data((line + "\n").utf8))
     }
 
     private static func after(_ delay: Duration, _ action: @escaping @MainActor () -> Void) {

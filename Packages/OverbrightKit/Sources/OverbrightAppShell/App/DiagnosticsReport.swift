@@ -5,10 +5,12 @@
 // READ-ONLY: it reads transfer tables, profile bases and EDR values, and never writes a table, arms a trigger, opens a
 // window or writes a preference (test `diagnosticsNeverWrites`). `gammaWrites` and `triggerWindows` are the ports'
 // own counters; smoke asserts both are 0. Each display's table is judged against its profile base by Policy's
-// `TableClassifier` (D26); `maxDeviationFromBase` is the raw evidence next to the class.
+// `TableClassifier` (D26); `maxDeviationFromBase` is the raw evidence next to the class. The inputs of a running app
+// or of `--diagnostics` come from the shell (`DiagnosticsReport+Shell.swift`).
 import AppKit
 import CoreGraphics
 import Foundation
+import OverbrightBoost
 import OverbrightCore
 import OverbrightPolicy
 import os
@@ -18,8 +20,7 @@ private let log = Log.logger(.diagnostics)
 
 /// Builds and writes the diagnostics report.
 enum DiagnosticsReport {
-    /// Everything the report reads. Optional ports are the ones the current wiring has no real implementation of
-    /// (WP0a placeholders); the report shows them as null rather than a fake's values.
+    /// Everything the report reads.
     struct Inputs {
         /// The settings (read only).
         var settings: SettingsStore
@@ -37,12 +38,18 @@ enum DiagnosticsReport {
         var triggers: any TriggerFactory
         /// The online displays (a read-only snapshot).
         var displays: [DisplayFacts]
-        /// The system snapshot, nil when the wiring has no real signals yet.
+        /// The system snapshot (nil: not available, shown as null).
         var signals: (any SystemSignals)?
-        /// Running catalogue matches, nil when the wiring has no real probe yet.
+        /// Running catalogue matches (nil: not available, shown as null).
         var conflicts: (any ConflictProbe)?
         /// Whether a display's ColorSync profile has a `vcgt` tag (nil: unknown).
         var profileHasVCGT: (CGDirectDisplayID) -> Bool?
+        /// The strategy cache by "<display UUID>|<OS build>" (the engine's, or the file's for `--diagnostics`).
+        var strategyRecords: [String: StrategyRecord] = [:]
+        /// The built-in panel's backlight now, in milli-nits (H-N1); nil without one.
+        var backlightMilliNits: Double?
+        /// The services that start and stop, in start order.
+        var services: [String] = []
         /// The `--qa-simulate` fixture, nil for real ports.
         var simulatedFixture: String?
         /// `--diagnostics`: languages, resource bundles, the main menu and a Design string in Russian (smoke).
@@ -69,7 +76,10 @@ enum DiagnosticsReport {
             report["designString.ru"] = designString(language: "ru")
         }
         report["displays"] = inputs.displays.map { display($0, inputs) }
-        report["strategyCache"] = [Any]()                                   // WP4's StrategyCache
+        report["strategyCache"] = inputs.strategyRecords.keys.sorted().map { key in
+            strategyEntry(key: key, record: inputs.strategyRecords[key] ?? StrategyRecord())
+        }
+        report["services"] = inputs.services
         report["settingsRevision"] = inputs.settings.storedRevision ?? NSNull()
         report["nonDefaultSettings"] = inputs.settings.storedKeyIDs()
         report["conflicts"] = inputs.conflicts.map { probe in
@@ -125,10 +135,12 @@ enum DiagnosticsReport {
             "supportsPQ": facts.supportsPQ ?? NSNull(), "panelPeakNits": facts.panelPeakNits ?? NSNull(),
             "panelFrameAverageNits": facts.panelFrameAverageNits ?? NSNull(),
             "panelMinNits": facts.panelMinNits ?? NSNull(), "sdrMaxNits": facts.sdrMaxNits ?? NSNull(),
-            "backlightMilliNits": NSNull(),                                 // WP2 (IORegistry, H-N1)
+            "backlightMilliNits": (facts.isBuiltIn ? inputs.backlightMilliNits : nil) ?? NSNull(),
             "profileHasVCGT": inputs.profileHasVCGT(id) ?? NSNull(),
-            "cachedRung": NSNull(), "lowestReadyHeadroom": NSNull(),       // WP4's StrategyCache
         ]
+        let cached = inputs.strategyRecords[StrategyCache.key(facts.ref.key, osBuild: inputs.machine.osBuild)]
+        entry["cachedRung"] = cached?.rung ?? NSNull()
+        entry["lowestReadyHeadroom"] = cached?.lowestReadyHeadroom ?? NSNull()
         entry.merge(table(of: id, capacity: facts.gammaCapacity, gamma: inputs.gamma)) { _, new in new }
         let reading = inputs.headroom.reading(for: facts.ref)
         entry["potential"] = reading?.potential ?? NSNull()
@@ -151,10 +163,15 @@ enum DiagnosticsReport {
             preferences.calibration, mechanism: mechanism, machine: inputs.machine, potential: reading?.potential).rawValue
         entry["calibration"] = preferences.calibration.map { record in
             ["outcome": record.outcome.rawValue,
-             "valid": isValid(record, mechanism: mechanism, machine: inputs.machine, potential: reading?.potential)]
-                as [String: Any]
+             "valid": EligibilityClassifier.hasValidCalibration(record, mechanism: mechanism, machine: inputs.machine,
+                                                                 potential: reading?.potential)] as [String: Any]
         } ?? NSNull()
         return entry
+    }
+
+    private static func strategyEntry(key: String, record: StrategyRecord) -> [String: Any] {
+        ["key": key, "rung": record.rung ?? NSNull(), "failures": record.failures,
+         "lowestReadyHeadroom": record.lowestReadyHeadroom ?? NSNull()]
     }
 
     /// The table read back and judged against the profile base (read-only).
@@ -178,12 +195,6 @@ enum DiagnosticsReport {
     private static func maxDeviation(_ table: GammaTable, _ base: GammaTable) -> Double {
         let pairs = [(table.red, base.red), (table.green, base.green), (table.blue, base.blue)]
         return pairs.flatMap { read, expected in zip(read, expected).map { Double(abs($0 - $1)) } }.max() ?? 0
-    }
-
-    private static func isValid(_ record: CalibrationRecord, mechanism: Mechanism, machine: MachineIdentity,
-                                potential: Double?) -> Bool {
-        guard record.osBuild == machine.osBuild, record.mechanism == mechanism, let potential else { return false }
-        return abs(potential - record.potentialAtTest) <= 0.05 * record.potentialAtTest
     }
 
     // MARK: Codes (machine codes, not UI copy)

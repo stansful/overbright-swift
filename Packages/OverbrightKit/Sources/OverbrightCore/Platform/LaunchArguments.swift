@@ -112,6 +112,12 @@ public nonisolated struct LaunchArguments: Sendable, Equatable {
     /// `--qa-state <scripted status>`: drive `PreviewBoostControl` with a named status (PanelUI's `ScriptedStatuses`).
     public var qaState: String? { value(after: "--qa-state") }
 
+    /// `--qa-script "<steps>"`: a scenario over the simulated ports (the shell's `ScenarioScript`, ARCHITECTURE.md §8.5).
+    public var qaScript: String? { value(after: "--qa-script") }
+
+    /// `--qa-status <file>`: where the scenario's `dump` lines go (JSON lines).
+    public var qaStatusFile: String? { value(after: "--qa-status") }
+
     /// `--qa-snapshot <dir>`: in-process window snapshots are written there.
     public var qaSnapshotDirectory: String? { value(after: "--qa-snapshot") }
 
