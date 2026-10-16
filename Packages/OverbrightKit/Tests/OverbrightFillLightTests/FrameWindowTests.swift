@@ -35,6 +35,22 @@ import Testing
         #expect(factory.openWindowCount == 0)
     }
 
+    @Test func standInCountsTheMainScreenAsItsSimulatedDisplay() throws {
+        // `--qa-simulate`: a simulated display without a real screen shows on the main screen, whose ID is not its
+        // own; a screen change must not remove the stand-in as "left its display".
+        guard NSScreen.main != nil else { return }   // no screen to stand in on (a headless runner)
+        let factory = SystemFillLightSurfaces(mode: .sdrStandIn, time: ManualTimeSource())
+        let simulated = DisplayRef(key: DisplayKey(rawValue: "0B21E7F1-0000-4000-8000-0000000000ED"), id: 0x7FFF_FFED)
+        let window = try #require(try factory.makeSurface(on: simulated) as? FillLightWindow)
+        defer { window.remove() }
+        let reports = ScreenReports()
+        window.onScreenChange = { reports.ids.append($0) }
+        window.screenChanged()
+        #expect(reports.ids == [0x7FFF_FFED])
+        #expect(window.rendering == .sdr)
+        #expect(factory.openWindowCount == 0)                              // built, never ordered in
+    }
+
     @Test func preferredRenderingFollowsTheOS() {
         if #available(macOS 26.0, *) {
             #expect(SystemFillLightSurfaces.preferredRendering == .taggedLayer)
@@ -102,6 +118,15 @@ import Testing
         #expect(abs((rgba(color).first ?? 0) - 0.9) < 1e-6)
     }
 
+    @Test func aColourLayerIsSetEvenWhenTheDrawableWaits() throws {
+        // `presentsDrawable: false` (hidden, or not ordered in yet) only keeps the Metal path from presenting.
+        let layers = FillLightLayers(rendering: .sdr, display: 0)
+        #expect(layers.apply(edrStyle(value: 0.7, request: nil), geometry: geometry, scale: 2, presentsDrawable: false))
+        let color = try #require(layers.content.backgroundColor)
+        #expect(abs((rgba(color).first ?? 0) - 0.7) < 1e-6)
+        #expect(layers.showColor(presentsDrawable: false))
+    }
+
     @Test func changingTheStyleRecoloursInPlace() throws {
         guard #available(macOS 26.0, *) else { return }
         let layers = FillLightLayers(rendering: .taggedLayer, display: 0)
@@ -113,4 +138,9 @@ import Testing
         #expect(abs((rgba(color).first ?? 0) - 1.9) < 1e-4)
         #expect(abs(Double(color.contentHeadroom) - 2.0) < 2e-3)
     }
+}
+
+/// The display IDs a window reported as its new screen.
+@MainActor private final class ScreenReports {
+    var ids: [CGDirectDisplayID?] = []
 }

@@ -13,6 +13,9 @@ public nonisolated struct FrameGeometry: Equatable, Sendable {
     public static let widthRange: ClosedRange<Double> = 16...120
     /// The largest inner corner radius (DESIGN.md §11).
     public static let maximumInnerCornerRadius: CGFloat = 24
+    /// The band kept clear for a menu bar that hides itself when macOS reports no height for it: the menu bar's
+    /// height on macOS 27 (30 pt, ARCHITECTURE.md §7.6), more than the 24 pt bar of macOS 14–15.
+    public static let hiddenMenuBarHeight: CGFloat = 30
 
     /// The window's bounds: the display's frame size at origin zero.
     public let bounds: CGRect
@@ -29,7 +32,7 @@ public nonisolated struct FrameGeometry: Equatable, Sendable {
 
     /// The frame of a display of `displaySize` points.
     /// - Parameters:
-    ///   - menuBarHeight: the menu bar's band at the top (`frame.maxY − visibleFrame.maxY`; 0 when it hides itself).
+    ///   - menuBarHeight: the menu bar's band at the top (`menuBarBand(reported:showsMenuBar:barHeight:)`).
     ///   - safeAreaTop: `NSScreen.safeAreaInsets.top`, the notch band (0 without a notch).
     ///   - width: the Width setting in points.
     ///   - reachesTop: the display shows a full-screen Space, so there is no menu bar to keep clear.
@@ -46,6 +49,17 @@ public nonisolated struct FrameGeometry: Equatable, Sendable {
         self.width = min(CGFloat(requested), fits)
         inner = outer.insetBy(dx: self.width, dy: self.width)
         innerCornerRadius = max(min(Self.maximumInnerCornerRadius, self.width, inner.width / 2, inner.height / 2), 0)
+    }
+
+    /// The menu bar band to pass as `menuBarHeight`. `reported` is `frame.maxY − visibleFrame.maxY`, which is 0 both
+    /// on a display without a menu bar and while an auto-hidden bar is out of sight; the frame sits above the menu
+    /// bar's level, so on a display that shows the bar (`showsMenuBar`) the band stays clear for it anyway:
+    /// `barHeight` (`NSMenu.menuBarHeight`, 0 when unknown), at least `hiddenMenuBarHeight`. A full-screen Space is
+    /// `init`'s `reachesTop`, not this.
+    public static func menuBarBand(reported: CGFloat, showsMenuBar: Bool, barHeight: CGFloat) -> CGFloat {
+        if reported.isFinite, reported > 0 { return reported }
+        guard showsMenuBar else { return 0 }
+        return max(barHeight.isFinite ? barHeight : 0, hiddenMenuBarHeight)
     }
 
     /// The frame as one even-odd path: the outer rectangle plus the inner rounded rectangle.

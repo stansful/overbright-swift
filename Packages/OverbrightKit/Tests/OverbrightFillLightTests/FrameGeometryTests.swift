@@ -69,6 +69,28 @@ import Testing
         #expect(shown.isLit(CGPoint(x: 100, y: 1_117 - 38)))
     }
 
+    @Test func anAutoHiddenMenuBarKeepsItsBandOutsideAFullScreenSpace() {
+        // `frame.maxY − visibleFrame.maxY` is 0 while an auto-hidden bar is out of sight; the frame sits above the menu
+        // bar's level, so the band stays clear on a display that shows the bar.
+        #expect(FrameGeometry.menuBarBand(reported: 30, showsMenuBar: true, barHeight: 0) == 30)
+        #expect(FrameGeometry.menuBarBand(reported: 37, showsMenuBar: true, barHeight: 24) == 37)
+        #expect(FrameGeometry.menuBarBand(reported: 0, showsMenuBar: true, barHeight: 0) == 30)
+        #expect(FrameGeometry.menuBarBand(reported: 0, showsMenuBar: true, barHeight: 24) == 30)
+        #expect(FrameGeometry.menuBarBand(reported: 0, showsMenuBar: true, barHeight: 37) == 37)
+        #expect(FrameGeometry.menuBarBand(reported: 0, showsMenuBar: true, barHeight: .nan) == 30)
+        #expect(FrameGeometry.menuBarBand(reported: .nan, showsMenuBar: true, barHeight: 0) == 30)
+        // A display without a menu bar (displays share one Space): nothing to keep clear.
+        #expect(FrameGeometry.menuBarBand(reported: 0, showsMenuBar: false, barHeight: 30) == 0)
+        let band = FrameGeometry.menuBarBand(reported: 0, showsMenuBar: true, barHeight: 0)
+        let hidden = FrameGeometry(displaySize: CGSize(width: 2_560, height: 1_440), menuBarHeight: band,
+                                   safeAreaTop: 0, width: 48, reachesTop: false)
+        #expect(hidden.topInset == 30)
+        #expect(!hidden.isLit(CGPoint(x: 1_280, y: 1_425)))      // where the bar slides in
+        let fullScreen = FrameGeometry(displaySize: CGSize(width: 2_560, height: 1_440), menuBarHeight: band,
+                                       safeAreaTop: 0, width: 48, reachesTop: true)
+        #expect(fullScreen.topInset == 0)
+    }
+
     @Test func fullScreenSpaceReachesTheTop() {
         let g = FrameGeometry(displaySize: CGSize(width: 1_728, height: 1_117), menuBarHeight: 37, safeAreaTop: 32,
                               width: 48, reachesTop: true)

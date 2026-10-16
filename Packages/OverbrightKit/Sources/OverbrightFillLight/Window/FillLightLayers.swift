@@ -42,9 +42,12 @@ import QuartzCore
         root.addSublayer(content)
     }
 
-    /// Lays the frame out as `geometry` and shows `style`. False only when the Metal path found no drawable yet.
+    /// Lays the frame out as `geometry` and shows `style`. `presentsDrawable` false: the Metal path keeps its drawable
+    /// for now (the window is hidden or not ordered in yet; a colour layer is set either way). False only when the
+    /// Metal path tried and found no drawable.
     @discardableResult
-    func apply(_ style: FillLightStyle, geometry: FrameGeometry, scale: CGFloat) -> Bool {
+    func apply(_ style: FillLightStyle, geometry: FrameGeometry, scale: CGFloat,
+               presentsDrawable: Bool = true) -> Bool {
         self.style = style
         CATransaction.begin()
         CATransaction.setDisableActions(true)   // a static light: no implicit fades
@@ -53,15 +56,15 @@ import QuartzCore
         mask.frame = geometry.bounds
         mask.contentsScale = scale
         mask.path = geometry.path
-        let shown = showColor()
+        let shown = showColor(presentsDrawable: presentsDrawable)
         CATransaction.commit()
         return shown
     }
 
-    /// Shows the current style's colour again (the Metal path presents a new drawable). False only when the Metal path
-    /// found no drawable yet.
+    /// Shows the current style's colour again (the Metal path presents a new drawable unless `presentsDrawable` is
+    /// false). False only when the Metal path tried and found no drawable.
     @discardableResult
-    func showColor() -> Bool {
+    func showColor(presentsDrawable: Bool = true) -> Bool {
         guard let style else { return true }
         let rgb = style.displayedColor
         switch rendering {
@@ -77,6 +80,9 @@ import QuartzCore
             }
             return true
         case .metalClear:
+            // nextDrawable() can wait up to 1 s on the main thread when no drawable is free (a hidden window's are
+            // not released), so the caller presents only while the window is visible.
+            guard presentsDrawable else { return true }
             return metal?.present(rgb, wantsEDR: style.headroomRequest != nil) ?? true
         case .sdr:
             content.backgroundColor = EDRColor.untagged(rgb)

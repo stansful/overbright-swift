@@ -13,7 +13,8 @@ public final class SystemFillLightSurfaces: FillLightSurfaceFactory {
     public nonisolated enum Mode: Hashable, Sendable {
         /// The app: EDR where the display has extra range.
         case live
-        /// `--qa-simulate`: never EDR, and a simulated display without a real screen uses the main screen.
+        /// `--qa-simulate`: never EDR, and a simulated display without a real screen uses the main screen (and
+        /// counts it as its own, so moving between real screens never removes it).
         case sdrStandIn
     }
 
@@ -39,10 +40,16 @@ public final class SystemFillLightSurfaces: FillLightSurfaceFactory {
         let standIn = mode == .sdrStandIn
         let id = display.id
         let screenNow: @MainActor () -> NSScreen? = { ScreenLookup.screen(for: id) ?? (standIn ? NSScreen.main : nil) }
+        // A simulated display without a real screen shows on the main screen, whose ID is not its own: the stand-in
+        // reports its own display for any screen then, so a screen change never removes it as "left its display".
+        let displayIDOf: @MainActor (NSScreen?) -> CGDirectDisplayID? = { screen in
+            if standIn, ScreenLookup.screen(for: id) == nil { return id }
+            return screen.flatMap(ScreenLookup.displayID(of:))
+        }
         guard let screen = screenNow() else { throw FillLightError.noScreen(id) }
         let rendering: FillLightRendering = standIn ? .sdr : Self.preferredRendering
-        return FillLightWindow(display: display, screen: screen, screenNow: screenNow, rendering: rendering,
-                               time: time) { [weak self] orderedIn in
+        return FillLightWindow(display: display, screen: screen, screenNow: screenNow, displayIDOf: displayIDOf,
+                               rendering: rendering, time: time) { [weak self] orderedIn in
             self?.openWindowCount += orderedIn ? 1 : -1
         }
     }
