@@ -356,7 +356,7 @@ Quit Overbright                           ⌘Q
 | Ticks | 1 × 5 pt `tick` marks at the **shown** presets (Indoor 25 %, Bright room 50 %, Sunlight 75 %, Max 100 % of the boost half; a preset below ×1.1 or within 0.1 stop of the next shown one is hidden, ARCHITECTURE.md §5.3); none on the dim half |
 | Thumb | 20 pt white circle with the system shadow (glass while dragged on macOS 26+); 28 pt hit area |
 | Snapping | within ±3 % of the detent or a shown tick, a slow drag settles there (`detentSnap`) with an `.alignment` haptic at the detent and `.levelChange` at a preset; a fast drag passes through |
-| Value tag | while dragging or hovering the thumb: a capsule 6 pt above it (`valueTag`) with the canonical value text: "Bright room · ×1.29" at a preset, "Standard" at the detent, "×1.42" between presets, "Dimmed · 25 %" on the dim half; "≈" before the multiplier while not calibrated; "· small gain on this display" when Max is below ×1.3; while a guard pauses the display, the reason ("Paused: Low Power Mode") |
+| Value tag | while dragging or hovering the thumb: a capsule 6 pt above it (`valueTag`) with the canonical value text: "Bright room · ×1.29" at a preset, "Standard" at the detent, "×1.42" between presets, "Dimmed · 25 %" on the dim half; "≈" before the multiplier while not calibrated; "· small gain on this display" when Max is at most ×1.3; while a guard pauses the display, the reason ("Paused: Low Power Mode") |
 | Disabled boost half | when boosting is not possible (verdict, or the Safe top below ×1.05): the right half draws with `inactiveHatch`, the thumb stops at the detent, and hovering the half shows the reason as a help tag |
 | Disabled dim half | displays without a transfer table (virtual) or in a reference preset: the left half is disabled the same way |
 | Keyboard (focused) | ← / → by **1/12 stop** of light (≈ 6 %) · ⌥← / ⌥→ to the previous/next named stop (Standard, the shown presets; on the dim half 50 %, 25 %, 10 %, 5 %, 2 % of Standard light) · Home = Standard · End = Max · scrolling adjusts by 1/12 stop per notch · ⌃↩ opens the card's context menu. A key step never crosses Standard: the next press continues past it |
@@ -644,7 +644,7 @@ A preview at the top: a 200 × 125 pt miniature of the chosen display with the f
 
 ### 7.9 About
 
-The compiled icon, "Overbright", version and build; **Check for Updates** with the result inline (only when configured); "Free and open source under the MIT License."; **Acknowledgements…** (THIRD_PARTY_NOTICES); the privacy statement: "Overbright collects nothing and needs no permissions. It connects to the internet only to check GitHub for updates, and only if you turn that on."; **Show Welcome…**; **Help**; a GitHub link (only when configured).
+The compiled icon, "Overbright", version and build; **Check for Updates** with the result inline (only when configured); "Free and open source under the MIT License."; **Acknowledgments…** (THIRD_PARTY_NOTICES; American spelling, as built and as §16's voice); the privacy statement: "Overbright collects nothing and needs no permissions. It connects to the internet only to check GitHub for updates, and only if you turn that on."; **Show Welcome…**; **Help**; a GitHub link (only when configured).
 
 ---
 
@@ -981,7 +981,7 @@ Displays use more power when brighter: that is the product, and the README says 
 
 | State | Allowed work | Target |
 |---|---|---|
-| Off (nothing dimmed) | event notifications only; no timers, tasks, windows, Metal devices or IOPS percent source | 0 wake-ups/s; Energy Impact 0.0; < 40 MB resident |
+| Off (nothing dimmed) | event notifications only, and the one-shot work an event asks for (the full-screen re-check 0.6 s after a Space, app or screen event, which ends a full-screen or app pause); no periodic timers or tasks, no windows, Metal devices or IOPS percent source | 0 wake-ups/s; Energy Impact 0.0; < 40 MB resident |
 | Preparing (first arm) | 10 Hz headroom reads; ≤ 7 rungs × 2.5 s once per display and macOS build, then ≈ 1–3 s | — |
 | Boosted, steady (T1/T2) | 2 s drift check (one table read, one headroom read, ≤ 2 ms window list when a full-screen rule is on) + the 2 s hang ping; a ≤ 3 s 10 Hz poll burst only after a raise that waits for range | ≤ 1.5 wake-ups/s; < 0.1 % CPU; no GPU work after the first frame |
 | Boosted with T3 | + one tiny present every 5 s | measured and reported in the release notes |
@@ -1021,7 +1021,7 @@ Displays use more power when brighter: that is the product, and the README says 
 | `EDRPreviewSurface` | the Welcome card (§8) | EDR content in our own view, draggable divider, SDR stand-in under `--qa-simulate`, paused when hidden |
 | `StepWedgeView` | the calibration squares (§9) | drawn in the screen's colour space on black |
 | `KeyCap` | shortcut key caps | renders the text it is given (from `ShortcutCenter.displayString`) in system colours |
-| `ChipButtonStyle`, `IconButtonStyle`, `LinkButtonStyle` | buttons | hit-target widening inside the style |
+| `ChipButtonStyle`, `IconButtonStyle`, `OverbrightLinkButtonStyle` | buttons | hit-target widening inside the style |
 | `.overbrightFocusRing` | keyboard focus | concentric, only after keyboard use |
 | `SettingRowConventions`, `SettingsStore.binding(_:)` | changed dot, Reset to Default, SwiftUI bindings | Cranny's |
 | Copy builders (`ChipModel`, `VerdictText`, `BannerModel`, `ValueText`, `HUDText`) | every sentence of §12.1–§12.3 and §12.9 | the only producers of engine-state copy |

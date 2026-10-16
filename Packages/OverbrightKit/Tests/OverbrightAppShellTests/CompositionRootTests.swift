@@ -6,14 +6,15 @@
 import Foundation
 import OverbrightBoost
 import OverbrightCore
+import OverbrightIntents
 import Testing
 @testable import OverbrightAppShell
 
 @MainActor @Suite struct CompositionRootTests {
-    private func shell(ports: ShellPorts, scriptedStatus: BoostStatus? = nil) -> Shell {
-        CompositionRoot.makeShell(settings: SettingsStore(defaults: InMemoryDefaults()), paths: .temporary(),
-                                  machine: DisplayFixture.ownerMachine, time: ManualTimeSource(), ports: ports,
-                                  scriptedStatus: scriptedStatus)
+    private func shell(ports: ShellPorts? = nil, scriptedStatus: BoostStatus? = nil) -> Shell {
+        let context = TestShell.context()
+        return CompositionRoot.makeShell(context, ports: ports ?? TestShell.ports(context: context),
+                                         scriptedStatus: scriptedStatus)
     }
 
     /// Building the hub, the engine, the launch rescue, the app control and every shell controller calls no port:
@@ -24,16 +25,18 @@ import Testing
         let gamma = TrapGammaPort()
         let shell = shell(ports: .traps(log: log, gamma: gamma))
         let services = shell.services
-        let control = ShellAppControl(settings: services.settings)
+        let control = ShellAppControl(settings: services.settings,
+                                      loginItems: LoginItemController(service: shell.ports.loginItems))
         services.app = control
         let statusItem = StatusItemController(services: services)
         control.connect(ShellAppControl.Controllers(
-            statusItem: statusItem, panel: PanelController(services: services),
+            icon: StatusIconPresence(services: services, statusItem: statusItem), panel: PanelController(services: services),
             settings: SettingsWindowController(services: services), welcome: WelcomeWindowController(services: services),
             help: HelpWindowController(services: services), calibration: CalibrationWindowController(services: services),
             selfTest: SelfTestSheetPresenter(services: services), diagnostics: { nil }))
         _ = HUDController(services: services)
         _ = LowLevelPromptController(services: services)
+        _ = DockMenuController(services: services)
 
         #expect(log.calls.isEmpty, "touched before start(): \(log.calls)")
         #expect(gamma.reads.isEmpty && gamma.writes.isEmpty)
@@ -47,19 +50,21 @@ import Testing
 
     /// Boost starts last and stops first (D7, D23).
     @Test func boostStartsLast() {
-        let shell = shell(ports: CompositionRoot.simulatedPorts(.builtinXDRLidOpen, time: ManualTimeSource()))
+        let shell = shell()
         #expect(shell.lifecycle.last is BoostEngine)
         #expect(shell.services.boost is BoostEngine)
+        #expect(shell.engine === shell.services.boost as? BoostEngine)
+        #expect(shell.signalHandlers != nil)
     }
 
     /// `--qa-state` swaps the engine for a `PreviewBoostControl` with that status (and no engine in the lifecycle).
     @Test func scriptedStatusReplacesTheEngine() {
         let status = BoostStatus(isOn: true, isReady: true, pausedUntil: nil, autoOffAt: nil, displays: [], banner: nil,
                                  symbol: .on)
-        let shell = shell(ports: CompositionRoot.simulatedPorts(.builtinXDRLidOpen, time: ManualTimeSource()),
-                          scriptedStatus: status)
+        let shell = shell(scriptedStatus: status)
         #expect(shell.services.boost.status == status)
         #expect(!shell.lifecycle.contains { $0 is BoostEngine })
+        #expect(shell.engine == nil && shell.signalHandlers == nil)
     }
 
     /// D24: `--qa-simulate` wires only Core fakes, whatever follows it: a known fixture, an unknown name, another
@@ -71,16 +76,20 @@ import Testing
                           ["Overbright", "--off", "--qa-simulate"],
                           ["Overbright", "--qa-simulate", "--off"],
                           ["Overbright", "--qa-simulate", "--qa-defaults-suite", "app.overbright.Overbright.dev"]] {
-            let ports = CompositionRoot.ports(for: LaunchArguments(arguments), time: ManualTimeSource())
+            let fixture = CompositionRoot.simulatedFixture(for: LaunchArguments(arguments))
+            #expect(fixture != nil, "\(arguments)")
+            let ports = TestShell.ports(fixture ?? .builtinXDRLidOpen, context: TestShell.context())
             #expect(ports.gamma is FakeGammaPort, "\(arguments)")
             #expect(ports.headroom is ScriptedHeadroom)
             #expect(ports.displays is FakeDisplayDirectory)
             #expect(ports.triggers is FakeTriggerFactory)
+            #expect(ports.signals is FakeSystemSignals && ports.conflicts is FakeConflictProbe)
+            #expect(ports.loginItems is InMemoryLoginItem && !ports.controlOutlet.isControlInstalled)
             #expect(ports.fixture != nil, "\(arguments)")
-            #expect(ports.lifecycle.isEmpty)
+            #expect(ports.services.displays == nil && ports.services.triggers == nil && ports.services.signals == nil)
         }
-        let fixture = CompositionRoot.ports(for: LaunchArguments(["Overbright", "--qa-simulate", "mpg322ux-hdr-on"]),
-                                            time: ManualTimeSource()).fixture
+        let fixture = CompositionRoot.simulatedFixture(for: LaunchArguments(["Overbright", "--qa-simulate",
+                                                                              "mpg322ux-hdr-on"]))
         #expect(fixture == .mpg322uxHDROn)
     }
 
@@ -103,7 +112,7 @@ import Testing
     /// the single-instance check; a launch wired to the real ports never does, even with `--qa-simulate` present.
     /// No test constructs the real ports (D24): `ShellPorts.traps` stands in for them (no fixture).
     @Test func singleInstanceExemptionFollowsTheWiring() {
-        let simulated = CompositionRoot.simulatedPorts(.builtinXDRLidOpen, time: ManualTimeSource())
+        let simulated = TestShell.ports(context: TestShell.context())
         let real = ShellPorts.traps(log: TrapLog(), gamma: TrapGammaPort())
         let qa = LaunchArguments(["Overbright", "--qa-simulate", "builtin-xdr-lid-open"])
         #expect(real.fixture == nil)
@@ -136,7 +145,7 @@ import Testing
     /// Every fixture of §3.9 wires and reads back its own displays.
     @Test func everyFixtureWires() {
         for fixture in DisplayFixture.allCases {
-            let ports = CompositionRoot.simulatedPorts(fixture, time: ManualTimeSource())
+            let ports = TestShell.ports(fixture, context: TestShell.context(fixture: fixture))
             #expect(ports.readDisplays().map(\.ref.key) == fixture.displays.map(\.key).sorted { a, b in
                 let builtIn = Set(fixture.displays.filter(\.facts.isBuiltIn).map(\.key))
                 return builtIn.contains(a) != builtIn.contains(b) ? builtIn.contains(a) : a < b

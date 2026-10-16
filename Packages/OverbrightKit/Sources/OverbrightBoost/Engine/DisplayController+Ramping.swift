@@ -77,10 +77,17 @@ extension DisplayController {
         settled()
     }
 
-    /// After a ramp ends: the drift watch runs while boosted or dimmed; idle does no work at all.
+    /// After a ramp ends: the drift watch runs while boosted or dimmed; idle does no work at all. Boosted asks for one
+    /// re-reduction: the decision's live reasons (Safe limit, Limited by macOS, Below full brightness) were reduced
+    /// with the reading from before the arm, so the chip would otherwise keep saying what the idle reading implied
+    /// (found end to end by WP13; an unchanged target makes the reduction a no-op for the controller).
     func settled() {
         switch phase {
-        case .boosted, .dimmed:
+        case .boosted:
+            if !driftSlot.isRunning { startDriftWatch() }
+            notify(needsReduction: true)
+            return
+        case .dimmed:
             if !driftSlot.isRunning { startDriftWatch() }
         case .idle:
             driftSlot.cancel(); burstSlot.cancel(); checkSlot.cancel()

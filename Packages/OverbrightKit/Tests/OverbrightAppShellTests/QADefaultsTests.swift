@@ -86,16 +86,14 @@ private func overbrightState(in defaults: UserDefaults) -> [String: String] {
         let suite = RecordingDefaults()
         let qa = try #require(QAHooks.defaults(LaunchArguments(["Overbright", "--qa-defaults-suite", suiteName]),
                                                ownDomain: "app.overbright.Overbright") { _ in suite })
-        let shell = CompositionRoot.makeShell(
-            settings: SettingsStore(defaults: qa.defaults), paths: .temporary(), machine: DisplayFixture.ownerMachine,
-            time: ManualTimeSource(), ports: CompositionRoot.simulatedPorts(.builtinXDRLidOpen, time: ManualTimeSource()))
+        let shell = TestShell.shell(context: TestShell.context(settings: SettingsStore(defaults: qa.defaults)))
         let settings = shell.services.settings
         settings.upgradeStoredSettings()
         settings[GeneralSettings.showsHUD] = false
         settings[DisplaySettings.linkLevels] = true
         settings[GeneralSettings.clickAction] = .toggle
         settings.reset(GeneralSettings.clickAction)
-        let control = ShellAppControl(settings: settings)
+        let control = ShellAppControl(settings: settings, loginItems: LoginItemController(service: shell.ports.loginItems))
         control.resetAllSettings()
         control.undoResetAllSettings()
 

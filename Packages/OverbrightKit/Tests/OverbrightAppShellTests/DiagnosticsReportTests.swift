@@ -2,6 +2,7 @@
 // (ARCHITECTURE.md §8.4, D24, D26): `diagnosticsNeverWrites` builds the report over ports that fail on any write and
 // any window, and checks what smoke reads (`gammaWrites`, `triggerWindows`, `displays`) and the per-display table class.
 import Foundation
+import OverbrightBoost
 import OverbrightCore
 import Testing
 @testable import OverbrightAppShell
@@ -63,4 +64,38 @@ import Testing
         #expect(abs(deviation - 0.5) < 0.001)
         #expect(report["gammaWrites"] as? Int == 0)                       // a foreign write is not ours
     }
+
+    /// The report of a running app over the simulated ports has every key of §8.4: the strategy cache (the engine's
+    /// own once it started, the file's for `--diagnostics`), each display's cached rung and lowest ready headroom, real
+    /// signals and conflicts (no placeholders since WP13), the services in start order and the counters at 0.
+    @Test func everyKeyIsFilled() async throws {
+        let shell = TestShell.shell(.builtinXDRLidOpen)
+        let osBuild = shell.services.machine.osBuild
+        let key = StrategyCache.key(DisplayFixture.Keys.builtIn, osBuild: osBuild)
+        // `--diagnostics`: nothing started, the cache read from its file (read-only).
+        let file = shell.services.paths.caches.appending(path: CompositionRoot.strategyCacheFileName)
+        try FileManager.default.createDirectory(at: shell.services.paths.caches, withIntermediateDirectories: true)
+        try JSONEncoder().encode([key: StrategyRecord(rung: 2, failures: 0, lowestReadyHeadroom: 2.4)]).write(to: file)
+        let report = DiagnosticsReport.build(.of(shell, forClipboard: false))
+        for name in ["app", "machine", "preferredLanguages", "mainPreferredLocalizations", "resourceBundles", "mainMenu",
+                     "designString.ru", "displays", "strategyCache", "settingsRevision", "nonDefaultSettings",
+                     "conflicts", "signals", "menuBarIcon", "boostMarker", "gammaWrites", "triggerWindows",
+                     "services", "simulatedFixture"] {
+            #expect(report[name] != nil, "missing \(name)")
+        }
+        #expect(!(report["signals"] is NSNull) && !(report["conflicts"] is NSNull))
+        #expect(report["services"] as? [String] == ["FillLight", "HotKeys", "Updates", "Intents", "boost"])
+        let cache = try #require(report["strategyCache"] as? [[String: Any]])
+        #expect(cache.first?["key"] as? String == key && cache.first?["rung"] as? Int == 2)
+        let display = try #require((report["displays"] as? [[String: Any]])?.first)
+        #expect(display["cachedRung"] as? Int == 2 && display["lowestReadyHeadroom"] as? Double == 2.4)
+        #expect(display["backlightMilliNits"] is NSNull)                          // simulated: no IORegistry
+        #expect(report["gammaWrites"] as? Int == 0 && report["triggerWindows"] as? Int == 0)
+        // Copy Diagnostics of the running app: the engine's own cache and the journal.
+        await CompositionRoot.runLaunchWork(shell)
+        let copied = DiagnosticsReport.build(.of(shell, forClipboard: true))
+        #expect((copied["journal"] as? [[String: Any]])?.isEmpty == false)
+        #expect((copied["strategyCache"] as? [[String: Any]])?.first?["key"] as? String == key)
+    }
 }
+

@@ -81,6 +81,9 @@ make -C <repo> strings-check                       # catalogs in sync + copy rul
 make -C <repo> probe-check                         # SDK name-collision probes are current
 make -C <repo> build                               # universal Release → build/Overbright.app; CONTROLS=1 keeps the appex
 make -C <repo> smoke                               # --diagnostics only: gammaWrites == 0, triggerWindows == 0, …
+SIMULATE=1 make -C <repo> smoke                    # agents: never launches on the real ports (Debug: --qa-simulate)
+make -C <repo> qa-matrix                           # after `make debug`: every fixture's scenario under --qa-simulate
+make -C <repo> soak                                # after `make debug`: 30 minutes under --qa-simulate (MINUTES=…)
 make -C <repo> run                                 # Debug build, simulated displays, a dev settings suite
 make -C <repo> dist                                # zip + dmg + sha256 (+ notarization when signing)
 make -C <repo> distclean                           # also every .build-* scratch dir
@@ -139,7 +142,7 @@ No hook posts input or asks for a permission. Launch arguments (`LaunchArguments
 | `--qa-simulate [fixture]` | Core fakes for every display port over a fixture of ARCHITECTURE.md §3.9 (`builtin-xdr-lid-open`, `mpg322ux-hdr-on`, `lcd-only`, `hardware-mirror`, …); a missing or unknown name falls back to `builtin-xdr-lid-open`, never to the real ports. |
 | `--qa-defaults-suite <name>` | Keeps every setting the run writes in that suite (`Launch/QAHooks+Defaults.swift`); the app's own domain or a global one is refused and the run keeps its settings in memory. The Settings window's frame is not autosaved then. |
 | `--qa-state <name>` | Drives the panel with a named status of PanelUI's `ScriptedStatuses` (every chip, banner, phase and HUD of DESIGN.md §5.13). |
-| `--qa-panel`, `--qa-menu`, `--qa-hud <level>` | Opens the panel, the status menu (its rows go to `qa-trace.txt`), the HUD. |
+| `--qa-panel`, `--qa-menu`, `--qa-hud <level>` | Opens the panel, the status menu (its rows go to `qa-trace.txt`), the HUD (under `--qa-simulate` at that level; on the real displays only its generic change, never a level). |
 | `--qa-settings <pane[#row]>` | Opens Settings at a pane (`general`, `displays`, `automations`, `shortcuts`, `fillLight`, `advanced`, `about`), scrolled to and highlighting a row. |
 | `--qa-welcome <step>` | Opens Welcome at `hello`, `displays`, `defaults`, `findIt` or `done`; takes no focus and records nothing. |
 | `--qa-calibration <display>`, `--qa-help <anchor>` | Opens the calibration window or Help at an anchor. |

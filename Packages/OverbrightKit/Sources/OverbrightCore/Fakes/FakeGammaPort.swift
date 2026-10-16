@@ -31,6 +31,7 @@ public nonisolated final class FakeGammaPort: GammaPort, @unchecked Sendable {
     private let time: any TimeSource
     private var displays: [CGDirectDisplayID: Display] = [:]
     private var log: [Write] = []
+    private var limit: Int?
     private var successfulWrites = 0
     private var restores = 0
     private var wroteATable = false
@@ -89,8 +90,14 @@ public nonisolated final class FakeGammaPort: GammaPort, @unchecked Sendable {
 
     // MARK: Records
 
-    /// Every write in order, ours and foreign ones.
+    /// Every write in order, ours and foreign ones (the newest `recordLimit` when one is set).
     public var writes: [Write] { lock.withLock { log } }
+    /// Keeps only about the newest `recordLimit` entries of `writes` (nil, the default: all of them). `--qa-simulate`
+    /// sets one, so a long QA run or soak does not grow with the fake's own history (each record holds a table).
+    public var recordLimit: Int? {
+        get { lock.withLock { limit } }
+        set { lock.withLock { limit = newValue; trimLog() } }
+    }
     /// Number of `restoreSystemColorSettings()` calls.
     public var restoreCount: Int { lock.withLock { restores } }
     /// A write is blocked inside `stallNextWrite(until:)` right now.
@@ -136,6 +143,7 @@ public nonisolated final class FakeGammaPort: GammaPort, @unchecked Sendable {
             if !ignoring { entry.screen = table }
             displays[display] = entry
             log.append(Write(display: display, table: table, time: time.now, isForeign: false))
+            trimLog()
             successfulWrites += 1
             wroteATable = true
         }
@@ -172,7 +180,14 @@ public nonisolated final class FakeGammaPort: GammaPort, @unchecked Sendable {
             displays[display]?.table = table
             displays[display]?.screen = table
             log.append(Write(display: display, table: table, time: time.now, isForeign: true))
+            trimLog()
         }
+    }
+
+    /// Drops the oldest records once there are twice `limit` (amortized; called under the lock).
+    private func trimLog() {
+        guard let limit, log.count > 2 * max(limit, 1) else { return }
+        log.removeFirst(log.count - limit)
     }
     /// A profile, preset or HDR change: the display gets a new base, which macOS applies to the live table now, or
     /// later (`appliesNow: false`, then `resetToBase(_:)`: the event can arrive before WindowServer's new table, §4.8).

@@ -212,7 +212,8 @@ Overbright on, both displays boosting; monitor running (`monitor-7.jsonl`).
 4. Make a shortcut with "Turn Overbright On or Off" and add Control Center's **Run Shortcut** control to Control Center and to the menu bar; use it with Overbright running and quit.
 5. **Control Center control (H-CC-1):** `CONTROLS=1 make build`, install, launch once. Then: `pluginkit -m -v -i app.overbright.Overbright.Controls > ~/Overbright-HW/12.5-pluginkit.txt`; right-click the desktop ▸ Edit Widgets… (refreshes the gallery); Control Center ▸ Edit Controls: is "Overbright" listed? Add it; does it show the right state? Toggle it with the app running and quit. **Rebuild** (new signature), reinstall, and repeat. Record pass / works until an update / fail.
 6. **H-CC-2:** boost, `kill -9 $(obpid)`: the control may show On until Overbright launches again, then Off.
-7. Afterwards: `make clean` unregisters the build products.
+7. **Launch by an action or a URL (WP13, H-AI-1):** quit Overbright, then run "Turn On Overbright" from the Shortcuts app: Overbright launches, turns on, and **no** window or panel opens. Quit again and run `open 'overbright://control?set=off'` in Terminal: nothing opens either. If a panel or Welcome opens, note how long after launch the action arrived (`log show --last 2m --info --predicate 'subsystem == "app.overbright.Overbright"' | grep -E 'launch UI|intent'`).
+8. Afterwards: `make clean` unregisters the build products.
 
 ---
 
@@ -239,7 +240,9 @@ Cases: Overbright **off**; on with the winning trigger at Bright room; on with *
 3. Open Overbright from Finder: Settings ▸ General must open; its **Quit Overbright** button must quit.
 4. Open Overbright from Finder again while it is **not** running: Settings opens (the icon is still hidden). Turn the icon back on under Allow in the Menu Bar; quit; open from Finder: the panel opens under the icon.
 5. Crowd the menu bar with other icons until Overbright's icon disappears behind the notch: the same window should appear (once per version).
-6. **H-L2:** set "When you log in" to "Open Overbright, keep it off", log out and back in: nothing may open. Then capture `obdiag …/14.6-login.json` and note in `results.md` whether the journal says the launch was recognised as a login launch.
+6. **H-L2:** set "When you log in" to "Open Overbright, keep it off", log out and back in: nothing may open. Then capture `obdiag …/14.6-login.json` and `/usr/bin/log show --last 15m --info --predicate 'subsystem == "app.overbright.Overbright"' | grep 'launch opening' > …/14.6-login.txt`, and note in `results.md` what the line says: the opening (`login` or `user`), the event (`aevt/oapp` expected) and the login-item flag (`true`: `SMAppService` sets `keyAELaunchedAsLogInItem`; `false` with opening `login`: only the fallback recognised it). Advanced ▸ Copy Diagnostics shows the same as the journal event `launch.login` / `launch.user`. For comparison, quit and open Overbright from Finder: the line must say `user` with the flag `false`.
+7. **Dock icon and quit (WP13):** General ▸ Show in Dock on: the Dock icon appears; its menu offers Turn On/Off Overbright, Dim All Displays/Stop Dimming, Back to Standard and Settings…; clicking the icon opens the panel (or Settings while the menu bar icon is hidden). Boost, then quit from the Dock menu's Quit and, separately, `osascript -e 'quit app "Overbright"'`: both quit at once without "User canceled", and `ob --monitor` (in another window) shows `matchesBase` right after. Boost again and `kill $(obpid)` (SIGTERM): the display returns to Standard and the process exits within ≈ 1 s.
+8. **Real-port smoke (WP13 ran only `SIMULATE=1 make smoke`):** `make build`, then `make smoke` (the read-only `--diagnostics` report on the real ports): `gammaWrites` 0, `triggerWindows` 0, every display `matchesBase`.
 
 ---
 

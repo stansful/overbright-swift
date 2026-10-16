@@ -99,6 +99,14 @@ private let marker = BoostMarker(since: Date(timeIntervalSinceReferenceDate: 800
         #expect(SystemShortcuts.enabled(from: nil).count == SystemShortcuts.defaults.count)
     }
 
+    /// A key code outside UInt16 (a damaged or future domain entry) is skipped, never a crash (§9.2 rule 2, WP13).
+    @Test func anOutOfRangeKeyCodeIsSkipped() {
+        let entry: [String: Any] = ["enabled": true, "value": ["parameters": [65535, 70_000, 262_144]]]
+        #expect(SystemShortcuts.parse(id: 7, entry: entry) == nil)
+        let negative: [String: Any] = ["enabled": true, "value": ["parameters": [65535, -1, 262_144]]]
+        #expect(SystemShortcuts.parse(id: 7, entry: negative) == nil)
+    }
+
     /// D17: the defaults avoid every enabled macOS shortcut; the accessibility neighbours are known by name.
     @Test func theDesignDefaultsCollideWithNoKnownSystemShortcut() throws {
         let shortcuts = SystemShortcuts.enabled(from: [:])

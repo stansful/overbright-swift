@@ -1,18 +1,23 @@
 // OverbrightAppShell/App/CompositionRoot.swift — the ONLY place that knows concrete types. ARCHITECTURE.md §3.9,
-// §3.11, §7.4, §10.0 (shared shell file, contract owner), §10.15 (WP13 wires every real implementation).
+// §3.11, §7.4, §10.0 (shared shell file), §10.15.
 //
 // Two wirings:
+// - Real ports: one `CoreGraphicsGamma` (its write gate serializes every table write and the restore of the process,
+//   so the directory's read checks get the same instance), `SystemDisplayDirectory`, `SystemHeadroomPort`,
+//   `SystemTriggerFactory`, `RunningAppsConflictProbe` over Policy's catalogue, `SignalsMonitor`, `FillLightController`
+//   with EDR frame windows, `HotKeyCenter`, `UpdateChecker`, the app's `SMAppService` login item and the control's real
+//   outlet. Displays' reconfiguration and screen events are relayed into Signals' event stream synchronously, so a
+//   `displayRemoved` reaches every display controller before the reconfiguration callback returns (§4.3, §7.1).
 // - `--qa-simulate [fixture]` (a Debug switch): every display port is a Core fake over the fixture (`FakeGammaPort`,
-//   `ScriptedHeadroom`, `FakeDisplayDirectory`, `FakeTriggerFactory`), with fake signals and conflicts. Nothing
-//   touches a display (D24). The switch alone selects this wiring (`simulatedFixture(for:)`): a missing name
-//   (`--off --qa-simulate`, or another switch right after it) or an unknown one is logged and falls back to
-//   `builtin-xdr-lid-open`, never to real ports. This holds in every build configuration, so it does not depend on
-//   the Release refusal below having run first.
-// - Real ports: in WP0a only the READ-ONLY display ports exist (`CoreGraphicsGamma` refuses writes,
-//   `SystemHeadroomPort`, `SystemDisplayDirectory`); triggers, signals, conflicts, Fill Light, shortcuts and updates are
-//   placeholders (fakes that open nothing) until their packages land, and `--diagnostics` reports them as null.
+//   `ScriptedHeadroom`, `FakeDisplayDirectory`, `FakeTriggerFactory`), with fake signals and conflicts, Fill Light's
+//   SDR stand-in windows, an in-memory login item and a silent control outlet; the shortcuts and the update check are
+//   the real ones (they touch no display). Nothing touches a display (D24). The switch alone selects this wiring
+//   (`simulatedFixture(for:)`): a missing name (`--off --qa-simulate`, or another switch right after it) or an unknown
+//   one is logged and falls back to `builtin-xdr-lid-open`, never to real ports. This holds in every build
+//   configuration, so it does not depend on the Release refusal below having run first.
 // Constructing either wiring does no I/O, hardware or network access (test `constructingServicesTouchesNoHardware`);
-// `ServiceLifecycle.start()` does. Lifecycle order: Displays → … → Boost last; stop in reverse, Boost first (D7).
+// `ServiceLifecycle.start()` does. Lifecycle order: Displays → Triggers → Signals → FillLight → HotKeys → Updates →
+// Intents → Boost last; stop in reverse, Boost first (D7, `ServiceStack`).
 //
 // A Release build never falls back silently: it refuses to start when given a Debug-only switch (`refusedSwitches`),
 // so a QA command meant for the simulated ports never runs on the real ones. The D27 single-instance exemption
@@ -23,7 +28,13 @@ import Foundation
 import OverbrightBoost
 import OverbrightCore
 import OverbrightDisplays
+import OverbrightFillLight
+import OverbrightHotKeys
+import OverbrightIntents
 import OverbrightPolicy
+import OverbrightSignals
+import OverbrightTriggers
+import OverbrightUpdates
 import os
 
 private let log = Log.logger(.app)
@@ -39,6 +50,12 @@ enum CompositionRoot {
         #endif
     }()
 
+    /// The strategy cache's file name under `AppPaths.caches` (§8.2).
+    static let strategyCacheFileName = "strategy-cache.json"
+
+    /// How many records the simulated fakes keep (their whole history would grow with every write of a long run).
+    static let qaRecordLimit = 256
+
     /// The Debug-only switches a build refuses to start with: none in a Debug build; in a Release build every
     /// `--qa-…` and `-OverbrightQA…` switch present (the app logs them and exits with `EX_USAGE` before anything
     /// starts, rather than ignoring them and wiring the real ports).
@@ -47,7 +64,7 @@ enum CompositionRoot {
     }
 
     /// D27: a command-line mode, or a launch wired to the simulated ports, skips the single-instance check. Decided on
-    /// what `ports(for:time:)` actually returned, so a launch that got the real ports is never exempt.
+    /// what `ports(for:context:)` actually returned, so a launch that got the real ports is never exempt.
     static func skipsSingleInstanceCheck(_ arguments: LaunchArguments, ports: ShellPorts) -> Bool {
         arguments.isCommandLineMode || ports.fixture != nil
     }
@@ -68,81 +85,141 @@ enum CompositionRoot {
         return fixture
     }
 
+    /// The context of a launch: the settings over `defaults`, and the real folders and Mac, or (simulated) temporary
+    /// folders and the fixture's Mac.
+    static func context(defaults: ShellDefaults, fixture: DisplayFixture?, time: any TimeSource) -> ShellContext {
+        ShellContext(settings: SettingsStore(defaults: defaults.defaults), paths: fixture == nil ? .live : .temporary(),
+                     machine: fixture?.machine ?? .current(), time: time)
+    }
+
     /// The ports for this launch: the simulated ones whenever `--qa-simulate` is present (in any build; a Release
     /// build has refused the switch before this, see `refusedSwitches`), the real ones only without it.
-    static func ports(for arguments: LaunchArguments, time: any TimeSource) -> ShellPorts {
-        if let fixture = simulatedFixture(for: arguments) { return simulatedPorts(fixture, time: time) }
-        return livePorts(time: time)
+    static func ports(for arguments: LaunchArguments, context: ShellContext) -> ShellPorts {
+        ports(fixture: simulatedFixture(for: arguments), context: context)
     }
 
-    /// Core fakes over `fixture`: nothing reaches a display.
-    static func simulatedPorts(_ fixture: DisplayFixture, time: any TimeSource) -> ShellPorts {
+    /// The simulated ports over `fixture`, or the real ones for nil.
+    static func ports(fixture: DisplayFixture?, context: ShellContext) -> ShellPorts {
+        if let fixture { return simulatedPorts(fixture, context: context) }
+        return livePorts(context)
+    }
+
+    /// Core fakes over `fixture`: nothing reaches a display. `hotKeys` registers the shortcuts (tests pass a recorder,
+    /// so no test registers a system-wide hot key).
+    static func simulatedPorts(_ fixture: DisplayFixture, context: ShellContext,
+                               hotKeys registrar: any HotKeyRegistrar = CarbonHotKeyRegistrar()) -> ShellPorts {
+        let time = context.time
         let headroom = ScriptedHeadroom(fixture: fixture, time: time)
         let directory = FakeDisplayDirectory(fixture: fixture)
-        return ShellPorts(gamma: FakeGammaPort(fixture: fixture, time: time), headroom: headroom, displays: directory,
-                          triggers: FakeTriggerFactory(headroom: headroom), signals: FakeSystemSignals(),
-                          conflicts: FakeConflictProbe(), fillLight: PreviewFillLightControl(),
-                          shortcuts: PreviewShortcutCenter(), updates: PreviewUpdateChecking(),
-                          readDisplays: { directory.displays }, profileHasVCGT: { _ in nil },
-                          lifecycle: [], placeholders: [], fixture: fixture)
+        let signals = FakeSystemSignals()
+        let fillLight = FillLightController(
+            settings: context.settings, displays: directory, headroom: headroom, signals: signals,
+            ownEDRSurfaces: context.ownEDRSurfaces, time: time, journal: context.journal, announcer: context.announcer,
+            surfaces: SystemFillLightSurfaces(mode: .sdrStandIn, time: time))
+        let hotKeys = HotKeyCenter(settings: context.settings, registrar: registrar)
+        let updates = UpdateChecker(settings: context.settings, paths: context.paths)
+        // The fakes record their history for tests; a QA run or a soak keeps only the newest records.
+        let gamma = FakeGammaPort(fixture: fixture, time: time)
+        gamma.recordLimit = qaRecordLimit
+        let triggers = FakeTriggerFactory(headroom: headroom)
+        triggers.recordLimit = qaRecordLimit
+        return ShellPorts(gamma: gamma, headroom: headroom, displays: directory, triggers: triggers, signals: signals,
+                          launchCheckSignals: signals, conflicts: FakeConflictProbe(), fillLight: fillLight,
+                          shortcuts: hotKeys, hotKeys: hotKeys, updates: updates, loginItems: InMemoryLoginItem(),
+                          controlOutlet: QuietControlOutlet(), readDisplays: { directory.displays },
+                          profileHasVCGT: { _ in nil }, backlightMilliNits: { nil },
+                          services: ServiceStack(fillLight: fillLight, hotKeys: hotKeys, updates: updates),
+                          relays: [], fixture: fixture)
     }
 
-    /// The real ports. WP0a: the read-only display ports; placeholders for the rest (see the file header).
-    static func livePorts(time: any TimeSource) -> ShellPorts {
+    /// The real ports (see the file header). Never constructed in a test (lint `noWritesInHardwareTests`).
+    static func livePorts(_ context: ShellContext) -> ShellPorts {
+        let time = context.time
         let gamma = CoreGraphicsGamma()
-        let directory = SystemDisplayDirectory()
-        return ShellPorts(gamma: gamma, headroom: SystemHeadroomPort(time: time), displays: directory,
-                          triggers: FakeTriggerFactory(),                 // WP3: SystemTriggerFactory
-                          signals: FakeSystemSignals(),                   // WP6: SignalsMonitor
-                          conflicts: FakeConflictProbe(),                 // WP6: RunningAppsConflictProbe
-                          fillLight: PreviewFillLightControl(),           // WP7: FillLightController
-                          shortcuts: PreviewShortcutCenter(),             // WP0b: HotKeyCenter
-                          updates: PreviewUpdateChecking(),               // WP0b: UpdateChecker
+        let directory = SystemDisplayDirectory(time: time, gamma: gamma)
+        let headroom = SystemHeadroomPort(time: time)
+        let triggers = SystemTriggerFactory(time: time, cacheDirectory: context.paths.caches)
+        let conflicts = RunningAppsConflictProbe(catalog: ConflictCatalog.entries)
+        let signals = SignalsMonitor(settings: context.settings, time: time, journal: context.journal,
+                                     displays: directory, conflicts: conflicts)
+        let relay = relayDisplayEvents(from: directory.addEventObserver) { [weak signals] event in signals?.post(event) }
+        let fillLight = FillLightController(
+            settings: context.settings, displays: directory, headroom: headroom, signals: signals,
+            ownEDRSurfaces: context.ownEDRSurfaces, time: time, journal: context.journal, announcer: context.announcer,
+            surfaces: SystemFillLightSurfaces(mode: .live, time: time))
+        let hotKeys = HotKeyCenter(settings: context.settings)
+        let updates = UpdateChecker(settings: context.settings, paths: context.paths)
+        let launchCheckSignals = LaunchCheckSignals(base: signals, hasStarted: { [weak signals] in
+            signals?.isStarted ?? false
+        })
+        return ShellPorts(gamma: gamma, headroom: headroom, displays: directory, triggers: triggers, signals: signals,
+                          launchCheckSignals: launchCheckSignals, conflicts: conflicts, fillLight: fillLight,
+                          shortcuts: hotKeys, hotKeys: hotKeys, updates: updates, loginItems: MainAppLoginItem(),
+                          controlOutlet: SystemControlOutlet(),
                           readDisplays: { SystemDisplayDirectory.onlineDisplays() },
                           profileHasVCGT: { gamma.profileHasVCGT(of: $0) },
-                          lifecycle: [directory], placeholders: [.signals, .conflicts], fixture: nil)
+                          backlightMilliNits: { IORegistryFacts.read().builtIn?.backlightMilliNits },
+                          services: ServiceStack(displays: directory, triggers: triggers, signals: signals,
+                                                 fillLight: fillLight, hotKeys: hotKeys, updates: updates),
+                          relays: [relay], fixture: nil)
     }
 
-    /// The hub and the lifecycle over `ports`. `scriptedStatus` (`--qa-state`) replaces the engine with a
-    /// `PreviewBoostControl` showing that status.
-    static func makeShell(settings: SettingsStore, paths: AppPaths, machine: MachineIdentity, time: any TimeSource,
-                          ports: ShellPorts, scriptedStatus: BoostStatus? = nil) -> Shell {
-        let journal = RingBufferJournal()
-        let ownEDRSurfaces = OwnEDRSurfaces()
-        var lifecycle = ports.lifecycle
+    /// §4.3, §7.1: Displays' events (`displayConfigurationBegan`, `displayRemoved`, `displaysReconfigured`,
+    /// `screenParametersChanged`) go into Signals' event stream synchronously, so they reach the engine (and Fill
+    /// Light) the way Signals' own events do: a removed display's windows are ordered out before the reconfiguration
+    /// callback returns. Keep the token for the life of the launch.
+    static func relayDisplayEvents(from source: (@escaping @MainActor (SystemEvent) -> Void) -> ObservationToken,
+                                   to sink: @escaping @MainActor (SystemEvent) -> Void) -> ObservationToken {
+        source { event in sink(event) }
+    }
+
+    /// The hub, the ordered services and the safety net over `ports`. `scriptedStatus` (`--qa-state`) replaces the
+    /// engine with a `PreviewBoostControl` showing that status.
+    static func makeShell(_ context: ShellContext, ports: ShellPorts, scriptedStatus: BoostStatus? = nil) -> Shell {
+        var stack = ports.services
         let boost: any BoostControl
+        var engine: BoostEngine?
         if let scriptedStatus {
-            boost = PreviewBoostControl(status: scriptedStatus, machine: machine)
+            boost = PreviewBoostControl(status: scriptedStatus, machine: context.machine)
         } else {
-            let engine = BoostEngine(settings: settings, machine: machine, time: time, journal: journal,
-                                     ownEDRSurfaces: ownEDRSurfaces, displays: ports.displays, signals: ports.signals,
-                                     gamma: ports.gamma, headroom: ports.headroom, triggers: ports.triggers,
-                                     conflicts: ports.conflicts)
-            boost = engine
-            lifecycle.append(engine)                                       // Boost starts last, stops first (D7)
+            let made = BoostEngine(settings: context.settings, machine: context.machine, time: context.time,
+                                   journal: context.journal, ownEDRSurfaces: context.ownEDRSurfaces,
+                                   displays: ports.displays, signals: ports.signals, gamma: ports.gamma,
+                                   headroom: ports.headroom, triggers: ports.triggers, conflicts: ports.conflicts)
+            made.useStrategyCache(at: context.paths.caches.appending(path: strategyCacheFileName))
+            engine = made
+            boost = made
         }
-        let services = OverbrightServices(settings: settings, paths: paths, machine: machine, time: time,
-                                          journal: journal, announcer: Announcer(), ownEDRSurfaces: ownEDRSurfaces,
-                                          displays: ports.displays, signals: ports.signals, boost: boost,
-                                          fillLight: ports.fillLight, shortcuts: ports.shortcuts,
-                                          updates: ports.updates)
+        stack.intents = ControlStateService(boost: boost, outlet: ports.controlOutlet)
+        stack.boost = engine                                              // Boost starts last, stops first (D7)
+        let services = OverbrightServices(settings: context.settings, paths: context.paths, machine: context.machine,
+                                          time: context.time, journal: context.journal, announcer: context.announcer,
+                                          ownEDRSurfaces: context.ownEDRSurfaces, displays: ports.displays,
+                                          signals: ports.signals, boost: boost, fillLight: ports.fillLight,
+                                          shortcuts: ports.shortcuts, updates: ports.updates)
+        let fillLight = ports.fillLight
+        ports.hotKeys?.onPress = { [weak boost] shortcut in
+            guard let boost else { return }
+            ShortcutActions.perform(shortcut, boost: boost, fillLight: fillLight)
+        }
         let readDisplays = ports.readDisplays
-        let rescue = LaunchRescue(gamma: ports.gamma, conflicts: ports.conflicts, signals: ports.signals,
-                                  journal: journal, time: time, displays: { readDisplays().map(\.ref) },
-                                  settings: settings)
-        return Shell(services: services, ports: ports, lifecycle: lifecycle, rescue: rescue)
+        let rescue = LaunchRescue(gamma: ports.gamma, conflicts: ports.conflicts, signals: ports.launchCheckSignals,
+                                  journal: context.journal, time: context.time,
+                                  displays: { readDisplays().map(\.ref) }, settings: context.settings)
+        rescue.onDeferredOutcome = { [weak engine] outcome in engine?.applyLaunchCheck(outcome) }
+        let runner = ServiceRunner(stack: stack, time: context.time, journal: context.journal)
+        let handlers = engine.map { engine in
+            SignalHandlers(writer: engine.writer) { [runner] in await runner.stop(within: EngineTiming.quitTimeout) }
+        }
+        return Shell(services: services, ports: ports, stack: stack, runner: runner, rescue: rescue, engine: engine,
+                     signalHandlers: handlers)
     }
 
-    /// The diagnostics inputs of `shell` (`--diagnostics`: bundle facts; Copy Diagnostics: the journal).
-    static func diagnosticsInputs(_ shell: Shell, forClipboard: Bool) -> DiagnosticsReport.Inputs {
-        let ports = shell.ports
-        return DiagnosticsReport.Inputs(
-            settings: shell.services.settings, machine: shell.services.machine, journal: shell.services.journal,
-            iconVisibility: shell.services.app?.iconVisibility ?? .visible, gamma: ports.gamma,
-            headroom: ports.headroom, triggers: ports.triggers, displays: ports.readDisplays(),
-            signals: ports.placeholders.contains(.signals) ? nil : ports.signals,
-            conflicts: ports.placeholders.contains(.conflicts) ? nil : ports.conflicts,
-            profileHasVCGT: ports.profileHasVCGT, simulatedFixture: ports.fixture?.rawValue,
-            includesBundleFacts: !forClipboard, includesJournal: forClipboard)
+    /// The launch work (§7.4): the launch check, then every service in order; its outcome reaches the engine right
+    /// before the engine starts, when the directory lists the displays.
+    static func runLaunchWork(_ shell: Shell) async {
+        let outcome = await shell.rescue.runLaunchCheck()
+        log.info("launch check: \(String(describing: outcome), privacy: .public)")
+        await shell.runner.start(beforeBoost: { shell.engine?.applyLaunchCheck(outcome) })
     }
 }

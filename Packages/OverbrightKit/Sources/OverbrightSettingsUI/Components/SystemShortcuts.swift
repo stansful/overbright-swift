@@ -32,9 +32,10 @@ nonisolated enum SystemShortcuts {
         guard (entry["enabled"] as? Bool) ?? (entry["enabled"] as? NSNumber)?.boolValue ?? false,
               let value = entry["value"] as? [String: Any],
               let parameters = value["parameters"] as? [Any], parameters.count >= 3,
-              let keyCode = (parameters[1] as? NSNumber)?.intValue, keyCode != 0xFFFF, keyCode >= 0,
+              let rawKeyCode = (parameters[1] as? NSNumber)?.intValue, rawKeyCode != 0xFFFF,
+              let keyCode = UInt16(exactly: rawKeyCode),                      // never traps on a bad entry (§9.2)
               let flags = (parameters[2] as? NSNumber)?.intValue else { return nil }
-        return SystemShortcut(id: id, keyCode: UInt16(keyCode), modifiers: modifiers(flags))
+        return SystemShortcut(id: id, keyCode: keyCode, modifiers: modifiers(flags))
     }
 
     /// `NSEvent.ModifierFlags` raw bits → `KeyCombo.Modifiers` (Fn, which arrows and F-keys carry, is ignored).

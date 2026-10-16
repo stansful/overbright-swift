@@ -3,7 +3,7 @@
 # own: on some shells `a && b` chains abort silently (docs/CONTRIBUTING.md).
 SHELL := /bin/bash
 
-.PHONY: help build debug run smoke dist check test tsan lint strings strings-check copy-check l10n-check l10n-pending probe probe-check icon list clean distclean
+.PHONY: help build debug run smoke qa-matrix soak dist check test tsan lint strings strings-check copy-check l10n-check l10n-pending probe probe-check icon list clean distclean
 
 help:            ## Show this help
 	@grep -E '^[a-z0-9-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  make %-14s %s\n", $$1, $$2}'
@@ -19,6 +19,12 @@ run:             ## Debug build + launch with --off --qa-simulate (never boosts)
 
 smoke:           ## Run build/Overbright.app --diagnostics: bundles, Edit menu, privacy none, intents, nothing written
 	@scripts/smoke.sh
+
+qa-matrix:       ## Debug app under --qa-simulate: every fixture's scenario, symbol/banner/chips checked (after make debug)
+	@scripts/qa-matrix.sh
+
+soak:            ## Debug app under --qa-simulate for MINUTES (30): footprint, idle wake-ups while off vs a control (after make debug)
+	@scripts/soak.sh
 
 dist: build      ## zip + dmg + sha256 (+ notarization with SIGN_IDENTITY/TEAM_ID/NOTARY_PROFILE) -> dist/
 	@scripts/dist.sh

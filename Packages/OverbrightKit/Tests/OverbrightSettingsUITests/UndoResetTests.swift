@@ -41,10 +41,10 @@ import Testing
         PaneReset.reset(SettingsPane.pane(pane).namespaces, settings: services.settings)
         let after = changedRows(services)
         let ownLeft = after.filter { $0.hasPrefix(pane.rawValue + ".") }
-        // Advanced's trigger methods live with the displays' preferences: Reset Displays… clears them, not Advanced's.
-        let expectedLeft: Set<String> = pane == .advanced ? before.filter { $0.hasPrefix("advanced.trigger.") } : []
-        #expect(ownLeft == expectedLeft, "\(pane): rows still changed after its reset: \(ownLeft)")
-        let others = before.filter { !$0.hasPrefix(pane.rawValue + ".") && !(pane == .displays && $0.hasPrefix("advanced.trigger.")) }
+        // Advanced's trigger methods live with the displays' preferences but follow the pane that shows them:
+        // Reset Advanced… clears them, Reset Displays… keeps them (WP13).
+        #expect(ownLeft.isEmpty, "\(pane): rows still changed after its reset: \(ownLeft)")
+        let others = before.filter { !$0.hasPrefix(pane.rawValue + ".") }
         #expect(others.isSubset(of: after), "\(pane): its reset changed other panes: \(others.subtracting(after))")
     }
 

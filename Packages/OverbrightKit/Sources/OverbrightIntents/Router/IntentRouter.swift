@@ -37,9 +37,14 @@ public final class IntentRouter {
     /// publisher). Tests replace it.
     public var expectedControlToken: () -> String? = { BoostChannel.token(in: PreferencesChannelStore.app) }
 
-    /// True when an intent or the Focus filter asked for something before the composition root connected the router:
-    /// this launch was most likely made for it, so the launch UI may stay silent (§7.6).
+    /// True when an intent or the Focus filter asked for something before the composition root connected the router.
+    /// The launch-time read of the Focus filter (`applyLaunchFocus`) never sets it: every launch makes that read.
     public private(set) var wasRequestedBeforeConnection = false
+
+    /// Requests from an intent, the Focus filter or the control's URL, connected or not (never the launch-time Focus
+    /// read). The shell's launch UI stays silent when one arrived during the launch (§7.6: a launch by an intent or a
+    /// URL shows nothing).
+    public private(set) var requestCount = 0
 
     /// Creates an unconnected router on the system clock (the app's).
     public convenience init() { self.init(time: SystemTimeSource()) }
@@ -115,11 +120,18 @@ public final class IntentRouter {
     /// The Focus filter's directive, handed to `SystemSignals.setFocusDirective(_:)` (kept until the router is
     /// connected; Signals persists it).
     public func focus(_ directive: FocusDirective) {
+        requestCount += 1
+        deliverFocus(directive, isRequest: true)
+    }
+
+    /// Hands `directive` to Signals now, or keeps it until the connection. Only a Focus delivery (`isRequest`) marks
+    /// the launch as made for a request; the launch-time read does not.
+    private func deliverFocus(_ directive: FocusDirective, isRequest: Bool) {
         focusSequence &+= 1
         if let signals {
             signals.setFocusDirective(directive)
         } else {
-            wasRequestedBeforeConnection = true
+            if isRequest { wasRequestedBeforeConnection = true }
             pendingFocus = directive
         }
     }
@@ -132,7 +144,7 @@ public final class IntentRouter {
         do {
             let directive = try await read()
             guard focusSequence == sequence else { return }
-            focus(directive)
+            deliverFocus(directive, isRequest: false)
         } catch {
             log.info("launch focus read failed: \(String(describing: error), privacy: .public)")
         }
@@ -154,6 +166,7 @@ public final class IntentRouter {
 
     /// The engine once it is connected and ready; `notReady` after `timeout` (or when the waiting task is cancelled).
     func ready() async throws -> any BoostControl {
+        requestCount += 1
         if let boost, boost.status.isReady { return boost }
         if boost == nil { wasRequestedBeforeConnection = true }
         let id = nextWaiter

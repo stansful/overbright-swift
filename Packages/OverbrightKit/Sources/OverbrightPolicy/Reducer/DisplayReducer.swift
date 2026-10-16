@@ -39,8 +39,10 @@ nonisolated struct DisplayReducer: Sendable {
         let requested = LevelMapping.requestedGain(for: level, top: top)
         let verdict = eligibility.verdict
         let halfAllowed = level.isBoost ? verdict.allowsBoost && peakTop > 1 : level.isDim ? verdict.allowsDim : true
-        // The boost half can change this display in its cap mode (Safe can be disabled while Peak is not).
-        let boosts = level.isBoost && halfAllowed && top > 1
+        // The boost half can change this display in its cap mode (Safe can be disabled while Peak is not), and the
+        // user let it: a display whose own switch is off would not change, so it neither "should boost" for the
+        // symbol nor raises a guard's banner (§6.3, §6.4; its chip still says why).
+        let boosts = level.isBoost && halfAllowed && top > 1 && boostEnabled
 
         func decision(_ target: BoostTarget, _ reasons: [LimitReason]) -> DisplayOutcome {
             DisplayOutcome(

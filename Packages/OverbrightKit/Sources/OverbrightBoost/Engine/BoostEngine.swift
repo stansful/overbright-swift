@@ -113,6 +113,12 @@ import OverbrightPolicy
     /// Advanced ▸ "Forget learned methods": every learned rung and headroom goes (§4.7).
     public func forgetLearnedStrategies() { strategyCache.forget() }
 
+    /// `BoostControl.forgetLearnedMethods()` (the contract-lane requirement Settings ▸ Advanced calls): the same.
+    public func forgetLearnedMethods() {
+        forgetLearnedStrategies()
+        journal.record("strategies.forgotten", display: nil, time: time)
+    }
+
     // MARK: ServiceLifecycle
 
     /// "boost".

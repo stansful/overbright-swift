@@ -33,7 +33,7 @@ public struct ChipButtonStyle: ButtonStyle {
         }
         .buttonStyle(ChipButtonStyle())
         Button {} label: { Image(symbol: .ellipsis) }.buttonStyle(IconButtonStyle())
-        Button {} label: { Text(verbatim: "Learn more") }.buttonStyle(LinkButtonStyle())
+        Button {} label: { Text(verbatim: "Learn more") }.buttonStyle(OverbrightLinkButtonStyle())
     }
     .padding()
     .overbrightThemeRoot()
