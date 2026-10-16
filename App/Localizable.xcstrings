@@ -2549,7 +2549,7 @@
         "el" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Εσωτερικός χώρος"
+            "value" : "Κλειστός χώρος"
           }
         },
         "es" : {
@@ -4848,7 +4848,7 @@
         "el" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Overbright: ενεργό, «Εσωτερικός χώρος»"
+            "value" : "Overbright: ενεργό, «Κλειστός χώρος»"
           }
         },
         "es" : {

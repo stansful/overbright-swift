@@ -2225,7 +2225,7 @@
         "ca" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pausa automàtica"
+            "value" : "Autopausa"
           }
         },
         "cs" : {
@@ -2249,13 +2249,13 @@
         "el" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Αυτόματη παύση"
+            "value" : "Παύσεις"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pausa automática"
+            "value" : "Autopausa"
           }
         },
         "fi" : {
@@ -2273,7 +2273,7 @@
         "he" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "השהיה אוטומטית"
+            "value" : "השהיות"
           }
         },
         "hi" : {
@@ -2291,19 +2291,19 @@
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Autom. szünet"
+            "value" : "Autoszünet"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Jeda otomatis"
+            "value" : "Jeda auto"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pausa automatica"
+            "value" : "Autopausa"
           }
         },
         "ja" : {
@@ -2321,7 +2321,7 @@
         "ms" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Jeda automatik"
+            "value" : "Jeda auto"
           }
         },
         "nb" : {
@@ -2345,13 +2345,13 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pausa automática"
+            "value" : "Autopausa"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pausa automática"
+            "value" : "Autopausa"
           }
         },
         "ro" : {
@@ -2375,7 +2375,7 @@
         "sl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Samodejni premor"
+            "value" : "Premori"
           }
         },
         "sv" : {
@@ -2393,7 +2393,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Otomatik duraklatma"
+            "value" : "Duraklatma"
           }
         },
         "uk" : {
@@ -2434,7 +2434,7 @@
         "ca" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sense pausa automàtica"
+            "value" : "Sense autopausa"
           }
         },
         "cs" : {
@@ -2458,13 +2458,13 @@
         "el" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Χωρίς αυτόματη παύση"
+            "value" : "Χωρίς παύσεις"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sin pausa automática"
+            "value" : "Sin autopausa"
           }
         },
         "fi" : {
@@ -2482,7 +2482,7 @@
         "he" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ללא השהיה אוטומטית"
+            "value" : "ללא השהיות"
           }
         },
         "hi" : {
@@ -2500,19 +2500,19 @@
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Autom. szünet ki"
+            "value" : "Autoszünet ki"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tanpa jeda otomatis"
+            "value" : "Tanpa jeda auto"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Senza pausa automatica"
+            "value" : "Senza autopausa"
           }
         },
         "ja" : {
@@ -2530,7 +2530,7 @@
         "ms" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tiada jeda automatik"
+            "value" : "Tiada jeda auto"
           }
         },
         "nb" : {
@@ -2554,13 +2554,13 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sem pausa automática"
+            "value" : "Sem autopausa"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sem pausa automática"
+            "value" : "Sem autopausa"
           }
         },
         "ro" : {
@@ -2602,7 +2602,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Otomatik duraklatma yok"
+            "value" : "Duraklatma yok"
           }
         },
         "uk" : {
@@ -8728,7 +8728,7 @@
         "el" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Εσωτερικός χώρος"
+            "value" : "Κλειστός χώρος"
           }
         },
         "es" : {
@@ -10376,7 +10376,7 @@
         "ca" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sense temporitzador"
+            "value" : "Sense límit"
           }
         },
         "cs" : {
@@ -10400,13 +10400,13 @@
         "el" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Χωρίς χρονόμετρο"
+            "value" : "Χωρίς όριο"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sin temporizador"
+            "value" : "Sin límite"
           }
         },
         "fi" : {
@@ -10472,7 +10472,7 @@
         "ms" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tiada pemasa"
+            "value" : "Tiada had"
           }
         },
         "nb" : {
@@ -10490,7 +10490,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bez wyłącznika"
+            "value" : "Bez limitu"
           }
         },
         "pt-BR" : {
@@ -10502,13 +10502,13 @@
         "pt-PT" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sem temporizador"
+            "value" : "Sem limite"
           }
         },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fără temporizator"
+            "value" : "Fără limită"
           }
         },
         "ru" : {
@@ -10544,7 +10544,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zamanlayıcı yok"
+            "value" : "Süresiz"
           }
         },
         "uk" : {
