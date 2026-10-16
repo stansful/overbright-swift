@@ -88,7 +88,10 @@ if want_controls == "1":
 elif appexes:
     problems.append(f"Contents/PlugIns holds {appexes} without CONTROLS=1 (scripts/build.sh removes the extension)")
 
-# App Intents (§7.7): every intent and the Focus filter are in the extracted metadata (DESIGN.md §12.8).
+# App Intents (§7.7): every intent and the Focus filter are in the extracted metadata, by the type names of
+# DESIGN.md §12.8. WP0a created App/Intents/ with placeholder declarations under exactly these names (§10.1), so the
+# check is the same before and after WP8 replaces their bodies; the Focus filter must carry the FocusConfiguration
+# system protocol (a SetFocusFilterIntent).
 intents = ["ToggleOverbrightIntent", "TurnOnOverbrightIntent", "TurnOffOverbrightIntent", "SetExtraBrightnessIntent",
            "DimDisplaysIntent", "PauseOverbrightIntent", "ResumeOverbrightIntent", "GetOverbrightStateIntent",
            "ReturnToStandardIntent", "OverbrightFocusFilter"]
@@ -98,6 +101,9 @@ if not os.path.exists(metadata):
 else:
     actions = json.load(open(metadata, encoding="utf-8")).get("actions", {})
     problems += [f"App Intents metadata lacks {name}" for name in intents if name not in actions]
+    focus = actions.get("OverbrightFocusFilter", {}).get("systemProtocols", [])
+    if "OverbrightFocusFilter" in actions and not any(p.endswith(".FocusConfiguration") for p in focus):
+        problems.append("OverbrightFocusFilter is not a Focus filter (no FocusConfiguration system protocol)")
 
 print("\n".join(problems) or "privacy OK: no entitlements, no usage strings, LSUIElement; %d languages advertised; "
       "Controls extension %s; %d intents in the metadata" % (len(advertised), "present" if appexes else "absent",
