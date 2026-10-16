@@ -23,7 +23,7 @@ smoke:           ## Run build/Overbright.app --diagnostics: bundles, Edit menu, 
 qa-matrix:       ## Debug app under --qa-simulate: every fixture's scenario, symbol/banner/chips checked (after make debug)
 	@scripts/qa-matrix.sh
 
-soak:            ## Debug app under --qa-simulate for MINUTES (30): footprint and idle wake-ups while off (after make debug)
+soak:            ## Debug app under --qa-simulate for MINUTES (30): footprint, idle wake-ups while off vs a control (after make debug)
 	@scripts/soak.sh
 
 dist: build      ## zip + dmg + sha256 (+ notarization with SIGN_IDENTITY/TEAM_ID/NOTARY_PROFILE) -> dist/
