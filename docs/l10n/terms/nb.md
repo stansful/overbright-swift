@@ -115,3 +115,4 @@ adjectives in common gender (“Overbright, lukket”). Compounds with a name ta
 | Reset to Default · Changed from the default | Gjenopprett standard · Endret fra standard |  |
 | click | klikk / klikke (på) | Apple: “Klikk på …” |
 | Acknowledgments | Takk til |  |
+| Space (the space bar in key caps) | Mellomrom | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is Mellomromstast |

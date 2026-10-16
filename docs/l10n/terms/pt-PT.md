@@ -127,3 +127,4 @@ Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its
 | Reset to Default | Repor predefinição | "Alterado em relação à predefinição"; Reset = Repor |
 | Preview | Pré‑visualização |  |
 | Back (Welcome) | Anterior | Apple pt-PT |
+| Space (the space bar in key caps) | Espaço | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is Barra de espaço |

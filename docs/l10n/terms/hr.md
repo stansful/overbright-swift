@@ -107,3 +107,4 @@ Reviewed 2026-10-14 (independent review).
 | Preview | Pretpregled | “Pregled” is Apple’s Preview app |
 | Never (timeout 0) | Nikad | Apple “Nikad” |
 | Off | Isključeno |  |
+| Space (the space bar in key caps) | Razmaknica | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is Razmaknica |

@@ -112,3 +112,4 @@ Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its
 | updates | uaktualnienia | Apple's word („Sprawdź uaktualnienia…”) |
 | Remove (from a list) | Usuń z listy | never just „Usuń aplikację” (reads as uninstall) |
 | App not installed | Aplikacja nie jest zainstalowana |  |
+| Space (the space bar in key caps) | Spacja | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is Spacja |

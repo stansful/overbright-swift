@@ -32295,7 +32295,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Overbright aumenta la luminosità extra a piccoli passi ogni %@. Osserva i due quadrati a destra. Premi Spazio non appena non riesci più a distinguerli."
+            "value" : "Overbright aumenta la luminosità extra a piccoli passi ogni %@. Osserva i due quadrati a destra. Premi la barra spaziatrice non appena non riesci più a distinguerli."
           }
         },
         "ja" : {
@@ -32349,7 +32349,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Overbright crește luminozitatea suplimentară în pași mici la fiecare %@. Urmăriți cele două pătrate din dreapta. Apăsați Spațiu imediat ce nu le mai puteți distinge."
+            "value" : "Overbright crește luminozitatea suplimentară în pași mici la fiecare %@. Urmăriți cele două pătrate din dreapta. Apăsați bara de spațiu imediat ce nu le mai puteți distinge."
           }
         },
         "ru" : {
@@ -43300,7 +43300,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mezerník"
+            "value" : "mezerník"
           }
         },
         "da" : {
@@ -43372,7 +43372,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Spazio"
+            "value" : "Barra spaziatrice"
           }
         },
         "ja" : {
@@ -43384,7 +43384,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "스페이스 바"
+            "value" : "스페이스"
           }
         },
         "ms" : {
@@ -43426,7 +43426,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Spațiu"
+            "value" : "Space"
           }
         },
         "ru" : {

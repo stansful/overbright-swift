@@ -107,3 +107,4 @@ sentence go in quotes (“Energibesparende funktion”, “Åbn alligevel”), p
 | Remove | Fjern |  |
 | App not installed | Appen er ikke installeret |  |
 | Preview | Eksempel | Apple’s Danish |
+| Space (the space bar in key caps) | Mellemrum | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is Mellemrumstast |

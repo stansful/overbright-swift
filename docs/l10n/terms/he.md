@@ -126,3 +126,4 @@ Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its
 | Try again | ניסיון נוסף | Apple |
 | Remove (from a list) | הסרה |  |
 | Show … (toggles) | הצגת … | «הצגת הערך» |
+| Space (the space bar in key caps) | רווח | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is מקש רווח |

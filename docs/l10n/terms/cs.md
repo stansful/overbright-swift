@@ -106,3 +106,4 @@ Register and typography (as macOS 27 in Czech):
 | Cancel · Done · Undo | Zrušit · Hotovo · Odvolat | Apple |
 | Never (timeout 0) | Nikdy |  |
 | Off / On | Vypnuto / Zapnuto |  |
+| Space (the space bar in key caps) | mezerník | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is Mezerník |

@@ -103,3 +103,4 @@ dash (English "—"); "&" only where Apple uses it (pane names). Nouns capitaliz
 | Remove (from a list) · Delete | Entfernen · Löschen |  |
 | App not installed | App nicht installiert |  |
 | Symbol | Symbol |  |
+| Space (the space bar in key caps) | Leertaste | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is Leertaste |

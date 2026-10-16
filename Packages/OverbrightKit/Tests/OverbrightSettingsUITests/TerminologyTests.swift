@@ -56,6 +56,30 @@ private enum Catalog {
 }
 
 @MainActor @Suite struct TerminologyTests {
+    /// The key cap "Space" in Settings and Welcome (SettingsUI's and HotKeys' catalogs) is AppKit's own word, the one
+    /// the menu's key equivalents show (FunctionKeyNames.loctable), in every language (the ja rule of WP15, WP14).
+    @Test func theSpaceKeyCapIsAppKitsWord() throws {
+        let loctable = URL(fileURLWithPath: "/System/Library/Frameworks/AppKit.framework/Resources/FunctionKeyNames.loctable")
+        guard let data = try? Data(contentsOf: loctable),
+              let names = try PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any] else {
+            return                                                                // an SDK without the table
+        }
+        let tableLanguage = ["nb": "no", "zh-Hans": "zh_CN", "zh-Hant": "zh_TW", "pt-BR": "pt_BR", "pt-PT": "pt_PT"]
+        var differences: [String] = []
+        for table in ["OverbrightSettingsUI/Resources/Localizable.xcstrings", "OverbrightHotKeys/Resources/Localizable.xcstrings"] {
+            let json = try #require(try JSONSerialization.jsonObject(with: Data(contentsOf: Catalog.sources.appending(path: table)))
+                                    as? [String: Any])
+            let space = try #require((json["strings"] as? [String: Any])?["Space"] as? [String: Any])
+            let localizations = try #require(space["localizations"] as? [String: [String: Any]])
+            for (language, entry) in localizations {
+                let ours = (entry["stringUnit"] as? [String: Any])?["value"] as? String
+                let appKit = (names[tableLanguage[language] ?? language] as? [String: String])?["Space"]
+                if let appKit, ours != appKit { differences.append("\(table.prefix { $0 != "/" }) \(language): \(ours ?? "-") ≠ \(appKit)") }
+            }
+        }
+        #expect(differences.isEmpty, "\(differences.sorted())")
+    }
+
     @Test func everyKeyHasASurfaceComment() throws {
         let entries = try Catalog.entries()
         #expect(entries.count > 200)

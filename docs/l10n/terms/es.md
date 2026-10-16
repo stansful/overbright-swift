@@ -120,3 +120,4 @@ Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its
 | App not installed | App no instalada |  |
 | Reset to Default | Restablecer valor predeterminado | "Cambiado respecto al valor predeterminado" |
 | Preview | Previsualización | never "Vista previa" (= the Preview app "Vista Previa") |
+| Space (the space bar in key caps) | Espacio | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is Barra espaciadora |

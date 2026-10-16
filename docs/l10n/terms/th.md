@@ -108,3 +108,4 @@ Register and typography (as macOS writes Thai):
 | Launch at login / Open at login | เปิดเมื่อเข้าสู่ระบบ | Apple's term |
 | Login Items | รายการเข้าสู่ระบบ | glossary |
 | update / check for updates | อัปเดต / ตรวจหารายการอัปเดต | Apple's term; Update Available = มีรายการอัปเดต; Version %@ is available = เวอร์ชัน %@ พร้อมให้ใช้งานแล้ว (not “มีเวอร์ชัน %@ แล้ว”, which reads “you already have”) |
+| Space (the space bar in key caps) | Space | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is Space bar |

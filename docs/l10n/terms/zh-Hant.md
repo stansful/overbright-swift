@@ -122,3 +122,4 @@ Register and typography (follow macOS 27 Traditional Chinese, Taiwan vocabulary;
 | App not installed | App未安裝 |  |
 | Never (timeout 0) | 永不 |  |
 | Try again / Retry | 再試一次 |  |
+| Space (the space bar in key caps) | 空白鍵 | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is 空白鍵 |

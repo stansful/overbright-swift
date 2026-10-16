@@ -81,3 +81,4 @@ confirmed in WP15: the table below shows every name as the catalogs ship it.
 | Calibrate… · Run Self-Test… · Reset Display Colors… | Откалибровать… · Запустить самопроверку… · Сбросить цвета дисплеев… |  |
 | Keep this level? · Go Back · Keep | Оставить этот уровень? · Вернуть · Оставить | the very-dark-level prompt |
 | Pause · Paused · Resume | “Приостановить Overbright” (Pause Overbright) · На паузе · Возобновить | a temporary stop; never “disabled” |
+| Space (the space bar in key caps) | Пробел | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is Клавиша пробела |

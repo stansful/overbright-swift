@@ -116,3 +116,4 @@ Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its
 | Preview | Előnézet |  |
 | Update(s) / Check for Updates | frissítés(ek) / Frissítések keresése |  |
 | Try again / Retry (buttons, chips) | Próbálja újra | Apple's "Try Again"; one wording everywhere (the chip, the banner and the card menu of a display that failed or stopped) |
+| Space (the space bar in key caps) | Szóköz | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is Szóközbillentyű |

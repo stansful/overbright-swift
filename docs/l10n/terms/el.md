@@ -115,3 +115,4 @@ Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its
 | Remove · Delete | Αφαίρεση · Διαγραφή | Remove = from a list (does not uninstall/delete) |
 | Show … / Hide … (switches) | Εμφάνιση … / Απόκρυψη … |  |
 | Never · Off · On · Automatic | Ποτέ · Ανενεργό · Ενεργό · Αυτόματα | picker values; “X is off” in a sentence = «είναι απενεργοποιημένη/-ο» |
+| Space (the space bar in key caps) | Διάστημα | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is Πλήκτρο διαστήματος |

@@ -121,3 +121,4 @@ Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its
 | Login Items | Ítems d’inici de sessió | macOS |
 | Acknowledgments ★ | Reconeixements | macOS (Books, Maps); search keeps "agraïments" |
 | Option-1 (key hint) · Option key ★ | Opció + 1 · la tecla d’opció | macOS writes combinations with " + " |
+| Space (the space bar in key caps) | Espai | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is Barra espaiadora |
