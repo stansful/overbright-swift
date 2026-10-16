@@ -1,10 +1,11 @@
 // OverbrightAppShell/StatusItem/StatusItemController.swift — the AppKit `NSStatusItem` (not a `MenuBarExtra`, which
-// macOS terminates when the user removes the extra). ARCHITECTURE.md §7.6, §10.0; DESIGN.md §4.1–§4.2; D13.
-// Seeded by WP0a: `init(services:)` is fixed; the WP0a body installs the item with the code-drawn symbol and routes a
-// click to `onClick` (the panel). WP10 owns `StatusItem/` and adds the right-click menu, ⌥-click, the toggle mode and
-// the per-state accessibility label.
+// macOS terminates when the user removes the extra). ARCHITECTURE.md §7.6, §10.0; DESIGN.md §4.1–§4.3, §12.7; D13.
+// Seeded by WP0a (`init(services:)`, `install()`, `onClick`, placement); WP10 adds click routing (panel or toggle mode,
+// right-click and ⌃-click for the menu, ⌥-click for the other action), the menu, the per-state VoiceOver label and the
+// "Overbright on / off" announcement of a toggle from the icon.
 import AppKit
 import OverbrightCore
+import OverbrightPanelUI
 import os
 
 private let log = Log.logger(.menuBar)
@@ -15,7 +16,7 @@ final class StatusItemController: NSObject {
     private var statusItem: NSStatusItem?
     private var symbolObservation: ObservationToken?
 
-    /// What a click does (the shell sets it: open or close the panel).
+    /// What opening the panel does (the shell sets it: open or close the panel under the button).
     var onClick: (() -> Void)?
 
     /// A controller for the app's services.
@@ -35,16 +36,13 @@ final class StatusItemController: NSObject {
     func install() {
         guard statusItem == nil else { return }
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-        item.button?.image = StatusSymbolImage.image(for: services.boost.status.symbol)
-        item.button?.setAccessibilityLabel("Overbright")
         item.button?.target = self
         item.button?.action = #selector(clicked(_:))
         item.button?.sendAction(on: [.leftMouseUp, .rightMouseUp])
         statusItem = item
+        show(services.boost.status.symbol)
         let boost = services.boost
-        symbolObservation = OverbrightCore.observe({ boost.status.symbol }) { [weak self] symbol in
-            self?.statusItem?.button?.image = StatusSymbolImage.image(for: symbol)
-        }
+        symbolObservation = OverbrightCore.observe({ boost.status.symbol }) { [weak self] symbol in self?.show(symbol) }
     }
 
     /// Shows or hides the item (General ▸ Show menu bar icon).
@@ -75,7 +73,45 @@ final class StatusItemController: NSObject {
         return placed
     }
 
+    // MARK: Clicks
+
+    /// Runs what a click does (DESIGN.md §4.2).
+    func perform(_ action: ClickRouting.Action) {
+        switch action {
+        case .togglePanel: onClick?()
+        case .toggleMaster: toggleMaster()
+        case .showMenu: showMenu()
+        }
+    }
+
+    /// Turns Overbright on or off from the icon and announces it (the symbol itself is the visual feedback; a turn-on
+    /// that is not ready within 0.5 s shows "Preparing…" in the HUD, which the engine publishes for `.statusItem`).
+    func toggleMaster() {
+        let wasOn = services.boost.status.isOn
+        services.boost.toggle(source: .statusItem)
+        services.announcer.announce(StatusMenuText.announcement(isOn: !wasOn), kind: .feedback)
+    }
+
+    /// The menu's rows now (also what `--qa-menu` dumps).
+    func menuModel() -> StatusMenuModel { StatusMenuModel.make(services: services) }
+
+    /// Opens the menu under the button, built fresh for the current state.
+    func showMenu() {
+        guard let statusItem, let button = statusItem.button else { return }
+        let menu = StatusMenuRender.menu(menuModel(), services: services) { [weak self] in self?.onClick?() }
+        // Attach, click, detach: AppKit then positions and tracks the menu exactly as a status menu.
+        statusItem.menu = menu
+        button.performClick(nil)
+        statusItem.menu = nil
+    }
+
     @objc private func clicked(_ sender: Any?) {
-        onClick?()
+        perform(ClickRouting.action(for: NSApp.currentEvent, setting: services.settings[GeneralSettings.clickAction]))
+    }
+
+    private func show(_ state: StatusSymbolState) {
+        guard let button = statusItem?.button else { return }
+        button.image = StatusSymbolImage.image(for: state)
+        button.setAccessibilityLabel(StatusSymbolImage.accessibilityLabel(for: state))
     }
 }
