@@ -4,6 +4,8 @@
 // arguments. The parser only names the Debug-only switches (`debugOnlySwitches`); what a build does with them is the
 // shell's decision (a Release build refuses to start, `CompositionRoot.refusedSwitches`), and so is the D27
 // single-instance exemption, which follows the ports actually wired (`CompositionRoot.skipsSingleInstanceCheck`).
+// `--qa-simulate` is a switch with an optional value: its presence (`qaSimulates`) selects the fakes, its value only
+// the fixture, so a missing or mistyped name never reaches the real ports.
 import Foundation
 
 /// Command-line arguments as `--name value` pairs and bare flags.
@@ -75,8 +77,16 @@ public nonisolated struct LaunchArguments: Sendable, Equatable {
     /// `--qa-defaults-suite <name>`: keep the run's settings in that suite (only `QAHooks+Defaults.swift` creates it).
     public var qaDefaultsSuite: String? { value(after: "--qa-defaults-suite") }
 
-    /// `--qa-simulate <fixture>`: fakes instead of every display port and EDR surface (`DisplayFixture` raw value).
-    public var qaSimulateFixture: String? { value(after: "--qa-simulate") }
+    /// `--qa-simulate [fixture]`: fakes instead of every display port and EDR surface, with or without a fixture name.
+    /// The switch alone decides the wiring (`CompositionRoot.simulatedFixture(for:)`), never the name.
+    public var qaSimulates: Bool { contains("--qa-simulate") }
+
+    /// The fixture name after `--qa-simulate` (a `DisplayFixture` raw value); nil when the switch is absent, last or
+    /// followed by another switch (`--qa-simulate --off`). A nil name with `qaSimulates` true still means fakes.
+    public var qaSimulateFixture: String? {
+        guard let name = value(after: "--qa-simulate"), !name.hasPrefix("-") else { return nil }
+        return name
+    }
 
     /// `--qa-panel`: open the panel.
     public var qaOpensPanel: Bool { contains("--qa-panel") }

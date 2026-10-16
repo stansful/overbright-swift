@@ -1,7 +1,8 @@
 // OverbrightAppShell/App/QAHooks.swift — DEBUG-only visual QA launch arguments. ARCHITECTURE.md §8.5; Cranny's
 // QAHooks (the owner's MIT code). Shared shell file (contract owner). The whole file is compiled out of Release.
 //
-//   --qa-simulate <fixture>          fakes for every display port (CompositionRoot); mandatory for agents
+//   --qa-simulate [fixture]          fakes for every display port (CompositionRoot; with no or an unknown name,
+//                                    builtin-xdr-lid-open); mandatory for agents
 //   --qa-defaults-suite <name>       settings in that suite (QAHooks+Defaults.swift)
 //   --qa-state <name>                drive `PreviewBoostControl` with PanelUI's `ScriptedStatuses` (CompositionRoot)
 //   --qa-panel                       open the panel

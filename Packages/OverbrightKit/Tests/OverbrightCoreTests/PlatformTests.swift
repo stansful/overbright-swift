@@ -139,7 +139,12 @@ private struct Document: Codable, Equatable, Sendable {
                              "--qa-help", "no-extra-range", "--qa-snapshot", "/tmp/shots", "--qa-snapshot-at", "1.5",
                              "--qa-update-check", "--qa-hang-main", "5,4"])
     #expect(a.startsOff && a.qaSimulateFixture == "mpg322ux-hdr-on")
-    #expect(a.qaSimulateFixture.flatMap(DisplayFixture.init(rawValue:)) == .mpg322uxHDROn)
+    #expect(a.qaSimulateFixture.flatMap(DisplayFixture.init(rawValue:)) == .mpg322uxHDROn && a.qaSimulates)
+    for bare in [["Overbright", "--off", "--qa-simulate"], ["Overbright", "--qa-simulate", "--off"]] {
+        let arguments = LaunchArguments(bare)                    // the switch without a name still simulates
+        #expect(arguments.qaSimulates && arguments.qaSimulateFixture == nil && arguments.startsOff, "\(bare)")
+    }
+    #expect(!LaunchArguments(["Overbright", "--off"]).qaSimulates)
     #expect(a.qaDefaultsSuite == "app.overbright.Overbright.dev")
     #expect(a.qaOpensMenu && !a.qaOpensPanel && a.qaHUDLevel == "0.5" && a.qaSettingsPane == "displays#capMode")
     #expect(a.qaCalibrationDisplay == "0B21E7F1-0000-4000-8000-000000000001" && a.qaHelpAnchor == "no-extra-range")

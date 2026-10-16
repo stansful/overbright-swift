@@ -2,9 +2,12 @@
 // §3.11, §7.4, §10.0 (shared shell file, contract owner), §10.15 (WP13 wires every real implementation).
 //
 // Two wirings:
-// - `--qa-simulate <fixture>` (Debug only): every display port is a Core fake over the fixture (`FakeGammaPort`,
+// - `--qa-simulate [fixture]` (a Debug switch): every display port is a Core fake over the fixture (`FakeGammaPort`,
 //   `ScriptedHeadroom`, `FakeDisplayDirectory`, `FakeTriggerFactory`), with fake signals and conflicts. Nothing
-//   touches a display (D24). An unknown fixture name falls back to `builtin-xdr-lid-open`, never to real ports.
+//   touches a display (D24). The switch alone selects this wiring (`simulatedFixture(for:)`): a missing name
+//   (`--off --qa-simulate`, or another switch right after it) or an unknown one is logged and falls back to
+//   `builtin-xdr-lid-open`, never to real ports. This holds in every build configuration, so it does not depend on
+//   the Release refusal below having run first.
 // - Real ports: in WP0a only the READ-ONLY display ports exist (`CoreGraphicsGamma` refuses writes,
 //   `SystemHeadroomPort`, `SystemDisplayDirectory`); triggers, signals, conflicts, Fill Light, shortcuts and updates are
 //   placeholders (fakes that open nothing) until their packages land, and `--diagnostics` reports them as null.
@@ -49,18 +52,26 @@ enum CompositionRoot {
         arguments.isCommandLineMode || ports.fixture != nil
     }
 
-    /// The ports for this launch: `--qa-simulate` (Debug builds only; a Release build has already refused the switch,
-    /// see `refusedSwitches`) or the real ones.
-    static func ports(for arguments: LaunchArguments, time: any TimeSource) -> ShellPorts {
-        #if DEBUG
-        if let name = arguments.qaSimulateFixture {
-            let fixture = DisplayFixture(rawValue: name) ?? {
-                log.error("QA: unknown --qa-simulate fixture \(name, privacy: .public); using builtin-xdr-lid-open")
-                return .builtinXDRLidOpen
-            }()
-            return simulatedPorts(fixture, time: time)
+    /// The fixture a launch simulates, nil only without `--qa-simulate`: the named fixture, or `builtin-xdr-lid-open`
+    /// (logged) when the name is missing or unknown. Pure apart from that log line, so tests check the decision
+    /// without constructing the real ports.
+    static func simulatedFixture(for arguments: LaunchArguments) -> DisplayFixture? {
+        guard arguments.qaSimulates else { return nil }
+        guard let name = arguments.qaSimulateFixture else {
+            log.error("QA: --qa-simulate without a fixture name; using builtin-xdr-lid-open")
+            return .builtinXDRLidOpen
         }
-        #endif
+        guard let fixture = DisplayFixture(rawValue: name) else {
+            log.error("QA: unknown --qa-simulate fixture \(name, privacy: .public); using builtin-xdr-lid-open")
+            return .builtinXDRLidOpen
+        }
+        return fixture
+    }
+
+    /// The ports for this launch: the simulated ones whenever `--qa-simulate` is present (in any build; a Release
+    /// build has refused the switch before this, see `refusedSwitches`), the real ones only without it.
+    static func ports(for arguments: LaunchArguments, time: any TimeSource) -> ShellPorts {
+        if let fixture = simulatedFixture(for: arguments) { return simulatedPorts(fixture, time: time) }
         return livePorts(time: time)
     }
 

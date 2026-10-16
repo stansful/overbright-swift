@@ -1,7 +1,8 @@
 // OverbrightAppShellTests/CompositionRootTests.swift — the composition root (ARCHITECTURE.md §3.9, §7.4, §10.0, D7,
 // D24): building the services touches nothing (`constructingServicesTouchesNoHardware`, the successor of Cranny's
-// `registersEveryContributionWithoutSideEffects`), Boost starts last, `--qa-simulate` never yields a real port, the
-// single-instance exemption follows the wiring, and a Release build refuses the Debug-only switches.
+// `registersEveryContributionWithoutSideEffects`), Boost starts last, `--qa-simulate` never yields a real port (with
+// or without a fixture name), the single-instance exemption follows the wiring, and a Release build refuses the
+// Debug-only switches. No test here constructs the real ports (lint `noWritesInHardwareTests`).
 import Foundation
 import OverbrightBoost
 import OverbrightCore
@@ -61,18 +62,21 @@ import Testing
         #expect(!shell.lifecycle.contains { $0 is BoostEngine })
     }
 
-    /// D24: `--qa-simulate` wires only Core fakes, whatever the fixture name (an unknown one falls back to a fixture,
-    /// never to the real ports).
+    /// D24: `--qa-simulate` wires only Core fakes, whatever follows it: a known fixture, an unknown name, another
+    /// switch or nothing at all (the switch last) all get a fixture, never the real ports.
     @Test func simulationNeverUsesRealPorts() {
         for arguments in [["Overbright", "--qa-simulate", "builtin-xdr-lid-open"],
                           ["Overbright", "--qa-simulate", "mpg322ux-hdr-on"],
-                          ["Overbright", "--qa-simulate", "no-such-fixture"]] {
+                          ["Overbright", "--qa-simulate", "no-such-fixture"],
+                          ["Overbright", "--off", "--qa-simulate"],
+                          ["Overbright", "--qa-simulate", "--off"],
+                          ["Overbright", "--qa-simulate", "--qa-defaults-suite", "app.overbright.Overbright.dev"]] {
             let ports = CompositionRoot.ports(for: LaunchArguments(arguments), time: ManualTimeSource())
             #expect(ports.gamma is FakeGammaPort, "\(arguments)")
             #expect(ports.headroom is ScriptedHeadroom)
             #expect(ports.displays is FakeDisplayDirectory)
             #expect(ports.triggers is FakeTriggerFactory)
-            #expect(ports.fixture != nil)
+            #expect(ports.fixture != nil, "\(arguments)")
             #expect(ports.lifecycle.isEmpty)
         }
         let fixture = CompositionRoot.ports(for: LaunchArguments(["Overbright", "--qa-simulate", "mpg322ux-hdr-on"]),
@@ -80,13 +84,29 @@ import Testing
         #expect(fixture == .mpg322uxHDROn)
     }
 
+    /// The wiring decision, checked without constructing any port: a missing or unknown name falls back to
+    /// `builtin-xdr-lid-open`, and only a launch without the switch gets the real ports (nil).
+    @Test func simulatedFixtureFollowsTheSwitchNotTheName() {
+        func fixture(_ arguments: [String]) -> DisplayFixture? {
+            CompositionRoot.simulatedFixture(for: LaunchArguments(["Overbright"] + arguments))
+        }
+        #expect(fixture(["--qa-simulate", "mpg322ux-hdr-on"]) == .mpg322uxHDROn)
+        #expect(fixture(["--off", "--qa-simulate"]) == .builtinXDRLidOpen)
+        #expect(fixture(["--qa-simulate", "--off"]) == .builtinXDRLidOpen)
+        #expect(fixture(["--qa-simulate", "no-such-fixture"]) == .builtinXDRLidOpen)
+        #expect(fixture([]) == nil)
+        #expect(fixture(["--off", "--qa-defaults-suite", "app.overbright.Overbright.dev"]) == nil)
+        #expect(fixture(["--diagnostics", "-"]) == nil)
+    }
+
     /// D27 follows the wiring, not the arguments: a launch wired to the simulated ports or a command-line mode skips
     /// the single-instance check; a launch wired to the real ports never does, even with `--qa-simulate` present.
+    /// No test constructs the real ports (D24): `ShellPorts.traps` stands in for them (no fixture).
     @Test func singleInstanceExemptionFollowsTheWiring() {
         let simulated = CompositionRoot.simulatedPorts(.builtinXDRLidOpen, time: ManualTimeSource())
-        let real = ShellPorts.traps(log: TrapLog(), gamma: TrapGammaPort())        // no fixture, as `livePorts`
+        let real = ShellPorts.traps(log: TrapLog(), gamma: TrapGammaPort())
         let qa = LaunchArguments(["Overbright", "--qa-simulate", "builtin-xdr-lid-open"])
-        #expect(CompositionRoot.livePorts(time: ManualTimeSource()).fixture == nil)
+        #expect(real.fixture == nil)
         #expect(CompositionRoot.skipsSingleInstanceCheck(qa, ports: simulated))
         #expect(!CompositionRoot.skipsSingleInstanceCheck(qa, ports: real))
         #expect(!CompositionRoot.skipsSingleInstanceCheck(LaunchArguments(["Overbright"]), ports: real))
