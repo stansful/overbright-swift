@@ -59,8 +59,8 @@ import Testing
             "Ends a pause.", "Tells whether Overbright is on, and the level of each display.",
             "Turns Overbright off at once. Your levels are kept for next time.",
         ]
-        let parameters = ["Display", "All Displays", "Level", "Indoor", "Bright Room", "Sunlight", "Max", "Multiplier",
-                          "Brightness", "Duration"]
+        let parameters = ["Display", "%lld Displays", "All Displays", "Level", "Indoor", "Bright Room", "Sunlight", "Max",
+                          "Multiplier", "Brightness", "Duration"]
         let focus = ["Overbright", "Leave Alone", "Off", "On", "Overbright: Leave Alone", "Overbright: Off",
                      "Overbright: On at Bright Room"]
         let summaries = ["Set extra brightness of ${display} to ${level}", "Dim ${display} to ${percent}",
@@ -68,6 +68,11 @@ import Testing
         let shortTitles = ["Turn On or Off", "Back to Standard"]
         let expected = Set(titles + descriptions + parameters + focus + summaries + shortTitles)
         #expect(expected.subtracting(app).isEmpty, "missing: \(expected.subtracting(app).sorted())")
+        // The type's plural (DESIGN.md §12.8: "Displays") has its plural forms, English included.
+        let plural = try #require(try Self.entries(of: "App/Localizable.xcstrings")["%lld Displays"])
+        let english = (plural["localizations"] as? [String: Any])?["en"] as? [String: Any]
+        let forms = ((english?["variations"] as? [String: Any])?["plural"] as? [String: Any]) ?? [:]
+        #expect(Set(forms.keys) == ["one", "other"])
         #expect(try Self.keys(of: "App/AppShortcuts.xcstrings") == ["Turn ${applicationName} on or off",
                                                                    "${applicationName} back to Standard"])
         #expect(try Self.keys(of: "Controls/Localizable.xcstrings").isSuperset(of: ["Overbright", "Extra brightness"]))
