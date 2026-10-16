@@ -186,7 +186,8 @@ import Testing
         #expect(h.table() == newBase)
     }
 
-    /// An idle display has nothing to re-base: no read, no write.
+    /// An idle display we never wrote has nothing to re-base: no read, no write (the at-rest cases are in
+    /// `RebaseAtRestTests`).
     @Test func idleDisplaysDoNothing() async throws {
         let h = EngineHarness()
         await h.start()

@@ -9,7 +9,8 @@ extension DisplayController {
 
     /// Reads the table and keeps it as the baseline when `BaselineRules` allows it. A scaled or invalid read does not
     /// arm: with `failsOnReject` the display fails as `foreignTableAtLaunch` (or `attributedDrift` once the conflict
-    /// probe names an app).
+    /// probe names an app). Our own write that is not the baseline (a re-base adopted a new base but could not write
+    /// it yet) is never captured: the stored baseline stays.
     @discardableResult
     func captureBaseline(failsOnReject: Bool = true) -> Bool {
         let read: GammaTable
@@ -18,6 +19,10 @@ extension DisplayController {
         } catch {
             deps.journal.record("baseline.readFailed", display: key, time: deps.time, category: .gamma)
             return false
+        }
+        if isOwnStaleWrite(read) {
+            deps.journal.record("baseline.keptOverOwnWrite", display: key, time: deps.time)
+            return true
         }
         let expected = deps.gamma.profileBase(of: ref.id, count: read.count)
         switch BaselineRules.capture(read, expectedBase: expected, previous: baseline) {

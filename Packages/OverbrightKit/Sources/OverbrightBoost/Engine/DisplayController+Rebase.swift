@@ -1,7 +1,7 @@
 // OverbrightBoost/Engine/DisplayController+Rebase.swift — reconfiguration passes, ColorSync and accessibility events: the
 // expected base recomputed, WindowServer's table awaited and adopted, the ledger updated, the target reapplied, in every
-// phase that holds a baseline. ARCHITECTURE.md §4.3 (reconfiguration rows: "whether or not the display is scaled"),
-// §4.8 (event-driven re-base), D26. MainActor.
+// phase, idle and failed included. ARCHITECTURE.md §4.3 (reconfiguration rows: "whether or not the display is scaled"),
+// §4.8 (event-driven re-base: "scaled, dimmed or idle alike"), §4.5 invariants 5 and 6, D26, D27. MainActor.
 import CoreGraphics
 import Foundation
 import OverbrightCore
@@ -16,46 +16,43 @@ extension DisplayController {
         ref = newFacts.ref
     }
 
-    /// The debounced after-phase pass: re-place windows, retry `headroomNeverArrived`, recheck a foreign table, resume
-    /// a display whose window moved, and re-base every display that holds a baseline.
+    /// The debounced after-phase pass: re-place windows, re-base every display (at rest too), resume a display whose
+    /// window moved, retry `headroomNeverArrived` and recheck a foreign table.
     func reconfigured(_ newFacts: DisplayFacts) {
         updateFacts(newFacts)
         trigger?.represent()
         overlay?.represent()
+        noteBaseEvent(.reconfiguration)
         switch phase {
-        case .failed(.headroomNeverArrived):
-            lastBaseEventAt = deps.time.now
-            clearTrip()
-        case .failed(.foreignTableAtLaunch), .failed(.attributedDrift):
-            lastBaseEventAt = deps.time.now
-            if case .failed(.foreignTableAtLaunch) = phase, tableMatchesBase() { clearTrip() }
         case .suspended(.reconfiguring):
-            noteBaseEvent(.reconfiguration)
             resume()                                                      // which restarts the re-base where it lands
+        case .failed(.headroomNeverArrived):
+            clearTrip()
+        case .failed(.foreignTableAtLaunch):
+            if tableMatchesBase() { clearTrip() }
         default:
-            noteBaseEvent(.reconfiguration)
+            break
         }
     }
 
     /// A ColorSync profile change or a change of the accessibility display options (the same re-base, §4.8).
     func baseEventOccurred(_ cause: ReapplyCause) {
-        switch phase {
-        case .failed(.foreignTableAtLaunch):
-            lastBaseEventAt = deps.time.now
-            if tableMatchesBase() { clearTrip() }
-        default:
-            noteBaseEvent(cause)
-        }
+        noteBaseEvent(cause)
+        if case .failed(.foreignTableAtLaunch) = phase, tableMatchesBase() { clearTrip() }
     }
 
-    /// A base event: every phase that holds a baseline (all but idle and failed, which capture afresh at the next
-    /// arm) re-bases, suspended, arming, gating and disarming included. Until a re-base has judged the table, the
-    /// event stays pending (`pendingRebase`).
+    /// A base event, in every phase (§4.8: "scaled, dimmed or idle alike"). An active display re-bases (suspended,
+    /// arming, gating and disarming included) and the event stays pending (`pendingRebase`) until that re-base has
+    /// judged the table; a display at rest (idle or failed) is judged at once, because WindowServer may keep our last
+    /// baseline write over the old curve, which the next arm or calibration would otherwise capture.
     func noteBaseEvent(_ cause: ReapplyCause) {
         lastBaseEventAt = deps.time.now
-        guard isActive else { return }
         pendingRebase = cause
-        rebase(cause: cause)
+        if isActive {
+            rebase(cause: cause)
+        } else {
+            settlePendingRebase()
+        }
     }
 
     /// A pending base event whose re-base a shield, a hang recovery or a resume cut short starts again (no-op while one
@@ -138,24 +135,33 @@ extension DisplayController {
         reapply(cause)
     }
 
-    /// The display reached idle or failed while a base event was unjudged (the end of a disarm, Back to Standard, a
-    /// stop or a trip cut its re-base short; the last write may have been the old baseline): judge it now in one read.
-    /// Our own baseline write still on screen is replaced by the new profile base; WindowServer's table is adopted as
-    /// it is. Without this, "off" would leave the old curve after a profile, preset or HDR change (§4.8).
+    /// A base event at rest (idle or failed), judged at once in one read: a fresh event, or one whose re-base a disarm,
+    /// Back to Standard, a stop or a trip cut short. Idle does no work (§4.2), so nothing waits for WindowServer: a
+    /// table it applies later replaces ours anyway and is captured at the next arm. Only a display we wrote can show
+    /// our own table. When it still does (WindowServer kept our write over the old curve), the new profile base is
+    /// adopted and written once, on the console only (D27); this also lands a failed landing. WindowServer's table is
+    /// adopted as it is when it matches the new base. A write that cannot happen now keeps the event pending for the
+    /// next reduction (`retryLandingAtRest`), and no capture takes our old table meanwhile (`isOwnStaleWrite`).
+    /// Without this, "off" would leave the old curve after a profile, preset or HDR change, and the next arm or
+    /// calibration would multiply it (§4.8).
     func settlePendingRebase() {
         guard let cause = pendingRebase else { return }
         pendingRebase = nil
         stopRebase()
-        guard mechanism == .table, let old = baseline, let read = try? deps.gamma.read(ref.id) else { return }
+        guard mechanism == .table, lastWrite != nil, let old = baseline, let read = try? deps.gamma.read(ref.id) else {
+            return
+        }
         let expected = deps.gamma.profileBase(of: ref.id, count: old.count)
         if isOurs(read) {
-            guard !lastWriteIsScaled, !isScaledOrDimmed, !expected.matches(old, tolerance: EngineTiming.driftTolerance),
-                  case .accept = BaselineRules.capture(expected, expectedBase: expected, previous: old) else { return }
-            adopt(expected, cause: cause)
-            writeAdoptedBase(expected)
+            if !expected.matches(old, tolerance: EngineTiming.driftTolerance),
+               case .accept = BaselineRules.capture(expected, expectedBase: expected, previous: old) {
+                adopt(expected, cause: cause)
+            }
+            if !lastWriteIsBaseline, let baseline, !writeAdoptedBase(baseline) { pendingRebase = cause }
         } else if read.matches(expected, tolerance: EngineTiming.driftTolerance),
                   case .accept = BaselineRules.capture(read, expectedBase: expected, previous: old) {
             adopt(read, cause: cause)
+            resetApplied()                                                // WindowServer's table replaced ours
         }
     }
 
@@ -168,16 +174,21 @@ extension DisplayController {
                             time: deps.time)
     }
 
-    /// Writes the adopted base over our own old baseline write (one baseline write; only after we wrote this display,
-    /// and never off the console, D27).
-    func writeAdoptedBase(_ table: GammaTable) {
-        guard lastWrite != nil, !isOffConsole, parameters.isSessionActive else { return }
+    /// Writes the adopted base over our own write still on screen (one baseline write; only after we wrote this
+    /// display, and never off the console, D27). The table is at its baseline afterwards; false when nothing was
+    /// written.
+    @discardableResult
+    func writeAdoptedBase(_ table: GammaTable) -> Bool {
+        guard lastWrite != nil, !isOffConsole, parameters.isSessionActive else { return false }
         do {
             try deps.writer.writeBaseline(table, to: ref)
-            lastWrite = (table, 1)
         } catch {
             deps.journal.record("baseline.writeFailed", display: key, time: deps.time, category: .gamma)
+            return false
         }
+        lastWrite = (table, 1)
+        resetApplied()
+        return true
     }
 
     /// Whether `read` is our latest write (or the baseline when we never wrote), under either read-back model: the
@@ -188,6 +199,20 @@ extension DisplayController {
             ? lastWrite.baseline : lastWrite.baseline.scaled(by: lastWrite.factor)
         return read.matches(written, tolerance: Self.sameTableTolerance)
             || read.matches(written.clampedAtOne, tolerance: Self.sameTableTolerance)
+    }
+
+    /// Our latest table write is the baseline we hold now (true when we never wrote this display): nothing of ours
+    /// but the baseline can be on screen.
+    var lastWriteIsBaseline: Bool {
+        guard let lastWrite else { return true }
+        guard let baseline, !lastWriteIsScaled else { return false }
+        return lastWrite.baseline.matches(baseline, tolerance: Self.sameTableTolerance)
+    }
+
+    /// `read` is our own latest write and not the baseline we hold: a failed landing, or the old curve whose
+    /// replacement a re-base adopted but could not write yet. It never becomes a baseline (§4.5 invariant 5).
+    func isOwnStaleWrite(_ read: GammaTable) -> Bool {
+        baseline != nil && !lastWriteIsBaseline && isOurs(read)
     }
 
     /// The re-base's poll; false once a shield, removal or stop cancelled it.

@@ -50,13 +50,16 @@ extension DisplayController: DisplayControllerDriving {
     }
 
     /// A fresh baseline for a driven session (§4.8): the stored one may predate a profile, preset or HDR change made
-    /// while the display was idle. Kept while our own scaled write is still on the table (it is what a landing
-    /// restores). A rejected or failed read leaves no baseline, so a calibration write is refused.
+    /// while the display was idle (a base event still pending is judged first). Kept while our own scaled write, or
+    /// the old curve a re-base could not replace yet, is still on the table (never captured, §4.5 invariant 5). A
+    /// rejected or failed read leaves no baseline, so a calibration write is refused.
     @discardableResult
     func refreshBaseline() -> Bool {
         guard mechanism == .table, facts.gammaCapacity > 0, !isScaledOrDimmed, !lastWriteIsScaled else {
             return baseline != nil
         }
+        if !isActive { settlePendingRebase() }
+        if let read = try? deps.gamma.read(ref.id), isOwnStaleWrite(read) { return true }
         baseline = nil
         return captureBaseline(failsOnReject: false)
     }
