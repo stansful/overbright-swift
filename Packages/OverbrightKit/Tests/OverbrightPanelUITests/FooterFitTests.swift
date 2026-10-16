@@ -1,7 +1,8 @@
 // OverbrightPanelUITests/FooterFitTests.swift — the footer's three guard chips fit one 292-pt row (DESIGN.md §5.9,
 // §16; ARCHITECTURE.md §8.8 width rule `chip`), and when a long translation would not fit, every chip drops to glyph +
 // value and the row still fits. Measured with the chip component and the footer row the panel draws, for the widest
-// settings (pause below a level, every rule off, a running 1 h 30 min timer), in English and the pseudo-long locale.
+// settings (pause below a level, every rule off, a running 1 h 30 min timer), in English and the pseudo-long locale,
+// and in every language Overbright ships (WP15), where the default row must show its words in full.
 // Also: what each chip says for its settings, and that its menu edits exactly that setting.
 import Foundation
 import OverbrightCore
@@ -75,6 +76,52 @@ import Testing
             let footer = PanelFooter(chips: chips, focus: nil)
             #expect(FitMeasure.width(footer, offered: PanelLayout.footerWidth) <= PanelLayout.footerWidth)
             #expect(FitMeasure.idealWidth(footer.row(.glyphs)) <= PanelLayout.footerWidth)
+        }
+    }
+
+    // MARK: Every language (WP15)
+
+    /// The footer rows in `code`'s words: the default settings, each other battery rule beside the default chips, and
+    /// the widest settings ("Below 20 %", "Auto-pause · Off", "Off in 1 h 30 min").
+    private func rows(in code: String) -> [(name: String, chips: [FooterChip])] {
+        let words = PanelWords(code)
+        let percent = words.percent(20)
+        let duration = words.duration(minutes: 90)
+        func localized(_ chips: [FooterChip], battery: String = words.below(percent),
+                       widest: Bool = false) -> [FooterChip] {
+            chips.map { chip in
+                let (text, compact): (String, String) = switch chip.kind {
+                case .battery: (battery, battery == words.below(percent) ? percent : "")
+                case .autoPause: widest ? (words.autoPauseOff, words.off) : (words.autoPause, "")
+                case .timer: widest ? (words.offIn(duration), duration) : (words.noTimer, "")
+                }
+                let model = GuardChipModel(symbol: chip.model.symbol, text: text, accessibilityLabel: text)
+                let small = GuardChipModel(symbol: chip.compact.symbol, text: compact, accessibilityLabel: text)
+                return FooterChip(kind: chip.kind, model: model, compact: small, menu: chip.menu)
+            }
+        }
+        return [("default", localized(defaultChips())),
+                ("adapter only", localized(defaultChips(), battery: words.adapterOnly)),
+                ("any charge", localized(defaultChips(), battery: words.anyCharge)),
+                ("widest", localized(widestChips(), widest: true))]
+    }
+
+    /// The default row shows its words in every language; every other row shows them or drops to glyph + value, and the
+    /// footer as drawn never leaves its row.
+    @Test(arguments: ShippedLanguages.codes)
+    func everyRowFitsInEveryLanguage(_ code: String) throws {
+        let rows = rows(in: code)
+        let defaultRow = try #require(rows.first { $0.name == "default" })
+        let width = rowWidth(defaultRow.chips, .full)
+        #expect(width > 0 && width <= PanelLayout.footerWidth, "\(code): the default footer row is \(width) pt")
+        for (name, chips) in rows {
+            let full = rowWidth(chips, .full)
+            let compact = rowWidth(chips, .compact)
+            #expect(full <= PanelLayout.footerWidth || compact <= PanelLayout.footerWidth,
+                    "\(code), \(name): neither the full row (\(full) pt) nor glyph + value (\(compact) pt) fits")
+            let footer = PanelFooter(chips: chips, focus: nil)
+            let drawn = FitMeasure.width(footer, offered: PanelLayout.footerWidth)
+            #expect(drawn <= PanelLayout.footerWidth, "\(code), \(name): \(drawn) pt")
         }
     }
 

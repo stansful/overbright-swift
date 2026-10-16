@@ -1,6 +1,7 @@
 // OverbrightPanelUITests/ReadoutFitTests.swift — readouts fit one line of ≤ 200 pt and value tags the 240-pt track
 // (DESIGN.md §5.5, §5.6, §16; ARCHITECTURE.md §8.8 width rules `readout` and `valueTag`), measured in the readout and
-// value-tag type (rounded, monospaced digits), in English and the pseudo-long locale. The texts are DESIGN.md §5.6's
+// value-tag type (rounded, monospaced digits), in English, the pseudo-long locale and every language Overbright ships
+// (WP15). The texts are DESIGN.md §5.6's
 // and §5.5's, plus what Design's `ValueText` makes for the gallery's readouts once WP9's copy lands. The value tag's
 // "small gain" suffix may wrap (§16), so it is measured without the suffix.
 import OverbrightCore
@@ -80,6 +81,74 @@ import Testing
             let longer = PseudoLocale.lengthen(text)
             #expect(FitMeasure.textWidth(longer, Self.valueTagFont) <= PanelLayout.trackWidth, "«\(longer)»")
         }
+    }
+
+    // MARK: Every language (WP15)
+
+    private static func values(_ state: ReadoutValues.State, _ gain: Double = 1, requested: Double? = nil,
+                               nits: Double? = nil, preset: LevelPreset? = nil, estimate: Bool = false,
+                               dim: Int? = nil) -> ReadoutValues {
+        ReadoutValues(state: state, appliedGain: gain, requestedGain: requested, nits: nits, preset: preset,
+                      isEstimate: estimate, dimPercent: dim)
+    }
+
+    /// DESIGN.md §5.6's readouts as numbers (`englishReadouts`), plus every preset with four-digit nits.
+    static let readoutValues: [ReadoutValues] = [
+        values(.off), values(.standard), values(.boost, 1.29, nits: 775, preset: .brightRoom),
+        values(.boost, 1.29, preset: .brightRoom), values(.boost, 1.29, preset: .brightRoom, estimate: true),
+        values(.boost, 1.42, nits: 852), values(.boost, 1.42, estimate: true), values(.boost, 1.21, requested: 1.47),
+        values(.dim, 0.25, dim: 25), values(.preparing), values(.boost, 2.04, preset: .sunlight, estimate: true),
+        values(.boost, 1.12, nits: 1_010, preset: .indoor, estimate: true),
+        values(.boost, 1.29, nits: 1_165, preset: .brightRoom, estimate: true),
+        values(.boost, 2.04, nits: 1_835, preset: .sunlight, estimate: true),
+        values(.boost, 2.6, nits: 2_340, preset: .max, estimate: true),
+    ]
+
+    /// DESIGN.md §5.5's value tags as numbers (`englishValueTags`), every preset, and each guard's words.
+    static func valueTags(in language: CopyLanguage) -> [String] {
+        let levels = [values(.boost, 1.29, preset: .brightRoom), values(.standard), values(.boost, 1.42),
+                      values(.dim, 0.25, dim: 25), values(.boost, 1.29, estimate: true),
+                      values(.boost, 1.29, preset: .brightRoom, estimate: true),
+                      values(.boost, 1.12, preset: .indoor, estimate: true),
+                      values(.boost, 2.04, preset: .sunlight, estimate: true),
+                      values(.boost, 1.3, preset: .max, estimate: true)]
+        let guards: [LimitReason] = [.battery(percent: 12, threshold: 20), .onBattery, .lowPowerMode, .thermalCritical,
+                                     .outsideSchedule, .focusOff]
+        return levels.map { ValueText.make($0, in: language).text }
+            + guards.compactMap { ValueText.guarded(by: $0, in: language)?.text }
+    }
+
+    /// Every readout fits its line, or drops the preset name and then fits (the card's fallback).
+    @Test(arguments: ShippedLanguages.codes)
+    func readoutsFitOneLineInEveryLanguage(_ code: String) {
+        let language = ShippedLanguages.design(code)
+        let builder = ScriptedStatuses.names.compactMap(ScriptedStatuses.services(named:)).flatMap { services in
+            services.boost.status.displays.map { display in
+                DisplayCardModel(status: display, isMasterOn: services.boost.status.isOn, services: services).readout
+            }
+        }
+        let failures = (Self.readoutValues + builder).compactMap { values -> String? in
+            let full = ValueText.make(values, in: language).text
+            let numbers = ValueText.make(DisplayCardView.withoutPreset(values), in: language).text
+            let (fullWidth, numbersWidth) = (FitMeasure.textWidth(full, Self.readoutFont),
+                                             FitMeasure.textWidth(numbers, Self.readoutFont))
+            return fullWidth <= PanelLayout.readoutWidth || numbersWidth <= PanelLayout.readoutWidth ? nil
+                : "«\(full)» \(fullWidth) pt, without the preset \(numbersWidth) pt"
+        }
+        #expect(failures.isEmpty, "\(code): readouts wider than \(PanelLayout.readoutWidth) pt: \(failures)")
+        let caption = PanelWords(code).compatibilityMode
+        #expect(FitMeasure.textWidth(caption, .caption) <= PanelLayout.readoutWidth, "\(code): «\(caption)»")
+    }
+
+    @Test(arguments: ShippedLanguages.codes)
+    func valueTagsFitTheTrackInEveryLanguage(_ code: String) {
+        let tags = Self.valueTags(in: ShippedLanguages.design(code))
+        #expect(tags.count == 15, "\(code)")
+        let failures = tags.compactMap { text -> String? in
+            let width = FitMeasure.textWidth(text, Self.valueTagFont)
+            return width <= PanelLayout.trackWidth ? nil : "«\(text)» \(width) pt"
+        }
+        #expect(failures.isEmpty, "\(code): value tags wider than \(PanelLayout.trackWidth) pt: \(failures)")
     }
 
     @Test func theCardKeepsItsReadoutInsideTheBudgetWhateverTheText() {

@@ -1,11 +1,13 @@
 // OverbrightAppShellTests/HUDFitTests.swift — the HUD's text fits (DESIGN.md §6, §16: HUD text ≤ 200 pt; ARCHITECTURE.md
 // §8.8 width rule `hud`): every value and reason of §12.9 in the HUD's type, in English and the pseudo-long locale
-// (+40 %), plus whatever Design's `HUDText` makes for the gallery's HUD states once WP9's copy lands; the HUD itself is
+// (+40 %), plus whatever Design's `HUDText` makes for the gallery's HUD states; in every language Overbright ships
+// (WP15) the values, the reasons and the Keep-this-level prompt are measured too; the HUD itself is
 // 280 × 56 pt whatever it says, and its bar draws the level. Measured in hosting views without a window.
 import AppKit
 import OverbrightCore
 import OverbrightDesign
 import OverbrightPanelUI
+import OverbrightPolicy
 import SwiftUI
 import Testing
 @testable import OverbrightAppShell
@@ -50,6 +52,87 @@ import Testing
             failures.append("reason «\(text)» \(width(text, Self.labelFont)) pt")
         }
         #expect(failures.isEmpty, "HUD text wider than \(HUDView.textWidth) pt: \(failures)")
+    }
+
+    // MARK: Every language (WP15)
+
+    /// Every language Overbright ships (Design's catalog, English included).
+    nonisolated static let languages = CopyLanguage.available
+
+    /// The HUD's values and reason lines in `language`: §12.9's values as numbers and every preset, each guard's line,
+    /// the change lines (Preparing…, back, timer ended) and the gallery's HUD states.
+    static func texts(in language: CopyLanguage) -> (values: [String], reasons: [String]) {
+        func value(_ state: ReadoutValues.State, _ gain: Double = 1, preset: LevelPreset? = nil, estimate: Bool = false,
+                   dim: Int? = nil) -> String {
+            ValueText.make(ReadoutValues(state: state, appliedGain: gain, requestedGain: nil, nits: nil, preset: preset,
+                                         isEstimate: estimate, dimPercent: dim), in: language).text
+        }
+        let values = [value(.boost, 1.29, preset: .brightRoom), value(.boost, 1.29, preset: .brightRoom, estimate: true),
+                      value(.boost, 1.42), value(.standard), value(.dim, 0.25, dim: 25), value(.off),
+                      value(.boost, 2.04, preset: .sunlight, estimate: true),
+                      value(.boost, 1.12, preset: .indoor, estimate: true),
+                      value(.boost, 2.6, preset: .max, estimate: true)]
+        let reasons: [LimitReason] = [.userPaused(until: Date(timeIntervalSinceReferenceDate: 800_000_000)), .focusOff,
+                                      .battery(percent: 12, threshold: 20), .onBattery, .lowPowerMode, .thermalCritical,
+                                      .thermalSerious, .outsideSchedule]
+        let status = BoostStatus(isOn: true, isReady: true, pausedUntil: nil, autoOffAt: nil, displays: [], banner: nil,
+                                 symbol: .dimming)
+        let changes = [LevelChange.Kind.preparing, .automationResumed, .timerEnded].compactMap { kind in
+            HUDText.make(LevelChange(sequence: 1, kind: kind, source: .shortcut, display: nil), status: status, on: nil,
+                         in: language)?.reason
+        }
+        let gallery = ScriptedStatuses.hudNames.compactMap { name -> HUDText? in
+            guard let status = ScriptedStatuses.status(named: name), let change = status.lastChange else { return nil }
+            return HUDText.make(change, status: status, on: nil, in: language)
+        }
+        let lines = reasons.compactMap { HUDText.reasonLine(for: $0, in: language) }
+        return (values + gallery.compactMap(\.value), lines + changes + gallery.compactMap(\.reason))
+    }
+
+    @Test(arguments: languages)
+    func valuesAndReasonsFitInEveryLanguage(_ code: String) {
+        let language = CopyLanguage.named(code) ?? .english()
+        let (values, reasons) = Self.texts(in: language)
+        #expect(values.count >= 9 && reasons.count >= 11, "\(code)")
+        var failures: [String] = []
+        for text in values where width(text, Self.valueFont) > HUDView.textWidth {
+            failures.append("value «\(text)» \(width(text, Self.valueFont)) pt")
+        }
+        for text in reasons where width(text, Self.labelFont) > HUDView.textWidth {
+            failures.append("reason «\(text)» \(width(text, Self.labelFont)) pt")
+        }
+        #expect(failures.isEmpty, "\(code): HUD text wider than \(HUDView.textWidth) pt: \(failures)")
+    }
+
+    /// The Keep-this-level prompt (DESIGN.md §6, 280 pt wide): its title, its countdown and its two buttons each fit
+    /// between the prompt's insets, in the shell's words and in Design's.
+    @Test(arguments: languages)
+    func theKeepLevelPromptFitsInEveryLanguage(_ code: String) {
+        let bundle = Bundle.module.path(forResource: code, ofType: "lproj").flatMap(Bundle.init(path:)) ?? .module
+        let (locale, language) = (Locale(identifier: code), CopyLanguage.named(code) ?? .english())
+        let titles = [String(localized: "Keep this level?", table: "StatusMenu", bundle: bundle, locale: locale),
+                      ConfirmationText.keepLevelTitle(in: language)]
+        let countdowns = [String(localized: "Going back in \(10) s", table: "StatusMenu", bundle: bundle,
+                                 locale: locale),
+                          ConfirmationText.goingBack(seconds: 10, in: language)]
+        let buttons = [(String(localized: "Go Back", table: "StatusMenu", bundle: bundle, locale: locale),
+                        String(localized: "Keep", table: "StatusMenu", bundle: bundle, locale: locale)),
+                       (ConfirmationText.goBack(in: language), ConfirmationText.keep(in: language))]
+        let room = HUDPlacement.promptSize.width - 2 * Space.l
+        for title in titles {
+            #expect(width(title, .headline) <= room, "\(code): «\(title)» \(width(title, .headline)) pt")
+        }
+        for countdown in countdowns {
+            let measured = width(countdown, .callout.monospacedDigit())
+            #expect(measured <= room, "\(code): «\(countdown)» \(measured) pt")
+        }
+        for (goBack, keep) in buttons {
+            let row = NSHostingView(rootView: HStack(spacing: Space.m) {
+                Button(action: {}) { Text(verbatim: goBack) }
+                Button(action: {}) { Text(verbatim: keep) }
+            }.fixedSize()).fittingSize.width
+            #expect(row <= room, "\(code): «\(goBack)» «\(keep)» \(row) pt")
+        }
     }
 
     @Test func theHUDKeepsItsSizeWhateverItSays() {

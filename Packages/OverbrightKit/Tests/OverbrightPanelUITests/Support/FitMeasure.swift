@@ -1,5 +1,5 @@
 // OverbrightPanelUITests/Support/FitMeasure.swift — measured widths for the fit tests (ARCHITECTURE.md §8.8: width rules
-// are measured, never counted) and the pseudo-long locale of phase B (+40 %; Russian and all 35 languages are WP15's).
+// are measured, never counted) and the pseudo-long locale of phase B (+40 %); WP15 measures every shipped language too.
 // Nothing is ordered in: views are measured in an `NSHostingView` that has no window.
 import AppKit
 import SwiftUI
