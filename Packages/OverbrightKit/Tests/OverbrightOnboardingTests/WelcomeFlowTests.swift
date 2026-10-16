@@ -56,6 +56,34 @@ private typealias Keys = DisplayFixture.Keys
         #expect(harness.boost.calls == ["setOn(true,welcome)"] && harness.boost.status.isOn)
     }
 
+    /// The steps and their model only read the engine (`boost.status`) and never touch a display: no table, gamma or
+    /// EDR API, no engine request (Turn On Overbright is the chrome's one call, `WelcomeSession.finish`). The card's EDR
+    /// content is Design's, in this window only (ARCHITECTURE.md §2.1 rule 6, D24).
+    @Test func theStepsOnlyReadTheEngine() throws {
+        let root = URL(filePath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+            .deletingLastPathComponent().appending(path: "Sources/OverbrightOnboarding")
+        let forbidden = [#"\bboost\.(?!status\b)"#, #"\.(setOn|toggle|setLevel|setExtraBrightness|setDimLight|step|toggleDim|returnToStandard|pause|resume|retry)\(.*source:"#,
+                         #"CGSetDisplayTransfer|CGDisplayRestoreColorSyncSettings|GammaPort|TableWriter"#,
+                         #"preferredDynamicRange|wantsExtendedDynamicRangeContent|contentsHeadroom|AVPlayerLayer|CAMetalLayer"#]
+        var scanned = 0
+        for folder in ["Steps", "Model"] {
+            let files = try FileManager.default.contentsOfDirectory(at: root.appending(path: folder),
+                                                                    includingPropertiesForKeys: nil)
+            for file in files where file.pathExtension == "swift" {
+                scanned += 1
+                let code = try String(contentsOf: file, encoding: .utf8).split(separator: "\n")
+                    .filter { !$0.trimmingCharacters(in: .whitespaces).hasPrefix("//") }
+                for (number, line) in code.enumerated() {
+                    for pattern in forbidden {
+                        #expect(line.range(of: pattern, options: .regularExpression) == nil,
+                                "\(file.lastPathComponent): \(line.trimmingCharacters(in: .whitespaces)) [\(number)]")
+                    }
+                }
+            }
+        }
+        #expect(scanned >= 15)
+    }
+
     // MARK: Step 1 · the card
 
     /// Bright room of the built-in in Safe: ×1.29 (ARCHITECTURE.md §5.3: top ×1.667, half way in stops).
