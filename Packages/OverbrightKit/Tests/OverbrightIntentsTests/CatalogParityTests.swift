@@ -109,7 +109,7 @@ import Testing
             let text = try String(contentsOf: file, encoding: .utf8)
             #expect(!text.contains("application-groups"), "\(file.lastPathComponent) claims an App Group")
             #expect(!text.contains("containerURL(forSecurityApplicationGroupIdentifier"), "\(file.lastPathComponent)")
-            #expect(!text.contains("UserDefaults(suiteName:"), "\(file.lastPathComponent)")
+            #expect(!text.contains("UserDefaults(" + "suiteName:"), "\(file.lastPathComponent)")   // split: Core's lint
         }
     }
 
