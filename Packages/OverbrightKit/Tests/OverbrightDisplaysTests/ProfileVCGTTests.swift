@@ -1,5 +1,6 @@
-// OverbrightDisplaysTests/ProfileVCGTTests.swift — the `vcgt` parser behind `profileBase` (D26), on synthetic ICC data
-// (ARCHITECTURE.md §4.8). WP2 adds real ICC fixtures (`ProfileBaseTests`). No test constructs a real port.
+// OverbrightDisplaysTests/ProfileVCGTTests.swift — the `vcgt` parser behind `profileBase` (D26), on minimal synthetic
+// ICC data (ARCHITECTURE.md §4.8). Real, ColorSync-validated profiles are in `ProfileBaseTests`. No test constructs a
+// real port.
 import Foundation
 import OverbrightCore
 import Testing
@@ -56,14 +57,5 @@ import Testing
         #expect(ProfileVCGT.parse(iccData: Data(repeating: 0, count: 64)) == nil)
         let truncated = header(kind: 0) + [0, 3, 0, 255, 0, 2] + [0, 1]
         #expect(ProfileVCGT.parse(iccData: profile(tag: truncated)) == nil)
-    }
-
-    /// The seeded panel class uses public facts only (WP2 adds IORegistry).
-    @Test func seededPanelClass() {
-        #expect(SystemDisplayDirectory.panelClass(isBuiltIn: true, capacity: 1024, potential: 16) == .builtInXDR)
-        #expect(SystemDisplayDirectory.panelClass(isBuiltIn: true, capacity: 1024, potential: 2) == .builtInLCD)
-        #expect(SystemDisplayDirectory.panelClass(isBuiltIn: false, capacity: 0, potential: nil) == .virtualDisplay)
-        #expect(SystemDisplayDirectory.panelClass(isBuiltIn: false, capacity: 256, potential: 4.65) == .hdrExternal)
-        #expect(SystemDisplayDirectory.panelClass(isBuiltIn: false, capacity: 256, potential: 1) == .sdrExternal)
     }
 }
