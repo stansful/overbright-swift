@@ -29,7 +29,8 @@ struct ShortcutRow: View {
         let isDefault = settings[ShortcutSettings.bindings][shortcut.id] == nil
         LabeledContent {
             ShortcutRecorder(title: info.title, keys: keys(for: combo),
-                             listening: { services.shortcuts.setRecording($0) }) { recorded in
+                             listening: { services.shortcuts.setRecording($0) },
+                             announce: { services.announcer.announce($0, kind: .feedback) }) { recorded in
                 if recorded == nil, shortcut.id == .standard {
                     confirmingClear = true
                 } else {

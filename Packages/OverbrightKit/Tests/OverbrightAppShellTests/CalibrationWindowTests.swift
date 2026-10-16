@@ -8,6 +8,7 @@ import AppKit
 import Foundation
 import Observation
 import OverbrightCore
+import OverbrightDesign
 import OverbrightSettingsUI
 import SwiftUI
 import Testing
@@ -104,7 +105,7 @@ import Testing
         #expect(controller.model?.session === session && controller.model?.step == .checklist)
         #expect(window.contentView is NSHostingView<CalibrationView>)
         #expect(window.backgroundColor == .black && !window.isReleasedWhenClosed)
-        #expect(window.title.contains("Simulated XDR"))
+        #expect(window.title.contains(BidiIsolation.isolate("Simulated XDR")))         // isolated in the sentence
         // No screen of its own: an ordinary titled window, at the ordinary level.
         #expect(window.styleMask.contains(.titled) && window.level == .normal)
         window.close()

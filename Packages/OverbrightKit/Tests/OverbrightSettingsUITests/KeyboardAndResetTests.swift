@@ -73,6 +73,29 @@ private let marker = BoostMarker(since: Date(timeIntervalSinceReferenceDate: 800
         #expect(!KeyComboFormatter.keyCaps(KeyCombo(keyCode: 11, modifiers: hyper)).isEmpty)
     }
 
+    /// VoiceOver hears what the recorder shows: "Type Shortcut" while it listens, then the hint after a key without
+    /// Command, Control or Option (also announced); the key caps or "Off" otherwise.
+    @Test func theRecorderSaysWhatItShows() {
+        #expect(ShortcutRecorder.spokenValue(isRecording: true, hint: nil, keys: "⌃⌥⌘B") == ShortcutRecorder.typeShortcut)
+        #expect(ShortcutRecorder.spokenValue(isRecording: true, hint: ShortcutRecorder.needsModifierHint, keys: nil)
+                == ShortcutRecorder.needsModifierHint)
+        #expect(ShortcutRecorder.spokenValue(isRecording: false, hint: nil, keys: "⌃⌥⌘B") == "⌃⌥⌘B")
+        #expect(ShortcutRecorder.spokenValue(isRecording: false, hint: nil, keys: nil) == ShortcutRecorder.offTitle)
+    }
+
+    /// DESIGN.md §13.3: Overbright ships no audio and plays no system sound (the recorder used to beep).
+    @Test func noSourcePlaysASound() throws {
+        let sources = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+            .deletingLastPathComponent().appending(path: "Sources")
+        let files = try #require(FileManager.default.enumerator(at: sources, includingPropertiesForKeys: nil))
+        var offenders: [String] = []
+        for case let url as URL in files where url.pathExtension == "swift" {
+            let text = try String(contentsOf: url, encoding: .utf8)
+            if text.contains("NSSound") || text.contains("AudioServicesPlay") { offenders.append(url.lastPathComponent) }
+        }
+        #expect(offenders.isEmpty, "sources that play a sound: \(offenders)")
+    }
+
     /// One recorder listens at a time: starting another stops the first.
     @Test func onlyOneRecorderListens() {
         let recording = ShortcutRecording()

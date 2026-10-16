@@ -67,8 +67,7 @@ private struct PausedAppRow: View {
             if let name = identity.name {
                 Text(verbatim: name).lineLimit(1).truncationMode(.middle)
             } else if identity.isNotInstalled {
-                Text("App not installed", bundle: .module,
-                     comment: "Settings ▸ Automations: row of an app on the pause list that is no longer installed")
+                Text(verbatim: PausedAppsEditor.notInstalled)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
             }
@@ -76,7 +75,7 @@ private struct PausedAppRow: View {
             Picker(selection: Binding(get: { rule.mode }, set: setMode)) {
                 ForEach(modes, id: \.self) { mode in Text(verbatim: mode.localizedName()).tag(mode) }
             } label: {
-                Text(verbatim: identity.name ?? "")                // VoiceOver: the app's name, then its mode
+                Text(verbatim: PausedAppsEditor.spokenName(identity))   // VoiceOver: the app's name, then its mode
             }
             .labelsHidden()
             .pickerStyle(.menu)
@@ -85,18 +84,33 @@ private struct PausedAppRow: View {
                 Image(symbol: .xmark).foregroundStyle(.secondary)
             }
             .buttonStyle(.borderless)
-            .accessibilityLabel(Text(verbatim: removeLabel))
+            .accessibilityLabel(Text(verbatim: PausedAppsEditor.removeLabel(identity)))
         }
         .padding(.leading, Space.xl)
         .accessibilityElement(children: .contain)
     }
+}
 
-    private var removeLabel: String {
+extension PausedAppsEditor {
+    /// "App not installed": the row of an app on the list that is no longer installed.
+    static var notInstalled: String {
+        String(localized: "App not installed", bundle: .module,
+               comment: "Settings ▸ Automations: row of an app on the pause list that is no longer installed")
+    }
+
+    /// What VoiceOver calls a row's app (the label of its mode pop-up): Finder's name, "App not installed", or, for the
+    /// moment its lookup runs, the bundle identifier (spoken only, never shown), so the pop-up is never unnamed.
+    static func spokenName(_ identity: AppIdentity) -> String {
+        identity.name ?? (identity.isNotInstalled ? notInstalled : identity.bundleID)
+    }
+
+    /// The remove button's VoiceOver label, the app's name bidi-isolated inside the sentence (ARCHITECTURE.md §8.8).
+    static func removeLabel(_ identity: AppIdentity) -> String {
         guard let name = identity.name else {
             return String(localized: "Remove app", bundle: .module,
                           comment: "VoiceOver: remove button of an app on the pause list that is not installed or not looked up yet")
         }
-        return String(localized: "Remove \(name)", bundle: .module,
+        return String(localized: "Remove \(name.overbrightIsolated)", bundle: .module,
                       comment: "VoiceOver: remove button of an app on the pause list; the argument is the app’s name")
     }
 }
