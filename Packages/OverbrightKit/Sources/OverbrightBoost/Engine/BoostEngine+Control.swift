@@ -63,6 +63,12 @@ extension BoostEngine {
         case .preset(let preset):
             setLevel(preset.position, for: display, source: source)
         case .multiplier(let gain):
+            if settings[DisplaySettings.linkLevels] {
+                // One linked level: the multiplier is read on the named display, else the first (built-in) one.
+                guard let key = display ?? displays.displays.first?.ref.key else { return }
+                setLevel(LevelMapping.position(forGain: gain, top: top(for: key)), for: nil, source: source)
+                return
+            }
             let keys = display.map { [$0] } ?? displays.displays.map(\.ref.key)
             let levels = keys.map { ($0, LevelMapping.position(forGain: gain, top: top(for: $0))) }
             applyLevels(Dictionary(uniqueKeysWithValues: levels), source: source, display: display)

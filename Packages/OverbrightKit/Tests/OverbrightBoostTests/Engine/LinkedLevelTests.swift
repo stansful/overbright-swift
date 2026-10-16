@@ -66,6 +66,19 @@ import Testing
         #expect(h.settings[DisplaySettings.perDisplay][msi]?.level == LevelPreset.indoor.position)
     }
 
+    /// Linked, a multiplier sets the one linked level, read on the named display (else the built-in one).
+    @Test func linkedMultiplierSetsTheLinkedLevel() async throws {
+        let h = await twoDisplays(linked: true)
+        h.engine.setOn(true, source: .panel)
+        await h.settle()
+        h.engine.setExtraBrightness(.multiplier(1.2), for: nil, source: .intent)
+        let expected = log(1.2) / log(1000.0 / 600)
+        #expect(abs(h.settings[DisplaySettings.linkedLevel].value - expected) < 1e-9)
+        h.engine.setExtraBrightness(.multiplier(1.2), for: msi, source: .intent)
+        #expect(abs(h.settings[DisplaySettings.linkedLevel].value - log(1.2) / log(1.3)) < 1e-9)
+        #expect(h.settings[DisplaySettings.perDisplay].isEmpty)
+    }
+
     /// Brighter / Less Bright move the display under the pointer by a quarter stop (or 1/12 with the fine size).
     @Test func stepsMoveInStopsFromThePointersDisplay() async throws {
         let h = await twoDisplays(linked: false)
