@@ -66,6 +66,7 @@ struct DisplayLevelRow: View {
                            dimEnabled: model.verdict.allowsDim, boostHalf: model.boostHalf(oledIdleMinutes: idleMinutes),
                            accessibilityName: model.name, valueText: { model.valueText(at: $0) },
                            onCommit: commit)
+            .spokenValue { model.spokenValue(at: $0) }
             .extraRange(model.allowedNow.map { ValueText.extraRange(allowed: $0, peak: model.peakTop) })
             .dimHalfReason(dimReason)
             .dimmedLevel(LevelMapping.position(forDimLight: services.settings[DisplaySettings.lastDimLight]))

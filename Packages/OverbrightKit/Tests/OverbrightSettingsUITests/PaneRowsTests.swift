@@ -245,6 +245,20 @@ import Testing
         #expect(oledModel.safeSentence == SafeLimitText(panelClass: .oledExternal, isOLED: true, safeTop: nil).sentence())
     }
 
+    /// Where Max is at most ×1.3 (an OLED in Safe), the value text and the spoken value say "small gain on this
+    /// display"; the dim half and other displays never do.
+    @Test func smallGainIsSaidInTextAndSpeech() throws {
+        let oledModel = try #require(DisplaysPane.models(services: TestServices.classified(.mpg322uxHDROn)).first)
+        let xdr = try #require(DisplaysPane.models(services: TestServices.classified(.builtinXDRLidOpen)).first)
+        let max = LevelPreset.max.position, dimmed = LevelPosition(-0.5)
+        #expect(oledModel.hasSmallGain && !xdr.hasSmallGain)
+        #expect(oledModel.valueText(at: max).contains(ValueText.smallGain()))
+        #expect(oledModel.spokenValue(at: max).contains(ValueText.smallGain()))
+        #expect(!oledModel.spokenValue(at: dimmed).contains(ValueText.smallGain()))
+        #expect(!xdr.spokenValue(at: max).contains(ValueText.smallGain()))
+        #expect(xdr.spokenValue(at: max) == ValueText.forLevel(max, top: xdr.top, presets: xdr.presets, isEstimate: xdr.readout.isEstimate).accessibilityText)
+    }
+
     /// A calibration record applies while the build and the method match and the potential is within 5 %; without a
     /// reading it is not called stale for the potential alone.
     @Test func calibrationValidity() {

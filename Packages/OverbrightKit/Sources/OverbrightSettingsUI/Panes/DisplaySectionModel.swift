@@ -130,6 +130,13 @@ struct DisplaySectionModel {
         return CopyFormat.parts(text, ValueText.smallGain())
     }
 
+    /// The VoiceOver value of a slider position: the spoken canonical text, with "small gain on this display" too.
+    func spokenValue(at position: LevelPosition) -> String {
+        let spoken = ValueText.forLevel(position, top: top, presets: presets, isEstimate: readout.isEstimate).accessibilityText
+        guard position.isBoost, hasSmallGain, !spoken.isEmpty else { return spoken }
+        return CopyFormat.spokenParts(spoken, ValueText.smallGain())
+    }
+
     /// The Safe sentence of this display (the Limit footnote, DESIGN.md §12.2).
     var safeSentence: String {
         let safeTop: Double? = if case .supported(let safeGain, _) = verdict { safeGain } else { nil }
