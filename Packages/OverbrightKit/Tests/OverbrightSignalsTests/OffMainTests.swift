@@ -1,0 +1,204 @@
+// OverbrightSignalsTests/OffMainTests.swift — every entry point the system may call off the main thread, called from a
+// background queue (ARCHITECTURE.md §7.1 last paragraph, §8.1 rule 2, §9.2 rule 9). Under this module's default
+// MainActor isolation a main-actor entry point would trap here before any hop could run; each suite shows the entry
+// point survives and its main-actor work happens.
+import AppKit
+import CoreMediaIO
+import Darwin
+import OverbrightCore
+import OverbrightTestSupport
+import Testing
+@testable import OverbrightSignals
+
+/// A main-actor flag the handlers set (a class, so `@Sendable` main-actor closures can capture it).
+@MainActor final class Flag {
+    var count = 0
+}
+
+/// Runs `body` on a background queue and returns whether it ran off the main thread.
+private func onBackgroundQueue(_ body: @escaping @Sendable () -> Void) async -> Bool {
+    await withCheckedContinuation { (continuation: CheckedContinuation<Bool, Never>) in
+        DispatchQueue.global(qos: .utility).async {
+            let offMain = !Thread.isMainThread
+            body()
+            continuation.resume(returning: offMain)
+        }
+    }
+}
+
+@MainActor @Suite struct PowerSourceOffMainTests {
+    @Test func theIOKitCallbackHopsToTheMainActor() async {
+        let flag = Flag()
+        let callback = MainActorCallback { flag.count += 1 }
+        let offMain = await onBackgroundQueue { PowerSourceNotifications.callback(callback.context) }
+        #expect(offMain)
+        #expect(await eventually { flag.count == 1 })
+    }
+
+    @Test func aMissingContextIsIgnored() async {
+        let offMain = await onBackgroundQueue { PowerSourceNotifications.callback(nil) }
+        #expect(offMain)
+    }
+
+    @Test func onTheMainThreadItRunsAtOnce() {
+        let flag = Flag()
+        let callback = MainActorCallback { flag.count += 1 }
+        PowerSourceNotifications.callback(callback.context)                  // the main run loop's delivery
+        #expect(flag.count == 1)
+    }
+}
+
+@MainActor @Suite struct ThermalOffMainTests {
+    @Test func aThermalChangePostedOnABackgroundThreadReachesTheSnapshotAndObservers() async {
+        let harness = SignalsHarness()
+        await harness.start()
+        var seen: [SystemEvent] = []
+        let token = harness.monitor.addEventObserver { seen.append($0) }
+        harness.platform.thermal = .critical
+        let center = harness.platform.localCenter
+        let offMain = await onBackgroundQueue {
+            center.post(name: ProcessInfo.thermalStateDidChangeNotification, object: nil)
+        }
+        #expect(offMain)
+        #expect(await eventually { harness.monitor.snapshot.thermal == .critical })
+        #expect(seen == [.thermalChanged(.critical)])
+        token.cancel()
+    }
+}
+
+@MainActor @Suite struct LowPowerOffMainTests {
+    @Test func lowPowerModePostedOnABackgroundThreadReachesTheSnapshotAndObservers() async {
+        let harness = SignalsHarness()
+        await harness.start()
+        var seen: [SystemEvent] = []
+        let token = harness.monitor.addEventObserver { seen.append($0) }
+        harness.platform.power.isLowPowerMode = true
+        let center = harness.platform.localCenter
+        let offMain = await onBackgroundQueue {
+            center.post(name: SignalsMonitor.lowPowerModeChanged, object: nil)
+        }
+        #expect(offMain)
+        #expect(await eventually { harness.monitor.snapshot.power.isLowPowerMode })
+        #expect(seen == [.powerChanged])
+        token.cancel()
+    }
+
+    @Test func theAnyThreadBlockItselfIsNonisolated() async {
+        let flag = Flag()
+        let block = SignalsMonitor.hop { flag.count += 1 }
+        let offMain = await onBackgroundQueue { block(Notification(name: .init("test"))) }
+        #expect(offMain)
+        #expect(await eventually { flag.count == 1 })
+    }
+}
+
+@MainActor @Suite struct CameraListenerOffMainTests {
+    @Test func theCoreMediaIOProcHopsToTheMainActor() async {
+        let flag = Flag()
+        let registry = CameraListenerRegistry.shared
+        let id = registry.add { flag.count += 1 }
+        let offMain = await onBackgroundQueue {
+            var address = CMIOObjectPropertyAddress()                         // CoreMediaIO's notification thread
+            _ = CameraListenerRegistry.proc(0, 1, &address, CameraListenerRegistry.clientData(id))
+        }
+        #expect(offMain)
+        #expect(await eventually { flag.count == 1 })
+        registry.remove(id)
+    }
+
+    @Test func aCallStillInFlightAfterRemovalDoesNothing() async {
+        let flag = Flag()
+        let registry = CameraListenerRegistry.shared
+        let id = registry.add { flag.count += 1 }
+        registry.remove(id)
+        let offMain = await onBackgroundQueue {
+            var address = CMIOObjectPropertyAddress()
+            _ = CameraListenerRegistry.proc(0, 1, &address, CameraListenerRegistry.clientData(id))
+            _ = CameraListenerRegistry.proc(0, 1, &address, nil)                  // no client data at all
+        }
+        #expect(offMain)
+        for _ in 0..<25 { await Task.yield() }
+        #expect(flag.count == 0)
+    }
+}
+
+@MainActor @Suite struct DistributedObserverOffMainTests {
+    @Test func theSelectorTargetHopsToTheMainActor() async {
+        let flag = Flag()
+        let observer = DistributedObserver { flag.count += 1 }
+        let offMain = await onBackgroundQueue { observer.receive(Notification(name: .init("com.apple.screenIsLocked"))) }
+        #expect(offMain)
+        #expect(await eventually { flag.count == 1 })
+    }
+
+    @Test func onTheMainThreadItRunsAtOnce() {
+        let flag = Flag()
+        DistributedObserver { flag.count += 1 }.receive(Notification(name: .init("com.apple.screenIsLocked")))
+        #expect(flag.count == 1)
+    }
+}
+
+@MainActor @Suite struct MainHopOffMainTests {
+    @Test func offMainItHopsAndOnMainItRunsAtOnce() async {
+        let flag = Flag()
+        let offMain = await onBackgroundQueue { MainHop.run { flag.count += 1 } }
+        #expect(offMain)
+        #expect(await eventually { flag.count == 1 })
+        MainHop.run { flag.count += 1 }
+        #expect(flag.count == 2)
+    }
+}
+
+@Suite struct WindowListOffMainTests {
+    @Test func theWindowListIsReadOffTheMainThread() async {
+        // Read-only and permission-free (bounds, layers, owner PIDs and alpha only).
+        let snapshot = await WindowListSnapshot.read(windowServerPID: nil)
+        #expect(snapshot.windows.allSatisfy { $0.layer == 0 || $0.layer == FullScreenDetector.menuBarLayer })
+        let box = SnapshotBox()
+        let offMain = await onBackgroundQueue { box.store(WindowListSnapshot.capture(windowServerPID: nil)) }
+        #expect(offMain && box.value != nil)
+    }
+
+    @Test func theWindowServerIsFoundByItsExecutablePathOffTheMainThread() async {
+        // Whatever is on screen (a full-screen Space shows no menu bar), the libproc scan names the WindowServer.
+        let box = PIDBox()
+        let offMain = await onBackgroundQueue { box.store(WindowServerProcess.locate()) }
+        #expect(offMain)
+        if let pid = box.value { #expect(WindowServerProcess.isWindowServer(pid)) }
+        #expect(!WindowServerProcess.isWindowServer(getpid()))
+    }
+}
+
+@Suite struct ProcessScanOffMainTests {
+    @Test func theLibprocScanRunsOffTheMainThreadAndFindsThisProcess() async {
+        let processes = await ProcessScanner.scan()
+        let me = processes.first { $0.processID == getpid() }
+        #expect(me != nil)
+        #expect(me?.executableName == LibProc.executablePath(of: getpid()).map { ($0 as NSString).lastPathComponent })
+        let box = ProcessesBox()
+        let offMain = await onBackgroundQueue { box.store(ProcessScanner.capture()) }
+        #expect(offMain && box.count > 1)
+    }
+}
+
+/// Lock-protected result boxes for the background closures (`@unchecked Sendable`: every access holds `lock`).
+private nonisolated final class SnapshotBox: @unchecked Sendable {
+    private let lock = NSLock()
+    private var stored: WindowListSnapshot?
+    func store(_ value: WindowListSnapshot) { lock.withLock { stored = value } }
+    var value: WindowListSnapshot? { lock.withLock { stored } }
+}
+
+private nonisolated final class PIDBox: @unchecked Sendable {
+    private let lock = NSLock()
+    private var stored: Int32?
+    func store(_ value: Int32?) { lock.withLock { stored = value } }
+    var value: Int32? { lock.withLock { stored } }
+}
+
+private nonisolated final class ProcessesBox: @unchecked Sendable {
+    private let lock = NSLock()
+    private var stored: [ProcessScanner.Process] = []
+    func store(_ value: [ProcessScanner.Process]) { lock.withLock { stored = value } }
+    var count: Int { lock.withLock { stored.count } }
+}

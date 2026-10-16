@@ -53,4 +53,7 @@ public nonisolated enum SystemEvent: Hashable, Sendable {
     case thermalChanged(ThermalLevel)
     /// The power source, battery percent or Low Power Mode changed.
     case powerChanged
+    /// The local time crossed a start or end minute of `automations.schedule` (Signals' one sleep to the next
+    /// boundary, §7.1): the engine re-reduces with a fresh `minuteOfDay`. Added by WP6 through the contract lane.
+    case scheduleBoundary
 }
