@@ -37,12 +37,7 @@ extension DisplayController {
 
     /// H0 (three reads 100 ms apart, the maximum), the pre-held test, the first rung, then the gate.
     func runArm(_ stamp: UInt64) async {
-        var reads: [Double] = []
-        for index in 0..<EngineTiming.baselineReads {
-            if index > 0 { guard await sleep(EngineTiming.baselineReadInterval, stamp) else { return } }
-            guard isCurrent(stamp) else { return }
-            reads.append(takeReading()?.current ?? 1)
-        }
+        guard let reads = await idleReads(stamp) else { return }
         idleHeadroom = reads.max() ?? 1
         if let potential = lastReading?.potential, potential <= 1 + Self.potentialEpsilon {
             fail(.headroomNeverArrived)
@@ -62,6 +57,17 @@ extension DisplayController {
             guard await presentRung(from: 0, stamp) else { return }
         }
         await gateLoop(stamp)
+    }
+
+    /// `baselineReads` headroom reads `baselineReadInterval` apart (1.0 without a reading); nil when superseded.
+    func idleReads(_ stamp: UInt64) async -> [Double]? {
+        var reads: [Double] = []
+        for index in 0..<EngineTiming.baselineReads {
+            if index > 0 { guard await sleep(EngineTiming.baselineReadInterval, stamp) else { return nil } }
+            guard isCurrent(stamp) else { return nil }
+            reads.append(takeReading()?.current ?? 1)
+        }
+        return reads
     }
 
     /// The rungs of this arm (§4.7): from the cached rung, the override, OLED black only, the backoff's single rung.

@@ -1,7 +1,8 @@
 // OverbrightBoostTests/Engine/PreHeldTests.swift — the pre-held path of D6 (ARCHITECTURE.md §4.3, §4.7): something
 // already holds EDR (an HDR video at H 2.6, our own Fill Light), so the cheapest rung is armed, the movement test is
 // skipped, the absolute gate applies, the cache is never written from a pre-held arm, and when the other source
-// leaves and our rung does not hold, the display escalates with H0 := H.
+// leaves and our rung does not hold, the display escalates with H0 := H. A re-gate after a lock or a wake measures
+// H0 and the path again.
 import Foundation
 import OverbrightCore
 import OverbrightPolicy
@@ -59,6 +60,61 @@ import Testing
         await h.advance(.seconds(10))
         #expect(h.phase() == .boosted && h.triggers.made.count == 1)
         #expect(!h.codes.contains("gate.heldSourceLeft"))
+    }
+
+    /// Pre-held, then a lock and an unlock while the other source still holds H at 2.6: the re-gate measures H0
+    /// again and gates with the absolute rule (a movement test above 2.6 would never pass).
+    @Test func unlockWithTheSourceStillHoldingRegatesPreHeld() async throws {
+        let h = EngineHarness()
+        h.scripted.update(h.builtIn) { $0.preHeld = 2.6; $0.grant = 2.6 }
+        await h.start()
+        #expect(await h.boost())
+        #expect(h.controller()?.armedPreHeld == true)
+        h.signals.snapshot.isScreenLocked = true
+        h.signals.emit(.locked)
+        await h.advance(.seconds(2))
+        h.signals.snapshot.isScreenLocked = false
+        h.signals.emit(.unlocked)
+        #expect(await h.boost(limit: .seconds(10)))
+        #expect(h.controller()?.armedPreHeld == true && h.controller()?.idleHeadroom == 2.6)
+        #expect(h.triggers.made.count == 1)                              // the kept trigger, re-presented
+        #expect(h.interlockViolations().isEmpty && h.orderViolations.isEmpty)
+    }
+
+    /// The same across a sleep long enough for the trigger to go (the lock screen hides the video meanwhile): after
+    /// the wake settle the re-gate's fresh reads are idle reads, and the source holding again makes it pre-held.
+    @Test func wakeWithTheSourceStillHoldingRegatesPreHeld() async throws {
+        let h = EngineHarness()
+        h.scripted.update(h.builtIn) { $0.preHeld = 2.6; $0.grant = 2.6 }
+        await h.start()
+        #expect(await h.boost())
+        h.signals.snapshot.isSystemSleeping = true
+        h.scripted.setOverride(1)
+        h.signals.emit(.willSleep)
+        await h.advance(.seconds(12))
+        #expect(h.liveTriggers().isEmpty)                                // the linger removed it
+        h.signals.snapshot.isSystemSleeping = false
+        h.scripted.setOverride(nil)
+        h.signals.emit(.didWake)
+        #expect(await h.boost(limit: .seconds(10)))
+        #expect(h.controller()?.armedPreHeld == true)
+        #expect(h.phase() == .boosted && h.interlockViolations().isEmpty)
+    }
+
+    /// A normal arm whose kept trigger already holds H when the lock ends stays on the normal path with the H0 of
+    /// its first arm (our own grant is not another source).
+    @Test func ownKeptTriggerDoesNotMakeAReGatePreHeld() async throws {
+        let h = EngineHarness()
+        await h.start()
+        #expect(await h.boost())
+        #expect(h.controller()?.armedPreHeld == false)
+        h.signals.snapshot.isScreenLocked = true
+        h.signals.emit(.locked)
+        await h.advance(.seconds(2))
+        h.signals.snapshot.isScreenLocked = false
+        h.signals.emit(.unlocked)
+        #expect(await h.boost(limit: .seconds(10)))
+        #expect(h.controller()?.armedPreHeld == false && h.controller()?.idleHeadroom == 1)
     }
 
     /// Our own EDR surface (Fill Light, the Welcome card) on the display counts as pre-held.
