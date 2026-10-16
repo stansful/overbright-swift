@@ -7,8 +7,9 @@
 //   --qa-state <name>                drive `PreviewBoostControl` with PanelUI's `ScriptedStatuses` (CompositionRoot)
 //   --qa-panel                       open the panel
 //   --qa-menu                        write the status menu's rows to qa-trace.txt (next to --qa-snapshot), open it
-//   --qa-hud <level>                 set every display to that level as a shortcut would, so the HUD shows it
-//                                    (bright-room, max, -0.5, …; anything else: the HUD's generic level change)
+//   --qa-hud <level>                 under --qa-simulate, set every display to that level as a shortcut would, so
+//                                    the HUD shows it (bright-room, max, -0.5, …); otherwise, and for anything else,
+//                                    only the HUD's generic level change (the real displays are never set)
 //   --qa-settings <pane[#row]>, --qa-welcome <step>, --qa-calibration <display>, --qa-help <anchor>
 //   --qa-script "<steps>"            run a scenario over the simulated ports once the services started
 //                                    (`ScenarioScript`; e.g. "on; wait 6; dump boosted; low-power on; dump paused")
@@ -18,7 +19,8 @@
 //   --qa-update-check                run the update check at once
 //   --qa-hang-main <delay>,<duration>  block the main thread (hang-watchdog test H-X1; the owner's session only)
 //
-// QA hooks never synthesize input and never ask for permissions. A scenario runs only over the simulated ports.
+// QA hooks never synthesize input and never ask for permissions. A scenario and a `--qa-hud` level change run only over
+// the simulated ports.
 #if DEBUG
 import AppKit
 import Foundation
@@ -82,14 +84,22 @@ enum QAHooks {
         return runScenario(script, statusFile: arguments.qaStatusFile, shell: targets.shell)
     }
 
-    /// `--qa-hud <level>`: a level the scenario script can name ("bright-room", "max", "-0.5") is set on every display
-    /// as a shortcut would, so the HUD shows that level for real; anything else shows the HUD's generic level change.
+    /// `--qa-hud <level>`: under `--qa-simulate`, a level the scenario script can name ("bright-room", "max", "-0.5")
+    /// is set on every display as a shortcut would, so the HUD shows that level for real; on the real ports (a Debug
+    /// hardware session) and for anything else, the HUD shows its generic level change and no display is set.
     static func showHUD(_ level: String, targets: Targets) {
-        if case .level(let position)? = try? ScenarioScript.parse("level \(level)").first {
+        if let position = hudLevel(level, ports: targets.shell.ports) {
             targets.shell.services.boost.setLevel(position, for: nil, source: .shortcut)
         } else {
             targets.hud.showForQA(level)
         }
+    }
+
+    /// The level `--qa-hud <level>` sets: nil unless the ports are the simulated ones and the script can name it.
+    static func hudLevel(_ level: String, ports: ShellPorts) -> LevelPosition? {
+        guard ports.fixture != nil else { return nil }
+        guard case .level(let position)? = try? ScenarioScript.parse("level \(level)").first else { return nil }
+        return position
     }
 
     /// Parses `script` and runs it over the simulated ports once the engine is ready; nil (logged) when it cannot run.
