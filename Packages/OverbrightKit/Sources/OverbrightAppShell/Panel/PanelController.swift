@@ -1,8 +1,10 @@
 // OverbrightAppShell/Panel/PanelController.swift — opens and closes the panel under the status item.
-// ARCHITECTURE.md §7.6, §10.0; DESIGN.md §5.1. Seeded by WP0a: `init(services:)` and `toggle(from:)` are fixed; the
-// WP0a body shows `PlaceholderPanelView` in an `OverbrightPanel`, anchored to the status button's window frame (never
-// `NSStatusBar.system.thickness`, which says 22 pt while the bar is 30 pt on macOS 27), closing on an outside click
-// or Esc. WP10 owns `Panel/` (glass container, keyboard focus rules, `panelIn` / `panelOut`, 70 % height cap).
+// ARCHITECTURE.md §7.6, §10.0; DESIGN.md §5.1; D13. Seeded by WP0a: `init(services:)` and `toggle(from:)` are fixed;
+// the WP0a body shows `PlaceholderPanelView` in an `OverbrightPanel`, anchored to the status button's window frame
+// (never `NSStatusBar.system.thickness`, which says 22 pt while the bar is 30 pt on macOS 27), closing on an outside
+// click or Esc. `PanelPlacement` keeps the panel on screen while the button is not placed yet, and the panel follows
+// the button's window while it is open (it moves when MenuBarAgent places the item). WP10 owns `Panel/` (glass
+// container, keyboard focus rules, `panelIn` / `panelOut`, 70 % height cap).
 import AppKit
 import OverbrightCore
 import OverbrightDesign
@@ -15,14 +17,12 @@ private let log = Log.logger(.panel)
 final class PanelController {
     /// The panel's width (DESIGN.md §5.1).
     static let width: CGFloat = 320
-    /// Distance from the screen edges.
-    private static let screenMargin: CGFloat = 8
-    /// Gap between the menu bar and the panel.
-    private static let gap: CGFloat = 4
 
     private let services: OverbrightServices
     private var panel: OverbrightPanel?
     private var outsideClickMonitor: Any?
+    /// Observers of the anchor's window while the panel is open.
+    private var anchorObservers: [any NSObjectProtocol] = []
 
     /// A controller for the app's services. Constructing it opens nothing.
     init(services: OverbrightServices) { self.services = services }
@@ -35,17 +35,15 @@ final class PanelController {
         if isShown { close() } else { show(from: anchor) }
     }
 
-    /// Opens the panel under `anchor`; without an anchor (the icon is hidden) at the top centre of the main screen.
+    /// Opens the panel under `anchor`; without an anchor (the icon is hidden) at the top centre of the main screen;
+    /// under an anchor that is not placed yet at the top-right of the main screen, until the anchor moves.
     func show(from anchor: NSView?) {
         let panel = self.panel ?? makePanel()
         self.panel = panel
-        guard let content = panel.contentView else { return }
-        let size = CGSize(width: Self.width, height: content.fittingSize.height)
-        let frame = frame(for: size, anchor: anchor)
-        log.info("panel at \(frame.minX, privacy: .public),\(frame.minY, privacy: .public) under \(String(describing: anchor?.window?.frame), privacy: .public)")
-        panel.setFrame(frame, display: true)
+        place(panel, under: anchor)
         panel.orderFrontRegardless()
         installOutsideClickMonitor()
+        follow(anchor)
     }
 
     /// Closes the panel.
@@ -53,6 +51,7 @@ final class PanelController {
         panel?.orderOut(nil)
         if let monitor = outsideClickMonitor { NSEvent.removeMonitor(monitor) }
         outsideClickMonitor = nil
+        stopFollowingAnchor()
     }
 
     // MARK: Private
@@ -82,16 +81,39 @@ final class PanelController {
         return panel
     }
 
-    private func frame(for size: CGSize, anchor: NSView?) -> CGRect {
-        // A status button whose window AppKit has not placed yet is 0 pt high at the origin: not an anchor.
-        let anchorFrame = (anchor?.window?.frame).flatMap { $0.height > 0 ? $0 : nil }
-        let screen = (anchorFrame == nil ? nil : anchor?.window?.screen) ?? NSScreen.main ?? NSScreen.screens.first
-        let visible = screen?.visibleFrame ?? CGRect(x: 0, y: 0, width: 1440, height: 900)
-        let full = screen?.frame ?? visible
-        let midX = anchorFrame?.midX ?? visible.midX
-        let top = anchorFrame?.minY ?? full.maxY - (full.maxY - visible.maxY)
-        let x = min(max(midX - size.width / 2, full.minX + Self.screenMargin), full.maxX - Self.screenMargin - size.width)
-        return CGRect(x: x, y: top - Self.gap - size.height, width: size.width, height: size.height)
+    /// Sets `panel`'s frame for `anchor` (an anchor without a window counts as not placed).
+    private func place(_ panel: OverbrightPanel, under anchor: NSView?) {
+        guard let content = panel.contentView else { return }
+        let size = CGSize(width: Self.width, height: content.fittingSize.height)
+        let anchorFrame = anchor.map { $0.window?.frame ?? .zero }
+        let screens = PanelPlacement.currentScreens
+        let frame = PanelPlacement.frame(for: size, anchor: anchorFrame, screens: screens,
+                                         main: PanelPlacement.currentMainScreen)
+        let placed = anchorFrame.map { PanelPlacement.isPlaced($0, in: screens) }
+        let origin = "\(frame.minX),\(frame.minY)"
+        log.info("panel at \(origin, privacy: .public) under \(String(describing: anchorFrame), privacy: .public), anchor placed: \(String(describing: placed), privacy: .public)")
+        panel.setFrame(frame, display: true)
+    }
+
+    /// Re-places the open panel whenever the anchor's window moves or changes screen.
+    private func follow(_ anchor: NSView?) {
+        stopFollowingAnchor()
+        guard let window = anchor?.window else { return }
+        let center = NotificationCenter.default
+        for name in [NSWindow.didMoveNotification, NSWindow.didChangeScreenNotification] {
+            let observer = center.addObserver(forName: name, object: window, queue: .main) { [weak self, weak anchor] _ in
+                MainActor.assumeIsolated {                                               // queue: .main
+                    guard let self, let panel = self.panel, panel.isVisible else { return }
+                    self.place(panel, under: anchor)
+                }
+            }
+            anchorObservers.append(observer)
+        }
+    }
+
+    private func stopFollowingAnchor() {
+        for observer in anchorObservers { NotificationCenter.default.removeObserver(observer) }
+        anchorObservers = []
     }
 
     private func installOutsideClickMonitor() {

@@ -5,6 +5,9 @@
 // the per-state accessibility label.
 import AppKit
 import OverbrightCore
+import os
+
+private let log = Log.logger(.menuBar)
 
 /// Owns the status item. Constructing it adds nothing to the menu bar; `install()` does.
 final class StatusItemController: NSObject {
@@ -47,21 +50,29 @@ final class StatusItemController: NSObject {
     /// Shows or hides the item (General ▸ Show menu bar icon).
     func setVisible(_ visible: Bool) { statusItem?.isVisible = visible }
 
-    /// The button's window frame once AppKit has placed the item in the menu bar; nil before (right after `install()`
-    /// the window is still 0 pt high) and while the item is not installed.
+    /// The button's window frame once the item is placed in a menu bar; nil before and while the item is not
+    /// installed. Placed means on a screen (`PanelPlacement.isPlaced`): right after `install()` the window is 0 pt
+    /// high, and on macOS 27.0.1 it then passes through frames just below and just above the primary screen while
+    /// MenuBarAgent places the item.
     var placedFrame: CGRect? {
-        guard let frame = statusItem?.button?.window?.frame, frame.width > 0, frame.height > 0 else { return nil }
+        guard let frame = statusItem?.button?.window?.frame,
+              PanelPlacement.isPlaced(frame, in: PanelPlacement.currentScreens) else { return nil }
         return frame
     }
 
-    /// Waits until the item is placed, at most `limit` (the launch UI anchors the panel to it).
-    func waitUntilPlaced(atMost limit: Duration) async {
+    /// Waits until the item is placed, at most `limit` (the launch UI anchors the panel to it); true when it is. When
+    /// it is not, the panel opens at the top-right of the main screen and follows the button once it is placed.
+    @discardableResult
+    func waitUntilPlaced(atMost limit: Duration) async -> Bool {
         let step: Duration = .milliseconds(50)
         var waited: Duration = .zero
         while statusItem != nil, placedFrame == nil, waited < limit {
             try? await Task.sleep(for: step)
             waited += step
         }
+        let placed = placedFrame != nil
+        log.info("status item placed: \(placed, privacy: .public) after \(waited.timeInterval, privacy: .public) s")
+        return placed
     }
 
     @objc private func clicked(_ sender: Any?) {

@@ -5,7 +5,8 @@
 // (`--diagnostics`, `--monitor`, `--restore-gamma`) run and quit here, before any service starts, any window opens or
 // any preference is written → single instance (skipped for CLI modes and `--qa-simulate`) → move to Applications →
 // settings upgrade → controllers, router connection and status item → `LaunchGate` runs the launch check, then
-// starts the services (Displays first, Boost last) → QA hooks → launch UI.
+// starts the services (Displays first, Boost last) → QA hooks → launch UI (anchored to the placed status item; see
+// `PanelPlacement` for the item MenuBarAgent has not placed yet).
 // Quit: a quit from inside the app is cancelled once, the services stop in reverse (Boost first) within
 // `EngineTiming.quitTimeout`, then the app terminates (see `applicationShouldTerminate` for why not
 // `.terminateLater`); a quit Apple Event (a script, the Dock, Activity Monitor, log out, restart, shut down)
@@ -43,6 +44,10 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
 
     /// Where a user quit is (`applicationShouldTerminate`).
     private enum QuitState { case running, stopping, stopped }
+
+    /// How long the launch UI waits for MenuBarAgent to place the status item before the panel opens at the top-right
+    /// of the main screen (it then follows the item once placed).
+    private static let placementWait: Duration = .seconds(1)
 
     /// Created by `@NSApplicationDelegateAdaptor`; everything starts in `applicationDidFinishLaunching`.
     override public init() { super.init() }
@@ -124,7 +129,7 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
                                        welcomeFinished: settings[OnboardingSettings.completedVersion] != nil,
                                        iconVisibility: appControl.iconVisibility)
         Task {
-            await statusItem.waitUntilPlaced(atMost: .seconds(1))   // the panel anchors to the placed icon
+            await statusItem.waitUntilPlaced(atMost: Self.placementWait)   // the panel anchors to the placed icon
             show(surface)
         }
     }
