@@ -10,11 +10,13 @@ extension DisplayController: DisplayControllerDriving {
     /// The display driven.
     var display: DisplayRef { ref }
 
-    /// Shows one rung with the table at its baseline (the self-test measures triggers only).
+    /// Shows one rung with the table at its baseline (the self-test measures triggers only). The baseline is captured
+    /// afresh, so a calibration never multiplies a curve from before a profile or preset change.
     func arm(rung request: TriggerRequest) async -> Bool {
         generation += 1
         let stamp = generation
         cancelAllTasks()
+        refreshBaseline()
         let handle: any TriggerHandle
         do {
             handle = try deps.triggers.makeTrigger(request, on: ref)
@@ -45,6 +47,18 @@ extension DisplayController: DisplayControllerDriving {
     /// Back to Standard at once: baseline written, trigger removed.
     func returnToStandard() {
         stopNow()
+    }
+
+    /// A fresh baseline for a driven session (§4.8): the stored one may predate a profile, preset or HDR change made
+    /// while the display was idle. Kept while our own scaled write is still on the table (it is what a landing
+    /// restores). A rejected or failed read leaves no baseline, so a calibration write is refused.
+    @discardableResult
+    func refreshBaseline() -> Bool {
+        guard mechanism == .table, facts.gammaCapacity > 0, !isScaledOrDimmed, !lastWriteIsScaled else {
+            return baseline != nil
+        }
+        baseline = nil
+        return captureBaseline(failsOnReject: false)
     }
 
     /// Calibration only: `factor` × the baseline through `TableWriter.writeCalibrationFactor`, which refuses anything

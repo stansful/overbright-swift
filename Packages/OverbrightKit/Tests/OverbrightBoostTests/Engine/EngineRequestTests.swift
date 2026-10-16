@@ -165,6 +165,35 @@ import Testing
         #expect(h.everyTableAtBase && h.engine.ledger.entries().isEmpty && h.liveTriggers().isEmpty)
     }
 
+    /// A profile or preset change while idle after an earlier boost: the driven session captures afresh, so the
+    /// calibration multiplies the new base and Back to Standard leaves the new base, not the old curve.
+    @Test func calibrationCapturesAFreshBaseline() async throws {
+        let h = EngineHarness()
+        await h.start()
+        #expect(await h.boost())
+        h.engine.setOn(false, source: .panel)
+        await h.advance(.seconds(1))
+        let newBase: GammaTable = {
+            func channel(_ scale: Double) -> [Float] { (0..<1024).map { Float(scale * Double($0) / 1023) } }
+            return GammaTable(red: channel(0.94), green: channel(0.97), blue: channel(0.91))
+        }()
+        h.gamma.changeBase(newBase, for: 1)
+        h.signals.emit(.colorProfileChanged)
+        await h.advance(.milliseconds(200))
+        let controller = try #require(h.controller())
+        controller.isDriven = true
+        #expect(controller.baseline == newBase)
+        let rung = LadderPlanner.request(for: LadderPlanner.table[0], facts: controller.facts, potential: 16)
+        #expect(await controller.arm(rung: rung))
+        await h.advance(.seconds(2))
+        try controller.writeCalibrationFactor(1.2, maxFactor: 2)
+        #expect(h.table()?.matches(newBase.scaled(by: 1.2), tolerance: 1e-6) == true)
+        #expect(h.engine.ledger.entries().first?.baseline == newBase)
+        controller.returnToStandard()
+        controller.isDriven = false
+        #expect(h.table() == newBase && h.liveTriggers().isEmpty)
+    }
+
     /// Reset Display Colors: Standard first, then WP5's dirty-then-restore with verification; the master comes back.
     @Test func resetDisplayColorsReturnsToStandardFirst() async throws {
         let h = EngineHarness()

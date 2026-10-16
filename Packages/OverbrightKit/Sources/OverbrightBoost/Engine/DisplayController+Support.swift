@@ -174,10 +174,12 @@ extension DisplayController {
         }
     }
 
-    /// Journals and logs every phase change and tells the engine.
+    /// Journals and logs every phase change and tells the engine. Reaching idle or failed judges a base event whose
+    /// re-base did not finish (§4.8), so the display is never left on the old curve.
     func phaseChanged(from old: EnginePhase) {
         deps.journal.record("phase." + Self.phaseCode(phase), display: key, time: deps.time)
         log.info("phase \(Self.phaseCode(old), privacy: .public) → \(Self.phaseCode(self.phase), privacy: .public)")
+        if !isActive { settlePendingRebase() }
         notify()
     }
 

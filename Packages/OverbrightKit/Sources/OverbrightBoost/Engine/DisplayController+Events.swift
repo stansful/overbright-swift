@@ -75,7 +75,8 @@ extension DisplayController {
         resume()
     }
 
-    /// Leaves `suspended`: neutral → idle; dim → ramp to it; boost → re-gate (wake settles 1 s first).
+    /// Leaves `suspended`: neutral → idle; dim → ramp to it; boost → re-gate (wake settles 1 s first). A base event the
+    /// shield cut short re-bases again in the phase the display lands in.
     func resume() {
         lingerSlot.cancel()
         let kind = pendingResume
@@ -95,6 +96,7 @@ extension DisplayController {
                 guard captureBaseline() else { return }
             }
             startRamp(to: light, origin: .automatic, finalPhase: .dimmed)
+            restartPendingRebase()
         case .boost:
             guard kind == .wake else {
                 regate(backoff: kind)
@@ -156,6 +158,7 @@ extension DisplayController {
         generation += 1
         cancelAllTasks()
         lastWrite = nil                                                   // no write to a display that is gone
+        pendingRebase = nil
         removeWindows()
         deps.ledger.unmark(key)
         appliedGain = 1
@@ -230,6 +233,7 @@ extension DisplayController {
         case .dim(let light):
             epochStamp = deps.ledger.hangEpoch
             startRamp(to: light, origin: .automatic, finalPhase: .dimmed)
+            restartPendingRebase()
         case .boost:
             regate(backoff: nil)
         }

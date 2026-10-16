@@ -98,6 +98,7 @@ extension DisplayController {
         preHeldHeadroom = nil
         gatePath = .normal
         cachedRungFailedThisArm = false
+        restartPendingRebase()
         if mechanism == .overlay {
             overlay?.represent()
             armSlot.run { [weak self] in

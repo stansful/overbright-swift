@@ -74,9 +74,14 @@ import OverbrightPolicy
     var lastWrite: (baseline: GammaTable, factor: Double)?
     /// A re-base waits for WindowServer's table: the drift check stands aside meanwhile.
     var isRebasing = false
+    /// A reconfiguration, ColorSync or accessibility event that no re-base has judged yet (a shield or a stop cut it
+    /// short): resuming restarts it, reaching idle or failed judges it at once (§4.8).
+    var pendingRebase: ReapplyCause?
     /// The self-test or a calibration drives this display (`DisplayControllerDriving`): decisions are stored, not
-    /// applied, until it is handed back.
-    var isDriven = false
+    /// applied, until it is handed back. A driven session starts from a freshly captured baseline.
+    var isDriven = false {
+        didSet { if isDriven, !oldValue { refreshBaseline() } }
+    }
 
     // MARK: Trigger, overlay and the gate
 
