@@ -8,7 +8,8 @@
 // second [VERIFIED: 24/24 codec × level × size combinations, also with the software HEVC encoder].
 //
 // Errors are logged with a path-free summary in `.public` and their description (which can hold the cache path, i.e.
-// the user's home folder name) in `.private` only (§9.2 rule 8).
+// the user's home folder name) in `.private` only (§9.2 rule 8). Temporaries a crash left mid-encode are swept on
+// the next call.
 import Darwin
 import Foundation
 import OverbrightCore
@@ -98,6 +99,10 @@ nonisolated enum HLGStillAsset {
         }
     }
 
+    /// Temporaries (`.<UUID>.mov`) older than this are left over from a crash mid-encode and are removed. Younger ones
+    /// may belong to a generation running now (another level, or another process) and are kept.
+    static let staleTemporaryAge: TimeInterval = 5 * 60
+
     private static let log = Log.logger(.trigger)
 
     /// A verified still in `directory` (created if needed), generated on first use. A cached file is re-verified
@@ -109,6 +114,7 @@ nonisolated enum HLGStillAsset {
                              in directory: URL) async throws -> (url: URL, report: HLGStillReport) {
         let fm = FileManager.default
         try fm.createDirectory(at: directory, withIntermediateDirectories: true)
+        sweepStaleTemporaries(in: directory)
         var failures: [String] = []
         for codec in codecs {
             let spec = Spec(codec: codec, level: level, edge: edge)
@@ -117,7 +123,7 @@ nonisolated enum HLGStillAsset {
                report.satisfies(spec) {
                 return (destination, report)
             }
-            let temporary = directory.appending(path: ".\(UUID().uuidString).mov", directoryHint: .notDirectory)
+            let temporary = directory.appending(path: temporaryName(), directoryHint: .notDirectory)
             do {
                 try await encode(spec, into: temporary)
                 let report = try await inspect(temporary)
@@ -133,6 +139,34 @@ nonisolated enum HLGStillAsset {
             }
         }
         throw Failure.allCodecsFailed(failures)
+    }
+
+    /// A fresh temporary file name: `.<UUID>.mov` (hidden, never a still's name).
+    static func temporaryName() -> String { ".\(UUID().uuidString).mov" }
+
+    /// Whether `name` is one of our temporary names.
+    static func isTemporaryName(_ name: String) -> Bool {
+        guard name.hasPrefix("."), name.hasSuffix(".mov") else { return false }
+        return UUID(uuidString: String(name.dropFirst().dropLast(4))) != nil
+    }
+
+    /// Removes our temporaries in `directory` last modified before `now - staleTemporaryAge` (left by a crash
+    /// mid-encode). Nothing else in the folder is touched; a file that cannot be read or removed is skipped.
+    static func sweepStaleTemporaries(in directory: URL, now: Date = Date()) {
+        let fm = FileManager.default
+        guard let names = try? fm.contentsOfDirectory(atPath: directory.path) else { return }
+        let cutoff = now.addingTimeInterval(-staleTemporaryAge)
+        for name in names where isTemporaryName(name) {
+            let url = directory.appending(path: name, directoryHint: .notDirectory)
+            guard let modified = (try? fm.attributesOfItem(atPath: url.path))?[.modificationDate] as? Date,
+                  modified < cutoff else { continue }
+            do {
+                try fm.removeItem(at: url)
+                log.info("Removed a stale HLG still temporary")
+            } catch {
+                log.error("Stale HLG still temporary not removed: \(LoggedError.publicSummary(error), privacy: .public)")
+            }
+        }
     }
 
     /// `rename(2)`: replaces `destination` (a corrupt file included) in one step, or fails and leaves it as it was.

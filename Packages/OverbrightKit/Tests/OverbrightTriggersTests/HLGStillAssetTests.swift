@@ -1,6 +1,6 @@
 // OverbrightTriggersTests/HLGStillAssetTests.swift — the T4 still: generated at run time and verified by read-back
 // (ProRes always, HEVC Main10 when an HEVC encoder exists), reused from the cache, a corrupt file replaced, no
-// temporary file left behind; one generation shared by two triggers. ARCHITECTURE.md §4.7 ("HLG still asset"),
+// temporary file left behind (and those a crash left swept); one generation shared by two triggers. ARCHITECTURE.md §4.7 ("HLG still asset"),
 // §10.5. Files go to a fresh temporary folder only; nothing is shown.
 import CoreMedia
 import CoreVideo
@@ -103,6 +103,31 @@ import VideoToolbox
             _ = try await HLGStillAsset.ensureCached(level: .black, codecs: [], in: folder)
         }
         #expect(contents(of: folder).isEmpty)
+    }
+
+    @Test func temporariesACrashLeftAreSweptAndEverythingElseIsKept() async throws {
+        let fm = FileManager.default
+        let folder = temporaryFolder()
+        defer { try? fm.removeItem(at: folder) }
+        try fm.createDirectory(at: folder, withIntermediateDirectories: true)
+        let stale = HLGStillAsset.temporaryName(), fresh = HLGStillAsset.temporaryName()
+        let other = ".notes.mov", still = HLGStillAsset.Spec(codec: .proRes422, level: .black).fileName
+        for name in [stale, fresh, other, still] { try Data([1]).write(to: folder.appending(path: name)) }
+        let old = Date().addingTimeInterval(-(HLGStillAsset.staleTemporaryAge + 60))
+        for name in [stale, other, still] {
+            try fm.setAttributes([.modificationDate: old], ofItemAtPath: folder.appending(path: name).path)
+        }
+        // No codec: nothing is encoded, so the folder shows only what the sweep did.
+        await #expect(throws: HLGStillAsset.Failure.self) {
+            _ = try await HLGStillAsset.ensureCached(level: .black, codecs: [], in: folder)
+        }
+        #expect(contents(of: folder) == [fresh, other, still].sorted(), "a fresh temporary may be another generation's")
+        #expect(HLGStillAsset.isTemporaryName(fresh))
+        #expect(!HLGStillAsset.isTemporaryName(other))
+        #expect(!HLGStillAsset.isTemporaryName(still))
+        #expect(!HLGStillAsset.isTemporaryName(".\(UUID().uuidString).mp4"))
+        HLGStillAsset.sweepStaleTemporaries(in: folder, now: Date().addingTimeInterval(HLGStillAsset.staleTemporaryAge + 60))
+        #expect(contents(of: folder) == [other, still].sorted())
     }
 
     @Test func atomicMoveReplacesTheDestination() throws {
