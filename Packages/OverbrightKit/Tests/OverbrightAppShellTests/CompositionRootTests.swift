@@ -1,6 +1,7 @@
 // OverbrightAppShellTests/CompositionRootTests.swift — the composition root (ARCHITECTURE.md §3.9, §7.4, §10.0, D7,
 // D24): building the services touches nothing (`constructingServicesTouchesNoHardware`, the successor of Cranny's
-// `registersEveryContributionWithoutSideEffects`), Boost starts last, and `--qa-simulate` never yields a real port.
+// `registersEveryContributionWithoutSideEffects`), Boost starts last, `--qa-simulate` never yields a real port, the
+// single-instance exemption follows the wiring, and a Release build refuses the Debug-only switches.
 import Foundation
 import OverbrightBoost
 import OverbrightCore
@@ -77,6 +78,39 @@ import Testing
         let fixture = CompositionRoot.ports(for: LaunchArguments(["Overbright", "--qa-simulate", "mpg322ux-hdr-on"]),
                                             time: ManualTimeSource()).fixture
         #expect(fixture == .mpg322uxHDROn)
+    }
+
+    /// D27 follows the wiring, not the arguments: a launch wired to the simulated ports or a command-line mode skips
+    /// the single-instance check; a launch wired to the real ports never does, even with `--qa-simulate` present.
+    @Test func singleInstanceExemptionFollowsTheWiring() {
+        let simulated = CompositionRoot.simulatedPorts(.builtinXDRLidOpen, time: ManualTimeSource())
+        let real = ShellPorts.traps(log: TrapLog(), gamma: TrapGammaPort())        // no fixture, as `livePorts`
+        let qa = LaunchArguments(["Overbright", "--qa-simulate", "builtin-xdr-lid-open"])
+        #expect(CompositionRoot.livePorts(time: ManualTimeSource()).fixture == nil)
+        #expect(CompositionRoot.skipsSingleInstanceCheck(qa, ports: simulated))
+        #expect(!CompositionRoot.skipsSingleInstanceCheck(qa, ports: real))
+        #expect(!CompositionRoot.skipsSingleInstanceCheck(LaunchArguments(["Overbright"]), ports: real))
+        #expect(!CompositionRoot.skipsSingleInstanceCheck(LaunchArguments(["Overbright", "--off"]), ports: real))
+        for mode in [["--diagnostics", "-"], ["--monitor", "2"], ["--restore-gamma"]] {
+            let arguments = LaunchArguments(["Overbright"] + mode)
+            #expect(CompositionRoot.skipsSingleInstanceCheck(arguments, ports: real), "\(mode)")
+        }
+    }
+
+    /// §8.5: a Release build refuses to start with a Debug-only switch rather than ignore it and wire the real ports;
+    /// a Debug build refuses nothing, and no build refuses the Release switches.
+    @Test func releaseBuildRefusesDebugOnlySwitches() {
+        let qa = LaunchArguments(["Overbright", "--off", "--qa-simulate", "builtin-xdr-lid-open", "--qa-defaults-suite",
+                                  "app.overbright.Overbright.dev"])
+        #expect(CompositionRoot.refusedSwitches(qa, debugBuild: false) == ["--qa-simulate", "--qa-defaults-suite"])
+        #expect(CompositionRoot.refusedSwitches(qa, debugBuild: true).isEmpty)
+        let release = LaunchArguments(["Overbright", "--off", "--diagnostics", "-"])
+        #expect(CompositionRoot.refusedSwitches(release, debugBuild: false).isEmpty)
+        #if DEBUG
+        #expect(CompositionRoot.isDebugBuild && CompositionRoot.refusedSwitches(qa).isEmpty)
+        #else
+        #expect(!CompositionRoot.isDebugBuild && !CompositionRoot.refusedSwitches(qa).isEmpty)
+        #endif
     }
 
     /// Every fixture of §3.9 wires and reads back its own displays.

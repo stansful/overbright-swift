@@ -10,7 +10,8 @@
 #     extension's entitlements are the sandbox and the read-only preference exception only;
 #   - App Intents: Contents/Resources/Metadata.appintents lists every intent of §7.7 and the Focus filter
 #     (the type names of DESIGN.md §12.8);
-#   - no shader source in the bundle (D22).
+#   - no shader source in the bundle (D22);
+#   - a Release build refuses a Debug-only switch (`--qa-simulate`): exit 64, nothing written (§8.5).
 #
 #   scripts/smoke.sh                       # uses build/Overbright.app
 #   APP=/path/Overbright.app scripts/smoke.sh
@@ -20,21 +21,39 @@ source "$(dirname "$0")/lib.sh"
 APP="${APP:-$BUILD_DIR/$APP_NAME.app}"
 [[ -d "$APP" ]] || die "$APP not found; run scripts/build.sh first"
 OUT="$BUILD_DIR/logs/diagnostics.json"
-mkdir -p "$BUILD_DIR/logs"; rm -f "$OUT"
+REFUSED_OUT="$BUILD_DIR/logs/diagnostics-refused.json"
+mkdir -p "$BUILD_DIR/logs"; rm -f "$OUT" "$REFUSED_OUT"
+ENTITLEMENTS="$BUILD_DIR/logs/entitlements.plist"
+codesign -d --entitlements - --xml "$APP" > "$ENTITLEMENTS" 2>/dev/null || die "codesign could not read $APP's entitlements"
+# Only a Debug build carries get-task-allow, and only a Debug build honours the QA switches of §8.5.
+grep -q "com.apple.security.get-task-allow" "$ENTITLEMENTS" && debug_build=1 || debug_build=0
 # No `timeout` on macOS: perl's alarm kills the app if it hangs (exit 142).
 # `--diagnostics` writes no preference; a Debug build also reads its settings from a suite of its own
-# (`--qa-defaults-suite`), never from the user's; Release ignores the switch.
+# (`--qa-defaults-suite`), never from the user's. A Release build gets no QA switch: it would refuse to start.
+qa_args=()
+(( debug_build )) && qa_args=(--qa-defaults-suite app.overbright.Overbright.smoke)
 /usr/bin/perl -e 'alarm shift; exec @ARGV' 60 "$APP/Contents/MacOS/$APP_NAME" \
-  --qa-defaults-suite app.overbright.Overbright.smoke --diagnostics "$OUT" >/dev/null 2>&1 \
+  ${qa_args[@]+"${qa_args[@]}"} --diagnostics "$OUT" >/dev/null 2>&1 \
   || die "$APP_NAME --diagnostics failed or timed out"
 [[ -s "$OUT" ]] || die "no diagnostics written"
+
+# A Release build never ignores a Debug-only switch (it would then run on the real ports): it exits with
+# EX_USAGE (64) before anything starts, so not even the read-only report is written.
+if (( ! debug_build )); then
+  set +e
+  /usr/bin/perl -e 'alarm shift; exec @ARGV' 60 "$APP/Contents/MacOS/$APP_NAME" \
+    --qa-simulate builtin-xdr-lid-open --diagnostics "$REFUSED_OUT" >/dev/null 2>&1
+  status=$?
+  set -e
+  (( status == 64 )) || die "a Release build must refuse --qa-simulate with exit 64, got $status"
+  [[ ! -e "$REFUSED_OUT" ]] || die "a Release launch with --qa-simulate wrote $REFUSED_OUT"
+  log "Release build refuses Debug-only switches (exit 64)"
+fi
 
 # Only compiled code ships: no shader sources or headers in any bundle (D22).
 sources="$(find "$APP/Contents" \( -name '*.metal' -o -name '*.h' \) -print | head -5)"
 [[ -z "$sources" ]] || die "shader sources or headers are in the app: $sources"
 
-ENTITLEMENTS="$BUILD_DIR/logs/entitlements.plist"
-codesign -d --entitlements - --xml "$APP" > "$ENTITLEMENTS" 2>/dev/null || die "codesign could not read $APP's entitlements"
 APPEX="$APP/Contents/PlugIns/$CONTROLS_APPEX"
 APPEX_ENTITLEMENTS="$BUILD_DIR/logs/entitlements-controls.plist"
 rm -f "$APPEX_ENTITLEMENTS"

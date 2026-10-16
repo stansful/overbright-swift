@@ -1,7 +1,9 @@
 // OverbrightCore/Platform/LaunchArguments.swift — the one parser for command-line arguments: the Release switches
 // (`--off`, `--restore-gamma`, `--diagnostics <file|->`, `--monitor [seconds]`) and the Debug QA hooks of
 // ARCHITECTURE.md §8.5. Ported from Cranny's LaunchArguments.swift (the owner's MIT code); pure: tests pass their own
-// arguments. Whether a Release build honours a QA switch is the shell's decision (`QAHooks`), not the parser's.
+// arguments. The parser only names the Debug-only switches (`debugOnlySwitches`); what a build does with them is the
+// shell's decision (a Release build refuses to start, `CompositionRoot.refusedSwitches`), and so is the D27
+// single-instance exemption, which follows the ports actually wired (`CompositionRoot.skipsSingleInstanceCheck`).
 import Foundation
 
 /// Command-line arguments as `--name value` pairs and bare flags.
@@ -59,10 +61,16 @@ public nonisolated struct LaunchArguments: Sendable, Equatable {
     /// A command-line mode (`--diagnostics`, `--monitor`, `--restore-gamma`): it starts no service and opens no UI.
     public var isCommandLineMode: Bool { diagnosticsPath != nil || runsMonitor || restoresGamma }
 
-    /// Exempt from the single-instance check (D27): a command-line mode or a `--qa-simulate` run.
-    public var skipsSingleInstanceCheck: Bool { isCommandLineMode || qaSimulateFixture != nil }
-
     // MARK: Debug QA switches (§8.5)
+
+    /// The prefixes of the Debug-only switches: `--qa-…` and the Settings window's `-OverbrightQA…` defaults.
+    public static let debugOnlyPrefixes = ["--qa-", "-OverbrightQA"]
+
+    /// The Debug-only switches present, in order (`["--qa-simulate", "--qa-defaults-suite"]`); empty for a launch with
+    /// Release switches only.
+    public var debugOnlySwitches: [String] {
+        values.filter { value in Self.debugOnlyPrefixes.contains { value.hasPrefix($0) } }
+    }
 
     /// `--qa-defaults-suite <name>`: keep the run's settings in that suite (only `QAHooks+Defaults.swift` creates it).
     public var qaDefaultsSuite: String? { value(after: "--qa-defaults-suite") }

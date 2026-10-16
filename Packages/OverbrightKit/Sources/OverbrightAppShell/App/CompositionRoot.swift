@@ -10,6 +10,11 @@
 //   placeholders (fakes that open nothing) until their packages land, and `--diagnostics` reports them as null.
 // Constructing either wiring does no I/O, hardware or network access (test `constructingServicesTouchesNoHardware`);
 // `ServiceLifecycle.start()` does. Lifecycle order: Displays → … → Boost last; stop in reverse, Boost first (D7).
+//
+// A Release build never falls back silently: it refuses to start when given a Debug-only switch (`refusedSwitches`),
+// so a QA command meant for the simulated ports never runs on the real ones. The D27 single-instance exemption
+// follows the wiring, not the arguments (`skipsSingleInstanceCheck`): only a command-line mode or a launch that
+// really got the simulated ports may run next to another Overbright.
 import CoreGraphics
 import Foundation
 import OverbrightBoost
@@ -22,7 +27,30 @@ private let log = Log.logger(.app)
 
 /// Builds the wiring.
 enum CompositionRoot {
-    /// The ports for this launch: `--qa-simulate` (Debug builds only) or the real ones.
+    /// Whether this is a Debug build (the only one that honours the QA switches of §8.5).
+    static let isDebugBuild: Bool = {
+        #if DEBUG
+        return true
+        #else
+        return false
+        #endif
+    }()
+
+    /// The Debug-only switches a build refuses to start with: none in a Debug build; in a Release build every
+    /// `--qa-…` and `-OverbrightQA…` switch present (the app logs them and exits with `EX_USAGE` before anything
+    /// starts, rather than ignoring them and wiring the real ports).
+    static func refusedSwitches(_ arguments: LaunchArguments, debugBuild: Bool = isDebugBuild) -> [String] {
+        debugBuild ? [] : arguments.debugOnlySwitches
+    }
+
+    /// D27: a command-line mode, or a launch wired to the simulated ports, skips the single-instance check. Decided on
+    /// what `ports(for:time:)` actually returned, so a launch that got the real ports is never exempt.
+    static func skipsSingleInstanceCheck(_ arguments: LaunchArguments, ports: ShellPorts) -> Bool {
+        arguments.isCommandLineMode || ports.fixture != nil
+    }
+
+    /// The ports for this launch: `--qa-simulate` (Debug builds only; a Release build has already refused the switch,
+    /// see `refusedSwitches`) or the real ones.
     static func ports(for arguments: LaunchArguments, time: any TimeSource) -> ShellPorts {
         #if DEBUG
         if let name = arguments.qaSimulateFixture {

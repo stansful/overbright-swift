@@ -103,7 +103,7 @@ private struct Document: Codable, Equatable, Sendable {
 @Test func releaseSwitchesAndCommandLineModes() {
     let plain = LaunchArguments(["Overbright"])
     #expect(!plain.startsOff && !plain.restoresGamma && plain.diagnosticsPath == nil && !plain.runsMonitor)
-    #expect(!plain.isCommandLineMode && !plain.skipsSingleInstanceCheck)
+    #expect(!plain.isCommandLineMode && plain.debugOnlySwitches.isEmpty)
 
     #expect(LaunchArguments(["Overbright", "--off"]).startsOff)
     #expect(LaunchArguments(["Overbright", "--restore-gamma"]).isCommandLineMode)
@@ -117,9 +117,19 @@ private struct Document: Codable, Equatable, Sendable {
     #expect(LaunchArguments(["Overbright", "--monitor"]).monitorDuration == nil)                  // until Ctrl-C
     #expect(LaunchArguments(["Overbright", "--monitor", "--off"]).monitorDuration == nil)
 
-    // D27: command-line modes and simulated runs never hand over to (or are stopped by) another instance.
-    #expect(LaunchArguments(["Overbright", "--monitor"]).skipsSingleInstanceCheck)
-    #expect(LaunchArguments(["Overbright", "--qa-simulate", "builtin-xdr-lid-open"]).skipsSingleInstanceCheck)
+}
+
+/// §8.5: the parser names every Debug-only switch (a Release build refuses to start with one; the shell decides),
+/// and never a Release switch or a value.
+@Test func debugOnlySwitchesAreNamed() {
+    let qa = LaunchArguments(["/Applications/Overbright.app/Contents/MacOS/Overbright", "--off", "--qa-simulate",
+                              "builtin-xdr-lid-open", "--qa-defaults-suite", "app.overbright.Overbright.dev",
+                              "-OverbrightQAAppearance", "dark", "--diagnostics", "-"])
+    #expect(qa.debugOnlySwitches == ["--qa-simulate", "--qa-defaults-suite", "-OverbrightQAAppearance"])
+    #expect(LaunchArguments(["Overbright", "--qa-panel"]).debugOnlySwitches == ["--qa-panel"])
+    let release = LaunchArguments(["Overbright", "--off", "--monitor", "2", "--diagnostics", "/tmp/qa-report.json",
+                                   "--restore-gamma"])
+    #expect(release.debugOnlySwitches.isEmpty)
 }
 
 @Test func qaSwitchesOfTheArchitecture() throws {

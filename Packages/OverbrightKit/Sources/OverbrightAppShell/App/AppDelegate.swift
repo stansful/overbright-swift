@@ -1,9 +1,10 @@
 // OverbrightAppShell/App/AppDelegate.swift — a thin orchestrator. ARCHITECTURE.md §7.4 (launch, quit), §7.6 (launch UI),
 // §8.5 (launch arguments), §10.0 (shared shell file, contract owner), §10.15 (WP13 completes it); D7, D13, D24, D27.
 //
-// Launch order: `ShellDefaults` → the composition root builds the hub (no I/O) → command-line modes
-// (`--diagnostics`, `--monitor`, `--restore-gamma`) run and quit here, before any service starts, any window opens or
-// any preference is written → single instance (skipped for CLI modes and `--qa-simulate`) → move to Applications →
+// Launch order: a Release build given a Debug-only switch (`--qa-…`) exits with `EX_USAGE` before anything else →
+// `ShellDefaults` → the composition root builds the hub (no I/O) → command-line modes (`--diagnostics`, `--monitor`,
+// `--restore-gamma`) run and quit here, before any service starts, any window opens or any preference is written →
+// single instance (skipped for CLI modes and launches wired to the simulated ports) → move to Applications →
 // settings upgrade → controllers, router connection and status item → `LaunchGate` runs the launch check, then
 // starts the services (Displays first, Boost last) → QA hooks → launch UI (anchored to the placed status item; see
 // `PanelPlacement` for the item MenuBarAgent has not placed yet).
@@ -60,6 +61,15 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
     /// The launch order of the file header.
     public func applicationDidFinishLaunching(_ notification: Notification) {
         let arguments = LaunchArguments.current
+        let refused = CompositionRoot.refusedSwitches(arguments)
+        if !refused.isEmpty {
+            let switches = refused.joined(separator: " ")
+            log.error("refusing to start: \(switches, privacy: .public) only work in Debug builds")
+            let message = "Overbright: \(switches) only work in Debug builds; this Release build does not start "
+                + "rather than ignore them and use the real displays.\n"
+            FileHandle.standardError.write(Data(message.utf8))
+            exit(EX_USAGE)
+        }
         let defaults = ShellDefaults.forLaunch(arguments)
         let time = SystemTimeSource()
         let ports = CompositionRoot.ports(for: arguments, time: time)
@@ -74,7 +84,8 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
         self.shell = shell
         if runCommandLineMode(arguments, shell: shell) { return }
 
-        if !arguments.skipsSingleInstanceCheck, SingleInstance.handOverIfRunning(arguments: arguments) {
+        if !CompositionRoot.skipsSingleInstanceCheck(arguments, ports: ports),
+           SingleInstance.handOverIfRunning(arguments: arguments) {
             log.info("another Overbright runs in this session; handed over")
             NSApp.terminate(nil)
             return
