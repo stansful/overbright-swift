@@ -86,6 +86,7 @@ private func strings(of copy: Any) -> [String] {
             "Your display can show light brighter than ordinary white. Overbright lets everyday content use that range, so the screen stays readable in a bright room or in sunlight. For the most light, turn your display brightness all the way up first; Overbright adds to it. Drag the divider to compare.",
             "Only this card is brighter. It’s a preview: the real result depends on your display.",
             "None of your displays has extra range right now. The next step shows why.",
+            "This display has no extra range right now. Move this window to another display to compare.",
             "Your displays", "Overbright checks what each display can do.", "Use extra brightness",
             "How Overbright behaves",
             "Extra light uses more power, so Overbright steps back on its own. Choose how it starts.",

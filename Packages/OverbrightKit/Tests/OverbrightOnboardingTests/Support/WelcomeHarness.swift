@@ -126,10 +126,26 @@ func onboardingBundle(_ code: String) -> Bundle {
     func facts(for key: DisplayKey) -> DisplayFacts? { displays.first { $0.ref.key == key } }
 }
 
-/// A preview hub over `base`'s fakes whose display directory is not the Core fake, listing `base`'s displays.
-@MainActor func servicesWithRealDirectory(_ base: OverbrightServices = WelcomePreview.services()) -> OverbrightServices {
+/// A preview hub whose display directory is not the Core fake and lists `fixture`'s displays, those named in `keys`
+/// under another key (the screen a test window is on), each with the verdict the classifier gives the fixture's
+/// display: step 1's card then follows the test window's real display (`WelcomeCard.make`).
+@MainActor func servicesWithRealDirectory(_ fixture: DisplayFixture = .builtinXDRLidOpen,
+                                          keys: [DisplayKey: DisplayKey]) -> OverbrightServices {
+    let base = WelcomePreview.services(fixture)
+    let displays = fixture.displays.map { display in
+        var renamed = display
+        renamed.facts.ref.key = keys[display.key] ?? display.key
+        return renamed
+    }
+    WelcomePreview.classify(base, machine: fixture.machine, scripts: displays)
+    return servicesWithRealDirectory(base, listing: displays.map(\.facts))
+}
+
+/// A preview hub over `base`'s fakes whose display directory is not the Core fake, listing `displays`.
+@MainActor private func servicesWithRealDirectory(_ base: OverbrightServices,
+                                                  listing displays: [DisplayFacts]) -> OverbrightServices {
     let directory = StaticDirectory()
-    directory.displays = base.displays.displays
+    directory.displays = displays
     let services = OverbrightServices(settings: base.settings, paths: base.paths, machine: base.machine, time: base.time,
                                       journal: base.journal, announcer: base.announcer,
                                       ownEDRSurfaces: base.ownEDRSurfaces, displays: directory,

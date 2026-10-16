@@ -48,6 +48,7 @@ import Testing
             ("hello", AnyView(lower { HelloLower(copy: hello, card: .preview(display: DisplayFixture.Keys.builtIn,
                                                                                gain: 1.29)) })),
             ("hello-none", AnyView(lower { HelloLower(copy: hello, card: .noneCapable) })),
+            ("hello-other-display", AnyView(lower { HelloLower(copy: hello, card: .otherDisplay) })),
             ("defaults", AnyView(lower {
                 StepHeader(title: defaults.title, message: defaults.message)
                 LoginOptions(choices: choices, settings: services.settings, copy: defaults)

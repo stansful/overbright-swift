@@ -90,7 +90,11 @@ private typealias Keys = DisplayFixture.Keys
         #expect(abs(gain - (1000.0 / 600).squareRoot()) < 0.001 && abs(gain - 1.291) < 0.001)
     }
 
-    /// The window's display wins when it can boost; a display that cannot (Sidecar) falls back to one that can.
+    /// The card shows the window's own display: its Bright room when it can boost. On a display that cannot (Sidecar,
+    /// an XDR on Safe) while another can, the illustration and "Move this window to another display", never another
+    /// display's light drawn where Overbright adds nothing (WP14 C-ONBOARD-4); while the window's display is not read
+    /// yet, the illustration alone. Before the window's display is known (and in a simulated run) the first display
+    /// that can boost, as the stand-in: nothing is held without the window's display.
     @Test func theCardFollowsTheWindowsDisplay() throws {
         let both = try WelcomeHarness(.russianNames)
         guard case let .preview(display, gain) = WelcomeCard.make(rows: both.rows, windowDisplay: Keys.mpg322ux) else {
@@ -98,8 +102,25 @@ private typealias Keys = DisplayFixture.Keys
         }
         #expect(display == Keys.mpg322ux && abs(gain - 1.3.squareRoot()) < 0.001)          // OLED Safe ×1.3
         let sidecar = try WelcomeHarness(.sidecar)
-        #expect(WelcomeCard.make(rows: sidecar.rows, windowDisplay: Keys.sidecar)
-                == .preview(display: Keys.builtIn, gain: WelcomeCard.gain(top: 1000.0 / 600)))
+        let onTheIPad = WelcomeCard.make(rows: sidecar.rows, windowDisplay: Keys.sidecar)
+        #expect(onTheIPad == .otherDisplay)
+        #expect(onTheIPad.heldDisplay(windowDisplay: Keys.sidecar, isWindowVisible: true, simulated: false) == nil)
+        let unknown = WelcomeCard.make(rows: sidecar.rows, windowDisplay: nil)
+        #expect(unknown == .preview(display: Keys.builtIn, gain: WelcomeCard.gain(top: 1000.0 / 600)))
+        #expect(unknown.heldDisplay(windowDisplay: nil, isWindowVisible: true, simulated: false) == nil)
+
+        let studio = try WelcomeHarness(.studioDisplayXDR)                     // Safe adds nothing there
+        #expect(WelcomeCard.make(rows: studio.rows, windowDisplay: Keys.studioDisplayXDR) == .noneCapable)
+        let lcd = try WelcomeHarness(.lcdOnly)
+        #expect(WelcomeCard.make(rows: lcd.rows, windowDisplay: Keys.builtIn) == .noneCapable)
+
+        let directory = try #require(both.services.displays as? FakeDisplayDirectory)
+        let pro = DisplayFixture.proDisplayXDR.displays[0]
+        directory.add(pro.facts)                                                  // not classified yet
+        #expect(WelcomeCard.make(rows: both.rows, windowDisplay: Keys.proDisplayXDR) == .checking)
+        #expect(WelcomeCard.make(rows: both.rows, windowDisplay: DisplayKey(rawValue: "NOT-LISTED")) == .checking)
+        #expect(HelloLower(copy: .localized(in: englishBundle), card: .otherDisplay).caption
+                == "This display has no extra range right now. Move this window to another display to compare.")
     }
 
     /// Without a display that can show extra brightness: the illustration and "The next step shows why"; while the

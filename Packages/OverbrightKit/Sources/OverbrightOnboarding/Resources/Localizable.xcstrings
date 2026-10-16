@@ -6486,6 +6486,215 @@
         }
       }
     },
+    "This display has no extra range right now. Move this window to another display to compare." : {
+      "comment" : "Welcome ▸ Hello: shown instead of the card when the display the Welcome window is on cannot show extra brightness but another display can",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا تملك هذه الشاشة هامش إضاءة الآن. انقل هذه النافذة إلى شاشة أخرى للمقارنة."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ara aquesta pantalla no té marge extra. Mou aquesta finestra a una altra pantalla per comparar."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tento monitor teď nemá rezervu jasu. Přesuňte toto okno na jiný monitor a porovnejte rozdíl."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Denne skærm har ingen lysreserve lige nu. Flyt dette vindue til en anden skærm for at sammenligne."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieses Display hat gerade keine Helligkeitsreserve. Bewege dieses Fenster auf ein anderes Display, um zu vergleichen."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Αυτή η οθόνη δεν έχει αυτήν τη στιγμή περιθώριο φωτεινότητας. Μετακινήστε αυτό το παράθυρο σε άλλη οθόνη για να συγκρίνετε."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ahora mismo esta pantalla no tiene margen de brillo. Mueve esta ventana a otra pantalla para comparar."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tällä näytöllä ei ole nyt kirkkausvaraa. Vertaa siirtämällä tämä ikkuna toiselle näytölle."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cet écran n’a pas de marge de luminosité pour le moment. Déplacez cette fenêtre sur un autre écran pour comparer."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "כרגע לצג הזה אין טווח נוסף. אפשר להעביר את החלון הזה לצג אחר כדי להשוות."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "अभी इस डिस्प्ले में अतिरिक्त रेंज नहीं है। तुलना करने के लिए इस विंडो को किसी दूसरे डिस्प्ले पर ले जाएँ।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ovaj zaslon trenutačno nema rezervu svjetline. Premjestite ovaj prozor na drugi zaslon za usporedbu."
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ennek a kijelzőnek jelenleg nincs fényerőtartaléka. Az összehasonlításhoz helyezze át ezt az ablakot egy másik kijelzőre."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saat ini layar ini tidak memiliki rentang ekstra. Pindahkan jendela ini ke layar lain untuk membandingkan."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Al momento questo schermo non ha margine di luminosità. Sposta questa finestra su un altro schermo per confrontare."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "現在、このディスプレイには輝度の余力がありません。比較するには、このウインドウを別のディスプレイに移動してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "현재 이 디스플레이에는 여유 밝기가 없습니다. 비교하려면 이 윈도우를 다른 디스플레이로 옮기십시오."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paparan ini tiada julat tambahan sekarang. Alihkan tetingkap ini ke paparan lain untuk membandingkan."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Denne skjermen har ingen lysreserve akkurat nå. Flytt dette vinduet til en annen skjerm for å sammenligne."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dit beeldscherm heeft op dit moment geen extra bereik. Verplaats dit venster naar een ander beeldscherm om te vergelijken."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ten wyświetlacz nie ma teraz zapasu jasności. Przenieś to okno na inny wyświetlacz, aby porównać."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No momento, esta tela não tem margem de brilho. Mova esta janela para outra tela para comparar."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neste momento, este monitor não tem margem extra. Mova esta janela para outro monitor para comparar."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Momentan, acest afișaj nu are rezervă de luminozitate. Mutați această fereastră pe alt afișaj pentru a compara."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сейчас у этого дисплея нет запаса яркости. Перенесите это окно на другой дисплей, чтобы сравнить."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tento displej teraz nemá rezervu jasu. Presuňte toto okno na iný displej a porovnajte rozdiel."
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ta zaslon trenutno nima rezerve svetlosti. Za primerjavo premaknite to okno na drug zaslon."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Den här skärmen har ingen ljusreserv just nu. Flytta det här fönstret till en annan skärm för att jämföra."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ขณะนี้จอภาพนี้ไม่มีช่วงเพิ่มเติม ย้ายหน้าต่างนี้ไปยังจอภาพอื่นเพื่อเปรียบเทียบ"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şu an bu ekranda parlaklık payı yok. Karşılaştırmak için bu pencereyi başka bir ekrana taşıyın."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Зараз у цього дисплея немає запасу яскравості. Перенесіть це вікно на інший дисплей, щоб порівняти."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hiện màn hình này chưa có dải sáng bổ sung. Hãy chuyển cửa sổ này sang màn hình khác để so sánh."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这台显示器目前没有亮度余量。将此窗口移到另一台显示器上进行比较。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "這台顯示器目前沒有亮度餘裕。將此視窗移到另一台顯示器上來比較。"
+          }
+        }
+      }
+    },
     "To put Overbright in Control Center or the menu bar, make a shortcut with Turn Overbright On or Off, then add Control Center’s Run Shortcut control." : {
       "comment" : "Welcome ▸ Find it: the Run Shortcut recipe (Turn Overbright On or Off is the Shortcuts action’s title; Run Shortcut is Control Center’s control)",
       "localizations" : {
