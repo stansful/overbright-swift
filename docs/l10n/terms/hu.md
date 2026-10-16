@@ -4,7 +4,7 @@ Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the re
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
 deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
 Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
-are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+were decided in WP15 (ARCHITECTURE.md §10.17, §8.8); the table shows them as the catalogs ship them.
 `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
@@ -26,7 +26,7 @@ Nouns after a number stay singular ("3 elem", "5 kijelző"), so the one/other pl
 
 ### The brand
 
-“Overbright” is never translated. Its suffixes follow the pronunciation (“óverbrájt”, back vowels): Overbrightot, Overbrighttal, Overbrighthoz — to be confirmed in WP15 (ARCHITECTURE.md §10.17); until then every brand-bearing string is marked needs_review.
+“Overbright” is never translated. Its suffixes follow the pronunciation (“óverbrájt”, back vowels): Overbrightot, Overbrighttal, Overbrighthoz — confirmed in WP15 (ARCHITECTURE.md §10.17): the shipped strings use Overbrightot and Overbrightból, and compounds take a hyphen (Overbright-önteszt).
 
 ## Apple names (`apple-terms.py hu` on macOS 27.0.1 — never paraphrased)
 
@@ -79,20 +79,23 @@ Nouns after a number stay singular ("3 elem", "5 kijelző"), so the one/other pl
 | English | hu | Note |
 |---|---|---|
 | Overbright | Overbright | never translated or transliterated |
-| Standard (the brightness macOS shows) | — | never “100 %” or “normal mode” |
-| extra brightness (the boost half) | — | never “boost”, “HDR mode”, “EDR” |
-| Dim below minimum (the setting) | — | the incumbent’s name for it is never used |
-| Dimmed (the state) · Dim All Displays / Stop Dimming (actions) | — | not “night mode” |
-| Brighter · Less Bright (one step) | — | never “Dimmer”: it reads like Dim |
-| Back to Standard (the instant off) | — | not “panic”, not “reset brightness” |
-| Indoor · Bright room · Sunlight · Max (presets) | — | “Max” is a preset only |
-| Safe · Peak (ceilings) | — | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | — | never “fallback” or “overlay” |
-| Fill Light (the edge light for video calls) | — | never “ring light” |
-| extra range (headroom, in user copy) | — | “headroom” only in Advanced and diagnostics |
-| Calibrate… · Run Self-Test… · Reset Display Colors… | — |  |
-| Keep this level? · Go Back · Keep | — | the very-dark-level prompt |
-| Pause · Paused · Resume | — | a temporary stop; never “disabled” |
+| Settings panes: General · Displays · Automations · Shortcuts · Fill Light · Advanced · About | Általános · Kijelzők · Automatizálás · Billentyűparancsok · Arcmegvilágítás · Speciális · Névjegy | the sidebar and window titles |
+| Standard (the brightness macOS shows) | Alapszint | never “100 %” or “normal mode” |
+| extra brightness (the boost half) | “Extra fényerő használata” (Use extra brightness) | never “boost”, “HDR mode”, “EDR” |
+| Dim below minimum (the setting) | “Minimum alatti sötétítés be- vagy kikapcsolása” (Dim Below Minimum On or Off) | the incumbent’s name for it is never used |
+| Dimmed (the state) · Dim All Displays / Stop Dimming (actions) | Sötétítve · Összes kijelző sötétítése / Sötétítés megszüntetése | not “night mode” |
+| Brighter · Less Bright (one step) | Világosabb · Kevésbé világos | never “Dimmer”: it reads like Dim |
+| Back to Standard (the instant off) | Vissza az alapszintre | not “panic”, not “reset brightness” |
+| Indoor · Bright room · Sunlight · Max (presets) | Beltéri · Világos szoba · Napfény · Maximum | “Max” is a preset only |
+| Safe · Peak (ceilings) | Biztonságos · Csúcs | Peak, never “Max”, for a ceiling; one short word each (segments) |
+| Compatibility mode · Color table (methods) | Kompatibilitási mód · Színtábla | never “fallback” or “overlay” |
+| Fill Light (the edge light for video calls) | Arcmegvilágítás | never “ring light” |
+| extra range (headroom, in user copy) | Fényerőtartalék | “headroom” only in Advanced and diagnostics |
+| Calibrate… · Run Self-Test… · Reset Display Colors… | Kalibrálás… · Önteszt futtatása… · Kijelzőszínek visszaállítása… |  |
+| Keep this level? · Go Back · Keep | Megtartja ezt a szintet? · Vissza · Megtartás | the very-dark-level prompt |
+| Pause · Paused · Resume | “Az Overbright szüneteltetése” (Pause Overbright) · Szüneteltetve · Folytatás | a temporary stop; never “disabled” |
+
+Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its 292 pt in full in every language (`FooterFitTests`), so the Auto-pause chip reads “Autoszünet” (off: “Autoszünet ki”).
 
 ## Carried from Cranny (generic interface words)
 

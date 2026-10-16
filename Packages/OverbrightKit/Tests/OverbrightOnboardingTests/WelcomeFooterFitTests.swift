@@ -2,7 +2,8 @@
 // Back and Continue, or Done and Turn On Overbright) fits the 640-pt window between its side insets (DESIGN.md §8, §16:
 // "constrained strings are measured … English and a pseudo-long locale during development, all 35 in WP15";
 // ARCHITECTURE.md §9.1 UI row). Measured, never counted: the row's ideal width as SwiftUI lays it out. In English every
-// row fits with its progress dots; a long translation may only push the dots out, never a button.
+// row fits with its progress dots; a long translation may only push the dots out, never a button (measured in every
+// language Overbright ships, WP15).
 import Foundation
 import OverbrightCore
 import OverbrightDesign
@@ -55,6 +56,22 @@ private final class EnglishMarker {}
                 let width = FitMeasure.width(WelcomeFooter(session: session, labels: labels), offered: Self.budget)
                 #expect(width <= Self.budget, "\(name): \(width) pt")
             }
+        }
+    }
+
+    /// WP15: in every language Overbright ships, every button fits the row (the progress dots may step aside), and the
+    /// footer as drawn never leaves it.
+    @Test(arguments: CopyLanguage.available)
+    func everyFooterFitsInEveryLanguage(_ code: String) {
+        let labels = WelcomeFooter.Labels.localized(in: onboardingBundle(code))
+        for (name, session) in Self.sessions() {
+            let footer = WelcomeFooter(session: session, labels: labels)
+            let full = FitMeasure.idealWidth(footer.row(showsDots: true))
+            let withoutDots = FitMeasure.idealWidth(footer.row(showsDots: false))
+            #expect(full <= Self.budget || withoutDots <= Self.budget,
+                    "\(code), \(name): \(full) pt with the dots, \(withoutDots) pt without, of \(Self.budget)")
+            let drawn = FitMeasure.width(footer, offered: Self.budget)
+            #expect(drawn <= Self.budget, "\(code), \(name): \(drawn) pt")
         }
     }
 

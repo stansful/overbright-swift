@@ -4,7 +4,7 @@ Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the re
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
 deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
 Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
-are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+were decided in WP15 (ARCHITECTURE.md §10.17, §8.8); the table shows them as the catalogs ship them.
 `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
@@ -24,7 +24,7 @@ or the Apple pattern “Sil: “%@””. Dotted/dotless i: İ/i, I/ı. Turkish 
 
 ### The brand
 
-“Overbright” is never translated; suffixes go after an apostrophe and follow the pronunciation (“overbrayt”): Overbright’ı · Overbright’a · Overbright’ta · Overbright’tan · Overbright’ın — to be confirmed in WP15 (ARCHITECTURE.md §10.17); until then every brand-bearing string is marked needs_review.
+“Overbright” is never translated; suffixes go after an apostrophe and follow the pronunciation (“overbrayt”): Overbright’ı · Overbright’a · Overbright’ta · Overbright’tan · Overbright’ın — confirmed in WP15 (ARCHITECTURE.md §10.17): the shipped strings use Overbright’ı, Overbright’ın, Overbright’tan and Overbright’a.
 
 ## Apple names (`apple-terms.py tr` on macOS 27.0.1 — never paraphrased)
 
@@ -77,20 +77,23 @@ or the Apple pattern “Sil: “%@””. Dotted/dotless i: İ/i, I/ı. Turkish 
 | English | tr | Note |
 |---|---|---|
 | Overbright | Overbright | never translated or transliterated |
-| Standard (the brightness macOS shows) | — | never “100 %” or “normal mode” |
-| extra brightness (the boost half) | — | never “boost”, “HDR mode”, “EDR” |
-| Dim below minimum (the setting) | — | the incumbent’s name for it is never used |
-| Dimmed (the state) · Dim All Displays / Stop Dimming (actions) | — | not “night mode” |
-| Brighter · Less Bright (one step) | — | never “Dimmer”: it reads like Dim |
-| Back to Standard (the instant off) | — | not “panic”, not “reset brightness” |
-| Indoor · Bright room · Sunlight · Max (presets) | — | “Max” is a preset only |
-| Safe · Peak (ceilings) | — | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | — | never “fallback” or “overlay” |
-| Fill Light (the edge light for video calls) | — | never “ring light” |
-| extra range (headroom, in user copy) | — | “headroom” only in Advanced and diagnostics |
-| Calibrate… · Run Self-Test… · Reset Display Colors… | — |  |
-| Keep this level? · Go Back · Keep | — | the very-dark-level prompt |
-| Pause · Paused · Resume | — | a temporary stop; never “disabled” |
+| Settings panes: General · Displays · Automations · Shortcuts · Fill Light · Advanced · About | Genel · Ekranlar · Otomasyonlar · Klavye Kestirmeleri · Yüz Işığı · İleri Düzey · Hakkında | the sidebar and window titles |
+| Standard (the brightness macOS shows) | Standart | never “100 %” or “normal mode” |
+| extra brightness (the boost half) | “Ek parlaklığı kullan” (Use extra brightness) | never “boost”, “HDR mode”, “EDR” |
+| Dim below minimum (the setting) | “Minimumun Altına Karartmayı Aç veya Kapat” (Dim Below Minimum On or Off) | the incumbent’s name for it is never used |
+| Dimmed (the state) · Dim All Displays / Stop Dimming (actions) | Karartıldı · Tüm Ekranları Karart / Karartmayı Durdur | not “night mode” |
+| Brighter · Less Bright (one step) | Daha Parlak · Daha Az Parlak | never “Dimmer”: it reads like Dim |
+| Back to Standard (the instant off) | Standart’a Dön | not “panic”, not “reset brightness” |
+| Indoor · Bright room · Sunlight · Max (presets) | İç mekân · Aydınlık oda · Güneş ışığı · Maksimum | “Max” is a preset only |
+| Safe · Peak (ceilings) | Güvenli · Tepe | Peak, never “Max”, for a ceiling; one short word each (segments) |
+| Compatibility mode · Color table (methods) | Uyumluluk modu · Renk tablosu | never “fallback” or “overlay” |
+| Fill Light (the edge light for video calls) | Yüz Işığı | never “ring light” |
+| extra range (headroom, in user copy) | Parlaklık payı | “headroom” only in Advanced and diagnostics |
+| Calibrate… · Run Self-Test… · Reset Display Colors… | Kalibre Et… · Öz Testi Çalıştır… · Ekran Renklerini Sıfırla… |  |
+| Keep this level? · Go Back · Keep | Bu düzey korunsun mu? · Geri Dön · Koru | the very-dark-level prompt |
+| Pause · Paused · Resume | “Overbright’ı Duraklat” (Pause Overbright) · Duraklatıldı · Sürdür | a temporary stop; never “disabled” |
+
+Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its 292 pt in full in every language (`FooterFitTests`), so the Auto-pause chip reads “Duraklatma” (off: “Duraklatma yok”) and the Timer chip “Süresiz” for No timer.
 
 ## Carried from Cranny (generic interface words)
 
@@ -112,3 +115,4 @@ or the Apple pattern “Sil: “%@””. Dotted/dotless i: İ/i, I/ı. Turkish 
 | Login Items · Launch at login | Oturum Açma Öğeleri · Oturum açıldığında aç | “Sistem Ayarları’ndaki Oturum Açma Öğeleri bölümünde” (one locative chain, not “Ayarları’nda … bölümünde”) |
 | Undo | Geri al |  |
 | Check for Updates | Güncellemeleri Denetle | update check = güncelleme denetimi |
+| Step X of Y (VoiceOver) | Adım %1$lld / %2$lld | a spaced slash, as Apple’s VoiceOver (Sayfa %1$d / %2$d); “3/5” is read as a fraction |

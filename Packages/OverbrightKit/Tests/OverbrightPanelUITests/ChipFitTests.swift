@@ -1,6 +1,7 @@
 // OverbrightPanelUITests/ChipFitTests.swift — status chips fit their own line: ≤ 280 pt, the card's inner width
 // (DESIGN.md §5.7, §16; ARCHITECTURE.md §8.8 width rule `chip`), measured with the chip component itself, in English
-// and the pseudo-long locale (+40 %). The English texts are DESIGN.md §12.2's; every chip Design's builder makes for a
+// and the pseudo-long locale (+40 %), and every chip in every language Overbright ships (WP15, `ShippedLanguages`). The
+// English texts are DESIGN.md §12.2's; every chip Design's builder makes for a
 // reason or phase is measured too (they become the catalog's words once WP9's copy lands). App names inside a chip are
 // middle-truncated to fit, so the panel's layout keeps even a very long one inside the line.
 import OverbrightCore
@@ -69,5 +70,54 @@ import Testing
         let longer = FitMeasure.textWidth(PseudoLocale.lengthen(text), .caption)
         let english = FitMeasure.textWidth(text, .caption)
         #expect(longer >= english * 1.3)
+    }
+
+    // MARK: Every language (WP15)
+
+    /// The apps the measured chips name: DESIGN.md §12.2's examples.
+    nonisolated static let mayInterfere = ConflictingApp(entryID: "s3", severity: .conditional,
+                                                          bundleID: "com.example.tuner", processID: 3,
+                                                          displayName: "Display Tuner")
+    nonisolated static let colorApp = ConflictingApp(entryID: "s2", severity: .gammaWriter, bundleID: "com.example.tuner",
+                                                      processID: 2, displayName: "Display Tuner")
+
+    /// Every chip Design's builders make in `language`: each per-display reason, the engine phases, and the badge of
+    /// every verdict that cannot boost (the chip of a dim-only display).
+    static func chips(in language: CopyLanguage) -> [String] {
+        let context = ChipContext(allowedGain: 1.55, appName: "QuickTime Player", language: language)
+        let reasons: [LimitReason] = [.headroom, .hdrSuppressedByMacOS, .nearFullBrightnessOnly, .safeLimit, .oledLimit,
+                                      .thermalSerious, .fullScreenVideo, .fullScreenApp, .game, .oledIdle,
+                                      .boostNotEnabled, .pausedApp(bundleID: "com.apple.QuickTimePlayerX"),
+                                      .conflict(mayInterfere), .tripped(.oscillation),
+                                      .tripped(.attributedDrift(colorApp)), .tripped(.foreignTableAtLaunch)]
+        let phases: [EnginePhase] = [.arming(rung: 1), .failed(.headroomNeverArrived)]
+        let verdicts: [DisplayVerdict] = [.checking, .turnOnHDR, .switchPreset, .referencePreset, .lcdClass, .mirrored,
+                                          .virtualDisplay, .noGammaTable, .notHDR]
+        let fromReasons = reasons.compactMap {
+            ChipModel.make(reason: $0, phase: .boosted, failedTries: 0, context: context)?.text
+        }
+        let fromPhases = phases.compactMap {
+            ChipModel.make(reason: nil, phase: $0, failedTries: 2, context: context)?.text
+        }
+        let badges = verdicts.compactMap { ChipModel.verdict($0, in: language)?.text }
+        return (fromReasons + fromPhases + badges).filter { !$0.isEmpty }
+    }
+
+    /// The fit tests below run every language of `scripts/l10n/languages.json`, and Design's catalog ships each one.
+    @Test func everyShippedLanguageIsMeasured() throws {
+        #expect(ShippedLanguages.codes == (try ShippedLanguages.listed()))
+        #expect(ShippedLanguages.codes.count == 35)
+    }
+
+    @Test(arguments: ShippedLanguages.codes)
+    func everyChipFitsItsLineInEveryLanguage(_ code: String) {
+        let texts = Self.chips(in: ShippedLanguages.design(code))
+        #expect(texts.count >= 25, "\(code): \(texts.count) chips")
+        var failures: [String] = []
+        for text in texts {
+            let width = FitMeasure.idealWidth(chip(text))
+            if !(width > 0 && width <= PanelLayout.cardInnerWidth) { failures.append("«\(text)» \(width) pt") }
+        }
+        #expect(failures.isEmpty, "\(code): chips wider than \(PanelLayout.cardInnerWidth) pt: \(failures)")
     }
 }

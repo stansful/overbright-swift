@@ -6,37 +6,37 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
@@ -48,170 +48,170 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "%1$@: %2$@."
+            "state" : "translated",
+            "value" : "%1$@ : %2$@."
           }
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "%1$@: %2$@."
+            "state" : "translated",
+            "value" : "%1$@: %2$@।"
           }
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "%1$@: %2$@."
+            "state" : "translated",
+            "value" : "%1$@: %2$@。"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "%1$@: %2$@."
+            "state" : "translated",
+            "value" : "%1$@: %2$@"
           }
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "%1$@: %2$@."
+            "state" : "translated",
+            "value" : "%1$@：%2$@。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "%1$@: %2$@."
+            "state" : "translated",
+            "value" : "%1$@：%2$@。"
           }
         }
       }
@@ -221,206 +221,206 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "تطبيق Overbright متوقف."
           }
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "L’Overbright està desactivat."
           }
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright je vypnutý."
           }
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright er slået fra."
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright ist ausgeschaltet."
           }
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Το Overbright είναι απενεργοποιημένο."
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright está desactivado."
           }
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright on pois päältä."
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright est désactivé."
           }
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "כרגע Overbright כבוי."
           }
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright बंद है।"
           }
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright je isključen."
           }
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Az Overbright ki van kapcsolva."
           }
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright mati."
           }
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright è disattivato."
           }
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbrightはオフです。"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright가 꺼져 있습니다."
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright dimatikan."
           }
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright er av."
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright is uitgeschakeld."
           }
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright jest wyłączony."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "O Overbright está desativado."
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "O Overbright está desativado."
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright este dezactivat."
           }
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright выключен."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright je vypnuté."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright je izklopljen."
           }
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright är av."
           }
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright ปิดอยู่"
           }
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright kapalı."
           }
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright вимкнено."
           }
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright đang tắt."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright已关闭。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright已關閉。"
           }
         }
       }
@@ -430,206 +430,206 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "تطبيق Overbright قيد التشغيل."
           }
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "L’Overbright està activat."
           }
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright je zapnutý."
           }
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright er slået til."
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright ist eingeschaltet."
           }
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Το Overbright είναι ενεργοποιημένο."
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright está activado."
           }
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright on päällä."
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright est activé."
           }
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "כרגע Overbright פעיל."
           }
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright चालू है।"
           }
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright je uključen."
           }
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Az Overbright be van kapcsolva."
           }
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright menyala."
           }
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright è attivo."
           }
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbrightはオンです。"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright가 켜져 있습니다."
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright dihidupkan."
           }
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright er på."
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright is ingeschakeld."
           }
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright jest włączony."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "O Overbright está ativado."
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "O Overbright está ativado."
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright este activat."
           }
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright включён."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright je zapnuté."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright je vklopljen."
           }
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright är på."
           }
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright เปิดอยู่"
           }
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright açık."
           }
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright увімкнено."
           }
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright đang bật."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright已开启。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright已開啟。"
           }
         }
       }
@@ -639,206 +639,206 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "لا يزال Overbright قيد البدء. حاول مرة أخرى بعد قليل."
           }
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "L’Overbright encara s’està iniciant. Torna‑ho a provar d’aquí a un moment."
           }
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright se ještě spouští. Zkuste to za chvíli znovu."
           }
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright er stadig ved at starte. Prøv igen om et øjeblik."
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright wird noch gestartet. Versuche es gleich noch einmal."
           }
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Το Overbright δεν έχει ξεκινήσει ακόμα. Δοκιμάστε ξανά σε λίγο."
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright todavía se está iniciando. Vuelve a intentarlo en un momento."
           }
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright käynnistyy vielä. Yritä hetken kuluttua uudelleen."
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright est encore en cours de démarrage. Réessayez dans un instant."
           }
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "עדיין מתבצעת הפעלה של Overbright. יש לנסות שוב בעוד רגע."
           }
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright अभी शुरू हो रहा है। थोड़ी देर में फिर कोशिश करें।"
           }
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright se još pokreće. Pokušajte ponovno za trenutak."
           }
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Az Overbright még indul. Próbálja újra egy pillanat múlva."
           }
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright belum selesai dimulai. Coba lagi dalam beberapa saat."
           }
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright si sta ancora avviando. Riprova tra un attimo."
           }
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbrightはまだ起動中です。しばらくしてからもう一度お試しください。"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright가 아직 시작하는 중입니다. 잠시 후 다시 시도하십시오."
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright belum selesai dimulakan. Cuba lagi sebentar nanti."
           }
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright starter fortsatt. Prøv igjen om et øyeblikk."
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright wordt nog gestart. Probeer het zo opnieuw."
           }
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright nadal się uruchamia. Spróbuj ponownie za chwilę."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "O Overbright ainda está iniciando. Tente novamente em instantes."
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "O Overbright ainda está a iniciar. Tente novamente daqui a pouco."
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright încă pornește. Reîncercați peste câteva momente."
           }
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright ещё запускается. Повторите попытку чуть позже."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright sa ešte spúšťa. Skúste to o chvíľu znova."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright se še zaganja. Poskusite znova čez trenutek."
           }
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright startar fortfarande. Försök igen om en liten stund."
           }
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright ยังเริ่มทำงานไม่เสร็จ ลองอีกครั้งในอีกสักครู่"
           }
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright hâlâ başlatılıyor. Birazdan yeniden deneyin."
           }
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright ще запускається. Спробуйте ще раз за мить."
           }
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright vẫn đang khởi động. Hãy thử lại sau giây lát."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright仍在启动。请稍后再试。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright仍在啟動中。請稍後再試一次。"
           }
         }
       }
@@ -848,206 +848,206 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "هذه الشاشة غير متصلة."
           }
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Aquesta pantalla no està connectada."
           }
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Tento monitor není připojený."
           }
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Den skærm er ikke tilsluttet."
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Dieses Display ist nicht verbunden."
           }
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Αυτή η οθόνη δεν είναι συνδεδεμένη."
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Esa pantalla no está conectada."
           }
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Näyttöä ei ole liitetty."
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Cet écran n’est pas connecté."
           }
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "הצג הזה לא מחובר."
           }
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "वह डिस्प्ले कनेक्ट नहीं है।"
           }
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Taj zaslon nije priključen."
           }
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Ez a kijelző nincs csatlakoztatva."
           }
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Layar tersebut tidak tersambung."
           }
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Quello schermo non è collegato."
           }
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "そのディスプレイは接続されていません。"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "해당 디스플레이가 연결되어 있지 않습니다."
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Paparan itu tidak disambungkan."
           }
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Den skjermen er ikke tilkoblet."
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Dat beeldscherm is niet aangesloten."
           }
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Ten wyświetlacz nie jest podłączony."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Essa tela não está conectada."
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Esse monitor não está ligado."
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Acel afișaj nu este conectat."
           }
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Этот дисплей не подключён."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Tento displej nie je pripojený."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Ta zaslon ni priključen."
           }
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Den skärmen är inte ansluten."
           }
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "จอภาพนั้นไม่ได้เชื่อมต่ออยู่"
           }
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Bu ekran bağlı değil."
           }
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Цей дисплей не підʼєднано."
           }
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Màn hình đó chưa được kết nối."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "该显示器未连接。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "該顯示器未連接。"
           }
         }
       }
@@ -1057,206 +1057,206 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "لا يمكن تعتيم هذه الشاشة."
           }
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Aquesta pantalla no es pot atenuar."
           }
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Tento monitor nelze ztmavit."
           }
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Denne skærm kan ikke dæmpes."
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Dieses Display kann nicht abgedunkelt werden."
           }
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Αυτή η οθόνη δεν μπορεί να χαμηλώσει."
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Esta pantalla no se puede atenuar."
           }
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Tätä näyttöä ei voi himmentää."
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Cet écran ne peut pas être assombri."
           }
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "לא ניתן לעמעם את הצג הזה."
           }
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "इस डिस्प्ले को डिम नहीं किया जा सकता।"
           }
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Ovaj zaslon ne može se zatamniti."
           }
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Ez a kijelző nem sötétíthető."
           }
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Layar ini tidak dapat diredupkan."
           }
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Questo schermo non può essere oscurato."
           }
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "このディスプレイは暗くできません。"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "이 디스플레이는 어둡게 할 수 없습니다."
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Paparan ini tidak boleh dimalapkan."
           }
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Denne skjermen kan ikke dempes."
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Dit beeldscherm kan niet worden gedimd."
           }
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Tego wyświetlacza nie można przyciemnić."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Esta tela não pode ser escurecida."
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Não é possível escurecer este monitor."
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Acest afișaj nu poate fi întunecat."
           }
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Этот дисплей нельзя затемнить."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Tento displej sa nedá stmaviť."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Tega zaslona ni mogoče zatemniti."
           }
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Den här skärmen kan inte tonas ned."
           }
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "ไม่สามารถหรี่แสงจอภาพนี้ได้"
           }
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Bu ekran karartılamaz."
           }
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Цей дисплей не можна затемнити."
           }
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Không thể làm tối màn hình này."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "无法调暗此显示器。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "無法調暗此顯示器。"
           }
         }
       }
@@ -1266,206 +1266,206 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "لا يمكن لهذه الشاشة عرض إضاءة إضافية."
           }
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Aquesta pantalla no pot mostrar brillantor extra."
           }
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Tento monitor nepodporuje extra jas."
           }
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Denne skærm kan ikke vise ekstra lysstyrke."
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Dieses Display kann keine Zusatzhelligkeit anzeigen."
           }
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Αυτή η οθόνη δεν μπορεί να δείξει επιπλέον φωτεινότητα."
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Esta pantalla no puede mostrar brillo extra."
           }
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Tämä näyttö ei voi näyttää lisäkirkkautta."
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Cet écran ne peut pas afficher de luminosité supplémentaire."
           }
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "הצג הזה לא יכול להציג בהירות נוספת."
           }
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "यह डिस्प्ले अतिरिक्त ब्राइटनेस नहीं दिखा सकता।"
           }
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Ovaj zaslon ne može prikazati dodatnu svjetlinu."
           }
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Ez a kijelző nem tud extra fényerőt megjeleníteni."
           }
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Layar ini tidak dapat menampilkan kecerahan ekstra."
           }
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Questo schermo non può mostrare la luminosità extra."
           }
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "このディスプレイでは追加の輝度を使用できません。"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "이 디스플레이에서는 추가 밝기를 사용할 수 없습니다."
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Paparan ini tidak boleh menunjukkan kecerahan tambahan."
           }
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Denne skjermen kan ikke vise ekstra lysstyrke."
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Dit beeldscherm kan geen extra helderheid tonen."
           }
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Ten wyświetlacz nie może pokazywać dodatkowej jasności."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Esta tela não pode exibir brilho extra."
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Este monitor não suporta brilho extra."
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Acest afișaj nu poate afișa luminozitate suplimentară."
           }
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Этот дисплей не поддерживает дополнительную яркость."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Tento displej nepodporuje extra jas."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Ta zaslon ne podpira dodatne svetlosti."
           }
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Den här skärmen kan inte visa extra ljusstyrka."
           }
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "จอภาพนี้แสดงความสว่างเพิ่มเติมไม่ได้"
           }
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Bu ekran ek parlaklık gösteremez."
           }
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Цей дисплей не підтримує додаткову яскравість."
           }
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Màn hình này không thể hiển thị độ sáng bổ sung."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "此显示器无法显示额外亮度。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "此顯示器無法顯示額外亮度。"
           }
         }
       }
