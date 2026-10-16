@@ -24,6 +24,7 @@ import OverbrightPolicy
 
 private typealias ProbeBoostPolicy = BoostPolicy
 private typealias ProbeCompatibilityModels = CompatibilityModels
+private typealias ProbeConflictCatalog = ConflictCatalog
 private typealias ProbeConflictMatcher = ConflictMatcher
 private typealias ProbeEligibilityClassifier = EligibilityClassifier
 private typealias ProbeFactorMath = FactorMath

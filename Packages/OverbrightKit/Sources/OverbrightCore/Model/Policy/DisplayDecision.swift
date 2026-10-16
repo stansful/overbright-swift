@@ -16,10 +16,13 @@ public nonisolated struct DisplayDecision: Hashable, Sendable {
     public var domain: TransferDomain
     /// Light gain the user's level asks for before any cap (for the readout and the "limited" chip).
     public var requestedGain: Double
+    /// The level the reducer used: the display's own, the linked level, or the Focus filter's (§6.1 step 3). The
+    /// readout names the preset at this level (`Readout.values`); `DisplayStatus` carries no level of its own.
+    public var level: LevelPosition
     /// A decision.
     public init(key: DisplayKey, target: BoostTarget, reasons: [LimitReason], eligibility: EligibilityResult,
-                mechanism: Mechanism, domain: TransferDomain, requestedGain: Double) {
+                mechanism: Mechanism, domain: TransferDomain, requestedGain: Double, level: LevelPosition = .standard) {
         self.key = key; self.target = target; self.reasons = reasons; self.eligibility = eligibility
-        self.mechanism = mechanism; self.domain = domain; self.requestedGain = requestedGain
+        self.mechanism = mechanism; self.domain = domain; self.requestedGain = requestedGain; self.level = level
     }
 }

@@ -1,5 +1,6 @@
 // OverbrightPolicy/Ceilings/GainCeiling.swift — the ceilings per display and the interlock's one function.
-// ARCHITECTURE.md §3.10, §5.3, §5.4, D5. Real bodies since WP0a except `sliderTop` (WP1).
+// ARCHITECTURE.md §3.10, §5.1, §5.3, §5.4, D5, D8. `liveCap` and the helpers since WP0a; `sliderTop`, `sdrMaxNits`
+// and the OLED-override rule of `capNits` by WP1.
 import Foundation
 import OverbrightCore
 
@@ -26,20 +27,52 @@ public nonisolated enum GainCeiling {
     /// See `taperStart`.
     public static let taperEnd = 2.0
 
-    /// Safe nits for the class (nil for OLED, whose Safe cap is the relative ×1.3).
+    /// Share of an HDR external's panel peak that Safe allows: about the full-screen sustained level that the
+    /// DisplayHDR tiers require (§5.3).
+    public static let safeShareOfPanelPeak = 0.6
+    /// A slider top below this disables the boost half for that cap mode; `sliderTop` then answers 1 (§5.3).
+    public static let minimumUsefulTop = 1.05
+    /// Classes whose boost half can exist (the others never boost, whatever the cap mode).
+    static let boostClasses: Set<PanelClass> = [.builtInXDR, .appleXDRExternal, .hdrExternal, .oledExternal]
+
+    /// Safe nits for the class (nil for OLED, whose Safe cap is the relative ×1.3). An OLED-class external that the
+    /// user marked "Not OLED" is an other HDR external here (the override is applied before classifying, D8).
     public static func capNits(facts: DisplayFacts, isOLED: Bool) -> Double? {
         if isOLED { return nil }
         switch facts.panelClass {
         case .builtInXDR, .appleXDRExternal: return safeNitsAppleXDR
-        case .hdrExternal: return facts.panelPeakNits.map { min(safeNitsAppleXDR, 0.6 * $0) }
+        case .hdrExternal, .oledExternal: return facts.panelPeakNits.map { min(safeNitsAppleXDR, safeShareOfPanelPeak * $0) }
         default: return nil
         }
     }
-    /// The gain at the top of the boost half for this display and cap mode, at full SDR brightness (§5.3 table).
-    /// Below 1.05 the boost half is disabled for that cap mode.
+    /// The highest SDR white the user can pick without ambient boost (`sdrMax`, §5.1): the IORegistry value, and on
+    /// an external without one its frame-average luminance (the HDR-mode SDR white). Nil when neither is known.
+    public static func sdrMaxNits(facts: DisplayFacts) -> Double? {
+        let value = facts.sdrMaxNits ?? (facts.isBuiltIn ? nil : facts.panelFrameAverageNits)
+        return value.flatMap { $0 > 0 ? $0 : nil }
+    }
+    /// The gain at the top of the boost half for this display and cap mode, at full SDR brightness (§5.3 table):
+    /// Peak `0.97 · peak / sdrMax`; Safe `min(capNits / sdrMax, Peak)`, on OLED `min(1.3, Peak)`. A top below 1.05
+    /// disables the boost half for that cap mode and is answered as 1, as is a class that never boosts or a display
+    /// whose panel peak or SDR maximum is unknown (no number we cannot back, DESIGN.md principle 2).
     public static func sliderTop(facts: DisplayFacts, capMode: CapMode, isOLED: Bool) -> Double {
-        _ = (facts, capMode, isOLED)
-        return 1   // WP1
+        guard boostClasses.contains(facts.panelClass), let peak = facts.panelPeakNits, peak > 0,
+              let sdrMax = sdrMaxNits(facts: facts) else { return 1 }
+        let peakTop = FactorMath.headroomMargin * peak / sdrMax
+        let top: Double
+        switch capMode {
+        case .peak:
+            top = peakTop
+        case .safe:
+            if isOLED {
+                top = min(safeGainOLED, peakTop)
+            } else if let cap = capNits(facts: facts, isOLED: false) {
+                top = min(cap / sdrMax, peakTop)
+            } else {
+                top = 1
+            }
+        }
+        return top >= minimumUsefulTop ? top : 1
     }
     /// Seed of the full-brightness headroom (`panelPeak ÷ sdrMax`); Boost replaces it with the lowest ready H seen.
     public static func fullBrightnessHeadroomSeed(facts: DisplayFacts) -> Double? {
@@ -66,17 +99,23 @@ public nonisolated enum GainCeiling {
         let h = reading.current
         var g = staticGain
         var reason: LimitReason?
+        func bind(_ term: Double, _ why: LimitReason) {
+            guard term < g else { return }
+            if term < g * (1 - bindingTolerance) { reason = why }
+            g = term
+        }
         if taper, let ref = fullBrightnessHeadroom {
-            let tapered = pow(g, taperExponent(headroom: h, fullBrightnessHeadroom: ref))
-            if tapered < g { g = tapered; reason = .nearFullBrightnessOnly }
+            bind(pow(g, taperExponent(headroom: h, fullBrightnessHeadroom: ref)), .nearFullBrightnessOnly)
         }
         if capMode == .safe, sdrWhite == nil, safeBound == .worstCaseGrant,
            let cap = capNits(facts: facts, isOLED: isOLED), let peak = facts.panelPeakNits, peak > 0 {
-            let bound = cap * h / peak          // sdrNow = grant ÷ H ≤ panelPeak ÷ H, so light ≤ cap
-            if bound < g { g = bound; reason = .safeLimit }
+            bind(cap * h / peak, .safeLimit)          // sdrNow = grant ÷ H ≤ panelPeak ÷ H, so light ≤ cap
         }
-        let margin = FactorMath.headroomMargin * h
-        if margin < g { g = margin; reason = .headroom }
+        bind(FactorMath.headroomMargin * h, .headroom)
         return LiveCap(gain: max(g, 1), reason: reason)
     }
+    /// A live term is reported as binding only when it lies below the gain by more than rounding: a reading exactly
+    /// at the grant makes Peak's top and `0.97 × H` equal up to the last bit, which is not a limit. The gain is the
+    /// exact minimum either way.
+    public static let bindingTolerance = 1e-9
 }

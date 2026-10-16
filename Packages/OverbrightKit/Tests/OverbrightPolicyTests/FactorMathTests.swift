@@ -65,4 +65,26 @@ import Testing
         #expect(FactorMath.tableFactor(forLightGain: 1.667, domain: .linear) == 1.667)
         #expect(FactorMath.headroomMargin == 0.97 && FactorMath.lowerThreshold == 0.98 && FactorMath.boostExponent == 2.4)
     }
+
+    /// §5.6 "Calibration predictions" for the 0.95 patch merging with white: encoded `encodeSRGB(H) ÷ 0.95` vs linear
+    /// `H ÷ decodeSRGB(0.95)`; the sweep's pause at 1.15 × the encoded prediction; the linear confirmation factor
+    /// `0.97 × H`, above which every code over `encodeSRGB(H) ÷ (0.97 × H)` clips under the encoded truth.
+    @Test func calibrationPredictions() {
+        let rows: [(h: Double, encoded: Double, linear: Double)] = [(2.667, 1.613, 2.997), (3.2, 1.745, 3.595),
+                                                                   (1.6, 1.293, 1.798)]
+        for row in rows {
+            let encoded = FactorMath.encodeSRGB(row.h) / 0.95
+            let linear = row.h / FactorMath.decodeSRGB(0.95)
+            #expect(abs(encoded - row.encoded) < 0.0005, "H \(row.h): \(encoded)")
+            #expect(abs(linear - row.linear) < 0.0005, "H \(row.h): \(linear)")
+        }
+        let h = 2.667
+        #expect(abs(1.15 * FactorMath.encodeSRGB(h) / 0.95 - 1.855) < 0.0005)
+        #expect(abs(FactorMath.headroomMargin * h - 2.587) < 0.0005)
+        #expect(abs(FactorMath.encodeSRGB(h) / (FactorMath.headroomMargin * h) - 0.592) < 0.0005)
+        // Under the linear truth the same factor delivers 0.97 × H, under the encoded truth it clips: only a
+        // confirmed "distinguishable" can therefore select `.linear`.
+        #expect(FactorMath.lightGain(forTableFactor: FactorMath.headroomMargin * h, domain: .encoded) > h)
+        #expect(FactorMath.lightGain(forTableFactor: FactorMath.headroomMargin * h, domain: .linear) <= h)
+    }
 }

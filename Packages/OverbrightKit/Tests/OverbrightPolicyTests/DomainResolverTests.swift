@@ -1,11 +1,11 @@
-// OverbrightPolicyTests/DomainAndCompatibilityTests.swift — the domain resolver and the compatibility models.
-// ARCHITECTURE.md §5.2, §7.5.
+// OverbrightPolicyTests/DomainResolverTests.swift — the transfer domain actually used, and the compatibility models
+// that make the reducer default to the overlay. ARCHITECTURE.md §5.2, §6.1 steps 4–5, §7.5.
 import Foundation
 import OverbrightCore
 import Testing
 @testable import OverbrightPolicy
 
-@Suite struct DomainAndCompatibilityTests {
+@Suite struct DomainResolverTests {
     private let machine = DisplayFixture.ownerMachine
     private func record(_ outcome: CalibrationRecord.Outcome, mechanism: Mechanism = .table, build: String = "26A434",
                         potential: Double = 16) -> CalibrationRecord {
@@ -44,5 +44,26 @@ import Testing
         }
         #expect(!CompatibilityModels.tableWritesIgnored(DisplayFixture.ownerMachine))
         #expect(!CompatibilityModels.tableWritesIgnored(machine("Mac17,10", 27, 0)))
+    }
+
+    /// The reducer hands the engine the resolved domain: `.linear` only for a valid linear record of the display's
+    /// mechanism, `.encoded` once the OS build, the potential or the mechanism changes.
+    @Test func theReducerResolvesTheDomainPerDisplay() {
+        func decided(_ record: CalibrationRecord?, mechanism: MechanismPreference = .automatic,
+                     potential: Double = 16) -> DisplayDecision? {
+            let reading = PolicyTestInputs.reading(PolicyTestInputs.builtIn, potential: potential)
+            let display = PolicyTestInputs.display(mechanism: mechanism, calibration: record, reading: reading)
+            return BoostPolicy.reduce(PolicyTestInputs.input([display])).builtIn
+        }
+        #expect(decided(record(.linear))?.domain == .linear)
+        #expect(decided(record(.linear), potential: 6)?.domain == .encoded)                  // preset changed
+        #expect(decided(record(.linear, build: "26A123"))?.domain == .encoded)               // macOS updated
+        #expect(decided(record(.linear), mechanism: .overlay)?.domain == .encoded)           // other mechanism
+        #expect(decided(record(.inconclusive))?.domain == .encoded && decided(nil)?.domain == .encoded)
+        // On a compatibility model the automatic mechanism is the overlay, so a table record no longer applies.
+        let neo = DisplayFixture.neoIgnoresWrites
+        let display = PolicyTestInputs.display(neo.displays[0], calibration: record(.linear, build: neo.machine.osBuild))
+        let decision = BoostPolicy.reduce(PolicyTestInputs.input([display], machine: neo.machine)).builtIn
+        #expect(decision?.mechanism == .overlay && decision?.domain == .encoded)
     }
 }
