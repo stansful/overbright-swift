@@ -58,6 +58,24 @@ import Testing
         #expect(GainCeiling.sdrMaxNits(facts: facts(.hdrExternal, peak: 600, sdrMax: 0)) == nil)
     }
 
+    /// An Apple XDR external's frame average is its full-screen sustained HDR level, never its SDR maximum: without
+    /// the product's SDR maximum it has none (and no top), instead of ×1.55 Peak and no Safe (C-PLATFORM-1).
+    @Test func anAppleXDRExternalNeverTakesItsFrameAverageAsSDRWhite() {
+        #expect(proDisplay.panelFrameAverageNits == 1000 && GainCeiling.sdrMaxNits(facts: proDisplay) == 500)
+        let unknownProduct = facts(.appleXDRExternal, peak: 1600, sdrMax: nil, frameAverage: 1000)
+        #expect(GainCeiling.frameAverageSDRWhite(facts: unknownProduct) == nil)
+        #expect(GainCeiling.sdrMaxNits(facts: unknownProduct) == nil)
+        #expect(top(unknownProduct, .peak) == 1 && top(unknownProduct, .safe) == 1)
+        // Other externals keep the HDR-mode SDR white; a built-in never has one.
+        #expect(GainCeiling.frameAverageSDRWhite(facts: msi) == 265.05)
+        #expect(GainCeiling.frameAverageSDRWhite(facts: facts(.hdrExternal, peak: 600, frameAverage: 300)) == 300)
+        #expect(GainCeiling.frameAverageSDRWhite(facts: facts(.builtInXDR, peak: 1600, frameAverage: 500,
+                                                              builtIn: true)) == nil)
+        #expect(GainCeiling.frameAverageSDRWhite(facts: facts(.hdrExternal, peak: 600, frameAverage: 0)) == nil)
+        // The seed of the taper's reference uses the facts' SDR maximum: 1600 ÷ 500 on the Pro Display XDR.
+        #expect(GainCeiling.fullBrightnessHeadroomSeed(facts: proDisplay) == 3.2)
+    }
+
     /// A top below ×1.05 disables that half (answered as 1); classes that never boost and unknown panel facts give 1.
     @Test func sliderTopIsOneWhereTheBoostHalfIsDisabledOrUnknown() {
         let dim = facts(.hdrExternal, peak: 400, sdrMax: 300)

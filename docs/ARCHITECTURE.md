@@ -403,11 +403,13 @@ public nonisolated struct DisplayFacts: Hashable, Sendable {
     public var supportsPQ: Bool?
     /// Panel maximum luminance in nits (built-in: `EDRPotentialHeadroom` × 100; external: DisplayAttributes Luminance Max).
     public var panelPeakNits: Double?
-    /// External: DisplayAttributes Luminance MaxFrameAverage (the HDR-mode SDR white on the measured OLED).
+    /// External: DisplayAttributes Luminance MaxFrameAverage (the HDR-mode SDR white on the measured OLED; on an
+    /// Apple XDR external the full-screen sustained HDR level, never an SDR white).
     public var panelFrameAverageNits: Double?
     /// External: DisplayAttributes Luminance Min.
     public var panelMinNits: Double?
-    /// Highest SDR white the user can select without ambient boost (built-in `user-accessible-max-nits`).
+    /// Highest SDR white the user can select without ambient boost (built-in `user-accessible-max-nits`; Apple XDR
+    /// external: the product's, 500 or 1000 nits).
     public var sdrMaxNits: Double?
     /// `NSScreen.safeAreaInsets.top > 0`.
     public var hasNotch: Bool
@@ -2518,7 +2520,7 @@ Generations cannot protect against a **hang**: only the main actor bumps them, a
 | `L` | Dim light factor (< 1) | policy |
 | `panelPeak` | Panel maximum luminance (built-in `EDRPotentialHeadroom` × 100; external DisplayAttributes Max) | IORegistry |
 | `capNits` | The Safe level in nits: 1000 on Apple XDR panels, `min(1000, 0.6 × panelPeak)` on other HDR externals; none on OLED (Safe is ×1.3 there) | `GainCeiling.capNits` |
-| `sdrMax` | Highest SDR white the user can pick without ambient boost (600 nits on M3–M5 MacBook Pro built-ins indoors, 500 on M1/M2 and Pro Display XDR, 1000 on Studio Display XDR, the frame-average luminance on an HDR external) | IORegistry where available, §5.5 |
+| `sdrMax` | Highest SDR white the user can pick without ambient boost (600 nits on M3–M5 MacBook Pro built-ins indoors, 500 on M1/M2 and Pro Display XDR, 1000 on Studio Display XDR, the frame-average luminance on another HDR external) | built-in: IORegistry; Apple XDR external: the product (`AppleXDRProducts`, keyed by vendor 0x610 and product ID), never its frame average, which is the full-screen sustained HDR level there; other externals: the frame average, §5.5 |
 | `sdrNow` | Actual SDR white right now | **no public API**; trusted estimates only (§5.5); always `≤ panelPeak ÷ H`, because the grant never exceeds the panel peak |
 
 ### 5.2 Transfer domains
@@ -2610,7 +2612,7 @@ No public API reports the SDR white level in nits. The engine keeps an `SDRWhite
 | Source | When | Trust |
 |---|---|---|
 | `colorimeter` | The user typed a colorimeter reading in the calibration sheet (`CalibrationRecord.measuredSDRWhiteNits`) | exact while the record is valid (§5.2) |
-| `hdrFrameAverage` | External in HDR mode: IORegistry `DisplayAttributes` MaxFrameAverage | Matched WindowServer's own SDR value on the MSI (265.05 nits) [VERIFIED]; whether the HDR-mode SDR brightness slider changes it is H-N2 |
+| `hdrFrameAverage` | External in HDR mode, except an Apple XDR external (its MaxFrameAverage is the full-screen sustained HDR level, 1000 nits on the Pro Display XDR): IORegistry `DisplayAttributes` MaxFrameAverage (`GainCeiling.frameAverageSDRWhite`) | Matched WindowServer's own SDR value on the MSI (265.05 nits) [VERIFIED]; whether the HDR-mode SDR brightness slider changes it is H-N2 |
 | `panelReported` | Built-in: IORegistry `AppleARMBacklight` `BrightnessMilliNits` | Only if H-N1 shows it tracks SDR white while EDR is active; otherwise never used |
 
 Consequences:
@@ -3154,6 +3156,7 @@ The cases that were foreseeable are already in the v0.2 contracts (not reserved,
 - **Delivers:** `SystemDisplayDirectory` (online list, `DisplayKey.of`, built-in first; the reconfiguration callback as a `nonisolated static` C function: begin flag → `displayConfigurationBegan`, **remove flag → `displayRemoved(id)` at once**, after phase debounced 0.5 s + 2 s; clamshell handling; hardware-mirror detection), `SystemHeadroomPort` (fresh NSScreen per read, stamped with its display ID; nil for mirror members), `CoreGraphicsGamma` (the **only** file with the CG setters and the global restore; write counter; thread-safe for the watchdog and signal queues; `profileBase(of:count:)` from the ColorSync profile's `vcgt`, table and formula types, identity when absent), `IORegistryFacts` (built-in `EDRPotentialHeadroom`, `user-accessible-max-nits`; externals `DisplayAttributes` Luminance Max / MaxFrameAverage / Min (16.16 fixed point), `SupportsPQEOTF`, vendor/product; virtual-display detection: capacity 0, failed read, placeholder vendor `0x756e6b6e`, no framebuffer service), `PanelClass` derivation, the read-only `DisplayMonitor` behind `--monitor` (table class against the profile base).
 - **Acceptance:** fixtures from the owner's IORegistry (MSI: 465.49 / 265.05 / 0.0003 nits, PQ yes, HLG no; built-in: potential 16, SDR max 600) and an ICC fixture with a `vcgt` parse exactly; no code compares names; real ports run only with `OVERBRIGHT_HARDWARE=1` and only read; `--monitor` never writes (a fake-port test and a lint test).
 - **Tests:** `IORegistryParsingTests`, `ProfileBaseTests`, `VirtualAndMirrorTests`, `DisplayKeyTests`, `ReconfigurationFlagsTests` (manual time; remove flag immediate; begin flag), `ReconfigurationCallbackOffMainTests`, `GammaPortContractTests` (write and restore cases only against `FakeGammaPort`; a read-only real-port variant), opt-in `RealDisplayReadTests`.
+- **As built (WP14 review fixes):** the IORegistry has no SDR white for Apple's XDR externals (their `MaxFrameAverage` is the full-screen sustained HDR level), so `AppleXDRProducts` gives it by vendor 0x610 and product ID: 500 nits for the Pro Display XDR (0xAE21–0xAE23, 0xAE2D–0xAE2F), 1000 for the Studio Display XDR (0xAE42–0xAE43), the IDs macOS's own display overrides list; the same entry gives the panel peak (1600 / 2000) when the attributes carry none. Policy never takes an Apple XDR external's frame average as its SDR white (`GainCeiling.frameAverageSDRWhite`, also used by Boost's `SDRWhiteSource`), and an Apple XDR external is never OLED by its black level. Core's Apple XDR fixtures carry exactly what the builder makes of them (`PanelClassTests.theAppleXDRExternalsEqualCoresFixtures`).
 
 ### 10.5 WP3 — Triggers · `OverbrightTriggers`
 

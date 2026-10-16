@@ -1,7 +1,8 @@
 // OverbrightDisplays/Directory/DisplayFactsBuilder.swift — CoreGraphics + NSScreen + IORegistry → `DisplayFacts`.
 // ARCHITECTURE.md §3.2, §3.6 (`DisplayDirectory.displays`: built-in first, then by key), §10.4, D8. Pure, so every
-// rule is tested with fixtures: virtual displays, hardware-mirror members, the closed lid, IORegistry matching and the
-// panel class. Names are carried for the UI and never compared (D8, §4.5 invariant 10).
+// rule is tested with fixtures: virtual displays, hardware-mirror members, the closed lid, IORegistry matching, the
+// panel class and the Apple XDR externals' SDR maximum (`AppleXDRProducts`). Names are carried for the UI and never
+// compared (D8, §4.5 invariant 10).
 import CoreGraphics
 import OverbrightCore
 
@@ -23,7 +24,9 @@ nonisolated enum DisplayFactsBuilder {
         let external = raw.isBuiltIn ? nil : registry.external(vendor: raw.vendor, product: raw.model, serial: raw.serial)
         let builtIn = raw.isBuiltIn ? registry.builtIn : nil
         let virtual = isVirtual(raw, external: external, registry: registry)
-        let peak = raw.isBuiltIn ? builtIn?.panelPeakNits : external?.maxNits
+        // An Apple XDR external's SDR maximum comes from the product, never from its frame average (§5.1).
+        let xdr = raw.isBuiltIn || virtual ? nil : AppleXDRProducts.product(vendor: raw.vendor, product: raw.model)
+        let peak = raw.isBuiltIn ? builtIn?.panelPeakNits : external?.maxNits ?? xdr?.peakNits
         let potential = builtIn?.potentialHeadroom ?? raw.screen?.potential
         return DisplayFacts(
             ref: DisplayRef(key: raw.key, id: raw.id),
@@ -37,7 +40,7 @@ nonisolated enum DisplayFactsBuilder {
             panelPeakNits: peak,
             panelFrameAverageNits: external?.frameAverageNits,
             panelMinNits: external?.minNits,
-            sdrMaxNits: builtIn?.sdrMaxNits,
+            sdrMaxNits: raw.isBuiltIn ? builtIn?.sdrMaxNits : xdr?.sdrMaxNits,
             hasNotch: raw.screen?.hasNotch ?? false,
             panelClass: PanelClassifier.classify(isVirtual: virtual, isBuiltIn: raw.isBuiltIn,
                                                  vendor: raw.vendor == 0 ? nil : raw.vendor, potential: potential,

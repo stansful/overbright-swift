@@ -22,11 +22,13 @@ public nonisolated struct DisplayFacts: Hashable, Sendable {
     public var supportsPQ: Bool?
     /// Panel maximum luminance in nits (built-in: `EDRPotentialHeadroom` × 100; external: DisplayAttributes Luminance Max).
     public var panelPeakNits: Double?
-    /// External: DisplayAttributes Luminance MaxFrameAverage (the HDR-mode SDR white on the measured OLED).
+    /// External: DisplayAttributes Luminance MaxFrameAverage (the HDR-mode SDR white on the measured OLED; on an
+    /// Apple XDR external the full-screen sustained HDR level, never an SDR white).
     public var panelFrameAverageNits: Double?
     /// External: DisplayAttributes Luminance Min.
     public var panelMinNits: Double?
-    /// Highest SDR white the user can select without ambient boost (built-in `user-accessible-max-nits`).
+    /// Highest SDR white the user can select without ambient boost (built-in `user-accessible-max-nits`; Apple XDR
+    /// external: the product's, 500 or 1000 nits).
     public var sdrMaxNits: Double?
     /// `NSScreen.safeAreaInsets.top > 0`.
     public var hasNotch: Bool

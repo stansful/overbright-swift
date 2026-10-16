@@ -55,14 +55,18 @@ public nonisolated enum EligibilityClassifier {
     }
 
     /// The display is treated as OLED: the user's override, else an `oledExternal` class or an external whose
-    /// IORegistry minimum luminance is self-emissive (≤ 0.005 nits). Never decided by name.
+    /// IORegistry minimum luminance is self-emissive (≤ 0.005 nits), except an Apple XDR external, whose mini-LED
+    /// black level can read that low too (the panel classifier checks XDR first for the same reason). Never decided
+    /// by name.
     public static func isOLED(_ facts: DisplayFacts, override: OLEDOverride) -> Bool {
         switch override {
         case .oled: return true
         case .notOLED: return false
         case .automatic:
             if facts.panelClass == .oledExternal { return true }
-            guard !facts.isBuiltIn, let minimum = facts.panelMinNits else { return false }
+            guard !facts.isBuiltIn, facts.panelClass != .appleXDRExternal, let minimum = facts.panelMinNits else {
+                return false
+            }
             return minimum <= oledMinimumNits
         }
     }

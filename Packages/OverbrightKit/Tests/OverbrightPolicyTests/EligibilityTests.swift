@@ -101,6 +101,13 @@ import Testing
         #expect(!EligibilityClassifier.isOLED(external(.hdrExternal, pq: true, minNits: 0.05).facts, override: .automatic))
         #expect(!EligibilityClassifier.isOLED(PolicyTestInputs.builtIn.facts, override: .automatic))
         #expect(EligibilityClassifier.isOLED(external(.hdrExternal, pq: true).facts, override: .oled))
+        // An Apple XDR external's mini-LED black level can read ≤ 0.005 nits: still not an OLED (D8, XDR first).
+        var xdrBlack = DisplayFixture.proDisplayXDR.displays[0].facts
+        xdrBlack.panelMinNits = 0.0005
+        #expect(!EligibilityClassifier.isOLED(xdrBlack, override: .automatic))
+        #expect(EligibilityClassifier.isOLED(xdrBlack, override: .oled))
+        #expect(classify(FixtureDisplay(facts: xdrBlack, headroom: DisplayFixture.proDisplayXDR.displays[0].headroom,
+                                        profileBase: .identity(count: 1024))).defaultBoostEnabled)
 
         // Built-in XDR and Apple XDR externals are on by default; other HDR and OLED externals are opt-in.
         #expect(classify(PolicyTestInputs.builtIn).defaultBoostEnabled)

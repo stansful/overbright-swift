@@ -61,10 +61,11 @@
 | built-in `backlight` node | `EDRPotentialHeadroom` | 16.16 fixed | panel peak = value × 100 |
 | built-in `backlight` node | `user-accessible-max-nits` | 16.16 fixed | SDR maximum |
 | `AppleARMBacklight` → `IODisplayParameters` | `BrightnessMilliNits` {min, value, max} | integers | SDR white **only if** H-N1 confirms it tracks SDR white |
-| external `IOMobileFramebufferShim` → `DisplayAttributes` | `Luminance` {Max, MaxFrameAverage, Min} | 16.16 fixed | peak, HDR-mode SDR white, OLED detection |
+| external `IOMobileFramebufferShim` → `DisplayAttributes` | `Luminance` {Max, MaxFrameAverage, Min} | 16.16 fixed | peak, HDR-mode SDR white (not on Apple XDR externals: there MaxFrameAverage is the full-screen sustained HDR level), OLED detection |
 | same | `SupportsPQEOTF`, `SupportsHLGEOTF` | bool | "Turn on HDR" verdict |
 | same | `ProductAttributes` vendor/product IDs | integers | Apple external detection, diagnostics |
 | placeholder vendor | `0x756e6b6e` ("unkn") | — | virtual-display detection |
+| CoreGraphics vendor and model of an Apple external | vendor 0x610; Pro Display XDR 0xAE21–0xAE23 and 0xAE2D–0xAE2F, Studio Display XDR 0xAE42–0xAE43 | integers | the SDR maximum (500 / 1000 nits) and, without attributes, the peak (1600 / 2000 nits) of Apple's XDR externals; the IDs are the ones macOS's display override database lists for vendor 0x610 (`/System/Library/Displays/Contents/Resources/Overrides/DisplayVendorID-610`, read on macOS 27.0.1), whose Pro Display XDR entries also give a `DisplayBacklight` of 500 [read-only file read; the panels themselves are untested] |
 
 ## 6. Presets (Apple support 108321)
 

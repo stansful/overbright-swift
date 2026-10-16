@@ -54,6 +54,49 @@ import Testing
         #expect(facts == expected)
     }
 
+    /// Every Policy test of an Apple XDR external runs on Core's fixtures; the live builder must produce exactly those
+    /// facts from what CoreGraphics and the IORegistry report, the SDR maximum included (C-PLATFORM-1).
+    @Test func theAppleXDRExternalsEqualCoresFixtures() throws {
+        let cases = [(DisplayFixture.proDisplayXDR, RawDisplayFixtures.proDisplay, RawDisplayFixtures.proDisplayAttributes),
+                     (.studioDisplayXDR, RawDisplayFixtures.studioDisplay, RawDisplayFixtures.studioDisplayAttributes)]
+        for (fixture, raw, attributes) in cases {
+            let registry = RawDisplayFixtures.ownerRegistry(extra: [attributes])
+            let facts = DisplayFactsBuilder.facts(for: raw, registry: registry)
+            let expected = try #require(fixture.displays.first).facts
+            #expect(facts == expected, "\(fixture)")
+        }
+    }
+
+    /// The SDR maximum of an Apple XDR external is the product's (500 / 1000 nits), whatever its frame average says;
+    /// an Apple display the table does not know gets none; nothing else gets one from the table.
+    @Test func anAppleXDRExternalsSDRMaximumComesFromTheProduct() {
+        var registry = RawDisplayFixtures.ownerRegistry(extra: [RawDisplayFixtures.proDisplayAttributes])
+        let pro = DisplayFactsBuilder.facts(for: RawDisplayFixtures.proDisplay, registry: registry)
+        #expect(pro.sdrMaxNits == 500 && pro.panelFrameAverageNits == 1000 && pro.panelClass == .appleXDRExternal)
+        // Every Pro Display XDR and Studio Display XDR product ID macOS lists.
+        for product in [0xAE21, 0xAE22, 0xAE23, 0xAE2D, 0xAE2E, 0xAE2F] as [UInt32] {
+            #expect(AppleXDRProducts.product(vendor: 0x610, product: product)?.sdrMaxNits == 500)
+        }
+        for product in [0xAE42, 0xAE43] as [UInt32] {
+            #expect(AppleXDRProducts.product(vendor: 0x610, product: product)?.sdrMaxNits == 1000)
+        }
+        #expect(AppleXDRProducts.product(vendor: 0x3669, product: 0xAE2F) == nil)          // another vendor
+        // An Apple XDR-class display with a product the table does not know: no SDR maximum, never the frame average.
+        var unknown = RawDisplayFixtures.proDisplay
+        unknown.model = 0xAEFF
+        var attributes = RawDisplayFixtures.proDisplayAttributes
+        attributes.productID = 0xAEFF
+        registry = RawDisplayFixtures.ownerRegistry(extra: [attributes])
+        let future = DisplayFactsBuilder.facts(for: unknown, registry: registry)
+        #expect(future.panelClass == .appleXDRExternal && future.sdrMaxNits == nil)
+        // Without attributes (keys renamed, or not paired yet) the product still gives the class and the peak.
+        let bare = DisplayFactsBuilder.facts(for: RawDisplayFixtures.proDisplay,
+                                             registry: IORegistryFacts(builtIn: RawDisplayFixtures.ownerBuiltInPanel))
+        #expect(bare.panelClass == .appleXDRExternal && bare.panelPeakNits == 1600 && bare.sdrMaxNits == 500)
+        // The MSI and the built-in are untouched by the table.
+        #expect(DisplayFactsBuilder.facts(for: RawDisplayFixtures.msi(), registry: registry).sdrMaxNits == nil)
+    }
+
     @Test func theOwnersMSIMatchesCoresFixture() throws {
         for (hdr, fixture) in [(true, DisplayFixture.mpg322uxHDROn), (false, .mpg322uxHDROff)] {
             let raw = RawDisplayFixtures.msi(potential: hdr ? 4.6549 : 1)

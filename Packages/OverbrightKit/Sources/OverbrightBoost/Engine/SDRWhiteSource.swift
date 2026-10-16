@@ -11,7 +11,9 @@ nonisolated enum SDRWhiteSource {
     static let trustsPanelReported = false
 
     /// A colorimeter value from a valid calibration record for the current mechanism, else an external's HDR-mode
-    /// frame average (`DisplayAttributes` MaxFrameAverage, matched WindowServer's SDR value on the measured OLED).
+    /// frame average (`DisplayAttributes` MaxFrameAverage, matched WindowServer's SDR value on the measured OLED;
+    /// never on an Apple XDR external, where it is the full-screen sustained HDR level: Policy's
+    /// `GainCeiling.frameAverageSDRWhite`).
     static func estimate(facts: DisplayFacts, preferences: DisplayPreferences, mechanism: Mechanism,
                          machine: MachineIdentity, reading: HeadroomReading?) -> SDRWhiteEstimate? {
         if let record = preferences.calibration, let nits = record.measuredSDRWhiteNits, nits > 0,
@@ -19,7 +21,7 @@ nonisolated enum SDRWhiteSource {
            let potential = reading?.potential, abs(potential - record.potentialAtTest) <= 0.05 * record.potentialAtTest {
             return SDRWhiteEstimate(nits: nits, source: .colorimeter)
         }
-        if !facts.isBuiltIn, facts.supportsPQ == true, let average = facts.panelFrameAverageNits, average > 0,
+        if facts.supportsPQ == true, let average = GainCeiling.frameAverageSDRWhite(facts: facts),
            let potential = reading?.potential, potential > 1.01 {
             return SDRWhiteEstimate(nits: average, source: .hdrFrameAverage)
         }
