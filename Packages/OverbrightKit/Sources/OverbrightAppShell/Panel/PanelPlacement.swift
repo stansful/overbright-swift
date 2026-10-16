@@ -10,6 +10,7 @@
 // unplaced button gives the top-right corner of the main screen (where the item will appear), and `PanelController`
 // re-places the open panel each time the button's window moves.
 import AppKit
+import OverbrightPanelUI
 
 /// The panel's frame under the status button.
 enum PanelPlacement {
@@ -58,6 +59,18 @@ enum PanelPlacement {
 
     /// Whether a status button's window frame is on a screen, i.e. placed in a menu bar.
     static func isPlaced(_ frame: CGRect, in screens: [Screen]) -> Bool { screen(of: frame, in: screens) != nil }
+
+    /// The tallest the panel may be on the screen it opens on: `PanelLayout.maximumHeightFraction` (70 %) of that
+    /// screen's visible height (DESIGN.md §5.1); beyond it the card list scrolls.
+    static func maximumHeight(anchor: CGRect?, screens: [Screen], main: Screen?) -> CGFloat {
+        let screen = anchor.flatMap { screen(of: $0, in: screens) } ?? main ?? screens.first ?? fallbackScreen
+        return (screen.visibleFrame.height * PanelLayout.maximumHeightFraction).rounded(.down)
+    }
+
+    /// The panel's height for content whose ideal height is `ideal`.
+    static func height(ideal: CGFloat, anchor: CGRect?, screens: [Screen], main: Screen?) -> CGFloat {
+        min(ideal, maximumHeight(anchor: anchor, screens: screens, main: main))
+    }
 
     /// The panel's frame for content of `size`.
     /// - `anchor` nil (no status button, the icon is hidden): at the top centre of `main`.
