@@ -2,8 +2,10 @@
 """Checks the QA matrix's dumps (scripts/qa-matrix.sh) against the expectations EndToEndScenarioTests uses.
 
 Each dump is one JSON line of the app's `StatusSummary` (ARCHITECTURE.md §8.5 `--qa-status`): the menu bar symbol,
-the banner's English sentence and each card's chip (DESIGN.md §4.1, §12.2, §12.3). Usage:
-    qa_check.py <dir> [fixture ...]
+the banner's English sentence and each card's chip (DESIGN.md §4.1, §12.2, §12.3). A `welcome-<step>` run (Welcome
+opened at that step by `--qa-welcome`, ARCHITECTURE.md §10.14) must have written no table and opened no trigger window.
+Usage:
+    qa_check.py <dir> [fixture | welcome-<step> ...]
 """
 import json
 import os
@@ -107,11 +109,33 @@ def check(directory, fixture):
     return problems
 
 
+WELCOME_STEPS = ["hello", "displays", "defaults", "findIt", "done"]
+
+
+def check_welcome(directory, name):
+    """§10.14: Welcome under --qa-simulate leaves the displays alone: gammaWrites and triggerWindows stay 0."""
+    path = os.path.join(directory, name + ".jsonl")
+    dumps = [json.loads(line) for line in open(path, encoding="utf-8") if line.strip()] if os.path.exists(path) else []
+    welcome = [dump for dump in dumps if dump.get("label") == "welcome"]
+    if not welcome:
+        return ["welcome: no dump"]
+    problems = []
+    for key in ("gammaWrites", "triggerWindows"):
+        if welcome[-1].get(key) != 0:
+            problems.append(f"welcome: {key} is {welcome[-1].get(key)!r}, must be 0 (Welcome touches no display)")
+    return problems
+
+
 def main():
     directory = sys.argv[1]
     fixtures = sys.argv[2:] or sorted(EXPECTED)
     failed = 0
     for fixture in fixtures:
+        if fixture.startswith("welcome-") and fixture[len("welcome-"):] in WELCOME_STEPS:
+            problems = check_welcome(directory, fixture)
+            failed += bool(problems)
+            print(("FAIL " if problems else "ok   ") + fixture + (": " + "; ".join(problems) if problems else ""))
+            continue
         if fixture not in EXPECTED:
             print(f"?    {fixture}: no expectations")
             failed += 1

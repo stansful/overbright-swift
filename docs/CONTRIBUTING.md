@@ -84,7 +84,7 @@ make -C <repo> probe-check                         # SDK name-collision probes a
 make -C <repo> build                               # universal Release → build/Overbright.app; CONTROLS=1 keeps the appex
 make -C <repo> smoke                               # --diagnostics only: gammaWrites == 0, triggerWindows == 0, …
 SIMULATE=1 make -C <repo> smoke                    # agents: never launches on the real ports (Debug: --qa-simulate)
-make -C <repo> qa-matrix                           # after `make debug`: every fixture's scenario under --qa-simulate
+make -C <repo> qa-matrix                           # after `make debug`: every fixture's scenario, Welcome writes nothing
 make -C <repo> soak                                # after `make debug`: 30 minutes under --qa-simulate (MINUTES=…)
 make -C <repo> run                                 # Debug build, simulated displays, a dev settings suite
 make -C <repo> dist                                # zip + dmg + sha256 (+ notarization when signing)

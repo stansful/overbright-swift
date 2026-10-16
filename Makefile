@@ -20,7 +20,7 @@ run:             ## Debug build + launch with --off --qa-simulate (never boosts)
 smoke:           ## Run build/Overbright.app --diagnostics: bundles + translations, Edit menu, privacy none, intents, nothing written
 	@scripts/smoke.sh
 
-qa-matrix:       ## Debug app under --qa-simulate: every fixture's scenario, symbol/banner/chips checked (after make debug)
+qa-matrix:       ## Debug app under --qa-simulate: every fixture's scenario, symbol/banner/chips checked; Welcome writes nothing (after make debug)
 	@scripts/qa-matrix.sh
 
 soak:            ## Debug app under --qa-simulate for MINUTES (30): footprint, idle wake-ups while off vs a control (after make debug)

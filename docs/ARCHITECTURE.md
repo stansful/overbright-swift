@@ -2989,7 +2989,7 @@ make probe-check                  # SDK name-collision probe (Core + Policy)
 make build                        # universal Release → build/Overbright.app (+ dSYM), stripped, signature verified; CONTROLS=1 keeps the appex
 make smoke                        # --diagnostics only: bundles and their translations, Edit menu, privacy none, intents metadata, gammaWrites == 0, triggerWindows == 0
 SIMULATE=1 make smoke             # agents: a Debug build reports over --qa-simulate's fakes; a Release build gets the static and refusal checks only
-make qa-matrix                    # after make debug: every fixture's scripted scenario under --qa-simulate, symbol/banner/chips checked
+make qa-matrix                    # after make debug: every fixture's scripted scenario under --qa-simulate, symbol/banner/chips checked; Welcome writes nothing
 make soak [MINUTES=30]            # after make debug: scripted cycles under --qa-simulate; footprint growth, and idle wake-ups while off against a control app
 make dist                         # zip + dmg + sha256 (+ notarization with SIGN_IDENTITY/TEAM_ID/NOTARY_PROFILE=overbright-notary)
 make run                          # Debug with --off and --qa-simulate; never boosts by default
@@ -3234,6 +3234,7 @@ The cases that were foreseeable are already in the v0.2 contracts (not reserved,
 - **Delivers:** DESIGN.md §8: five steps (hello with the before/after card, displays with live re-evaluation, defaults, where to find Overbright with live key caps and the Run Shortcut recipe, done with the update toggle and a Turn On button only when a display can boost); Quit Overbright on every step and in the Skip alert; Skip applies every default including the login item; `WelcomePlan` (update toggle only when configured).
 - **Acceptance:** every step reachable with ↩, ⌘[ and Esc; launch behaviour applied on Done or Skip; snapshots per step (US, German and French key caps on step 4); nothing writes a table (the card is our own EDR content, `gammaWrites` stays 0 in a welcome run under `--qa-simulate`).
 - **Tests:** `WelcomePlanTests`, `WelcomeFlowTests`, `SkipAppliesDefaultsTests`, `CopyGlossaryTests`, snapshots.
+- **Shown at app level (WP14):** `make qa-matrix` opens Welcome with `--qa-welcome hello` and `--qa-welcome displays` in fresh defaults suites (Welcome never finished) under `--qa-simulate builtin-xdr-lid-open`, dumps the status after 3 s (`--qa-script 'wait 3; dump welcome; …'`) and fails unless `gammaWrites` and `triggerWindows` are 0 (`qa_check.py`); both were 0 on macOS 27.0.1.
 
 ### 10.15 WP13 — Integration (phase C)
 
