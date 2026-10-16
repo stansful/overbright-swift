@@ -39,8 +39,40 @@ enum SourceScan {
     /// The package's test folders.
     static let tests = "Packages/OverbrightKit/Tests"
 
-    private static let skippedFolders: Set<String> = [".git", ".swiftpm", "__pycache__", "build", "dist", "DerivedData"]
+    private static let skippedFolders: Set<String> = [".git", ".swiftpm", "__pycache__", "build", "dist", "DerivedData",
+                                                      ".derived", "xcuserdata", ".idea"]
     private static let binarySuffixes = [".png", ".jpg", ".jpeg", ".icns", ".pdf", ".mov", ".car", ".zip", ".dmg"]
+
+    /// Every text file of the repository, as `scripts/lint-copy.py`'s `scanned_files()` lists them for the clean-room
+    /// scan: what git tracks plus the untracked files `.gitignore` does not exclude, or, without git, every file under
+    /// the root except build outputs, SwiftPM caches and per-user state.
+    static func repositoryFiles() -> [ScannedFile] {
+        guard let paths = gitListedFiles() else { return files(in: [""]) }
+        return paths.compactMap { path -> ScannedFile? in
+            let name = (path as NSString).lastPathComponent
+            if name == ".DS_Store" || binarySuffixes.contains(where: name.hasSuffix) { return nil }
+            let url = repository.appending(path: path, directoryHint: .notDirectory)
+            guard let text = try? String(contentsOf: url, encoding: .utf8) else { return nil }
+            return ScannedFile(path: path, lines: text.components(separatedBy: "\n"))
+        }
+        .sorted { $0.path < $1.path }
+    }
+
+    /// `git ls-files --cached --others --exclude-standard` from the repository root; nil when git cannot list it.
+    private static func gitListedFiles() -> [String]? {
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/git")
+        process.arguments = ["-C", repository.path, "ls-files", "-z", "--cached", "--others", "--exclude-standard"]
+        let output = Pipe()
+        process.standardOutput = output
+        process.standardError = FileHandle.nullDevice
+        do { try process.run() } catch { return nil }
+        let data = output.fileHandleForReading.readDataToEndOfFile()
+        process.waitUntilExit()
+        guard process.terminationStatus == 0 else { return nil }
+        let paths = String(decoding: data, as: UTF8.self).split(separator: "\0").map(String.init)
+        return paths.isEmpty ? nil : paths
+    }
 
     /// Every text file under `folders` (repository-relative), optionally only with one of `extensions`.
     static func files(in folders: [String], extensions: Set<String>? = nil) -> [ScannedFile] {

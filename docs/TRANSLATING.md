@@ -15,7 +15,7 @@ for code: [ARCHITECTURE.md §8.8](ARCHITECTURE.md); the copy voice and vocabular
 
 | What | Where |
 |---|---|
-| Strings of the package, one or more tables per module | `Packages/OverbrightKit/Sources/<Target>/Resources/*.xcstrings` (`Localizable`, plus a co-tenant's table: Boost's `Safety`, AppShell's `StatusMenu` and `Calibration`) |
+| Strings of the package, one or more tables per module | `Packages/OverbrightKit/Sources/<Target>/Resources/*.xcstrings` (`Localizable`, plus a co-tenant's table: AppShell's `StatusMenu` and `Calibration`; Boost's `Safety` and Boost's, Core's, Displays', Signals' and Triggers' `Localizable` exist but hold no key, because those modules show no text of their own) |
 | Shortcuts actions, the Focus filter, Shortcuts phrases | `App/Localizable.xcstrings`, `App/AppShortcuts.xcstrings` |
 | App name and copyright | `App/InfoPlist.xcstrings` (no permission prompts: Overbright asks for none) |
 | Control Center control (only when it ships) | `Controls/Localizable.xcstrings` |

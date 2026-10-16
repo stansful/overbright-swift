@@ -11,8 +11,9 @@ import Testing
     private let sources = SourceScan.sources
     private let code = [SourceScan.sources, "App", "Controls", "Shared"]
 
-    /// D3: no competitor name outside the allowlist, in every text file of Sources, Tests, App, Controls, Shared,
-    /// scripts and docs (the same rules as `scripts/lint-copy.py`).
+    /// D3: no competitor name outside the allowlist, in every text file of the repository: the root's README, notices
+    /// and Makefile, the workflows, the Xcode project and Package.swift as much as the sources, tests, scripts and
+    /// docs (the same files and rules as `scripts/lint-copy.py`).
     @Test func noDenylistedNamesOutsideAllowlist() throws {
         let caseless = try NSRegularExpression(pattern: "v[iíì]v[iíì]d|lumen[\\s-]*digital|bright[\\s-]*intosh|better[\\s-]*display",
                                                options: .caseInsensitive)
@@ -35,7 +36,7 @@ import Testing
             }
             return false
         }
-        let files = SourceScan.files(in: [sources, SourceScan.tests, "App", "Controls", "Shared", "scripts", "docs"])
+        let files = SourceScan.repositoryFiles()
         var hits: [String] = []
         for file in files {
             for (index, line) in file.lines.enumerated() where denylisted(line) && !allowed(file, line) {
@@ -43,7 +44,10 @@ import Testing
             }
         }
         #expect(files.count > 300)
-        #expect(files.contains { $0.path == "docs/ARCHITECTURE.md" })
+        for path in ["README.md", "THIRD_PARTY_NOTICES.md", "Makefile", ".github/workflows/ci.yml",
+                     "Packages/OverbrightKit/Package.swift", "Overbright.xcodeproj/project.pbxproj", "docs/ARCHITECTURE.md"] {
+            #expect(files.contains { $0.path == path }, "\(path) is not in the clean-room scan")
+        }
         #expect(hits.isEmpty, "competitor names outside the D3 allowlist: \(hits)")
     }
 

@@ -2,7 +2,7 @@
 
 Overbright's text lives in String Catalogs: every table of every OverbrightKit target
 (`Packages/OverbrightKit/Sources/<Target>/Resources/*.xcstrings`: `Localizable` plus a co-tenant's own table such as
-Boost's `Safety` or AppShell's `StatusMenu` and `Calibration`), the app target's `App/InfoPlist.xcstrings`,
+AppShell's `StatusMenu` and `Calibration`; Boost's `Safety` is reserved and empty), the app target's `App/InfoPlist.xcstrings`,
 `App/Localizable.xcstrings` (App Intents and the Focus filter) and `App/AppShortcuts.xcstrings`, and
 `Controls/Localizable.xcstrings` once the Control Center extension ships. English is the source; all 35 languages of
 `languages.json` ship from day one (ARCHITECTURE.md §8.8). Russian is the owner's review language and the pivot for

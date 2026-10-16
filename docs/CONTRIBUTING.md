@@ -11,7 +11,9 @@ shows, so a few of its rules exist to protect your own screen while you work. Th
   For the record, the app is Vivid by Lumen Digital, named only on lines that carry the lint's marker. <!-- denylist-ok -->
   `scripts/lint-copy.py` and the Core test `noDenylistedNamesOutsideAllowlist` reject its name, its maker's and those
   of other display tools in every catalog (keys, values and translator comments, every language) and in every text
-  file under `Packages/`, `App/`, `Controls/`, `Shared/`, `scripts/` and `docs/`. The allowlist is short: the
+  file of the repository: what git tracks plus untracked files `.gitignore` does not exclude, so the root's README,
+  notices, Makefile and `.gitattributes`, the workflows, the Xcode project and `Package.swift` as much as the sources,
+  tests, scripts and docs (without git, a walk of the root minus build outputs and caches). The allowlist is short: the
   conflict catalogue's bundle-ID literals (`Sources/OverbrightPolicy/Conflicts/ConflictCatalog.swift`), the denylist
   definitions in the two scripts (lines marked `denylist-ok`), Markdown lines carrying `<!-- denylist-ok -->`, and
   `docs/research/`. Other apps' names reach the UI only at runtime, through `NSRunningApplication.localizedName`.
@@ -135,7 +137,8 @@ the key is `-overbright.<namespace>.<name>` and the value the setting's JSON as 
 
 ### Visual QA hooks (Debug builds only)
 
-No hook posts input or asks for a permission. Launch arguments (`LaunchArguments`, `App/QAHooks.swift`):
+No hook posts input or asks for a permission. Launch arguments (`LaunchArguments`,
+`Packages/OverbrightKit/Sources/OverbrightAppShell/App/QAHooks.swift`):
 
 | Argument | Effect |
 |---|---|
