@@ -153,7 +153,9 @@ nonisolated enum FullScreenDetector {
     /// How `bounds` covers `display`, if it does.
     static func coverage(_ bounds: CGRect, _ display: Display) -> Coverage? {
         let d = display.bounds
-        guard abs(bounds.minX - d.minX) < 1, abs(bounds.width - d.width) < 1, abs(bounds.maxY - d.maxY) < 1 else { return nil }
+        guard abs(bounds.minX - d.minX) < 1, abs(bounds.width - d.width) < 1, abs(bounds.maxY - d.maxY) < 1 else {
+            return nil
+        }
         if abs(bounds.minY - d.minY) < 1 { return .exact }
         if display.notchBand > 0, abs(bounds.minY - (d.minY + display.notchBand)) < 1 { return .belowBand }
         return nil

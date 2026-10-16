@@ -54,5 +54,7 @@ nonisolated enum PowerSourceReader {
 
 private extension Int {
     /// `self` limited to `range`.
-    nonisolated func clamped(to range: ClosedRange<Int>) -> Int { Swift.min(Swift.max(self, range.lowerBound), range.upperBound) }
+    nonisolated func clamped(to range: ClosedRange<Int>) -> Int {
+        Swift.min(Swift.max(self, range.lowerBound), range.upperBound)
+    }
 }

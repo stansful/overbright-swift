@@ -3,8 +3,9 @@
 // Matching is Policy's pure `ConflictMatcher` over the catalogue (exact bundle ID and its `-setapp` twin, vendor
 // prefixes, executable names, optional team ID); this probe only feeds it: the running applications (read live on every
 // call, ≈ 0.04 ms, so the launch check before `SignalsMonitor.start()` already sees them), the signing team for bundles
-// whose ID starts with a catalogued prefix that names teams (read once per bundle and process), and, for an unexplained drift, the
-// libproc scan off the main actor. Names are never matched; `displayName` is `localizedName`, for the UI only.
+// whose ID starts with a catalogued prefix that names teams (read once per bundle and process), and, for an unexplained
+// drift, the libproc scan off the main actor. Names are never matched; `displayName` is `localizedName`, for the UI
+// only.
 // Thread: main (the scan inside `attributeDrift()` runs off the main actor).
 import Foundation
 import OverbrightCore

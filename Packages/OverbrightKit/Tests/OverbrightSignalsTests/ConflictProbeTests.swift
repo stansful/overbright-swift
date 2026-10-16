@@ -61,6 +61,32 @@ import Testing
         #expect(probe(apps).runningConflicts().isEmpty)
     }
 
+    @Test func scriptedLaunchesAndTerminationsReachTheSnapshotThenTheEvent() async {
+        let harness = SignalsHarness()
+        await harness.start()
+        var seen: [(SystemEvent, [String])] = []
+        let token = harness.monitor.addEventObserver { event in
+            seen.append((event, harness.monitor.snapshot.conflicts.map(\.entryID)))
+        }
+        // Launch: LaunchServices may not list the app yet when the notification arrives; it counts anyway.
+        harness.platform.post(NSWorkspace.didLaunchApplicationNotification, in: harness.platform.workspaceCenter, app: booster)
+        #expect(harness.monitor.snapshot.conflicts.map(\.entryID) == ["test-booster"])
+        harness.apps.apps = [booster]
+        harness.platform.post(NSWorkspace.didLaunchApplicationNotification, in: harness.platform.workspaceCenter, app: tint)
+        harness.apps.apps = [booster, tint]
+        // An ordinary app launching changes nothing but still posts its event.
+        harness.platform.post(NSWorkspace.didLaunchApplicationNotification, in: harness.platform.workspaceCenter, app: editor)
+        // Termination: the process may still be listed; it no longer counts.
+        harness.platform.post(NSWorkspace.didTerminateApplicationNotification, in: harness.platform.workspaceCenter, app: booster)
+        #expect(seen.map(\.0) == [.appLaunched(bundleID: "com.example.booster"), .appLaunched(bundleID: "com.example.tint"),
+                                  .appLaunched(bundleID: "com.example.editor"),
+                                  .appTerminated(bundleID: "com.example.booster", processID: 201)])
+        // The snapshot is current when each event arrives.
+        #expect(seen.map(\.1) == [["test-booster"], ["test-booster", "test-tint"], ["test-booster", "test-tint"],
+                                  ["test-tint"]])
+        token.cancel()
+    }
+
     @Test func driftIsAttributedToARunningAppFirst() async {
         let apps = FakeRunningApps()
         apps.apps = [shade, tint]
