@@ -14,6 +14,8 @@ import Testing
 @testable import OverbrightDesign
 
 nonisolated private let directory = SnapshotOutput.directory("Design")
+/// The words of the gallery: English, or `OVERBRIGHT_SNAPSHOT_LANGUAGE` (e.g. `ru`) where the builders take a language.
+nonisolated private let language = SnapshotOutput.language().flatMap { CopyLanguage.named($0) } ?? english
 
 @MainActor @Suite(.enabled(if: directory != nil, "set OVERBRIGHT_SNAPSHOT_DIR to write the gallery"))
 struct ComponentSnapshotTests {
@@ -31,17 +33,19 @@ struct ComponentSnapshotTests {
         BoostSlider(level: .constant(LevelPosition(level)), top: top, allowedNow: allowed,
                     presets: PresetVisibility.visiblePresets(top: top), dimEnabled: dim, boostHalf: half,
                     accessibilityName: "Built-in Display",
-                    valueText: { ValueText.forLevel($0, top: top, presets: Self.presets, isEstimate: true).text },
+                    valueText: { ValueText.forLevel($0, top: top, presets: Self.presets, isEstimate: true, in: language).text },
                     onCommit: { _ in })
     }
 
     private var scenes: [(String, CGSize, AnyView)] {
-        let chips: [ChipModel] = [ChipModel.preparing(), ChipModel.noExtraRange(failedTries: 0, context: ChipContext())]
+        let chips: [ChipModel] = [ChipModel.preparing(in: language),
+                                  ChipModel.noExtraRange(failedTries: 0, context: ChipContext(language: language))]
             + [LimitReason.headroom, .safeLimit, .oledLimit, .thermalSerious, .nearFullBrightnessOnly, .boostNotEnabled,
                .fullScreenVideo, .pausedApp(bundleID: "com.example.player"), .oledIdle, .tripped(.oscillation),
                .notSupported(.turnOnHDR)]
             .compactMap { ChipModel.make(reason: $0, phase: .boosted, failedTries: 0,
-                                         context: ChipContext(allowedGain: 1.55, appName: "A Very Long Video Player Name")) }
+                                         context: ChipContext(allowedGain: 1.55, appName: "A Very Long Video Player Name",
+                                                              language: language)) }
         let banners: [Banner] = [.userPaused(until: Date(timeIntervalSince1970: 1_792_160_400)), .lowPowerMode,
                                  .battery(percent: 12, threshold: 20), .focusOff, .thermalCritical,
                                  .flickerStop(display: DisplayKey(rawValue: "A"))]
@@ -61,13 +65,14 @@ struct ComponentSnapshotTests {
             })),
             ("banners", CGSize(width: 320, height: 520), AnyView(VStack(spacing: Space.m) {
                 ForEach(Array(banners.enumerated()), id: \.offset) { _, banner in
-                    PausedBanner(BannerModel.make(banner), primary: {}, secondary: nil)
+                    PausedBanner(BannerModel.make(banner, displayNames: [DisplayKey(rawValue: "A"): "Studio Display"],
+                                                  in: language), primary: {}, secondary: nil)
                 }
             })),
             ("footer-chips", CGSize(width: 320, height: 60), AnyView(HStack(spacing: Space.s) {
-                GuardChip(.battery(.belowThreshold, threshold: 20), menu: [])
-                GuardChip(.autoPause(anyRuleOn: true), menu: [])
-                GuardChip(.timer(minutes: nil, remaining: nil), menu: [])
+                GuardChip(.battery(.belowThreshold, threshold: 20, in: language), menu: [])
+                GuardChip(.autoPause(anyRuleOn: true, in: language), menu: [])
+                GuardChip(.timer(minutes: nil, remaining: nil, in: language), menu: [])
             })),
             ("readouts", CGSize(width: 320, height: 140), AnyView(VStack(alignment: .leading, spacing: Space.s) {
                 ReadoutText(ReadoutValues(state: .off, appliedGain: 1, requestedGain: nil, nits: nil, preset: nil,

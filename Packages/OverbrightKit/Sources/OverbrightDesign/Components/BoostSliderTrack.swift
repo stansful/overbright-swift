@@ -51,14 +51,24 @@ struct BoostSliderTrack: View {
             if let marker = model.markerLevel {
                 mark(StrokeWidth.allowedMarker, at: x(of: marker), color: theme.color(.allowedMarker))
             }
-            Circle()
-                .fill(Color.white)
-                .frame(width: Self.thumbSize, height: Self.thumbSize)
-                .shadow(color: .black.opacity(0.3), radius: 1, y: 0.5)
-                .offset(x: thumbX - Self.thumbSize / 2)
+            thumb.offset(x: thumbX - Self.thumbSize / 2)
         }
         .frame(width: width, height: HitTarget.sliderThumb, alignment: .leading)
         .accessibilityHidden(true)
+    }
+
+    /// A 20-pt white circle with the system shadow; on macOS 26+ it takes glass while dragged (the system behaviour of
+    /// transient controls), never under Reduce Transparency or Increase Contrast.
+    @ViewBuilder private var thumb: some View {
+        let circle = Circle()
+            .fill(Color.white)
+            .frame(width: Self.thumbSize, height: Self.thumbSize)
+            .shadow(color: .black.opacity(0.3), radius: 1, y: 0.5)
+        if #available(macOS 26, *), isDragging, theme.usesGlass {
+            circle.glassEffect(.regular, in: Circle())
+        } else {
+            circle
+        }
     }
 
     /// The x of `level` from the leading edge.
