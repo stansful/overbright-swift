@@ -169,9 +169,7 @@ public nonisolated struct BoostSliderModel: Hashable, Sendable {
         guard old != new else { return nil }
         if new == .standard { return .alignment }
         let low = min(old.value, new.value), high = max(old.value, new.value)
-        let touched = tickLevels.contains { tick in
-            tick.value == new.value || (tick.value > low && tick.value < high) || (tick.value == high && high == new.value)
-        }
+        let touched = tickLevels.contains { tick in tick.value == new.value || (tick.value > low && tick.value < high) }
         return touched ? .levelChange : nil
     }
 }
