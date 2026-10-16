@@ -128,6 +128,7 @@ public struct BoostSlider: View {
         if isDragging || isHoveringThumb {
             let base = valueText(level)
             let x = thumbX
+            let lift = Space.s - (HitTarget.sliderThumb - BoostSliderTrack.thumbSize) / 2
             let text = model.isSmallGain && level.isBoost ? CopyFormat.parts(base, ValueText.smallGain()) : base
             Text(verbatim: text)
                 .font(OverbrightFont.valueTag.font)
@@ -141,7 +142,7 @@ public struct BoostSlider: View {
                 .frame(maxWidth: BoostSliderTrack.width)
                 .fixedSize()
                 .alignmentGuide(.leading) { d in d.width / 2 - x }
-                .alignmentGuide(.top) { d in d.height + Space.s }
+                .alignmentGuide(.top) { d in d.height + lift }
                 .allowsHitTesting(false)
                 .accessibilityHidden(true)
         }
