@@ -11,10 +11,11 @@
 //   event <reconfigured|configuration-began|removed <display>|profile|screen-parameters|space|accessibility>
 //   low-power on|off | battery <percent>|adapter | thermal nominal|fair|serious|critical
 //   full-screen video|app|none <display> | focus off|leave|<level> | conflict booster|writer|conditional|none
-//   wait <seconds> | dump <label> | loop | quit
+//   wait <seconds> | dump <label> | panel open|close | loop | quit
 //
 // Displays are named by fixture role: built-in, msi, pro, studio, sidecar, projector. Nothing here reaches a real
-// display: a script runs only when the ports are the Core fakes (`ScenarioRunner.Rig`).
+// display: a script runs only when the ports are the Core fakes (`ScenarioRunner.Rig`). `panel` opens or closes the
+// app's panel (the soak closes it for its off phases and opens it once per cycle).
 #if DEBUG
 import Foundation
 import OverbrightCore
@@ -80,6 +81,7 @@ enum ScenarioScript {
         case "conflict": return first.flatMap(conflict).map(ScenarioStep.conflict)
         case "wait": return first.flatMap { Double($0) }.map { .wait(seconds: $0) }
         case "dump": return .dump(args.joined(separator: " "))
+        case "panel": return first == "open" ? .panel(true) : first == "close" ? .panel(false) : nil
         case "loop": return .loop
         case "quit": return .quit
         default: return nil

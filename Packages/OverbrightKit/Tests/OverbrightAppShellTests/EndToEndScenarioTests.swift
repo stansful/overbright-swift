@@ -274,4 +274,16 @@ import Testing
         #expect(engine.strategyCache.records.isEmpty)
         shell.runner.stopNow()
     }
+
+    /// `panel open|close` reaches the app's panel through the runner (the soak closes it for its off phases).
+    @Test func thePanelStepReachesTheApp() async throws {
+        #expect(try ScenarioScript.parse("panel open; panel close") == [.panel(true), .panel(false)])
+        #expect(throws: ScenarioScript.ParseError(step: "panel ajar")) { try ScenarioScript.parse("panel ajar") }
+        let shell = TestShell.shell()
+        let rig = try #require(ScenarioRunner.Rig(shell: shell))
+        var panel: [Bool] = []
+        let runner = ScenarioRunner(rig: rig, wait: { _ in }, panel: { panel.append($0) })
+        await runner.run([.panel(true), .wait(seconds: 1), .panel(false)])
+        #expect(panel == [true, false])
+    }
 }

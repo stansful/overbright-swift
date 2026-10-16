@@ -25,6 +25,8 @@ enum ScenarioStep: Equatable {
     case conflict(ConflictSeverity?)
     case wait(seconds: Double)
     case dump(String)
+    /// The panel under the icon opens (true) or closes; the app's QA hooks act on it, tests record it.
+    case panel(Bool)
     case loop
     case quit
 }

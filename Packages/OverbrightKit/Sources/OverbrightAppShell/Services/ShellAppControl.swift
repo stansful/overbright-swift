@@ -85,6 +85,9 @@ private let log = Log.logger(.app)
         controllers.panel.show(from: controllers.icon.statusItem.button)
     }
 
+    /// Closes the panel (Debug QA scenarios: `panel close`).
+    func closePanel() { controllers?.panel.close() }
+
     /// Settings at `pane` ("pane" or "pane#row").
     func openSettings(_ pane: String?) { controllers?.settings.show(pane: pane) }
 

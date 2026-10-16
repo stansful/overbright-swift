@@ -81,7 +81,7 @@ enum QAHooks {
             }
         }
         guard let script = arguments.qaScript else { return nil }
-        return runScenario(script, statusFile: arguments.qaStatusFile, shell: targets.shell)
+        return runScenario(script, statusFile: arguments.qaStatusFile, shell: targets.shell, appControl: control)
     }
 
     /// `--qa-hud <level>`: under `--qa-simulate`, a level the scenario script can name ("bright-room", "max", "-0.5")
@@ -103,7 +103,9 @@ enum QAHooks {
     }
 
     /// Parses `script` and runs it over the simulated ports once the engine is ready; nil (logged) when it cannot run.
-    static func runScenario(_ script: String, statusFile: String?, shell: Shell) -> Task<Void, Never>? {
+    /// `panel open|close` acts on `appControl`'s panel.
+    static func runScenario(_ script: String, statusFile: String?, shell: Shell,
+                            appControl: ShellAppControl) -> Task<Void, Never>? {
         guard let rig = ScenarioRunner.Rig(shell: shell) else {
             log.error("QA: --qa-script needs --qa-simulate; nothing runs")
             return nil
@@ -117,7 +119,8 @@ enum QAHooks {
         if let output { try? Data().write(to: output) }                      // a fresh file per run
         let runner = ScenarioRunner(rig: rig, wait: { duration in try? await Task.sleep(for: duration) },
                                     record: { summary in append(summary.jsonLine, to: output) },
-                                    quit: { NSApp.terminate(nil) })
+                                    quit: { NSApp.terminate(nil) },
+                                    panel: { open in open ? appControl.showPanel() : appControl.closePanel() })
         let boost = shell.services.boost
         return Task {
             while !boost.status.isReady, !Task.isCancelled { try? await Task.sleep(for: .milliseconds(100)) }

@@ -34,15 +34,16 @@ final class ScenarioRunner {
     private let wait: (Duration) async -> Void
     private let record: (StatusSummary) -> Void
     private let quit: () -> Void
+    private let panel: (Bool) -> Void
     private var nextProcessID: Int32 = 90_000
     /// The summaries `dump` recorded, in order.
     private(set) var summaries: [StatusSummary] = []
 
     /// A runner over `rig`; `wait` passes time (real sleeps in the app, a manual clock in tests), `record` receives
-    /// every `dump`, `quit` ends the app.
+    /// every `dump`, `quit` ends the app, `panel` opens (true) or closes the app's panel.
     init(rig: Rig, wait: @escaping (Duration) async -> Void, record: @escaping (StatusSummary) -> Void = { _ in },
-         quit: @escaping () -> Void = {}) {
-        self.rig = rig; self.wait = wait; self.record = record; self.quit = quit
+         quit: @escaping () -> Void = {}, panel: @escaping (Bool) -> Void = { _ in }) {
+        self.rig = rig; self.wait = wait; self.record = record; self.quit = quit; self.panel = panel
     }
 
     /// Runs `steps` in order; `loop` starts them again (until the task is cancelled or a `quit`).
@@ -121,6 +122,7 @@ final class ScenarioRunner {
             signals.emit(.activeSpaceChanged)
         case .focus(let directive): signals.setFocusDirective(directive)
         case .conflict(let severity): setConflict(severity)
+        case .panel(let open): panel(open)
         case .wait, .dump, .loop, .quit: break
         }
     }
