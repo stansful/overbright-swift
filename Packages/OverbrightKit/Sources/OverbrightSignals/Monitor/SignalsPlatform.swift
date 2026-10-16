@@ -31,6 +31,10 @@ import OverbrightCore
     func frontmostApplication() -> RunningAppInfo?
     /// `NSWorkspace.runningApplications`.
     func runningApplications() -> [RunningAppInfo]
+    /// Observes `NSWorkspace.runningApplications` by KVO (`.old`, `.new`): the apps that joined and left, on the main
+    /// actor. It also reports the agent and accessory apps the launch and termination notifications miss.
+    func observeRunningApplications(_ handler: @escaping @MainActor @Sendable (RunningAppsChange) -> Void)
+        -> ObservationToken
     /// The application of a workspace launch, termination or activation notification. Nonisolated: it runs on the
     /// posting queue, before the hop to the main actor.
     nonisolated func application(in notification: Notification) -> RunningAppInfo?
@@ -38,6 +42,9 @@ import OverbrightCore
     func dockProcessID() -> Int32?
     /// Every screen in CG global coordinates with its notch band.
     func screens() -> [FullScreenDetector.Display]
+    /// `NSScreen.screensHaveSeparateSpaces` (Desktop & Dock ▸ Displays have separate Spaces; off: one menu bar, on the
+    /// main display only).
+    func screensHaveSeparateSpaces() -> Bool
     /// The window list (off the main actor in the live implementation). `windowServerPID`: the WindowServer's PID from
     /// an earlier snapshot, so it is looked up at most once per session.
     func windowList(windowServerPID: Int32?) async -> WindowListSnapshot

@@ -3,28 +3,52 @@
 // - battery percent: IOKit's every-change source, only on battery (the source switch itself is always on);
 // - OLED idle: one deadline (`IdleScheduler`), only when an OLED display is online; once idle, the 2 s input poll runs
 //   until input returns even after the boost went inactive (the idle pause itself makes every OLED neutral; stopping
-//   the poll then would clear the flag, re-boost and pause again every few seconds while the user is away);
+//   the poll then would clear the flag, re-boost and pause again every few seconds while the user is away), except
+//   while shielded;
 // - full-screen watch: the 2 s re-check while a full-screen or "while playing" rule is on (borderless games, players
 //   starting or stopping without a Space change). While the boost is inactive only events re-check (Space, app,
 //   screen, wake), so a pause that made every display neutral and whose player then stops without any such event
-//   lasts until the next one: keeping the watch then would mean a 2 s timer with the master off (§17);
+//   lasts until the next one: keeping the watch then would mean a 2 s timer with the master off (§17). The watch is
+//   Signals' own timer, not a ride on the engine's drift check (WP14 decision, §7.1 "Playing video"): the drift check
+//   runs per display inside Boost, the full-screen state is one system-wide read here, and the two 2 s sleeps carry
+//   the time source's 10 % tolerance, so the system may coalesce them;
 // - schedule boundary: one sleep towards the next boundary (`ScheduleTimer`), only while a schedule is set.
+// While shielded (locked, screensaver, displays or system asleep, off the console) the first three stop, the OLED idle
+// poll too: nobody sees the screen, and the engine holds every display neutral. An idle pause keeps its flag until the
+// shield lifts; the schedule's one sleep stays (it wakes only at a boundary).
 // `applyBoostSources()` reconciles all four with the state; it runs on every change that could matter.
 // Thread: main.
 import Foundation
 import OverbrightCore
 
 extension SignalsMonitor {
-    /// The full-screen and playback re-check interval while boosted (the drift check's cadence, DESIGN.md §17).
+    /// The full-screen and playback re-check interval while boosted (the drift check's cadence, its own timer,
+    /// DESIGN.md §17).
     static let watchInterval: Duration = .seconds(2)
 
-    /// Starts or stops each boost-only source to match the state.
+    /// Starts or stops each boost-only source to match the state. While the screen cannot be seen
+    /// (`SystemSnapshot.isShielded`: locked, screensaver, displays or system asleep, another session on the console)
+    /// the battery percent, the idle deadline and the full-screen watch stop; an idle pause keeps its flag until the
+    /// shield lifts and the idle time is read again (`shieldChanged`).
     func applyBoostSources() {
         let boosting = isStarted && isBoostActive
-        setBatteryPercent(boosting && snapshot.power.source == .battery)
-        setIdleTracking(isStarted && anyOLED && (isBoostActive || snapshot.isIdleBeyondThreshold))
-        setWatching(boosting && watchRuleIsOn)
+        let visible = !snapshot.isShielded
+        setBatteryPercent(boosting && visible && snapshot.power.source == .battery)
+        setIdleTracking(isStarted && anyOLED && (isBoostActive || snapshot.isIdleBeyondThreshold), suspended: !visible)
+        setWatching(boosting && visible && watchRuleIsOn)
         setSchedule(boosting && settings[AutomationSettings.schedule] != nil)
+    }
+
+    /// A shield began or ended (lock, screensaver, display or system sleep, console): the boost-only sources follow.
+    /// When the last shield lifts while boosting, the power is read first (the battery percent source stopped
+    /// meanwhile; `powerChanged` follows the shield's own event when it changed); idle tracking restarts with a fresh
+    /// read of the idle time.
+    func shieldChanged() {
+        if !snapshot.isShielded, isBoostActive {
+            powerSourceChanged()                                  // re-applies the sources too
+        } else {
+            applyBoostSources()
+        }
     }
 
     /// A rule that needs the periodic re-check is on.
@@ -49,12 +73,14 @@ extension SignalsMonitor {
     // MARK: OLED idle
 
     /// `on`: started, an OLED online, and the boost active or an idle pause in effect. Off with the flag still set means
-    /// the OLED went away or Signals stopped: the pause ends with the source.
-    private func setIdleTracking(_ on: Bool) {
-        if on, !isIdleTracking {
+    /// the OLED went away or Signals stopped: the pause ends with the source. `suspended` (shielded): no deadline runs,
+    /// the flag stays as it is, and the next unsuspended call reads the idle time again.
+    private func setIdleTracking(_ on: Bool, suspended: Bool) {
+        let runs = on && !suspended
+        if runs, !isIdleTracking {
             isIdleTracking = true
             evaluateIdle()
-        } else if !on, isIdleTracking {
+        } else if !runs, isIdleTracking {
             isIdleTracking = false
             idleTimer.cancel()
         }

@@ -58,6 +58,35 @@ import Testing
         #expect(fullScreenSpace.frontmostDisplays == [builtInKey])
     }
 
+    @Test func withSpacesAcrossDisplaysOnlyTheFrontmostAppCoversASecondaryDisplay() {
+        // "Displays have separate Spaces" off: the built-in (the main display, at the origin) has the only menu bar,
+        // so the MSI's missing one says nothing. A player window that exactly fills the MSI behind the editor is a
+        // window, not full screen.
+        let movie = F.window(F.player, 1728, 0, 2560, 1440)
+        let typing = F.window(F.editor, 100, 100, 800, 600)
+        let windows = [F.menuBar(on: F.builtIn), typing, movie]
+        func fullScreen(frontmost: Int32, separateSpaces: Bool) -> Set<DisplayKey> {
+            FullScreenDetector.evaluate(windows: windows, displays: [F.builtIn, F.msi], context: F.context(frontmost: frontmost),
+                                        windowServerPID: F.windowServer, separateSpaces: separateSpaces).fullScreenDisplays
+        }
+        #expect(fullScreen(frontmost: F.editor, separateSpaces: true) == [msiKey])      // a full-screen Space there
+        #expect(fullScreen(frontmost: F.editor, separateSpaces: false).isEmpty)
+        #expect(fullScreen(frontmost: F.player, separateSpaces: false) == [msiKey])     // exact and frontmost
+        #expect(FullScreenDetector.observedMenuBar(windows: windows, displays: [F.builtIn, F.msi], windowServerPID: F.windowServer,
+                                                   separateSpaces: false) == [builtInKey: true, msiKey: true])
+        // Nor do two tiles make a Split View there.
+        let tiles = [F.menuBar(on: F.builtIn), typing, F.window(F.player, 1728, 0, 1277, 1440), F.window(F.notes, 3011, 0, 1277, 1440)]
+        #expect(FullScreenDetector.evaluate(windows: tiles, displays: [F.builtIn, F.msi], context: F.context(frontmost: F.editor),
+                                            windowServerPID: F.windowServer, separateSpaces: false).fullScreenDisplays.isEmpty)
+        // The main display still reads its own menu bar: a full-screen app there hides it.
+        let notes = F.window(F.notes, 0, 32, 1728, 1085)
+        let main = FullScreenDetector.evaluate(windows: [notes, movie], displays: [F.builtIn, F.msi],
+                                               context: F.context(frontmost: F.notes), windowServerPID: F.windowServer,
+                                               separateSpaces: false)
+        #expect(main.fullScreenDisplays == [builtInKey])
+        #expect(FullScreenDetector.isMain(F.builtIn) && FullScreenDetector.isMain(F.msiAlone) && !FullScreenDetector.isMain(F.msi))
+    }
+
     @Test func belowTheNotchBandCountsOnlyWithoutTheMenuBar() {
         let belowBand = F.window(F.notes, 0, 32, 1728, 1085)
         // A zoomed window has the same frame while the menu bar shows: not full screen.

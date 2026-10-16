@@ -2,12 +2,13 @@
 // ARCHITECTURE.md §6.5, §7.1 ("Full screen", "Playing video"), §7.3, §10.8.
 // A check is requested by events (Space change, app activation and termination, screen parameters, wake) and, while
 // boosted, by the 2 s re-check; requests are debounced 0.6 s (Space animations produce transient window lists). One
-// check reads the window list off the main actor, then on the main actor the screens, running apps, the frontmost app
-// and the display-sleep assertions, applies the sticky menu-bar absence and `FullScreenDetector.evaluate`, and publishes
-// full-screen displays, full-screen-video displays and the frontmost app (its displays, `isPlaying`, `isGame`) in ONE
-// outcome, so the snapshot never shows a half-updated front. When a sticky absence masks a present menu bar, one more
-// check runs as the mask expires. Nothing is pending while no request is. The WindowServer's PID, once a snapshot found
-// it, is kept for the session and handed to every later read (`WindowListSnapshot`: no lookup per check).
+// check reads the window list off the main actor, then on the main actor the screens (and whether they have separate
+// Spaces), running apps, the frontmost app and the display-sleep assertions, applies the sticky menu-bar absence and
+// `FullScreenDetector.evaluate`, and publishes full-screen displays, full-screen-video displays and the frontmost app
+// (its displays, `isPlaying`, `isGame`) in ONE outcome, so the snapshot never shows a half-updated front. When a sticky
+// absence masks a present menu bar, one more check runs as the mask expires. Nothing is pending while no request is.
+// The WindowServer's PID, once a snapshot found it, is kept for the session and handed to every later read
+// (`WindowListSnapshot`: no lookup per check).
 // Thread: main.
 import Foundation
 import OverbrightCore
@@ -100,7 +101,8 @@ final class FullScreenTracker {
                                                  regularPIDs: Set(apps.filter(\.isRegular).map(\.processID)),
                                                  displaySleepHolders: holders ?? [])
         let observed = FullScreenDetector.observedMenuBar(windows: list.windows, displays: screens,
-                                                          windowServerPID: list.windowServerPID)
+                                                          windowServerPID: list.windowServerPID,
+                                                          separateSpaces: platform.screensHaveSeparateSpaces())
         let effective = menuBar.update(observed: observed, at: time.now)
         let result = FullScreenDetector.evaluate(windows: list.windows, displays: screens, context: context,
                                                  menuBarPresent: effective.present)

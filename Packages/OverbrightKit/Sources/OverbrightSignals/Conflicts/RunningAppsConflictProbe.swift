@@ -2,7 +2,8 @@
 // §7.4 (the launch rescue asks it before touching any table), §10.8.
 // Matching is Policy's pure `ConflictMatcher` over the catalogue (exact bundle ID and its `-setapp` twin, vendor
 // prefixes, executable names, optional team ID); this probe only feeds it: the running applications (read live on every
-// call, ≈ 0.04 ms, so the launch check before `SignalsMonitor.start()` already sees them), the signing team for bundles
+// call, ≈ 0.04 ms, so the launch check before `SignalsMonitor.start()` already sees them; `SignalsMonitor` asks again on
+// every launch and termination, from the notifications and the running list's KVO), the signing team for bundles
 // whose ID starts with a catalogued prefix that names teams (read once per bundle and process), and, for an unexplained
 // drift, the libproc scan off the main actor. Names are never matched; `displayName` is `localizedName`, for the UI
 // only.
@@ -40,12 +41,14 @@ public final class RunningAppsConflictProbe: ConflictProbe {
         conflicts(in: source.runningApplications())
     }
 
-    /// The running matches right after a workspace launch or termination notification: the launched app counts even
-    /// if the running list does not show it yet, and the terminated process no longer counts even if it still does.
-    func runningConflicts(launched: RunningAppInfo?, terminatedPID: Int32?) -> [ConflictingApp] {
-        var apps = source.runningApplications().filter { $0.processID != terminatedPID }
-        if let launched, launched.processID != terminatedPID, !apps.contains(where: { $0.processID == launched.processID }) {
-            apps.append(launched)
+    /// The running matches right after a launch or termination (a workspace notification or a change of the running
+    /// list): launched apps count even if the running list does not show them yet, and terminated processes no longer
+    /// count even if it still does.
+    func runningConflicts(launched: [RunningAppInfo], terminated: Set<Int32>) -> [ConflictingApp] {
+        var apps = source.runningApplications().filter { !terminated.contains($0.processID) }
+        for app in launched where !terminated.contains(app.processID)
+            && !apps.contains(where: { $0.processID == app.processID }) {
+            apps.append(app)
         }
         return conflicts(in: apps)
     }

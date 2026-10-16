@@ -7,7 +7,8 @@
 /// One source of system signals.
 public nonisolated enum SignalSource: String, Sendable, CaseIterable {
     /// Workspace notifications: sleep and wake, screens, session, Space, app activation, launch and termination,
-    /// accessibility options. Always on.
+    /// accessibility options, and the KVO of the running-application list (the launches and terminations of agent and
+    /// accessory apps, which post no notification). Always on.
     case workspaceNotifications
     /// Distributed notifications: lock and unlock, screensaver, ColorSync display profiles. Always on.
     case distributedNotifications
@@ -17,13 +18,14 @@ public nonisolated enum SignalSource: String, Sendable, CaseIterable {
     case powerSourceSwitch
     /// CoreMediaIO listeners, while Fill Light's camera rule is on (listeners, no polling).
     case camera
-    /// IOKit's every-change notification for the battery percent: boost-only, on battery only.
+    /// IOKit's every-change notification for the battery percent: boost-only, on battery only, never while shielded.
     case batteryPercent
     /// One deadline for the OLED idle pause (`threshold − idle`, then every 2 s while idle): boost-only, OLED only.
-    /// Once idle, the 2 s input poll outlasts the boost until input returns (the pause itself ends the boost).
+    /// Once idle, the 2 s input poll outlasts the boost until input returns (the pause itself ends the boost). Never
+    /// while shielded: the pause is kept and the idle time read again when the shield lifts.
     case idleDeadline
     /// The 2 s full-screen and playback re-check (catches borderless games and players starting or stopping):
-    /// boost-only, while a full-screen or "while playing" rule is on.
+    /// boost-only, while a full-screen or "while playing" rule is on, never while shielded.
     case fullScreenWatch
     /// One sleep towards the next schedule boundary: boost-only, while a schedule is set.
     case scheduleBoundary
