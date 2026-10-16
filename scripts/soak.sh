@@ -4,7 +4,8 @@
 # screen-parameters change, a colour app, dimming, Dim All, Back to Standard, off), then off for 6 minutes. `top`
 # samples the app every 10 s (IDLEW is cumulative), `footprint` and `vmmap` run at checkpoints, and the summary checks
 # that the footprint after the last cycle is within LEAK_MB of the one after the first, and that idle wake-ups do not
-# grow while off. Fakes only: no real display is touched (D24). `footprint` and `vmmap` read the process; nothing
+# grow during the final off phase (the first one, right after launch, is reported only). Wake-ups the window server or
+# the system cause (the pointer over the menu bar, another app's notifications) count too: run it on a quiet Mac. Fakes only: no real display is touched (D24). `footprint` and `vmmap` read the process; nothing
 # attaches a debugger.
 #
 #   make debug; make soak                  # 30 minutes → build/logs/soak/
@@ -93,12 +94,14 @@ def window(a, b):
     return None if start is None or end is None else (end - start, marks[b]["t"] - marks[a]["t"])
 cycles = sum(1 for line in open(f"{out}/status.jsonl") if '"cycle-end"' in line)
 problems = []
-for name, (a, b) in {"first off": ("first-off-start", "first-off-end"),
-                     "final off": ("final-off-start", "final-off-end")}.items():
+# The first off phase follows the launch (AppKit and the system still settle the windows it opened): reported only.
+# The final one follows a long active run and must be silent: zero periodic work while off (DESIGN.md §17).
+for name, (a, b), strict in [("first off", ("first-off-start", "first-off-end"), False),
+                             ("final off", ("final-off-start", "final-off-end"), True)]:
     w = window(a, b)
     if w is None: problems.append(f"{name}: no samples"); continue
-    print(f"{name}: {w[0]} idle wake-ups in {w[1]} s")
-    if w[0] > 0: problems.append(f"{name}: {w[0]} idle wake-ups while off")
+    print(f"{name}: {w[0]} idle wake-ups in {w[1]} s" + ("" if strict else " (after launch; reported only)"))
+    if strict and w[0] > 0: problems.append(f"{name}: {w[0]} idle wake-ups while off")
 first, last = marks.get("cycle1-end", {}).get("mb"), marks.get("final-off-end", {}).get("mb")
 print(f"cycles: {cycles}; footprint MB: " + ", ".join(f"{k} {v.get('mb', '?')}" for k, v in marks.items()))
 if first is None or last is None: problems.append("no footprint after the first cycle or at the end")
