@@ -12,9 +12,11 @@
 // that runs there and sends it the reopen event; no Apple Event is sent from here (the hardened runtime would need an
 // entitlement, and the app has none). When both copies share one bundle path (`open -n`), LaunchServices picks the
 // instance [U: WP16 checks it on the owner's Mac]. A relaunch after "Move to Applications" names the old process
-// with `--after-move <pid>`: that one is quitting, so this launch waits for it (at most `moveWait`) instead of handing
-// over to it. An instance started with `--qa-simulate` (a Debug QA run on the simulated ports, which writes no table)
-// is not an engine either: the owner's copy never hands over to an agent's QA run (`ProcessArguments`).
+// with `--after-move <pid>`: that one exits as soon as LaunchServices has answered its relaunch, before it starts any
+// service (`ApplicationsMover`), so it is never an engine. This launch waits for it (at most `moveWait`) and never
+// hands over to it, also when it is slow to go: handing over to a copy that is exiting would leave nothing running. An
+// instance started with `--qa-simulate` (a Debug QA run on the simulated ports, which writes no table) is not an
+// engine either: the owner's copy never hands over to an agent's QA run (`ProcessArguments`).
 import AppKit
 import Foundation
 import OverbrightCore
@@ -95,12 +97,11 @@ enum SingleInstance {
             .filter { $0.processIdentifier != environment.processIdentifier && !$0.isSimulated }
         if let moved = arguments.int(after: afterMoveArgument).map(pid_t.init),
            others.contains(where: { $0.processIdentifier == moved }) {
-            // The copy that moved itself is quitting: it is not an engine to hand over to.
-            if environment.waitForExit(moved, moveWait) {
-                others.removeAll { $0.processIdentifier == moved }
-            } else {
-                log.error("launch.secondInstance: the moved copy \(moved, privacy: .public) did not quit")
+            // The copy that moved itself exits before it starts anything: never an engine to hand over to.
+            if !environment.waitForExit(moved, moveWait) {
+                log.error("launch.secondInstance: the moved copy \(moved, privacy: .public) is still exiting; carrying on")
             }
+            others.removeAll { $0.processIdentifier == moved }
         }
         guard let other = others.first else { return false }
         let reopened = environment.reopen(other)

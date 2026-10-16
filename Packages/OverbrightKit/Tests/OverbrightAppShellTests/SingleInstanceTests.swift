@@ -120,13 +120,14 @@ private let me = SingleInstance.Instance(processIdentifier: 200, bundleURL: URL(
         #expect(own == ProcessInfo.processInfo.arguments)
     }
 
-    /// If the moved copy never quits, it is still an engine: hand over to it rather than run two.
-    @Test func aMovedCopyThatDoesNotQuitIsHandedOverTo() {
+    /// The copy that moved exits before it starts any service (`ApplicationsMover`): even when it is slow to go, this
+    /// launch never hands over to it (that would leave nothing running) and carries on.
+    @Test func aMovedCopyThatIsSlowToExitIsNeverHandedOverTo() {
         let system = FakeSystem()
         system.running = [installed, me]
         system.exitsInTime = false
         let afterMove = LaunchArguments(["Overbright", SingleInstance.afterMoveArgument, "100"])
-        #expect(SingleInstance.handOverIfRunning(arguments: afterMove, environment: system.environment()))
-        #expect(system.reopened == [100])
+        #expect(!SingleInstance.handOverIfRunning(arguments: afterMove, environment: system.environment()))
+        #expect(system.waitedFor == [100] && system.reopened.isEmpty)
     }
 }

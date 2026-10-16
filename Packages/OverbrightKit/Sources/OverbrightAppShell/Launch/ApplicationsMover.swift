@@ -1,16 +1,27 @@
 // OverbrightAppShell/Launch/ApplicationsMover.swift — "Move to Applications?" for a launch from elsewhere.
-// ARCHITECTURE.md §7.4 (launch order: after the single-instance check, before Welcome), §10.2; DESIGN.md §4.4, §12.4.
-// Seam written by WP0a (§10.0): `init(settings:)` and the instance method `offerIfNeeded()` are fixed; WP0b wrote the
-// body (`ApplicationsMoverTests`).
+// ARCHITECTURE.md §7.4 (launch order: after the single-instance check, before Welcome), §9.2 rule 8, §10.2;
+// DESIGN.md §4.4, §12.4. Seam written by WP0a (§10.0): `init(settings:)` and the instance method `offerIfNeeded()` are
+// fixed; WP0b wrote the body (`ApplicationsMoverTests`).
 //
 // Shortcuts actions and opening at login work only from Applications, so a copy launched from Downloads, a disk image
 // or a translocated path asks once: [Move to Applications] [Not Now]. "Not Now" is remembered for this version
 // (`OnboardingSettings.declinedMoveVersion`) and asked again after an update. Moving puts the bundle in /Applications
-// (replacing an older copy, which goes to the Trash), clears the quarantine flag of the copy the user chose to move,
-// relaunches it from there and quits this one; the new process waits for this one to exit (`SingleInstance`,
-// `--after-move`). A failure says so and the app carries on from where it is. Debug QA runs (any `--qa-…` switch)
-// never ask: a modal alert would block their scripted surfaces.
+// (replacing an older copy, which goes to the Trash) and clears the quarantine flag of the copy the user chose to move.
+//
+// A successful move never returns into the launch. The bundle this process runs from may be gone (a move from
+// Downloads renames it), and every module's resource bundle is looked up under `Bundle.main` on first use (SwiftPM's
+// accessor stops the process when it finds none), so nothing after the move may run here. The mover relaunches the
+// moved copy, waits for LaunchServices' answer (at most `relaunchWait`; no answer counts as launched) and exits at once
+// (`quit`, `exit(EXIT_SUCCESS)`): no service has started, no window is open and no setting has been written yet. The new
+// process waits for this one to exit (`SingleInstance`, `--after-move`) and never hands over to it.
+//
+// When the relaunch fails, a moved bundle goes back where it was (a copy in Applications goes to the Trash), the failure
+// alert says so, and the app carries on from where it is. Only if the bundle cannot be put back does this copy quit
+// after the alert, because it cannot run from a path that no longer exists. Debug QA runs (any `--qa-…` switch) never
+// ask: a modal alert would block their scripted surfaces. Failures are logged with the error's domain and code; the
+// description, which names the user's folders, stays `.private` (§9.2 rule 8).
 import AppKit
+import Darwin
 import Foundation
 import OverbrightCore
 import os
@@ -30,31 +41,39 @@ final class ApplicationsMover {
         var reportFailure: @MainActor () -> Void
     }
 
+    /// The longest wait for LaunchServices' answer to the relaunch.
+    static let relaunchWait: Duration = .seconds(10)
+
     private let settings: SettingsStore
     private let bundleURL: URL
     private let version: String
     private let arguments: LaunchArguments
     private let destinationFolder: URL
     private let prompts: Prompts
-    private let relaunch: @MainActor (URL) -> Void
+    private let relaunch: @MainActor (URL) throws -> Void
+    private let quit: @MainActor () -> Void
     private let trash: (URL) throws -> Void
 
     /// A mover that remembers "Not Now" in `settings`.
     convenience init(settings: SettingsStore) {
         self.init(settings: settings, bundleURL: Bundle.main.bundleURL, version: AppInfo.current().version,
                   arguments: .current, destinationFolder: URL(filePath: "/Applications", directoryHint: .isDirectory),
-                  prompts: .alerts, relaunch: Self.relaunch(from:), trash: BundleMove.moveToTrash)
+                  prompts: .alerts, relaunch: Self.relaunch(from:), quit: Self.exitAfterRelaunch,
+                  trash: BundleMove.moveToTrash)
     }
 
-    /// Tests inject the bundle, the folders, the prompts, the relaunch and what happens to an older copy.
+    /// Tests inject the bundle, the folders, the prompts, the relaunch (it throws LaunchServices' error), the quit
+    /// that follows a relaunch, and what happens to an older copy.
     init(settings: SettingsStore, bundleURL: URL, version: String, arguments: LaunchArguments, destinationFolder: URL,
-         prompts: Prompts, relaunch: @escaping @MainActor (URL) -> Void, trash: @escaping (URL) throws -> Void) {
+         prompts: Prompts, relaunch: @escaping @MainActor (URL) throws -> Void, quit: @escaping @MainActor () -> Void,
+         trash: @escaping (URL) throws -> Void) {
         self.settings = settings; self.bundleURL = bundleURL; self.version = version; self.arguments = arguments
         self.destinationFolder = destinationFolder; self.prompts = prompts; self.relaunch = relaunch
-        self.trash = trash
+        self.quit = quit; self.trash = trash
     }
 
-    /// Asks the user to move Overbright to /Applications when it runs from elsewhere, and moves it on "Move".
+    /// Asks the user to move Overbright to /Applications when it runs from elsewhere. On "Move" it moves, relaunches
+    /// from there and quits (it never returns then, see the file header); on a failure it says so and returns.
     func offerIfNeeded() {
         guard Self.shouldOffer(bundleURL: bundleURL, version: version,
                                declinedVersion: settings[OnboardingSettings.declinedMoveVersion],
@@ -64,16 +83,35 @@ final class ApplicationsMover {
             settings[OnboardingSettings.declinedMoveVersion] = version
             log.info("move to Applications: not now (\(self.version, privacy: .public))")
         case .move:
-            do {
-                let moved = try BundleMove.perform(bundleURL, into: destinationFolder,
-                                                   copyOnly: LoginItemController.isTranslocated(bundleURL), trash: trash)
-                log.info("moved to Applications; relaunching")
-                relaunch(moved)
-            } catch {
-                log.error("move to Applications failed: \(error.localizedDescription, privacy: .public)")
-                prompts.reportFailure()
-            }
+            moveAndRelaunch()
         }
+    }
+
+    private func moveAndRelaunch() {
+        let moved: URL
+        do {
+            moved = try BundleMove.perform(bundleURL, into: destinationFolder,
+                                           copyOnly: LoginItemController.isTranslocated(bundleURL), trash: trash)
+        } catch {
+            let failure = error as NSError
+            log.error("move to Applications failed: \(failure.domain, privacy: .public) \(failure.code, privacy: .public) (\(failure.localizedDescription, privacy: .private))")
+            prompts.reportFailure()
+            return
+        }
+        do {
+            try relaunch(moved)
+        } catch {
+            let failure = error as NSError
+            log.error("relaunch from Applications failed: \(failure.domain, privacy: .public) \(failure.code, privacy: .public) (\(failure.localizedDescription, privacy: .private))")
+            let canCarryOn = BundleMove.putBack(moved, to: bundleURL, trash: trash)
+            prompts.reportFailure()
+            if canCarryOn { return }
+            log.error("move to Applications: the bundle could not be put back; this copy quits")
+            quit()
+            return
+        }
+        log.info("moved to Applications and relaunched from there; this copy quits before anything starts")
+        quit()
     }
 
     // MARK: Pure helpers (unit-tested)
@@ -94,20 +132,49 @@ final class ApplicationsMover {
         return folders.contains { folder in path.hasPrefix(folder.hasSuffix("/") ? folder : folder + "/") }
     }
 
-    // MARK: Relaunch
+    // MARK: Relaunch and quit
 
-    /// Opens the moved copy as a new instance (it waits for this one to quit, `--after-move`), then quits.
-    private static func relaunch(from url: URL) {
+    /// Ends this process right after the relaunch, before anything of the launch runs (the file header says why).
+    static func exitAfterRelaunch() {
+        exit(EXIT_SUCCESS)
+    }
+
+    /// Opens the moved copy as a new instance (it waits for this one to exit, `--after-move`) and blocks until
+    /// LaunchServices answers, at most `relaunchWait`. Throws the error LaunchServices reports. No answer in time counts
+    /// as launched: the new copy is most likely starting, and this one must not go on from a bundle that moved.
+    private static func relaunch(from url: URL) throws {
         let configuration = NSWorkspace.OpenConfiguration()
         configuration.createsNewApplicationInstance = true
         configuration.arguments = [SingleInstance.afterMoveArgument, String(ProcessInfo.processInfo.processIdentifier)]
-        // The completion handler runs on a background queue (§8.1 rule 2): hop to the main actor for everything.
+        let answer = LaunchAnswer()
+        // The completion handler runs on a concurrent queue (§8.1 rule 2), so this launch-time wait on the main thread
+        // cannot hold it up.
         NSWorkspace.shared.openApplication(at: url, configuration: configuration) { @Sendable _, error in
-            let failure = error?.localizedDescription
-            Task { @MainActor in
-                if let failure { log.error("relaunch after the move failed: \(failure, privacy: .public)") }
-                NSApp.terminate(nil)
-            }
+            answer.finish(error)
+        }
+        switch answer.wait(atMost: relaunchWait) {
+        case .success?: return
+        case .failure(let error)?: throw error
+        case nil: log.error("relaunch from Applications: no answer from LaunchServices in time; quitting as launched")
+        }
+    }
+
+    /// LaunchServices' answer to the relaunch, handed from its queue to the waiting main thread.
+    private nonisolated final class LaunchAnswer: Sendable {
+        private let answered = DispatchSemaphore(value: 0)
+        private let error = OSAllocatedUnfairLock<(any Error)?>(initialState: nil)
+
+        /// Called once, from the completion handler.
+        func finish(_ error: (any Error)?) {
+            self.error.withLock { $0 = error }
+            answered.signal()
+        }
+
+        /// The answer, or nil when none came within `limit`.
+        func wait(atMost limit: Duration) -> Result<Void, any Error>? {
+            guard answered.wait(timeout: .now() + limit.timeInterval) == .success else { return nil }
+            if let error = error.withLock({ $0 }) { return .failure(error) }
+            return .success(())
         }
     }
 }

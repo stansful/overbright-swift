@@ -4,7 +4,8 @@
 // The bundle goes to `<folder>/<name>.app`. An older copy there goes to the Trash first (never deleted outright). A
 // bundle on a read-only volume (a disk image) or a translocated copy is copied instead of moved; anything else is
 // moved (the running process keeps its open files). The quarantine flag is removed from the moved copy only, because
-// the user chose to move it there: a quarantined copy in Applications would be translocated again.
+// the user chose to move it there: a quarantined copy in Applications would be translocated again. When the relaunch
+// from the new place fails, `putBack` undoes the move, so the running process carries on from a bundle that exists.
 import Darwin
 import Foundation
 
@@ -30,6 +31,25 @@ enum BundleMove {
         }
         removeQuarantine(under: destination, fileManager: fileManager)
         return destination
+    }
+
+    /// Undoes `perform` after a failed relaunch: a bundle that was moved goes back to `original`; a copy (the original
+    /// is still there) goes through `trash`. True when `original` exists afterwards, so the process running from it can
+    /// carry on.
+    static func putBack(_ moved: URL, to original: URL, fileManager: FileManager = .default,
+                        trash: (URL) throws -> Void = moveToTrash) -> Bool {
+        let originalPath = original.path(percentEncoded: false)
+        guard moved.standardizedFileURL != original.standardizedFileURL else { return true }
+        if fileManager.fileExists(atPath: originalPath) {
+            try? trash(moved)                                                  // a copy: the original never left
+            return true
+        }
+        do {
+            try fileManager.moveItem(at: moved, to: original)
+            return true
+        } catch {
+            return fileManager.fileExists(atPath: originalPath)
+        }
     }
 
     /// Puts `url` in the Trash (never deleted outright: the user can put an older copy back).
