@@ -97,8 +97,12 @@ public struct DisplayCardView: View {
                         accessibilityName: name,
                         valueText: { LevelText.valueTag(at: $0, card: model, guardText: guardText(model)) },
                         onCommit: { commit($0, model) })
+                .spokenValue { spokenValue(at: $0, model) }
+                .extraRange(extraRange(model))
+                .dimHalfReason(dimHalfReason(model))
+                .dimmedLevel(LevelMapping.position(forDimLight: lastDimLight))
+                .focusBinding(focus, equals: .slider(model.key))     // the slider's own element: one Tab stop, its keys
                 .frame(width: PanelLayout.trackWidth)
-                .panelFocus(focus, .slider(model.key))
             Image(symbol: .sunMaxFill)
                 .font(.system(size: PanelLayout.sliderGlyph))
                 .foregroundStyle(.secondary)
@@ -217,6 +221,26 @@ public struct DisplayCardView: View {
             return
         }
         services.boost.setLevel(level, for: target, source: .panel)
+    }
+
+    /// VoiceOver's value of `position`: the guard's words while one holds the boost half (as the value tag shows),
+    /// else the spoken canonical value ("Bright room, about 1.29 times, not calibrated").
+    private func spokenValue(at position: LevelPosition, _ model: DisplayCardModel) -> String {
+        if position.isBoost, let guardText = guardText(model), !guardText.isEmpty { return guardText }
+        return LevelText.accessibilityValue(at: position, card: model)
+    }
+
+    /// The allowed-now marker's help tag and VoiceOver "Extra range", with the display's Peak figure, while extra
+    /// light is on screen with a reading.
+    private func extraRange(_ model: DisplayCardModel) -> ValueText? {
+        guard case .active = model.boostHalf, let allowed = model.allowedNow else { return nil }
+        return ValueText.extraRange(allowed: allowed, peak: model.peakTop)
+    }
+
+    /// Why the dim half is off (the verdict's sentence), for its help tag and VoiceOver hint.
+    private func dimHalfReason(_ model: DisplayCardModel) -> String? {
+        guard !model.dimEnabled, let verdict = model.verdict else { return nil }
+        return VerdictText.make(verdict, advisories: model.advisories, lastGrant: nil).sentence
     }
 
     /// The guard that holds the boost half, in the HUD's words ("Paused: Low Power Mode"), for the value tag.
