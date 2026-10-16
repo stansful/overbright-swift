@@ -1,4 +1,4 @@
-// OverbrightDesign/Tokens/StrokeWidth.swift — stroke and mark sizes. DESIGN.md §2.3, §5.5.
+// OverbrightDesign/Tokens/StrokeWidth.swift — stroke and mark sizes. DESIGN.md §2.1 (hatch), §2.3, §5.5.
 // Seam written by WP0a (ARCHITECTURE.md §10.0); WP9 owns it.
 import CoreGraphics
 
@@ -18,4 +18,11 @@ public nonisolated enum StrokeWidth {
     public static let presetTick = CGSize(width: 1, height: 5)
     /// The allowed-now marker.
     public static let allowedMarker = CGSize(width: 2, height: 10)
+    /// A line of the inactive hatch.
+    public static let hatchLine: CGFloat = 1
+    /// The distance between hatch lines.
+    public static let hatchSpacing: CGFloat = 3
+
+    /// One device pixel at `scale` (the card hairline).
+    public static func hairline(scale: CGFloat) -> CGFloat { 1 / max(scale, 1) }
 }
