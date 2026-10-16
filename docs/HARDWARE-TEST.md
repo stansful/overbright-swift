@@ -6,7 +6,7 @@
 |---|---|
 | When | After WP13 (integration) has merged, and again after every major macOS update. Sections can be run on different days, but **§2.0 always runs first** in a session. |
 | Who | The project owner, on the owner's Mac: MacBook Pro Mac16,5 (M4 Max) and the external MSI MPG322UX QD-OLED. |
-| Time | About 3.5 hours in total; each section states its own time. |
+| Time | About 4 hours in total; each section states its own time. |
 | Outcome | A folder of diagnostics, monitor captures, self-test logs and a filled results table, analysed by WP16 to set the engine's defaults. |
 
 **Safety first.** Everything here is reversible.
@@ -51,7 +51,7 @@
 
 ---
 
-## 1. What macOS reports (read-only, 20 min) — H-E1
+## 1. What macOS reports (read-only, 30 min) — H-E1–E3
 
 Nothing here boosts: keep Overbright running but off (master switch off in the panel). `obdiag` and `ob --monitor` run as separate, read-only processes that open no window and add no menu bar icon.
 
@@ -67,6 +67,8 @@ Nothing here boosts: keep Overbright running but off (master switch off in the p
 | 1.8 | Locale: your system runs Russian | look at `displays[].name` in 1.1 | the built-in's name may be Russian; verdicts in 1.1–1.7 must not depend on it |
 | 1.9 | **H-N1** (needs §2.0 first, so Overbright can boost): boost the built-in at Bright room; set the system brightness to about 25 %, 50 % and 100 %; at each level capture both files | `obdiag …/1.9-<level>.json` and `/usr/bin/log show --last 1m --style compact --predicate 'subsystem == "com.apple.coreanimation" AND category == "Brightness"' > …/1.9-<level>-ws.txt` | WP16 compares `displays[].backlightMilliNits` with WindowServer's own `sdr:` value; if they track, Overbright can show nits on the built-in |
 | 1.10 | **H-N2**: MSI with HDR on; move its SDR brightness slider in Displays settings (if macOS offers one) to two positions | the same two captures, `1.10-<position>` | whether the frame-average SDR white still matches WindowServer's `sdr:` |
+| 1.11 | **H-E2** (WP2, virtual displays; if an iPad or an AirPlay receiver is at hand): connect it as a **Sidecar** display, then as an **AirPlay** display (extended, then mirrored) | `obdiag …/1.11-sidecar.json`, `…/1.11-airplay.json` and `system_profiler SPDisplaysDataType -json > …/1.11-<kind>-profiler.json` | the display reads `virtual` true, panel class `virtualDisplay`, no card in the panel (it sits under "Why?"); WP16 reads its vendor (WP2 expects macOS's placeholder `'unkn'`, `0x756e6b6e`) and gamma capacity from the files |
+| 1.12 | **H-E3** (WP2, hot-plug): type `obdiag ~/Overbright-HW/1.12-early.json` without pressing Return; plug the MSI (HDR on) in and press Return at once; 3 s later run `obdiag …/1.12-late.json`; repeat once | the two files per try | whether the MSI's `panelPeakNits`, `panelFrameAverageNits` and `supportsPQ` (its `DisplayAttributes`) are already there in the early file; Overbright reads them 0.5 s after the last reconfiguration and again at 2 s, so a late arrival must show up by the 2 s pass (the panel's verdict and readout then match 1.6 without a replug) |
 
 ---
 
@@ -116,7 +118,7 @@ Save the photos into the folder.
 
 ---
 
-## 5. Process death, hangs and rescue (25 min) — H-K1, H-X1
+## 5. Process death, hangs and rescue (25 min) — H-K1, H-X1, H-X2
 
 Monitor running (`monitor-5.jsonl`). Overbright on, built-in at **Max**. §2.0 must have passed.
 
@@ -129,6 +131,7 @@ Monitor running (`monitor-5.jsonl`). Overbright on, built-in at **Max**. §2.0 m
 | 5.5 | Hang test (Debug build): quit the installed copy, then `<your clone>/scripts/run.sh -- --qa-defaults-suite app.overbright.Overbright.hw --qa-hang-main 20,8`, and within 20 s turn the boost on | about 3–5 s after the hang starts the monitor shows `matchesBase` (the watchdog restored); after the hang ends, the boost returns only after a fresh gate (no instant jump back) |
 | 5.6 | (informational) Boost, then `kill -STOP $(obpid)` for 10 s, then `kill -CONT $(obpid)` | the monitor keeps printing; a fully stopped process cannot restore: the table stays SCALED while stopped (expected, documented); after CONT the engine continues |
 | 5.7 | Quit Overbright from the panel, then `ob --restore-gamma` | prints "already neutral" |
+| 5.8 | **H-X2** (WP2: CoreGraphics' transfer calls off the main thread). After 5.5 and after a `kill $(obpid)` (SIGTERM) while boosted, both of which write the baselines from a background queue: `/usr/bin/log show --last 15m --style compact --predicate 'process == "Overbright" AND messageType == fault' > ~/Overbright-HW/5.8-faults.txt`; look in `~/Library/Logs/DiagnosticReports` for an Overbright report | no fault and no crash report; each display came back `matchesBase` (the watchdog's and the signal queue's writes worked off the main thread) |
 
 ---
 
@@ -145,7 +148,7 @@ Monitor running (`monitor-5.jsonl`). Overbright on, built-in at **Max**. §2.0 m
 
 ---
 
-## 7. Guards, full screen, players, games and the taper (25 min) — H-FS1, H-P1, H-B1
+## 7. Guards, full screen, players, games and the taper (35 min) — H-FS1, H-FS2, H-P1, H-B1
 
 Overbright on, both displays boosting; monitor running (`monitor-7.jsonl`).
 
@@ -160,6 +163,8 @@ Overbright on, both displays boosting; monitor running (`monitor-7.jsonl`).
 | 7.7 | Set Turn off after: 5 minutes, wait | turns off at the deadline; the HUD shows "Off: timer ended" (and VoiceOver announces it if running) |
 | 7.8 | A game (or any app with the games category) full screen | paused only with "Pause for every full-screen app" or "Pause in games" on |
 | 7.9 (H-B1) | "Add extra brightness only near full brightness" on (default). Built-in at Max (Safe); set system brightness to 100 %, about 75 %, 50 %, 25 %, using the brightness keys; then turn the option off and repeat | with the option on: full boost at 100 %, partly at 75 %, none at 50 % and below, and every brightness-key step looks like a normal step (no bigger jumps); with it off: the multiplier applies at every level. Note any step that looks uneven |
+| 7.10 (H-FS2) | (WP6) System Settings ▸ Desktop & Dock: turn **Displays have separate Spaces** off (log out and back in), then repeat 7.1 and 7.3; afterwards turn it back on | note which displays pause for a full-screen video and whether a zoomed window counts; WP6's rules assume every display has its own Space and menu bar band, so a pause of both displays, or none, is the finding |
+| 7.11 | (WP11) Settings ▸ Automations ▸ Pause for these apps ▸ add from the suggestions: for each of Prime Video, Infuse, GeForce NOW and Moonlight that is installed, run `osascript -e 'id of app "<its name>"'` | the suggestion lists the installed ones by their Finder names; their IDs are `com.amazon.aiv.AIVApp`, `com.firecore.infuse.enterprise`, `com.nvidia.gfnpc.mall` and `com.moonlight-stream.Moonlight` (unverified publishers' IDs; note any that differ) |
 
 ---
 
@@ -195,12 +200,16 @@ Overbright on, both displays boosting; monitor running (`monitor-7.jsonl`).
 
 ---
 
-## 11. Fill Light and the camera (10 min) — H-F1
+## 11. Fill Light and the camera (25 min) — H-F1–F5
 
 1. Settings ▸ Fill Light: turn on "Turn on while a camera is in use" (Any camera).
 2. Open Photo Booth or FaceTime: Fill Light turns on within ≈ 1 s; **no camera permission prompt may appear** (note if one does). The panel shows the Fill Light card; change Brightness and Warmth there. Close the app: off after ≈ 3 s.
 3. Check width, warmth and brightness changes live; check that clicks pass through the frame and that a screenshot leaves it out.
 4. With Fill Light on, turn the boost on for the built-in: it must still prepare and boost normally (Fill Light is counted as range already in use, not as idle).
+5. **H-F2 (WP7, the headroom grant):** boost off, Fill Light on at Brightness 100 %; capture `obdiag …/11.5-filllight.json` and the WindowServer log of step 1.9 (`…/11.5-ws.txt`). Fill Light asks for 2.07 (2 ÷ 0.97, §4.7): does macOS grant about that (policy B) or the display's potential (policy A)? Either way the frame's light must settle at twice white.
+6. **H-F3 (WP7, the ramp):** watch the frame while it fades in and out and while you drag Brightness from 20 % to 100 %: no flash, no step and no colour shift mid-ramp (macOS must not tone-map the frame while its headroom rises).
+7. **H-F4 (WP7, the menu bar band):** System Settings ▸ Menu Bar ▸ Automatically hide and show the menu bar: **Always**. With Fill Light on, the frame keeps a band at the top clear; move the pointer to the top: the menu bar slides in over that band, not over the frame. Then a full-screen app on that display: the frame reaches the top. Set the menu bar back afterwards.
+8. **H-F5 (WP7, presents):** Fill Light on and nothing changing for 60 s: `top -l 30 -s 2 -stats pid,cpu,idlew -pid $(obpid) > ~/Overbright-HW/11.8-top.txt`; Fill Light draws only when its size, warmth or brightness changes, so idle wake-ups stay near those of §13's on case and the CPU near 0 %.
 
 ---
 
@@ -210,7 +219,7 @@ Overbright on, both displays boosting; monitor running (`monitor-7.jsonl`).
 2. System Settings ▸ Focus ▸ (a Focus) ▸ Focus Filters ▸ Add Filter ▸ Overbright: set "On at Sunlight"; switch that Focus on with Overbright running, then with Overbright quit and launch it (the filter applies at launch).
 3. Switch the system language to German, then Russian (log out/in): action titles and the Focus filter are translated; key caps in Welcome step 4 and Help follow the keyboard layout.
 4. Make a shortcut with "Turn Overbright On or Off" and add Control Center's **Run Shortcut** control to Control Center and to the menu bar; use it with Overbright running and quit.
-5. **Control Center control (H-CC-1):** `CONTROLS=1 make build`, install, launch once. Then: `pluginkit -m -v -i app.overbright.Overbright.Controls > ~/Overbright-HW/12.5-pluginkit.txt`; right-click the desktop ▸ Edit Widgets… (refreshes the gallery); Control Center ▸ Edit Controls: is "Overbright" listed? Add it; does it show the right state? Toggle it with the app running and quit. **Rebuild** (new signature), reinstall, and repeat. Record pass / works until an update / fail.
+5. **Control Center control (H-CC-1):** `CONTROLS=1 make build`, install, launch once. Then: `pluginkit -m -v -i app.overbright.Overbright.Controls > ~/Overbright-HW/12.5-pluginkit.txt`; right-click the desktop ▸ Edit Widgets… (refreshes the gallery); Control Center ▸ Edit Controls: is "Overbright" listed? Add it; does it show the right state? Toggle it with the app running and quit. **Rebuild** (new signature), reinstall, and repeat. Record pass / works until an update / fail. **Language (WP8):** with the system language English, note the control's title and state labels in the Controls gallery and in Control Center; switch the system language to French (log out and in) and look again: they must be French (the extension's own `Controls/Localizable.xcstrings`); then switch back.
 6. **H-CC-2:** boost, `kill -9 $(obpid)`: the control may show On until Overbright launches again, then Off.
 7. **Launch by an action or a URL (WP13, H-AI-1):** quit Overbright, then run "Turn On Overbright" from the Shortcuts app: Overbright launches, turns on, and **no** window or panel opens. Quit again and run `open 'overbright://control?set=off'` in Terminal: nothing opens either. If a panel or Welcome opens, note how long after launch the action arrived (`log show --last 2m --info --predicate 'subsystem == "app.overbright.Overbright"' | grep -E 'launch UI|intent'`).
 8. Afterwards: `make clean` unregisters the build products.
@@ -291,3 +300,10 @@ Cases: Overbright **off**; on with the winning trigger at Bright room; on with *
 | H-M1 | hidden-icon window and Settings row; Finder launch opens Settings; Quit works | | 14.1–14.5 |
 | H-L2 | login launch recognised and silent | | 14.6 |
 | H-N1, H-N2 | (from the logs) does `BrightnessMilliNits` track SDR white with boost on; does the MSI's frame average follow its HDR SDR slider | | 1.x |
+| H-E2 | Sidecar and AirPlay: virtual, no card, vendor and capacity | | 1.11 |
+| H-E3 | hot-plug: the MSI's `DisplayAttributes` present at once, or only after the 0.5 s / 2 s passes? | | 1.12 |
+| H-X2 | baseline writes from the watchdog's and the signal queue's threads: no fault, no crash, `matchesBase` | | 5.8 |
+| H-FS2 | "Displays have separate Spaces" off: which displays pause for full screen | | 7.10 |
+| suggestions | the paused-app suggestions' bundle IDs on this Mac | | 7.11 |
+| H-F2–F5 | Fill Light: grant for the 2.07 request (policy A or B), no tone-mapping during the ramp, the auto-hidden menu bar band, no presents while idle | | 11.5–11.8 |
+| H-CC-1 (language) | the control's title and labels in English, then French | | 12.5 |

@@ -3370,9 +3370,14 @@ Each item has a step in `docs/HARDWARE-TEST.md`.
 | H-N1, H-N2 | Does IORegistry `BrightnessMilliNits` track SDR white with EDR active; does the MSI's frame average follow the HDR-mode SDR slider | nits readout, Safe cap |
 | H-P1 | Which power assertion QuickTime, TV, IINA, VLC, Infuse, Safari, Chrome hold while playing (in a window and full screen), released on pause | `whilePlaying` rules, the full-screen video rule (beta label) |
 | H-F1 | Camera-in-use without a TCC prompt from the signed app | Fill Light auto rule |
+| H-F2–F5 | (WP7) Does macOS grant Fill Light's 2.07 request or the potential; no tone-mapping while its headroom ramps; the auto-hidden menu bar band; no presents while idle | Fill Light's request and drawing |
+| H-E2, H-E3 | (WP2) Sidecar and AirPlay facts (vendor, capacity, virtual); do an external panel's `DisplayAttributes` exist before the 0.5 s pass after a hot-plug | virtual-display rule, reconfiguration passes |
+| H-X2 | (WP2) CoreGraphics transfer calls from the watchdog's and the signal queue's threads: no fault, no crash | D7 background writes |
 | H-FS1 | Full-screen heuristic on the notched built-in, Split View, auto-hidden menu bar | full-screen rules |
+| H-FS2 | (WP6) "Displays have separate Spaces" off: which displays a full-screen video pauses | full-screen rules |
+| (WP11) | the paused-app suggestions' bundle IDs (Prime Video, Infuse, GeForce NOW, Moonlight) | the suggestion list |
 | H-AI-1–3 | Intents and Focus filter appear and run; localized in German and Russian; Run Shortcut control | D18 |
-| H-CC-1–2 | Ad-hoc control listed, rendered, survives a rebuild; stale state after `kill -9` | D18 promotion |
+| H-CC-1–2 | Ad-hoc control listed, rendered, survives a rebuild, follows the system language (English, then French); stale state after `kill -9` | D18 promotion |
 | H-M1 | Does the visibility check notice that macOS hides our status item ("Allow in the Menu Bar" off) or that the notch covers it | the hidden-icon window |
 | H-L2 | Does a login launch by `SMAppService.mainApp` carry `keyAELaunchedAsLogInItem`; does the fallback separate login from Finder launches | launch UI |
 | H-S1 | Energy: T1 vs T2 vs Compatibility mode; tag policy A vs B; 30-minute battery drain at G 1.5 | energy budget |
