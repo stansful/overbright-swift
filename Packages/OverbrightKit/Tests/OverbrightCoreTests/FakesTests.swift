@@ -251,6 +251,8 @@ import Testing
         #expect(headroom.requestCount(on: builtIn) == 0 && headroom.currentHeadroom(of: builtIn) == 1)
         headroom.update(builtIn) { $0.potential = 1 }                             // potential falls: H follows
         #expect(headroom.currentHeadroom(of: builtIn) == 1)
+        try overlay.setFactor(1, headroomRequest: 1.3)                            // request first, then boost (§7.5)
+        #expect(headroom.requestCount(on: builtIn) == 1)
     }
 
     @Test func windowsMoveAndOcclude() async throws {

@@ -12,7 +12,9 @@ import CoreGraphics
     var onOcclusionChange: ((Bool) -> Void)? { get set }
     /// Called when AppKit moves the window to another screen.
     var onScreenChange: ((CGDirectDisplayID?) -> Void)? { get set }
-    /// `factor` < 1 dims without EDR; > 1 multiplies and requests at least `headroomRequest`.
+    /// `factor` < 1 dims without EDR; ≥ 1 with `headroomRequest` > 1 requests at least that much headroom and
+    /// multiplies by `factor` (request first, then boost: factor 1 with a request asks for headroom before anything
+    /// is brighter, ARCHITECTURE.md §7.5).
     func setFactor(_ factor: Double, headroomRequest: Double) throws
     /// Event-driven re-present.
     func represent()

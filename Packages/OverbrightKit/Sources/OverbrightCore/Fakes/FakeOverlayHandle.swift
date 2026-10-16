@@ -29,11 +29,12 @@ import CoreGraphics
     /// The factor shown now (1 before the first call).
     public var factor: Double { factors.last?.factor ?? 1 }
 
-    /// Records the factor; a factor above 1 with a request above 1 is an EDR request the script answers.
+    /// Records the factor; a factor of at least 1 with a request above 1 is an EDR request the script answers
+    /// (request first, then boost, §7.5).
     public func setFactor(_ factor: Double, headroomRequest: Double) throws {
         if let error = nextError { nextError = nil; throw error }
         factors.append((factor, headroomRequest))
-        if factor > 1 && headroomRequest > 1 {
+        if factor >= 1 && headroomRequest > 1 {
             factory?.requestStarted(id, on: display.key)
         } else {
             factory?.requestEnded(id, on: display.key)
