@@ -111,6 +111,15 @@ enum LaunchUI {
             if let sessionLoginDone { values["sessionLoginDone"] = sessionLoginDone ? 1 : 0 }
             return values
         }
+
+        /// The journal event of the launch UI's decision: `launch.<opening>` with `journalValues` and whether the
+        /// launch was a background one.
+        func journalEvent(seconds: Double, background: Bool) -> JournalEvent {
+            var values = journalValues
+            values["background"] = background ? 1 : 0
+            return JournalEvent(seconds: seconds, category: LogCategory.app.rawValue, display: nil,
+                                code: "launch.\(opening)", values: values)
+        }
     }
 
     /// What `event` (the current Apple event, read first thing in `applicationDidFinishLaunching`), the session

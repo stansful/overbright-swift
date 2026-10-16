@@ -284,11 +284,8 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
         let background = LaunchUI.isBackgroundLaunch(opening: opening, openedURLDuringLaunch: urlOpenedDuringLaunch,
                                                      intentRequests: Self.intentRouter?.requestCount ?? 0)
         if let reading = openingReading {
-            var values = reading.journalValues
-            values["background"] = background ? 1 : 0
-            services.journal.record(JournalEvent(seconds: services.time.now.sinceOrigin.timeInterval,
-                                                 category: LogCategory.app.rawValue, display: nil,
-                                                 code: "launch.\(reading.opening)", values: values))
+            let seconds = services.time.now.sinceOrigin.timeInterval
+            services.journal.record(reading.journalEvent(seconds: seconds, background: background))
         }
         let surface = LaunchUI.surface(isLoginLaunch: opening == .login, isBackgroundLaunch: background,
                                        welcomeFinished: settings[OnboardingSettings.completedVersion] != nil,
