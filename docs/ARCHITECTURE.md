@@ -2989,6 +2989,8 @@ make probe-check                  # SDK name-collision probe (Core + Policy)
 make build                        # universal Release → build/Overbright.app (+ dSYM), stripped, signature verified; CONTROLS=1 keeps the appex
 make smoke                        # --diagnostics only: bundles, Edit menu, privacy none, intents metadata, gammaWrites == 0, triggerWindows == 0
 SIMULATE=1 make smoke             # agents: a Debug build reports over --qa-simulate's fakes; a Release build gets the static and refusal checks only
+make qa-matrix                    # after make debug: every fixture's scripted scenario under --qa-simulate, symbol/banner/chips checked
+make soak [MINUTES=30]            # after make debug: scripted cycles under --qa-simulate; footprint growth and idle wake-ups while off
 make dist                         # zip + dmg + sha256 (+ notarization with SIGN_IDENTITY/TEAM_ID/NOTARY_PROFILE=overbright-notary)
 make run                          # Debug with --off and --qa-simulate; never boosts by default
 make icon                         # render AppIcon.icon layers from scripts/render-icon.swift
