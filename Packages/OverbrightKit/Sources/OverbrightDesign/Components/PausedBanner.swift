@@ -52,8 +52,8 @@ public struct PausedBanner: View {
                 .overlay(shape.fill(model.color.bannerTint))
                 .overlay(shape.strokeBorder(theme.color(.cardStroke), lineWidth: StrokeWidth.regular))
         }
+        // A group: VoiceOver reads the sentence once (its Text), then the buttons by their titles (DESIGN.md §12.7).
         .accessibilityElement(children: .contain)
-        .accessibilityLabel(Text(verbatim: model.sentence))
         .transition(OverbrightMotion.bannerTransition(reduceMotion: theme.reduceMotion))
     }
 
