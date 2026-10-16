@@ -6,7 +6,7 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@ (%2$@)"
           }
         },
@@ -66,7 +66,7 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@ (%2$@)"
           }
         },
@@ -221,8 +221,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "%@ · small gain on this display"
+            "state" : "translated",
+            "value" : "%@ · زيادة ضئيلة على هذه الشاشة"
           }
         },
         "ca" : {
@@ -275,8 +275,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "%@ · small gain on this display"
+            "state" : "translated",
+            "value" : "%@ · תוספת קטנה בצג הזה"
           }
         },
         "hi" : {
@@ -430,8 +430,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "%1$@, %2$@"
+            "state" : "translated",
+            "value" : "%1$@، %2$@"
           }
         },
         "ca" : {
@@ -490,7 +490,7 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@, %2$@"
           }
         },
@@ -648,38 +648,38 @@
             "plural" : {
               "few" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld displays can’t be adjusted"
+                  "state" : "translated",
+                  "value" : "لا يمكن ضبط %lld شاشات"
                 }
               },
               "many" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld displays can’t be adjusted"
+                  "state" : "translated",
+                  "value" : "لا يمكن ضبط %lld شاشة"
                 }
               },
               "one" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld display can’t be adjusted"
+                  "state" : "translated",
+                  "value" : "لا يمكن ضبط شاشة واحدة"
                 }
               },
               "other" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld displays can’t be adjusted"
+                  "state" : "translated",
+                  "value" : "لا يمكن ضبط %lld شاشة"
                 }
               },
               "two" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld displays can’t be adjusted"
+                  "state" : "translated",
+                  "value" : "لا يمكن ضبط شاشتين"
                 }
               },
               "zero" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld displays can’t be adjusted"
+                  "state" : "translated",
+                  "value" : "لا يمكن ضبط %lld شاشة"
                 }
               }
             }
@@ -882,20 +882,20 @@
             "plural" : {
               "one" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld display can’t be adjusted"
+                  "state" : "translated",
+                  "value" : "לא ניתן לכוונן צג אחד"
                 }
               },
               "other" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld displays can’t be adjusted"
+                  "state" : "translated",
+                  "value" : "לא ניתן לכוונן %lld צגים"
                 }
               },
               "two" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "%lld displays can’t be adjusted"
+                  "state" : "translated",
+                  "value" : "לא ניתן לכוונן שני צגים"
                 }
               }
             }
@@ -1382,8 +1382,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "A one-minute check makes sure extra brightness is right for %@."
+            "state" : "translated",
+            "value" : "يتأكد فحص مدته دقيقة واحدة من أن الإضاءة الإضافية مناسبة للشاشة \"%@\"."
           }
         },
         "ca" : {
@@ -1436,8 +1436,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "A one-minute check makes sure extra brightness is right for %@."
+            "state" : "translated",
+            "value" : "בדיקה של דקה אחת מוודאת שהבהירות הנוספת מתאימה ל-%@."
           }
         },
         "hi" : {
@@ -1591,8 +1591,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Adapter only"
+            "state" : "translated",
+            "value" : "بالمحول فقط"
           }
         },
         "ca" : {
@@ -1645,8 +1645,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Adapter only"
+            "state" : "translated",
+            "value" : "ספק כוח בלבד"
           }
         },
         "hi" : {
@@ -1800,8 +1800,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Add Overbright to Control Center"
+            "state" : "translated",
+            "value" : "إضافة Overbright إلى \"مركز التحكم\""
           }
         },
         "ca" : {
@@ -1854,8 +1854,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Add Overbright to Control Center"
+            "state" : "translated",
+            "value" : "הוספת Overbright ל״מרכז הבקרה״"
           }
         },
         "hi" : {
@@ -2009,8 +2009,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Any charge"
+            "state" : "translated",
+            "value" : "بأي نسبة شحن"
           }
         },
         "ca" : {
@@ -2063,8 +2063,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Any charge"
+            "state" : "translated",
+            "value" : "כל רמת טעינה"
           }
         },
         "hi" : {
@@ -2218,8 +2218,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Auto-pause"
+            "state" : "translated",
+            "value" : "إيقاف مؤقت تلقائي"
           }
         },
         "ca" : {
@@ -2272,8 +2272,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Auto-pause"
+            "state" : "translated",
+            "value" : "השהיה אוטומטית"
           }
         },
         "hi" : {
@@ -2427,8 +2427,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Auto-pause · Off"
+            "state" : "translated",
+            "value" : "بلا إيقاف مؤقت تلقائي"
           }
         },
         "ca" : {
@@ -2481,8 +2481,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Auto-pause · Off"
+            "state" : "translated",
+            "value" : "ללא השהיה אוטומטית"
           }
         },
         "hi" : {
@@ -2636,8 +2636,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Battery Level"
+            "state" : "translated",
+            "value" : "مستوى البطارية"
           }
         },
         "ca" : {
@@ -2690,8 +2690,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Battery Level"
+            "state" : "translated",
+            "value" : "רמת סוללה"
           }
         },
         "hi" : {
@@ -2845,8 +2845,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Battery limit"
+            "state" : "translated",
+            "value" : "حد البطارية"
           }
         },
         "ca" : {
@@ -2899,8 +2899,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Battery limit"
+            "state" : "translated",
+            "value" : "מגבלת סוללה"
           }
         },
         "hi" : {
@@ -3054,8 +3054,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Below %@"
+            "state" : "translated",
+            "value" : "أقل من %@"
           }
         },
         "ca" : {
@@ -3108,8 +3108,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Below %@"
+            "state" : "translated",
+            "value" : "מתחת ל-%@"
           }
         },
         "hi" : {
@@ -3263,8 +3263,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Bright Room"
+            "state" : "translated",
+            "value" : "غرفة مضاءة"
           }
         },
         "ca" : {
@@ -3317,8 +3317,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Bright Room"
+            "state" : "translated",
+            "value" : "חדר מואר"
           }
         },
         "hi" : {
@@ -3472,8 +3472,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Bright content that stays in one place for a long time, like the menu bar, can wear OLED panels unevenly. Overbright keeps extra brightness lower on OLED displays and pauses it after 5 minutes without input."
+            "state" : "translated",
+            "value" : "قد يؤدي المحتوى الساطع الذي يبقى في مكان واحد لوقت طويل، مثل شريط القوائم، إلى تآكل لوحات OLED بشكل غير متساوٍ. لذا يُبقي Overbright الإضاءة الإضافية أخفض على شاشات OLED ويوقفها مؤقتًا بعد خمس دقائق بلا أي إدخال."
           }
         },
         "ca" : {
@@ -3526,8 +3526,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Bright content that stays in one place for a long time, like the menu bar, can wear OLED panels unevenly. Overbright keeps extra brightness lower on OLED displays and pauses it after 5 minutes without input."
+            "state" : "translated",
+            "value" : "תוכן בהיר שנשאר זמן רב באותו מקום, כמו שורת התפריטים, עלול לגרום לבלאי לא אחיד במסכי OLED. לכן בצגי OLED, Overbright שומר על בהירות נוספת נמוכה יותר ומשהה אותה אחרי 5 דקות ללא קלט."
           }
         },
         "hi" : {
@@ -3681,8 +3681,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Brightens through an overlay. The pointer isn’t brightened, and screen recordings may show the overlay."
+            "state" : "translated",
+            "value" : "يزيد الإضاءة من خلال طبقة تراكب. لا يصبح المؤشر أكثر إضاءة، وقد تظهر الطبقة في تسجيلات الشاشة."
           }
         },
         "ca" : {
@@ -3735,8 +3735,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Brightens through an overlay. The pointer isn’t brightened, and screen recordings may show the overlay."
+            "state" : "translated",
+            "value" : "מגביר את הבהירות באמצעות שכבת על. המצביע לא מתבהר, וייתכן ששכבת העל תופיע בהקלטות מסך."
           }
         },
         "hi" : {
@@ -3890,8 +3890,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Brightness"
+            "state" : "translated",
+            "value" : "الإضاءة"
           }
         },
         "ca" : {
@@ -3944,8 +3944,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Brightness"
+            "state" : "translated",
+            "value" : "בהירות"
           }
         },
         "hi" : {
@@ -4099,8 +4099,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate…"
+            "state" : "translated",
+            "value" : "معايرة…"
           }
         },
         "ca" : {
@@ -4153,8 +4153,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate…"
+            "state" : "translated",
+            "value" : "כיול…"
           }
         },
         "hi" : {
@@ -4308,8 +4308,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Cancel"
+            "state" : "translated",
+            "value" : "إلغاء"
           }
         },
         "ca" : {
@@ -4362,8 +4362,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Cancel"
+            "state" : "translated",
+            "value" : "ביטול"
           }
         },
         "hi" : {
@@ -4517,8 +4517,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change rules…"
+            "state" : "translated",
+            "value" : "تغيير القواعد…"
           }
         },
         "ca" : {
@@ -4571,8 +4571,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change rules…"
+            "state" : "translated",
+            "value" : "שינוי הכללים…"
           }
         },
         "hi" : {
@@ -4726,8 +4726,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change setting…"
+            "state" : "translated",
+            "value" : "تغيير الإعداد…"
           }
         },
         "ca" : {
@@ -4780,8 +4780,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change setting…"
+            "state" : "translated",
+            "value" : "שינוי ההגדרה…"
           }
         },
         "hi" : {
@@ -4935,8 +4935,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change the display preset in Displays settings and back, or log out. If another color app was running, quit it. Settings ▸ Advanced ▸ Reset Display Colors can also help."
+            "state" : "translated",
+            "value" : "غيّر الإعداد المسبق للشاشة في إعدادات \"شاشات العرض\" ثم أعده كما كان، أو سجّل الخروج. وإذا كان تطبيق ألوان آخر قيد التشغيل، فأنهِه. وقد يساعد أيضًا الخيار الإعدادات ◂ متقدم ◂ إعادة تعيين ألوان الشاشة."
           }
         },
         "ca" : {
@@ -4989,8 +4989,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change the display preset in Displays settings and back, or log out. If another color app was running, quit it. Settings ▸ Advanced ▸ Reset Display Colors can also help."
+            "state" : "translated",
+            "value" : "יש להחליף את התצורה של הצג בהגדרות ״צגים״ ולהחזיר אותה, או להתנתק. אם פעל יישום צבע אחר, יש לסיים אותו. גם ״הגדרות״ > ״מתקדם״ > ״איפוס צבעי הצגים…״ יכול לעזור."
           }
         },
         "hi" : {
@@ -5144,8 +5144,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Check that it works"
+            "state" : "translated",
+            "value" : "تحقق من أنه يعمل"
           }
         },
         "ca" : {
@@ -5198,8 +5198,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Check that it works"
+            "state" : "translated",
+            "value" : "כדאי לוודא שהכול עובד"
           }
         },
         "hi" : {
@@ -5353,8 +5353,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Choose Peak…"
+            "state" : "translated",
+            "value" : "اختيار \"الذروة\"…"
           }
         },
         "ca" : {
@@ -5407,8 +5407,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Choose Peak…"
+            "state" : "translated",
+            "value" : "בחירת ״שיא״…"
           }
         },
         "hi" : {
@@ -5562,8 +5562,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Choose Turn Off Overbright in the menu or the panel. If Overbright stops responding, Force Quit it: macOS restores your displays at once."
+            "state" : "translated",
+            "value" : "اختر \"إيقاف Overbright\" من القائمة أو اللوحة. وإذا توقف Overbright عن الاستجابة، فاستخدم \"فرض الإنهاء\" معه: يستعيد macOS شاشاتك فورًا."
           }
         },
         "ca" : {
@@ -5616,8 +5616,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Choose Turn Off Overbright in the menu or the panel. If Overbright stops responding, Force Quit it: macOS restores your displays at once."
+            "state" : "translated",
+            "value" : "יש לבחור ״כיבוי Overbright״ בתפריט או בלוח. אם Overbright מפסיק להגיב, יש לבצע לו סיום מיידי: מערכת macOS תשחזר את הצגים מיד."
           }
         },
         "hi" : {
@@ -5771,8 +5771,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Colors look washed out, or HDR video looks flat"
+            "state" : "translated",
+            "value" : "تبدو الألوان باهتة، أو يبدو فيديو HDR مسطحًا"
           }
         },
         "ca" : {
@@ -5825,8 +5825,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Colors look washed out, or HDR video looks flat"
+            "state" : "translated",
+            "value" : "הצבעים נראים דהויים, או שווידאו HDR נראה שטוח"
           }
         },
         "hi" : {
@@ -5980,8 +5980,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Compatibility mode"
+            "state" : "translated",
+            "value" : "وضع التوافق"
           }
         },
         "ca" : {
@@ -6034,8 +6034,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Compatibility mode"
+            "state" : "translated",
+            "value" : "מצב תאימות"
           }
         },
         "hi" : {
@@ -6189,8 +6189,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue anyway"
+            "state" : "translated",
+            "value" : "متابعة على أية حال"
           }
         },
         "ca" : {
@@ -6243,8 +6243,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue anyway"
+            "state" : "translated",
+            "value" : "המשך בכל זאת"
           }
         },
         "hi" : {
@@ -6398,8 +6398,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim All Displays"
+            "state" : "translated",
+            "value" : "تعتيم كل الشاشات"
           }
         },
         "ca" : {
@@ -6452,8 +6452,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim All Displays"
+            "state" : "translated",
+            "value" : "עמעום כל הצגים"
           }
         },
         "hi" : {
@@ -6607,8 +6607,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Display"
+            "state" : "translated",
+            "value" : "الشاشة"
           }
         },
         "ca" : {
@@ -6661,8 +6661,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Display"
+            "state" : "translated",
+            "value" : "צג"
           }
         },
         "hi" : {
@@ -6816,8 +6816,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Does it use more battery?"
+            "state" : "translated",
+            "value" : "هل يستهلك المزيد من البطارية؟"
           }
         },
         "ca" : {
@@ -6870,8 +6870,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Does it use more battery?"
+            "state" : "translated",
+            "value" : "האם זה מרוקן את הסוללה מהר יותר?"
           }
         },
         "hi" : {
@@ -7025,8 +7025,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Don’t Use on This Display"
+            "state" : "translated",
+            "value" : "عدم الاستخدام على هذه الشاشة"
           }
         },
         "ca" : {
@@ -7079,8 +7079,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Don’t Use on This Display"
+            "state" : "translated",
+            "value" : "ללא שימוש בצג הזה"
           }
         },
         "hi" : {
@@ -7234,8 +7234,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Edit Apps…"
+            "state" : "translated",
+            "value" : "تعديل القائمة…"
           }
         },
         "ca" : {
@@ -7288,8 +7288,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Edit Apps…"
+            "state" : "translated",
+            "value" : "עריכת היישומים…"
           }
         },
         "hi" : {
@@ -7443,8 +7443,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Edit apps…"
+            "state" : "translated",
+            "value" : "تعديل القائمة…"
           }
         },
         "ca" : {
@@ -7497,8 +7497,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Edit apps…"
+            "state" : "translated",
+            "value" : "עריכת היישומים…"
           }
         },
         "hi" : {
@@ -7652,8 +7652,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light"
+            "state" : "translated",
+            "value" : "إضاءة الوجه"
           }
         },
         "ca" : {
@@ -7706,8 +7706,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light"
+            "state" : "translated",
+            "value" : "אור מילוי"
           }
         },
         "hi" : {
@@ -7861,8 +7861,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "For the most light, turn your display brightness all the way up first; Overbright adds to it."
+            "state" : "translated",
+            "value" : "لأكبر قدر من الضوء، ارفع إضاءة الشاشة إلى أقصاها أولًا، إذ يضيف Overbright إليها."
           }
         },
         "ca" : {
@@ -7915,8 +7915,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "For the most light, turn your display brightness all the way up first; Overbright adds to it."
+            "state" : "translated",
+            "value" : "לקבלת מרב האור, יש להגביר קודם את בהירות הצג עד הסוף; Overbright מוסיף עליה."
           }
         },
         "hi" : {
@@ -8070,8 +8070,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Help"
+            "state" : "translated",
+            "value" : "المساعدة"
           }
         },
         "ca" : {
@@ -8124,8 +8124,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Help"
+            "state" : "translated",
+            "value" : "עזרה"
           }
         },
         "hi" : {
@@ -8279,8 +8279,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "How do I get back to normal right away?"
+            "state" : "translated",
+            "value" : "كيف أعود إلى الوضع العادي فورًا؟"
           }
         },
         "ca" : {
@@ -8333,8 +8333,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "How do I get back to normal right away?"
+            "state" : "translated",
+            "value" : "איך חוזרים מיד למצב הרגיל?"
           }
         },
         "hi" : {
@@ -8488,8 +8488,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "If the menu bar is full or macOS hides the icon, open Overbright from Finder or Spotlight to see Settings. In Menu Bar settings, check that Overbright is turned on under Allow in the Menu Bar."
+            "state" : "translated",
+            "value" : "إذا كان شريط القوائم ممتلئًا أو كان macOS يخفي الأيقونة، فافتح Overbright من فايندر أو الباحث لرؤية الإعدادات. وفي إعدادات \"شريط القوائم\"، تأكد من تشغيل Overbright ضمن \"السماح في شريط القوائم\"."
           }
         },
         "ca" : {
@@ -8542,8 +8542,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "If the menu bar is full or macOS hides the icon, open Overbright from Finder or Spotlight to see Settings. In Menu Bar settings, check that Overbright is turned on under Allow in the Menu Bar."
+            "state" : "translated",
+            "value" : "אם שורת התפריטים מלאה או שמערכת macOS מסתירה את הצלמית, יש לפתוח את Overbright מ-Finder או מ-Spotlight כדי לראות את ההגדרות. בהגדרות ״שורת התפריטים״ יש לוודא ש-Overbright מופעל תחת ״הצגה בשורת התפריטים״."
           }
         },
         "hi" : {
@@ -8697,8 +8697,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Indoor"
+            "state" : "translated",
+            "value" : "داخلي"
           }
         },
         "ca" : {
@@ -8751,8 +8751,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Indoor"
+            "state" : "translated",
+            "value" : "בתוך הבית"
           }
         },
         "hi" : {
@@ -8906,8 +8906,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Keep Boosting"
+            "state" : "translated",
+            "value" : "عدم الإيقاف المؤقت"
           }
         },
         "ca" : {
@@ -8960,8 +8960,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Keep Boosting"
+            "state" : "translated",
+            "value" : "ללא השהיה"
           }
         },
         "hi" : {
@@ -9115,8 +9115,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Learn more"
+            "state" : "translated",
+            "value" : "معرفة المزيد"
           }
         },
         "ca" : {
@@ -9169,8 +9169,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Learn more"
+            "state" : "translated",
+            "value" : "פרטים נוספים"
           }
         },
         "hi" : {
@@ -9324,8 +9324,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Little gain at full brightness"
+            "state" : "translated",
+            "value" : "زيادة ضئيلة عند الإضاءة الكاملة"
           }
         },
         "ca" : {
@@ -9378,8 +9378,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Little gain at full brightness"
+            "state" : "translated",
+            "value" : "תוספת קטנה בבהירות מלאה"
           }
         },
         "hi" : {
@@ -9533,8 +9533,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Max"
+            "state" : "translated",
+            "value" : "الأقصى"
           }
         },
         "ca" : {
@@ -9587,8 +9587,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Max"
+            "state" : "translated",
+            "value" : "מקסימום"
           }
         },
         "hi" : {
@@ -9742,8 +9742,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "More"
+            "state" : "translated",
+            "value" : "المزيد"
           }
         },
         "ca" : {
@@ -9796,8 +9796,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "More"
+            "state" : "translated",
+            "value" : "עוד"
           }
         },
         "hi" : {
@@ -9951,8 +9951,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Never"
+            "state" : "translated",
+            "value" : "مطلقًا"
           }
         },
         "ca" : {
@@ -10005,8 +10005,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Never"
+            "state" : "translated",
+            "value" : "אף פעם"
           }
         },
         "hi" : {
@@ -10160,8 +10160,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "No Extra Brightness on This Display"
+            "state" : "translated",
+            "value" : "لا توجد إضاءة إضافية على هذه الشاشة"
           }
         },
         "ca" : {
@@ -10214,8 +10214,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "No Extra Brightness on This Display"
+            "state" : "translated",
+            "value" : "אין בהירות נוספת בצג הזה"
           }
         },
         "hi" : {
@@ -10369,8 +10369,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "No timer"
+            "state" : "translated",
+            "value" : "بلا مؤقت"
           }
         },
         "ca" : {
@@ -10423,8 +10423,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "No timer"
+            "state" : "translated",
+            "value" : "ללא טיימר"
           }
         },
         "hi" : {
@@ -10578,8 +10578,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "None of your displays can show extra brightness right now."
+            "state" : "translated",
+            "value" : "لا تستطيع أي من شاشاتك عرض إضاءة إضافية الآن."
           }
         },
         "ca" : {
@@ -10632,8 +10632,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "None of your displays can show extra brightness right now."
+            "state" : "translated",
+            "value" : "כרגע אף אחד מהצגים שלך לא יכול להציג בהירות נוספת."
           }
         },
         "hi" : {
@@ -10787,8 +10787,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not calibrated: this is an estimate."
+            "state" : "translated",
+            "value" : "غير معايرة: هذه قيمة تقديرية."
           }
         },
         "ca" : {
@@ -10841,8 +10841,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not calibrated: this is an estimate."
+            "state" : "translated",
+            "value" : "לא מכויל: זהו ערך משוער."
           }
         },
         "hi" : {
@@ -10996,8 +10996,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not now"
+            "state" : "translated",
+            "value" : "ليس الآن"
           }
         },
         "ca" : {
@@ -11050,8 +11050,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not now"
+            "state" : "translated",
+            "value" : "לא כעת"
           }
         },
         "hi" : {
@@ -11205,8 +11205,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off"
+            "state" : "translated",
+            "value" : "إيقاف"
           }
         },
         "ca" : {
@@ -11259,8 +11259,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off"
+            "state" : "translated",
+            "value" : "כבוי"
           }
         },
         "hi" : {
@@ -11414,8 +11414,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off after %@"
+            "state" : "translated",
+            "value" : "المؤقت: %@"
           }
         },
         "ca" : {
@@ -11468,8 +11468,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off after %@"
+            "state" : "translated",
+            "value" : "כיבוי אחרי %@"
           }
         },
         "hi" : {
@@ -11623,8 +11623,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off in %@"
+            "state" : "translated",
+            "value" : "إيقاف بعد %@"
           }
         },
         "ca" : {
@@ -11677,8 +11677,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off in %@"
+            "state" : "translated",
+            "value" : "כיבוי בעוד %@"
           }
         },
         "hi" : {
@@ -11832,8 +11832,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "On"
+            "state" : "translated",
+            "value" : "تشغيل"
           }
         },
         "ca" : {
@@ -11886,8 +11886,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "On"
+            "state" : "translated",
+            "value" : "פעיל"
           }
         },
         "hi" : {
@@ -12041,8 +12041,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open System Settings"
+            "state" : "translated",
+            "value" : "فتح إعدادات النظام"
           }
         },
         "ca" : {
@@ -12095,8 +12095,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open System Settings"
+            "state" : "translated",
+            "value" : "פתיחת ״הגדרות המערכת״"
           }
         },
         "hi" : {
@@ -12250,8 +12250,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Below a Level"
+            "state" : "translated",
+            "value" : "إيقاف مؤقت دون مستوى معيّن"
           }
         },
         "ca" : {
@@ -12304,8 +12304,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Below a Level"
+            "state" : "translated",
+            "value" : "השהיה מתחת לרמה"
           }
         },
         "hi" : {
@@ -12459,8 +12459,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for Apps in the List"
+            "state" : "translated",
+            "value" : "إيقاف مؤقت للتطبيقات في القائمة"
           }
         },
         "ca" : {
@@ -12513,8 +12513,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for Apps in the List"
+            "state" : "translated",
+            "value" : "השהיה עבור יישומים ברשימה"
           }
         },
         "hi" : {
@@ -12668,8 +12668,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for Every Full-Screen App"
+            "state" : "translated",
+            "value" : "إيقاف مؤقت لأي تطبيق بملء الشاشة"
           }
         },
         "ca" : {
@@ -12722,8 +12722,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for Every Full-Screen App"
+            "state" : "translated",
+            "value" : "השהיה עבור כל יישום במסך מלא"
           }
         },
         "hi" : {
@@ -12877,8 +12877,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for Full-Screen Video"
+            "state" : "translated",
+            "value" : "إيقاف مؤقت لفيديو بملء الشاشة"
           }
         },
         "ca" : {
@@ -12931,8 +12931,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for Full-Screen Video"
+            "state" : "translated",
+            "value" : "השהיה בווידאו במסך מלא"
           }
         },
         "hi" : {
@@ -13086,8 +13086,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause on Battery"
+            "state" : "translated",
+            "value" : "إيقاف مؤقت عند العمل بالبطارية"
           }
         },
         "ca" : {
@@ -13140,8 +13140,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause on Battery"
+            "state" : "translated",
+            "value" : "השהיה בעת שימוש בסוללה"
           }
         },
         "hi" : {
@@ -13295,8 +13295,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Press %@, or choose Turn Off Overbright. If Overbright stops responding, Force Quit it: macOS restores your displays at once."
+            "state" : "translated",
+            "value" : "اضغط على %@ أو اختر \"إيقاف Overbright\". وإذا توقف Overbright عن الاستجابة، فاستخدم \"فرض الإنهاء\" معه: يستعيد macOS شاشاتك فورًا."
           }
         },
         "ca" : {
@@ -13349,8 +13349,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Press %@, or choose Turn Off Overbright. If Overbright stops responding, Force Quit it: macOS restores your displays at once."
+            "state" : "translated",
+            "value" : "יש להקיש %@, או לבחור ״כיבוי Overbright״. אם Overbright מפסיק להגיב, יש לבצע לו סיום מיידי: מערכת macOS תשחזר את הצגים מיד."
           }
         },
         "hi" : {
@@ -13504,8 +13504,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Quit Overbright"
+            "state" : "translated",
+            "value" : "إنهاء Overbright"
           }
         },
         "ca" : {
@@ -13558,8 +13558,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Quit Overbright"
+            "state" : "translated",
+            "value" : "סיום Overbright"
           }
         },
         "hi" : {
@@ -13713,8 +13713,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Run Self-Test…"
+            "state" : "translated",
+            "value" : "تشغيل الاختبار الذاتي…"
           }
         },
         "ca" : {
@@ -13767,8 +13767,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Run Self-Test…"
+            "state" : "translated",
+            "value" : "הרצת בדיקה עצמית…"
           }
         },
         "hi" : {
@@ -13922,8 +13922,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Run self-test…"
+            "state" : "translated",
+            "value" : "تشغيل الاختبار الذاتي…"
           }
         },
         "ca" : {
@@ -13976,8 +13976,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Run self-test…"
+            "state" : "translated",
+            "value" : "בדיקה עצמית…"
           }
         },
         "hi" : {
@@ -14131,8 +14131,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Safe limit reached: choose Peak for more"
+            "state" : "translated",
+            "value" : "تم بلوغ الحد \"آمن\": اختر \"الذروة\" لإضاءة أكثر"
           }
         },
         "ca" : {
@@ -14185,8 +14185,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Safe limit reached: choose Peak for more"
+            "state" : "translated",
+            "value" : "״בטוח״ הגיע למגבלה: לבהירות רבה יותר יש לבחור ״שיא״"
           }
         },
         "hi" : {
@@ -14340,8 +14340,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Same level on all displays"
+            "state" : "translated",
+            "value" : "المستوى نفسه على كل الشاشات"
           }
         },
         "ca" : {
@@ -14394,8 +14394,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Same level on all displays"
+            "state" : "translated",
+            "value" : "אותה רמה בכל הצגים"
           }
         },
         "hi" : {
@@ -14549,8 +14549,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Settings for This Display…"
+            "state" : "translated",
+            "value" : "إعدادات هذه الشاشة…"
           }
         },
         "ca" : {
@@ -14603,8 +14603,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Settings for This Display…"
+            "state" : "translated",
+            "value" : "הגדרות עבור הצג הזה…"
           }
         },
         "hi" : {
@@ -14758,8 +14758,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Settings…"
+            "state" : "translated",
+            "value" : "الإعدادات…"
           }
         },
         "ca" : {
@@ -14812,8 +14812,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Settings…"
+            "state" : "translated",
+            "value" : "הגדרות…"
           }
         },
         "hi" : {
@@ -14967,8 +14967,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Standard"
+            "state" : "translated",
+            "value" : "القياسي"
           }
         },
         "ca" : {
@@ -15021,8 +15021,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Standard"
+            "state" : "translated",
+            "value" : "סטנדרט"
           }
         },
         "hi" : {
@@ -15176,8 +15176,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Stop Dimming"
+            "state" : "translated",
+            "value" : "إيقاف التعتيم"
           }
         },
         "ca" : {
@@ -15230,8 +15230,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Stop Dimming"
+            "state" : "translated",
+            "value" : "הפסקת העמעום"
           }
         },
         "hi" : {
@@ -15385,8 +15385,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sunlight"
+            "state" : "translated",
+            "value" : "ضوء الشمس"
           }
         },
         "ca" : {
@@ -15439,8 +15439,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sunlight"
+            "state" : "translated",
+            "value" : "אור שמש"
           }
         },
         "hi" : {
@@ -15594,8 +15594,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "The display looks wrong even after quitting"
+            "state" : "translated",
+            "value" : "تبدو الشاشة غير صحيحة حتى بعد الإنهاء"
           }
         },
         "ca" : {
@@ -15648,8 +15648,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "The display looks wrong even after quitting"
+            "state" : "translated",
+            "value" : "הצג נראה לא תקין גם אחרי סיום היישום"
           }
         },
         "hi" : {
@@ -15803,8 +15803,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "The screen didn’t get brighter"
+            "state" : "translated",
+            "value" : "لم تصبح الشاشة أكثر إضاءة"
           }
         },
         "ca" : {
@@ -15857,8 +15857,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "The screen didn’t get brighter"
+            "state" : "translated",
+            "value" : "המסך לא נעשה בהיר יותר"
           }
         },
         "hi" : {
@@ -16012,8 +16012,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Timer"
+            "state" : "translated",
+            "value" : "المؤقت"
           }
         },
         "ca" : {
@@ -16066,8 +16066,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Timer"
+            "state" : "translated",
+            "value" : "טיימר"
           }
         },
         "hi" : {
@@ -16221,8 +16221,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To put Overbright in Control Center or the menu bar, make a shortcut with Turn Overbright On or Off, then add Control Center’s Run Shortcut control."
+            "state" : "translated",
+            "value" : "لإضافة Overbright إلى \"مركز التحكم\" أو شريط القوائم، أنشئ اختصارًا يتضمن الإجراء \"تشغيل Overbright أو إيقافه\"، ثم أضف عنصر التحكم \"تشغيل الاختصار\" إلى \"مركز التحكم\"."
           }
         },
         "ca" : {
@@ -16275,8 +16275,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To put Overbright in Control Center or the menu bar, make a shortcut with Turn Overbright On or Off, then add Control Center’s Run Shortcut control."
+            "state" : "translated",
+            "value" : "כדי להוסיף את Overbright ל״מרכז הבקרה״ או לשורת התפריטים, יש ליצור קיצור עם הפעולה ״הפעלה או כיבוי של Overbright״, ואז להוסיף ל״מרכז הבקרה״ את הפקד ״הפעלת קיצור״."
           }
         },
         "hi" : {
@@ -16430,8 +16430,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Try Again"
+            "state" : "translated",
+            "value" : "إعادة المحاولة"
           }
         },
         "ca" : {
@@ -16484,8 +16484,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Try Again"
+            "state" : "translated",
+            "value" : "ניסיון נוסף"
           }
         },
         "hi" : {
@@ -16639,8 +16639,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Try again"
+            "state" : "translated",
+            "value" : "إعادة المحاولة"
           }
         },
         "ca" : {
@@ -16693,8 +16693,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Try again"
+            "state" : "translated",
+            "value" : "ניסיון נוסף"
           }
         },
         "hi" : {
@@ -16848,8 +16848,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Off After"
+            "state" : "translated",
+            "value" : "إيقاف بعد"
           }
         },
         "ca" : {
@@ -16902,8 +16902,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Off After"
+            "state" : "translated",
+            "value" : "כיבוי אחרי"
           }
         },
         "hi" : {
@@ -17057,8 +17057,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On"
+            "state" : "translated",
+            "value" : "تشغيل"
           }
         },
         "ca" : {
@@ -17111,8 +17111,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On"
+            "state" : "translated",
+            "value" : "הפעלה"
           }
         },
         "hi" : {
@@ -17266,8 +17266,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn off"
+            "state" : "translated",
+            "value" : "إيقاف"
           }
         },
         "ca" : {
@@ -17320,8 +17320,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn off"
+            "state" : "translated",
+            "value" : "כיבוי"
           }
         },
         "hi" : {
@@ -17475,8 +17475,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn on"
+            "state" : "translated",
+            "value" : "تشغيل"
           }
         },
         "ca" : {
@@ -17529,8 +17529,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn on"
+            "state" : "translated",
+            "value" : "הפעלה"
           }
         },
         "hi" : {
@@ -17684,8 +17684,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn the display brightness all the way up; Overbright adds to it. Check the display’s verdict in Settings ▸ Displays. On a MacBook Pro, use the 1600-nit preset. On some Macs, macOS ignores color table changes: choose Calibrate… to check, or try Compatibility mode. Run Self-Test… shows what macOS reports."
+            "state" : "translated",
+            "value" : "ارفع إضاءة الشاشة إلى أقصاها، إذ يضيف Overbright إليها. تحقق من تقييم الشاشة في الإعدادات ◂ شاشات العرض. على MacBook Pro، استخدم الإعداد المسبق 1600 نيت. وعلى بعض أجهزة Mac، يتجاهل macOS تغييرات جدول الألوان: اختر \"معايرة…\" للتحقق، أو جرّب وضع التوافق. ويعرض \"تشغيل الاختبار الذاتي…\" ما يُبلغ عنه macOS."
           }
         },
         "ca" : {
@@ -17738,8 +17738,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn the display brightness all the way up; Overbright adds to it. Check the display’s verdict in Settings ▸ Displays. On a MacBook Pro, use the 1600-nit preset. On some Macs, macOS ignores color table changes: choose Calibrate… to check, or try Compatibility mode. Run Self-Test… shows what macOS reports."
+            "state" : "translated",
+            "value" : "יש להגביר את בהירות הצג עד הסוף; Overbright מוסיף עליה. אפשר לבדוק את ההערכה של הצג ב״הגדרות״ > ״צגים״. ב-MacBook Pro יש להשתמש בתצורה של 1600 ניט. בחלק ממחשבי ה-Mac, מערכת macOS מתעלמת משינויים בטבלת הצבעים: כדי לבדוק, יש לבחור ״כיול…״, או לנסות את מצב התאימות. ״הרצת בדיקה עצמית…״ מראה מה מערכת macOS מדווחת."
           }
         },
         "hi" : {
@@ -17893,8 +17893,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use Compatibility mode"
+            "state" : "translated",
+            "value" : "استخدام وضع التوافق"
           }
         },
         "ca" : {
@@ -17947,8 +17947,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use Compatibility mode"
+            "state" : "translated",
+            "value" : "שימוש במצב תאימות"
           }
         },
         "hi" : {
@@ -18102,8 +18102,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use Extra Brightness on This Display"
+            "state" : "translated",
+            "value" : "استخدام الإضاءة الإضافية على هذه الشاشة"
           }
         },
         "ca" : {
@@ -18156,8 +18156,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use Extra Brightness on This Display"
+            "state" : "translated",
+            "value" : "שימוש בבהירות נוספת בצג הזה"
           }
         },
         "hi" : {
@@ -18311,8 +18311,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use extra brightness on this OLED display?"
+            "state" : "translated",
+            "value" : "هل تريد استخدام الإضاءة الإضافية على شاشة OLED هذه؟"
           }
         },
         "ca" : {
@@ -18365,8 +18365,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use extra brightness on this OLED display?"
+            "state" : "translated",
+            "value" : "להשתמש בבהירות נוספת בצג ה-OLED הזה?"
           }
         },
         "hi" : {
@@ -18520,8 +18520,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Warmth"
+            "state" : "translated",
+            "value" : "الدفء"
           }
         },
         "ca" : {
@@ -18574,8 +18574,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Warmth"
+            "state" : "translated",
+            "value" : "חום"
           }
         },
         "hi" : {
@@ -18729,8 +18729,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Where is the menu bar icon?"
+            "state" : "translated",
+            "value" : "أين أيقونة شريط القوائم؟"
           }
         },
         "ca" : {
@@ -18783,8 +18783,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Where is the menu bar icon?"
+            "state" : "translated",
+            "value" : "איפה הצלמית בשורת התפריטים?"
           }
         },
         "hi" : {
@@ -18938,8 +18938,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "While extra brightness is on, HDR highlights can’t go above the brightened white. Overbright pauses for full-screen video and for video players; add other apps in Settings ▸ Automations."
+            "state" : "translated",
+            "value" : "أثناء تشغيل الإضاءة الإضافية، لا يمكن أن تتجاوز المناطق الساطعة في محتوى HDR الأبيض بعد زيادة إضاءته. يتوقف Overbright مؤقتًا لفيديو بملء الشاشة ولمشغلات الفيديو؛ أضف تطبيقات أخرى في الإعدادات ◂ الأتمتة."
           }
         },
         "ca" : {
@@ -18992,8 +18992,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "While extra brightness is on, HDR highlights can’t go above the brightened white. Overbright pauses for full-screen video and for video players; add other apps in Settings ▸ Automations."
+            "state" : "translated",
+            "value" : "כשהבהירות הנוספת פועלת, אזורים בהירים בתוכן HDR לא יכולים לעלות מעל הלבן המוגבר. Overbright מושהה בווידאו במסך מלא ובנגני וידאו; אפשר להוסיף יישומים אחרים ב״הגדרות״ > ״פעולות אוטומטיות״."
           }
         },
         "hi" : {
@@ -19147,8 +19147,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Why does extra brightness fade when I lower the brightness?"
+            "state" : "translated",
+            "value" : "لماذا تخفت الإضاءة الإضافية عندما أخفض الإضاءة؟"
           }
         },
         "ca" : {
@@ -19201,8 +19201,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Why does extra brightness fade when I lower the brightness?"
+            "state" : "translated",
+            "value" : "למה הבהירות הנוספת דועכת כשמנמיכים את הבהירות?"
           }
         },
         "hi" : {
@@ -19356,8 +19356,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Why is extra brightness limited?"
+            "state" : "translated",
+            "value" : "لماذا تكون الإضاءة الإضافية محدودة؟"
           }
         },
         "ca" : {
@@ -19410,8 +19410,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Why is extra brightness limited?"
+            "state" : "translated",
+            "value" : "למה הבהירות הנוספת מוגבלת?"
           }
         },
         "hi" : {
@@ -19565,8 +19565,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Why?"
+            "state" : "translated",
+            "value" : "لماذا؟"
           }
         },
         "ca" : {
@@ -19619,8 +19619,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Why?"
+            "state" : "translated",
+            "value" : "למה?"
           }
         },
         "hi" : {
@@ -19774,8 +19774,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "With Add extra brightness only near full brightness on, Overbright adds light only when the display is near full brightness, so the brightness keys keep their normal range. Turn it off in Settings ▸ Displays to multiply any brightness."
+            "state" : "translated",
+            "value" : "عند تشغيل \"إضافة الإضاءة الإضافية فقط قرب الإضاءة الكاملة\"، يضيف Overbright الضوء فقط عندما تكون الشاشة قريبة من الإضاءة الكاملة، فتحتفظ مفاتيح الإضاءة بنطاقها العادي. أوقفه في الإعدادات ◂ شاشات العرض لمضاعفة أي مستوى إضاءة."
           }
         },
         "ca" : {
@@ -19828,8 +19828,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "With Add extra brightness only near full brightness on, Overbright adds light only when the display is near full brightness, so the brightness keys keep their normal range. Turn it off in Settings ▸ Displays to multiply any brightness."
+            "state" : "translated",
+            "value" : "כשההגדרה ״הוספת בהירות נוספת רק סמוך לבהירות מלאה״ מופעלת, Overbright מוסיף אור רק כשהצג קרוב לבהירות מלאה, כך שמקשי הבהירות שומרים על הטווח הרגיל שלהם. כדי להגביר כל רמת בהירות, יש לכבות אותה ב״הגדרות״ > ״צגים״."
           }
         },
         "hi" : {
@@ -19983,8 +19983,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Yes. More light takes more power, roughly in proportion. By default Overbright pauses below %@ battery and in Low Power Mode."
+            "state" : "translated",
+            "value" : "نعم. يحتاج الضوء الأكثر إلى طاقة أكبر، بشكل متناسب تقريبًا. افتراضيًا، يتوقف Overbright مؤقتًا عندما يقل شحن البطارية عن %@ وفي \"نمط الطاقة المنخفضة\"."
           }
         },
         "ca" : {
@@ -20037,8 +20037,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Yes. More light takes more power, roughly in proportion. By default Overbright pauses below %@ battery and in Low Power Mode."
+            "state" : "translated",
+            "value" : "כן. יותר אור צורך יותר חשמל, בערך ביחס ישר. כברירת מחדל, Overbright מושהה כשהסוללה מתחת ל-%@ וב״מצב חיסכון באנרגיה״."
           }
         },
         "hi" : {
@@ -20192,8 +20192,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "macOS decides how much extra range a display gets. It gives less when the surroundings are already bright, the display is warm or the battery is low. The chip on each display says what limits it."
+            "state" : "translated",
+            "value" : "يقرر macOS مقدار هامش الإضاءة الذي تحصل عليه الشاشة. ويمنح هامشًا أقل عندما يكون المحيط ساطعًا أصلًا أو الشاشة دافئة أو البطارية منخفضة. وتوضح الشارة على كل شاشة ما يقيّدها."
           }
         },
         "ca" : {
@@ -20246,8 +20246,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "macOS decides how much extra range a display gets. It gives less when the surroundings are already bright, the display is warm or the battery is low. The chip on each display says what limits it."
+            "state" : "translated",
+            "value" : "מערכת macOS קובעת כמה טווח נוסף יקבל כל צג. היא נותנת פחות כשהסביבה כבר מוארת, כשהצג חם או כשהסוללה חלשה. התווית בכל צג מציינת מה מגביל אותו."
           }
         },
         "hi" : {

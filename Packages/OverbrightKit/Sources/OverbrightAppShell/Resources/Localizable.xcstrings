@@ -6,8 +6,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "هل تريد نقل Overbright إلى مجلد \"التطبيقات\"؟"
           }
         },
         "ca" : {
@@ -60,8 +60,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "להעביר את Overbright לתיקיה ״יישומים״?"
           }
         },
         "hi" : {
@@ -215,8 +215,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "نقل إلى \"التطبيقات\""
           }
         },
         "ca" : {
@@ -269,8 +269,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "העברה ל״יישומים״"
           }
         },
         "hi" : {
@@ -424,8 +424,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "ليس الآن"
           }
         },
         "ca" : {
@@ -478,8 +478,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "לא כעת"
           }
         },
         "hi" : {
@@ -633,8 +633,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "OK"
+            "state" : "translated",
+            "value" : "حسنًا"
           }
         },
         "ca" : {
@@ -687,8 +687,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "OK"
+            "state" : "translated",
+            "value" : "אישור"
           }
         },
         "hi" : {
@@ -842,8 +842,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "تعذر نقل Overbright. اسحبه إلى مجلد \"التطبيقات\" في فايندر."
           }
         },
         "ca" : {
@@ -896,8 +896,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "לא ניתן היה להעביר את Overbright. יש לגרור אותו לתיקיה ״יישומים״ ב-Finder."
           }
         },
         "hi" : {
@@ -1260,8 +1260,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "تعمل إجراءات \"الاختصارات\" والفتح عند تسجيل الدخول فقط من مجلد \"التطبيقات\"."
           }
         },
         "ca" : {
@@ -1314,8 +1314,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "פעולות ב״קיצורים״ ופתיחה בעת ההתחברות פועלות רק מתוך ״יישומים״."
           }
         },
         "hi" : {

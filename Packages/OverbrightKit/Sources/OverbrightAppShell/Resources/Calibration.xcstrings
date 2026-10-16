@@ -6,8 +6,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "معايرة %@"
           }
         },
         "ca" : {
@@ -60,8 +60,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "כיול %@"
           }
         },
         "hi" : {
@@ -215,8 +215,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "اختبار Overbright الذاتي %@"
           }
         },
         "ca" : {
@@ -269,8 +269,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "בדיקה עצמית של Overbright %@"
           }
         },
         "hi" : {
@@ -424,8 +424,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "الاختبار الذاتي"
           }
         },
         "ca" : {
@@ -478,8 +478,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "בדיקה עצמית"
           }
         },
         "hi" : {

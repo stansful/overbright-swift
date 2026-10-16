@@ -6,8 +6,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "إضاءة إضافية"
           }
         },
         "ca" : {
@@ -60,8 +60,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "בהירות נוספת"
           }
         },
         "hi" : {
@@ -215,8 +215,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra brightness"
+            "state" : "translated",
+            "value" : "إضاءة إضافية"
           }
         },
         "ca" : {
@@ -269,8 +269,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra brightness"
+            "state" : "translated",
+            "value" : "בהירות נוספת"
           }
         },
         "hi" : {
@@ -424,7 +424,7 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },
@@ -478,7 +478,7 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },

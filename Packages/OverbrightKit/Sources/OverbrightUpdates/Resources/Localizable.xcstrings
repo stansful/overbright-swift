@@ -424,7 +424,7 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "لم يعثر GitHub على إصدارات Overbright. حاول مرة أخرى لاحقًا."
           }
         },
@@ -478,7 +478,7 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "לא נמצאו ב-GitHub גירסאות של Overbright. יש לנסות שוב מאוחר יותר."
           }
         },

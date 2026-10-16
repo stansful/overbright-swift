@@ -7,8 +7,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "العودة إلى المستوى القياسي في ${applicationName}"
           }
         },
         "ca" : {
@@ -69,8 +69,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "חזרה לסטנדרט ב-${applicationName}"
           }
         },
         "hi" : {
@@ -225,8 +225,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "تشغيل ${applicationName} أو إيقافه"
           }
         },
         "ca" : {
@@ -287,8 +287,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "הפעלה או כיבוי של ${applicationName}"
           }
         },
         "hi" : {

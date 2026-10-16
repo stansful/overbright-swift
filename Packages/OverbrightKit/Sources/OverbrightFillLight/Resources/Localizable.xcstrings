@@ -6,8 +6,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light off"
+            "state" : "translated",
+            "value" : "تم إيقاف إضاءة الوجه"
           }
         },
         "ca" : {
@@ -60,8 +60,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light off"
+            "state" : "translated",
+            "value" : "אור המילוי כבוי"
           }
         },
         "hi" : {
@@ -215,8 +215,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light on"
+            "state" : "translated",
+            "value" : "تم تشغيل إضاءة الوجه"
           }
         },
         "ca" : {
@@ -269,8 +269,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light on"
+            "state" : "translated",
+            "value" : "אור המילוי פעיל"
           }
         },
         "hi" : {

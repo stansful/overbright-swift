@@ -6,8 +6,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "All Displays"
+            "state" : "translated",
+            "value" : "كل الشاشات"
           }
         },
         "ca" : {
@@ -60,8 +60,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "All Displays"
+            "state" : "translated",
+            "value" : "כל הצגים"
           }
         },
         "hi" : {
@@ -215,8 +215,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "العودة إلى المستوى القياسي"
           }
         },
         "ca" : {
@@ -269,8 +269,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "חזרה לסטנדרט"
           }
         },
         "hi" : {
@@ -424,8 +424,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change Hours…"
+            "state" : "translated",
+            "value" : "تغيير الساعات…"
           }
         },
         "ca" : {
@@ -478,8 +478,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change Hours…"
+            "state" : "translated",
+            "value" : "שינוי השעות…"
           }
         },
         "hi" : {
@@ -633,8 +633,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change Power Rules…"
+            "state" : "translated",
+            "value" : "تغيير قواعد الطاقة…"
           }
         },
         "ca" : {
@@ -687,8 +687,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change Power Rules…"
+            "state" : "translated",
+            "value" : "שינוי כללי האנרגיה…"
           }
         },
         "hi" : {
@@ -842,8 +842,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue Anyway"
+            "state" : "translated",
+            "value" : "متابعة على أية حال"
           }
         },
         "ca" : {
@@ -896,8 +896,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue Anyway"
+            "state" : "translated",
+            "value" : "המשך בכל זאת"
           }
         },
         "hi" : {
@@ -1051,8 +1051,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim All Displays"
+            "state" : "translated",
+            "value" : "تعتيم كل الشاشات"
           }
         },
         "ca" : {
@@ -1105,8 +1105,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim All Displays"
+            "state" : "translated",
+            "value" : "עמעום כל הצגים"
           }
         },
         "hi" : {
@@ -1260,8 +1260,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light"
+            "state" : "translated",
+            "value" : "إضاءة الوجه"
           }
         },
         "ca" : {
@@ -1314,8 +1314,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light"
+            "state" : "translated",
+            "value" : "אור מילוי"
           }
         },
         "hi" : {
@@ -1469,8 +1469,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Go Back"
+            "state" : "translated",
+            "value" : "رجوع"
           }
         },
         "ca" : {
@@ -1523,8 +1523,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Go Back"
+            "state" : "translated",
+            "value" : "חזרה"
           }
         },
         "hi" : {
@@ -1677,9 +1677,45 @@
       "comment" : "HUD: Keep-this-level prompt, the countdown before the previous level returns",
       "localizations" : {
         "ar" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Going back in %lld s"
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "العودة خلال %lld ثوانٍ"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "العودة خلال %lld ثانية"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "العودة خلال ثانية"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "العودة خلال %lld ثانية"
+                }
+              },
+              "two" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "العودة خلال ثانيتين"
+                }
+              },
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "العودة خلال %lld ثانية"
+                }
+              }
+            }
           }
         },
         "ca" : {
@@ -1875,9 +1911,27 @@
           }
         },
         "he" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Going back in %lld s"
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "חזרה בעוד %lld שנ׳"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "חזרה בעוד %lld שנ׳"
+                }
+              },
+              "two" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "חזרה בעוד %lld שנ׳"
+                }
+              }
+            }
           }
         },
         "hi" : {
@@ -2301,8 +2355,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Help"
+            "state" : "translated",
+            "value" : "المساعدة"
           }
         },
         "ca" : {
@@ -2355,8 +2409,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Help"
+            "state" : "translated",
+            "value" : "עזרה"
           }
         },
         "hi" : {
@@ -2510,8 +2564,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Keep"
+            "state" : "translated",
+            "value" : "إبقاء"
           }
         },
         "ca" : {
@@ -2564,8 +2618,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Keep"
+            "state" : "translated",
+            "value" : "השארה"
           }
         },
         "hi" : {
@@ -2719,8 +2773,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Keep this level?"
+            "state" : "translated",
+            "value" : "الإبقاء على هذا المستوى؟"
           }
         },
         "ca" : {
@@ -2773,8 +2827,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Keep this level?"
+            "state" : "translated",
+            "value" : "להשאיר את הרמה הזו?"
           }
         },
         "hi" : {
@@ -2931,38 +2985,38 @@
             "plural" : {
               "few" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld seconds."
+                  "state" : "translated",
+                  "value" : "الإبقاء على هذا المستوى؟ العودة خلال %lld ثوانٍ."
                 }
               },
               "many" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld seconds."
+                  "state" : "translated",
+                  "value" : "الإبقاء على هذا المستوى؟ العودة خلال %lld ثانية."
                 }
               },
               "one" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld second."
+                  "state" : "translated",
+                  "value" : "الإبقاء على هذا المستوى؟ العودة خلال ثانية واحدة."
                 }
               },
               "other" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld seconds."
+                  "state" : "translated",
+                  "value" : "الإبقاء على هذا المستوى؟ العودة خلال %lld ثانية."
                 }
               },
               "two" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld seconds."
+                  "state" : "translated",
+                  "value" : "الإبقاء على هذا المستوى؟ العودة خلال ثانيتين."
                 }
               },
               "zero" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld seconds."
+                  "state" : "translated",
+                  "value" : "الإبقاء على هذا المستوى؟ العودة خلال %lld ثانية."
                 }
               }
             }
@@ -3165,20 +3219,20 @@
             "plural" : {
               "one" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld second."
+                  "state" : "translated",
+                  "value" : "להשאיר את הרמה הזו? חזרה בעוד שנייה אחת."
                 }
               },
               "other" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld seconds."
+                  "state" : "translated",
+                  "value" : "להשאיר את הרמה הזו? חזרה בעוד %lld שניות."
                 }
               },
               "two" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld seconds."
+                  "state" : "translated",
+                  "value" : "להשאיר את הרמה הזו? חזרה בעוד שתי שניות."
                 }
               }
             }
@@ -3665,8 +3719,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "OK"
+            "state" : "translated",
+            "value" : "حسنًا"
           }
         },
         "ca" : {
@@ -3719,8 +3773,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "OK"
+            "state" : "translated",
+            "value" : "אישור"
           }
         },
         "hi" : {
@@ -3874,8 +3928,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open System Settings"
+            "state" : "translated",
+            "value" : "فتح إعدادات النظام"
           }
         },
         "ca" : {
@@ -3928,8 +3982,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open System Settings"
+            "state" : "translated",
+            "value" : "פתיחת ״הגדרות המערכת״"
           }
         },
         "hi" : {
@@ -4083,8 +4137,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Help"
+            "state" : "translated",
+            "value" : "مساعدة Overbright"
           }
         },
         "ca" : {
@@ -4137,8 +4191,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Help"
+            "state" : "translated",
+            "value" : "עזרה בנושא Overbright"
           }
         },
         "hi" : {
@@ -4292,8 +4346,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright off"
+            "state" : "translated",
+            "value" : "تم إيقاف Overbright"
           }
         },
         "ca" : {
@@ -4346,8 +4400,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright off"
+            "state" : "translated",
+            "value" : "Overbright כבוי"
           }
         },
         "hi" : {
@@ -4501,8 +4555,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright on"
+            "state" : "translated",
+            "value" : "تم تشغيل Overbright"
           }
         },
         "ca" : {
@@ -4555,8 +4609,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright on"
+            "state" : "translated",
+            "value" : "Overbright פעיל"
           }
         },
         "hi" : {
@@ -4710,8 +4764,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, dimmed"
+            "state" : "translated",
+            "value" : "Overbright، معتّم"
           }
         },
         "ca" : {
@@ -4764,8 +4818,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, dimmed"
+            "state" : "translated",
+            "value" : "Overbright, מעומעם"
           }
         },
         "hi" : {
@@ -4919,8 +4973,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, needs attention"
+            "state" : "translated",
+            "value" : "Overbright، يحتاج إلى انتباه"
           }
         },
         "ca" : {
@@ -4973,8 +5027,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, needs attention"
+            "state" : "translated",
+            "value" : "Overbright, דורש תשומת לב"
           }
         },
         "hi" : {
@@ -5128,8 +5182,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, off"
+            "state" : "translated",
+            "value" : "Overbright، متوقف"
           }
         },
         "ca" : {
@@ -5182,8 +5236,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, off"
+            "state" : "translated",
+            "value" : "Overbright, כבוי"
           }
         },
         "hi" : {
@@ -5337,8 +5391,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, on"
+            "state" : "translated",
+            "value" : "Overbright، مشغّل"
           }
         },
         "ca" : {
@@ -5391,8 +5445,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, on"
+            "state" : "translated",
+            "value" : "Overbright, פעיל"
           }
         },
         "hi" : {
@@ -5546,8 +5600,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, paused"
+            "state" : "translated",
+            "value" : "Overbright، متوقف مؤقتًا"
           }
         },
         "ca" : {
@@ -5600,8 +5654,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, paused"
+            "state" : "translated",
+            "value" : "Overbright, מושהה"
           }
         },
         "hi" : {
@@ -5755,8 +5809,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, preparing"
+            "state" : "translated",
+            "value" : "Overbright، قيد التحضير"
           }
         },
         "ca" : {
@@ -5809,8 +5863,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, preparing"
+            "state" : "translated",
+            "value" : "Overbright, בהכנה"
           }
         },
         "hi" : {
@@ -5964,8 +6018,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright’s icon isn’t visible"
+            "state" : "translated",
+            "value" : "أيقونة Overbright غير ظاهرة"
           }
         },
         "ca" : {
@@ -6018,8 +6072,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright’s icon isn’t visible"
+            "state" : "translated",
+            "value" : "הצלמית של Overbright אינה מוצגת"
           }
         },
         "hi" : {
@@ -6173,8 +6227,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for 1 Hour"
+            "state" : "translated",
+            "value" : "إيقاف مؤقت لمدة ساعة"
           }
         },
         "ca" : {
@@ -6227,8 +6281,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for 1 Hour"
+            "state" : "translated",
+            "value" : "השהיה לשעה אחת"
           }
         },
         "hi" : {
@@ -6382,8 +6436,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Paused Until %@"
+            "state" : "translated",
+            "value" : "متوقف مؤقتًا حتى %@"
           }
         },
         "ca" : {
@@ -6436,8 +6490,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Paused Until %@"
+            "state" : "translated",
+            "value" : "מושהה עד %@"
           }
         },
         "hi" : {
@@ -6591,8 +6645,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Quit Overbright"
+            "state" : "translated",
+            "value" : "إنهاء Overbright"
           }
         },
         "ca" : {
@@ -6645,8 +6699,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Quit Overbright"
+            "state" : "translated",
+            "value" : "סיום Overbright"
           }
         },
         "hi" : {
@@ -6800,8 +6854,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Resume"
+            "state" : "translated",
+            "value" : "استئناف"
           }
         },
         "ca" : {
@@ -6854,8 +6908,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Resume"
+            "state" : "translated",
+            "value" : "המשך"
           }
         },
         "hi" : {
@@ -7009,8 +7063,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Settings…"
+            "state" : "translated",
+            "value" : "الإعدادات…"
           }
         },
         "ca" : {
@@ -7063,8 +7117,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Settings…"
+            "state" : "translated",
+            "value" : "הגדרות…"
           }
         },
         "hi" : {
@@ -7218,8 +7272,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Show Panel"
+            "state" : "translated",
+            "value" : "إظهار اللوحة"
           }
         },
         "ca" : {
@@ -7272,8 +7326,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Show Panel"
+            "state" : "translated",
+            "value" : "הצגת הלוח"
           }
         },
         "hi" : {
@@ -7427,8 +7481,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Stop Dimming"
+            "state" : "translated",
+            "value" : "إيقاف التعتيم"
           }
         },
         "ca" : {
@@ -7481,8 +7535,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Stop Dimming"
+            "state" : "translated",
+            "value" : "הפסקת העמעום"
           }
         },
         "hi" : {
@@ -7636,8 +7690,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To show it, turn on Overbright under Allow in the Menu Bar in Menu Bar settings."
+            "state" : "translated",
+            "value" : "لإظهاره، شغّل Overbright ضمن \"السماح في شريط القوائم\" في إعدادات \"شريط القوائم\"."
           }
         },
         "ca" : {
@@ -7690,8 +7744,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To show it, turn on Overbright under Allow in the Menu Bar in Menu Bar settings."
+            "state" : "translated",
+            "value" : "כדי שתוצג, יש להפעיל את Overbright תחת ״הצגה בשורת התפריטים״ בהגדרות ״שורת התפריטים״."
           }
         },
         "hi" : {
@@ -7845,8 +7899,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Try Again"
+            "state" : "translated",
+            "value" : "إعادة المحاولة"
           }
         },
         "ca" : {
@@ -7899,8 +7953,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Try Again"
+            "state" : "translated",
+            "value" : "ניסיון נוסף"
           }
         },
         "hi" : {
@@ -8054,8 +8108,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Off Overbright"
+            "state" : "translated",
+            "value" : "إيقاف Overbright"
           }
         },
         "ca" : {
@@ -8108,8 +8162,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Off Overbright"
+            "state" : "translated",
+            "value" : "כיבוי Overbright"
           }
         },
         "hi" : {
@@ -8263,8 +8317,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "تشغيل Overbright"
           }
         },
         "ca" : {
@@ -8317,8 +8371,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "הפעלת Overbright"
           }
         },
         "hi" : {
@@ -8472,8 +8526,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Update Available: Overbright %@…"
+            "state" : "translated",
+            "value" : "يتوفر تحديث: Overbright %@…"
           }
         },
         "ca" : {
@@ -8526,8 +8580,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Update Available: Overbright %@…"
+            "state" : "translated",
+            "value" : "עדכון זמין: Overbright %@…"
           }
         },
         "hi" : {
@@ -8681,8 +8735,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use Compatibility Mode"
+            "state" : "translated",
+            "value" : "استخدام وضع التوافق"
           }
         },
         "ca" : {
@@ -8735,8 +8789,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use Compatibility Mode"
+            "state" : "translated",
+            "value" : "שימוש במצב תאימות"
           }
         },
         "hi" : {
@@ -8890,8 +8944,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "macOS may be hiding it, or the menu bar is too full to show it. You can still open Overbright from Finder or Spotlight."
+            "state" : "translated",
+            "value" : "ربما يخفيه macOS، أو أن شريط القوائم ممتلئ فلا يتسع له. لا يزال بإمكانك فتح Overbright من فايندر أو الباحث."
           }
         },
         "ca" : {
@@ -8944,8 +8998,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "macOS may be hiding it, or the menu bar is too full to show it. You can still open Overbright from Finder or Spotlight."
+            "state" : "translated",
+            "value" : "ייתכן שמערכת macOS מסתירה אותה, או ששורת התפריטים מלאה מדי. עדיין אפשר לפתוח את Overbright מ-Finder או מ-Spotlight."
           }
         },
         "hi" : {
@@ -9099,8 +9153,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "macOS may be hiding it, or the menu bar is too full to show it. You can still use %@, or open Overbright from Finder or Spotlight."
+            "state" : "translated",
+            "value" : "ربما يخفيه macOS، أو أن شريط القوائم ممتلئ فلا يتسع له. لا يزال بإمكانك استخدام %@ أو فتح Overbright من فايندر أو الباحث."
           }
         },
         "ca" : {
@@ -9153,8 +9207,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "macOS may be hiding it, or the menu bar is too full to show it. You can still use %@, or open Overbright from Finder or Spotlight."
+            "state" : "translated",
+            "value" : "ייתכן שמערכת macOS מסתירה אותה, או ששורת התפריטים מלאה מדי. עדיין אפשר להשתמש ב-%@, או לפתוח את Overbright מ-Finder או מ-Spotlight."
           }
         },
         "hi" : {

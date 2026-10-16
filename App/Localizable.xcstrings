@@ -10,8 +10,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "All Displays"
+            "state" : "translated",
+            "value" : "كل الشاشات"
           }
         },
         "ca" : {
@@ -64,8 +64,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "All Displays"
+            "state" : "translated",
+            "value" : "כל הצגים"
           }
         },
         "hi" : {
@@ -219,8 +219,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "العودة إلى المستوى القياسي"
           }
         },
         "ca" : {
@@ -273,8 +273,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "חזרה לסטנדרט"
           }
         },
         "hi" : {
@@ -428,8 +428,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Bright Room"
+            "state" : "translated",
+            "value" : "غرفة مضاءة"
           }
         },
         "ca" : {
@@ -482,8 +482,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Bright Room"
+            "state" : "translated",
+            "value" : "חדר מואר"
           }
         },
         "hi" : {
@@ -637,8 +637,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Brightness"
+            "state" : "translated",
+            "value" : "الإضاءة"
           }
         },
         "ca" : {
@@ -691,8 +691,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Brightness"
+            "state" : "translated",
+            "value" : "בהירות"
           }
         },
         "hi" : {
@@ -846,8 +846,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim ${display} to ${percent}"
+            "state" : "translated",
+            "value" : "تعتيم ${display} إلى ${percent}"
           }
         },
         "ca" : {
@@ -900,8 +900,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim ${display} to ${percent}"
+            "state" : "translated",
+            "value" : "עמעום ${display} ל-${percent}"
           }
         },
         "hi" : {
@@ -1055,8 +1055,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim Displays"
+            "state" : "translated",
+            "value" : "تعتيم الشاشات"
           }
         },
         "ca" : {
@@ -1109,8 +1109,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim Displays"
+            "state" : "translated",
+            "value" : "עמעום צגים"
           }
         },
         "hi" : {
@@ -1264,8 +1264,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dims a display, or every display, below the macOS minimum."
+            "state" : "translated",
+            "value" : "يعتّم شاشة واحدة أو كل الشاشات دون الحد الأدنى في macOS."
           }
         },
         "ca" : {
@@ -1318,8 +1318,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dims a display, or every display, below the macOS minimum."
+            "state" : "translated",
+            "value" : "מעמעם צג אחד, או את כל הצגים, מתחת למינימום של macOS."
           }
         },
         "hi" : {
@@ -1473,8 +1473,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Display"
+            "state" : "translated",
+            "value" : "الشاشة"
           }
         },
         "ca" : {
@@ -1527,8 +1527,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Display"
+            "state" : "translated",
+            "value" : "צג"
           }
         },
         "hi" : {
@@ -1682,8 +1682,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Duration"
+            "state" : "translated",
+            "value" : "المدة"
           }
         },
         "ca" : {
@@ -1736,8 +1736,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Duration"
+            "state" : "translated",
+            "value" : "משך"
           }
         },
         "hi" : {
@@ -1891,8 +1891,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ends a pause."
+            "state" : "translated",
+            "value" : "ينهي الإيقاف المؤقت."
           }
         },
         "ca" : {
@@ -1945,8 +1945,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ends a pause."
+            "state" : "translated",
+            "value" : "מסיים השהיה."
           }
         },
         "hi" : {
@@ -2100,8 +2100,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "إضاءة إضافية"
           }
         },
         "ca" : {
@@ -2154,8 +2154,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "בהירות נוספת"
           }
         },
         "hi" : {
@@ -2309,8 +2309,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Get Overbright State"
+            "state" : "translated",
+            "value" : "الحصول على حالة Overbright"
           }
         },
         "ca" : {
@@ -2363,8 +2363,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Get Overbright State"
+            "state" : "translated",
+            "value" : "קבלת המצב של Overbright"
           }
         },
         "hi" : {
@@ -2518,8 +2518,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Indoor"
+            "state" : "translated",
+            "value" : "داخلي"
           }
         },
         "ca" : {
@@ -2572,8 +2572,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Indoor"
+            "state" : "translated",
+            "value" : "בתוך הבית"
           }
         },
         "hi" : {
@@ -2727,8 +2727,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Leave Alone"
+            "state" : "translated",
+            "value" : "دون تغيير"
           }
         },
         "ca" : {
@@ -2781,8 +2781,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Leave Alone"
+            "state" : "translated",
+            "value" : "ללא שינוי"
           }
         },
         "hi" : {
@@ -2936,8 +2936,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Level"
+            "state" : "translated",
+            "value" : "المستوى"
           }
         },
         "ca" : {
@@ -2990,8 +2990,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Level"
+            "state" : "translated",
+            "value" : "רמה"
           }
         },
         "hi" : {
@@ -3145,8 +3145,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Max"
+            "state" : "translated",
+            "value" : "الأقصى"
           }
         },
         "ca" : {
@@ -3199,8 +3199,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Max"
+            "state" : "translated",
+            "value" : "מקסימום"
           }
         },
         "hi" : {
@@ -3354,8 +3354,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Multiplier"
+            "state" : "translated",
+            "value" : "المضاعف"
           }
         },
         "ca" : {
@@ -3408,8 +3408,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Multiplier"
+            "state" : "translated",
+            "value" : "מכפיל"
           }
         },
         "hi" : {
@@ -3563,8 +3563,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off"
+            "state" : "translated",
+            "value" : "إيقاف"
           }
         },
         "ca" : {
@@ -3617,8 +3617,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Off"
+            "state" : "translated",
+            "value" : "כיבוי"
           }
         },
         "hi" : {
@@ -3772,8 +3772,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "On"
+            "state" : "translated",
+            "value" : "تشغيل"
           }
         },
         "ca" : {
@@ -3826,8 +3826,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "On"
+            "state" : "translated",
+            "value" : "הפעלה"
           }
         },
         "hi" : {
@@ -3981,7 +3981,7 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },
@@ -4035,7 +4035,7 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },
@@ -4190,8 +4190,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: Leave Alone"
+            "state" : "translated",
+            "value" : "تطبيق Overbright: دون تغيير"
           }
         },
         "ca" : {
@@ -4244,8 +4244,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: Leave Alone"
+            "state" : "translated",
+            "value" : "ללא שינוי ב-Overbright"
           }
         },
         "hi" : {
@@ -4399,8 +4399,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: Off"
+            "state" : "translated",
+            "value" : "تطبيق Overbright: إيقاف"
           }
         },
         "ca" : {
@@ -4453,8 +4453,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: Off"
+            "state" : "translated",
+            "value" : "כיבוי של Overbright"
           }
         },
         "hi" : {
@@ -4608,8 +4608,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Bright Room"
+            "state" : "translated",
+            "value" : "تطبيق Overbright: تشغيل، \"غرفة مضاءة\""
           }
         },
         "ca" : {
@@ -4662,8 +4662,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Bright Room"
+            "state" : "translated",
+            "value" : "הפעלת Overbright: ״חדר מואר״"
           }
         },
         "hi" : {
@@ -4817,8 +4817,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Indoor"
+            "state" : "translated",
+            "value" : "تطبيق Overbright: تشغيل، \"داخلي\""
           }
         },
         "ca" : {
@@ -4871,8 +4871,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Indoor"
+            "state" : "translated",
+            "value" : "הפעלת Overbright: ״בתוך הבית״"
           }
         },
         "hi" : {
@@ -5026,8 +5026,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Max"
+            "state" : "translated",
+            "value" : "تطبيق Overbright: تشغيل، \"الأقصى\""
           }
         },
         "ca" : {
@@ -5080,8 +5080,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Max"
+            "state" : "translated",
+            "value" : "הפעלת Overbright: ״מקסימום״"
           }
         },
         "hi" : {
@@ -5235,8 +5235,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Sunlight"
+            "state" : "translated",
+            "value" : "تطبيق Overbright: تشغيل، \"ضوء الشمس\""
           }
         },
         "ca" : {
@@ -5289,8 +5289,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright: On at Sunlight"
+            "state" : "translated",
+            "value" : "הפעלת Overbright: ״אור שמש״"
           }
         },
         "hi" : {
@@ -5444,8 +5444,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Overbright"
+            "state" : "translated",
+            "value" : "إيقاف Overbright مؤقتًا"
           }
         },
         "ca" : {
@@ -5498,8 +5498,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Overbright"
+            "state" : "translated",
+            "value" : "השהיית Overbright"
           }
         },
         "hi" : {
@@ -5653,8 +5653,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Overbright for ${duration}"
+            "state" : "translated",
+            "value" : "إيقاف Overbright مؤقتًا لمدة ${duration}"
           }
         },
         "ca" : {
@@ -5707,8 +5707,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause Overbright for ${duration}"
+            "state" : "translated",
+            "value" : "השהיית Overbright למשך ${duration}"
           }
         },
         "hi" : {
@@ -5862,8 +5862,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pauses extra brightness for a while."
+            "state" : "translated",
+            "value" : "يوقف الإضاءة الإضافية مؤقتًا لفترة."
           }
         },
         "ca" : {
@@ -5916,8 +5916,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pauses extra brightness for a while."
+            "state" : "translated",
+            "value" : "משהה את הבהירות הנוספת לזמן מה."
           }
         },
         "hi" : {
@@ -6071,8 +6071,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Resume Overbright"
+            "state" : "translated",
+            "value" : "استئناف Overbright"
           }
         },
         "ca" : {
@@ -6125,8 +6125,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Resume Overbright"
+            "state" : "translated",
+            "value" : "המשך הפעולה של Overbright"
           }
         },
         "hi" : {
@@ -6280,8 +6280,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set Extra Brightness"
+            "state" : "translated",
+            "value" : "تعيين الإضاءة الإضافية"
           }
         },
         "ca" : {
@@ -6334,8 +6334,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set Extra Brightness"
+            "state" : "translated",
+            "value" : "הגדרת בהירות נוספת"
           }
         },
         "hi" : {
@@ -6489,8 +6489,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set extra brightness of ${display} to ${level}"
+            "state" : "translated",
+            "value" : "تعيين الإضاءة الإضافية لـ ${display} إلى ${level}"
           }
         },
         "ca" : {
@@ -6543,8 +6543,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set extra brightness of ${display} to ${level}"
+            "state" : "translated",
+            "value" : "הגדרת הבהירות הנוספת של ${display} ל-${level}"
           }
         },
         "hi" : {
@@ -6698,8 +6698,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set extra brightness of ${display} to ${level} ×${multiplier}"
+            "state" : "translated",
+            "value" : "تعيين الإضاءة الإضافية لـ ${display} إلى ${level} ×${multiplier}"
           }
         },
         "ca" : {
@@ -6752,8 +6752,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Set extra brightness of ${display} to ${level} ×${multiplier}"
+            "state" : "translated",
+            "value" : "הגדרת הבהירות הנוספת של ${display} ל-${level} ×${multiplier}"
           }
         },
         "hi" : {
@@ -6907,8 +6907,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sets the extra brightness of a display, or of every display. Each display stops at its own limit."
+            "state" : "translated",
+            "value" : "يعيّن الإضاءة الإضافية لشاشة واحدة أو لكل الشاشات. وتتوقف كل شاشة عند حدها الخاص."
           }
         },
         "ca" : {
@@ -6961,8 +6961,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sets the extra brightness of a display, or of every display. Each display stops at its own limit."
+            "state" : "translated",
+            "value" : "מגדיר את הבהירות הנוספת של צג אחד, או של כל הצגים. כל צג נעצר במגבלה שלו."
           }
         },
         "hi" : {
@@ -7116,8 +7116,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sunlight"
+            "state" : "translated",
+            "value" : "ضوء الشمس"
           }
         },
         "ca" : {
@@ -7170,8 +7170,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sunlight"
+            "state" : "translated",
+            "value" : "אור שמש"
           }
         },
         "hi" : {
@@ -7325,8 +7325,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Tells whether Overbright is on, and the level of each display."
+            "state" : "translated",
+            "value" : "يُعلمك بما إذا كان Overbright قيد التشغيل، وبمستوى كل شاشة."
           }
         },
         "ca" : {
@@ -7379,8 +7379,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Tells whether Overbright is on, and the level of each display."
+            "state" : "translated",
+            "value" : "מציין אם Overbright פועל, ואת הרמה של כל צג."
           }
         },
         "hi" : {
@@ -7534,8 +7534,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Off Overbright"
+            "state" : "translated",
+            "value" : "إيقاف Overbright"
           }
         },
         "ca" : {
@@ -7588,8 +7588,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Off Overbright"
+            "state" : "translated",
+            "value" : "כיבוי Overbright"
           }
         },
         "hi" : {
@@ -7743,8 +7743,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "تشغيل Overbright"
           }
         },
         "ca" : {
@@ -7797,8 +7797,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "הפעלת Overbright"
           }
         },
         "hi" : {
@@ -7952,8 +7952,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On or Off"
+            "state" : "translated",
+            "value" : "تشغيل أو إيقاف"
           }
         },
         "ca" : {
@@ -8006,8 +8006,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On or Off"
+            "state" : "translated",
+            "value" : "הפעלה או כיבוי"
           }
         },
         "hi" : {
@@ -8161,8 +8161,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Overbright On or Off"
+            "state" : "translated",
+            "value" : "تشغيل Overbright أو إيقافه"
           }
         },
         "ca" : {
@@ -8215,8 +8215,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Overbright On or Off"
+            "state" : "translated",
+            "value" : "הפעלה או כיבוי של Overbright"
           }
         },
         "hi" : {
@@ -8370,8 +8370,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright off at once. Your levels are kept for next time."
+            "state" : "translated",
+            "value" : "يوقف Overbright فورًا. وتُحفظ مستوياتك للمرة القادمة."
           }
         },
         "ca" : {
@@ -8424,8 +8424,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright off at once. Your levels are kept for next time."
+            "state" : "translated",
+            "value" : "מכבה את Overbright מיד. הרמות נשמרות לפעם הבאה."
           }
         },
         "hi" : {
@@ -8579,8 +8579,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright off. Your displays return to Standard."
+            "state" : "translated",
+            "value" : "يوقف Overbright. وتعود شاشاتك إلى المستوى القياسي."
           }
         },
         "ca" : {
@@ -8633,8 +8633,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright off. Your displays return to Standard."
+            "state" : "translated",
+            "value" : "מכבה את Overbright. הצגים חוזרים ל״סטנדרט״."
           }
         },
         "hi" : {
@@ -8788,8 +8788,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright on. Each display uses its own level."
+            "state" : "translated",
+            "value" : "يشغّل Overbright. وتستخدم كل شاشة مستواها الخاص."
           }
         },
         "ca" : {
@@ -8842,8 +8842,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns Overbright on. Each display uses its own level."
+            "state" : "translated",
+            "value" : "מפעיל את Overbright. כל צג משתמש ברמה שלו."
           }
         },
         "hi" : {
@@ -8997,8 +8997,8 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns extra brightness on or off."
+            "state" : "translated",
+            "value" : "يشغّل الإضاءة الإضافية أو يوقفها."
           }
         },
         "ca" : {
@@ -9051,8 +9051,8 @@
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turns extra brightness on or off."
+            "state" : "translated",
+            "value" : "מפעיל או מכבה את הבהירות הנוספת."
           }
         },
         "hi" : {
