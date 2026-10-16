@@ -3,7 +3,7 @@
 Russian is the owner's review language and the pivot for every other language (ARCHITECTURE.md §8.8): `export.py`
 shows each translator the Russian next to the English. Cranny kept its Russian glossary in its architecture document
 rather than in a sheet; Overbright's glossary is ARCHITECTURE.md §8.8, guarded by `TerminologyTests` (WP11), and is
-confirmed in WP15. The names below marked “—” are WP15's decision.
+confirmed in WP15: the table below shows every name as the catalogs ship it.
 
 ## Register and typography
 
@@ -66,17 +66,18 @@ confirmed in WP15. The names below marked “—” are WP15's decision.
 | English | ru | Note |
 |---|---|---|
 | Overbright | Overbright | never translated or transliterated |
+| Settings panes: General · Displays · Automations · Shortcuts · Fill Light · Advanced · About | Основные · Дисплеи · Автоматизация · Сочетания клавиш · Подсветка лица · Дополнительно · О программе | the sidebar and window titles |
 | Standard (the brightness macOS shows) | Стандарт | never “100 %” or “normal mode” |
 | extra brightness (the boost half) | Дополнительная яркость | never “boost”, “HDR mode”, “EDR” |
 | Dim below minimum (the setting) | Затемнение ниже минимума | the incumbent’s name for it is never used |
-| Dimmed (the state) · Dim All Displays / Stop Dimming (actions) | — | not “night mode” |
-| Brighter · Less Bright (one step) | — · Менее ярко | never “Dimmer”: it reads like Dim |
-| Back to Standard (the instant off) | — | not “panic”, not “reset brightness” |
-| Indoor · Bright room · Sunlight · Max (presets) | — | “Max” is a preset only |
+| Dimmed (the state) · Dim All Displays / Stop Dimming (actions) | Затемнение · Затемнить все дисплеи / Убрать затемнение | not “night mode” |
+| Brighter · Less Bright (one step) | Ярче · Менее ярко | never “Dimmer”: it reads like Dim |
+| Back to Standard (the instant off) | Вернуться к стандарту | not “panic”, not “reset brightness” |
+| Indoor · Bright room · Sunlight · Max (presets) | В комнате · Яркий свет · На солнце · Максимум | “Max” is a preset only |
 | Safe · Peak (ceilings) | Безопасно · Пик | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | Режим совместимости · — | never “fallback” or “overlay” |
+| Compatibility mode · Color table (methods) | Режим совместимости · Цветовая таблица | never “fallback” or “overlay” |
 | Fill Light (the edge light for video calls) | Подсветка лица | never “ring light” |
-| extra range (headroom, in user copy) | — | “headroom” only in Advanced and diagnostics |
-| Calibrate… · Run Self-Test… · Reset Display Colors… | — |  |
-| Keep this level? · Go Back · Keep | — | the very-dark-level prompt |
-| Pause · Paused · Resume | — | a temporary stop; never “disabled” |
+| extra range (headroom, in user copy) | Запас яркости | “headroom” only in Advanced and diagnostics |
+| Calibrate… · Run Self-Test… · Reset Display Colors… | Откалибровать… · Запустить самопроверку… · Сбросить цвета дисплеев… |  |
+| Keep this level? · Go Back · Keep | Оставить этот уровень? · Вернуть · Оставить | the very-dark-level prompt |
+| Pause · Paused · Resume | “Приостановить Overbright” (Pause Overbright) · На паузе · Возобновить | a temporary stop; never “disabled” |

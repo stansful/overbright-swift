@@ -4,7 +4,7 @@ Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the re
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
 deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
 Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
-are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+were decided in WP15 (ARCHITECTURE.md §10.17, §8.8); the table shows them as the catalogs ship them.
 `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
@@ -81,20 +81,21 @@ Reviewed 2026-10-14 (independent review).
 | English | ja | Note |
 |---|---|---|
 | Overbright | Overbright | never translated or transliterated |
-| Standard (the brightness macOS shows) | — | never “100 %” or “normal mode” |
-| extra brightness (the boost half) | — | never “boost”, “HDR mode”, “EDR” |
-| Dim below minimum (the setting) | — | the incumbent’s name for it is never used |
-| Dimmed (the state) · Dim All Displays / Stop Dimming (actions) | — | not “night mode” |
-| Brighter · Less Bright (one step) | — | never “Dimmer”: it reads like Dim |
-| Back to Standard (the instant off) | — | not “panic”, not “reset brightness” |
-| Indoor · Bright room · Sunlight · Max (presets) | — | “Max” is a preset only |
-| Safe · Peak (ceilings) | — | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | — | never “fallback” or “overlay” |
-| Fill Light (the edge light for video calls) | — | never “ring light” |
-| extra range (headroom, in user copy) | — | “headroom” only in Advanced and diagnostics |
-| Calibrate… · Run Self-Test… · Reset Display Colors… | — |  |
-| Keep this level? · Go Back · Keep | — | the very-dark-level prompt |
-| Pause · Paused · Resume | — | a temporary stop; never “disabled” |
+| Settings panes: General · Displays · Automations · Shortcuts · Fill Light · Advanced · About | 一般 · ディスプレイ · 自動化 · キーボードショートカット · フィルライト · 詳細 · 情報 | the sidebar and window titles |
+| Standard (the brightness macOS shows) | 標準 | never “100 %” or “normal mode” |
+| extra brightness (the boost half) | “追加の輝度を使用” (Use extra brightness) | never “boost”, “HDR mode”, “EDR” |
+| Dim below minimum (the setting) | “最小輝度以下の減光をオン/オフ” (Dim Below Minimum On or Off) | the incumbent’s name for it is never used |
+| Dimmed (the state) · Dim All Displays / Stop Dimming (actions) | 減光中 · すべてのディスプレイを暗くする / 減光を解除 | not “night mode” |
+| Brighter · Less Bright (one step) | 輝度を上げる · 輝度を下げる | never “Dimmer”: it reads like Dim |
+| Back to Standard (the instant off) | 標準に戻す | not “panic”, not “reset brightness” |
+| Indoor · Bright room · Sunlight · Max (presets) | 室内 · 明るい部屋 · 日差し · 最大 | “Max” is a preset only |
+| Safe · Peak (ceilings) | 安全 · ピーク | Peak, never “Max”, for a ceiling; one short word each (segments) |
+| Compatibility mode · Color table (methods) | 互換モード · カラーテーブル | never “fallback” or “overlay” |
+| Fill Light (the edge light for video calls) | フィルライト | never “ring light” |
+| extra range (headroom, in user copy) | 輝度の余力 | “headroom” only in Advanced and diagnostics |
+| Calibrate… · Run Self-Test… · Reset Display Colors… | キャリブレーション… · セルフテストを実行… · ディスプレイの色をリセット… |  |
+| Keep this level? · Go Back · Keep | このレベルを維持しますか? · 元に戻す · 維持 | the very-dark-level prompt |
+| Pause · Paused · Resume | “Overbrightを一時停止” (Pause Overbright) · 一時停止中 · 再開 | a temporary stop; never “disabled” |
 
 ## Carried from Cranny (generic interface words)
 

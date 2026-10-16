@@ -4,7 +4,7 @@ Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the re
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
 deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
 Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
-are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+were decided in WP15 (ARCHITECTURE.md §10.17, §8.8); the table shows them as the catalogs ship them.
 `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
@@ -81,20 +81,23 @@ Register and style, as macOS writes Greek:
 | English | el | Note |
 |---|---|---|
 | Overbright | Overbright | never translated or transliterated |
-| Standard (the brightness macOS shows) | — | never “100 %” or “normal mode” |
-| extra brightness (the boost half) | — | never “boost”, “HDR mode”, “EDR” |
-| Dim below minimum (the setting) | — | the incumbent’s name for it is never used |
-| Dimmed (the state) · Dim All Displays / Stop Dimming (actions) | — | not “night mode” |
-| Brighter · Less Bright (one step) | — | never “Dimmer”: it reads like Dim |
-| Back to Standard (the instant off) | — | not “panic”, not “reset brightness” |
-| Indoor · Bright room · Sunlight · Max (presets) | — | “Max” is a preset only |
-| Safe · Peak (ceilings) | — | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | — | never “fallback” or “overlay” |
-| Fill Light (the edge light for video calls) | — | never “ring light” |
-| extra range (headroom, in user copy) | — | “headroom” only in Advanced and diagnostics |
-| Calibrate… · Run Self-Test… · Reset Display Colors… | — |  |
-| Keep this level? · Go Back · Keep | — | the very-dark-level prompt |
-| Pause · Paused · Resume | — | a temporary stop; never “disabled” |
+| Settings panes: General · Displays · Automations · Shortcuts · Fill Light · Advanced · About | Γενικά · Οθόνες · Αυτοματισμοί · Συντομεύσεις πληκτρολογίου · Φωτισμός προσώπου · Προηγμένα · Πληροφορίες | the sidebar and window titles |
+| Standard (the brightness macOS shows) | Τυπικό | never “100 %” or “normal mode” |
+| extra brightness (the boost half) | “Χρήση επιπλέον φωτεινότητας” (Use extra brightness) | never “boost”, “HDR mode”, “EDR” |
+| Dim below minimum (the setting) | “Εναλλαγή χαμηλώματος κάτω από το ελάχιστο” (Dim Below Minimum On or Off) | the incumbent’s name for it is never used |
+| Dimmed (the state) · Dim All Displays / Stop Dimming (actions) | Σε χαμήλωμα · Χαμήλωμα όλων των οθονών / Διακοπή χαμηλώματος | not “night mode” |
+| Brighter · Less Bright (one step) | Φωτεινότερα · Λιγότερο φωτεινά | never “Dimmer”: it reads like Dim |
+| Back to Standard (the instant off) | Επιστροφή στο Τυπικό | not “panic”, not “reset brightness” |
+| Indoor · Bright room · Sunlight · Max (presets) | Κλειστός χώρος · Φωτεινό δωμάτιο · Ηλιακό φως · Μέγιστο | “Max” is a preset only |
+| Safe · Peak (ceilings) | Ασφαλές · Αιχμή | Peak, never “Max”, for a ceiling; one short word each (segments) |
+| Compatibility mode · Color table (methods) | Λειτουργία συμβατότητας · Πίνακας χρωμάτων | never “fallback” or “overlay” |
+| Fill Light (the edge light for video calls) | Φωτισμός προσώπου | never “ring light” |
+| extra range (headroom, in user copy) | Περιθώριο φωτεινότητας | “headroom” only in Advanced and diagnostics |
+| Calibrate… · Run Self-Test… · Reset Display Colors… | Βαθμονόμηση… · Εκτέλεση αυτοελέγχου… · Επαναφορά χρωμάτων οθόνης… |  |
+| Keep this level? · Go Back · Keep | Να μείνει αυτό το επίπεδο; · Επιστροφή · Διατήρηση | the very-dark-level prompt |
+| Pause · Paused · Resume | “Παύση Overbright” (Pause Overbright) · Σε παύση · Συνέχιση | a temporary stop; never “disabled” |
+
+Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its 292 pt in full in every language (`FooterFitTests`), so the Auto-pause chip reads “Παύσεις” (off: “Χωρίς παύσεις”) and the Timer chip “Χωρίς όριο” for No timer. The Indoor preset is “Κλειστός χώρος”: the HUD shows a preset and its value in 200 pt (`HUDFitTests`).
 
 ## Carried from Cranny (generic interface words)
 

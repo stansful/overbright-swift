@@ -4,7 +4,7 @@ Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the re
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
 deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
 Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
-are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+were decided in WP15 (ARCHITECTURE.md §10.17, §8.8); the table shows them as the catalogs ship them.
 `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
@@ -75,20 +75,23 @@ U+2011 ("activați‑l", "într‑un"), never in search keywords. Numbers, dates
 | English | ro | Note |
 |---|---|---|
 | Overbright | Overbright | never translated or transliterated |
-| Standard (the brightness macOS shows) | — | never “100 %” or “normal mode” |
-| extra brightness (the boost half) | — | never “boost”, “HDR mode”, “EDR” |
-| Dim below minimum (the setting) | — | the incumbent’s name for it is never used |
-| Dimmed (the state) · Dim All Displays / Stop Dimming (actions) | — | not “night mode” |
-| Brighter · Less Bright (one step) | — | never “Dimmer”: it reads like Dim |
-| Back to Standard (the instant off) | — | not “panic”, not “reset brightness” |
-| Indoor · Bright room · Sunlight · Max (presets) | — | “Max” is a preset only |
-| Safe · Peak (ceilings) | — | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | — | never “fallback” or “overlay” |
-| Fill Light (the edge light for video calls) | — | never “ring light” |
-| extra range (headroom, in user copy) | — | “headroom” only in Advanced and diagnostics |
-| Calibrate… · Run Self-Test… · Reset Display Colors… | — |  |
-| Keep this level? · Go Back · Keep | — | the very-dark-level prompt |
-| Pause · Paused · Resume | — | a temporary stop; never “disabled” |
+| Settings panes: General · Displays · Automations · Shortcuts · Fill Light · Advanced · About | General · Afișaje · Automatizări · Scurtături din tastatură · Lumină pentru față · Avansat · Despre | the sidebar and window titles |
+| Standard (the brightness macOS shows) | Standard | never “100 %” or “normal mode” |
+| extra brightness (the boost half) | “Utilizare luminozitate suplimentară” (Use extra brightness) | never “boost”, “HDR mode”, “EDR” |
+| Dim below minimum (the setting) | “Activați sau dezactivați întunecarea sub minim” (Dim Below Minimum On or Off) | the incumbent’s name for it is never used |
+| Dimmed (the state) · Dim All Displays / Stop Dimming (actions) | Întunecat · Întunecați toate afișajele / Opriți întunecarea | not “night mode” |
+| Brighter · Less Bright (one step) | Mai luminos · Mai puțin luminos | never “Dimmer”: it reads like Dim |
+| Back to Standard (the instant off) | Reveniți la Standard | not “panic”, not “reset brightness” |
+| Indoor · Bright room · Sunlight · Max (presets) | Interior · Cameră luminoasă · Lumină solară · Maxim | “Max” is a preset only |
+| Safe · Peak (ceilings) | Sigur · Vârf | Peak, never “Max”, for a ceiling; one short word each (segments) |
+| Compatibility mode · Color table (methods) | Mod de compatibilitate · Tabel de culori | never “fallback” or “overlay” |
+| Fill Light (the edge light for video calls) | Lumină pentru față | never “ring light” |
+| extra range (headroom, in user copy) | Rezervă de luminozitate | “headroom” only in Advanced and diagnostics |
+| Calibrate… · Run Self-Test… · Reset Display Colors… | Calibrați… · Rulați autotestul… · Resetați culorile afișajelor… |  |
+| Keep this level? · Go Back · Keep | Păstrați acest nivel? · Reveniți · Păstrați | the very-dark-level prompt |
+| Pause · Paused · Resume | “Puneți Overbright pe pauză” (Pause Overbright) · Pe pauză · Reluați | a temporary stop; never “disabled” |
+
+Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its 292 pt in full in every language (`FooterFitTests`), so the Timer chip reads “Fără limită” for No timer.
 
 ## Carried from Cranny (generic interface words)
 
