@@ -2,9 +2,10 @@
 // on the stage (a sample page at Standard on the left and at Bright room on the right of a draggable divider, our own
 // EDR content in this window only, Design's `EDRPreviewSurface`), or a static illustration when no display can show
 // extra brightness. Nothing outside the card changes: no table is written, nothing turns on. The card registers with
-// `OwnEDRSurfaces` on the window's display while it shows EDR content (`EDRCardHold`), and pauses while the window is
-// hidden (it draws its SDR stand-in then, so it holds no extra range nobody sees). Seeded by WP0b with its headline;
-// built by WP12 (ARCHITECTURE.md §10.14).
+// `OwnEDRSurfaces` on the window's display while it shows EDR content (`EDRCardHold`), and draws its SDR stand-in
+// whenever it holds nothing: while the window is hidden (so it holds no extra range nobody sees) and until the window's
+// display is known, so no EDR content is ever on screen unregistered. Seeded by WP0b with its headline; built by WP12
+// (ARCHITECTURE.md §10.14).
 import Foundation
 import OverbrightCore
 import OverbrightDesign
@@ -59,13 +60,13 @@ struct HelloStep: View {
 
     var body: some View {
         let services = session.services
-        let rows = WelcomeDisplayRow.rows(in: services)
+        let rows = WelcomeDisplayRow.rows(in: services, choices: session.choices)
         let card = WelcomeCard.make(rows: rows, windowDisplay: windowDisplay)
         let simulated = WelcomeCard.simulates(services)
         let held = card.heldDisplay(windowDisplay: windowDisplay, isWindowVisible: isWindowVisible, simulated: simulated)
         StepLayout {
             StepStage {
-                HelloStage(card: card, divider: $divider, simulated: simulated || !isWindowVisible,
+                HelloStage(card: card, divider: $divider, simulated: WelcomeCard.drawsStandIn(held: held),
                            illustration: rows.first?.isBuiltIn == true ? .laptopComputer : .display)
             }
             .background { if !simulated { WindowScreenReader { windowDisplay = $0 } } }
@@ -87,7 +88,7 @@ struct HelloStep: View {
 struct HelloStage: View {
     let card: WelcomeCard
     @Binding var divider: Double
-    /// Draw the card's SDR stand-in (simulated run, or the window is hidden).
+    /// Draw the card's SDR stand-in (simulated run, the window is hidden, or its display is not held yet).
     let simulated: Bool
     /// The glyph shown instead of the card: the laptop when the first display is built in.
     var illustration = OverbrightSymbol.display
@@ -99,8 +100,11 @@ struct HelloStage: View {
                 .frame(maxWidth: StepMetrics.cardWidth, maxHeight: StepMetrics.stageContentHeight)
         case .checking, .noneCapable:
             Image(symbol: illustration)
-                .font(.system(size: StepMetrics.illustration, weight: .thin))
+                .resizable()
+                .scaledToFit()
+                .fontWeight(.thin)
                 .foregroundStyle(.tertiary)
+                .frame(width: StepMetrics.illustration, height: StepMetrics.illustration)
                 .accessibilityHidden(true)
         }
     }

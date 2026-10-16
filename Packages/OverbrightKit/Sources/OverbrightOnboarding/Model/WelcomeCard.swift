@@ -40,6 +40,11 @@ enum WelcomeCard: Hashable {
         return windowDisplay
     }
 
+    /// The card draws its SDR stand-in unless a display is held for it (`heldDisplay`): EDR content is only ever on
+    /// screen while it is registered, never in a simulated run, never while the window is hidden, and not before the
+    /// window's display is known.
+    static func drawsStandIn(held: DisplayKey?) -> Bool { held == nil }
+
     /// The card draws its SDR stand-in instead of EDR content: under `--qa-simulate`, and whenever the display ports
     /// are the Core fakes (previews, tests, scripted QA states), so nothing a developer runs raises real headroom (D24).
     static func simulates(_ services: OverbrightServices, arguments: LaunchArguments = .current) -> Bool {
