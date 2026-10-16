@@ -15,11 +15,13 @@
 // (`quit`, `exit(EXIT_SUCCESS)`): no service has started, no window is open and no setting has been written yet. The new
 // process waits for this one to exit (`SingleInstance`, `--after-move`) and never hands over to it.
 //
-// When the relaunch fails, a moved bundle goes back where it was (a copy in Applications goes to the Trash), the failure
-// alert says so, and the app carries on from where it is. Only if the bundle cannot be put back does this copy quit
-// after the alert, because it cannot run from a path that no longer exists. Debug QA runs (any `--qa-…` switch) never
-// ask: a modal alert would block their scripted surfaces. Failures are logged with the error's domain and code; the
-// description, which names the user's folders, stays `.private` (§9.2 rule 8).
+// When the relaunch fails, a moved bundle goes back where it was (a copy in Applications goes to the Trash), an older
+// copy the move had put in the Trash comes back to Applications, the failure alert says so, and the app carries on from
+// where it is. Only if the bundle cannot be put back does this copy quit, after an alert that says where Overbright is
+// now (in Applications: open it from there), because it cannot run from a path that no longer exists. Debug QA runs
+// (any `--qa-…` switch) never ask: a modal alert would block their scripted surfaces. Esc answers "Not Now" (NSAlert
+// gives Escape only to a button titled Cancel). Failures are logged with the error's domain and code; the description,
+// which names the user's folders, stays `.private` (§9.2 rule 8).
 import AppKit
 import Darwin
 import Foundation
@@ -39,6 +41,9 @@ final class ApplicationsMover {
         var ask: @MainActor () -> Answer
         /// "Overbright couldn't be moved…"
         var reportFailure: @MainActor () -> Void
+        /// "Overbright is now in the Applications folder, but it couldn't be opened from there…" (the bundle could
+        /// not be put back after a failed relaunch).
+        var reportStranded: @MainActor () -> Void
     }
 
     /// The longest wait for LaunchServices' answer to the relaunch.
@@ -52,7 +57,7 @@ final class ApplicationsMover {
     private let prompts: Prompts
     private let relaunch: @MainActor (URL) throws -> Void
     private let quit: @MainActor () -> Void
-    private let trash: (URL) throws -> Void
+    private let trash: BundleMove.Trash
 
     /// A mover that remembers "Not Now" in `settings`.
     convenience init(settings: SettingsStore) {
@@ -66,7 +71,7 @@ final class ApplicationsMover {
     /// that follows a relaunch, and what happens to an older copy.
     init(settings: SettingsStore, bundleURL: URL, version: String, arguments: LaunchArguments, destinationFolder: URL,
          prompts: Prompts, relaunch: @escaping @MainActor (URL) throws -> Void, quit: @escaping @MainActor () -> Void,
-         trash: @escaping (URL) throws -> Void) {
+         trash: @escaping BundleMove.Trash) {
         self.settings = settings; self.bundleURL = bundleURL; self.version = version; self.arguments = arguments
         self.destinationFolder = destinationFolder; self.prompts = prompts; self.relaunch = relaunch
         self.quit = quit; self.trash = trash
@@ -88,10 +93,10 @@ final class ApplicationsMover {
     }
 
     private func moveAndRelaunch() {
-        let moved: URL
+        let placement: BundleMove.Placement
         do {
-            moved = try BundleMove.perform(bundleURL, into: destinationFolder,
-                                           copyOnly: LoginItemController.isTranslocated(bundleURL), trash: trash)
+            placement = try BundleMove.perform(bundleURL, into: destinationFolder,
+                                               copyOnly: LoginItemController.isTranslocated(bundleURL), trash: trash)
         } catch {
             let failure = error as NSError
             log.error("move to Applications failed: \(failure.domain, privacy: .public) \(failure.code, privacy: .public) (\(failure.localizedDescription, privacy: .private))")
@@ -99,15 +104,21 @@ final class ApplicationsMover {
             return
         }
         do {
-            try relaunch(moved)
+            try relaunch(placement.moved)
         } catch {
             let failure = error as NSError
             log.error("relaunch from Applications failed: \(failure.domain, privacy: .public) \(failure.code, privacy: .public) (\(failure.localizedDescription, privacy: .private))")
-            let canCarryOn = BundleMove.putBack(moved, to: bundleURL, trash: trash)
+            let undo = BundleMove.putBack(placement, to: bundleURL, trash: trash)
+            if let restored = undo.olderCopyRestored {
+                log.info("move to Applications: the older copy \(restored ? "is back" : "stays in the Trash", privacy: .public)")
+            }
+            guard undo.originalExists else {
+                log.error("move to Applications: the bundle could not be put back; it stays in Applications and this copy quits")
+                prompts.reportStranded()
+                quit()
+                return
+            }
             prompts.reportFailure()
-            if canCarryOn { return }
-            log.error("move to Applications: the bundle could not be put back; this copy quits")
-            quit()
             return
         }
         log.info("moved to Applications and relaunched from there; this copy quits before anything starts")
@@ -184,26 +195,55 @@ extension ApplicationsMover.Prompts {
     static var alerts: ApplicationsMover.Prompts {
         ApplicationsMover.Prompts(
             ask: {
-                let alert = NSAlert()
-                alert.messageText = String(localized: "Move Overbright to the Applications folder?", bundle: .module,
-                                           comment: "Move to Applications alert: title, shown at launch outside Applications")
-                alert.informativeText = String(localized: "Shortcuts actions and opening at login work only from Applications.",
-                                               bundle: .module, comment: "Move to Applications alert: message")
-                alert.addButton(withTitle: String(localized: "Move to Applications", bundle: .module,
-                                                  comment: "Move to Applications alert: default button (title case)"))
-                alert.addButton(withTitle: String(localized: "Not Now", bundle: .module,
-                                                  comment: "Move to Applications alert: button that keeps the app where it is; asked again after an update"))
                 NSApp.activate()
-                return alert.runModal() == .alertFirstButtonReturn ? .move : .notNow
+                return ApplicationsMover.askAlert().runModal() == .alertFirstButtonReturn ? .move : .notNow
             },
-            reportFailure: {
-                let alert = NSAlert()
-                alert.alertStyle = .warning
-                alert.messageText = String(localized: "Overbright couldn’t be moved. Drag it to the Applications folder in Finder.",
-                                           bundle: .module, comment: "Move to Applications alert: the move failed")
-                alert.addButton(withTitle: String(localized: "OK", bundle: .module,
-                                                  comment: "Move to Applications alert: closes the failure alert"))
-                alert.runModal()
-            })
+            reportFailure: { ApplicationsMover.failureAlert().runModal() },
+            reportStranded: { ApplicationsMover.strandedAlert().runModal() })
+    }
+}
+
+extension ApplicationsMover {
+    /// The Escape key, which answers "Not Now".
+    static let escapeKey = "\u{1b}"
+
+    /// "Move Overbright to the Applications folder?" [Move to Applications] [Not Now]; Return moves, Esc is "Not Now".
+    static func askAlert() -> NSAlert {
+        let alert = NSAlert()
+        alert.messageText = String(localized: "Move Overbright to the Applications folder?", bundle: .module,
+                                   comment: "Move to Applications alert: title, shown at launch outside Applications")
+        alert.informativeText = String(localized: "Shortcuts actions and opening at login work only from Applications.",
+                                       bundle: .module, comment: "Move to Applications alert: message")
+        alert.addButton(withTitle: String(localized: "Move to Applications", bundle: .module,
+                                          comment: "Move to Applications alert: default button (title case)"))
+        let notNow = alert.addButton(withTitle: String(localized: "Not Now", bundle: .module,
+                                                       comment: "Move to Applications alert: button that keeps the app where it is; asked again after an update"))
+        notNow.keyEquivalent = escapeKey                  // NSAlert gives Esc only to a button titled Cancel
+        return alert
+    }
+
+    /// "Overbright couldn't be moved. Drag it to the Applications folder in Finder." [OK]
+    static func failureAlert() -> NSAlert {
+        let alert = NSAlert()
+        alert.alertStyle = .warning
+        alert.messageText = String(localized: "Overbright couldn’t be moved. Drag it to the Applications folder in Finder.",
+                                   bundle: .module, comment: "Move to Applications alert: the move failed")
+        alert.addButton(withTitle: okTitle)
+        return alert
+    }
+
+    /// The moved copy could not be put back after a failed relaunch: it is in Applications now, and this copy quits.
+    static func strandedAlert() -> NSAlert {
+        let alert = NSAlert()
+        alert.alertStyle = .warning
+        alert.messageText = String(localized: "Overbright is now in the Applications folder, but it couldn’t be opened from there. Open it from the Applications folder in Finder.",
+                                   bundle: .module,
+                                   comment: "Move to Applications alert: the move worked but Overbright couldn’t start from Applications, so this copy quits")
+        alert.addButton(withTitle: okTitle)
+        return alert
+    }
+
+    private static var okTitle: String {
+        String(localized: "OK", bundle: .module, comment: "Move to Applications alert: closes the failure alert")
     }
 }

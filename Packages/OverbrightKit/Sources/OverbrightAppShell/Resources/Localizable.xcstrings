@@ -1046,6 +1046,215 @@
         }
       }
     },
+    "Overbright is now in the Applications folder, but it couldn’t be opened from there. Open it from the Applications folder in Finder." : {
+      "comment" : "Move to Applications alert: the move worked but Overbright couldn’t start from Applications, so this copy quits",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "أصبح Overbright الآن في مجلد \"التطبيقات\"، لكن تعذر فتحه من هناك. افتحه من مجلد \"التطبيقات\" في فايندر."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’Overbright ja és a la carpeta Apps, però no s’ha pogut obrir des d’allà. Obre’l des de la carpeta Apps al Finder."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright je teď ve složce Aplikace, ale odtud ho nebylo možné otevřít. Otevřete ho ze složky Aplikace ve Finderu."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright ligger nu i mappen Apps, men appen kunne ikke åbnes derfra. Åbn den fra mappen Apps i Finder."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright ist jetzt im Ordner „Programme“, konnte von dort aber nicht geöffnet werden. Öffne es im Finder aus dem Ordner „Programme“."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Το Overbright βρίσκεται τώρα στον φάκελο «Εφαρμογές», αλλά δεν ήταν δυνατό να ανοίξει από εκεί. Ανοίξτε το από τον φάκελο «Εφαρμογές» στο Finder."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright ya está en la carpeta Aplicaciones, pero no se ha podido abrir desde allí. Ábrelo desde la carpeta Aplicaciones en el Finder."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright on nyt Apit-kansiossa, mutta sitä ei voitu avata sieltä. Avaa se Finderissa Apit-kansiosta."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright se trouve désormais dans le dossier Applications, mais n’a pas pu être ouvert depuis cet emplacement. Ouvrez-le depuis le dossier Applications dans le Finder."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright נמצא עכשיו בתיקיה ״יישומים״, אך לא ניתן היה לפתוח אותו משם. יש לפתוח אותו מהתיקיה ״יישומים״ ב-Finder."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright अब ऐप्लिकेशन फ़ोल्डर में है, लेकिन इसे वहाँ से खोला नहीं जा सका। इसे Finder में ऐप्लिकेशन फ़ोल्डर से खोलें।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright je sada u mapi Aplikacije, ali ga nije bilo moguće otvoriti odande. Otvorite ga iz mape Aplikacije u Finderu."
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Az Overbright már az Alkalmazások mappában van, de onnan nem sikerült megnyitni. Nyissa meg az Alkalmazások mappából a Finderben."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright kini ada di folder Aplikasi, tetapi tidak dapat dibuka dari sana. Buka dari folder Aplikasi di Finder."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright ora si trova nella cartella Applicazioni, ma non è stato possibile aprirlo da lì. Aprilo dalla cartella Applicazioni nel Finder."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbrightは“アプリケーション”フォルダに移動しましたが、そこから開けませんでした。Finderで“アプリケーション”フォルダから開いてください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright가 이제 응용 프로그램 폴더에 있지만 그곳에서 열 수 없습니다. Finder의 응용 프로그램 폴더에서 여십시오."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright kini berada dalam folder Aplikasi, tetapi tidak dapat dibuka dari situ. Buka dari folder Aplikasi dalam Finder."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright ligger nå i Apper-mappen, men kunne ikke åpnes derfra. Åpne den fra Apper-mappen i Finder."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright staat nu in de map Apps, maar kon daar niet worden geopend. Open het vanuit de map Apps in de Finder."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright jest teraz w folderze Aplikacje, ale nie można go było stamtąd otworzyć. Otwórz go z folderu Aplikacje w Finderze."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Overbright agora está na pasta Aplicativos, mas não foi possível abri-lo de lá. Abra-o pela pasta Aplicativos no Finder."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Overbright está agora na pasta Aplicações, mas não foi possível abri‑lo a partir daí. Abra‑o a partir da pasta Aplicações no Finder."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright se află acum în dosarul Aplicații, dar nu a putut fi deschis de acolo. Deschideți‑l din dosarul Aplicații din Finder."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright уже в папке «Программы», но открыть его оттуда не удалось. Откройте его из папки «Программы» в Finder."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright je teraz v priečinku Aplikácie, ale odtiaľ ho nebolo možné otvoriť. Otvorte ho z priečinka Aplikácie vo Finderi."
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikacija Overbright je zdaj v mapi Aplikacije, vendar je od tam ni bilo mogoče odpreti. Odprite jo iz mape Aplikacije v Finderju."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright ligger nu i mappen Appar, men appen kunde inte öppnas därifrån. Öppna den från mappen Appar i Finder."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright อยู่ในโฟลเดอร์แอปพลิเคชันแล้ว แต่ไม่สามารถเปิดจากที่นั่นได้ ให้เปิดจากโฟลเดอร์แอปพลิเคชันใน Finder"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright artık Uygulamalar klasöründe, ancak oradan açılamadı. Finder’da Uygulamalar klasöründen açın."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright уже в папці «Програми», але відкрити його звідти не вдалося. Відкрийте його з папки «Програми» у Finder."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright hiện đã ở trong thư mục Ứng dụng nhưng không thể mở từ đó. Hãy mở ứng dụng từ thư mục Ứng dụng trong Finder."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright现已在“应用程序”文件夹中，但无法从那里打开。请在访达中从“应用程序”文件夹打开它。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright現已在「應用程式」檔案夾中，但無法從該處打開。請在Finder中從「應用程式」檔案夾打開它。"
+          }
+        }
+      }
+    },
     "Settings…" : {
       "comment" : "Menu: the app menu item that opens the Settings window",
       "localizations" : {
