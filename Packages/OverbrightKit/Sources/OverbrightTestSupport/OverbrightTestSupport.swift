@@ -1,11 +1,8 @@
-// OverbrightTestSupport — test helpers for the test targets only (never linked into the app). ARCHITECTURE.md §9.1, §10.1.
-// Placeholder written by WP0a so that every target of Package.swift exists from the start (§2.1 rule 4);
-// its owner (WP0a) replaces it.
-import OverbrightCore
-import OverbrightPolicy
-
-/// Names the module until its work package lands; the placeholder test checks that it links.
-public enum OverbrightTestSupportModule {
-    /// The target name.
-    public static let name = "OverbrightTestSupport"
-}
+// OverbrightTestSupport/OverbrightTestSupport.swift — module overview. ARCHITECTURE.md §2.1, §9.1, §10.1.
+//
+// Test helpers for the test targets only (never linked into the app; no Resources folder):
+//   SeededGenerator    reproducible randomness for property tests (§9.1)
+//   ReferenceReducer   a tiny stand-in for BoostPolicy.reduce, so WP4 tests the engine before WP1 lands (§10.1)
+//   eventually(_:)     the one real-time wait tests may use, with a generous 30 s bound (§9.1)
+// Core's Fakes/ hold the port fakes and display fixtures (they are public there because #Previews and
+// `--qa-simulate` use them too).
