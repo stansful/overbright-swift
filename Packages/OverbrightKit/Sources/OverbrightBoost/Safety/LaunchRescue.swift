@@ -12,11 +12,26 @@ public final class LaunchRescue {
     private let conflicts: any ConflictProbe
     private let signals: any SystemSignals
     private let journal: any DiagnosticsJournal
+    private let time: any TimeSource
+    private let onlineDisplays: @MainActor () -> [DisplayRef]
+    private let settings: SettingsStore?
 
-    /// A rescue over the real or fake ports.
+    /// A rescue over the real or fake ports that reads the online displays from CoreGraphics (read-only) and keeps no
+    /// boost marker. Prefer `init(gamma:conflicts:signals:journal:time:displays:settings:)`.
+    public convenience init(gamma: any GammaPort, conflicts: any ConflictProbe, signals: any SystemSignals,
+                            journal: any DiagnosticsJournal) {
+        self.init(gamma: gamma, conflicts: conflicts, signals: signals, journal: journal, time: SystemTimeSource(),
+                  displays: OnlineDisplays.coreGraphics, settings: nil)
+    }
+
+    /// A rescue over the real or fake ports. `displays` lists the online displays (the composition root passes its
+    /// read-only snapshot; the services have not started when the launch check runs); `settings` holds the boost
+    /// marker (`EngineRecords.boostMarker`), which the launch check reads and clears; `time` stamps the journal.
     public init(gamma: any GammaPort, conflicts: any ConflictProbe, signals: any SystemSignals,
-                journal: any DiagnosticsJournal) {
+                journal: any DiagnosticsJournal, time: any TimeSource,
+                displays: @escaping @MainActor () -> [DisplayRef], settings: SettingsStore?) {
         self.gamma = gamma; self.conflicts = conflicts; self.signals = signals; self.journal = journal
+        self.time = time; self.onlineDisplays = displays; self.settings = settings
     }
 
     /// The launch check (§7.4), before any other display work. WP0a seed: reports neutral without reading.
