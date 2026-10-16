@@ -53,10 +53,14 @@ import Testing
         // An external of another class whose IORegistry minimum luminance is self-emissive: the reducer treats it as
         // OLED, so the idle source must run for it too.
         var external = try #require(DisplayFixture.mpg322uxHDROn.displays.first?.facts)
-        external.panelClass = .appleXDRExternal
+        external.panelClass = .hdrExternal
         external.panelMinNits = 0.0005
         #expect(EligibilityClassifier.isOLED(external, override: .automatic))
         #expect(OLEDPresence.anyOLED([external], preferences: [:]))
+        // Not an Apple XDR external: its mini-LED black level can read as low, and Policy never calls it OLED.
+        var xdr = external
+        xdr.panelClass = .appleXDRExternal
+        #expect(!OLEDPresence.anyOLED([xdr], preferences: [:]))
         external.panelMinNits = 0.05                                          // an LCD's black
         #expect(!OLEDPresence.anyOLED([external], preferences: [:]))
         for override in [OLEDOverride.automatic, .oled, .notOLED] {
