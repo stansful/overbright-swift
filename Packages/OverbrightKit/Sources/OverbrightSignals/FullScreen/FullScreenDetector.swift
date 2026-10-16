@@ -15,7 +15,7 @@
 // - full-screen video: the covering window's owner holds a display-sleep assertion (`PlaybackAssertions`);
 // - the displays that show the frontmost app's topmost layer-0 window (per-app rules pause only those, §6.5).
 // The locked screen's loginwindow windows sit at layers 2001/2004 and never count.
-// Thread: any. `evaluate` is pure; the one window-server read is `WindowListSnapshot.read()` (@concurrent).
+// Thread: any. `evaluate` is pure; the one window-server read is `WindowListSnapshot.read(windowServerPID:)` (@concurrent).
 import CoreGraphics
 import OverbrightCore
 
@@ -96,8 +96,9 @@ nonisolated enum FullScreenDetector {
     // MARK: Menu bar
 
     /// Whether the WindowServer's menu-bar window is on each display: a menu-bar-layer window owned by
-    /// `windowServerPID` at the display's top-left corner with its width. Unknown PID → present everywhere (the
-    /// conservative answer: only the exact-and-frontmost rule can then match).
+    /// `windowServerPID` at the display's top-left corner with its width. Unknown PID (libproc could not tell, see
+    /// `WindowListSnapshot`) → present everywhere (the conservative answer: only the exact-and-frontmost rule can then
+    /// match).
     static func observedMenuBar(windows: [Window], displays: [Display], windowServerPID: Int32?) -> [DisplayKey: Bool] {
         var result: [DisplayKey: Bool] = [:]
         for display in displays {

@@ -6,7 +6,8 @@
 // and the display-sleep assertions, applies the sticky menu-bar absence and `FullScreenDetector.evaluate`, and publishes
 // full-screen displays, full-screen-video displays and the frontmost app (its displays, `isPlaying`, `isGame`) in ONE
 // outcome, so the snapshot never shows a half-updated front. When a sticky absence masks a present menu bar, one more
-// check runs as the mask expires. Nothing is pending while no request is.
+// check runs as the mask expires. Nothing is pending while no request is. The WindowServer's PID, once a snapshot found
+// it, is kept for the session and handed to every later read (`WindowListSnapshot`: no lookup per check).
 // Thread: main.
 import Foundation
 import OverbrightCore
@@ -33,6 +34,8 @@ final class FullScreenTracker {
     private let deadline: DeadlineTimer
     private var menuBar = MenuBarPresence()
     private var games: [URL: Bool] = [:]
+    /// The WindowServer's PID, fixed for the login session (kept across stop and start).
+    private(set) var windowServerPID: Int32?
     private var isChecking = false
     private var needsAnotherCheck = false
 
@@ -71,8 +74,9 @@ final class FullScreenTracker {
         guard isEnabled else { return }
         if isChecking { needsAnotherCheck = true; return }
         isChecking = true
-        let list = await platform.windowList()
+        let list = await platform.windowList(windowServerPID: windowServerPID)
         isChecking = false
+        if let pid = list.windowServerPID { windowServerPID = pid }
         guard isEnabled else { return }
         let outcome = evaluate(list)
         onOutcome?(outcome.outcome)

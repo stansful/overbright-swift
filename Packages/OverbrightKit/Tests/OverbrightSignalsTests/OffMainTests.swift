@@ -135,17 +135,20 @@ private func onBackgroundQueue(_ body: @escaping @Sendable () -> Void) async -> 
 @Suite struct WindowListOffMainTests {
     @Test func theWindowListIsReadOffTheMainThread() async {
         // Read-only and permission-free (bounds, layers, owner PIDs and alpha only).
-        let snapshot = await WindowListSnapshot.read()
+        let snapshot = await WindowListSnapshot.read(windowServerPID: nil)
         #expect(snapshot.windows.allSatisfy { $0.layer == 0 || $0.layer == FullScreenDetector.menuBarLayer })
         let box = SnapshotBox()
-        let offMain = await onBackgroundQueue { box.store(WindowListSnapshot.capture()) }
+        let offMain = await onBackgroundQueue { box.store(WindowListSnapshot.capture(windowServerPID: nil)) }
         #expect(offMain && box.value != nil)
     }
 
-    @Test func theWindowServerIsRecognisedByItsExecutablePath() {
-        #expect(WindowListSnapshot.isWindowServerPath("/System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer"))
-        #expect(!WindowListSnapshot.isWindowServerPath("/Applications/WindowServer Helper.app/Contents/MacOS/Helper"))
-        #expect(!WindowListSnapshot.isWindowServer(getpid()))
+    @Test func theWindowServerIsFoundByItsExecutablePathOffTheMainThread() async {
+        // Whatever is on screen (a full-screen Space shows no menu bar), the libproc scan names the WindowServer.
+        let box = PIDBox()
+        let offMain = await onBackgroundQueue { box.store(WindowServerProcess.locate()) }
+        #expect(offMain)
+        if let pid = box.value { #expect(WindowServerProcess.isWindowServer(pid)) }
+        #expect(!WindowServerProcess.isWindowServer(getpid()))
     }
 }
 
@@ -154,7 +157,7 @@ private func onBackgroundQueue(_ body: @escaping @Sendable () -> Void) async -> 
         let processes = await ProcessScanner.scan()
         let me = processes.first { $0.processID == getpid() }
         #expect(me != nil)
-        #expect(me?.executableName == WindowListSnapshot.executablePath(of: getpid()).map { ($0 as NSString).lastPathComponent })
+        #expect(me?.executableName == LibProc.executablePath(of: getpid()).map { ($0 as NSString).lastPathComponent })
         let box = ProcessesBox()
         let offMain = await onBackgroundQueue { box.store(ProcessScanner.capture()) }
         #expect(offMain && box.count > 1)
@@ -167,6 +170,13 @@ private nonisolated final class SnapshotBox: @unchecked Sendable {
     private var stored: WindowListSnapshot?
     func store(_ value: WindowListSnapshot) { lock.withLock { stored = value } }
     var value: WindowListSnapshot? { lock.withLock { stored } }
+}
+
+private nonisolated final class PIDBox: @unchecked Sendable {
+    private let lock = NSLock()
+    private var stored: Int32?
+    func store(_ value: Int32?) { lock.withLock { stored = value } }
+    var value: Int32? { lock.withLock { stored } }
 }
 
 private nonisolated final class ProcessesBox: @unchecked Sendable {

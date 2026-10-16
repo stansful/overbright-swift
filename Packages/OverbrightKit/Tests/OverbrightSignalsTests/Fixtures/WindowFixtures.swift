@@ -4,7 +4,11 @@
 // 2560 × 1440 pt, the WindowServer (PID 415) owning the 2560 × 30 menu-bar window at layer 24; while locked, loginwindow
 // (PID 419) frontmost with a display-sized window at layer 2004 and a 30000 × 30000 one at layer 2001; ordinary
 // layer-0 windows of other apps. The notched built-in (1728 × 1117 pt, 32-pt notch band) lies to the MSI's left.
+// Recorded again on 2026-10-16 (same Mac, lid closed, screen locked) with Chrome in a full-screen Space on the MSI: the
+// on-screen list holds NO layer-24 window (the WindowServer's three menu-bar windows report off screen, at y −74, 0 and
+// −30), Chrome's display-sized window, a 115-pt toolbar and two title-bar strips parked above the screen.
 import CoreGraphics
+import Foundation
 import OverbrightCore
 @testable import OverbrightSignals
 
@@ -68,4 +72,28 @@ enum WindowFixtures {
         FullScreenDetector.Context(frontmostPID: frontmost, ignoredPIDs: [ourPID, dock], regularPIDs: regular,
                                    displaySleepHolders: holders)
     }
+
+    // MARK: Raw window-server entries
+
+    /// The executable of the fixtures' WindowServer.
+    static let windowServerPath = "/System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer"
+
+    /// `window` as one `CGWindowListCopyWindowInfo` entry (layer, owner PID, bounds, alpha).
+    static func entry(_ window: Window) -> NSDictionary {
+        [kCGWindowLayer as String: window.layer, kCGWindowOwnerPID as String: Int(window.ownerPID),
+         kCGWindowBounds as String: window.bounds.dictionaryRepresentation, kCGWindowAlpha as String: window.alpha]
+    }
+
+    /// The 2026-10-16 on-screen list, front to back: Chrome full screen on the MSI, no menu bar on screen; the
+    /// WindowServer's cursor and shield layers and loginwindow's lock windows above everything.
+    static let msiChromeFullScreenEntries: [NSDictionary] = [
+        window(windowServer, 1391, 1324, 28, 40, layer: 2_147_483_630),
+        window(windowServer, 0, 0, 2560, 1440, layer: 2_147_483_646),
+        window(loginWindow, 0, 0, 2560, 1440, layer: 2004),
+        window(loginWindow, -15000, -15000, 30000, 30000, layer: 2001),
+        window(chrome, 0, -41, 2560, 41),
+        window(chrome, 0, -47, 2560, 47),
+        window(chrome, 0, 0, 2560, 115),
+        window(chrome, 0, 0, 2560, 1440),
+    ].map { entry($0) }
 }

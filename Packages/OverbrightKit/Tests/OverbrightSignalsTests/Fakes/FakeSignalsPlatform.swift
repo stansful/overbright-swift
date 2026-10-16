@@ -28,12 +28,21 @@ import OverbrightCore
     var dockPID: Int32? = 50
     var screenList: [FullScreenDetector.Display] = []
     var windows = WindowListSnapshot(windows: [], windowServerPID: nil)
+    /// When set, `windowList` builds its snapshot from these raw entries the way the live read does, with
+    /// `locatedWindowServer` as the libproc scan's answer and `windowServerPaths` as each PID's executable.
+    var rawWindowList: [NSDictionary]?
+    var locatedWindowServer: Int32?
+    var windowServerPaths: [Int32: String] = [:]
     var holders: Set<Int32>? = []
     var idleSeconds: Double? = 0
     var categories: [URL: String] = [:]
 
     private(set) var powerReads = 0
     private(set) var windowReads = 0
+    /// The `windowServerPID` each window read was given.
+    private(set) var windowServerHints: [Int32?] = []
+    /// libproc scans for the WindowServer (raw mode only).
+    private(set) var windowServerScans = 0
     private(set) var idleReads = 0
     private(set) var switchSources = 0
     private(set) var batterySources = 0
@@ -52,7 +61,15 @@ import OverbrightCore
     }
     func dockProcessID() -> Int32? { dockPID }
     func screens() -> [FullScreenDetector.Display] { screenList }
-    func windowList() async -> WindowListSnapshot { windowReads += 1; return windows }
+    func windowList(windowServerPID: Int32?) async -> WindowListSnapshot {
+        windowReads += 1
+        windowServerHints.append(windowServerPID)
+        guard let rawWindowList else { return windows }
+        let paths = windowServerPaths
+        return WindowListSnapshot.make(rawWindowList, windowServerPID: windowServerPID,
+                                       isWindowServer: { paths[$0].map(WindowServerProcess.isWindowServerPath) ?? false },
+                                       locate: { windowServerScans += 1; return locatedWindowServer })
+    }
     func displaySleepHolders() -> Set<Int32>? { holders }
     func secondsSinceLastInput() -> Double? { idleReads += 1; return idleSeconds }
     func appCategory(bundleURL: URL) -> String? { categories[bundleURL] }

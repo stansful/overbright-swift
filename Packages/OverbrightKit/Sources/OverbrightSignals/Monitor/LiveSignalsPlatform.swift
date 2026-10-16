@@ -3,7 +3,7 @@
 // `NSScreen`, the window list (bounds, layers, PIDs, alpha only), power assertions, the idle timestamp
 // (`CGEventSource.secondsSinceLastEventType`, no Input Monitoring) and Info.plist categories. Nothing here writes,
 // and constructing it touches nothing (`constructingServicesTouchesNoHardware`).
-// Thread: main, except `windowList()`, whose read runs off the main actor.
+// Thread: main, except `windowList(windowServerPID:)`, whose read runs off the main actor.
 import AppKit
 import CoreGraphics
 import Foundation
@@ -88,7 +88,9 @@ final class LiveSignalsPlatform: SignalsPlatform {
     }
 
     /// The window list, read off the main actor.
-    func windowList() async -> WindowListSnapshot { await WindowListSnapshot.read() }
+    func windowList(windowServerPID: Int32?) async -> WindowListSnapshot {
+        await WindowListSnapshot.read(windowServerPID: windowServerPID)
+    }
 
     /// `IOPMCopyAssertionsByProcess`.
     func displaySleepHolders() -> Set<Int32>? { PlaybackAssertions.read() }

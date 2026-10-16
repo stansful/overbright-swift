@@ -38,8 +38,9 @@ import OverbrightCore
     func dockProcessID() -> Int32?
     /// Every screen in CG global coordinates with its notch band.
     func screens() -> [FullScreenDetector.Display]
-    /// The window list (off the main actor in the live implementation).
-    func windowList() async -> WindowListSnapshot
+    /// The window list (off the main actor in the live implementation). `windowServerPID`: the WindowServer's PID from
+    /// an earlier snapshot, so it is looked up at most once per session.
+    func windowList(windowServerPID: Int32?) async -> WindowListSnapshot
     /// Processes holding a display-sleep assertion; nil when the read fails.
     func displaySleepHolders() -> Set<Int32>?
     /// Seconds since the last input event of the session; nil when unreadable.

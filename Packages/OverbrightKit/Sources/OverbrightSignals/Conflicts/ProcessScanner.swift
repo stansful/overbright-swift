@@ -1,11 +1,10 @@
 // OverbrightSignals/Conflicts/ProcessScanner.swift — the on-demand libproc scan behind drift attribution.
 // ARCHITECTURE.md §3.6 (`ConflictProbe.attributeDrift`), §7.2 ("Drift attribution"), §8.1 rule 3.
-// `proc_listallpids` + `proc_pidpath` list every process with its executable path (≈ 920 PIDs in ≈ 14 ms, no
-// permission [VERIFIED]). It runs only when an unexplained drift needs a culprit, never periodically, and off the main
-// actor. For executables inside an app bundle the bundle ID is read from that bundle's Info.plist (once per bundle;
-// system bundles under /System are skipped: they are never catalogued).
+// `LibProc` (`proc_listallpids` + `proc_pidpath`) lists every process with its executable path (≈ 920 PIDs in
+// ≈ 14 ms, no permission [VERIFIED]). It runs only when an unexplained drift needs a culprit, never periodically, and
+// off the main actor. For executables inside an app bundle the bundle ID is read from that bundle's Info.plist (once
+// per bundle; system bundles under /System are skipped: they are never catalogued).
 // Thread: any; `scan()` runs off the main actor.
-import Darwin
 import Foundation
 
 /// Lists running processes by executable path.
@@ -27,17 +26,10 @@ nonisolated enum ProcessScanner {
 
     /// Scans every process on the calling thread.
     static func capture() -> [Process] {
-        let estimate = proc_listallpids(nil, 0)
-        guard estimate > 0 else { return [] }
-        var pids = [pid_t](repeating: 0, count: Int(estimate) + 64)
-        let count = pids.withUnsafeMutableBytes { buffer in
-            proc_listallpids(buffer.baseAddress, Int32(buffer.count))
-        }
-        guard count > 0 else { return [] }
         var bundleIDs: [String: String?] = [:]
         var processes: [Process] = []
-        for pid in pids.prefix(Int(count)) where pid > 0 {
-            guard let path = WindowListSnapshot.executablePath(of: pid) else { continue }
+        for pid in LibProc.allProcessIDs() {
+            guard let path = LibProc.executablePath(of: pid) else { continue }
             let bundle = bundlePath(forExecutable: path)
             var bundleID: String?
             if let bundle, !bundle.hasPrefix("/System/") {
