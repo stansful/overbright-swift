@@ -1,7 +1,8 @@
 // OverbrightSettingsUITests/PaneSnapshotTests.swift — every pane, the calibration window's steps and the self-test
 // sheet rendered in Light, Dark and Increase Contrast (ARCHITECTURE.md §9.1 UI row, §10.13 "snapshots of every pane"):
 // in-process, never ordered in, each checked for ink; PNGs land in `$OVERBRIGHT_SNAPSHOT_DIR/SettingsUI/` when set.
-// The panes show the built-in display and the OLED external as a running engine classifies them, with the schedule on.
+// The panes show the built-in display and the OLED external as a running engine classifies them, with the schedule on,
+// and the apps they list are looked up first, so the Automations snapshot shows names and icons, not pending rows.
 import AppKit
 import OverbrightCore
 import OverbrightDesign
@@ -15,9 +16,8 @@ import Testing
     static let paneSize = CGSize(width: SettingsMetrics.windowSize.width - SettingsMetrics.sidebarWidth.ideal, height: 1300)
 
     /// Every pane with the environment the Settings window gives it.
-    static func panes() -> [(String, AnyView)] {
-        let services = PaneValues.richServices()
-        return SettingsPaneID.allCases.map { pane in
+    static func panes(_ services: OverbrightServices = PaneValues.richServices()) -> [(String, AnyView)] {
+        SettingsPaneID.allCases.map { pane in
             let view = SettingsPaneCatalog.view(for: pane, services: services)
                 .environment(SettingsNavigator(target: pane.rawValue))
                 .environment(ResetAllController(services: services))
@@ -48,9 +48,23 @@ import Testing
             .map { ($0.0, AnyView(CalibrationView(model: $0.1))) }
     }
 
+    /// Looks up every app the panes name (the paused apps, the other apps) and waits for the answers: the rows of a
+    /// pending lookup are blank (no name, no icon), which is not what a person sees a moment later.
+    static func resolveApps(_ services: OverbrightServices) async -> [String] {
+        let resolver = AppIdentityResolver.shared
+        let ids = services.settings[AutomationSettings.pausedApps].map(\.bundleID)
+            + services.signals.snapshot.conflicts.compactMap(\.bundleID)
+        for id in ids { _ = resolver.identity(of: id) }
+        _ = await eventually { !resolver.isLookingUp }
+        return ids.filter { resolver.identity(of: $0).isPending }
+    }
+
     @Test(arguments: ChromeAppearance.allCases)
-    func everyPaneRenders(_ appearance: ChromeAppearance) throws {
-        for (name, view) in Self.panes() {
+    func everyPaneRenders(_ appearance: ChromeAppearance) async throws {
+        let services = PaneValues.richServices()
+        let pending = await Self.resolveApps(services)
+        #expect(pending.isEmpty, "apps still looked up when the panes render: \(pending)")
+        for (name, view) in Self.panes(services) {
             let rep = try ChromeSnapshot.render(view, appearance, size: Self.paneSize)
             #expect(ChromeSnapshot.inkFraction(rep) > 0.01, "\(name) \(appearance.rawValue): nothing drawn")
             try ChromeSnapshot.write(rep, name, appearance)
