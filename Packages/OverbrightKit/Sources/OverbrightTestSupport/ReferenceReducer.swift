@@ -81,6 +81,6 @@ public nonisolated struct ReferenceReducer: Sendable {
             return (.boost(gain: requested), [])
         }()
         return DisplayDecision(key: key, target: target, reasons: reasons, eligibility: eligibility,
-                               mechanism: mechanism, domain: domain, requestedGain: requested)
+                               mechanism: mechanism, domain: domain, requestedGain: requested, level: level)
     }
 }
