@@ -1,7 +1,8 @@
 // OverbrightBoostTests/Engine/WriteFailureTests.swift — WindowServer refusing a write (ARCHITECTURE.md §4.5 invariants 2
 // and 4, §9.1 "every sequence ending in off leaves every table equal to its baseline"): a failed ramp step lands on the
 // baseline before any window goes and before the ramp claims its phase; a ramp to anything else retries; a failed
-// baseline write keeps the display marked and its trigger until a later write succeeds.
+// baseline write keeps the display marked and its trigger until a later write succeeds; a table that cannot be read
+// leaves the display for the next reduction to retry.
 import Foundation
 import OverbrightCore
 import OverbrightPolicy
@@ -87,5 +88,20 @@ import Testing
         }
         #expect(h.phase() == .failed(.repairBudgetExceeded) || h.phase() == .failed(.oscillation))
         #expect(h.engine.activeTaskCount == 0)
+    }
+
+    /// The table cannot be read when the arm starts: the display stays idle without keeping the target, so the next
+    /// reduction arms (not only a change of the target).
+    @Test func anUnreadableTableRetriesOnTheNextReduction() async throws {
+        let h = EngineHarness()
+        await h.start()
+        let base = try #require(h.base())
+        h.gamma.removeDisplay(h.id(h.builtIn))
+        h.engine.setOn(true, source: .panel)
+        await h.advance(.milliseconds(500))
+        #expect(h.phase() == .idle && h.codes.contains("arm.couldNotStart") && h.triggers.made.isEmpty)
+        h.gamma.addDisplay(h.id(h.builtIn), base: base)
+        h.engine.reduceNow()
+        #expect(await h.boost())
     }
 }

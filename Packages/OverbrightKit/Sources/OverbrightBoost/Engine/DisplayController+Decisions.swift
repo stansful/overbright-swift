@@ -72,6 +72,13 @@ extension DisplayController {
         }
     }
 
+    /// The arm or dim could not start (the table could not be read, the overlay could not be made): the display stays
+    /// idle and forgets the target, so the next reduction tries again instead of waiting for the target to change.
+    func couldNotStart() {
+        target = .neutral
+        deps.journal.record("arm.couldNotStart", display: key, time: deps.time)
+    }
+
     func goBoost(_ gain: Double, requested: Bool) {
         switch phase {
         case .idle, .dimmed:
@@ -97,9 +104,12 @@ extension DisplayController {
         case .idle:
             generation += 1
             if mechanism == .overlay {
-                guard ensureOverlay() else { return }
-            } else {
-                guard captureBaseline() else { return }
+                guard ensureOverlay() else { return couldNotStart() }
+            } else if !isScaledOrDimmed, !lastWriteIsScaled {           // never capture our own write still on screen
+                guard captureBaseline() else {
+                    if !phase.isFailed { couldNotStart() }
+                    return
+                }
             }
             epochStamp = deps.ledger.hangEpoch
             startRamp(to: light, origin: origin, finalPhase: .dimmed)

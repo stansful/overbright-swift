@@ -14,12 +14,17 @@ extension DisplayController {
     // MARK: Starting an arm
 
     /// idle or dimmed → boost: capture the baseline (from idle), read H0, decide the path, show the first rung, gate.
+    /// A table that cannot be read leaves the display idle for the next reduction to retry (`couldNotStart`); our own
+    /// write still on screen (a failed landing) is never captured as a baseline.
     func beginArm() {
         generation += 1
         let stamp = generation
         armSlot.cancel(); burstSlot.cancel(); driftSlot.cancel(); lingerSlot.cancel()
-        if phase == .idle, mechanism == .table {
-            guard captureBaseline() else { return }
+        if phase == .idle, mechanism == .table, !isScaledOrDimmed, !lastWriteIsScaled {
+            guard captureBaseline() else {
+                if !phase.isFailed { couldNotStart() }
+                return
+            }
         }
         if appliedGain < 1 - TableWriter.neutralTolerance {
             // The dim factor ramps back to 1 while arming (§4.3 dimmed → boost).
