@@ -1,0 +1,5 @@
+# String Catalogs merge per key and language (see scripts/merge-xcstrings.py). Enable the driver once per clone
+# and per worktree (ARCHITECTURE.md §10.0):
+#   git config merge.xcstrings.name "String Catalog union merge"
+#   git config merge.xcstrings.driver "python3 scripts/merge-xcstrings.py %O %A %B"
+*.xcstrings merge=xcstrings

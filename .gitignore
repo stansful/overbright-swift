@@ -1,0 +1,19 @@
+# Build outputs
+/build/
+/dist/
+DerivedData/
+.derived/
+# SwiftPM (one scratch dir per module: .build-<target>; `make distclean` removes them)
+.build/
+.build-*/
+.swiftpm/
+# Xcode per-user state
+xcuserdata/
+*.xcuserstate
+# Editors
+.idea/
+# macOS
+.DS_Store
+
+# Python bytecode from scripts/
+__pycache__/

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Merged with the keys Xcode generates (GENERATE_INFOPLIST_FILE = YES). Localized in InfoPlist.xcstrings.
+	     ARCHITECTURE.md §8.6. No *UsageDescription key: Overbright asks for no permission (scripts/smoke.sh fails on one). -->
+	<!-- A menu bar app: no Dock icon by default (the optional Dock icon is switched at runtime, D13). -->
+	<key>LSUIElement</key>
+	<true/>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.utilities</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>Copyright © 2026 Overbright contributors. MIT License.</string>
+	<!-- Without this, SwiftPM resource bundles fall back to English. Every language of scripts/l10n/languages.json
+	     (scripts/smoke.sh checks the built app). -->
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>ar</string>
+		<string>ca</string>
+		<string>cs</string>
+		<string>da</string>
+		<string>de</string>
+		<string>el</string>
+		<string>es</string>
+		<string>fi</string>
+		<string>fr</string>
+		<string>he</string>
+		<string>hi</string>
+		<string>hr</string>
+		<string>hu</string>
+		<string>id</string>
+		<string>it</string>
+		<string>ja</string>
+		<string>ko</string>
+		<string>ms</string>
+		<string>nb</string>
+		<string>nl</string>
+		<string>pl</string>
+		<string>pt-BR</string>
+		<string>pt-PT</string>
+		<string>ro</string>
+		<string>ru</string>
+		<string>sk</string>
+		<string>sl</string>
+		<string>sv</string>
+		<string>th</string>
+		<string>tr</string>
+		<string>uk</string>
+		<string>vi</string>
+		<string>zh-Hans</string>
+		<string>zh-Hant</string>
+	</array>
+	<!-- The Metal-backed triggers (T2/T3) run on the GPU that drives each display and never force the discrete GPU on;
+	     each Metal device comes from CGDirectDisplayCopyCurrentMetalDevice (ARCHITECTURE.md §8.6). -->
+	<key>NSSupportsAutomaticGraphicsSwitching</key>
+	<true/>
+	<!-- "owner/repo" for the GitHub Releases update check. Empty = update check disabled, no network at all (D2). -->
+	<key>OverbrightGitHubRepository</key>
+	<string></string>
+	<!-- overbright://settings[/<pane>] opens Settings; overbright://control?set=… is the dormant control's route
+	     (ARCHITECTURE.md §7.7). Nothing else. -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>app.overbright.Overbright</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>overbright</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>
