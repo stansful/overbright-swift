@@ -1,7 +1,9 @@
 // OverbrightDesignTests/ContrastAuditTests.swift — DESIGN.md §2.1's contrast audit (WCAG 2.x, non-text 3:1 by 1.4.11,
-// text 4.5:1): the reference table reproduced from the tokens, then every token re-measured against the system colours
-// it resolves to in Light, Dark and Increase Contrast. ARCHITECTURE.md §10.11 Acceptance.
+// text 4.5:1 by 1.4.3): the reference table reproduced from the tokens, then every token re-measured against the system
+// colours it resolves to in Light, Dark and Increase Contrast, and the "Off" readout as `ReadoutText` draws it on the
+// card. ARCHITECTURE.md §10.11 Acceptance.
 import AppKit
+import OverbrightPolicy
 import SwiftUI
 import Testing
 @testable import OverbrightDesign
@@ -80,6 +82,10 @@ import Testing
         let tertiary = SRGBA.black.opacity(0.26).over(Self.lightCard)
         #expect(tertiary.contrast(with: Self.lightCard) < 3)
         #expect(SRGBA(hex: 0xFF9500).contrast(with: Self.lightCard) < 3)           // system orange in Light
+        // Why the "Off" readout is `labelColor`: `tertiaryLabelColor` fails 4.5:1 on both cards, and so does
+        // `secondaryLabelColor` on the light one (3.95:1), however light the card is.
+        #expect(SRGBA.white.opacity(0.25).over(Self.darkCard).contrast(with: Self.darkCard) < 4.5)
+        #expect(Self.secondaryLight.over(Self.lightCard).contrast(with: Self.lightCard) < 4.5)
     }
 
     // MARK: The resolved system colours
@@ -104,6 +110,30 @@ import Testing
         #expect(glyph.contrast(with: tint) >= 3, "neutral glyph vs tint, \(where_)")
         let text = (SRGBA(NSColor.labelColor.resolved(scheme, palette)) ?? .black).over(tint)
         #expect(text.contrast(with: tint) >= 4.5, "chip text vs tint, \(where_)")
+        // The readout, "Off" included, is text on the card (WCAG 1.4.3).
+        let readout = (SRGBA(NSColor.labelColor.resolved(scheme, palette)) ?? .black).over(card)
+        #expect(readout.contrast(with: card) >= 4.5, "readout vs card, \(where_): \(readout.contrast(with: card))")
+    }
+
+    /// The "Off" readout, shown at every launch, as `ReadoutText` draws it on the card: its ink reaches 4.5:1 in every
+    /// palette and appearance (it was `tertiaryLabelColor`, 2.5:1 on the dark card).
+    @Test(arguments: [OverbrightTheme.Palette.standard, .highContrast, .opaque], [ColorScheme.light, .dark])
+    func theOffReadoutIsReadableOnTheCard(palette: OverbrightTheme.Palette, scheme: ColorScheme) throws {
+        let panel = OverbrightColor.panelBackground.resolved(palette: palette, scheme: scheme)
+        let card = OverbrightColor.card.resolved(palette: palette, scheme: scheme).over(panel)
+        let off = ReadoutValues(state: .off, appliedGain: 1, requestedGain: nil, nits: nil, preset: nil, isEstimate: true,
+                                dimPercent: nil)
+        let theme = OverbrightTheme(reduceTransparency: palette == .opaque, increaseContrast: palette == .highContrast)
+        let pixels = try render(ReadoutText(off), size: CGSize(width: 80, height: 24), theme: theme, scheme: scheme,
+                                background: card.color)
+        var strongest = 1.0
+        for y in 0..<pixels.height {
+            for x in 0..<pixels.width {
+                let p = pixels.pixel(x: x, y: y)
+                strongest = max(strongest, SRGBA(red: p.r, green: p.g, blue: p.b).contrast(with: card))
+            }
+        }
+        #expect(strongest >= 4.5, "\(palette), \(scheme): the “Off” ink reaches \(strongest):1 on \(card)")
     }
 
     /// Increase Contrast draws the marks in `labelColor` and the warm colour darker or lighter (DESIGN.md §2.1, §15).
