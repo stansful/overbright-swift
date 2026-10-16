@@ -61,7 +61,8 @@ struct FillLightPane: SettingsPaneView {
                     FillLightPreview(width: settings[FillLightSettings.width],
                                      kelvin: PaneFormat.kelvin(warmth: settings[FillLightSettings.warmth]),
                                      brightness: settings[FillLightSettings.brightness],
-                                     displayWidth: Self.width(of: displays.first { $0.ref.key == chosen }))
+                                     displayWidth: Self.width(of: displays.first { $0.ref.key == chosen },
+                                                              simulated: services.displays is FakeDisplayDirectory))
                     Spacer()
                 }
                 Toggle(isOn: Binding(get: { services.fillLight.isOn },
@@ -119,9 +120,11 @@ struct FillLightPane: SettingsPaneView {
             .disabled(displays.isEmpty)
     }
 
-    /// The display's width in points (a read of its bounds), or a 14-inch laptop's when it cannot be read.
-    static func width(of display: DisplayFacts?) -> Double {
-        guard let display else { return fallbackDisplayWidth }
+    /// The display's width in points (a read of its bounds), or a 14-inch laptop's when it cannot be read. A simulated
+    /// display is never looked up: its fixture ID (1–6) can be a real display's (WP14). The directory port has no
+    /// bounds yet; reading them through it is a contract-lane change.
+    static func width(of display: DisplayFacts?, simulated: Bool) -> Double {
+        guard let display, !simulated else { return fallbackDisplayWidth }
         let bounds = CGDisplayBounds(display.ref.id)
         return bounds.width > 0 ? bounds.width : fallbackDisplayWidth
     }

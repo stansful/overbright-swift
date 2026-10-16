@@ -81,6 +81,14 @@ import Testing
         }
     }
 
+    /// Fill Light's miniature never measures a real display for a simulated one: fixture IDs 1–6 are real displays'
+    /// numbers on many Macs (WP14).
+    @Test func theFillLightPreviewNeverMeasuresARealDisplayForASimulatedOne() throws {
+        let builtIn = try #require(DisplayFixture.builtinXDRLidOpen.displays.first?.facts)
+        #expect(FillLightPane.width(of: builtIn, simulated: true) == FillLightPane.fallbackDisplayWidth)
+        #expect(FillLightPane.width(of: nil, simulated: false) == FillLightPane.fallbackDisplayWidth)
+    }
+
     /// Tall enough that a pane renders every row (the rich setup's Displays pane is the longest).
     private static let tallPane = CGSize(width: PaneSnapshotTests.paneSize.width, height: 4000)
 

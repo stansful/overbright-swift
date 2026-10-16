@@ -24,6 +24,41 @@ private func index(rows: [SettingsRowInfo] = rows,
 @MainActor @Suite struct SearchAndNavigationTests {
     // MARK: Search
 
+    /// The index follows what its rows were built from: rows that appear with a setting or an app state (From / To,
+    /// Battery level, the icon warning) are found as soon as they show, not after the displays change (WP14).
+    @Test func theIndexFollowsTheStateItsRowsDependOn() throws {
+        let services = OverbrightServices.preview()
+        let cache = SearchIndexCache()
+        func finds(_ row: SettingsRowInfo) -> Bool {
+            cache.index(panes: SettingsPane.all, signature: ["unchanged"]) { SettingsPaneCatalog.rows(services: services) }
+                .search(row.title).rows.contains { $0.id == row.id }
+        }
+        #expect(!finds(AutomationsRows.scheduleFrom))
+        services.settings[AutomationSettings.schedule] = ScheduleEditing.defaultWindow
+        #expect(finds(AutomationsRows.scheduleFrom))
+        #expect(finds(AutomationsRows.batteryThreshold))
+        services.settings[AutomationSettings.batteryGuard] = .onlyOnAdapter
+        #expect(!finds(AutomationsRows.batteryThreshold))
+        #expect(!finds(GeneralRows.iconWarning))
+        let app = try #require(services.app as? PreviewAppControl)
+        app.iconVisibility = .notVisible
+        #expect(finds(GeneralRows.iconWarning))
+    }
+
+    /// A search hit on Run Self-Test… shows the row; only a deep link (the panel's Run Self-Test…) opens the sheet.
+    @Test func onlyADeepLinkOpensTheSelfTestSheet() {
+        let searched = SettingsNavigator(target: "general")
+        searched.open(row: AdvancedRows.selfTest)
+        #expect(searched.selection == .advanced && searched.highlightedRow == AdvancedPane.selfTestRowID)
+        #expect(!searched.highlightIsDeepLink && !AdvancedPane.opensSelfTest(searched))
+        let linked = SettingsNavigator(target: "general")
+        linked.open("advanced#selfTest")
+        #expect(linked.highlightIsDeepLink && AdvancedPane.opensSelfTest(linked))
+        #expect(AdvancedPane.opensSelfTest(SettingsNavigator(target: "advanced#selfTest")))
+        #expect(!AdvancedPane.opensSelfTest(SettingsNavigator(target: "advanced#detailedLogging")))
+        #expect(!AdvancedPane.opensSelfTest(nil))
+    }
+
     /// DESIGN.md §7.2's keyword list finds the pane that holds each subject.
     @Test func designKeywordsFindTheirPanes() {
         let search = index(rows: [])

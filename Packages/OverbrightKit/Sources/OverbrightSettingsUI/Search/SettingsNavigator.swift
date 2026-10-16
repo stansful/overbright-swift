@@ -3,6 +3,8 @@
 // fading over 1 s"). Ported from Cranny's SettingsNavigator (the owner's MIT code). A deep link is "pane" or
 // "pane#row": `displays#cap` opens Displays, scrolls to the Limit row and washes it with the accent.
 // `AppControl.openSettings(_:)`, `overbright://settings/<pane>` and the Debug `--qa-settings` hook pass it unchanged.
+// A reveal remembers whether a deep link or a search hit asked for it: a row that acts when it is linked to (Run
+// Self-Test… opens its sheet) acts only for a deep link, never when search merely shows it (WP14).
 import Foundation
 import Observation
 
@@ -16,26 +18,28 @@ import Observation
     private(set) var highlightedRow: String?
     /// Bumped on every reveal (a repeat of the same row flashes again).
     private(set) var highlightSerial = 0
+    /// The last reveal came from a deep link ("advanced#selfTest"), not from a search hit.
+    private(set) var highlightIsDeepLink = false
     @ObservationIgnored private(set) var highlightDate = Date.distantPast
 
     /// Opens `target` ("pane" or "pane#row"; General when nil or unknown).
     init(target: String? = nil) {
         let parsed = Self.parse(target)
         selection = parsed.pane ?? .general
-        if let row = parsed.row { reveal(row) }
+        if let row = parsed.row { reveal(row, deepLink: true) }
     }
 
     /// Opens a pane or a deep link ("displays#cap"); nil or an unknown pane keeps the current pane.
     func open(_ target: String?) {
         let parsed = Self.parse(target)
         if let pane = parsed.pane, pane != selection { selection = pane }
-        if let row = parsed.row { reveal(row) }
+        if let row = parsed.row { reveal(row, deepLink: true) }
     }
 
-    /// Opens `row`'s pane, scrolls to it and highlights it.
+    /// A search hit: opens `row`'s pane, scrolls to it and highlights it.
     func open(row: SettingsRowInfo) {
         if selection != row.pane { selection = row.pane }
-        reveal(row.id)
+        reveal(row.id, deepLink: false)
     }
 
     /// Called by `pane`'s form: the row to scroll to if it belongs to that pane (at most once per request).
@@ -48,9 +52,10 @@ import Observation
     /// A highlight is shown only shortly after it was requested, so rows that scroll in later stay calm.
     var isHighlightFresh: Bool { Date().timeIntervalSince(highlightDate) < 2 }
 
-    private func reveal(_ row: String) {
+    private func reveal(_ row: String, deepLink: Bool) {
         pendingRow = row
         highlightedRow = row
+        highlightIsDeepLink = deepLink
         highlightDate = Date()
         highlightSerial += 1
     }
