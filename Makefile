@@ -23,7 +23,7 @@ smoke:           ## Run build/Overbright.app --diagnostics: bundles + translatio
 qa-matrix:       ## Debug app under --qa-simulate: every fixture's scenario, symbol/banner/chips checked; Welcome writes nothing (after make debug)
 	@scripts/qa-matrix.sh
 
-soak:            ## Debug app under --qa-simulate for MINUTES (30): footprint, idle wake-ups while off vs a control (after make debug)
+soak:            ## Debug app under --qa-simulate for MINUTES (30, at least 17): footprint growth per cycle, no recurring own wake-ups while off (after make debug)
 	@scripts/soak.sh
 
 dist: build      ## zip + dmg + sha256 (+ notarization with SIGN_IDENTITY/TEAM_ID/NOTARY_PROFILE) -> dist/
@@ -40,11 +40,13 @@ tsan:            ## swift test under the Thread Sanitizer (FILTER=HangWatchdogTe
 	@. scripts/lib.sh && ensure_xcode && cd "$$PACKAGE_DIR" && \
 	  swift test "$${SWIFTPM_FLAGS[@]}" --sanitize=thread --scratch-path .build-tsan $(if $(FILTER),--filter '$(FILTER)')
 
-lint:            ## Copy rules, competitor denylist (catalogs + sources) and no Metal shader sources (D22)
+lint:            ## Copy rules, competitor denylist (catalogs + every repository file), no Metal shader sources (D22), script self-tests
 	@/usr/bin/python3 -I scripts/lint-copy.py
 	@shaders="$$(find Packages App Controls Shared -name '*.metal' -not -path '*/.build*' 2>/dev/null)"; \
 	  if [[ -n "$$shaders" ]]; then echo "error: Metal shader sources are not allowed (ARCHITECTURE.md D22):"; echo "$$shaders"; exit 1; fi; \
 	  echo "No Metal shader sources"
+	@/usr/bin/python3 -I scripts/check-lproj.py --self-test
+	@/usr/bin/python3 -I scripts/soak_judge.py --self-test
 
 strings:         ## Sync the package's String Catalogs with the keys used in code
 	@scripts/sync-strings.sh

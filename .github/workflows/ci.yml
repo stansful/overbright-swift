@@ -28,7 +28,7 @@ jobs:
           xcodebuild -version
           swift --version
 
-      - name: Lint (copy rules per language, the clean-room denylist over catalogs and sources, no Metal shader sources)
+      - name: Lint (copy rules per language, the clean-room denylist over catalogs and every repository file, no Metal shader sources, script self-tests)
         run: make lint
 
       - name: Shipped languages are complete and valid (placeholders, plural forms, quotes; new keys may be pending)
