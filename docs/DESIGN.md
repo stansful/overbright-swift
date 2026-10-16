@@ -584,7 +584,7 @@ Every state below is a named status in PanelUI's `ScriptedStatuses` (`--qa-state
 | (add) | **+** menu | — | apps that are running · Choose… · Suggested ▸ (installed video apps, Prime Video, Infuse Enterprise, GeForce NOW, Moonlight) | — |
 | **Schedule** | | | | |
 | Only allow extra brightness at set times | switch | off | — | "Outside these hours Overbright stays at Standard. Dimming still works." |
-| From / To | time pickers | 08:00 / 20:00 | any minute | — |
+| From / To | time pickers | 08:00 / 20:00 | any minute (the same minute in both is the whole day, never no hours) | — |
 | **OLED displays** (only when one is known) | | | | |
 | Pause extra brightness after no input for | pop-up | **5 minutes** | 1 · 2 · 5 · 10 · 15 · 30 minutes | "Video that keeps your Mac awake doesn't count as no input." |
 | **Focus** | | | | |

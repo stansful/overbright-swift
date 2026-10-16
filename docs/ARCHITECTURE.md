@@ -851,7 +851,8 @@ public nonisolated struct PausedAppRule: Hashable, Codable, Sendable {
     }
 }
 
-/// "Only allow extra brightness during set hours". Minutes since local midnight; `end < start` spans midnight.
+/// "Only allow extra brightness during set hours". Minutes since local midnight; `end < start` spans midnight, and
+/// `end == start` is the whole day (as built in WP14: the Settings pickers pass through equal ends).
 public nonisolated struct ScheduleWindow: Hashable, Codable, Sendable {
     public var startMinute: Int
     public var endMinute: Int
@@ -859,7 +860,8 @@ public nonisolated struct ScheduleWindow: Hashable, Codable, Sendable {
         self.startMinute = min(max(startMinute, 0), 1439); self.endMinute = min(max(endMinute, 0), 1439)
     }
     public func contains(minuteOfDay m: Int) -> Bool {
-        startMinute <= endMinute ? (m >= startMinute && m < endMinute) : (m >= startMinute || m < endMinute)
+        if startMinute == endMinute { return true }
+        return startMinute < endMinute ? (m >= startMinute && m < endMinute) : (m >= startMinute || m < endMinute)
     }
 }
 

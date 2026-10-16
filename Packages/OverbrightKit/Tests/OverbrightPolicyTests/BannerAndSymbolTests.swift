@@ -54,6 +54,29 @@ import Testing
                 == .unattributedDrift(display: DisplayFixture.Keys.builtIn))
     }
 
+    /// A schedule whose From equals its To is the whole day (C-PLATFORM-2): the Settings pickers pass through equal
+    /// ends while either is stepped, and "allowed from 08:00 to 08:00" must never block extra brightness for good.
+    @Test func aScheduleFromAMinuteToTheSameMinuteIsTheWholeDay() {
+        for minute in [0, 480, 1439] {
+            let allDay = ScheduleWindow(startMinute: minute, endMinute: minute)
+            #expect((0..<1440).allSatisfy { allDay.contains(minuteOfDay: $0) }, "\(minute)")
+            for now in [0, minute, (minute + 720) % 1440, 1439] {
+                let decision = reduce(settings: PolicySettings(schedule: allDay), minuteOfDay: now)
+                #expect(decision.banner == nil, "\(minute) at \(now)")
+                let builtIn = decision.displays[DisplayFixture.Keys.builtIn]
+                #expect(builtIn?.reasons.contains(.outsideSchedule) == false)
+                guard case .boost? = builtIn?.target else { Issue.record("not boosting: \(minute) at \(now)"); continue }
+            }
+        }
+        // One minute apart is still a window of one minute, or of all but one.
+        let oneMinute = ScheduleWindow(startMinute: 480, endMinute: 481)
+        #expect(oneMinute.contains(minuteOfDay: 480) && !oneMinute.contains(minuteOfDay: 481))
+        let allButOne = ScheduleWindow(startMinute: 481, endMinute: 480)
+        #expect(!allButOne.contains(minuteOfDay: 480) && allButOne.contains(minuteOfDay: 481))
+        #expect(reduce(settings: PolicySettings(schedule: oneMinute), minuteOfDay: 600).banner
+                == .outsideSchedule(oneMinute))
+    }
+
     /// Only reasons that stop a display that would otherwise change raise a banner.
     @Test func bannersNeedADisplayThatWouldChange() {
         let lowPower = SystemSnapshot(power: PowerState(source: .adapter, batteryPercent: nil, isLowPowerMode: true))
