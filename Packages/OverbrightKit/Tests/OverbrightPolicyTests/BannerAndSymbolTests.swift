@@ -116,6 +116,24 @@ import Testing
         #expect(reduce([T.display(trip: .headroomNeverArrived)]).symbol == .on)
     }
 
+    /// A display whose own "Use extra brightness" switch is off would not change: it is not "paused" in the menu bar
+    /// and raises no guard's banner (an opt-in OLED external on a Mac mini, WP13); its chip still says why.
+    @Test func aDisplayWhoseSwitchIsOffIsNotPaused() {
+        let msi = DisplayFixture.mpg322uxHDROn.displays[0]
+        let lowPower = SystemSnapshot(power: PowerState(source: .adapter, batteryPercent: nil, isLowPowerMode: true))
+        let notEnabled = reduce([T.display(msi, boostEnabled: false)])
+        #expect(notEnabled.symbol == .on)
+        #expect(notEnabled.banner == nil)
+        #expect(notEnabled.displays[msi.key]?.reasons.first == .boostNotEnabled)
+        #expect(reduce([T.display(msi, boostEnabled: false)], system: lowPower).banner == nil)
+        #expect(reduce([T.display(msi, boostEnabled: false)], system: lowPower).symbol == .on)
+        // Once the user turns it on, the guard pauses it and says so.
+        #expect(reduce([T.display(msi, boostEnabled: true)], system: lowPower).symbol == .paused)
+        #expect(reduce([T.display(msi, boostEnabled: true)], system: lowPower).banner == .lowPowerMode)
+        // Next to a display that boosts, the menu bar shows on.
+        #expect(reduce([T.display(), T.display(msi, boostEnabled: false)]).symbol == .on)
+    }
+
     /// The reducer never sets `.preparing` (the engine does, from its phases), whatever the input.
     @Test func neverPreparing() {
         for master in [true, false] {
