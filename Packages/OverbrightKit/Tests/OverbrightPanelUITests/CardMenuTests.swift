@@ -85,24 +85,23 @@ import Testing
 
     @Test func turningExtraBrightnessOnForAnOLEDAsksFirstOnce() throws {
         let (services, boost) = try setup("extra-brightness-off")
-        var asked: [String] = []
-        var answer = false
-        let commands = PanelCommands(services: services, source: .panel, confirmOLED: { asked.append($0); return answer },
-                                     openURL: { _ in })
+        let notice = OLEDNoticeScript()
+        let commands = PanelCommands(services: services, source: .panel,
+                                     confirmOLED: { notice.asked.append($0); return notice.answer }, openURL: { _ in })
         let model = try card(services, msi)
         #expect(model.isOLED && !model.boostEnabled)
         CardMenu.perform(.level(.brightRoom, isChecked: false), card: model, commands: commands)
-        #expect(asked == ["MPG322UX OLED"])
+        #expect(notice.asked == ["MPG322UX OLED"])
         #expect(commands.preferences(of: msi).boostEnabled != true)            // Cancel: still off, nothing set
         #expect(boost.calls.isEmpty)
-        answer = true
+        notice.answer = true
         CardMenu.perform(.level(.brightRoom, isChecked: false), card: model, commands: commands)
         #expect(commands.preferences(of: msi).boostEnabled == true)
         #expect(commands.preferences(of: msi).oledNoticeAcknowledged)
         #expect(boost.calls == ["setExtraBrightness(brightRoom,\(msi.rawValue),panel)"])
         commands.setExtraBrightness(false, for: msi, name: "MPG322UX OLED", isOLED: true)
         commands.setExtraBrightness(true, for: msi, name: "MPG322UX OLED", isOLED: true)
-        #expect(asked.count == 2)                                              // acknowledged: never asked again
+        #expect(notice.asked.count == 2)                                       // acknowledged: never asked again
     }
 
     @Test func dontUseReturnsADimmedDisplayToStandard() throws {
@@ -132,4 +131,11 @@ import Testing
         BannerAction.resume.perform(commands, status: services.boost.status)
         #expect(boost.calls.last == "resume(panel)")
     }
+}
+
+/// The OLED notice's scripted answer and the names it was asked for: a main-actor box, so the test changes the answer
+/// after the (Sendable) confirmOLED closure captured it.
+@MainActor private final class OLEDNoticeScript {
+    var asked: [String] = []
+    var answer = false
 }
