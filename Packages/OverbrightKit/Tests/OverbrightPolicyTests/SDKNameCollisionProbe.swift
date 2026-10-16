@@ -22,4 +22,16 @@ import os
 import OverbrightCore
 import OverbrightPolicy
 
-private typealias ProbeOverbrightPolicyModule = OverbrightPolicyModule
+private typealias ProbeBoostPolicy = BoostPolicy
+private typealias ProbeCompatibilityModels = CompatibilityModels
+private typealias ProbeConflictMatcher = ConflictMatcher
+private typealias ProbeEligibilityClassifier = EligibilityClassifier
+private typealias ProbeFactorMath = FactorMath
+private typealias ProbeGainCeiling = GainCeiling
+private typealias ProbeLevelMapping = LevelMapping
+private typealias ProbePresetVisibility = PresetVisibility
+private typealias ProbeReadout = Readout
+private typealias ProbeReadoutValues = ReadoutValues
+private typealias ProbeStepMath = StepMath
+private typealias ProbeTableClassifier = TableClassifier
+private typealias ProbeTransferDomainResolver = TransferDomainResolver
