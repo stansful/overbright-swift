@@ -36,6 +36,8 @@ import OverbrightCore
     var holders: Set<Int32>? = []
     var idleSeconds: Double? = 0
     var categories: [URL: String] = [:]
+    /// "Displays have separate Spaces" (the default on).
+    var separateSpaces = true
 
     private(set) var powerReads = 0
     private(set) var windowReads = 0
@@ -46,8 +48,11 @@ import OverbrightCore
     private(set) var idleReads = 0
     private(set) var switchSources = 0
     private(set) var batterySources = 0
+    /// Running-list observations registered and not yet cancelled.
+    private(set) var runningListObservers = 0
     private var switchHandler: (@MainActor @Sendable () -> Void)?
     private var batteryHandler: (@MainActor @Sendable () -> Void)?
+    private var runningListHandler: (@MainActor @Sendable (RunningAppsChange) -> Void)?
 
     func sessionState() -> SessionState { session }
     func readPower() -> PowerState { powerReads += 1; return power }
@@ -56,11 +61,18 @@ import OverbrightCore
     func isHDRSuppressed() -> Bool { hdrSuppressed }
     func frontmostApplication() -> RunningAppInfo? { frontmost }
     func runningApplications() -> [RunningAppInfo] { running }
+    func observeRunningApplications(_ handler: @escaping @MainActor @Sendable (RunningAppsChange) -> Void)
+        -> ObservationToken {
+        runningListObservers += 1
+        runningListHandler = handler
+        return ObservationToken { [weak self] in self?.runningListObservers -= 1; self?.runningListHandler = nil }
+    }
     nonisolated func application(in notification: Notification) -> RunningAppInfo? {
         notification.userInfo?[Self.appKey] as? RunningAppInfo
     }
     func dockProcessID() -> Int32? { dockPID }
     func screens() -> [FullScreenDetector.Display] { screenList }
+    func screensHaveSeparateSpaces() -> Bool { separateSpaces }
     func windowList(windowServerPID: Int32?) async -> WindowListSnapshot {
         windowReads += 1
         windowServerHints.append(windowServerPID)
@@ -101,6 +113,14 @@ import OverbrightCore
     /// Posts `name` on `center` (from the main thread), carrying `app` like a workspace notification.
     func post(_ name: Notification.Name, in center: NotificationCenter, app: RunningAppInfo? = nil) {
         center.post(name: name, object: nil, userInfo: app.map { [Self.appKey: $0] })
+    }
+
+    /// The running list changes the way AppKit's KVO reports it (`running` is updated first, as the live list is when
+    /// the observer runs): `added` join, `removed` leave.
+    func changeRunningList(added: [RunningAppInfo] = [], removed: [RunningAppInfo] = []) {
+        let gone = Set(removed.map(\.processID))
+        running = running.filter { !gone.contains($0.processID) } + added
+        runningListHandler?(RunningAppsChange(added: added, removed: removed))
     }
 
     /// IOKit's source-switch callback fires with `power` as the new state.

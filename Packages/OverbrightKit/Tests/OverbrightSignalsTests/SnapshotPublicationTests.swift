@@ -172,6 +172,27 @@ import Testing
         #expect(harness.monitor.snapshot.fullScreenDisplays.isEmpty)        // the menu bar stayed: a zoomed window
     }
 
+    @Test func everyCheckReadsWhetherDisplaysHaveSeparateSpaces() async {
+        // A player window exactly fills the MSI behind the editor; the MSI shows no menu bar.
+        let harness = SignalsHarness()
+        let platform = harness.platform
+        platform.screenList = [F.builtIn, F.msi]
+        platform.windows = WindowListSnapshot(windows: [F.menuBar(on: F.builtIn), F.window(F.editor, 100, 100, 800, 600),
+                                                        F.window(F.player, 1728, 0, 2560, 1440)],
+                                              windowServerPID: F.windowServer)
+        platform.frontmost = RunningAppInfo(bundleID: "com.example.editor", processID: F.editor)
+        platform.running = [RunningAppInfo(bundleID: "com.example.editor", processID: F.editor),
+                            RunningAppInfo(bundleID: "com.example.player", processID: F.player)]
+        platform.separateSpaces = false                                     // one menu bar, on the main display
+        await harness.start()
+        await harness.advance(.seconds(1))
+        #expect(harness.monitor.snapshot.fullScreenDisplays.isEmpty)
+        platform.separateSpaces = true                                      // the MSI's missing menu bar now counts
+        platform.post(NSWorkspace.activeSpaceDidChangeNotification, in: platform.workspaceCenter)
+        await harness.advance(.seconds(1))
+        #expect(harness.monitor.snapshot.fullScreenDisplays == [DisplayFixture.Keys.mpg322ux])
+    }
+
     @Test func theFocusDirectiveIsPersistedAndPublished() async {
         let harness = SignalsHarness()
         await harness.start()

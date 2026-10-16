@@ -140,8 +140,113 @@ import Testing
         await harness.monitor.stop()
         #expect(harness.monitor.activeSources.isEmpty)
         #expect(harness.platform.switchSources == 0 && harness.platform.batterySources == 0)
-        #expect(harness.platform.cameraDevices.activeListeners == 0)
+        #expect(harness.platform.cameraDevices.activeListeners == 0 && harness.platform.runningListObservers == 0)
         await harness.advance(.seconds(1))
         #expect(harness.time.sleeperCount == 0)
+    }
+
+    // MARK: Shielded (nobody sees the screen; the engine holds every display neutral)
+
+    @Test func anIdlePauseStopsPollingWhileTheScreensSleepAndKeepsItsFlag() async {
+        let harness = SignalsHarness(fixture: .mpg322uxHDROn)
+        harness.platform.idleSeconds = 4000
+        await harness.start()
+        await harness.advance(.seconds(1))                                    // the launch full-screen check settles
+        harness.monitor.setBoostActive(true)
+        harness.monitor.setBoostActive(false)                                 // the idle pause made the OLED neutral
+        #expect(harness.monitor.activeSources == alwaysOn.union([.idleDeadline]))
+        let center = harness.platform.workspaceCenter
+        harness.platform.post(NSWorkspace.screensDidSleepNotification, in: center)
+        #expect(harness.monitor.activeSources == alwaysOn)
+        #expect(harness.monitor.snapshot.isIdleBeyondThreshold)              // the pause holds
+        await harness.advance(.seconds(1))
+        #expect(harness.time.sleeperCount == 0)                               // no sleeper all night
+        let reads = harness.platform.idleReads
+        await harness.advance(.seconds(3600))
+        #expect(harness.platform.idleReads == reads)
+        // The screens wake by themselves: still idle, the 2 s poll resumes.
+        harness.platform.post(NSWorkspace.screensDidWakeNotification, in: center)
+        #expect(harness.platform.idleReads == reads + 1)
+        #expect(harness.monitor.activeSources == alwaysOn.union([.idleDeadline]))
+        #expect(harness.monitor.snapshot.isIdleBeyondThreshold)
+        // A lock suspends it again; the user unlocks: the idle time is read, the pause ends, the poll stops.
+        harness.platform.post(.init("com.apple.screenIsLocked"), in: harness.platform.distributedCenter)
+        #expect(harness.monitor.activeSources == alwaysOn)
+        harness.platform.idleSeconds = 1
+        harness.platform.post(.init("com.apple.screenIsUnlocked"), in: harness.platform.distributedCenter)
+        #expect(!harness.monitor.snapshot.isIdleBeyondThreshold)
+        #expect(harness.monitor.activeSources == alwaysOn)
+        await harness.advance(.seconds(1))
+        #expect(harness.time.sleeperCount == 0)
+    }
+
+    /// One shield: the notification that raises it and the one that lowers it.
+    enum Shield: String, CaseIterable, CustomTestStringConvertible {
+        case lock, screensaver, displaySleep, systemSleep, otherSession
+
+        var testDescription: String { rawValue }
+
+        @MainActor func names(_ platform: FakeSignalsPlatform) -> (NotificationCenter, Notification.Name, Notification.Name) {
+            switch self {
+            case .lock: (platform.distributedCenter, .init("com.apple.screenIsLocked"), .init("com.apple.screenIsUnlocked"))
+            case .screensaver:
+                (platform.distributedCenter, .init("com.apple.screensaver.didstart"), .init("com.apple.screensaver.didstop"))
+            case .displaySleep:
+                (platform.workspaceCenter, NSWorkspace.screensDidSleepNotification, NSWorkspace.screensDidWakeNotification)
+            case .systemSleep: (platform.workspaceCenter, NSWorkspace.willSleepNotification, NSWorkspace.didWakeNotification)
+            case .otherSession:
+                (platform.workspaceCenter, NSWorkspace.sessionDidResignActiveNotification,
+                 NSWorkspace.sessionDidBecomeActiveNotification)
+            }
+        }
+    }
+
+    @Test(arguments: Shield.allCases)
+    func aShieldStopsTheWatchAndTheBatteryPercentUntilItLifts(_ shield: Shield) async {
+        let harness = SignalsHarness()
+        harness.platform.power = PowerState(source: .battery, batteryPercent: 80, isLowPowerMode: false)
+        await harness.start()
+        harness.monitor.setBoostActive(true)                                  // the engine kept the boost active
+        let boosted = alwaysOn.union([.fullScreenWatch, .batteryPercent])
+        #expect(harness.monitor.activeSources == boosted)
+        let (center, begins, ends) = shield.names(harness.platform)
+        center.post(name: begins, object: nil)
+        #expect(harness.monitor.activeSources == alwaysOn)
+        #expect(harness.platform.batterySources == 0)
+        await harness.advance(.seconds(1))                                    // the boost-on request's one check
+        let reads = harness.platform.windowReads
+        await harness.advance(.seconds(30))
+        #expect(harness.platform.windowReads == reads)                        // no 2 s re-check behind the shield
+        #expect(harness.time.sleeperCount == 0)
+        // The shield lifts: the percent is read before the sources resume; powerChanged follows the lift's event.
+        var seen: [SystemEvent] = []
+        let token = harness.monitor.addEventObserver { seen.append($0) }
+        harness.platform.power = PowerState(source: .battery, batteryPercent: 61, isLowPowerMode: false)
+        center.post(name: ends, object: nil)
+        #expect(seen.last == .powerChanged && seen.count == 2)
+        #expect(harness.monitor.snapshot.power.batteryPercent == 61)
+        #expect(harness.monitor.activeSources == boosted)
+        token.cancel()
+    }
+
+    @Test func overlappingShieldsResumeOnlyWhenTheLastOneLifts() async {
+        let harness = SignalsHarness()
+        await harness.start()
+        harness.monitor.setBoostActive(true)
+        #expect(harness.monitor.activeSources.contains(.fullScreenWatch))
+        harness.platform.post(.init("com.apple.screenIsLocked"), in: harness.platform.distributedCenter)
+        harness.platform.post(NSWorkspace.screensDidSleepNotification, in: harness.platform.workspaceCenter)
+        harness.platform.post(.init("com.apple.screenIsUnlocked"), in: harness.platform.distributedCenter)
+        #expect(!harness.monitor.activeSources.contains(.fullScreenWatch))   // the screens still sleep
+        harness.platform.post(NSWorkspace.screensDidWakeNotification, in: harness.platform.workspaceCenter)
+        #expect(harness.monitor.activeSources.contains(.fullScreenWatch))
+    }
+
+    @Test func aLaunchWhileLockedStartsNoShieldedSource() async {
+        let harness = SignalsHarness()
+        harness.platform.session = SessionState(isOnConsole: true, isScreenLocked: true)
+        await harness.start()
+        harness.monitor.setBoostActive(true)
+        #expect(harness.monitor.activeSources == alwaysOn)
     }
 }
