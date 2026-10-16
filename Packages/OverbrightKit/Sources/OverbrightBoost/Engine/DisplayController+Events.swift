@@ -1,6 +1,6 @@
 // OverbrightBoost/Engine/DisplayController+Events.swift — shields, suspension and resume, occlusion, window moves,
-// reconfiguration, re-basing, display removal, Back to Standard and the hang recovery. ARCHITECTURE.md §4.3 (event
-// rows), §4.5 invariants 2, 6, 11, §4.6, §4.8 (event-driven re-base), D9, D27. MainActor.
+// display removal, Back to Standard, the stops and the hang recovery (re-basing lives in `+Rebase`).
+// ARCHITECTURE.md §4.3 (event rows), §4.5 invariants 2, 6, 11, §4.6, D9, D27. MainActor.
 import CoreGraphics
 import Foundation
 import OverbrightCore
@@ -89,8 +89,12 @@ extension DisplayController {
         case .dim(let light):
             generation += 1
             cancelAllTasks()
-            removeWindows()
-            if mechanism == .table, baseline == nil { guard captureBaseline() else { return } }
+            removeTrigger()
+            if mechanism == .overlay {
+                guard ensureOverlay() else { return }
+            } else if baseline == nil {
+                guard captureBaseline() else { return }
+            }
             startRamp(to: light, origin: .automatic, finalPhase: .dimmed)
         case .boost:
             guard kind == .wake else {
@@ -145,108 +149,6 @@ extension DisplayController {
         }
     }
 
-    // MARK: Reconfiguration and re-basing (§4.8)
-
-    /// New facts without a reconfiguration pass (the directory changed).
-    func updateFacts(_ newFacts: DisplayFacts) {
-        facts = newFacts
-        ref = newFacts.ref
-    }
-
-    /// The debounced after-phase pass: re-place windows, retry `headroomNeverArrived`, recheck a foreign table, resume
-    /// a display whose window moved, and re-base a scaled or dimmed one.
-    func reconfigured(_ newFacts: DisplayFacts) {
-        updateFacts(newFacts)
-        lastBaseEventAt = deps.time.now
-        trigger?.represent()
-        overlay?.represent()
-        switch phase {
-        case .failed(.headroomNeverArrived):
-            clearTrip()
-        case .failed(.foreignTableAtLaunch), .failed(.attributedDrift):
-            if case .failed(.foreignTableAtLaunch) = phase, tableMatchesBase() { clearTrip() }
-        case .suspended(.reconfiguring):
-            resume()
-        case .boosted, .dimmed, .ramping:
-            rebase(cause: .reconfiguration)
-        default:
-            break
-        }
-    }
-
-    /// A ColorSync profile change or a change of the accessibility display options (the same re-base, §4.8).
-    func baseEventOccurred(_ cause: ReapplyCause) {
-        lastBaseEventAt = deps.time.now
-        switch phase {
-        case .boosted, .dimmed, .ramping:
-            rebase(cause: cause)
-        case .failed(.foreignTableAtLaunch):
-            if tableMatchesBase() { clearTrip() }
-        default:
-            break
-        }
-    }
-
-    /// Whether the live table matches the display's profile base now.
-    func tableMatchesBase() -> Bool {
-        guard let read = try? deps.gamma.read(ref.id) else { return false }
-        let expected = deps.gamma.profileBase(of: ref.id, count: read.count)
-        return read.matches(expected, tolerance: EngineTiming.driftTolerance)
-    }
-
-    /// Recomputes the expected base, waits until WindowServer applied the new table (at most 1 s), adopts it after two
-    /// identical reads (or the new profile base when WindowServer kept our table), updates the ledger in the same step
-    /// and reapplies the target with a ramp.
-    func rebase(cause: ReapplyCause) {
-        guard mechanism == .table, let old = baseline else {
-            if mechanism == .overlay { reapply(cause) }
-            return
-        }
-        let stamp = generation
-        rampSerial &+= 1
-        rampSlot.cancel()
-        let ourLast = old.scaled(by: appliedFactor)
-        rebaseSlot.run { [weak self] in await self?.runRebase(old: old, ourLast: ourLast, cause: cause, stamp: stamp) }
-    }
-
-    /// Two tables this close are the same write (read-back noise).
-    static let sameTableTolerance = 1e-4
-
-    func runRebase(old: GammaTable, ourLast: GammaTable, cause: ReapplyCause, stamp: UInt64) async {
-        let expected = deps.gamma.profileBase(of: ref.id, count: old.count)
-        var waited = Duration.zero
-        var first = try? deps.gamma.read(ref.id)
-        while let read = first, read.matches(ourLast, tolerance: Self.sameTableTolerance),
-              waited < EngineTiming.reapplyWaitLimit {
-            guard await sleep(EngineTiming.gatePollInterval, stamp) else { return }
-            waited += EngineTiming.gatePollInterval
-            first = try? deps.gamma.read(ref.id)
-        }
-        guard let first, await sleep(EngineTiming.gatePollInterval, stamp),
-              let second = try? deps.gamma.read(ref.id) else { return }
-        let keptOurs = first.matches(ourLast, tolerance: Self.sameTableTolerance)
-        var adopted: GammaTable?
-        if !keptOurs, first.matches(second, tolerance: Self.sameTableTolerance),
-           first.matches(expected, tolerance: EngineTiming.driftTolerance),
-           case .accept = BaselineRules.capture(first, expectedBase: expected, previous: old) {
-            adopted = first
-        } else if keptOurs, !expected.matches(old, tolerance: EngineTiming.driftTolerance),
-                  case .accept = BaselineRules.capture(expected, expectedBase: expected, previous: old) {
-            adopted = expected
-        }
-        if let adopted {
-            baseline = adopted
-            if deps.ledger.isMarked(key) { deps.ledger.markScaled(ref, baseline: adopted) }
-            deps.journal.record("baseline.adopted", display: key, values: ["cause": Double(cause.rawValue)],
-                                time: deps.time)
-        }
-        if !keptOurs {
-            appliedGain = 1
-            appliedFactor = 1
-        }
-        reapply(cause)
-    }
-
     // MARK: Removal, Back to Standard, stop
 
     /// `kCGDisplayRemoveFlag`: order the windows out first; no table write (the table went with the display); forget
@@ -254,6 +156,7 @@ extension DisplayController {
     func removeNow() {
         generation += 1
         cancelAllTasks()
+        lastWrite = nil                                                   // no write to a display that is gone
         removeWindows()
         deps.ledger.unmark(key)
         appliedGain = 1
@@ -265,7 +168,8 @@ extension DisplayController {
     /// baseline at once, so it never depends on one.
     func rampBackToStandard() {
         generation += 1
-        armSlot.cancel(); burstSlot.cancel(); driftSlot.cancel(); rebaseSlot.cancel(); checkSlot.cancel()
+        armSlot.cancel(); burstSlot.cancel(); driftSlot.cancel(); checkSlot.cancel()
+        stopRebase()
         lingerSlot.cancel()
         target = .neutral
         if phase.isFailed { return }

@@ -58,7 +58,7 @@ extension DisplayController {
 
     /// One drift check: hang epoch, read-back classification (§4.8 order), then the headroom check.
     func driftTick(_ stamp: UInt64, trigger: DriftTrigger) async {
-        guard isCurrent(stamp), phase == .boosted || phase == .dimmed else { return }
+        guard isCurrent(stamp), phase == .boosted || phase == .dimmed, !isRebasing else { return }
         if isScaledOrDimmed, epochStamp != deps.ledger.hangEpoch {
             recoverFromHang()
             return
@@ -165,14 +165,31 @@ extension DisplayController {
         return repairs.count >= EngineTiming.repairBudget
     }
 
-    /// Reapplies the current target with a ramp (§4.5 invariant 12) and journals why.
+    /// Reapplies the current target with a ramp (§4.5 invariant 12) and journals why. While arming or gating only a
+    /// leftover dim ramps back to 1 (the gate ramps to the boost); idle, failed and suspended displays have nothing on
+    /// screen to reapply.
     func reapply(_ cause: ReapplyCause) {
         deps.journal.record("drift.reapplied", display: key, values: ["cause": Double(cause.rawValue)], time: deps.time)
+        switch phase {
+        case .arming, .gating:
+            if appliedGain < 1 - TableWriter.neutralTolerance {
+                startRamp(to: 1, origin: .automatic, finalPhase: nil, setsRampingPhase: false)
+            }
+            return
+        case .idle, .failed, .suspended:
+            return
+        case .disarming:
+            startRamp(to: 1, kind: rampKind, origin: .automatic, finalPhase: .idle, removesWindowsAtEnd: true,
+                      setsRampingPhase: false)
+            return
+        case .ramping, .boosted, .dimmed:
+            break
+        }
         switch target {
         case .boost(let gain):
             startRamp(to: allowedGain(for: gain) ?? 1, origin: .automatic, finalPhase: .boosted)
         case .dim(let light):
-            startRamp(to: light, origin: .automatic, finalPhase: .dimmed)
+            startRamp(to: light, origin: .automatic, finalPhase: .dimmed, removesWindowsAtEnd: true)
         case .neutral:
             disarm(kind: rampKind)
         }

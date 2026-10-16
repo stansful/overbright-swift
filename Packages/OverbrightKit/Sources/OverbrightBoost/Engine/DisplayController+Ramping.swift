@@ -31,7 +31,8 @@ extension DisplayController {
         let kind = kind ?? rampKind
         let direction: FlickerGuard.Direction = gain >= appliedGain ? .up : .down
         let delay = rateLimited ? flicker.delay(before: direction, at: deps.time.now) : .zero
-        if setsRampingPhase, phase != .disarming { phase = .ramping }
+        // The phase always names the ramp in flight: a ramp to idle is a disarm, anything else is ramping.
+        if setsRampingPhase { phase = finalPhase == .idle ? .disarming : .ramping }
         rampSlot.run { [weak self] in
             guard let self else { return }
             if delay > .zero {
@@ -59,7 +60,9 @@ extension DisplayController {
             }
         }
         guard isCurrent(stamp), rampSerial == serial else { return }
-        if removesWindowsAtEnd, appliedGain <= 1 + TableWriter.neutralTolerance { removeWindows() }
+        if removesWindowsAtEnd, appliedGain <= 1 + TableWriter.neutralTolerance {
+            if finalPhase == .dimmed { removeTrigger() } else { removeWindows() }
+        }
         if let finalPhase { phase = finalPhase }
         settled()
     }
@@ -70,7 +73,8 @@ extension DisplayController {
         case .boosted, .dimmed:
             if !driftSlot.isRunning { startDriftWatch() }
         case .idle:
-            driftSlot.cancel(); burstSlot.cancel(); checkSlot.cancel(); rebaseSlot.cancel()
+            driftSlot.cancel(); burstSlot.cancel(); checkSlot.cancel()
+            stopRebase()
             if switchesMechanism {
                 switchesMechanism = false
                 mechanism = decision?.mechanism ?? mechanism
@@ -96,6 +100,7 @@ extension DisplayController {
             appliedGain = outcome.appliedGain
             appliedFactor = outcome.factor
             appliedLimit = outcome.limit
+            lastWrite = (baseline, outcome.factor)
             if let reading { flicker.noteHeadroom(reading.current) }
             return true
         } catch GammaError.writeRefused {

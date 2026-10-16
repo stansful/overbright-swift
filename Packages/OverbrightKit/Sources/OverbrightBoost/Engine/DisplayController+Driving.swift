@@ -55,6 +55,7 @@ extension DisplayController: DisplayControllerDriving {
         guard let baseline, let reading = takeReading() else { throw GammaError.writeRefused }
         deps.ledger.markScaled(ref, baseline: baseline)
         try deps.writer.writeCalibrationFactor(factor, to: ref, reading: reading, maxFactor: maxFactor)
+        lastWrite = (baseline, factor)
         appliedFactor = factor
         appliedGain = FactorMath.lightGain(forTableFactor: factor, domain: .encoded)
         notify()
