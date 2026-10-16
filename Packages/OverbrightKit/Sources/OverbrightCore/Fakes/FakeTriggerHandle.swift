@@ -31,6 +31,9 @@ import CoreGraphics
     /// Records the present; succeeds unless the factory fails this strategy (or the handle was removed).
     public func present(_ pixel: TriggerPixel) async -> Bool {
         presentedPixels.append(pixel)
+        if let limit = factory?.recordLimit, presentedPixels.count > 2 * max(limit, 1) {
+            presentedPixels.removeFirst(presentedPixels.count - limit)
+        }
         let succeeded = !isRemoved && (factory?.presentSucceeds(request.strategy) ?? false)
         factory?.record(FakeTriggerFactory.Present(display: display.key, strategy: request.strategy, pixel: pixel,
                                                    succeeded: succeeded), id: id)
@@ -39,7 +42,12 @@ import CoreGraphics
     /// Counts the re-present.
     public func represent() { representCount += 1 }
     /// Records the tag.
-    public func requestHeadroom(_ headroom: Double) { requestedHeadroom.append(headroom) }
+    public func requestHeadroom(_ headroom: Double) {
+        requestedHeadroom.append(headroom)
+        if let limit = factory?.recordLimit, requestedHeadroom.count > 2 * max(limit, 1) {
+            requestedHeadroom.removeFirst(requestedHeadroom.count - limit)
+        }
+    }
     /// Ends the request; the window counts as closed.
     public func remove() {
         guard !isRemoved else { return }

@@ -53,6 +53,9 @@ enum CompositionRoot {
     /// The strategy cache's file name under `AppPaths.caches` (§8.2).
     static let strategyCacheFileName = "strategy-cache.json"
 
+    /// How many records the simulated fakes keep (their whole history would grow with every write of a long run).
+    static let qaRecordLimit = 256
+
     /// The Debug-only switches a build refuses to start with: none in a Debug build; in a Release build every
     /// `--qa-…` and `-OverbrightQA…` switch present (the app logs them and exits with `EX_USAGE` before anything
     /// starts, rather than ignoring them and wiring the real ports).
@@ -115,8 +118,12 @@ enum CompositionRoot {
             surfaces: SystemFillLightSurfaces(mode: .sdrStandIn, time: time))
         let hotKeys = HotKeyCenter(settings: context.settings, registrar: registrar)
         let updates = UpdateChecker(settings: context.settings, paths: context.paths)
-        return ShellPorts(gamma: FakeGammaPort(fixture: fixture, time: time), headroom: headroom, displays: directory,
-                          triggers: FakeTriggerFactory(headroom: headroom), signals: signals,
+        // The fakes record their history for tests; a QA run or a soak keeps only the newest records.
+        let gamma = FakeGammaPort(fixture: fixture, time: time)
+        gamma.recordLimit = qaRecordLimit
+        let triggers = FakeTriggerFactory(headroom: headroom)
+        triggers.recordLimit = qaRecordLimit
+        return ShellPorts(gamma: gamma, headroom: headroom, displays: directory, triggers: triggers, signals: signals,
                           launchCheckSignals: signals, conflicts: FakeConflictProbe(), fillLight: fillLight,
                           shortcuts: hotKeys, hotKeys: hotKeys, updates: updates, loginItems: InMemoryLoginItem(),
                           controlOutlet: QuietControlOutlet(), readDisplays: { directory.displays },

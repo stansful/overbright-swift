@@ -34,6 +34,9 @@ import CoreGraphics
     public func setFactor(_ factor: Double, headroomRequest: Double) throws {
         if let error = nextError { nextError = nil; throw error }
         factors.append((factor, headroomRequest))
+        if let limit = factory?.recordLimit, factors.count > 2 * max(limit, 1) {
+            factors.removeFirst(factors.count - limit)
+        }
         if factor >= 1 && max(factor, headroomRequest) > 1 {
             factory?.requestStarted(id, on: display.key)
         } else {

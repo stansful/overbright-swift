@@ -87,6 +87,18 @@ import Testing
         #expect(try port.read(id).red[100] == boosted.red[100])                  // sub-1 entries unchanged
     }
 
+    /// `--qa-simulate` bounds the fake's history (a soak would otherwise grow by a table per write); tests keep it all.
+    @Test func aRecordLimitKeepsOnlyTheNewestWrites() throws {
+        let port = FakeGammaPort(fixture: .builtinXDRLidOpen)
+        let base = try #require(port.base(of: id))
+        port.recordLimit = 10
+        for step in 1...50 { try port.write(scaled(base, by: 1 + Float(step) / 100), to: id) }
+        #expect(port.writeCount == 50)                                            // the counter is never trimmed
+        #expect(port.writes.count <= 20 && port.writes.count >= 10)
+        #expect(port.writes.last?.table == scaled(base, by: 1.5))
+        #expect(FakeGammaPort(fixture: .builtinXDRLidOpen).recordLimit == nil)
+    }
+
     @Test func deathRevertsEveryDisplayAndRestoreNeedsAPriorWrite() throws {
         let port = FakeGammaPort(fixture: .russianNames)
         let base1 = try #require(port.base(of: 1)), base2 = try #require(port.base(of: 2))
@@ -253,6 +265,19 @@ import Testing
         #expect(headroom.currentHeadroom(of: builtIn) == 1)
         try overlay.setFactor(1, headroomRequest: 1.3)                            // request first, then boost (§7.5)
         #expect(headroom.requestCount(on: builtIn) == 1)
+    }
+
+    @Test func aRecordLimitDropsOnlyRemovedHandles() async throws {
+        let factory = FakeTriggerFactory()
+        factory.recordLimit = 3
+        let live = try factory.makeTrigger(request(.taggedLayer), on: ref)
+        for _ in 0..<20 {
+            let trigger = try factory.makeTrigger(request(.taggedLayer), on: ref)
+            _ = await trigger.present(.black)
+            trigger.remove()
+        }
+        #expect(factory.openWindowCount == 1 && factory.liveTriggers(on: builtIn).first === live as AnyObject)
+        #expect(factory.triggers.count <= 7 && factory.made.count <= 6 && factory.presents.count <= 6)
     }
 
     @Test func windowsMoveAndOcclude() async throws {

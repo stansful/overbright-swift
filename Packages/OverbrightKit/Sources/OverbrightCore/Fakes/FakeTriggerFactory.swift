@@ -43,6 +43,10 @@ import CoreGraphics
     /// Every overlay handle made (removed ones included).
     public private(set) var overlays: [FakeOverlayHandle] = []
     private var lastID: UInt64 = 0
+    /// Keeps only about the newest `recordLimit` entries of `made` and `presents`, and of the removed handles in
+    /// `triggers` and `overlays` and of each handle's own records (nil, the default: everything). `--qa-simulate`
+    /// sets one, so a long QA run or soak does not grow with the fake's own history.
+    public var recordLimit: Int? { didSet { trim() } }
 
     /// A factory; pass the `ScriptedHeadroom` the presents should drive.
     public init(headroom: ScriptedHeadroom? = nil) { self.headroom = headroom }
@@ -60,6 +64,7 @@ import CoreGraphics
         let handle = FakeTriggerHandle(id: lastID, request: request, display: display, factory: self)
         made.append(Made(request: request, display: display))
         triggers.append(handle)
+        trim()
         return handle
     }
 
@@ -69,6 +74,7 @@ import CoreGraphics
         lastID += 1
         let handle = FakeOverlayHandle(id: lastID, display: display, factory: self)
         overlays.append(handle)
+        trim()
         return handle
     }
 
@@ -102,10 +108,31 @@ import CoreGraphics
 
     func record(_ present: Present, id: UInt64) {
         presents.append(present)
+        trim()
         if present.succeeded { headroom?.requestStarted(id, strategy: present.strategy, on: present.display) }
     }
 
     func presentSucceeds(_ strategy: TriggerStrategy) -> Bool { !failingPresents.contains(strategy) }
+
+    /// Applies `recordLimit` (amortized: once a record holds twice the limit).
+    private func trim() {
+        guard let limit = recordLimit.map({ max($0, 1) }) else { return }
+        if made.count > 2 * limit { made.removeFirst(made.count - limit) }
+        if presents.count > 2 * limit { presents.removeFirst(presents.count - limit) }
+        triggers = Self.droppingOldestRemoved(triggers, keep: limit) { $0.isRemoved }
+        overlays = Self.droppingOldestRemoved(overlays, keep: limit) { $0.isRemoved }
+    }
+
+    /// `items` without its oldest removed entries beyond `keep` (live ones always stay), once there are twice `keep`.
+    private static func droppingOldestRemoved<T>(_ items: [T], keep: Int, isRemoved: (T) -> Bool) -> [T] {
+        var excess = items.filter(isRemoved).count - keep
+        guard excess > keep else { return items }
+        return items.filter { item in
+            guard excess > 0, isRemoved(item) else { return true }
+            excess -= 1
+            return false
+        }
+    }
 
     func requestStarted(_ id: UInt64, on key: DisplayKey) { headroom?.requestStarted(id, strategy: nil, on: key) }
 
