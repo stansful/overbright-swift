@@ -10,7 +10,8 @@
 // none. The controller keeps one `SettingsSession` for the run: opening a pane navigates it, so the search survives.
 // Closing releases the window, its hosting controller and the SwiftUI tree, and ends the Undo offer of Reset All
 // (DESIGN.md §7.8); the next open builds them again around the same session, at the frame the window had. ⌘Q quits
-// Overbright (the app menu's Quit, while Settings is key), ⌘Z undoes Reset All (the root view).
+// Overbright (the app menu's Quit, while Settings is key); ⌘Z undoes Reset All (Edit ▸ Undo, through the window's
+// undo manager).
 import AppKit
 import OverbrightCore
 import OverbrightSettingsUI
@@ -50,6 +51,10 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
         self.services = services
         self.defaults = defaults.defaults
         autosavesFrame = defaults.autosavesWindowFrames
+        super.init()
+        #if DEBUG
+        scheduleQASettingsMenuItem()
+        #endif
     }
 
     /// Opens (or brings forward) Settings at `pane` ("pane" or "pane#row"), or at the pane shown last when nil. Call
@@ -60,7 +65,7 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
         let window = preparedWindow(at: pane)
         NSApp.activate()
         window.makeKeyAndOrderFront(nil)
-        log.info("settings shown at \(pane ?? "-", privacy: .public)")
+        log.info("settings shown at \(pane ?? "-", privacy: .public) (pane \(self.session?.currentPane.rawValue ?? "-", privacy: .public), window \(window.windowNumber, privacy: .public))")
     }
 
     /// The Settings window at `pane` (nil keeps the session's pane; the first open restores the last one), not yet
@@ -154,6 +159,37 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
             try? await Task.sleep(for: .seconds(delay > 0 ? delay : 3))
             self?.writeSnapshot(to: URL(fileURLWithPath: snapshot))
         }
+    }
+
+    /// Visual QA (Debug only): `-OverbrightQASettingsMenuItem <s>` performs the app menu's ⌘, item that many seconds
+    /// after launch, as pressing ⌘, would (shape question 1 of ARCHITECTURE.md §10.2: ⌘, reaches this window). No input
+    /// is synthesized: the item is found by its key equivalent and its own action runs (`performActionForItem(at:)`).
+    /// The log names the item; `show(pane:)` then logs the window it opened, and `-OverbrightQASnapshot` draws it.
+    private func scheduleQASettingsMenuItem() {
+        let delay = defaults.double(forKey: "OverbrightQASettingsMenuItem")
+        guard delay > 0 else { return }
+        Task {
+            try? await Task.sleep(for: .seconds(delay))
+            Self.performSettingsMenuItem()
+        }
+    }
+
+    /// The app menu's ⌘, item, performed; false when the menu has none.
+    @discardableResult
+    static func performSettingsMenuItem(in mainMenu: NSMenu? = NSApp.mainMenu) -> Bool {
+        guard let appMenu = mainMenu?.items.first?.submenu,
+              let index = appMenu.items.firstIndex(where: isSettingsItem) else {
+            log.error("QA: the app menu has no ⌘, item")
+            return false
+        }
+        log.info("QA: performing the app menu's \(appMenu.items[index].title, privacy: .public) (⌘,)")
+        appMenu.performActionForItem(at: index)
+        return true
+    }
+
+    /// ⌘, with no other modifier.
+    static func isSettingsItem(_ item: NSMenuItem) -> Bool {
+        item.keyEquivalent == "," && item.keyEquivalentModifierMask.intersection(.deviceIndependentFlagsMask) == .command
     }
 
     /// Visual QA (Debug only): `-OverbrightQACloseAfter <s>` closes the first Settings window of the run after that

@@ -149,7 +149,8 @@ No hook posts input or asks for a permission. Launch arguments (`LaunchArguments
 
 Settings-window defaults: `-OverbrightQAAppearance light|dark`, `-OverbrightQASnapshot <file.png>`
 [`-OverbrightQASnapshotDelay <s>`], `-OverbrightQASearch "<text>"`, `-OverbrightQACloseAfter <s>` (closes Settings as
-its close button would), and `-OverbrightQAKeyboardLayout <id>` (key caps
+its close button would), `-OverbrightQASettingsMenuItem <s>` (performs the app menu's ⌘, item after that many
+seconds, as the key would; no input is synthesized), and `-OverbrightQAKeyboardLayout <id>` (key caps
 in another layout, for example `com.apple.keylayout.German`; read wherever key caps are drawn). Debug builds also
 take `-OverbrightGitHubRepository owner/repo` to try the update check against a scratch repository.
 

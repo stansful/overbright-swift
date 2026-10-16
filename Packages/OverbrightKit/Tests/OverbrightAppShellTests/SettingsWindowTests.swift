@@ -77,4 +77,33 @@ import Testing
         #expect(try #require(controller.session).currentPane == .fillLight)
         window.close()
     }
+
+    /// Debug QA `-OverbrightQASettingsMenuItem`: the app menu's ⌘, item is found by its key equivalent (⌘, alone, not
+    /// ⌘⇧,) and its own action runs; a menu without one reports that. Built here, nothing is shown.
+    @Test func theQAHookPerformsTheAppMenusCommandCommaItem() {
+        final class Target: NSObject {
+            var fired: [String] = []
+            @objc func fire(_ sender: NSMenuItem) { fired.append(sender.title) }
+        }
+        let target = Target()
+        func item(_ title: String, _ key: String, _ modifiers: NSEvent.ModifierFlags) -> NSMenuItem {
+            let item = NSMenuItem(title: title, action: #selector(Target.fire(_:)), keyEquivalent: key)
+            item.keyEquivalentModifierMask = modifiers
+            item.target = target
+            return item
+        }
+        let appMenu = NSMenu(title: "Overbright")
+        appMenu.items = [item("About", "", []), item("Other…", ",", [.command, .shift]), item("Settings…", ",", .command),
+                         item("Quit", "q", .command)]
+        let main = NSMenu(title: "Main")
+        let top = NSMenuItem(title: "Overbright", action: nil, keyEquivalent: "")
+        top.submenu = appMenu
+        main.addItem(top)
+        #expect(SettingsWindowController.performSettingsMenuItem(in: main))
+        #expect(target.fired == ["Settings…"])
+        appMenu.removeItem(at: 2)
+        #expect(!SettingsWindowController.performSettingsMenuItem(in: main))
+        #expect(!SettingsWindowController.performSettingsMenuItem(in: nil))
+        #expect(target.fired == ["Settings…"])
+    }
 }
