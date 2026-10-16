@@ -35,18 +35,22 @@ final class PanelController {
     /// Whether the panel is on screen.
     var isShown: Bool { panel?.isVisible == true && !isClosing }
 
-    /// Opens the panel under `anchor` (the status button), or closes it when it is open.
+    /// Opens the panel under `anchor` (the status button), or closes it when it is open. A press that is not a mouse
+    /// click (the keyboard, VoiceOver's press) gives the panel keyboard focus (DESIGN.md §5.1).
     func toggle(from anchor: NSView?) {
-        if isShown { close() } else { show(from: anchor) }
+        if isShown {
+            close()
+        } else {
+            show(from: anchor, takingFocus: ClickRouting.isKeyboardOrAccessibility(NSApp.currentEvent)
+                    || NSWorkspace.shared.isVoiceOverEnabled)
+        }
     }
 
     /// Opens the panel under `anchor`; without an anchor (the icon is hidden) at the top centre of the main screen;
-    /// under an anchor that is not placed yet at the top-right of the main screen, until the anchor moves. The panel
-    /// takes keyboard focus when the current event is not a mouse click (keyboard, VoiceOver) or VoiceOver runs.
+    /// under an anchor that is not placed yet at the top-right of the main screen, until the anchor moves. Opened this
+    /// way (the launch UI, a reopen, the menu's Show Panel) it takes keyboard focus only while VoiceOver runs.
     func show(from anchor: NSView?) {
-        let takesFocus = ClickRouting.isKeyboardOrAccessibility(NSApp.currentEvent)
-            || NSWorkspace.shared.isVoiceOverEnabled
-        show(from: anchor, takingFocus: takesFocus)
+        show(from: anchor, takingFocus: NSWorkspace.shared.isVoiceOverEnabled)
     }
 
     /// Opens the panel, with keyboard focus on its master switch when `takingFocus`.

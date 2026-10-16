@@ -77,6 +77,27 @@ import Testing
         #expect(frame.midX == visible.midX && frame.minY == visible.minY + 64 && frame.size == HUDPlacement.size)
     }
 
+    @Test func theValueKeepsItsWidthBesideTheBar() {
+        // The longest English value next to a display name still shows whole (the bar has its own line).
+        let text = HUDText(symbol: .sunMaxFill, displayName: "Built-in Retina Display", value: "Sunlight · ≈ ×2.04",
+                           reason: nil, announcement: "")
+        let full = NSHostingView(rootView: Text(verbatim: "Sunlight · ≈ ×2.04").font(Self.valueFont).fixedSize())
+            .fittingSize.width
+        #expect(full <= HUDView.textWidth)
+        let hud = NSHostingView(rootView: HUDView(text: text, level: LevelPosition(0.75), isBoosting: true)
+            .overbrightThemeRoot())
+        #expect(hud.fittingSize == HUDPlacement.size)
+    }
+
+    @Test func theBoostFillIsWarmOnlyWithExtraLight() throws {
+        let boosting = try #require(ScriptedStatuses.status(named: "hud-boost"))
+        let dimmed = try #require(ScriptedStatuses.status(named: "hud-dim"))
+        let key = DisplayFixture.Keys.builtIn
+        #expect(HUDController.isBoosting(key, status: boosting))
+        #expect(!HUDController.isBoosting(key, status: dimmed))
+        #expect(!HUDController.isBoosting(key, status: try #require(ScriptedStatuses.status(named: "hud-off"))))
+    }
+
     @Test func theBarFollowsTheLevelAndIsStandardWhileOff() {
         let settings = SettingsStore(defaults: InMemoryDefaults())
         let key = DisplayFixture.Keys.builtIn

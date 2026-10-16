@@ -115,7 +115,7 @@ final class HUDController {
             return
         }
         let level = Self.level(of: display, status: status, settings: services.settings)
-        let isBoosting = status.isOn && (status.displays.first { $0.key == display }?.appliedGain ?? 1) > 1
+        let isBoosting = Self.isBoosting(display, status: status)
         let root = HUDView(text: text, level: level, isBoosting: isBoosting).overbrightThemeRoot()
         let window = self.window ?? HUDWindow(frame: frame, interactive: false)
         self.window = window
@@ -130,6 +130,11 @@ final class HUDController {
             context.timingFunction = CAMediaTimingFunction(name: .easeOut)
             window.animator().alphaValue = 1
         }
+    }
+
+    /// Extra light is on screen on `display`: the bar's boost fill is warm only then (DESIGN.md §2.1).
+    static func isBoosting(_ display: DisplayKey?, status: BoostStatus) -> Bool {
+        status.isOn && (status.displays.first { $0.key == display }?.appliedGain ?? 1) > 1
     }
 
     /// The level the bar shows: the display's stored level while on, Standard while off.

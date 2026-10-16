@@ -1,6 +1,7 @@
 // OverbrightAppShell/HUD/HUDView.swift — the HUD's content: a 20-pt glyph; the display name (only with two or more
-// displays) above a 150-pt level bar drawn like the slider (detent mark, dim fill left, the warm fill right, no
-// thumb) or, for reasons, one line instead of the bar; the value in canonical units. DESIGN.md §6, §2.1 (the warm
+// displays) and the value in canonical units on the first line, a 150-pt level bar drawn like the slider (detent mark,
+// dim fill left, the warm fill right, no thumb) under them or, for reasons, one line instead of the bar. The value
+// keeps its full 200 pt (§16) because the bar sits on its own line. DESIGN.md §6, §2.1 (the warm
 // colour only while extra light is on screen), §2.2 (`hudValue`, `hudLabel`), §12.9. The words are Design's
 // (`HUDText`).
 import OverbrightCore
@@ -28,36 +29,44 @@ struct HUDView: View {
                 .frame(width: 24)
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: Space.xs) {
-                if let name = text.displayName {
-                    Text(verbatim: name)
-                        .font(.system(size: 11))
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                        .truncationMode(.middle)
-                }
                 if let reason = text.reason {
+                    if let name = text.displayName { nameLabel(name) }
                     Text(verbatim: reason)
                         .font(.system(size: 11))
                         .lineLimit(2)
                         .fixedSize(horizontal: false, vertical: true)
-                } else if let level {
-                    HUDLevelBar(level: level, isBoosting: isBoosting)
-                        .frame(width: Self.barWidth, height: StrokeWidth.trackDragging)
+                        .frame(maxWidth: Self.textWidth, alignment: .leading)
+                } else {
+                    HStack(alignment: .firstTextBaseline, spacing: Space.s) {
+                        if let name = text.displayName { nameLabel(name) }
+                        Spacer(minLength: 0)
+                        if let value = text.value {
+                            Text(verbatim: value)
+                                .font(.system(size: 15, weight: .semibold, design: .rounded).monospacedDigit())
+                                .lineLimit(1)
+                                .layoutPriority(1)
+                        }
+                    }
+                    if let level {
+                        HUDLevelBar(level: level, isBoosting: isBoosting)
+                            .frame(width: Self.barWidth, height: StrokeWidth.trackDragging)
+                    }
                 }
             }
-            .frame(maxWidth: Self.textWidth, alignment: .leading)
-            Spacer(minLength: 0)
-            if text.reason == nil, let value = text.value {
-                Text(verbatim: value)
-                    .font(.system(size: 15, weight: .semibold, design: .rounded).monospacedDigit())
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
-            }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(.horizontal, Space.l)
         .frame(width: HUDPlacement.size.width, height: HUDPlacement.size.height)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(verbatim: text.announcement))
+    }
+
+    private func nameLabel(_ name: String) -> some View {
+        Text(verbatim: name)
+            .font(.system(size: 11))
+            .foregroundStyle(.secondary)
+            .lineLimit(1)
+            .truncationMode(.middle)
     }
 }
 
