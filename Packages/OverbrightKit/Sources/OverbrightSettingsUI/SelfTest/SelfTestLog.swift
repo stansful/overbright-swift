@@ -16,7 +16,7 @@ public nonisolated enum SelfTestLog {
         try data(report)
     }
 
-    /// The report as JSON (synchronous, for callers already off the main actor).
+    /// The report as JSON (synchronous, for callers already off the main actor; the main actor awaits `encode(_:)`).
     static func data(_ report: SelfTestReport) throws -> Data {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]

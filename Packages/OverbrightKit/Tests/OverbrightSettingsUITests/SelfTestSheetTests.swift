@@ -64,16 +64,29 @@ import Testing
     @Test func copyPutsTheReportAsJSONOnTheClipboard() async throws {
         let (_, boost, model, copied) = setup()
         boost.runsUntilEnded = false
-        model.copy()                                                               // nothing before the results
+        #expect(model.copy() == nil)                                               // nothing before the results
         #expect(copied().isEmpty)
         model.start()
         #expect(await eventually { model.phase == .results(boost.report) })
-        model.copy()
+        await model.copy()?.value
         let text = try #require(copied().first)
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
         #expect(try decoder.decode(SelfTestReport.self, from: Data(text.utf8)) == boost.report)
         #expect(!text.contains("Built-in"))                                        // no names in a log
+    }
+
+    /// §8.1 rule 3: the self-test JSON is encoded off the main actor, by Copy as by Save Log… and the archive; only
+    /// `SelfTestLog`'s own `@concurrent` functions call the synchronous encoder.
+    @Test func onlyTheConcurrentFunctionsEncodeTheLog() throws {
+        let folder = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+            .deletingLastPathComponent().appending(path: "Sources/OverbrightSettingsUI")
+        let files = try #require(FileManager.default.enumerator(at: folder, includingPropertiesForKeys: nil))
+        var callers: [String] = []
+        for case let url as URL in files where url.pathExtension == "swift" && url.lastPathComponent != "SelfTestLog.swift" {
+            if try String(contentsOf: url, encoding: .utf8).contains("SelfTestLog.data(") { callers.append(url.lastPathComponent) }
+        }
+        #expect(callers.isEmpty, "encodes the log on the caller's actor: \(callers)")
     }
 
     // MARK: Progress

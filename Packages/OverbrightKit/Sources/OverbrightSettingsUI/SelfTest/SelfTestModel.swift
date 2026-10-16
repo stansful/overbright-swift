@@ -112,10 +112,21 @@ private let log = Log.logger(.selfTest)
         services.app?.saveSelfTestLog(report)
     }
 
-    /// Copy: the JSON on the clipboard.
-    func copy() {
-        guard case .results(let report) = phase, let data = try? SelfTestLog.data(report) else { return }
-        copyText(String(decoding: data, as: UTF8.self))
+    /// Copy: the JSON on the clipboard, encoded off the main actor like Save Log… and the archive (§8.1 rule 3).
+    /// Returns the task that copies (tests await it).
+    @discardableResult
+    func copy() -> Task<Void, Never>? {
+        guard case .results(let report) = phase else { return nil }
+        let copyText = self.copyText
+        return Task {
+            do {
+                let data = try await SelfTestLog.encode(report)
+                copyText(String(decoding: data, as: UTF8.self))
+            } catch {
+                let failure = error as NSError
+                log.error("self-test log not copied: \(failure.domain, privacy: .public) \(failure.code, privacy: .public)")
+            }
+        }
     }
 
     /// The name of a display in a report (the name it has now; a display that went away keeps a generic one).
