@@ -21,6 +21,24 @@ struct ScriptedState {
 
     /// A HUD or Keep-this-level state (DESIGN.md §5.13's last row).
     var isHUDState: Bool { id.hasPrefix("hud-") || id == "keep-level" }
+
+    /// The state with every decision carrying the level the reducer would have used (`DisplayDecision.level`,
+    /// ARCHITECTURE.md §6.1 step 3): the linked level while levels are linked, else the display's own level from
+    /// `configure`'s settings. `Readout.values` names the preset at that level.
+    func withDecisionLevels() -> ScriptedState {
+        let settings = SettingsStore(defaults: InMemoryDefaults())
+        configure(settings)
+        let linked = settings[DisplaySettings.linkLevels] ? settings[DisplaySettings.linkedLevel] : nil
+        let preferences = settings[DisplaySettings.perDisplay]
+        var status = status
+        status.displays = status.displays.map { display in
+            var display = display
+            display.decision?.level = linked ?? preferences[display.key]?.level ?? DisplayPreferences().level
+            return display
+        }
+        return ScriptedState(id: id, status: status, facts: facts, configure: configure, fillLightOn: fillLightOn,
+                             expandsWhy: expandsWhy)
+    }
 }
 
 /// Settings edits the gallery uses.

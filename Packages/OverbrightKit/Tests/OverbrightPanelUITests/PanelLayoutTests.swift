@@ -5,6 +5,7 @@
 import AppKit
 import OverbrightCore
 import OverbrightDesign
+import OverbrightPolicy
 import SwiftUI
 import Testing
 @testable import OverbrightPanelUI
@@ -51,6 +52,17 @@ import Testing
         #expect(services.settings[DisplaySettings.linkLevels])
         #expect(ScriptedStatuses.services(named: "fill-light-card")?.fillLight.isOn == true)
         #expect(ScriptedStatuses.expandsWhy(named: "why-expanded"))
+    }
+
+    @Test func galleryDecisionsCarryTheLevelOfTheirSettings() throws {
+        // `DisplayDecision.level` is the level the reducer used; the readout names its preset (`Readout.values`).
+        let boosting = try #require(ScriptedStatuses.status(named: "boosting")?.displays.first)
+        #expect(boosting.decision?.level == LevelPreset.brightRoom.position)
+        #expect(Readout.values(for: boosting, isMasterOn: true).preset == .brightRoom)
+        let standard = try #require(ScriptedStatuses.status(named: "standard"))
+        #expect(standard.displays.allSatisfy { $0.decision?.level == .standard })
+        let linked = try #require(ScriptedStatuses.status(named: "linked"))
+        #expect(linked.displays.allSatisfy { $0.decision?.level == DisplaySettings.linkedLevel.defaultValue })
     }
 
     // MARK: Sections

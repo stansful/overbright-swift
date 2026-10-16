@@ -42,8 +42,9 @@ public enum ScriptedStatuses {
 
     // MARK: Private
 
-    /// Every state, built once.
-    static let states: [ScriptedState] = ScriptedGallery.panelStates + ScriptedGallery.hudStates
+    /// Every state, built once, each decision at the level its settings give.
+    static let states: [ScriptedState] = (ScriptedGallery.panelStates + ScriptedGallery.hudStates)
+        .map { $0.withDecisionLevels() }
 
     static func state(named name: String) -> ScriptedState? { states.first { $0.id == name } }
 }
