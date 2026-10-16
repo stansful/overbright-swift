@@ -126,8 +126,10 @@ enum CompositionRoot {
                                           displays: ports.displays, signals: ports.signals, boost: boost,
                                           fillLight: ports.fillLight, shortcuts: ports.shortcuts,
                                           updates: ports.updates)
+        let readDisplays = ports.readDisplays
         let rescue = LaunchRescue(gamma: ports.gamma, conflicts: ports.conflicts, signals: ports.signals,
-                                  journal: journal)
+                                  journal: journal, time: time, displays: { readDisplays().map(\.ref) },
+                                  settings: settings)
         return Shell(services: services, ports: ports, lifecycle: lifecycle, rescue: rescue)
     }
 

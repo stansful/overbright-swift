@@ -32,4 +32,11 @@
     func finish(brighter: Bool?) -> CalibrationRecord?
     /// Esc: neutral at once.
     func cancel()
+    /// The step the session is in (DESIGN.md §9), so the window can show it. Added by WP5 through the contract lane.
+    var state: CalibrationState { get }
+}
+
+extension CalibrationSession {
+    /// A session that does not report its step is always ready (the §10.0 default for a requirement added after WP0a).
+    public var state: CalibrationState { .ready }
 }

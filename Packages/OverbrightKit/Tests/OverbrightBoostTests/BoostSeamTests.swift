@@ -65,21 +65,23 @@ import Testing
         #expect(gamma.writeCount == 0 && triggers.openWindowCount == 0 && triggers.made.isEmpty)
     }
 
-    /// WP5's seams: every initializer of §10.0 builds over fakes and does nothing yet.
-    @Test func theSafetySeamsDoNothing() async throws {
+    /// WP5's seams: every initializer of §10.0 builds over fakes; on a neutral fixture the launch check reports
+    /// neutral and touches no table; constructing the watchdog and the signal handlers starts and installs nothing
+    /// (a test process never installs signal handlers through this seam). WP5's own suites test the bodies.
+    @Test func theSafetySeamsBuildOverFakes() async throws {
         let gamma = FakeGammaPort(fixture: fixture)
         let journal = RingBufferJournal()
         let ledger = SafetyLedger()
         let time = ManualTimeSource()
         let writer = TableWriter(gamma: gamma, ledger: ledger, time: time, journal: journal)
+        let directory = FakeDisplayDirectory(fixture: fixture)
         let rescue = LaunchRescue(gamma: gamma, conflicts: FakeConflictProbe(), signals: FakeSystemSignals(),
-                                  journal: journal)
+                                  journal: journal, time: time, displays: { directory.displays.map(\.ref) },
+                                  settings: nil)
         #expect(await rescue.runLaunchCheck() == .alreadyNeutral)
-        #expect(await rescue.rescueNow() == .alreadyNeutral)
         let watchdog = HangWatchdog(writer: writer, ledger: ledger, journal: journal)
-        watchdog.setActive(true)
         #expect(!watchdog.consumeFiredFlag())
-        SignalHandlers(writer: writer, stop: {}).install()
+        _ = SignalHandlers(writer: writer, stop: {})
         let report = await SelfTestRunner(drivers: [], time: time, journal: journal, machine: fixture.machine)
             .run(SelfTestOptions())
         #expect(report.displays.isEmpty && report.machine == fixture.machine)
