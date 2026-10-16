@@ -4,8 +4,9 @@
 # Bright, Low Power, lock, sleep, a reconfiguration, a screen-parameters change, a colour app, dimming, Dim All, Back
 # to Standard, off), then off for 6 minutes. Beside it runs a control (scripts/soak-control.swift): a menu bar app that
 # does nothing but subscribe to what Overbright subscribes to at rest (a status item, the keyboard layout). `top`
-# samples both every 10 s (IDLEW is cumulative); `footprint` and `vmmap` run at checkpoints. The summary checks that
-# the footprint after the last cycle is within LEAK_MB of the one after the first, and judges the final off phase's
+# samples both every 10 s (IDLEW is cumulative); `footprint` and `vmmap` run after every cycle and at the off phases.
+# The summary checks that the footprint at the end is within LEAK_MB of the one after the third cycle (the caches the
+# first cycles fill have settled by then; with fewer cycles, the last one), and judges the final off phase's
 # idle wake-ups against the control: a wake-up in the same 10 s sample as one of the control's is the system's (a
 # keyboard layout switch, the window server, which hand them to every such app); the rest are Overbright's own and must
 # be neither periodic (4 or more at even gaps) nor more than one a minute. The first off phase, right after launch, is
@@ -85,10 +86,10 @@ mark() {
 }
 sleep 20; mark first-off-start
 sleep 95; mark first-off-end
+marked=0
 while kill -0 "$pid" 2>/dev/null; do
-  if grep -q '"cycle-end"' "$OUT/status.jsonl" 2>/dev/null && ! grep -q '== cycle1-end' "$OUT/footprint.txt"; then
-    mark cycle1-end
-  fi
+  ended="$(grep -c '"cycle-end"' "$OUT/status.jsonl" 2>/dev/null || true)"
+  if (( ${ended:-0} > marked )); then marked=${ended:-0}; mark "cycle$marked-end"; fi
   if grep -q '"final-off-start"' "$OUT/status.jsonl" 2>/dev/null && ! grep -q '== final-off-start' "$OUT/footprint.txt"; then
     sleep 10; mark final-off-start
   fi
@@ -162,12 +163,18 @@ for name, (a, b), strict in [("first off", ("first-off-start", "first-off-end"),
     if len(own) >= 4 and max(gaps) - min(gaps) <= SAMPLE:
         shown = ", ".join(str(int(gap)) for gap in gaps)
         problems.append(f"{name}: Overbright's own wake-ups come at even gaps ({shown} s)")
-first, last = marks.get("cycle1-end", {}).get("mb"), marks.get("final-off-end", {}).get("mb")
-print(f"cycles: {cycles}; footprint MB: " + ", ".join(f"{k} {v.get('mb', '?')}" for k, v in marks.items()))
-if first is None or last is None: problems.append("no footprint after the first cycle or at the end")
-elif last - first > leak_mb: problems.append(f"footprint grew {last - first:.1f} MB after the first cycle")
+# A leak grows with every cycle; the first cycles also fill caches that then stay. So the footprint at the end is
+# compared with the one after the third cycle (or the last one when there are fewer), and every cycle is reported.
+settled = f"cycle{min(3, cycles)}-end"
+first, last = marks.get(settled, {}).get("mb"), marks.get("final-off-end", {}).get("mb")
+print(f"cycles: {cycles}; footprint MB: " + ", ".join(f"{k} {v.get('mb', '?')}" for k, v in marks.items()
+                                                    if not re.match(r"cycle\d+-end", k) or k == settled))
+print("after each cycle: " + " ".join(str(v.get("mb", "?")) for k, v in marks.items()
+                                      if re.match(r"cycle\d+-end", k)))
+if first is None or last is None: problems.append(f"no footprint at {settled} or at the end")
+elif last - first > leak_mb: problems.append(f"footprint grew {last - first:.1f} MB after {settled}")
 print("\n".join(problems)
-      or "soak OK: no growth beyond the first cycle; while off, no periodic wake-ups of Overbright's own")
+      or "soak OK: no growth once settled; while off, no periodic wake-ups of Overbright's own")
 sys.exit(1 if problems else 0)
 PY
 log "Soak passed ($OUT)"
