@@ -2,25 +2,27 @@
 
 Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the register, voice and
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
-deleted. Overbright’s own names are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they
-read “—”. `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
+deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
+Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
+are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+`scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
 
 Register: **anda** in lower case, as macOS. Buttons, menu items and toggles use the bare imperative ("Buka",
-"Tunjukkan", "Keluarkan", "Jeda"), as Apple's Malay does. Where English uses Title Case (menu items, buttons,
+"Tunjukkan", "Sembunyikan", "Jeda"), as Apple's Malay does. Where English uses Title Case (menu items, buttons,
 standard AppKit chrome) the Malay is Title Case too ("Semak Kemas Kini…", "Keluar daripada Overbright", "Alih ke
-Bawah"); function words stay lower case (ke, di, dari, daripada, dalam, dan, untuk, pada, kepada, dengan).
+Aplikasi"); function words stay lower case (ke, di, dari, daripada, dalam, dan, untuk, pada, kepada, dengan).
 Settings rows, toggles, footnotes and VoiceOver text are sentence case.
 Typography: quotes “…” (‘…’ inside), the apostrophe ’, one-character ellipsis …, " ▸ " in Settings paths with
 Apple's pane names unquoted (as Apple's Malay writes "Seting Sistem > Privasi & Keselamatan > Foto"); a setting or
-button named inside a sentence is quoted (“Kurangkan pergerakan”, “Sertai”, “Simpan di Rak”); Apple's apps are not
-("app Muzik", "app Pintasan"), user-made names are (“%@” for notes and shortcuts). No serial comma ("fon, tataletak
+button named inside a sentence is quoted (“Kurangkan pergerakan”, “Mod Kuasa Rendah”); Apple's apps are not
+("app Foto", "app Pintasan"), user-made names are (“%@” for shortcuts). No serial comma ("fon, tataletak
 dan warna"), as Apple's Malay.
-Malay has no grammatical plural: every plural key has only `other` ("%lld item", "%lld sel", "Tinggal %lld").
+Malay has no grammatical plural: every plural key has only `other` ("%lld item", "%lld paparan", "Tinggal %lld").
 Numbers, dates and durations arrive formatted; units written by Overbright: jam / min / saat.
 Apple's own names come from `apple-terms.py ms` (read from macOS 27) and macOS 27's own Malay loctables (AppKit
-menus, Calendar, Music, Preview, System Settings, the keyboard-shortcut table).
+menus, Preview, System Settings, the keyboard-shortcut table).
 
 ## Apple names (`apple-terms.py ms` on macOS 27.0.1 — never paraphrased)
 
@@ -93,9 +95,8 @@ menus, Calendar, Music, Preview, System Settings, the keyboard-shortcut table).
 | English | ms | Note |
 |---|---|---|
 | Overbright | Overbright | never translated; also the open panel ("Buka Overbright", "Kekalkan Overbright terbuka") |
-| Shortcuts (Apple's app) · a shortcut (Shortcuts.app) | Pintasan · pintasan | "app Pintasan" wherever bare "Pintasan" could read as "shortcuts": "Buka app Pintasan", "Muat semula daripada app Pintasan", "Tidak ditemui dalam app Pintasan"; the Settings pane name stays "Pintasan" |
-| keyboard shortcut | pintasan papan kekunci / pintasan | Settings ▸ Keyboard section: "Pintasan papan kekunci" |
-| launcher (search word) | pelancar |  |
+| Shortcuts (Apple's app) · a shortcut (Shortcuts.app) | Pintasan · pintasan | "app Pintasan" wherever bare "Pintasan" could read as "shortcuts": "Buka app Pintasan" |
+| keyboard shortcut | pintasan papan kekunci / pintasan | the key bindings in Overbright's Shortcuts pane |
 | About Overbright · Quit Overbright | Perihal Overbright · Keluar daripada Overbright | Apple's app-menu pattern |
 | setup (welcome flow) | persediaan | "Langkau persediaan" (not "seting" = Settings) |
 | Reset to Default · Reset | Reset kepada Lalai · Reset | Apple ("Reset kepada Lalai", "mereset") |
@@ -104,7 +105,7 @@ menus, Calendar, Music, Preview, System Settings, the keyboard-shortcut table).
 | Preview | Pratonton | Apple |
 | click | klik |  |
 | Never (timeout 0) · Off · On | Tidak pernah · Mati · Hidup | segment pickers "Mati" |
-| Turn on · Turn off (as a pair) | Hidupkan · Matikan | the pair as Apple's Home app: "Hidupkan mod demo" / "Matikan mod demo", "matikan penunjuk, kemudian hidupkannya semula"; on its own "mengaktifkan" stays fine for features and fallbacks, and a system setting quoted in a sentence is "… diaktifkan" |
+| Turn on · Turn off (as a pair) | Hidupkan · Matikan | the pair as Apple's Home app: "Hidupkan mod demo" / "Matikan mod demo"; on its own "mengaktifkan" stays fine for features and fallbacks, and a system setting quoted in a sentence is "… diaktifkan" |
 | Delete | Padam | Apple |
 | App not installed | App tidak dipasang |  |
 | Symbol | Simbol |  |

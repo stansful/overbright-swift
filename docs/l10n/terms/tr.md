@@ -2,20 +2,22 @@
 
 Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the register, voice and
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
-deleted. Overbright’s own names are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they
-read “—”. `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
+deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
+Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
+are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+`scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
 
 Register: formal *siz* (instructions end in -in/-ın/-un/-ün: “Tıklayın”, “Seçin”, “Deneyin”), as macOS does.
 Buttons and menu commands are bare imperatives (“Aç”, “Sil”, “Yeniden dene”). Where English uses Title Case for
-standard macOS chrome (menu bar items, “Reset to Default”, “Check Now”, “Add Page”), Turkish uses Title Case as
-macOS Türkçe does (“Güncellemeleri Denetle…”, “Sayfa Ekle”); everything else is sentence case. Toggles are
+standard macOS chrome (menu bar items, “Reset to Default”, “Check Now”), Turkish uses Title Case as
+macOS Türkçe does (“Güncellemeleri Denetle…”, “Saptanmışa Dön”); everything else is sentence case. Toggles are
 imperatives in sentence case like System Settings (“Menü çubuğunda göster”). Errors are passive: “… okunamadı”,
 “… kaydedilemedi”. Yes/no confirmation titles use the passive question with a no-break space before the particle,
 as macOS writes it: “Silinsin mi?”, “Sıfırlansın mı?”.
 
-Typography: quotes “…” (inner ‘…’), apostrophe ’ before suffixes on names (Overbright’ı, Finder’da, Raf’ta,
+Typography: quotes “…” (inner ‘…’), apostrophe ’ before suffixes on names (Overbright’ı, Finder’da,
 Sistem Ayarları’nda), one-character ellipsis …, no suffix directly on a placeholder: “%@ uygulaması”, “%@ adlı…”,
 or the Apple pattern “Sil: “%@””. Dotted/dotless i: İ/i, I/ı. Turkish nouns stay singular after a number
 (“3 öğe”), so plural forms one/other are usually identical.
@@ -95,7 +97,7 @@ or the Apple pattern “Sil: “%@””. Dotted/dotless i: İ/i, I/ı. Turkish 
 | English | tr | Note |
 |---|---|---|
 | keyboard shortcut | klavye kestirmesi | Apple: “Klavye Kestirmeleri”; “kestirme” alone only when the keyboard is obvious |
-| Settings | Ayarlar | “Ayarlar ▸ İzinler” |
+| Settings | Ayarlar | “Ayarlar ▸ Genel” |
 | Allow… / Grant… | İzin Ver… | as the system prompt’s button |
 | Done (button) | Bitti | Apple’s Done |
 | Reset to Default | Saptanmışa Dön | Apple’s phrase; default = saptanmış |

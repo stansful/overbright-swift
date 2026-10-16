@@ -2,14 +2,16 @@
 
 Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the register, voice and
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
-deleted. Overbright’s own names are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they
-read “—”. `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
+deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
+Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
+are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+`scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
 
 Direction: right to left. No bidi control characters are added (not even the U+200F that some of Apple's
 loctable values start with). Quotes: gershayim ״…״ (U+05F4) around names; geresh ׳ (U+05F3) in abbreviations
-and loanwords (וידג׳ט, דק׳). Prefix letters attach directly to a quoted name, as macOS does («ב״נגישות״»,
+and loanwords (צ׳יפ, דק׳). Prefix letters attach directly to a quoted name, as macOS does («ב״נגישות״»,
 «ו״כיבוי״»), and with a hyphen to Latin words and placeholders («ב-Overbright», «ל-%@», «וה-Dock»).
 Ellipsis is one character (…). Apple spelling where Apple has one: «גירסה», «תיקיה».
 
@@ -19,12 +21,12 @@ macOS, GitHub, Liquid Glass) or with a key combination (⌃⌥N) is laid out lef
 the left and the final period or colon on the right, so a Hebrew reader meets the period first. Never start a
 string that contains Hebrew with a Latin word, a key combination or a placeholder that may hold Latin text
 (shortcut names, keys): move a Hebrew word to the front («כעת Overbright מטפל במקשים.», «הקיצור %1$@ מוגדר גם עבור
-״%2$@״.», «בצג הזה Overbright כבוי.»). This includes the permission prompts in InfoPlist. Strings that are only a
-name (Overbright, AirDrop) and VoiceOver-only labels are exempt. Parentheses around Latin text are fine (bracket
+״%2$@״.», «בצג הזה Overbright כבוי.»). This includes the InfoPlist strings. Strings that are only a
+name (Overbright, Finder) and VoiceOver-only labels are exempt. Parentheses around Latin text are fine (bracket
 pairs resolve correctly).
 
 **Paths.** Apple's Hebrew writes Settings paths with ">" (mirrored, so it points along the reading direction)
-between quoted names: «ב״פרטיות ואבטחה״ > ״נגישות״», «ב״הגדרות״ > ״מקלדת״». Never "▸": it does not mirror and
+between quoted names: «ב״פרטיות ואבטחה״ > ״נגישות״», «ב״הגדרות״ > ״כללי״». Never "▸": it does not mirror and
 points backwards in right-to-left text.
 
 **System Settings** is quoted as an app name in running text and in buttons, as Apple does: «ב״הגדרות המערכת״»,
@@ -35,7 +37,7 @@ points backwards in right-to-left text.
 
 Grammatical gender: Overbright = masculine («Overbright פתוח», «Overbright מציג»); macOS = feminine, and as a subject it is
 written «מערכת macOS» + feminine verb, as Apple does («מערכת macOS מבקשת…»; «מערכת macOS לא הוסיפה…»);
-notch (מגרעת) = feminine; Tray (מדף) = masculine; widget (וידג׳ט) = masculine; activity (פעילות) = feminine.
+display (צג) = masculine; camera (מצלמה) = feminine.
 
 ## Apple names (`apple-terms.py he` on macOS 27.0.1 — never paraphrased)
 
@@ -116,7 +118,7 @@ notch (מגרעת) = feminine; Tray (מדף) = masculine; widget (וידג׳ט) 
 | Changed from the default | שונה מברירת המחדל |  |
 | Allow… / Grant… | אישור… | Apple's Allow = «אישור» |
 | Never (timeout 0) | אף פעם | Apple |
-| Off | כבוי (masc.) / כבויה (camera) | Apple; as the value of a feminine picker («אזהרה ראשונה») use «ללא» |
+| Off | כבוי (masc.) / כבויה (camera) | Apple |
 | Undo | ביטול |  |
 | Try again | ניסיון נוסף | Apple |
 | Remove (from a list) | הסרה |  |

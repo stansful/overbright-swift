@@ -2,8 +2,10 @@
 
 Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the register, voice and
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
-deleted. Overbright’s own names are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they
-read “—”. `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
+deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
+Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
+are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+`scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
 
@@ -14,24 +16,23 @@ America differ, prefer the neutral word, but keep Apple's term where people look
 
 ### Voice and typography
 
-- Informal **tú**, as macOS: "Haz clic…", "Arrastra…", "tus eventos".
+- Informal **tú**, as macOS: "Haz clic…", "Arrastra…", "tus pantallas".
 - **Buttons, menu items, toggles, commands: infinitive** ("Abrir Overbright", "Mostrar el valor", "Buscar actualizaciones…").
-  **Instructions to the user: imperative tú** ("Suelta archivos en la muesca…", "Pulsa el atajo de teclado").
+  **Instructions to the user: imperative tú** ("Arrastra Overbright a la carpeta Aplicaciones", "Pulsa el atajo de teclado").
   Footnotes and statuses: present indicative, third person.
 - Sentence case everywhere (English title-case menu items become sentence case: "Check for Updates…" → "Buscar actualizaciones…").
 - Quotes “…” (secondary ‘…’); one-character ellipsis …; opening ¿ and ¡. App names are not quoted (Apple style:
-  "Abrir en Calendario", "Mostrar en el Finder"); Overbright's own mode/pane/page names and Apple's settings and panes in
-  running text are quoted: “Reducir movimiento”, “En vivo”, “Unirse”, “Actividades en directo”, “General”, “Ítems de inicio”,
-  la página “Bandeja”. Not quoted: Settings paths with ▸ ("Ajustes ▸ Permisos", "Privacidad y seguridad ▸ Accesibilidad"),
-  a widget name after "widget" ("el widget Espejo"), button titles ("Abrir Ítems de inicio…").
-- Statuses about the future: future / subjunctive ("Se iniciará cuando suene música", "Se pedirá cuando haga falta").
-  Confirmation messages describe what will happen: future ("volverán a su valor predeterminado", "Se eliminarán…").
+  "Mostrar en el Finder", "la app Atajos"); Overbright's own pane names and Apple's settings and panes in running text
+  are quoted: “Reducir movimiento”, “Modo de bajo consumo”, “General”, “Ítems de inicio”. Not quoted: Settings paths
+  with ▸ ("Ajustes ▸ General", "Privacidad y seguridad ▸ Accesibilidad"), button titles ("Abrir Ítems de inicio…").
+- Statuses about the future: future / subjunctive ("Se reanudará cuando conectes el Mac a la corriente").
+  Confirmation messages describe what will happen: future ("volverán a su valor predeterminado", "Cada pantalla volverá a su perfil de color").
 - Errors: "No se ha podido…" (Apple es). Unit symbols: "min", "h", "ms", "px", "pt"; numbers and durations come formatted.
 - Key names (Apple es: Terminal "⌫ Suprimir", Calculator "Comando + Suprimir"): Comando (⌘), Opción (⌥), Control (⌃),
   Mayúsculas (⇧), Retorno (↩), **Suprimir (⌫)** — never "Eliminar" for the key —, Espacio, Esc, Flecha arriba / abajo.
   Combinations: "Opción + 1", "Comando + Flecha arriba". Hold a key = "mantener pulsada (la tecla) ⌥".
 - Regional neutrality: avoid Peninsular-only phrasing where a neutral one exists ("Intenta…", not "Prueba a…";
-  "almuerzo", not "comida"); keep Apple es terms people see on screen (ratón, vídeo, mando de videojuegos, Cuenta atrás).
+  "almuerzo", not "comida"); keep Apple es terms people see on screen (ratón, vídeo, mando de videojuegos).
 - Gender: **Overbright** masculine ("Overbright está abierto / cerrado / desactivado"); **macOS** masculine ("macOS no ha añadido…");
   **app** feminine ("la app", "las apps"); **el Mac**.
 - Plurals: es = one / many / other; many (millions) always has the same wording as other.
@@ -109,10 +110,10 @@ America differ, prefer the neutral word, but keep Apple's term where people look
 | Overbright | Overbright | never translated; masculine; also the open panel ("Abrir Overbright") |
 | click | hacer clic / clic | never "pinchar" |
 | keyboard shortcut | atajo de teclado (short: atajo) | Apple es: "Atajos de teclado…" |
-| Shortcuts (Apple's app) | Atajos | an item of it = atajo; the Keyboard pane's section is "Atajos de teclado" to tell them apart |
+| Shortcuts (Apple's app) | Atajos | an item of it = atajo; Overbright's own key bindings are "atajos de teclado" to tell them apart |
 | Settings | Ajustes | as Apple es ("Ajustes…"); System Settings = Ajustes del Sistema |
 | Welcome | bienvenida | window title "Te damos la bienvenida a Overbright" (Apple es formula) |
-| Done (button) | Aceptar | macOS es "Done" buttons (≈ 45 system strings; "OK" only in Shortcuts); Welcome/tutorial button that VoiceOver also reads as the completed-step word, and the flash: Hecho; Timer done label: Fin |
+| Done (button) | Aceptar | macOS es "Done" buttons (≈ 45 system strings; "OK" only in Shortcuts); Welcome's closing button, which VoiceOver also reads as the completed-step word: Hecho |
 | App not installed | App no instalada |  |
 | Reset to Default | Restablecer valor predeterminado | "Cambiado respecto al valor predeterminado" |
-| Preview (Settings stage) | Previsualización | never "Vista previa" (= the Preview app "Vista Previa") |
+| Preview | Previsualización | never "Vista previa" (= the Preview app "Vista Previa") |

@@ -2,18 +2,20 @@
 
 Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the register, voice and
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
-deleted. Overbright’s own names are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they
-read “—”. `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
+deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
+Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
+are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+`scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
 
 Register and style, following macOS 27 in Slovenian (checked in the system's own loctables):
 
 - Buttons, menu items, commands and toggles: **imperative, 2nd person singular**, as Apple writes them
-  (“Odpri”, “Prikaži odstotek”, “Premakni v koš”, “Zapri aplikacijo Koledar”, “Pripni zapisek”).
-- Sentences, footnotes, coach marks, tutorial steps and VoiceOver hints: **formal vi** (“Kliknite”, “Povlecite”,
-  “Če zaprete zdaj, boste izgubili …”, “Vaši dogodki”).
-- Confirmation titles: **“Želite …?”** (Apple: “Želite izbrisati zbirko?”) → “Želite izbrisati »%@«?”,
+  (“Odpri”, “Prikaži odstotek”, “Premakni v koš”, “Zapri aplikacijo Koledar”).
+- Sentences, footnotes and VoiceOver hints: **formal vi** (“Kliknite”, “Povlecite”,
+  “Če zaprete zdaj, boste izgubili …”, “Vaši zasloni”).
+- Confirmation titles: **“Želite …?”** (Apple: “Želite izbrisati zbirko?”) → “Želite ponastaviti barve zaslona?”,
   “Želite ponastaviti vse nastavitve?”.
 - Sentence case everywhere; Slovenian has no title case (Apple: “O aplikaciji Koledar”, “Zapri okno”).
 - Quotes: **»…«** (macOS 27), inner „…“. Names of apps/panes/settings in running text either quoted or after a
@@ -24,12 +26,10 @@ Register and style, following macOS 27 in Slovenian (checked in the system's own
 - Units: a space before units (“90 s”, “12 min”); “h” for hours, “min”, “s”, “ms”, “pt”, “px”.
 - Placeholders are not declined: a noun in front carries the case (“v aplikaciji %@”, “na zaslonu »%@«”).
 - Plurals: one (1, 101), **two (dual: 2, 102)**, few (3–4), other (0, 5–20, 100): “1 element, 2 elementa,
-  3 elementi, 5 elementov”; “1 celica, 2 celici, 3 celice, 5 celic”; “1 dan, 2 dneva, 3 dnevi, 5 dni”.
+  3 elementi, 5 elementov”; “1 zaslon, 2 zaslona, 3 zasloni, 5 zaslonov”; “1 dan, 2 dneva, 3 dnevi, 5 dni”.
 - Apple's names from `apple-terms.py sl`: Nastavitve sistema (v Nastavitvah sistema), Zasebnost in varnost, Dostopnost,
-  Elementi prijave, Menijska vrstica, Način nizke porabe, Hitri pregled, Glasba, Bližnjice, Koledar, Zapiski,
-  Prenosi, Aplikacije, Zmanjšaj dinamičnost animacij, Zmanjšaj prosojnost, Razlikuj brez barv, Predvaja se,
-  Snemanje sistemskega zvoka, alert sounds (Sapica, Mehurček, Kristal, Funk, Junakinja, Skok, Prodnik, Puljenje,
-  Potop; Boop, Mezzo, Pong, Sonar, Sonumi unchanged).
+  Elementi prijave, Menijska vrstica, Način nizke porabe, Bližnjice, Aplikacije, Zmanjšaj dinamičnost animacij,
+  Zmanjšaj prosojnost, Razlikuj brez barv.
 
 ### The brand
 
@@ -105,9 +105,8 @@ Register and style, following macOS 27 in Slovenian (checked in the system's own
 
 | English | sl | Note |
 |---|---|---|
-| Shortcuts (Apple's app) · a shortcut | Bližnjice · bližnjica | Apple's name; Settings pane “Bližnjice” |
-| keyboard shortcut | bližnjica na tipkovnici / bližnjica | Apple: “Bližnjice na tipkovnici …”; in Settings ▸ Keyboard just “bližnjica” |
-| launcher (search keyword) | zaganjalnik |  |
+| Shortcuts (Apple's app) · a shortcut | Bližnjice · bližnjica | Apple's name |
+| keyboard shortcut | bližnjica na tipkovnici / bližnjica | Apple: “Bližnjice na tipkovnici …”; in Overbright's Shortcuts pane (the key bindings) just “bližnjica” |
 | Allow… / Grant… | Dovoli … |  |
 | Welcome / setup | Dobrodošli / nastavitev | “Preskoči nastavitev” |
 | Show … (every show-switch) | Prikaži … | Apple: “Prikaži odstotek” |

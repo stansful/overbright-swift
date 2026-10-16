@@ -2,8 +2,10 @@
 
 Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the register, voice and
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
-deleted. Overbright’s own names are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they
-read “—”. `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
+deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
+Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
+are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+`scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
 
@@ -15,17 +17,15 @@ Register and style follow Korean macOS 27 (checked in the system's own loctables
 - **Buttons, menu items, toggles, picker options and titles** are noun phrases, as macOS writes them:
   “취소”, “완료”, “열기”, “Overbright 종료”, “업데이트 확인…”, “메뉴 막대 아이콘 보기”, “로그인 시 열기”.
   Show-toggles are “… 보기” (System Settings: “메뉴 막대에서 보기”, “배터리 잔량 보기”); hide-toggles “… 가리기”.
-  States and confirmations end in “-됨” (“일시 정지됨”, “복사됨”, “허용됨”).
+  States and confirmations end in “-됨” (“일시 정지됨”, “복사됨”).
 - **Quotes**: ‘…’ around names and setting names (macOS: “‘%@’ 압축”, “‘세게 클릭 및 햅틱 피드백’ 업데이트”);
   “…” only inside them. Ellipsis … (one character). No straight quotes.
 - **Particles** after a placeholder use both forms: ‘%@’을(를), 이(가), 은(는), 와(과), (으)로. After *Overbright*
-  (vowel ending, 크래니) always 는 / 가 / 를 / 와 / 의 / 에서 / 로. After any other Latin name, choose by how
-  it is read: “Spotify를”, “macOS가”, “PDF를”, “AirDrop으로”, “JPEG으로” (제이펙), “1600px로”.
-- **Counts**: one plural form (`other`) with a counter: “%lld개 항목”, “%lld칸”, “%lld일”, “%lld분”, “%lld ms”.
-- **Typed input**: hints that show what the user can type keep the Latin units the parsers accept: the timer
-  hint is “25 또는 90s”, never “90초” (DurationParser reads only English and Russian units).
-- **Spacing**: 띄어쓰기 as Apple (“일시 정지”, “하루 종일”, “미리 알림”); Latin names keep their spelling.
-- **Overbright** is never translated or transliterated (no “크래니” in copy).
+  (read 오버브라이트, a vowel ending) always 는 / 가 / 를 / 와 / 의 / 에서 / 로. After any other Latin name, choose by how
+  it is read: “macOS가”, “Finder를”, “HDR을”, “OLED를”, “GitHub로”.
+- **Counts**: one plural form (`other`) with a counter: “%lld개 항목”, “%lld일”, “%lld분”, “%lld ms”.
+- **Spacing**: 띄어쓰기 as Apple (“일시 정지”, “메뉴 막대”, “다시 시도”); Latin names keep their spelling.
+- **Overbright** is never translated or transliterated (no “오버브라이트” in copy).
 
 ## Apple names (`apple-terms.py ko` on macOS 27.0.1 — never paraphrased)
 
@@ -98,15 +98,15 @@ Register and style follow Korean macOS 27 (checked in the system's own loctables
 | English | ko | Note |
 |---|---|---|
 | Overbright | Overbright | never translated; Overbright는 / Overbright가 / Overbright를; also the open panel (“Overbright 열기”) |
-| Settings | 설정 | “설정 ▸ 키보드” |
+| Settings | 설정 | “설정 ▸ 일반” |
 | Reset to Default | 기본값으로 재설정 |  |
 | Changed from the default | 기본값에서 변경됨 |  |
 | Allow… / Grant… | 허용… |  |
-| Preview (Settings stage) | 미리보기 |  |
+| Preview | 미리보기 |  |
 | Never (timeout 0) | 안 함 | Apple’s value word |
 | Off / On (values) | 끔 / 켬 | Apple’s value words |
 | Shortcuts (Apple app) · a shortcut | 단축어 · 단축어 | “단축어 실행”; never “바로 가기” |
 | keyboard shortcut | 단축키 | “키보드 단축키” |
-| Remove (from a list) | 제거 | “선반에서 제거”, “빠른 앱에서 제거”; 삭제 only for deleting data (note, to-do, pipeline) |
+| Remove (from a list) | 제거 | “목록에서 제거”; 삭제 only for deleting data |
 | App not installed | 설치되지 않은 앱 |  |
 | Welcome (window) | Overbright 시작하기 | Apple: “Mac 시작하기” |

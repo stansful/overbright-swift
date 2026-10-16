@@ -2,31 +2,31 @@
 
 Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the register, voice and
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
-deleted. Overbright’s own names are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they
-read “—”. `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
+deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
+Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
+are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+`scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
 
 Register and typography (follow macOS 27 Japanese):
 
-- Sentences (footnotes, errors, permission reasons, VoiceOver announcements) in polite です／ます; buttons, menu items,
+- Sentences (footnotes, errors, VoiceOver announcements) in polite です／ます; buttons, menu items,
   toggles, pickers and headers are short noun phrases or verb dictionary forms (開く, 追加, 削除, 〜を表示).
-- Tutorial bubbles and coach marks are short instructions without です／ます («ノッチをクリック»). A bubble that is
-  followed by a key cap ends in «次のキーを押す» so the key cap reads naturally after it.
-- Card descriptions on the Welcome window use ます (ノッチをクリックして開きます).
-- VoiceOver hints describe the result in ます form (カメラをオフにします).
-- No spaces between Japanese and Latin text or digits (Overbrightを開く, 4セル, macOS 14.2以降); spaces stay between two
+- Card descriptions on the Welcome window use ます (メニューバーのアイコンをクリックして開きます).
+- VoiceOver hints describe the result in ます form (パネルを開きます).
+- No spaces between Japanese and Latin text or digits (Overbrightを開く, 3台, macOS 14.2以降); spaces stay between two
   Latin words or a Latin word and a number (Overbright %@, 名称未設定 %lld as in Finder/TextEdit).
 - Quotes “…” (never 「」, the validator rejects them) around names that could be misread: app names in running text
-  (“ミュージック”, “ショートカット”), System Settings panes and settings (“プライバシーとセキュリティ”,
+  (“写真”, “ショートカット”), System Settings panes and settings (“プライバシーとセキュリティ”,
   “カラー以外で区別”), user content (“%@”を削除しますか?). No quotes in a button that names the app it opens
   (システム設定を開く, %@を開く) — Apple writes it that way.
 - Half-width colon + space (状況: %@), full-width parentheses （ ） around Japanese and placeholders as macOS
   (自動（%@）, バージョン%@（%@）), half-width ? after a question, 、。 punctuation, … (U+2026), 〜 (U+301C) for ranges
-  in running text, ▸ with spaces in Settings paths (設定 ▸ キーボード).
+  in running text, ▸ with spaces in Settings paths (設定 ▸ 一般).
 - Search keyword lists keep the English separator (", " or a space): the code splits on it.
-- No grammatical plural: every plural key has the single form `other`; counters 件 (events, to-dos), 項目 (Tray
-  items, as Finder), 個 (overflow tiles), セル (grid cells), 日, 分, ミリ秒.
+- No grammatical plural: every plural key has the single form `other`; counters 台 (displays), 項目 (items, as
+  Finder), 個, 日, 分, ミリ秒.
 
 Reviewed 2026-10-14 (independent review).
 
@@ -104,7 +104,7 @@ Reviewed 2026-10-14 (independent review).
 | click | クリック |  |
 | Welcome / setup | ようこそ / セットアップ |  |
 | Shortcuts (Apple's app) | ショートカット | “ショートカット” in running text |
-| keyboard shortcut | キーボードショートカット | also the section header in Settings ▸ Keyboard, so it is not confused with the Shortcuts pane; short ショートカット only in rows inside that pane (ショートカットを記録, “%@”のショートカット) |
+| keyboard shortcut | キーボードショートカット | so it is not confused with Apple's Shortcuts; short ショートカット only in rows inside Overbright's Shortcuts pane (ショートカットを記録, “%@”のショートカット) |
 | Settings (Overbright) | 設定 | Settings… = 設定… |
 | Allow / Grant | 許可 | Allow… / Grant… = 許可… |
 | Reset to Default | デフォルトに戻す | Changed from the default = デフォルトから変更済み |

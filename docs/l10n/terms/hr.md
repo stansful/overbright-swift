@@ -2,19 +2,21 @@
 
 Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the register, voice and
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
-deleted. Overbright’s own names are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they
-read “—”. `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
+deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
+Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
+are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+`scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
 
 Register and style, following macOS 27 in Croatian:
 
 - Buttons, menu items, toggles and checkboxes: **imperative, 2nd person singular** (Apple: “Prikaži”, “Otvori”, “Obriši”, “Smanji pomicanje”, “Prikaži u traci s izbornicima”).
-- Sentences, footnotes, instructions and onboarding: **formal Vi** (“Povucite”, “Kliknite”, “Vaši događaji”).
-- Confirmation titles as questions: **infinitive** (Apple: “Pristupiti kalendaru “%@”?”) → “Obrisati “%@”?”, “Resetirati sve postavke?”.
+- Sentences, footnotes, instructions and onboarding: **formal Vi** (“Povucite”, “Kliknite”, “Vaši zasloni”).
+- Confirmation titles as questions: **infinitive** (Apple: “Pristupiti kalendaru “%@”?”) → “Resetirati boje zaslona?”, “Resetirati sve postavke?”.
 - Sentence case everywhere (no English title case in menus); quotes “…” as macOS writes them in Croatian; one-character ellipsis …; ▸ for paths.
 - Placeholders are not declined: a noun in front carries the case (“u aplikaciji %@”, “na zaslonu “%@””).
-- Apple’s names come from the apple-terms glossary (`apple-terms.py hr`): Postavke sustava, Privatnost i sigurnost, Pristupačnost, Stavke za prijavu, Traka s izbornicima, Mod slabog napajanja, Brzi pregled, Glazba, Prečaci, Kalendar, Bilješke, Smanji pomicanje, Smanji prozirnost, Povećaj kontrast, Razgraniči bez boje, alert sounds (Povjetarac, Kristal, Mezzo…).
+- Apple’s names come from the apple-terms glossary (`apple-terms.py hr`): Postavke sustava, Privatnost i sigurnost, Pristupačnost, Stavke za prijavu, Traka s izbornicima, Mod slabog napajanja, Prečaci, Smanji pomicanje, Smanji prozirnost, Povećaj kontrast, Razgraniči bez boje.
 
 Reviewed 2026-10-14 (independent review).
 
@@ -93,7 +95,7 @@ Reviewed 2026-10-14 (independent review).
 | English | hr | Note |
 |---|---|---|
 | Shortcuts (Apple’s app) · shortcut | Prečaci · prečac | “u Prečacima” / “u aplikaciji Prečaci” (both Apple); “Otvori aplikaciju Prečaci” (Apple “Otvori aplikaciju Glazba”); “Aplikacija Prečaci nije dostupna” |
-| keyboard shortcut | prečac tipkovnice | short “prečac” inside Settings ▸ Tipkovnica |
+| keyboard shortcut | prečac tipkovnice | short “prečac” inside Overbright's Shortcuts pane (the key bindings) |
 | Reset to Default · Changed from the default | Resetiraj na standardno · Promijenjeno u odnosu na standardnu vrijednost | Apple’s exact menu item (Podcasts “Reset to Default”); “standardne vrijednosti” in sentences |
 | click | klik / kliknuti |  |
 | Open at login / Launch at login | Otvori kod prijave | Apple’s Login Items wording |
@@ -101,6 +103,6 @@ Reviewed 2026-10-14 (independent review).
 | About (pane) / About Overbright | Opis / Više o aplikaciji Overbright | Apple General ▸ Opis; AppKit app menu “About %@” = “Više o aplikaciji %@” |
 | Acknowledgments | Priznanja | Apple |
 | Remove · Delete · Clear · Undo · Cancel | Ukloni · Obriši · Očisti · Poništi · Odustani | Apple |
-| Preview (Settings stage) | Pretpregled | “Pregled” is Apple’s Preview app |
+| Preview | Pretpregled | “Pregled” is Apple’s Preview app |
 | Never (timeout 0) | Nikad | Apple “Nikad” |
 | Off | Isključeno |  |

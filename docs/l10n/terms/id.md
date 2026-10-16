@@ -2,19 +2,21 @@
 
 Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the register, voice and
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
-deleted. Overbright’s own names are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they
-read “—”. `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
+deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
+Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
+are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+`scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
 
 Register: formal **Anda** (capital A), as macOS. Buttons and menu items use the bare imperative
 ("Buka", "Tampilkan", "Jeda"), as Apple's Indonesian does. Where English uses Title Case (menu items, buttons) the
-Indonesian is Title Case too ("Periksa Pembaruan…", "Tutup Overbright", "Pindahkan ke Bawah"); function words stay
+Indonesian is Title Case too ("Periksa Pembaruan…", "Tutup Overbright", "Pindahkan ke Aplikasi"); function words stay
 lower case (ke, di, dari, dan, untuk, yang, dengan). Settings rows, toggles and footnotes are sentence case.
 Typography: quotes “…” (‘…’ inside), one-character ellipsis …, “ ▸ ” in Settings paths, no straight quotes.
-Indonesian has no grammatical plural: every plural key has only `other` ("%lld item", "%lld hari", "Sisa %lld sel").
+Indonesian has no grammatical plural: every plural key has only `other` ("%lld item", "%lld hari", "%lld layar").
 Apple's own names come from `apple-terms.py id` (read from macOS 27) and from macOS 27's own loctables
-(AppKit menus, Finder, Calendar, keyboard-shortcut table).
+(AppKit menus, Finder, keyboard-shortcut table).
 
 
 Reviewed 2026-10-14 (independent review).

@@ -2,8 +2,10 @@
 
 Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the register, voice and
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
-deleted. Overbright’s own names are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they
-read “—”. `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
+deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
+Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
+are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+`scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
 
@@ -12,23 +14,21 @@ Register and style, following macOS 27 in Hindi (checked against the system's ow
 - Formal **आप**; buttons and menu commands in the polite imperative (**खोलें, दिखाएँ, हटाएँ, रद्द करें, जारी रखें**), the way
   macOS writes them. Toggles are imperative phrases too (macOS: “मेन्यू बार में दिखाएँ”).
 - Apple's Hindi keeps many established English words in Devanagari (ऐक्सेस, सेटिंग, डिलीट करें, मूव करें, स्किप करें,
-  ऑटोमैटिक, ब्राइटनेस, वॉल्यूम, फ़ुल स्क्रीन). Overbright follows that hybrid register instead of Sanskritised coinages.
+  ऑटोमैटिक, ब्राइटनेस, फ़ुल स्क्रीन). Overbright follows that hybrid register instead of Sanskritised coinages.
 - Full stop is the danda **।**; ? and ! as in English; ellipsis **…** (U+2026); quotes **“…”** (and ‘…’ inside).
-  Nukta spellings as macOS: फ़ाइल, फ़ोल्डर, फ़ोकस, डिफ़ॉल्ट, ज़िप.
+  Nukta spellings as macOS: फ़ाइल, फ़ोल्डर, फ़ोकस, डिफ़ॉल्ट.
 - Apple names a pane without quotes in running text (“सिस्टम सेटिंग में लॉगइन आइटम खोलें”) and an app as “<name> ऐप”
-  (संगीत ऐप, शॉर्टकट ऐप) — also inside parentheses and lists (“Apple Events (संगीत ऐप, Spotify)”), because bare संगीत
-  reads as the common noun “music”. A pane whose name is an ordinary word gets quotes and पेन, as Apple does
+  (शॉर्टकट ऐप, फ़ोटो ऐप) — also inside parentheses and lists (“(फ़ोटो ऐप, QuickTime Player)”), because bare फ़ोटो
+  reads as the common noun “photos”. A pane whose name is an ordinary word gets quotes and पेन, as Apple does
   (“… “सामान्य” पेन में …”, cf. Apple “… “डाउनटाइम” पेन …”). Settings paths keep Overbright's ▸.
 - “never X or Y”: the correlative **न तो … न ही …** (“Overbright उन्हें न तो कभी बदलता है, न ही अपलोड करता है।”), never
   “कभी न X है, न Y है”.
 - Postpositions after names stay separate words: “Overbright को”, “Overbright में”, “Overbright का”. Overbright is grammatically
   **masculine** (“Overbright खुलता है”, like ऐप). macOS: “macOS ने … नहीं जोड़ा”.
-- Plurals: one/other. Loan nouns do not inflect (1 सेल / 3 सेल, 1 आइटम / 3 आइटम), so most forms are identical but every
+- Plurals: one/other. Loan nouns do not inflect (1 डिस्प्ले / 3 डिस्प्ले, 1 आइटम / 3 आइटम), so most forms are identical but every
   plural key still gets both.
 - Abbreviated units as Foundation writes them for hi: घं॰, मि॰, से॰, मि॰से॰ (ms). Points: “%@ पॉइंट” (System Settings ▸
   Accessibility text size), pixels: पिक्सेल.
-- Typed timer durations stay Latin (“25 या 90s”): `DurationParser` accepts English and Russian unit words only, so a
-  Devanagari suffix (90से॰) would not parse.
 
 ## Apple names (`apple-terms.py hi` on macOS 27.0.1 — never paraphrased)
 
@@ -102,11 +102,11 @@ Register and style, following macOS 27 in Hindi (checked against the system's ow
 |---|---|---|
 | Overbright | Overbright | never translated/transliterated; masculine |
 | welcome (window) | स्वागत | “Overbright में आपका स्वागत है” |
-| keys / keyboard shortcut | कीज़ / कीबोर्ड शॉर्टकट | “Shortcuts” in Settings ▸ Keyboard = कीबोर्ड शॉर्टकट |
+| keys / keyboard shortcut | कीज़ / कीबोर्ड शॉर्टकट | Overbright's Shortcuts pane (key bindings) = कीबोर्ड शॉर्टकट |
 | Open / Close / Quit Overbright | खोलें / बंद करें / Overbright बंद करें |  |
 | About / About Overbright | परिचय / Overbright परिचय |  |
 | Add / Remove / Delete | जोड़ें / हटाएँ / डिलीट करें |  |
-| Done | पूर्ण (flash words in the wings: हो गया; Done editing = संपादन समाप्त करें; All done = सब हो गया) |  |
+| Done | पूर्ण |  |
 | Cancel / Continue / Back / Skip | रद्द करें / जारी रखें / वापस / स्किप करें |  |
 | Undo | पहले जैसा करें |  |
 | Try again | फिर कोशिश करें |  |

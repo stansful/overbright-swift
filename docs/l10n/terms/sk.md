@@ -2,26 +2,24 @@
 
 Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the register, voice and
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
-deleted. Overbright’s own names are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they
-read “—”. `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
+deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
+Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
+are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+`scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
 
 Register and typography, as macOS 27 writes Slovak (checked in the system's own loctables):
 
-- Formal *vy*, lower case mid-sentence ("vaše udalosti"). Buttons and menu items in the **infinitive** ("Otvoriť", "Zrušiť", "Vyhľadať aktualizácie…"); instructions in the imperative ("Potiahnite…", "Kliknite…"). Switches that describe ongoing behaviour use the imperfective infinitive ("Zobrazovať…", "Skrývať…"), one-off commands the perfective ("Zobraziť…").
-- Sentence case everywhere, also where English uses title case for menus ("Vyhľadať aktualizácie…", "Pripnúť Overbright").
+- Formal *vy*, lower case mid-sentence ("vaše displeje"). Buttons and menu items in the **infinitive** ("Otvoriť", "Zrušiť", "Vyhľadať aktualizácie…"); instructions in the imperative ("Potiahnite…", "Kliknite…"). Switches that describe ongoing behaviour use the imperfective infinitive ("Zobrazovať…", "Skrývať…"), one-off commands the perfective ("Zobraziť…").
+- Sentence case everywhere, also where English uses title case for menus ("Vyhľadať aktualizácie…", "Ukončiť Overbright").
 - "app" is **apka** (apky, apiek, apkou), as System Settings writes it in macOS 27 ("Správa apiek", "Apka %@ žiada o prístup…"); the one exception is Apple's menu convention "O aplikácii Overbright" / pane "O aplikácii".
-- Apple's names of settings, panes and apps are written **without quotes**, introduced by a classifier noun: "funkcia Obmedziť pohyb", "apka Hudba", "Súkromie a bezpečnosť ▸ Prístupnosť" (as macOS: "Keď je zapnutá funkcia Obmedziť priehľadnosť…"). User content (note titles, pipeline names, file names, search queries) goes in „…“ (‚…‘ inside), as Apple does ("Vymazať „%@“?").
-- Placeholders are never declined: a noun in front carries the case ("apka %@", "na displeji %@", "postup „%@“").
-- Durations arrive in the nominative ("4 min", "2 minúty 11 sekúnd"): never after a preposition that needs another case. Abbreviated forms ("4 min", "1 h 30 min") may follow "o"/"na"; spelled-out ones use "ešte %@", "%@ od začiatku", "Zostávajúci čas: %@", "%@ po pozastavení".
-- Plurals: one = 1, few = 2–4, other = 0 and 5+ (genitive plural: "5 buniek", "5 položiek"); many (fractions only) is filled with the same text as other.
+- Apple's names of settings, panes and apps are written **without quotes**, introduced by a classifier noun: "funkcia Obmedziť pohyb", "apka Fotky", "Súkromie a bezpečnosť ▸ Prístupnosť" (as macOS: "Keď je zapnutá funkcia Obmedziť priehľadnosť…"). User content (display names, search queries) goes in „…“ (‚…‘ inside), as Apple does ("Vymazať „%@“?").
+- Placeholders are never declined: a noun in front carries the case ("apka %@", "na displeji %@", "skratka „%@“").
+- Durations arrive in the nominative ("4 min", "2 minúty 11 sekúnd"): never after a preposition that needs another case. Abbreviated forms ("4 min", "1 h 30 min") may follow "o"/"na"; spelled-out ones use "ešte %@" or "Zostávajúci čas: %@".
+- Plurals: one = 1, few = 2–4, other = 0 and 5+ (genitive plural: "5 displejov", "5 položiek"); many (fractions only) is filled with the same text as other.
 - One-character ellipsis …; spaced en dash " – " where English has an em dash; no-break space (U+00A0) after the one-letter prepositions and conjunctions k, s, v, z, o, u, a, i (added by the build script).
 - "Overbright" is never translated, transliterated or declined; "apka Overbright" when a case is needed. Where grammar needs a gender it is **neuter** like other indeclinable names ("Overbright je otvorené"), and that is avoided where possible. macOS is masculine ("macOS nepridal").
-
-Review (independent review pass): 79 strings changed.
-
-Verification: `validate.py sk` exits 0 (13 warnings, all names or units Slovak writes like English: Symbol, Panel, Trackpad, video, min, +1 min, and the alert sounds Funky, Mezzo, Pong, Sonar, Sonumi as macOS names them). With `sk` imported, the measured-width tests (FlashLabelFitTests, BandCopyTests, FeaturedRowTests, the header tab test, the longest tutorial bubble) pass for `sk`, and `scripts/lint-copy.py` passes.
 
 ## Apple names (`apple-terms.py sk` on macOS 27.0.1 — never paraphrased)
 
@@ -98,15 +96,15 @@ Verification: `validate.py sk` exits 0 (13 warnings, all names or units Slovak w
 | keyboard shortcut | klávesová skratka | "skratka" alone only where it is unambiguous |
 | Settings (Overbright) · System Settings | Nastavenia · Systémové nastavenia | "v Systémových nastaveniach" |
 | Welcome · setup | Vitajte v Overbright · úvodné nastavenie | "Preskočiť úvodné nastavenie" |
-| Allow / Allow… / Grant… | Povoliť / Povoliť… | Apple's TCC button |
+| Allow / Allow… / Grant… | Povoliť / Povoliť… | Apple's button |
 | Reset to Default · Changed from the default | Obnoviť predvolenú hodnotu · Zmenené oproti predvolenej hodnote |  |
 | Remove (from a list) · Delete | Odstrániť · Vymazať | as AppKit (Remove = Odstrániť, Delete = Vymazať) |
 | Undo | Odvolať | as AppKit |
 | Cancel · Done · OK | Zrušiť · Hotovo | as AppKit |
 | App not installed | Apka nie je nainštalovaná |  |
 | Never · Off | Nikdy · Vypnuté |  |
-| Show … (every show switch) | Zobrazovať … | likewise "Nahrádzať systémový indikátor", "Zahŕňať predbežné verzie", "Skrývať potiahnutím nahor", "Obrátený smer" |
-| Preview (Settings preview stage) | Náhľad | as Apple ("Zobrazovať náhľady") |
+| Show … (every show switch) | Zobrazovať … | likewise "Zahŕňať predbežné verzie" |
+| Preview | Náhľad | as Apple ("Zobrazovať náhľady") |
 | Login Items | Položky a rozšírenia spúšťané pri prihlásení | Apple's pane name in General |
 | launch at login | otvárať po prihlásení | Apple: "Otvoriť po prihlásení" |
 | Check for updates · Last checked · Not checked yet | Vyhľadať aktualizácie · Posledná kontrola: %@ · Kontrola ešte neprebehla | "Posledná kontrola" is Apple's own status line |

@@ -2,8 +2,10 @@
 
 Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the register, voice and
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
-deleted. Overbright’s own names are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they
-read “—”. `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
+deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
+Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
+are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+`scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
 
@@ -11,8 +13,8 @@ Register and style, as macOS writes Greek:
 
 - Formal plural (σας): «Κάντε κλικ», «Επιλέξτε», «Σύρετε», «Πατήστε».
 - Buttons, menu items, toggles and row labels use the verbal noun, as macOS does («Άνοιγμα», «Προσθήκη»,
-  «Αφαίρεση», «Εμφάνιση εικονιδίου στη γραμμή μενού»). Instructions, coach marks and tutorial bubbles use the
-  formal imperative. Try again / Retry buttons say «Νέα δοκιμή», as Apple's do (80 strings; «Δοκιμή ξανά» is not
+  «Αφαίρεση», «Εμφάνιση εικονιδίου στη γραμμή μενού»). Instructions use the formal
+  imperative. Try again / Retry buttons say «Νέα δοκιμή», as Apple's do (80 strings; «Δοκιμή ξανά» is not
   an Apple form); «δοκιμάστε ξανά» stays inside sentences.
 - Commands that name the app follow Apple's menu pattern without an article: «Τερματισμός Overbright»,
   «Άνοιγμα Overbright», but «Πληροφορίες για το Overbright» (Apple: «Πληροφορίες για το Mail»). In running text the
@@ -24,9 +26,9 @@ Register and style, as macOS writes Greek:
   the Off value of a picker or a VoiceOver state value.
 - Apple's names come from the glossary (apple-terms.py) and are quoted when named in a sentence:
   «Απόρρητο και ασφάλεια» ▸ «Προσβασιμότητα», «Στοιχεία εισόδου», «Μείωση κίνησης», «Μείωση διαφάνειας»,
-  «Διαφοροποίηση χωρίς χρώμα», «Λειτουργία χαμηλής ισχύος», «Εγγραφή ήχου συστήματος», «Λήψεις», «Εφαρμογές».
+  «Διαφοροποίηση χωρίς χρώμα», «Λειτουργία χαμηλής ισχύος», «Εφαρμογές».
 - Text that a style draws in capitals keeps its accents in the catalog; locale-aware uppercasing drops them
-  («Ζωντανά» → ΖΩΝΤΑΝΑ, checked with `uppercased(with: el)`).
+  («Αυτόματα» → ΑΥΤΟΜΑΤΑ, checked with `uppercased(with: el)`).
 
 ## Apple names (`apple-terms.py el` on macOS 27.0.1 — never paraphrased)
 
@@ -102,13 +104,11 @@ Register and style, as macOS writes Greek:
 | Shortcuts (Apple's app) · a shortcut | Συντομεύσεις · συντόμευση | app named in quotes «Συντομεύσεις» in sentences |
 | login · Launch / Open at login | είσοδος · Άνοιγμα κατά την είσοδο | Apple's «Άνοιγμα κατά την είσοδο», «Στοιχεία εισόδου»; never «κατά τη σύνδεση» (= while connecting); search words keep «σύνδεση» |
 | Acknowledgments | Αναγνωρίσεις | Apple's section name |
-| Try again · Retry (buttons) | Νέα δοκιμή | Apple's button; Mirror chip 63 of 74 pt at the narrowest card |
-| keyboard shortcut · keys | συντόμευση (πληκτρολογίου) · πλήκτρα | key combination in a sentence: «ο συνδυασμός ⌃⌥N» |
+| Try again · Retry (buttons) | Νέα δοκιμή | Apple's button; the chip, the banner and the card menu of a display that failed or stopped |
+| keyboard shortcut · keys | συντόμευση (πληκτρολογίου) · πλήκτρα | key combination in a sentence: «ο συνδυασμός %@» (the live key caps) |
 | Reset to Default · Changed from the default | Επαναφορά προεπιλογής · Διαφέρει από την προεπιλογή |  |
-| Allow (shows the system prompt) · Allow… / Grant… | Να επιτραπεί · Να επιτραπεί… | Apple's own TCC button; the narrow Mirror chip says «Επιτρέψτε…» |
 | click | κλικ / κάντε κλικ |  |
 | App not installed | Η εφαρμογή δεν είναι εγκατεστημένη | never the bundle ID |
 | Remove · Delete | Αφαίρεση · Διαγραφή | Remove = from a list (does not uninstall/delete) |
 | Show … / Hide … (switches) | Εμφάνιση … / Απόκρυψη … |  |
 | Never · Off · On · Automatic | Ποτέ · Ανενεργό · Ενεργό · Αυτόματα | picker values; “X is off” in a sentence = «είναι απενεργοποιημένη/-ο» |
-| subject (Remove background) | θέμα | Apple: «Αντιγραφή θέματος»; «Δεν βρέθηκε θέμα» |

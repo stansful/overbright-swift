@@ -2,25 +2,27 @@
 
 Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the register, voice and
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
-deleted. Overbright’s own names are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they
-read “—”. `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
+deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
+Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
+are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+`scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
 
 Register: formal (Ön), as macOS — the pronoun is left out ("Kattintson…", "Nyissa meg…").
 Buttons, menu items, commands and VoiceOver actions: nominalised verbs as macOS writes them
-("Megnyitás", "Törlés", "Kuka ürítése", "A(z) %@ megnyitása"); toggles and row labels: noun phrases
+("Megnyitás", "Törlés", "Frissítések keresése", "A(z) %@ megnyitása"); toggles and row labels: noun phrases
 ("Mozgás csökkentése", "Menüsor ikonjának megjelenítése"); instructions in sentences: formal imperative.
 Sentence case. Quotes „…” (inner »…«), ellipsis …, apostrophe ’. Article before a placeholder: a(z) %@.
-Apple's app names are not quoted and take suffixes the way macOS writes them ("a Parancsokban", "a Zene app").
-Nouns after a number stay singular ("3 elem", "5 cella"), so the one/other plural forms are usually identical.
+Apple's app names are not quoted and take suffixes the way macOS writes them ("a Parancsokban", "a Fotók app").
+Nouns after a number stay singular ("3 elem", "5 kijelző"), so the one/other plural forms are usually identical.
 
 
 ### Orthography
 
-- Abbreviation + noun compounds take a hyphen: "MIT-licenc", "ZIP-archívumok", "AirDrop-zóna", "PDF-ek".
-- Compounds are one word: "fókuszmód", "kódmód", "kijelzőmodell".
-- Settings panes in running text: "az Élő tevékenységek panelen", "a(z) %@ panel", as macOS ("az Általános panelen").
+- Abbreviation + noun compounds take a hyphen: "MIT-licenc", "HDR-videó", "OLED-kijelző".
+- Compounds are one word: "fókuszmód", "kijelzőmodell".
+- Settings panes in running text: "a Kijelzők panelen", "a(z) %@ panel", as macOS ("az Általános panelen").
 
 ### The brand
 
@@ -110,6 +112,4 @@ Nouns after a number stay singular ("3 elem", "5 cella"), so the one/other plura
 | click | kattintás / kattintson |  |
 | Preview | Előnézet |  |
 | Update(s) / Check for Updates | frissítés(ek) / Frissítések keresése |  |
-| Try again / Retry (buttons, chips) | Próbálja újra | Apple's "Try Again"; one wording everywhere; "Újrapróbálkozás" (90 pt) overflows the Mirror chip in a 2-cell card |
-| subject (of a photo, Remove background) | téma | Apple: "…megtartva a témát"; not "alany" |
-| guided tour (search keyword) | körbevezetés | not "túra" (= hike) |
+| Try again / Retry (buttons, chips) | Próbálja újra | Apple's "Try Again"; one wording everywhere (the chip, the banner and the card menu of a display that failed or stopped) |

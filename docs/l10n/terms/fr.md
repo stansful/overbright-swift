@@ -2,8 +2,10 @@
 
 Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the register, voice and
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
-deleted. Overbright’s own names are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they
-read “—”. `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
+deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
+Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
+are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+`scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
 
@@ -87,12 +89,11 @@ many (millions; same wording as other), other.
 | English | fr | Note |
 |---|---|---|
 | Overbright | Overbright | brand; masculine ("Garder Overbright ouvert", "Overbright est fermé") |
-| Preview (Settings stage) | Aperçu | "Aperçu : Overbright dit bonjour" |
-| click | cliquer / clic | Apple FR "Cliquez sur…"; "Ouvrir Overbright par : Clic" |
+| Preview | Aperçu |  |
+| click | cliquer / clic | Apple FR "Cliquez sur…" |
 | Shortcuts (Apple app) | Raccourcis | Apple’s name; a Shortcuts item = "raccourci" |
-| keyboard shortcut | raccourci clavier | always with "clavier" when ambiguous; Settings ▸ Keyboard section "Raccourcis clavier" |
-| launcher (search keyword) | lanceur |  |
-| Settings | Réglages | macOS 13+ wording ("Réglages…", "Réglages ▸ Clavier") |
+| keyboard shortcut | raccourci clavier | always with "clavier" when ambiguous (Overbright's Shortcuts pane holds key bindings) |
+| Settings | Réglages | macOS 13+ wording ("Réglages…", "Réglages ▸ Général") |
 | Reset to Default | Rétablir la valeur par défaut |  |
 | Changed from the default | Modifié par rapport à la valeur par défaut |  |
 | Allow… / Grant… | Autoriser… |  |
@@ -101,10 +102,9 @@ many (millions; same wording as other), other.
 | Welcome | Bienvenue | "Bienvenue dans Overbright" |
 | Never (timeout 0) | Jamais |  |
 | Show … (switches) | Afficher … |  |
-| Done (editor / welcome button) | OK / Terminé | layout editor "OK" (Apple FR); welcome/tutorial closing "Terminé" |
+| Done (sheet / welcome button) | OK / Terminé | a sheet's Done (Acknowledgments) "OK" (Apple FR); Welcome's closing button "Terminé" |
 | Symbol | Symbole |  |
 | Login Items | Ouverture et extensions | Apple’s pane name in macOS 27 (Général ▸ Ouverture et extensions), always quoted in sentences; button « Ouvrir les réglages « Ouverture et extensions »… » (pattern of « Ouvrir les réglages Batterie »); footnotes « autorisez Overbright sous « Ouverture et extensions » dans Réglages Système »; the list inside is « Ouvrir avec la session » (« à la liste « Ouvrir avec la session » ») |
-| System Audio Recording | Enregistrement des sons du système | follows Apple’s pane « Enregistrement de l’écran et des sons du système » |
 | Launch / Open at login | Ouvrir avec la session | Apple’s "Open at Login" (Dock menu, Ouverture et extensions) |
 | Esc / Return / Space / Delete / Command | Échap / Retour / Espace / Supprimer / Commande | Apple FR key names in prose; key caps stay symbols |
 | Paused / Done states | En pause / Terminé |  |

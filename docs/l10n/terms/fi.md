@@ -2,8 +2,10 @@
 
 Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the register, voice and
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
-deleted. Overbright’s own names are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they
-read “—”. `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
+deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
+Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
+are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+`scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
 
@@ -13,11 +15,10 @@ labels and headers as nouns. Sentence case. Quotes ”…” (U+201D on both sid
 setting names inside sentences are quoted (”Vähennä läpinäkyvyyttä”), app names are not (Pikakomennot-appi).
 Ellipsis … (U+2026). Ranges and spaced dashes use the en dash (– ). Placeholders are never inflected: use
 “apissa %@”, “pikakomento %@”, “Avaa %@” or a colon (“Lisätty: %@”) instead of “%@:ssa”.
-Permission reasons (Permissions pane, onboarding step 5, Settings ▸ Calendar) describe what the access does, in the
-3rd person without a subject: “Näyttää tapahtumasi lovessa.”, “Korvaa järjestelmän … ilmaisimen.”, “Lukee, mitä
-toistetaan, …” — never an imperative addressed to the user (“Lue …”). Progress “X of Y” is “%1$lld / %2$lld”
+Footnotes that describe what a setting does are in the 3rd person without a subject (“Keskeyttää, kun akun varaus
+on alle 20 %.”) — never an imperative addressed to the user. Progress “X of Y” is “%1$lld / %2$lld”
 (Apple’s VoiceOver “Sivu %@ / %@”; “2/5” is read as a fraction). Clock times take “klo” in sentences
-(“päättyy klo 14.35”). “You can’t undo this.” = AppKit’s “Toimintoa ei voida perua.”
+(“jatkuu klo 7.00”). “You can’t undo this.” = AppKit’s “Toimintoa ei voida perua.”
 
 ### The brand
 

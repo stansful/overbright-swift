@@ -2,8 +2,10 @@
 
 Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the register, voice and
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
-deleted. Overbright’s own names are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they
-read “—”. `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
+deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
+Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
+are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+`scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
 
@@ -17,8 +19,8 @@ Register and typography (as macOS writes Thai):
 - Quotes “…” (secondary ‘…’), ellipsis … (U+2026), no straight quotes.
 - Buttons and menu items are bare verbs ("เปิด", "ยกเลิก", "ตรวจหารายการอัปเดต…"); Thai has no letter case, so the
   English title case/sentence case split disappears.
-- Number + classifier: "%lld รายการ", "%lld ช่อง", "%lld วัน". Thai has one plural form (other).
-- Apple's names come from `apple-terms.py th` (System Settings panes, privacy services, apps, sounds).
+- Number + classifier: "%lld รายการ", "%lld จอ", "%lld วัน". Thai has one plural form (other).
+- Apple's names come from `apple-terms.py th` (System Settings panes, apps).
 - "Overbright" is never translated or transliterated.
 
 ## Apple names (`apple-terms.py th` on macOS 27.0.1 — never paraphrased)
@@ -101,8 +103,7 @@ Register and typography (as macOS writes Thai):
 | keyboard shortcut | ปุ่มลัด | Apple: Keyboard Shortcuts = ปุ่มลัดแป้นพิมพ์ |
 | click / press (key) | คลิก / กด |  |
 | Never (timeout 0) | ไม่เลย | Apple's term |
-| Preview (noun) | ตัวอย่าง | "Notch preview" → "ตัวอย่างรอยบาก" |
+| Preview (noun) | ตัวอย่าง |  |
 | Launch at login / Open at login | เปิดเมื่อเข้าสู่ระบบ | Apple's term |
 | Login Items | รายการเข้าสู่ระบบ | glossary |
 | update / check for updates | อัปเดต / ตรวจหารายการอัปเดต | Apple's term; Update Available = มีรายการอัปเดต; Version %@ is available = เวอร์ชัน %@ พร้อมให้ใช้งานแล้ว (not “มีเวอร์ชัน %@ แล้ว”, which reads “you already have”) |
-| Remove background | เอาพื้นหลังออก | Apple Preview |

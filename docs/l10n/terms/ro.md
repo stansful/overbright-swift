@@ -2,19 +2,21 @@
 
 Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the register, voice and
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
-deleted. Overbright’s own names are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they
-read “—”. `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
+deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
+Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
+are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+`scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
 
 Register and typography: formal **dumneavoastră** ("dvs."), as macOS. Following Apple's Romanian macOS:
-**buttons, menu items, ⌘K commands and VoiceOver actions use the formal imperative** ("Deschideți", "Afișați",
+**buttons, menu items and VoiceOver actions use the formal imperative** ("Deschideți", "Afișați",
 "Adăugați", "Anulați"); **setting labels and switches use the verbal noun** ("Afișare ceas…" style: "Afișare
-pictogramă în bara de meniu", "Ascundere completate"); section headers and states are nouns or adjectives.
-Instructions to the user use the imperative ("Trageți fișierele…", "Faceți clic pe…", "Țineți cursorul…").
+pictogramă în bara de meniu"); section headers and states are nouns or adjectives.
+Instructions to the user use the imperative ("Trageți Overbright în dosarul Aplicații", "Faceți clic pe…").
 Sentence case everywhere (English Title Case menu items become "Căutați actualizări…"). Quotes „…” (secondary
 «…»), apostrophe ’, one-character ellipsis …, comma-below ș ț. Clitic hyphens are Apple's non-breaking hyphen
-U+2011 ("fixați‑l", "într‑un"), never in search keywords. Numbers, dates and durations come pre-formatted
+U+2011 ("activați‑l", "într‑un"), never in search keywords. Numbers, dates and durations come pre-formatted
 (Romanian ICU narrow: "4 m", "1 h 30 m"; "50 %"). Plural: one (1), few (0, 2–19, 101–119…), other (20+, with
 "de" before a noun: "20 de articole").
 
@@ -94,16 +96,15 @@ U+2011 ("fixați‑l", "într‑un"), never in search keywords. Numbers, dates a
 |---|---|---|
 | Overbright | Overbright | brand, uninflected; also the name of the open panel ("Deschideți Overbright", "Închideți Overbright" = close the panel) |
 | Quit Overbright | Închideți aplicația Overbright | Apple's "Închideți aplicația %@"; keeps Quit apart from Close |
-| Preview (Settings stage) | Previzualizare | "Previzualizare: Overbright salută" |
-| click | clic / faceți clic | Apple "Faceți clic pe…"; "Deschidere Overbright: Clic" |
+| Preview | Previzualizare |  |
+| click | clic / faceți clic | Apple "Faceți clic pe…" |
 | Shortcuts (Apple app) | Scurtături | Apple's name; one shortcut of the app = "scurtătură" |
 | keyboard shortcut | scurtătură din tastatură | Apple's wording; plain "scurtătură" where context is the keyboard |
-| launcher (search keyword) | lansator |  |
-| Settings | Configurări | Apple macOS 13+ ("Configurări…", "Configurări ▸ Permisiuni") |
+| Settings | Configurări | Apple macOS 13+ ("Configurări…", "Configurări ▸ General") |
 | Reset to Default | Resetați la valoarea implicită |  |
 | Changed from the default | Modificat față de valoarea implicită |  |
 | Allow… / Grant… | Permiteți… | Apple "Permiteți" |
-| Delete | Ștergeți | only for real deletion (notes, to-dos, pipelines, pages) |
+| Delete | Ștergeți | only for real deletion |
 | App not installed | Aplicație neinstalată |  |
 | Welcome | Bun venit | "Bun venit în Overbright" |
 | Never (timeout 0) | Niciodată |  |
@@ -111,7 +112,6 @@ U+2011 ("fixați‑l", "într‑un"), never in search keywords. Numbers, dates a
 | Symbol | Simbol |  |
 | Login Items | Lansare la login | Apple's pane name ("Deschideți „Lansare la login”…") |
 | Launch / Open at login | Deschidere la login | Apple "Deschideți la login" |
-| System Audio Recording | Înregistrare audio sistem | from Apple's "Înregistrare ecran și audio sistem" |
 | Esc / Return / Space / Delete / Command / Option | Esc / Retur / Spațiu / Delete / Comandă / Opțiune | Apple key names; key caps stay symbols |
-| Undo | Infirmați (button) · anula (running text) | Apple's Edit-menu word ("Infirmați %@") on the Tray chip and the Reset All banner; sentences say "Puteți anula acțiunea…", as Apple ro ("pentru a anula modificările") |
+| Undo | Infirmați (button) · anula (running text) | Apple's Edit-menu word ("Infirmați %@") on the Reset All banner; sentences say "Puteți anula acțiunea…", as Apple ro ("pentru a anula modificările") |
 | This action cannot be undone. | Această acțiune este ireversibilă. | Apple ro |

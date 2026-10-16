@@ -2,8 +2,10 @@
 
 Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the register, voice and
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
-deleted. Overbright’s own names are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they
-read “—”. `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
+deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
+Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
+are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+`scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
 
@@ -12,11 +14,11 @@ switches: **imperative first**, as Apple's Dutch macOS ("Open Overbright", "Stop
 "Toon symbool in menubalk", "Verminder beweging"). Dialog titles that ask: **infinitive at the end**
 ("Alle instellingen herstellen?", "‘%@’ verwijderen?"). Section headers, picker labels and statuses: nouns,
 adjectives or participles ("Duur", "Toegestaan", "Gepauzeerd"). Instructions and footnotes: imperative
-("Klik op de notch", "Sleep bestanden hierheen").
+("Klik op het symbool in de menubalk", "Sleep Overbright naar de map Apps").
 Typography: quotes ‘…’ (secondary “…”); macOS itself writes straight '…' in Dutch, Overbright uses the typographic
-ones. Apostrophe ’ ("agenda’s", "foto’s", "pagina’s"), one-character ellipsis …, sentence case. Compounds are
+ones. Apostrophe ’ ("foto’s", "video’s", "menu’s"), one-character ellipsis …, sentence case. Compounds are
 written together; a hyphen after names, abbreviations, digits and vowel clashes ("Overbright-paneel",
-"Bluetooth-apparaat", "zip-archief", "Live-visualisatie", "Muziek-app"). "&" in Apple pane names becomes "en"
+"HDR-video", "OLED-beeldscherm", "Foto’s-app"). "&" in Apple pane names becomes "en"
 as Apple writes it.
 
 ## Apple names (`apple-terms.py nl` on macOS 27.0.1 — never paraphrased)
@@ -90,7 +92,7 @@ as Apple writes it.
 | English | nl | Note |
 |---|---|---|
 | Overbright | Overbright | never translated; also the open panel ("Open Overbright", "Houd Overbright open") |
-| Shortcuts (Apple's app) · a shortcut in it | Opdrachten · opdracht | Settings pane "Opdrachten" |
+| Shortcuts (Apple's app) · a shortcut in it | Opdrachten · opdracht | Apple's name |
 | keyboard shortcut | toetscombinatie | never "opdracht" (= Shortcuts app) |
 | Reset to Default | Herstel standaardwaarde | a restore, close to Apple’s ‘Herstel standaardinstelling’; every other Reset is ‘Stel opnieuw in’ |
 | Changed from the default | Afwijkend van standaardwaarde |  |
@@ -100,6 +102,6 @@ as Apple writes it.
 | Welcome / setup | Welkom / configuratie | "Sla configuratie over" |
 | Never (timeout 0) · Off | Nooit · Uit |  |
 | Show … (switches) | Toon … |  |
-| Remove (from a list) · Delete | Verwijder uit … · Verwijder | "Verwijder uit lade", "Verwijder %@ uit lijst" |
+| Remove (from a list) · Delete | Verwijder uit … · Verwijder | "Verwijder %@ uit lijst" |
 | App not installed | App niet geïnstalleerd |  |
 | Symbol | Symbool |  |

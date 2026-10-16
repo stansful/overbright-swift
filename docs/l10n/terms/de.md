@@ -2,18 +2,20 @@
 
 Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the register, voice and
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
-deleted. Overbright’s own names are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they
-read “—”. `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
+deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
+Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
+are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+`scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
 
 Register: informal **du**, lowercase in running text ("dein", "deine Kamera"), as macOS since 2020.
 Buttons, menu items, commands and toggles: **infinitive at the end** ("Overbright beenden", "Nach Updates suchen …",
-"Symbol in der Menüleiste anzeigen"). Instructions and footnotes: **du-imperative** ("Klicke auf die Notch").
+"Symbol in der Menüleiste anzeigen"). Instructions and footnotes: **du-imperative** ("Klicke auf das Symbol in der Menüleiste").
 Typography: „…“ (secondary ‚…‘), apostrophe ’, ellipsis … preceded by a **no-break space** in menu items, buttons and
 progress text ("Einstellungen …", "Laden …") as AppKit/Finder write it; en dash with spaces " – " for a parenthetical
 dash (English "—"); "&" only where Apple uses it (pane names). Nouns capitalized; compounds with names take a hyphen
-("Overbright-Einstellungen", "Bluetooth-Gerät", "Live-Aktivitäten").
+("Overbright-Einstellungen", "HDR-Video", "OLED-Display").
 
 ## Apple names (`apple-terms.py de` on macOS 27.0.1 — never paraphrased)
 
@@ -86,9 +88,9 @@ dash (English "—"); "&" only where Apple uses it (pane names). Nouns capitaliz
 | English | de | Note |
 |---|---|---|
 | Overbright | Overbright | never translated; neuter when a pronoun is unavoidable ("es"); also the open panel ("Overbright öffnen") |
-| Shortcuts (Apple's app) · a shortcut in it | Kurzbefehle · Kurzbefehl | Settings pane "Kurzbefehle" |
+| Shortcuts (Apple's app) · a shortcut in it | Kurzbefehle · Kurzbefehl | Apple's name |
 | keyboard shortcut | Tastenkombination | never "Kurzbefehl" (= Shortcuts app) |
-| Try again / Retry | Wiederholen (Mirror chip, Calendar, Notes, To-dos – the standard German retry button) · Erneut versuchen (Media, whose Repeat is already „Wiederholen“; Quick Apps picker) |  |
+| Try again / Retry | Wiederholen | the standard German retry button: the chip, the banner and the card menu of a display that failed or stopped |
 | Reset to Default | Auf Standard zurücksetzen |  |
 | Changed from the default | Vom Standard abweichend |  |
 | Allow… / Grant… | Erlauben … |  |
@@ -96,7 +98,7 @@ dash (English "—"); "&" only where Apple uses it (pane names). Nouns capitaliz
 | click | klicken |  |
 | Welcome / setup | Willkommen / Einrichtung |  |
 | Never (timeout 0) · Off | Nie · Aus |  |
-| Show … (toggles, buttons, actions) | … anzeigen | never bare „zeigen“ („Auf der Notch anzeigen“, „Tastenkombinationen anzeigen“) |
+| Show … (toggles, buttons, actions) | … anzeigen | never bare „zeigen“ („Symbol in der Menüleiste anzeigen“, „Willkommen anzeigen …“) |
 | Remove (from a list) · Delete | Entfernen · Löschen |  |
 | App not installed | App nicht installiert |  |
 | Symbol | Symbol |  |

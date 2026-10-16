@@ -2,27 +2,29 @@
 
 Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the register, voice and
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
-deleted. Overbright’s own names are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they
-read “—”. `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
+deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
+Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
+are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+`scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
 
 Register and style, as macOS writes Ukrainian (checked against this Mac's AppKit, Finder, Control Center,
 System Settings and Shortcuts loctables):
 
-- Formal **ви**, lowercase (ваш, ваші події).
-- **Commands** (buttons, menu items, ⌘K commands, VoiceOver actions): perfective infinitive, as Apple —
-  Відкрити, Скасувати, Вилучити, Скопіювати, Поширити…, Перейменувати, Закріпити.
-- **Settings switches and persistent options**: imperfective infinitive — Показувати…, Закривати…, Замінювати…,
+- Formal **ви**, lowercase (ваш, ваші дисплеї).
+- **Commands** (buttons, menu items, VoiceOver actions): perfective infinitive, as Apple —
+  Відкрити, Скасувати, Вилучити, Скопіювати, Призупинити.
+- **Settings switches and persistent options**: imperfective infinitive — Показувати…, Приховувати…,
   Відкривати під час входу в систему (Apple: “Open at Login”).
 - **Instructions in sentences**: imperative, ви-form — Клацніть, Перетягніть, Спробуйте ще раз, Утримуйте ⌘.
-- **Statuses**: impersonal passive — Дозволено, Заборонено, Зʼєднано, Призупинено, Не збережено.
+- **Statuses**: impersonal passive — Призупинено, Скопійовано, Не збережено.
 - Sentence case. Apple buttons: Скасувати (Cancel), Готово (Done), Продовжити, Назад, Пропустити, Зберегти,
   Видалити (Delete), Вилучити (Remove), Відмінити (Undo), Скинути (Reset), Вибрати… (Choose…), Пізніше.
 - Typography: quotes «…» (secondary „…“); apostrophe **ʼ (U+02BC)** as macOS (обʼєкт, памʼять, зʼєднано);
   one-character ellipsis …; spaced en dash – or em dash — as in the source; ▸ for paths.
 - Names are not declined: a free name or app name goes in « » after a noun that takes the case
-  (програма «Музика», віджет «Нотатки», сторінка «%@»), as Apple does (“Програма «%@» зможе…”).
+  (програма «Фотографії», дисплей «%@»), as Apple does (“Програма «%@» зможе…”).
 - **Overbright** is never translated or declined; sentences are turned so it stays in the nominative or after a
   noun/preposition that leaves it unchanged (Відкрити Overbright, у Overbright, для Overbright, Overbright не бачить…).
   Verbs agree with Overbright as masculine (Overbright закрився), as in the Russian reference.
@@ -99,9 +101,9 @@ System Settings and Shortcuts loctables):
 | English | uk | Note |
 |---|---|---|
 | Overbright | Overbright | never translated or transliterated; also the open panel (“Відкрити Overbright”) |
-| Preview (Settings stage) | Попередній перегляд | stage label; short form “Перегляд” not used |
-| Settings (Overbright) | Параметри | Apple's “Settings…” = “Параметри…”; panes: Загальні, Вигляд, Клавіатура, Жести, Дозволи, Про програму |
-| Allow… / Grant… | Дозволити… | Apple's TCC button “Дозволити” |
+| Preview | Попередній перегляд | short form “Перегляд” not used |
+| Settings (Overbright) | Параметри | Apple's “Settings…” = “Параметри…”; Apple's “Загальні” for General; Overbright's other pane names are WP15's |
+| Allow… / Grant… | Дозволити… | Apple's button “Дозволити” |
 | Reset to Default | Скинути до типового значення | default = типовий (Apple: Restore Defaults = “Відновити типові”) |
 | Changed from the default | Змінено порівняно з типовим значенням |  |
 | Welcome | Вітаємо в Overbright | window title |
@@ -109,9 +111,8 @@ System Settings and Shortcuts loctables):
 | Shortcuts (Apple app) | «Команди» | Finder's display name; bundle name “Швидкі команди” |
 | Never (a timeout of 0) | Ніколи |  |
 | Off (an option) | Вимк. | Apple segment style; VoiceOver values: вимкнено / увімкнено |
-| Remove (from a list) | Вилучити | Apple; “Видалити” only for Delete (notes, to-dos, pipelines) and Strip metadata |
+| Remove (from a list) | Вилучити | Apple; “Видалити” only for Delete |
 | App not installed | Програму не встановлено |  |
-| System Audio Recording | Записування системного звуку | Apple |
 | Login Items | Автозапуск | Apple |
 | pre-release | тестова версія | “Включно з тестовими версіями”; “попередня версія” means *previous* |
 | When Overbright quits | До завершення роботи Overbright | Apple: “до завершення її роботи” |

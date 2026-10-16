@@ -2,8 +2,10 @@
 
 Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the register, voice and
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
-deleted. Overbright’s own names are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they
-read “—”. `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
+deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
+Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
+are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+`scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
 
@@ -11,29 +13,16 @@ Register and typography (as macOS writes Vietnamese):
 
 - Neutral, polite register; "bạn" for "you", used sparingly as Apple does. No "quý khách", no particles (nhé, ạ).
 - Sentence case everywhere. Apple's names and Overbright's own named features keep their initial capital
-  mid-sentence, as Apple does with "Chuyển vào Thùng rác", "trong Trung tâm điều khiển": "Giữ trong Khay",
-  "trang Trang chủ", "tiện ích Gương".
-- Buttons and menu items are bare imperative verbs ("Mở", "Hủy", "Thêm trang", "Kiểm tra bản cập nhật…");
-  status words are adjectives/participles with "Đã" where Apple does ("Đã cho phép", "Đã kết nối").
+  mid-sentence, as Apple does with "Chuyển vào Thùng rác", "trong Trung tâm điều khiển".
+- Buttons and menu items are bare imperative verbs ("Mở", "Hủy", "Kiểm tra bản cập nhật…");
+  status words are adjectives/participles with "Đã" where Apple does ("Đã tạm dừng", "Đã sao chép").
 - Apple's diacritic placement: hóa, khóa, hủy, thủy (not hoá, khoá, huỷ).
 - Quotes “…” (secondary ‘…’), ellipsis … (U+2026), no straight quotes. Apple setting names and Overbright row names
-  inside a sentence go in “…”; pane paths keep the arrow: "Cài đặt ▸ Bàn phím".
-- Vietnamese has no grammatical plural: the single plural form "other" holds every count ("%lld mục", "%lld ô").
+  inside a sentence go in “…”; pane paths keep the arrow: "Cài đặt ▸ Cài đặt chung".
+- Vietnamese has no grammatical plural: the single plural form "other" holds every count ("%lld mục", "%lld màn hình").
 - Numbers, durations, dates arrive formatted (vi narrow duration: "4ph", "1g 5ph").
 - "Overbright" is never translated or transliterated; it takes no inflection in Vietnamese.
 
-Verified with vi imported: FlashLabelFitTests, BandCopyTests,
-FeaturedRowTests, the header tab test and the longest tutorial bubble pass for vi; `lint-copy.py` and
-`validate.py vi --catalogs` pass. The 6 remaining validator warnings are words macOS keeps in Vietnamese
-(Camera, the alert sounds Boop / Pong / Sonumi, "video").
-
-Independent review (2026-10-14): 45 strings changed.
-Kept after review: notch = "tai thỏ" (the word Vietnamese users and tech press use for the camera cut-out; "phần
-khuyết" / "vùng camera" read as descriptions, not a name); keyboard shortcut = "tổ hợp phím" next to Apple's
-"Phím tắt" app (Overbright has both a Keyboard pane and a Shortcuts pane, so the split is needed); Quick Apps tile =
-"mục"; Copied = "Xong" (ruling E4, the copy glyph carries "copied"); Join capsule = "Vào"; "Ngày mai %@"; sample
-names (Lan, Nam, "Giao ban nhóm", "Thống nhất lộ trình"). Accent and tile colour names (Lam, Lục, Tía, Than chì,
-Bạc hà, Nâu, Xám) are Apple's (AppKit AccentColorNames / HighlightColorNames / MenuCommands loctables).
 
 ## Apple names (`apple-terms.py vi` on macOS 27.0.1 — never paraphrased)
 
@@ -110,7 +99,7 @@ Bạc hà, Nâu, Xám) are Apple's (AppKit AccentColorNames / HighlightColorName
 | Reset to Default | Đặt lại về mặc định | Apple's term |
 | Changed from the default | Đã thay đổi so với mặc định |  |
 | App not installed | Ứng dụng chưa được cài đặt |  |
-| Shortcuts (Apple's app) / a shortcut in it | Phím tắt / phím tắt | glossary; "ứng dụng Phím tắt" where ambiguous ("Ứng dụng Phím tắt không khả dụng…"). Likewise "ứng dụng Nhạc" in running text and the usage description ("cho Nhạc" reads as "for music") |
+| Shortcuts (Apple's app) / a shortcut in it | Phím tắt / phím tắt | glossary; "ứng dụng Phím tắt" where ambiguous ("Ứng dụng Phím tắt không khả dụng…") |
 | keyboard shortcut | tổ hợp phím | kept apart from the Shortcuts app, whose Vietnamese name is also "Phím tắt" |
 | click / press (key) | bấm / nhấn | Apple: Click = Bấm |
 | Never (timeout 0) | Không bao giờ |  |

@@ -2,8 +2,10 @@
 
 Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the register, voice and
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
-deleted. Overbright’s own names are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they
-read “—”. `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
+deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
+Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
+are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+`scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
 
@@ -13,9 +15,9 @@ Register and style, checked against the Catalan strings of macOS 27 on this Mac 
   singular**, as macOS writes them: "Obre", "Tanca", "Afegeix", "Mostra…", "Oculta…", "Cancel·la", "Continua",
   "Desa", "Omet", "Torna‑ho a provar", "Fet". VoiceOver hints are 3rd person ("Obre la configuració del sistema").
 - Sentence case everywhere (also menus: "Cerca actualitzacions…", "Surt del Overbright").
-- Apostrophe ’ (U+2019): l’osca, d’Apple. Quotes “…” (secondary ‘…’). Ellipsis … (U+2026). Geminated l·l (U+00B7).
+- Apostrophe ’ (U+2019): l’app, d’Apple. Quotes “…” (secondary ‘…’). Ellipsis … (U+2026). Geminated l·l (U+00B7).
 - Pronoun hyphen as macOS writes it: non-breaking hyphen U+2011 ("Torna‑ho", "Uneix‑t’hi", "Mou‑te").
-- Product names take the article, as macOS does ("el Finder", "l’AirDrop", "el macOS", "el Mac"):
+- Product names take the article, as macOS does ("el Finder", "el Safari", "el macOS", "el Mac"):
   **el Overbright / del Overbright / al Overbright**. An app name in a placeholder: **l’app %@** (macOS: "l’app Música").
 - System Settings in prose is lowercase, as macOS: "a la configuració del sistema"; the button is
   "Obre la configuració del sistema"; a path keeps the names: "Privacitat i seguretat ▸ Accessibilitat".
@@ -24,8 +26,8 @@ Register and style, checked against the Catalan strings of macOS 27 on this Mac 
   "d’%lld" (d’1) is used in one-forms where the preposition elides.
 - Pre-formatted durations (%@ = "1 min", "1 minut", "1 h 20 min") never follow a verb that must agree with them
   ("Queden %@" is wrong at one minute) or a preposition that must elide ("de %@" is wrong before "1 min"). Use the
-  macOS patterns instead: "Restant: %@" (visible), "Temps restant: %@" (VoiceOver), "%@ per acabar" (meetings),
-  "%@ després" (picker "After %@"), "Inicia un temporitzador: %@".
+  macOS patterns instead: "Restant: %@" (visible), "Temps restant: %@" (VoiceOver), "%@ després" (picker
+  "After %@").
 - A settings pane in running text is a "secció" (macOS: "a la secció Pantalles de la configuració del sistema").
 - Key names in running text as macOS writes them: "la tecla d’opció", "la tecla d’ordre + fletxa amunt",
   "la barra espaiadora", "la tecla de retorn", "la tecla de supressió"; a shortcut hint is "Opció + 1".
@@ -103,14 +105,14 @@ _Reviewed 2026-10-14 (independent review): rows marked ★ changed or were added
 |---|---|---|
 | Overbright | el Overbright | never translated; masculine with article: "Obre el Overbright", "Surt del Overbright" |
 | Shortcuts (Apple app) · a shortcut | Dreceres (l’app Dreceres) · drecera | macOS name |
-| keyboard shortcut | drecera de teclat / drecera | Settings ▸ Keyboard section "Dreceres de teclat" |
-| Settings (Overbright) | Configuració | "Configuració ▸ Permisos" |
+| keyboard shortcut | drecera de teclat / drecera | macOS: Teclat ▸ "Dreceres de teclat"; the bindings in Overbright's Shortcuts pane |
+| Settings (Overbright) | Configuració | "Configuració ▸ General" |
 | About (pane) · About Overbright (menu) | Informació · Sobre el Overbright | macOS: "Informació", "Sobre el Mail" |
 | Reset to Default | Restableix el valor per omissió |  |
 | Changed from the default | Canviat respecte del valor per omissió |  |
 | Allow… / Grant… | Permet… |  |
 | Preview | Previsualització |  |
-| click | fer clic | "Fes clic a l’osca" |
+| click | fer clic | "Fes clic a la icona de la barra de menús" |
 | Never (timeout 0) | Mai |  |
 | Symbol | Símbol |  |
 | Login Items | Ítems d’inici de sessió | macOS |

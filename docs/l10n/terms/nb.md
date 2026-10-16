@@ -2,8 +2,10 @@
 
 Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the register, voice and
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
-deleted. Overbright’s own names are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they
-read “—”. `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
+deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
+Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
+are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+`scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
 
@@ -12,25 +14,24 @@ Register: informal **du**, sentence case everywhere (also menu items and buttons
 **imperative** (Åpne, Legg til, Fjern, Vis, Skjul), as Apple’s Norwegian System Settings does (“Vis prosent”,
 “Skjul og vis Dock automatisk”). Quotes «…» (inner ‘…’), apostrophe ’, ellipsis … glued to the word
 (“Innstillinger…”), spaced en dash “ – ” in running text. Conservative bokmål forms as Apple uses them
-(“menylinjen”, “hyllen”, “Macen”). Errors in Apple’s style: “Kunne ikke …” / “Kan ikke …”. Units: min, t
+(“menylinjen”, “skjermen”, “Macen”). Errors in Apple’s style: “Kunne ikke …” / “Kan ikke …”. Units: min, t
 (time), sek, pkt. (points), px. Genitive of the name: “Overbrights” (no apostrophe). Overbright is “den” (appen);
-adjectives in common gender (“Overbright, lukket”). Compounds with a name take a hyphen (“Bluetooth-enheter”,
-“Overbright-vinduet”, “zip-arkiv”).
+adjectives in common gender (“Overbright, lukket”). Compounds with a name take a hyphen (“HDR-video”,
+“Overbright-vinduet”, “OLED-skjerm”).
 
 
 ### Style notes
 
-- Permission reasons (Permissions pane, onboarding) are descriptive present tense: “Viser hendelsene dine i Overbright.”,
-  “Styrer avspillingen …”, “Erstatter systemets …” — never a bare imperative that reads like an order to the user.
-- No comma between two imperatives joined by “og/eller” (“Klikk her eller trykk”, “Fest den med festeknappen og trykk
-  så Esc”); a comma after a subordinate clause in mid-sentence (“Apper som ikke er installert, blir værende her”).
-- Questions in alerts start with “Vil du …?” (“Vil du slette «%@»?”, “Vil du nullstille alle innstillinger?”).
-- Apple’s app names are not quoted (“Åpne i Kalender”, “Musikk og Spotify”); names of settings and Overbright rows are
-  quoted when they sit in running text («Reduser bevegelse», «Bli med», «Legg på hyllen»).
-- Widget names compound with a hyphen: “Speil-widgeten”, “%@-widgeten”, “Hylle-siden”.
-- Keyboard navigation is «Gå mellom …» (“Gå mellom widgeter”); «Flytt …» is only for really moving something
+- Footnotes that say what a setting does are descriptive present tense (“Settes på pause når batterinivået er under
+  20 %.”) — never a bare imperative that reads like an order to the user.
+- No comma between two imperatives joined by “og/eller” (“Klikk her eller trykk”, “Velg en skjerm og trykk
+  så Retur”); a comma after a subordinate clause in mid-sentence (“Apper som ikke er installert, blir værende her”).
+- Questions in alerts start with “Vil du …?” (“Vil du nullstille skjermfargene?”, “Vil du nullstille alle innstillinger?”).
+- Apple’s app names are not quoted (“Åpne Snarveier”, “Vis i Finder”); names of settings and Overbright rows are
+  quoted when they sit in running text («Reduser bevegelse», «Spareblussmodus»).
+- Keyboard navigation is «Gå mellom …» (“Gå mellom skjermer”); «Flytt …» is only for really moving something
   (“Flytt til venstre”, Apple’s “Flytt ett arbeidsområde til venstre”).
-- Purpose takes «brukes til» (“Brukes til fremdrift, ringer og brytere”), questions to a service «spørre om»
+- Purpose takes «brukes til» (“Brukes til videosamtaler”), questions to a service «spørre om»
   (“Spør GitHub om nye utgivelser”).
 - After «første/siste/neste» the noun is definite with its article: “det første objektet”.
 - A macOS shortcut name in a sentence is quoted like a Overbright one: “macOS bruker %1$@ for «%2$@».”
@@ -106,10 +107,10 @@ adjectives in common gender (“Overbright, lukket”). Compounds with a name ta
 | English | nb | Note |
 |---|---|---|
 | Overbright | Overbright | never translated; genitive “Overbrights”; “Åpne Overbright” |
-| Settings | Innstillinger | “Innstillinger ▸ Tastatur” |
-| Welcome / setup (first-run window) | velkomst | “Hopp over velkomsten”, “Vis velkomst”; never “oppsett”, which is the layout |
+| Settings | Innstillinger | “Innstillinger ▸ Generelt” |
+| Welcome / setup (first-run window) | velkomst | “Hopp over velkomsten”, “Vis velkomst” |
 | shortcut (Shortcuts app) | snarvei / snarveier | “Kjør «%@»”, “Legg til snarvei” |
 | keyboard shortcut | tastatursnarvei | “Trykk tastatursnarveien” |
 | Reset to Default · Changed from the default | Gjenopprett standard · Endret fra standard |  |
 | click | klikk / klikke (på) | Apple: “Klikk på …” |
-| Getting started · Acknowledgments | Kom i gang · Takk til |  |
+| Acknowledgments | Takk til |  |

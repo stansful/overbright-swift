@@ -2,26 +2,27 @@
 
 Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the register, voice and
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
-deleted. Overbright’s own names are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they
-read “—”. `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
+deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
+Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
+are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+`scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
 
 Register and style, as macOS writes Polish:
 
-- Informal **Ty**, with the polite forms capitalised as macOS does: Twój, Twoje, Twoich, Ci, Cię („Twoje wydarzenia”).
-- **Commands** (buttons, menu items, ⌘K commands): perfective imperative, 2nd person singular — Otwórz, Pokaż, Usuń, Dodaj, Zmień nazwę, Przypnij.
-- **Settings switches and persistent options**: imperfective imperative, as in System Settings — Pokazuj…, Ukrywaj…, Zastępuj…, Otwieraj podczas logowania.
+- Informal **Ty**, with the polite forms capitalised as macOS does: Twój, Twoje, Twoich, Ci, Cię („Twoje wyświetlacze”).
+- **Commands** (buttons, menu items): perfective imperative, 2nd person singular — Otwórz, Pokaż, Usuń, Dodaj, Wstrzymaj.
+- **Settings switches and persistent options**: imperfective imperative, as in System Settings — Pokazuj…, Ukrywaj…, Otwieraj podczas logowania.
 - **Progress / in-flight states**: 1st person present as macOS does — Wczytuję…, Sprawdzam…, Obliczam…; static statuses use nouns or participles (Uruchamianie, Działa, Wstrzymano).
 - Sentence case. Apple's standard buttons: Anuluj, Dalej, Wróć, Pomiń, Gotowe, Zachowaj (Save), Wyzeruj (Reset), Przywróć domyślne.
 - Typography: „…” (secondary «…»), apostrophe ’, ellipsis …, en dash – with spaces; no-break space (U+00A0) after the one-letter words w, z, i, o, u, a (as macOS does: „w aplikacji”).
-- Placeholders are never declined: „aplikacja %@”, „w aplikacji %@”, „widżet %@”; the name is quoted „%@” when it is a free name (note, page, pane, widget) and left bare for app names and keys.
-- **Overbright** stays as written and is not declined; where a case ending would be needed, the sentence is turned (Otwórz Overbright, w Overbright, aplikacja Overbright, Witaj w Overbright). Overbright is masculine wherever an adjective, participle or pronoun agrees with it („Overbright jest otwarty”, „przypnij go”, „Aby Overbright otwierał się…”).
-- **Spelled-out durations** (VoiceOver and the Media picker get „1 minuta”, „4 minuty”, „5 minut” in the nominative): put them only after a colon („pozostało: %@”, „minęło: %@”, „Ustawiono: %@”), after „jeszcze”, or before „później”; never after „za”, „na”, „po” or „przez”, which need another case („za 1 minuta” is wrong). The short forms in the widget and band („4 min”) may follow „Za”.
+- Placeholders are never declined: „aplikacja %@”, „w aplikacji %@”, „wyświetlacz „%@””; the name is quoted „%@” when it is a free name (a display, a pane, a shortcut) and left bare for app names and keys.
+- **Overbright** stays as written and is not declined; where a case ending would be needed, the sentence is turned (Otwórz Overbright, w Overbright, aplikacja Overbright, Witaj w Overbright). Overbright is masculine wherever an adjective, participle or pronoun agrees with it („Overbright jest otwarty”, „włącz go”, „Aby Overbright otwierał się…”).
+- **Spelled-out durations** (VoiceOver gets „1 minuta”, „4 minuty”, „5 minut” in the nominative): put them only after a colon („pozostało: %@”, „minęło: %@”, „Ustawiono: %@”), after „jeszcze”, or before „później”; never after „za”, „na”, „po” or „przez”, which need another case („za 1 minuta” is wrong). The short forms („4 min”) may follow „Za”.
 - **Purpose clauses**: „Aby + bezokolicznik” only when the main clause has the same subject; otherwise „Aby Overbright otwierał się…, aplikacja musi…”.
 - **„nigdy” always takes „nie”** with its verb, also in elliptical clauses („…i nigdy nie robi tego podczas pisania”).
-- **Toggles vs. buttons**: a toggle that names a state uses a noun or participle („Odwrócony kierunek”, „Odbicie lustrzane”), a toggle that names a behaviour the imperfective („Pokazuj…”); one-off buttons the perfective („Przetestuj wykrywanie multimediów”, „Sprawdź teraz”).
-- **Drag vs. drop**: „Przeciągnij pliki na wycięcie” when nothing is being dragged (empty states, tutorial); „Upuść…” in the catch state and on drop zones, where the files are already in hand.
+- **Toggles vs. buttons**: a toggle that names a state uses a noun or participle, a toggle that names a behaviour the imperfective („Pokazuj…”); one-off buttons the perfective („Sprawdź teraz”).
 
 ## Apple names (`apple-terms.py pl` on macOS 27.0.1 — never paraphrased)
 
@@ -94,9 +95,9 @@ Register and style, as macOS writes Polish:
 | English | pl | Note |
 |---|---|---|
 | Overbright | Overbright | never translated or transliterated; also the open panel („Otwórz Overbright”) |
-| Preview (Settings stage) | Podgląd |  |
-| Settings (Overbright) | Ustawienia | panes: Ogólne, Wygląd, Klawiatura, Gesty, Uprawnienia, Informacje |
-| Allow… / Grant… | Pozwól… | Apple's TCC button „Pozwól” |
+| Preview | Podgląd |  |
+| Settings (Overbright) | Ustawienia | Apple's „Ogólne” for General; Overbright's other pane names are WP15's |
+| Allow… / Grant… | Pozwól… | Apple's button „Pozwól” |
 | Reset to Default | Przywróć wartość domyślną | row menu |
 | Changed from the default | Zmieniono względem wartości domyślnej |  |
 | Welcome (window) | Witaj w Overbright |  |
@@ -106,5 +107,5 @@ Register and style, as macOS writes Polish:
 | Option key | klawisz Option („Przytrzymaj klawisz Option”) | ⌥ symbol stays a symbol |
 | Launch at login | Otwieraj podczas logowania | Apple's term; Login Items = „Rzeczy otwierane podczas logowania” |
 | updates | uaktualnienia | Apple's word („Sprawdź uaktualnienia…”) |
-| Remove (from a list) | Usuń z listy / Usuń z półki / Usuń z szybkich aplikacji | never just „Usuń aplikację” (reads as uninstall) |
+| Remove (from a list) | Usuń z listy | never just „Usuń aplikację” (reads as uninstall) |
 | App not installed | Aplikacja nie jest zainstalowana |  |

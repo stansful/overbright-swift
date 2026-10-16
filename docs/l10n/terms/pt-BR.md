@@ -2,8 +2,10 @@
 
 Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the register, voice and
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
-deleted. Overbright’s own names are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they
-read “—”. `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
+deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
+Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
+are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+`scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
 
@@ -13,32 +15,30 @@ read on this Mac). Brazilian vocabulary only: arquivo, tela, câmera, app, apaga
 
 ### Voice and typography
 
-- **você**, as macOS ("seus eventos", "Clique…", "Arraste…"). Instructions to the user: imperative with você
-  forms (Clique, Arraste, Solte, Pressione, Mantenha pressionada, Deixe o ponteiro…).
+- **você**, as macOS ("suas telas", "Clique…", "Arraste…"). Instructions to the user: imperative with você
+  forms (Clique, Arraste, Pressione, Mantenha pressionada).
 - **Buttons, menu items, toggles, commands: infinitive** ("Abrir o Overbright", "Mostrar valor", "Buscar Atualizações…").
 - **Capitalization:** where English uses title case for standard macOS chrome (menu bar menu, AppKit-style buttons
-  such as "Check for Updates…", "Reset to Default", "Move Up"), follow Apple pt-BR title case: nouns, verbs and
-  adjectives capitalized, articles/prepositions lower case ("Buscar Atualizações…", "Mover para Cima",
-  "Redefinir para o Padrão", "Até Eu Retomar"). Everything else is sentence case, like the English source.
+  such as "Check for Updates…", "Reset to Default", "Move to Applications"), follow Apple pt-BR title case: nouns,
+  verbs and adjectives capitalized, articles/prepositions lower case ("Buscar Atualizações…", "Mover para
+  Aplicativos", "Redefinir para o Padrão"). Everything else is sentence case, like the English source.
 - Quotes “…” (secondary ‘…’), apostrophe ’, one-character ellipsis …. Apple names of settings and panes in running
   text are written as macOS writes them, without quotes ("em Privacidade e Segurança ▸ Acessibilidade"); Apple app
-  names that are also common words get "app" in front instead of quotes ("os apps Música e Spotify").
-  User content (note titles, app names passed as arguments) in “%@” where Apple quotes them.
+  names that are also common words get "app" in front instead of quotes ("os apps Fotos e Atalhos").
+  User content (display names, app names passed as arguments) in “%@” where Apple quotes them.
 - Errors: "Não foi possível…" (Apple pt-BR). Units: "min", "h", "ms", "px", "pt"; numbers/durations arrive formatted
   (pt-BR durations are "4min", "1h 30min").
-- Gender: **o Overbright** (masculine, like "o app"); **o macOS**; **o app / os apps**; **o Mac**; **o notch**;
-  **a Bandeja**; **o widget**.
-  Commands with the brand (menu items, buttons, ⌘K commands, shortcut names) have no article, as Apple pt-BR
-  ("Encerrar Safari" → "Encerrar Overbright", "Abrir Overbright", "Manter Overbright Aberto"); running text and row labels take
-  it ("o Overbright mostra…", "Sobre o Overbright", row label "Abrir o Overbright"). The welcome cheat sheet lists commands, so
-  no article there either ("Abrir ou fechar Overbright", "Fechar Overbright", "Manter Overbright aberto").
+- Gender: **o Overbright** (masculine, like "o app"); **o macOS**; **o app / os apps**; **o Mac**.
+  Commands with the brand (menu items, buttons, shortcut names) have no article, as Apple pt-BR
+  ("Encerrar Safari" → "Encerrar Overbright", "Abrir Overbright"); running text and row labels take
+  it ("o Overbright mostra…", "Sobre o Overbright", row label "Abrir o Overbright").
 - Confirmation messages and footnotes about what an action will do use the **future** ("Todos os ajustes do Overbright
-  voltarão ao padrão", "As cópias … serão apagadas", "Notas, tarefas e arquivos da Bandeja serão mantidos").
+  voltarão ao padrão", "Cada tela voltará ao seu perfil de cor").
 - Key combinations as Apple pt-BR writes them, with " + ": "Option + 1", "Command + Seta para Cima"; key names
   Option, Command, Shift, Return, Esc, Delete, Espaço (Spotlight pane), "Mantenha Option pressionada".
 - Plurals: pt = one / many / other. **one covers 0 and 1** (Apple pt-BR also writes the singular there:
   "%d item"); **many** (millions) always has the same wording as other. The singular for 0 is the normative
-  Brazilian rule (numbers below 2 take the singular: "zero hora", "zero grau"), so "0 dia" / "0 célula livre" are
+  Brazilian rule (numbers below 2 take the singular: "zero hora", "zero grau"), so "0 dia" / "0 tela" are
   correct and stay; no key is reworded to dodge it.
 
 ## Apple names (`apple-terms.py pt-BR` on macOS 27.0.1 — never paraphrased)
@@ -113,11 +113,11 @@ read on this Mac). Brazilian vocabulary only: arquivo, tela, câmera, app, apaga
 |---|---|---|
 | Overbright | Overbright | never translated; masculine ("o Overbright"); also the open panel ("Abrir Overbright") |
 | click | clicar / clique | Apple pt-BR |
-| keyboard shortcut | atalho de teclado (short: atalho) | Apple: "Atalhos de Teclado…"; Settings ▸ Keyboard section = "Atalhos de teclado" |
-| Shortcuts (Apple's app) | Atalhos | an item of it = atalho; Overbright's pane named after it = "Atalhos" |
+| keyboard shortcut | atalho de teclado (short: atalho) | Apple: "Atalhos de Teclado…"; the key bindings in Overbright's Shortcuts pane |
+| Shortcuts (Apple's app) | Atalhos | an item of it = atalho |
 | Welcome | boas-vindas | window title "Boas-vindas ao Overbright" (Apple's current neutral form) |
-| Done (button) | OK | Apple pt-BR; Welcome's closing button (also VoiceOver's word for a finished step) = Concluído; Quick Apps flash = Pronto; Timer band = Fim |
+| Done (button) | OK | Apple pt-BR; Welcome's closing button (also VoiceOver's word for a finished step) = Concluído |
 | App not installed | App não instalado |  |
 | Reset to Default | Redefinir para o Padrão | "Alterado em relação ao padrão"; Reset = Redefinir |
-| Preview (Settings stage) | Pré-visualização | the Preview app is "Pré-Visualização" |
+| Preview | Pré-visualização | the Preview app is "Pré-Visualização" |
 | Undo / Cancel | Desfazer / Cancelar |  |

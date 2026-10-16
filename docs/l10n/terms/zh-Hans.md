@@ -2,8 +2,10 @@
 
 Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the register, voice and
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
-deleted. Overbright’s own names are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they
-read “—”. `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
+deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
+Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
+are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+`scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
 
@@ -12,12 +14,12 @@ Register and typography (as macOS 27 writes zh_CN):
 - 你, never 您. Buttons and menu items are short verb phrases without 请 (打开、添加、移除); sentences and
   instructions may use 请 sparingly (macOS: “若要节能，请点按‘还原’。”).
 - Full-width punctuation ，。：；？！（）; quotes “…” (secondary ‘…’); one-character ellipsis …; no exclamation marks.
-- No spaces between Chinese and Latin letters, numbers or placeholders: 打开Overbright、%lld格、版本%@、App管理.
+- No spaces between Chinese and Latin letters, numbers or placeholders: 打开Overbright、%lld台显示器、版本%@、App管理.
 - Apple's names come from the apple-terms glossary and are quoted in running text the way macOS does it:
-  “系统设置”>“键盘” → Overbright keeps its ▸: “设置”▸“权限”, “隐私与安全”▸“无障碍”.
+  “系统设置”>“键盘” → Overbright keeps its ▸: “设置”▸“通用”, “隐私与安全”▸“无障碍”.
 - click = 点按, double-click = 连按两次, drag = 拖移/拖到, swipe = 轻扫, hover = 悬停, pointer = 指针 (Apple's verbs).
 - Copy (to the pasteboard) = 拷贝 (macOS Edit ▸ 拷贝); 复制 is Duplicate and is not used.
-- No plural: the single category other holds every count; counters take a measure word (%lld个项目, %lld格, 剩余%lld项).
+- No plural: the single category other holds every count; counters take a measure word (%lld个项目, %lld台显示器, %lld天).
 
 Reviewed by an independent review pass; the rows above include its changes.
 
@@ -91,22 +93,20 @@ Reviewed by an independent review pass; the rows above include its changes.
 
 | English | zh-Hans | Note |
 |---|---|---|
-| Overbright | Overbright | never translated or transliterated; also the open panel (“打开Overbright”, “固定Overbright”) |
+| Overbright | Overbright | never translated or transliterated; also the open panel (“打开Overbright”, “退出Overbright”) |
 | Settings | 设置 |  |
 | Allow… / Grant… | 允许… |  |
 | Reset to Default | 恢复默认值 |  |
 | Changed from the default | 与默认值不同 | VoiceOver hint and tooltip of the dot (the translation always used this; the sheet said 已更改（非默认值）) |
-| Preview | 预览 | settings stage |
+| Preview | 预览 |  |
 | welcome / setup | 欢迎 / 设置向导 |  |
 | Never (timeout 0) | 永不 |  |
 | Off | 关闭 | Apple: 关闭 |
 | keyboard shortcut | 快捷键 |  |
 | shortcut (Shortcuts app item) / Shortcuts (app) | 快捷指令 / “快捷指令” | Apple's names |
-| Remove (from a list) | 移除 | 删除 only for really deleting (a note, a to-do, a pipeline) |
+| Remove (from a list) | 移除 | 删除 only for really deleting |
 | App not installed | App未安装 | never the bundle ID |
 | Symbol | 符号 |  |
 | Login Items | 登录项 | Apple |
-| System Audio Recording | 系统录音 | Apple (“录屏与系统录音”, “仅系统录音”) |
 | Undo | 撤销 | Apple |
 | Try again / Retry | 重试 | Apple |
-| Next to the original (Save results) | 原件所在位置 | permission prompts: 原文件所在的文件夹 |

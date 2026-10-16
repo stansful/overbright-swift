@@ -2,8 +2,10 @@
 
 Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the register, voice and
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
-deleted. Overbright’s own names are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they
-read “—”. `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
+deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
+Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
+are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+`scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
 
@@ -11,10 +13,10 @@ Register: informal **du**, sentence case everywhere — also menu items, buttons
 writes them (“Leta efter uppdateringar…”, “Avsluta Overbright”, “Visa i Finder”). Buttons, menu items and toggles in the
 **imperative** (Öppna, Lägg till, Ta bort, Radera, Visa, Pausa), as Apple’s Swedish System Settings does (“Visa i
 menyraden”, “Minska rörelse”). Status words standing alone take the neuter participle (“Kopierat”, “Pausat”,
-“Klart”) unless they describe a specific common-gender noun (timern är “Pausad”, “Klar”).
+“Klart”) unless they describe a specific common-gender noun (bildskärmen är “Pausad”).
 Typography: quotes ”…” (U+201D on both sides), inner ’…’, apostrophe ’, ellipsis …, spaced en dash “ – ” in running
 text (never the English em dash), no apostrophe in the genitive (“Overbrights”). Compounds with foreign names take a
-hyphen (“Bluetooth-enhet”, “Force Touch-styrplatta”, “Overbright-panelen”). Units: pt, px, ms, timer units tim/min/sek.
+hyphen (“HDR-video”, “OLED-skärm”, “Overbright-panelen”). Units: pt, px, ms, timer units tim/min/sek.
 Error lines in Apple’s style: “Det gick inte att …” / “Kunde inte …”. Overbright is “den” (en app) when a pronoun is
 needed, adjectives in common gender (“Overbright är öppen”).
 
@@ -99,4 +101,4 @@ needed, adjectives in common gender (“Overbright är öppen”).
 | Remove · Delete | Ta bort · Radera | Apple: Remove = Ta bort, Delete = Radera |
 | App not installed | Appen är inte installerad |  |
 | Preview | Förhandsvisning |  |
-| Done | Klar (buttons, timer) · Klart (Quick Apps wing flash) | Apple’s “Klar” button; impersonal flash |
+| Done | Klar | Apple’s “Klar” button |
