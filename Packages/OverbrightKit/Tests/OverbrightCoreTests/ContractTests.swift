@@ -107,6 +107,13 @@ import Testing
         #expect(Set(codes).isDisjoint(with: [28, 43, 47, 9, 2, 49]))
     }
 
+    /// Contract lane (WP0b): `UpdateChecking.repositoryURL` came after WP0a with a default, so existing conformers
+    /// (the preview fake) compile unchanged and offer no link.
+    @MainActor @Test func updateCheckingHasNoRepositoryPageByDefault() {
+        let updates: any UpdateChecking = PreviewUpdateChecking(isConfigured: true)
+        #expect(updates.repositoryURL == nil)
+    }
+
     @Test func machineIdentityRoundTripsAsJSON() throws {
         let machine = MachineIdentity(model: "Mac16,5", osBuild: "26A434", osMajor: 27, osMinor: 0, osPatch: 1)
         #expect(try JSONDecoder().decode(MachineIdentity.self, from: JSONEncoder().encode(machine)) == machine)
