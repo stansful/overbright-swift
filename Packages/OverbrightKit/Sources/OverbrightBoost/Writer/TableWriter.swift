@@ -134,9 +134,11 @@ public nonisolated final class TableWriter: Sendable {
     // MARK: Calibration and the safety queues
 
     /// Calibration: writes `factor` × the display's ledger baseline, refusing anything above `maxFactor` or the live
-    /// interlock (`factor ≤ 0.97 × H` of a fresh reading of the same display: the factor read as linear light, the most
-    /// conservative reading). The caller records the baseline in the ledger first (`SafetyLedger.markScaled`). A
-    /// factor of 1 writes the baseline and forgets the display.
+    /// interlock (`factor ≤ 0.97 × H` of a fresh reading of the same display). That bound reads the factor as linear
+    /// light, the least conservative reading (an encoded factor gives `F^γ ≥ F` of light): the calibration needs it for
+    /// its linear-confirmation frame at `F = 0.97 × H` (§5.2), and `maxFactor` bounds every other step of the sweep.
+    /// The caller records the baseline in the ledger first (`SafetyLedger.markScaled`). A factor of 1 writes the
+    /// baseline and forgets the display.
     public func writeCalibrationFactor(_ factor: Double, to display: DisplayRef, reading: HeadroomReading,
                                        maxFactor: Double) throws {
         guard factor.isFinite, factor > 0, factor <= maxFactor + Self.neutralTolerance else {
