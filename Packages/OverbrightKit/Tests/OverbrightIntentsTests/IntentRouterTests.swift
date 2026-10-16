@@ -124,6 +124,25 @@ import Testing
         #expect(signals.focusDirectives == [.on(level: LevelPreset.sunlight.position)])
     }
 
+    /// Every launch reads the Focus filter: that read is not a request, so it never marks an ordinary cold launch as
+    /// one made for an intent (the shell's launch UI, ARCHITECTURE.md §7.6). A Focus delivery and an intent are.
+    @Test func theLaunchReadIsNotARequestButIntentsAndFocusDeliveriesAre() async throws {
+        let router = IntentRouter(time: ManualTimeSource())
+        await router.applyLaunchFocus { .leaveAlone }
+        #expect(!router.wasRequestedBeforeConnection)
+        #expect(router.requestCount == 0)
+        router.focus(.off)
+        #expect(router.wasRequestedBeforeConnection)
+        #expect(router.requestCount == 1)
+        let (connectedRouter, _, _) = connected()
+        await connectedRouter.applyLaunchFocus { .off }
+        #expect(connectedRouter.requestCount == 0)
+        try await connectedRouter.turnOn()
+        try await connectedRouter.returnToStandard()
+        #expect(connectedRouter.requestCount == 2)
+        #expect(!connectedRouter.wasRequestedBeforeConnection)
+    }
+
     @Test func aFocusChangeDuringTheLaunchReadWins() async {
         let (router, _, signals) = connected()
         await router.applyLaunchFocus {
