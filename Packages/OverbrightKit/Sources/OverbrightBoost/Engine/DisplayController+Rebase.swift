@@ -123,7 +123,11 @@ extension DisplayController {
             // What is on screen now is WindowServer's table, not our scaling.
             resetApplied()
         } else if let adopted {
-            if isScaledOrDimmed {
+            if case .suspended = phase {
+                // A shielded display is neutral (§4.2, §4.5 invariant 6), even when its shield write failed and our
+                // scaled table is still on screen: the new base, never a scaled table (the linger retries it).
+                writeAdoptedBase(adopted)
+            } else if isScaledOrDimmed {
                 // WindowServer kept our table over the old curve: the same light on the new base is one write (the
                 // level does not change, only the curve under it).
                 _ = writeGain(appliedGain)

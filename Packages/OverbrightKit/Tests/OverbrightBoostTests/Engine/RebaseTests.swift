@@ -135,6 +135,28 @@ import Testing
         #expect(h.phase() == .suspended(.shielded))
     }
 
+    /// The lock's baseline write failed, so our scaled table is still on screen: a base event while shielded writes
+    /// the new base, never the new base × F (a shielded display is neutral, §4.5 invariant 6); the linger then
+    /// removes the trigger in order.
+    @Test func aRebaseWhileShieldedAfterAFailedShieldWriteWritesTheBase() async throws {
+        let h = EngineHarness()
+        await h.start()
+        #expect(await h.boost())
+        h.gamma.failNextWrite(with: .coreGraphics(code: 1000))
+        lock(h)
+        let locked = h.time.now
+        #expect(h.controller()?.isScaledOrDimmed == true && h.phase() == .suspended(.shielded))
+        h.gamma.changeBase(newBase, for: 1, appliesNow: false)
+        h.signals.emit(.colorProfileChanged)
+        await h.advance(.milliseconds(1_500))
+        let written = h.writes().filter { $0.time >= locked }.map(\.table)
+        #expect(!written.isEmpty && written.allSatisfy { $0.matches(newBase, tolerance: 1e-6) })
+        #expect(h.table() == newBase && h.controller()?.baseline == newBase)
+        #expect(h.phase() == .suspended(.shielded) && h.controller()?.isScaledOrDimmed == false)
+        await h.advance(.seconds(10))
+        #expect(h.liveTriggers().isEmpty && h.engine.ledger.entries().isEmpty && h.orderViolations.isEmpty)
+    }
+
     /// A base change while arming or gating: the gate's ramp multiplies the new base.
     @Test func rebaseWhileGating() async throws {
         let h = EngineHarness()
