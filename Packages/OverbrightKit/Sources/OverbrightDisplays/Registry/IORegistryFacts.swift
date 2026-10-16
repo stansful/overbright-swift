@@ -4,22 +4,28 @@
 import Foundation
 
 /// The built-in panel, every external panel with `DisplayAttributes`, whether Apple-silicon framebuffer services exist
-/// (the "no framebuffer service" virtual-display rule needs them), and the lid state.
+/// and how many external ones describe a display (the "no framebuffer service" virtual-display rule needs both), and
+/// the lid state.
 public nonisolated struct IORegistryFacts: Hashable, Sendable {
     /// The built-in panel; nil on Macs without one or when the keys are missing.
     public var builtIn: BuiltInPanelFacts?
-    /// One entry per external `IOMobileFramebufferShim` that carries `DisplayAttributes` (a connected display).
+    /// One entry per external `IOMobileFramebufferShim` whose `DisplayAttributes` name a product (a connected display).
     public var externals: [ExternalPanelFacts]
-    /// At least one `IOMobileFramebufferShim` service exists (Apple silicon). Only then does a missing service mark an
+    /// External `IOMobileFramebufferShim` services that carry a `DisplayAttributes` dictionary, parsed or not: the
+    /// connected displays with a real framebuffer (an idle display pipe has none).
+    public var attributedExternalCount: Int
+    /// At least one `IOMobileFramebufferShim` service exists (Apple silicon). Only then can a missing service mark an
     /// external display as virtual; an Intel Mac has none at all.
     public var hasFramebufferServices: Bool
     /// `IOPMrootDomain` ▸ `AppleClamshellState`: the lid is closed (nil on Macs without a lid).
     public var isClamshellClosed: Bool?
 
-    /// A snapshot with the given values.
+    /// A snapshot with the given values; `attributedExternals` defaults to one per parsed external.
     public init(builtIn: BuiltInPanelFacts? = nil, externals: [ExternalPanelFacts] = [],
-                hasFramebufferServices: Bool = false, isClamshellClosed: Bool? = nil) {
+                attributedExternals: Int? = nil, hasFramebufferServices: Bool = false,
+                isClamshellClosed: Bool? = nil) {
         self.builtIn = builtIn; self.externals = externals
+        attributedExternalCount = max(attributedExternals ?? externals.count, externals.count)
         self.hasFramebufferServices = hasFramebufferServices; self.isClamshellClosed = isClamshellClosed
     }
 

@@ -17,15 +17,20 @@ nonisolated enum DisplayFactsBuilder {
     /// lid is closed (clamshell: its panel is dark and macOS removes it from the online list moments later).
     static func facts(from raw: [RawDisplay], registry: IORegistryFacts) -> [DisplayFacts] {
         raw.filter { !isBehindClosedLid($0, registry: registry) }
-            .map { facts(for: $0, registry: registry) }
+            .map { facts(for: $0, among: raw, registry: registry) }
             .sorted { a, b in a.isBuiltIn != b.isBuiltIn ? a.isBuiltIn : a.ref.key < b.ref.key }
     }
 
-    /// One display's facts.
+    /// One display's facts, as if it were the only one online.
     static func facts(for raw: RawDisplay, registry: IORegistryFacts) -> DisplayFacts {
+        facts(for: raw, among: [raw], registry: registry)
+    }
+
+    /// One display's facts among the `online` displays (the framebuffer rule counts them).
+    static func facts(for raw: RawDisplay, among online: [RawDisplay], registry: IORegistryFacts) -> DisplayFacts {
         let external = raw.isBuiltIn ? nil : registry.external(vendor: raw.vendor, product: raw.model, serial: raw.serial)
         let builtIn = raw.isBuiltIn ? registry.builtIn : nil
-        let virtual = isVirtual(raw, external: external, registry: registry)
+        let virtual = isVirtual(raw, external: external, among: online, registry: registry)
         // An Apple XDR external's SDR maximum comes from the product, never from its frame average (§5.1).
         let xdr = raw.isBuiltIn || virtual ? nil : AppleXDRProducts.product(vendor: raw.vendor, product: raw.model)
         let potential = builtIn?.potentialHeadroom ?? raw.screen?.potential
@@ -64,11 +69,32 @@ nonisolated enum DisplayFactsBuilder {
     }
 
     /// Virtual (Sidecar, AirPlay, placeholder, a display without a real framebuffer): no transfer table
-    /// (capacity 0), a table that cannot be read, macOS's placeholder vendor, or, on a Mac with framebuffer services
-    /// (Apple silicon), an external display that no framebuffer service describes.
-    static func isVirtual(_ raw: RawDisplay, external: ExternalPanelFacts?, registry: IORegistryFacts) -> Bool {
-        if raw.gammaCapacity == 0 || !raw.tableReadable || raw.vendor == placeholderVendor { return true }
-        return !raw.isBuiltIn && registry.hasFramebufferServices && external == nil
+    /// (capacity 0), a table that cannot be read, macOS's placeholder vendor, or an external display that
+    /// `lacksFramebuffer`.
+    static func isVirtual(_ raw: RawDisplay, external: ExternalPanelFacts?, among online: [RawDisplay],
+                          registry: IORegistryFacts) -> Bool {
+        if isVirtualByCoreGraphics(raw) { return true }
+        return lacksFramebuffer(raw, external: external, among: online, registry: registry)
+    }
+
+    /// The CoreGraphics rules alone: no transfer table, an unreadable one, or the placeholder vendor.
+    static func isVirtualByCoreGraphics(_ raw: RawDisplay) -> Bool {
+        raw.gammaCapacity == 0 || !raw.tableReadable || raw.vendor == placeholderVendor
+    }
+
+    /// An external display that no framebuffer service describes, judged only when the IORegistry walk positively
+    /// shows one missing: framebuffer services exist (Apple silicon), the attributes parse on this macOS (at least one
+    /// external named its product), and fewer external framebuffers carry attributes than there are external displays
+    /// the CoreGraphics rules left standing. A renamed or missing key, or attributes that arrive after the display,
+    /// never make a real monitor virtual (it would lose boost and dimming); without the walk's evidence the display
+    /// counts as real (§9.2 rule 6).
+    static func lacksFramebuffer(_ raw: RawDisplay, external: ExternalPanelFacts?, among online: [RawDisplay],
+                                 registry: IORegistryFacts) -> Bool {
+        guard !raw.isBuiltIn, external == nil, registry.hasFramebufferServices, !registry.externals.isEmpty else {
+            return false
+        }
+        let candidates = online.filter { !$0.isBuiltIn && !isVirtualByCoreGraphics($0) }.count
+        return registry.attributedExternalCount < max(candidates, 1)
     }
 
     /// A member of a (hardware) mirror set that does not own the set's NSScreen: its own table, no headroom reading.

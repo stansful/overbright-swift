@@ -21,7 +21,7 @@ import Testing
         #expect(sidecar == expected.facts)
     }
 
-    @Test func eachVirtualRuleAloneMakesADisplayVirtual() {
+    @Test func eachVirtualRuleAloneMakesADisplayVirtual() throws {
         let msi = RawDisplayFixtures.msi()
         var noTable = msi
         noTable.gammaCapacity = 0
@@ -29,12 +29,59 @@ import Testing
         unreadable.tableReadable = false
         var placeholder = msi
         placeholder.vendor = DisplayFactsBuilder.placeholderVendor
-        var noFramebuffer = msi
-        noFramebuffer.vendor = 0x1E6D                                 // no attributes describe it
-        for raw in [noTable, unreadable, placeholder, noFramebuffer] {
+        for raw in [noTable, unreadable, placeholder] {
             #expect(DisplayFactsBuilder.facts(for: raw, registry: registry).panelClass == .virtualDisplay, "\(raw)")
         }
         #expect(DisplayFactsBuilder.facts(for: msi, registry: registry).panelClass != .virtualDisplay)
+        // No framebuffer: the MSI's attributes parse, and one framebuffer with attributes serves two external
+        // displays, so the one nothing describes has none (a software display with a real-looking vendor).
+        let facts = DisplayFactsBuilder.facts(from: [RawDisplayFixtures.builtIn(), msi, Self.unattributed],
+                                              registry: RawDisplayFixtures.ownerRegistry(extra: []))
+        #expect(try #require(facts.first { $0.ref.key == Self.unattributed.key }).panelClass == .virtualDisplay)
+        #expect(try #require(facts.first { $0.ref.key == msi.key }).panelClass == .oledExternal)
+    }
+
+    /// An external display with a real-looking vendor that no `DisplayAttributes` describe.
+    private static let unattributed = RawDisplay(
+        id: 7, key: DisplayKey(rawValue: "0B21E7F1-0000-4000-8000-000000000007"), isBuiltIn: false, gammaCapacity: 1024,
+        tableReadable: true, vendor: 0x1E6D, model: 0x5B8E, serial: 7, mirrorsDisplay: kCGNullDirectDisplay,
+        screen: RawDisplay.Screen(name: "Display", potential: 1, hasNotch: false))
+
+    /// The "no framebuffer" rule applies only on the walk's positive evidence (C-PLATFORM-4): a renamed or missing
+    /// key, or attributes that have not arrived, never turn a real monitor into a virtual display (no boost, no dim).
+    @Test func aMissingFramebufferNeedsTheWalksEvidence() throws {
+        let online = [RawDisplayFixtures.builtIn(), RawDisplayFixtures.msi()]
+        func msiClass(_ registry: IORegistryFacts) throws -> PanelClass {
+            let facts = DisplayFactsBuilder.facts(from: online, registry: registry)
+            return try #require(facts.first { $0.ref.key == DisplayFixture.Keys.mpg322ux }).panelClass
+        }
+        let builtIn = RawDisplayFixtures.ownerBuiltInPanel
+        // ProductAttributes renamed: the framebuffer carries attributes nothing can parse.
+        var renamed = OwnerIORegistry.msiDisplayAttributes
+        let attributes = renamed.removeValue(forKey: "ProductAttributes")
+        renamed["ProductInfo"] = attributes
+        #expect(ExternalPanelFacts.parse(displayAttributes: renamed) == nil)
+        let unparsed = IORegistryFacts(builtIn: builtIn, attributedExternals: 1, hasFramebufferServices: true)
+        #expect(try msiClass(unparsed) == .hdrExternal)                // NSScreen's potential 4.65, peak 465.49
+        // LegacyManufacturerID renamed: the attributes parse but describe no CoreGraphics vendor.
+        var noVendor = OwnerIORegistry.msiDisplayAttributes
+        var product = try #require(noVendor["ProductAttributes"] as? [String: Any])
+        let vendor = product.removeValue(forKey: "LegacyManufacturerID")
+        product["ManufacturerIDLegacy"] = vendor
+        noVendor["ProductAttributes"] = product
+        let vendorless = try #require(ExternalPanelFacts.parse(displayAttributes: noVendor))
+        #expect(vendorless.vendorID == nil)
+        #expect(try msiClass(IORegistryFacts(builtIn: builtIn, externals: [vendorless],
+                                             hasFramebufferServices: true)) != .virtualDisplay)
+        // Attributes not there yet: framebuffer services exist, but no external has any.
+        #expect(try msiClass(IORegistryFacts(builtIn: builtIn, hasFramebufferServices: true)) != .virtualDisplay)
+        // A framebuffer per external display: nothing is missing, whatever the matching says.
+        let both = IORegistryFacts(builtIn: builtIn, externals: [vendorless], attributedExternals: 2,
+                                   hasFramebufferServices: true)
+        let two = DisplayFactsBuilder.facts(from: online + [Self.unattributed], registry: both)
+        #expect(two.allSatisfy { $0.panelClass != .virtualDisplay })
+        // The owner's attributes as read: the MSI is paired and real.
+        #expect(try msiClass(RawDisplayFixtures.ownerRegistry()) == .oledExternal)
     }
 
     @Test func aMissingFramebufferServiceCountsOnlyOnAppleSilicon() {
