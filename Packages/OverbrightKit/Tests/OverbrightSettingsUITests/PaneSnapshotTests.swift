@@ -71,6 +71,40 @@ import Testing
         }
     }
 
+    /// Fill Light's three sliders share one track (DESIGN.md §7.2, §7.7): the same width at the same place, with Cool
+    /// and Warm under the warmth track rather than beside it (where they made it about 60 pt shorter). Read from the
+    /// rendered pane through the tracks' layout bounds.
+    @Test func fillLightSlidersShareOneTrack() throws {
+        final class Frames { var byTitle: [String: CGRect] = [:] }
+        let frames = Frames()
+        let services = OverbrightServices.preview()
+        let pane = SettingsPaneCatalog.view(for: .fillLight, services: services)
+            .environment(SettingsNavigator(target: "fillLight"))
+            .environment(ResetAllController(services: services))
+            .overlayPreferenceValue(SliderTrackBounds.self) { anchors in
+                GeometryReader { proxy in
+                    let _ = frames.byTitle = anchors.mapValues { proxy[$0] }
+                    Color.clear
+                }
+            }
+        _ = try ChromeSnapshot.render(pane, .light, size: Self.paneSize)
+        let tracks = [FillLightRows.width, FillLightRows.warmth, FillLightRows.brightness].compactMap { frames.byTitle[$0.title] }
+        try #require(tracks.count == 3, "tracks found: \(frames.byTitle.keys.sorted())")
+        #expect(Set(tracks.map { $0.width.rounded() }).count == 1, "track widths \(tracks.map(\.width))")
+        #expect(Set(tracks.map { $0.minX.rounded() }).count == 1, "track starts \(tracks.map(\.minX))")
+        #expect(tracks.allSatisfy { $0.width >= SettingsMetrics.sliderWidth.min })
+    }
+
+    /// The sliders settle on whole steps in the binding (they draw no tick marks); the default comes back exactly.
+    @Test func slidersSettleOnWholeSteps() {
+        #expect(SliderRow.snapped(49.9, step: FillLightPane.widthStep, in: FillLightPane.widthRange) == 48)
+        #expect(SliderRow.snapped(200, step: FillLightPane.widthStep, in: FillLightPane.widthRange) == 120)
+        #expect(SliderRow.snapped(0.79, step: FillLightPane.brightnessStep, in: FillLightPane.brightnessRange)
+                == FillLightSettings.brightness.defaultValue)                          // 0.8 exactly: no changed dot
+        #expect(SliderRow.snapped(0.01, step: FillLightPane.brightnessStep, in: FillLightPane.brightnessRange) == 0.2)
+        #expect(FillLightWarmthRow.snapped(0.401) == FillLightSettings.warmth.defaultValue)
+    }
+
     @Test(arguments: ChromeAppearance.allCases)
     func theCalibrationStepsRenderOnBlack(_ appearance: ChromeAppearance) throws {
         for (name, view) in Self.calibrationSteps() {

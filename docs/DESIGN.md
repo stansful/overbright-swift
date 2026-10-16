@@ -513,7 +513,7 @@ Every state below is a named status in PanelUI's `ScriptedStatuses` (`--qa-state
 
 ### 7.2 Conventions (Cranny's, carried over)
 
-- `Form { … }.formStyle(.grouped)`; `Toggle` with `.switch` and `.controlSize(.small)`; segmented pickers for ≤ 4 options, pop-ups otherwise; sliders always show their value with its unit and ticks at meaningful stops.
+- `Form { … }.formStyle(.grouped)`; `Toggle` with `.switch` and `.controlSize(.small)`; segmented pickers for ≤ 4 options, pop-ups otherwise; sliders always show their value with its unit and ticks at meaningful stops. As built (WP14): Settings' sliders (Fill Light's Width, Warmth and Brightness) have no stop worth a tick, so they draw none (a tick per step put 27 dots under Width); the value settles on whole steps, every track has the same width, and words for the ends sit under the track (Cool · Warm).
 - Every non-obvious row has a one-line footnote in `.secondary`.
 - A 6-pt accent dot before the label marks a changed value; every row with a value has **Reset to Default** in its context menu; every pane footer has **Reset ‹Pane›…** (confirmation §12.9); Reset All is in Advanced, destructive, confirmed, and undoable until the window closes.
 - **Search** matches pane names, row labels and keywords ("HDR", "XDR", "nits", "brighter", "dim", "battery", "shortcut", "camera", "login", "OLED", "flicker", "colors", "quit"); a result opens the pane, scrolls to the row and highlights it with an accent wash fading over 1 s. Deep links `pane#row` serve chips, banners, the menu and Help.
@@ -617,7 +617,7 @@ A preview at the top: a 200 × 125 pt miniature of the chosen display with the f
 | Fill Light | switch | off | — | "Lights your face on video calls with a glowing frame around the screen." |
 | Display | pop-up | Built-in Display (else the main display) | connected displays | — |
 | Width | slider + value | **48 pt** | 16–120 pt | — |
-| Warmth | slider (Cool ↔ Warm) + value | **5,100 K** | 6,500–3,000 K | — |
+| Warmth | slider + value, "Cool" and "Warm" under the track's ends | **5,100 K** | 6,500–3,000 K | — |
 | Brightness | slider + value | **80 %** | 20–100 % | "Uses the display's extra range when it has one, so the light can be brighter than white." |
 | Turn on while a camera is in use | switch | off | — | "Turns off a few seconds after the camera stops." |
 | Cameras | pop-up | Any camera | Any camera · Built-in and USB cameras only | "Virtual cameras and iPhone cameras count as Any camera." |
