@@ -6,6 +6,9 @@
 // frame in extended linear sRGB (no shader, no library). The host registers the card with `OwnEDRSurfaces` while it
 // shows it; the EDR layer hides itself whenever its window is not visible, so the card pauses while hidden.
 // `simulated` (QA, previews, snapshots) draws an SDR stand-in: the Standard side at 1 / gain of the light.
+// The divider moves by dragging, by VoiceOver's adjust actions and from the keyboard (DESIGN.md §15: every action has a
+// key path): the card is one focusable element with the Overbright focus ring, and ← / → move the divider by 10 %
+// toward the side they point at, mirrored right to left like the level slider's keys.
 import AppKit
 import Metal
 import OverbrightPolicy
@@ -18,8 +21,13 @@ public struct EDRPreviewSurface: View {
     private let gain: Double
     @Binding private var divider: Double
     private let simulated: Bool
+    private var focusesOnAppear = false
     @Environment(\.layoutDirection) private var direction
     @Environment(\.overbright) private var theme
+    @FocusState private var isFocused: Bool
+
+    /// One arrow-key step of the divider: 10 % of the card's width.
+    static let keyStep = 0.1
 
     /// - Parameters:
     ///   - gain: the light gain of the "after" part.
@@ -31,6 +39,21 @@ public struct EDRPreviewSurface: View {
 
     /// The Standard page's grey in the stand-in: the light of Standard relative to the brighter side, sRGB-encoded.
     public static func standInGrey(gain: Double) -> Double { FactorMath.encodeSRGB(1 / max(gain, 1)) }
+
+    /// The divider after a press of `key` from `divider` in a `direction` layout: ← and → move it 10 % toward the side
+    /// they point at (the divider is measured from the leading edge, so right to left → lowers it); nil for any other
+    /// key.
+    static func divider(after key: KeyEquivalent, from divider: Double, direction: LayoutDirection) -> Double? {
+        guard let step = direction.step(for: key) else { return nil }
+        return min(max(divider + Double(step) * keyStep, 0), 1)
+    }
+
+    /// The card with keyboard focus as soon as it appears (tests only: a window that is never ordered in gets no Tab).
+    func focusedOnAppear() -> EDRPreviewSurface {
+        var copy = self
+        copy.focusesOnAppear = true
+        return copy
+    }
 
     /// The card.
     public var body: some View {
@@ -55,13 +78,26 @@ public struct EDRPreviewSurface: View {
             })
         }
         .clipShape(RoundedRectangle(cornerRadius: Radius.card, style: .continuous))
+        // Inside the focusable element, `\.isFocused` is the card's own focus (the ring shows after keyboard use).
+        .overbrightFocusRing(cornerRadius: Radius.card)
+        .focusable()
+        .focusEffectDisabled()
+        .focused($isFocused)
+        .onKeyPress(keys: [.leftArrow, .rightArrow], phases: [.down, .repeat]) { press in
+            guard let next = Self.divider(after: press.key, from: divider, direction: direction) else {
+                return .ignored
+            }
+            divider = next
+            return .handled
+        }
+        .onAppear { if focusesOnAppear { isFocused = true } }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(verbatim: Self.dividerLabel()))
         .accessibilityValue(Text(verbatim: CopyFormat.percent(Int((min(max(divider, 0), 1) * 100).rounded()))))
         .accessibilityAdjustableAction { change in
             switch change {
-            case .increment: divider = min(divider + 0.1, 1)
-            case .decrement: divider = max(divider - 0.1, 0)
+            case .increment: divider = min(divider + Self.keyStep, 1)
+            case .decrement: divider = max(divider - Self.keyStep, 0)
             @unknown default: break
             }
         }
