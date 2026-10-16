@@ -52,3 +52,15 @@ struct DisplayLimitRow: View {
                comment: "Settings ▸ Displays: title of the question before the display switches to Peak; the argument is the display’s name")
     }
 }
+
+#Preview("Limit") {
+    let services = OverbrightServices.preview(fixture: .mpg322uxHDROn)
+    if let model = DisplaysPane.models(services: services).first {
+        let value = RowValue(DisplaysRows.limit(model.key, name: model.name), isDefault: { true }, reset: {})
+        Form { DisplayLimitRow(services: services, model: model, value: value) }
+            .formStyle(.grouped)
+            .environment(SettingsNavigator(target: "displays"))
+            .frame(width: 640, height: 160)
+            .overbrightThemeRoot()
+    }
+}

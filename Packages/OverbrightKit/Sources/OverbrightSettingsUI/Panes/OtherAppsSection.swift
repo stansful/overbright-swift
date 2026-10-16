@@ -88,3 +88,15 @@ private struct OtherAppRow: View {
         })
     }
 }
+
+#Preview("Other apps") {
+    let services = OverbrightServices.preview()
+    (services.signals as? FakeSystemSignals)?.snapshot.conflicts = [
+        ConflictingApp(entryID: "S2-preview", severity: .gammaWriter, bundleID: "com.apple.finder", processID: 1,
+                       displayName: "Finder"),
+    ]
+    return Form { OtherAppsSection(services: services, value: AdvancedPane.otherAppsValue(services)) }
+        .formStyle(.grouped)
+        .environment(SettingsNavigator(target: "advanced"))
+        .frame(width: 600, height: 200)
+}

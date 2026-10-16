@@ -50,3 +50,10 @@ struct ResetDisplayColorsRow: View {
         }
     }
 }
+
+#Preview("Reset Display Colors") {
+    Form { ResetDisplayColorsRow(services: .preview()) }
+        .formStyle(.grouped)
+        .environment(SettingsNavigator(target: "advanced"))
+        .frame(width: 600, height: 120)
+}

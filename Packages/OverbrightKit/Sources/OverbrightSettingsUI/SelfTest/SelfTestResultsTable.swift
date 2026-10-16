@@ -39,3 +39,13 @@ struct SelfTestResultsTable: View {
         }
     }
 }
+
+#Preview("Results table") {
+    SelfTestResultsTable(results: [
+        SelfTestStrategyResult(strategy: .taggedLayer, pixel: .black, verdict: .noEngage, baselineHeadroom: 1.2,
+                               secondsToFirstMovement: nil, secondsToStable: nil, heldFraction: 0, samples: []),
+        SelfTestStrategyResult(strategy: .taggedLayer, pixel: .bright, verdict: .held, baselineHeadroom: 1.2,
+                               secondsToFirstMovement: 0.4, secondsToStable: 1.6, heldFraction: 1, samples: []),
+    ])
+    .padding()
+}

@@ -224,3 +224,16 @@ struct DisplaySection: View {
         }
     }
 }
+
+#Preview("Display section") {
+    let services = OverbrightServices.preview()
+    Form {
+        ForEach(DisplaysPane.models(services: services), id: \.key) { model in
+            DisplaySection(services: services, model: model)
+        }
+    }
+    .formStyle(.grouped)
+    .environment(SettingsNavigator(target: "displays"))
+    .frame(width: 640, height: 600)
+    .overbrightThemeRoot()
+}

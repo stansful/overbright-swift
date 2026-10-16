@@ -164,3 +164,11 @@ private struct AddPausedAppMenu: View {
         }
     }
 }
+
+#Preview("Paused apps") {
+    let services = OverbrightServices.preview()
+    return Form { PausedAppsEditor(services: services, value: AutomationsPane.pausedAppsValue(services)) }
+        .formStyle(.grouped)
+        .environment(SettingsNavigator(target: "automations"))
+        .frame(width: 600, height: 700)
+}

@@ -47,3 +47,10 @@ struct FillLightWarmthRow: View {
         return (PaneFormat.coolKelvin - kelvin) / (PaneFormat.coolKelvin - PaneFormat.warmKelvin)
     }
 }
+
+#Preview("Warmth") {
+    Form { FillLightWarmthRow(settings: OverbrightServices.preview().settings) }
+        .formStyle(.grouped)
+        .environment(SettingsNavigator(target: "fillLight"))
+        .frame(width: 600, height: 100)
+}

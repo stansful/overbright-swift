@@ -50,3 +50,12 @@ struct AutomationsScheduleSection: View {
         .settingRow(value)
     }
 }
+
+#Preview("Schedule") {
+    let services = OverbrightServices.preview()
+    services.settings[AutomationSettings.schedule] = ScheduleEditing.defaultWindow
+    return Form { AutomationsScheduleSection(services: services) }
+        .formStyle(.grouped)
+        .environment(SettingsNavigator(target: "automations"))
+        .frame(width: 600, height: 260)
+}

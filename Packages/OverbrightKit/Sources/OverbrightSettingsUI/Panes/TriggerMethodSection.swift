@@ -90,3 +90,10 @@ struct TriggerMethodSection: View {
                       comment: "Settings ▸ Advanced: a trigger method this macOS cannot use, disabled in the pop-up; the argument is the method’s name")
     }
 }
+
+#Preview("Trigger method") {
+    Form { TriggerMethodSection(services: .preview(fixture: .russianNames)) }
+        .formStyle(.grouped)
+        .environment(SettingsNavigator(target: "advanced"))
+        .frame(width: 600, height: 260)
+}

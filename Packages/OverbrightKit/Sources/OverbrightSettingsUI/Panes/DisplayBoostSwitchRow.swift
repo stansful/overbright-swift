@@ -36,3 +36,15 @@ struct DisplayBoostSwitchRow: View {
         }
     }
 }
+
+#Preview("Use extra brightness") {
+    let services = OverbrightServices.preview(fixture: .mpg322uxHDROn)
+    if let model = DisplaysPane.models(services: services).first {
+        let value = RowValue(DisplaysRows.extraBrightness(model.key, name: model.name), isDefault: { true }, reset: {})
+        Form { DisplayBoostSwitchRow(services: services, model: model, value: value) }
+            .formStyle(.grouped)
+            .environment(SettingsNavigator(target: "displays"))
+            .frame(width: 640, height: 160)
+            .overbrightThemeRoot()
+    }
+}

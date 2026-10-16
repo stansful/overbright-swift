@@ -97,3 +97,15 @@ struct DisplayLevelRow: View {
         services.boost.setLevel(level, for: target, source: .settings)
     }
 }
+
+#Preview("Level") {
+    let services = OverbrightServices.preview(fixture: .mpg322uxHDROn)
+    if let model = DisplaysPane.models(services: services).first {
+        let value = RowValue(DisplaysRows.level(model.key, name: model.name), isDefault: { true }, reset: {})
+        Form { DisplayLevelRow(services: services, model: model, value: value) }
+            .formStyle(.grouped)
+            .environment(SettingsNavigator(target: "displays"))
+            .frame(width: 640, height: 160)
+            .overbrightThemeRoot()
+    }
+}
