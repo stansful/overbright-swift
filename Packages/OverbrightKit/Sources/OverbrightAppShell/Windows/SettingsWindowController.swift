@@ -80,6 +80,7 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
             self.session = session
             #if DEBUG
             scheduleQASnapshot()
+            scheduleQAClose()
             #endif
         }
         let window = makeWindow(session: session)
@@ -130,6 +131,7 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
         if autosavesFrame { window?.setFrameAutosaveName("") } else { closedFrame = window?.frame }
         window = nil
         session?.windowDidClose()
+        log.info("settings closed")
     }
 
     #if DEBUG
@@ -151,6 +153,17 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
         Task { [weak self] in
             try? await Task.sleep(for: .seconds(delay > 0 ? delay : 3))
             self?.writeSnapshot(to: URL(fileURLWithPath: snapshot))
+        }
+    }
+
+    /// Visual QA (Debug only): `-OverbrightQACloseAfter <s>` closes the first Settings window of the run after that
+    /// many seconds, as its close button would (checks that the agent app survives closing Settings, §10.2).
+    private func scheduleQAClose() {
+        let delay = defaults.double(forKey: "OverbrightQACloseAfter")
+        guard delay > 0 else { return }
+        Task { [weak self] in
+            try? await Task.sleep(for: .seconds(delay))
+            self?.window?.performClose(nil)
         }
     }
 

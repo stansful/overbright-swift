@@ -148,7 +148,8 @@ No hook posts input or asks for a permission. Launch arguments (`LaunchArguments
 | `--qa-hang-main <delay>,<duration>` | Blocks the main thread (hang-watchdog test H-X1, the owner's session only). |
 
 Settings-window defaults: `-OverbrightQAAppearance light|dark`, `-OverbrightQASnapshot <file.png>`
-[`-OverbrightQASnapshotDelay <s>`], `-OverbrightQASearch "<text>"`, and `-OverbrightQAKeyboardLayout <id>` (key caps
+[`-OverbrightQASnapshotDelay <s>`], `-OverbrightQASearch "<text>"`, `-OverbrightQACloseAfter <s>` (closes Settings as
+its close button would), and `-OverbrightQAKeyboardLayout <id>` (key caps
 in another layout, for example `com.apple.keylayout.German`; read wherever key caps are drawn). Debug builds also
 take `-OverbrightGitHubRepository owner/repo` to try the update check against a scratch repository.
 
