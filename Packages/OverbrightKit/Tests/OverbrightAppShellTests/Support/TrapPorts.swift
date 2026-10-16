@@ -5,6 +5,7 @@ import CoreGraphics
 import Foundation
 import Observation
 import OverbrightCore
+import ServiceManagement
 @testable import OverbrightAppShell
 
 /// Every call any trap port received, in order.
@@ -138,15 +139,28 @@ final class TrapConflictProbe: ConflictProbe {
     func checkNow() { log.record("updates.checkNow") }
 }
 
+/// A login item that records every call (registering one is system state).
+final class TrapLoginItem: LoginItemService {
+    let log: TrapLog
+    init(log: TrapLog) { self.log = log }
+    var status: SMAppService.Status { log.record("loginItem.status"); return .notRegistered }
+    func register() throws { log.record("loginItem.register") }
+    func unregister() throws { log.record("loginItem.unregister") }
+    func openSystemSettingsLoginItems() { log.record("loginItem.openSystemSettings") }
+}
+
 extension ShellPorts {
-    /// Every port a trap recording into `log` (gamma calls go to `gamma`).
+    /// Every port a trap recording into `log` (gamma calls go to `gamma`); no service has a lifecycle of its own.
     static func traps(log: TrapLog, gamma: TrapGammaPort) -> ShellPorts {
-        ShellPorts(gamma: gamma, headroom: TrapHeadroom(log: log), displays: TrapDisplayDirectory(log: log),
-                   triggers: TrapTriggerFactory(log: log), signals: TrapSignals(log: log),
-                   conflicts: TrapConflictProbe(log: log), fillLight: TrapFillLight(log: log),
-                   shortcuts: TrapShortcuts(log: log), updates: TrapUpdates(log: log),
-                   readDisplays: { log.record("readDisplays"); return [] },
-                   profileHasVCGT: { _ in log.record("profileHasVCGT"); return nil },
-                   lifecycle: [], placeholders: [], fixture: nil)
+        let signals = TrapSignals(log: log)
+        return ShellPorts(gamma: gamma, headroom: TrapHeadroom(log: log), displays: TrapDisplayDirectory(log: log),
+                          triggers: TrapTriggerFactory(log: log), signals: signals, launchCheckSignals: signals,
+                          conflicts: TrapConflictProbe(log: log), fillLight: TrapFillLight(log: log),
+                          shortcuts: TrapShortcuts(log: log), hotKeys: nil, updates: TrapUpdates(log: log),
+                          loginItems: TrapLoginItem(log: log), controlOutlet: QuietControlOutlet(),
+                          readDisplays: { log.record("readDisplays"); return [] },
+                          profileHasVCGT: { _ in log.record("profileHasVCGT"); return nil },
+                          backlightMilliNits: { log.record("backlightMilliNits"); return nil },
+                          services: ServiceStack(), relays: [], fixture: nil)
     }
 }
