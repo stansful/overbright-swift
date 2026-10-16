@@ -57,7 +57,9 @@ import Testing
 
     /// The steps differ from each other: each draws its own stage and copy.
     @Test func theStepsDifferFromEachOther() throws {
-        let reps = try Self.shots().map { try ChromeSnapshot.render(Self.window($0.session), .light, size: WelcomeMetrics.window) }
+        let reps = try Self.shots().map {
+            try ChromeSnapshot.render(Self.window($0.session), .light, size: WelcomeMetrics.window)
+        }
         let data = reps.compactMap { $0.representation(using: .png, properties: [:]) }
         #expect(data.count == reps.count && Set(data).count == reps.count)
     }
@@ -85,11 +87,12 @@ import Testing
     @Test func increaseContrastDiffersFromLight() throws {
         for step in [WelcomeStep.displays, .defaults, .findIt] {
             let session = Self.session(WelcomePreview.services(.russianNames), step)
-            let light = try ChromeSnapshot.render(Self.page(session).environment(\.isStaticSnapshot, true), .light, size: WelcomeMetrics.window)
-            let contrast = try ChromeSnapshot.render(Self.page(session).environment(\.isStaticSnapshot, true), .increaseContrast, size: WelcomeMetrics.window)
+            let page = Self.page(session).environment(\.isStaticSnapshot, true)
+            let light = try ChromeSnapshot.render(page, .light, size: WelcomeMetrics.window)
+            let contrast = try ChromeSnapshot.render(page, .increaseContrast, size: WelcomeMetrics.window)
             #expect(light.representation(using: .png, properties: [:])
                     != contrast.representation(using: .png, properties: [:]), "\(step.rawValue)")
-            let dark = try ChromeSnapshot.render(Self.page(session).environment(\.isStaticSnapshot, true), .dark, size: WelcomeMetrics.window)
+            let dark = try ChromeSnapshot.render(page, .dark, size: WelcomeMetrics.window)
             #expect(ChromeSnapshot.backgroundBrightness(light) > ChromeSnapshot.backgroundBrightness(dark) + 0.3)
             try ChromeSnapshot.write(contrast, "page-\(step.rawValue)", .increaseContrast)
         }

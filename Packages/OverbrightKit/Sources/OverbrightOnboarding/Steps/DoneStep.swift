@@ -88,6 +88,7 @@ struct UpdateSwitch: View {
 }
 
 #Preview("5 Done") {
-    DoneStep(session: WelcomeSession(services: WelcomePreview.services(updatesConfigured: true), initialStep: .done) { _ in })
+    let services = WelcomePreview.services(updatesConfigured: true)
+    return DoneStep(session: WelcomeSession(services: services, initialStep: .done) { _ in })
         .frame(width: WelcomeMetrics.window.width, height: 400)
 }

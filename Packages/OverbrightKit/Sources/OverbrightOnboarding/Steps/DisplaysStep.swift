@@ -68,11 +68,13 @@ struct DisplaysStep: View {
 }
 
 #Preview("2 Displays") {
-    DisplaysStep(session: WelcomeSession(services: WelcomePreview.services(.russianNames), initialStep: .displays) { _ in })
+    let services = WelcomePreview.services(.russianNames)
+    return DisplaysStep(session: WelcomeSession(services: services, initialStep: .displays) { _ in })
         .frame(width: WelcomeMetrics.window.width, height: 400)
 }
 
 #Preview("2 Displays · HDR off") {
-    DisplaysStep(session: WelcomeSession(services: WelcomePreview.services(.mpg322uxHDROff), initialStep: .displays) { _ in })
+    let services = WelcomePreview.services(.mpg322uxHDROff)
+    return DisplaysStep(session: WelcomeSession(services: services, initialStep: .displays) { _ in })
         .frame(width: WelcomeMetrics.window.width, height: 400)
 }

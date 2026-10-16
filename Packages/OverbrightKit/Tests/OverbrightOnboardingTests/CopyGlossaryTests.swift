@@ -34,7 +34,8 @@ private func strings(of copy: Any) -> [String] {
 @MainActor @Suite struct CopyGlossaryTests {
     /// The words of every step in English (whatever language the test process runs in).
     static var stepStrings: [String] {
-        strings(of: HelloStep.Copy.localized(in: englishBundle)) + strings(of: DisplaysStep.Copy.localized(in: englishBundle))
+        strings(of: HelloStep.Copy.localized(in: englishBundle))
+            + strings(of: DisplaysStep.Copy.localized(in: englishBundle))
             + strings(of: DefaultsStep.Copy.localized(in: englishBundle))
             + strings(of: FindItStep.Copy.localized(in: englishBundle))
             + strings(of: DoneStep.Copy.localized(in: englishBundle))

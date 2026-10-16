@@ -119,7 +119,8 @@ import Testing
         #expect(choices.pausesOnBattery(in: settings))                           // "Pause on battery" counts as on
         choices.pauseInLowPowerMode = false
         harness.session.skip()
-        #expect(settings[AutomationSettings.batteryThreshold] == 30 && settings[AutomationSettings.batteryGuard] == .onlyOnAdapter)
+        #expect(settings[AutomationSettings.batteryThreshold] == 30)
+        #expect(settings[AutomationSettings.batteryGuard] == .onlyOnAdapter)
         #expect(settings[AutomationSettings.pauseInLowPowerMode])
         #expect(harness.app.calls == ["setLaunchBehavior(launchAndEnable)"])
 

@@ -62,9 +62,11 @@ private typealias Keys = DisplayFixture.Keys
     @Test func theStepsOnlyReadTheEngine() throws {
         let root = URL(filePath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
             .deletingLastPathComponent().appending(path: "Sources/OverbrightOnboarding")
-        let forbidden = [#"\bboost\.(?!status\b)"#, #"\.(setOn|toggle|setLevel|setExtraBrightness|setDimLight|step|toggleDim|returnToStandard|pause|resume|retry)\(.*source:"#,
-                         #"CGSetDisplayTransfer|CGDisplayRestoreColorSyncSettings|GammaPort|TableWriter"#,
-                         #"preferredDynamicRange|wantsExtendedDynamicRangeContent|contentsHeadroom|AVPlayerLayer|CAMetalLayer"#]
+        let requests = "setOn|toggle|setLevel|setExtraBrightness|setDimLight|step|toggleDim|returnToStandard|pause|resume"
+        let forbidden = [#"\bboost\.(?!status\b)"#, #"\.("# + requests + #"|retry)\(.*source:"#,
+                         "CGSet" + "DisplayTransfer|CGDisplay" + "RestoreColorSyncSettings|GammaPort|TableWriter",
+                         "preferred" + "DynamicRange|wantsExtended" + "DynamicRangeContent|contents" + "Headroom|"
+                            + "AVPlayer" + "Layer|CAMetal" + "Layer"]
         var scanned = 0
         for folder in ["Steps", "Model"] {
             let files = try FileManager.default.contentsOfDirectory(at: root.appending(path: folder),

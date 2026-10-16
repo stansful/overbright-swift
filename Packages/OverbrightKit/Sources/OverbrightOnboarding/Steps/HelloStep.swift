@@ -59,12 +59,14 @@ struct HelloStep: View {
 
     var body: some View {
         let services = session.services
-        let card = WelcomeCard.make(rows: WelcomeDisplayRow.rows(in: services), windowDisplay: windowDisplay)
+        let rows = WelcomeDisplayRow.rows(in: services)
+        let card = WelcomeCard.make(rows: rows, windowDisplay: windowDisplay)
         let simulated = WelcomeCard.simulates(services)
         let held = card.heldDisplay(windowDisplay: windowDisplay, isWindowVisible: isWindowVisible, simulated: simulated)
         StepLayout {
             StepStage {
-                HelloStage(card: card, divider: $divider, simulated: simulated || !isWindowVisible)
+                HelloStage(card: card, divider: $divider, simulated: simulated || !isWindowVisible,
+                           illustration: rows.first?.isBuiltIn == true ? .laptopComputer : .display)
             }
             .background { if !simulated { WindowScreenReader { windowDisplay = $0 } } }
         } content: {
@@ -87,6 +89,8 @@ struct HelloStage: View {
     @Binding var divider: Double
     /// Draw the card's SDR stand-in (simulated run, or the window is hidden).
     let simulated: Bool
+    /// The glyph shown instead of the card: the laptop when the first display is built in.
+    var illustration = OverbrightSymbol.display
 
     var body: some View {
         switch card {
@@ -94,7 +98,7 @@ struct HelloStage: View {
             EDRPreviewSurface(gain: gain, divider: $divider, simulated: simulated)
                 .frame(maxWidth: StepMetrics.cardWidth, maxHeight: StepMetrics.stageContentHeight)
         case .checking, .noneCapable:
-            Image(symbol: .display)
+            Image(symbol: illustration)
                 .font(.system(size: StepMetrics.illustration, weight: .thin))
                 .foregroundStyle(.tertiary)
                 .accessibilityHidden(true)

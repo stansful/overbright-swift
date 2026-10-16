@@ -38,7 +38,8 @@ import Testing
         let findIt = FindItStep.Copy.localized(in: englishBundle).map(transform)
         let done = DoneStep.Copy.localized(in: englishBundle).map(transform)
         return [
-            ("hello", AnyView(lower { HelloLower(copy: hello, card: .preview(display: DisplayFixture.Keys.builtIn, gain: 1.29)) })),
+            ("hello", AnyView(lower { HelloLower(copy: hello, card: .preview(display: DisplayFixture.Keys.builtIn,
+                                                                               gain: 1.29)) })),
             ("hello-none", AnyView(lower { HelloLower(copy: hello, card: .noneCapable) })),
             ("displays", AnyView(lower { StepHeader(title: displays.title, message: displays.message) })),
             ("defaults", AnyView(lower {
