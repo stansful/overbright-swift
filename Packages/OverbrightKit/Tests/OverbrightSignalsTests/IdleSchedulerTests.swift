@@ -2,6 +2,7 @@
 // video keeps it awake, OLED-only and boost-only. ARCHITECTURE.md §7.1, §7.3, D10, D22.
 import Foundation
 import OverbrightCore
+import OverbrightPolicy
 import Testing
 @testable import OverbrightSignals
 
@@ -45,6 +46,23 @@ import Testing
         #expect(!OLEDPresence.anyOLED(builtIn, preferences: [:]))
         #expect(!OLEDPresence.anyOLED(msi, preferences: [DisplayFixture.Keys.mpg322ux: DisplayPreferences(oled: .notOLED)]))
         #expect(OLEDPresence.anyOLED(builtIn, preferences: [DisplayFixture.Keys.builtIn: DisplayPreferences(oled: .oled)]))
+    }
+
+    @Test func oledFollowsPolicysRuleIncludingASelfEmissiveMinimum() throws {
+        // An external of another class whose IORegistry minimum luminance is self-emissive: the reducer treats it as
+        // OLED, so the idle source must run for it too.
+        var external = try #require(DisplayFixture.mpg322uxHDROn.displays.first?.facts)
+        external.panelClass = .appleXDRExternal
+        external.panelMinNits = 0.0005
+        #expect(EligibilityClassifier.isOLED(external, override: .automatic))
+        #expect(OLEDPresence.anyOLED([external], preferences: [:]))
+        external.panelMinNits = 0.05                                          // an LCD's black
+        #expect(!OLEDPresence.anyOLED([external], preferences: [:]))
+        for override in [OLEDOverride.automatic, .oled, .notOLED] {
+            let preferences = [external.ref.key: DisplayPreferences(oled: override)]
+            #expect(OLEDPresence.anyOLED([external], preferences: preferences)
+                    == EligibilityClassifier.isOLED(external, override: override))
+        }
     }
 
     // MARK: In the monitor
