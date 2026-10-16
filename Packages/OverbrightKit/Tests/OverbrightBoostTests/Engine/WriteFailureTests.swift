@@ -87,7 +87,59 @@ import Testing
             await h.advance(.milliseconds(50))
         }
         #expect(h.phase() == .failed(.repairBudgetExceeded) || h.phase() == .failed(.oscillation))
-        #expect(h.engine.activeTaskCount == 0)
+        #expect(h.engine.activeTaskCount == 0 && h.orderViolations.isEmpty)
+    }
+
+    /// The same while boosted: whichever trip ends it, no trigger goes while its table is above the base, and the
+    /// display ends at its baseline with no window.
+    @Test func aBoostWriteThatKeepsFailingTripsInOrder() async throws {
+        let h = EngineHarness()
+        await h.start()
+        #expect(await h.boost())
+        var level = 0.9
+        for _ in 0..<40 where !(h.phase()?.isFailed ?? false) {
+            level = level > 0.8 ? 0.7 : 0.9
+            h.engine.setLevel(LevelPosition(level), for: h.builtIn, source: .panel)
+            h.gamma.failNextWrite(with: Self.failure)
+            await h.advance(.milliseconds(120))
+        }
+        #expect(h.phase()?.isFailed == true)
+        await h.advance(.seconds(1))
+        #expect(h.everyTableAtBase && h.liveTriggers().isEmpty && h.engine.activeTaskCount == 0)
+        #expect(h.orderViolations.isEmpty && h.interlockViolations().isEmpty)
+    }
+
+    /// A trip whose landing WindowServer refuses keeps the trigger with the scaled table (§4.5 invariant 2); the next
+    /// reduction lands it and only then orders the trigger out.
+    @Test func aTripWhoseLandingFailsKeepsTheTriggerUntilItLands() async throws {
+        let h = EngineHarness()
+        await h.start()
+        #expect(await h.boost())
+        h.gamma.failNextWrite(with: Self.failure)
+        h.controller()?.fail(.repairBudgetExceeded)
+        #expect(h.phase() == .failed(.repairBudgetExceeded) && (h.liveFactor() ?? 1) > 1)
+        #expect(h.liveTriggers().count == 1 && !h.engine.ledger.entries().isEmpty && h.orderViolations.isEmpty)
+        #expect(h.codes.contains("order.windowsKept"))
+        await h.advance(.milliseconds(200))
+        #expect(h.everyTableAtBase && h.liveTriggers().isEmpty && h.engine.ledger.entries().isEmpty)
+        #expect(h.phase() == .failed(.repairBudgetExceeded) && h.engine.activeTaskCount == 0)
+        #expect(h.orderViolations.isEmpty)
+    }
+
+    /// The occlusion's baseline write failed, then a dim is chosen and its landing fails too: the trigger stays until
+    /// the dim ramp has the table below the base, then goes (found by the property test, seed 4242).
+    @Test func aDimAfterAFailedOcclusionWriteRemovesTheTriggerInOrder() async throws {
+        let h = EngineHarness()
+        await h.start()
+        #expect(await h.boost())
+        h.gamma.failNextWrite(with: Self.failure)
+        h.triggers.setOccluded(true, on: h.builtIn)
+        #expect(h.phase() == .suspended(.occluded) && h.controller()?.isScaledOrDimmed == true)
+        h.gamma.failNextWrite(with: Self.failure)
+        h.engine.setDimLight(0.5, for: h.builtIn, source: .menu)
+        await h.advance(.seconds(2))
+        #expect(h.phase() == .dimmed && h.liveTriggers().isEmpty && (h.liveFactor() ?? 1) < 1)
+        #expect(h.orderViolations.isEmpty && h.codes.contains("order.windowsKept"))
     }
 
     /// The table cannot be read when the arm starts: the display stays idle without keeping the target, so the next

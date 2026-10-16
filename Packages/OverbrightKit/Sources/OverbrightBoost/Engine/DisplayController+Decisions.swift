@@ -119,7 +119,7 @@ extension DisplayController {
             generation += 1
             armSlot.cancel(); burstSlot.cancel()
             removeTrigger()
-            startRamp(to: light, origin: origin, finalPhase: .dimmed)
+            startRamp(to: light, origin: origin, finalPhase: .dimmed, removesWindowsAtEnd: true)
         case .ramping, .boosted, .disarming:
             generation += 1
             armSlot.cancel(); burstSlot.cancel(); driftSlot.cancel()

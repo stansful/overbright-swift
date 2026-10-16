@@ -68,13 +68,17 @@ extension DisplayController {
     }
 
     /// A display at rest (idle or failed) whose last landing failed is still scaled or dimmed: every reduction writes
-    /// its baseline again (the master off must end at the baseline, §4.5 invariant 4). A base event that could not be
-    /// written yet is judged again first (§4.8).
+    /// its baseline again (the master off must end at the baseline, §4.5 invariant 4), then orders out the windows
+    /// kept meanwhile (invariant 2). A base event that could not be written yet is judged again first (§4.8).
     func retryLandingAtRest() {
         guard !isActive else { return }
         settlePendingRebase()
-        guard isScaledOrDimmed || (mechanism == .table && lastWriteIsScaled) else { return }
-        deps.journal.record("baseline.retried", display: key, time: deps.time, category: .gamma)
-        writeBaselineNow()
+        let scaled = isScaledOrDimmed || (mechanism == .table && lastWriteIsScaled)
+        guard scaled || trigger != nil || overlay != nil else { return }
+        if scaled {
+            deps.journal.record("baseline.retried", display: key, time: deps.time, category: .gamma)
+            guard writeBaselineNow() else { return }
+        }
+        removeWindows()
     }
 }

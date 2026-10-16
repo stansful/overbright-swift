@@ -16,7 +16,7 @@ extension DisplayController {
         pendingResume = nil                                               // the wake or unlock that ends it comes later
         switch phase {
         case .idle, .failed:
-            if cause == .notOnConsole { removeWindows() }
+            if cause == .notOnConsole { removeWindows(force: true) }
             return
         default:
             break
@@ -24,7 +24,7 @@ extension DisplayController {
         generation += 1
         cancelAllTasks()
         writeBaselineNow()
-        if cause == .notOnConsole { removeWindows() }
+        if cause == .notOnConsole { removeWindows(force: true) }
         phase = .suspended(cause)
         if trigger != nil || overlay != nil { startLinger() }
     }
@@ -95,7 +95,7 @@ extension DisplayController {
             } else if baseline == nil {
                 guard captureBaseline() else { return }
             }
-            startRamp(to: light, origin: .automatic, finalPhase: .dimmed)
+            startRamp(to: light, origin: .automatic, finalPhase: .dimmed, removesWindowsAtEnd: true)
             restartPendingRebase()
         case .boost:
             guard kind == .wake else {
@@ -140,12 +140,12 @@ extension DisplayController {
         deps.journal.record("trigger.movedScreen", display: key, time: deps.time, category: .trigger)
         switch phase {
         case .suspended:
-            removeWindows()
+            removeWindows(force: true)
         default:
             generation += 1
             cancelAllTasks()
             writeBaselineNow()
-            removeWindows()
+            removeWindows(force: true)
             phase = .suspended(.reconfiguring)
         }
     }
@@ -159,7 +159,7 @@ extension DisplayController {
         cancelAllTasks()
         lastWrite = nil                                                   // no write to a display that is gone
         pendingRebase = nil
-        removeWindows()
+        removeWindows(force: true)
         deps.ledger.unmark(key)
         appliedGain = 1
         appliedFactor = 1
@@ -175,7 +175,7 @@ extension DisplayController {
         lingerSlot.cancel()
         target = .neutral
         if phase.isFailed {
-            writeBaselineNow()                                            // a landing that failed earlier, once more
+            if writeBaselineNow() { removeWindows() }                     // a landing that failed earlier, once more
             return
         }
         guard isScaledOrDimmed else {
@@ -204,7 +204,8 @@ extension DisplayController {
     }
 
     /// `stopNow()`: baseline at once, windows removed, no tasks. Synchronous by contract (quit, the instruments): if
-    /// WindowServer refuses the baseline, the display stays marked and the engine's ledger pass writes it again.
+    /// WindowServer refuses the baseline, the display stays marked (and keeps its trigger, §4.5 invariant 2) and the
+    /// engine's ledger pass writes it again.
     func stopNow() {
         generation += 1
         cancelAllTasks()

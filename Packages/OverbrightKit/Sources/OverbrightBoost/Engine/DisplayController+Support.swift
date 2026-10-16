@@ -11,12 +11,17 @@ private let log = Log.logger(.engine)
 extension DisplayController {
     // MARK: Trips
 
-    /// Lands on neutral at once (one write), removes every window and records `cause` as the feedback.
+    /// Lands on neutral at once (one write), removes every window and records `cause` as the feedback. While
+    /// WindowServer refuses that landing and our scaled table is still on screen, the trigger stays with it (§4.5
+    /// invariant 2) until a later landing succeeds (`retryLandingAtRest`, Back to Standard, a stop).
     func fail(_ cause: TripCause) {
         generation += 1
         cancelAllTasks()
-        writeBaselineNow()
-        removeWindows()
+        if !writeBaselineNow(), keepsWindowsAfterFailedLanding {
+            deps.journal.record("order.windowsKept", display: key, time: deps.time, category: .gamma)
+        } else {
+            removeWindows()
+        }
         if case .headroomNeverArrived = cause {
             failedTries += 1
             potentialAtFailure = lastReading?.potential
@@ -69,6 +74,17 @@ extension DisplayController {
     /// Our latest table write was not the baseline (whatever `appliedFactor` believes after a reset or re-base).
     var lastWriteIsScaled: Bool { abs((lastWrite?.factor ?? 1) - 1) > TableWriter.neutralTolerance }
 
+    /// Our latest table write was above the baseline (it needed the trigger's EDR request).
+    var lastWriteIsAboveBase: Bool { (lastWrite?.factor ?? 1) > 1 + TableWriter.neutralTolerance }
+
+    /// After a landing WindowServer refused: the trigger has to stay, because our write above the baseline may still be
+    /// on screen (it is, or the table cannot be read). Once WindowServer replaced it (a reset, a new base), the
+    /// windows may go.
+    var keepsWindowsAfterFailedLanding: Bool {
+        guard trigger != nil, mechanism == .table, lastWriteIsAboveBase else { return false }
+        return (try? deps.gamma.read(ref.id)).map(isOurs) ?? true
+    }
+
     /// Writes the baseline now when the table (or overlay) is scaled or dimmed, or our latest write was (one write,
     /// never refused by the epoch). True when the display is at its baseline afterwards. When WindowServer (or the
     /// overlay) throws, the applied state is kept, so the display still counts as scaled or dimmed: the ledger keeps its
@@ -113,11 +129,19 @@ extension DisplayController {
     }
 
     /// Orders out the trigger and the overlay (after the table is back at its baseline, §4.5 invariant 2). The safety
-    /// net of that order: if our latest write was above the baseline, the baseline is written first.
-    func removeWindows() {
-        if trigger != nil, mechanism == .table, (lastWrite?.factor ?? 1) > 1 + TableWriter.neutralTolerance {
+    /// net of that order: if our latest write was above the baseline, the baseline is written first, and while
+    /// WindowServer refuses it and our scaled table is still on screen both stay (the scaled table keeps its EDR
+    /// request); the reduction this asks for retries the landing (`retryLandingAtRest`, as do the linger, Back to
+    /// Standard and a stop). `force` removes them anyway, for the two rows that must: the session left the console, or
+    /// AppKit moved the window to another display (§4.3).
+    func removeWindows(force: Bool = false) {
+        if trigger != nil, mechanism == .table, lastWriteIsAboveBase {
             deps.journal.record("order.baselineBeforeRemoval", display: key, time: deps.time)
-            writeBaselineNow()
+            if !writeBaselineNow(), !force, keepsWindowsAfterFailedLanding {
+                deps.journal.record("order.windowsKept", display: key, time: deps.time, category: .gamma)
+                notify(needsReduction: true)
+                return
+            }
         }
         let windows = (trigger, overlay)
         trigger = nil
@@ -128,11 +152,16 @@ extension DisplayController {
         lingerSlot.cancel()
     }
 
-    /// Orders out the trigger only (a dim keeps the Compatibility-mode overlay: it is what dims, §4.3). The table is
-    /// at or below its baseline here.
+    /// Orders out the trigger only (a dim keeps the Compatibility-mode overlay: it is what dims, §4.3). If our latest
+    /// write was above the baseline (a shield or occlusion whose write failed), the baseline is written first; while
+    /// WindowServer refuses it and that write is still on screen, the trigger stays (§4.5 invariant 2) and the dim
+    /// ramp that follows removes it once the table is at or below the baseline.
     func removeTrigger() {
         guard trigger != nil else { return }
-        if mechanism == .table, (lastWrite?.factor ?? 1) > 1 + TableWriter.neutralTolerance { writeBaselineNow() }
+        if mechanism == .table, lastWriteIsAboveBase, !writeBaselineNow(), keepsWindowsAfterFailedLanding {
+            deps.journal.record("order.windowsKept", display: key, time: deps.time, category: .gamma)
+            return
+        }
         let handle = trigger
         trigger = nil
         handle?.remove()
