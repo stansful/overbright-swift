@@ -1485,6 +1485,8 @@ public nonisolated enum UpdateState: Hashable, Sendable {
 @MainActor public protocol UpdateChecking: AnyObject, Observable {
     /// False while the Info.plist repository key is empty: no network at all (D2).
     var isConfigured: Bool { get }
+    /// https://github.com/owner/repo from the same validated slug; nil while not configured (Settings ▸ About's link).
+    var repositoryURL: URL? { get }   // contract lane (WP0b): default nil in a protocol extension
     var state: UpdateState { get }
     func checkNow()
 }

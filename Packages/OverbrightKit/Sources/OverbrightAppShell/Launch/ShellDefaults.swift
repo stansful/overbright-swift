@@ -17,6 +17,9 @@ struct ShellDefaults {
     /// The standard domain (production).
     static var standard: ShellDefaults { ShellDefaults(defaults: .standard, qaSuite: nil) }
 
+    /// Fresh in-memory defaults without frame autosave (tests; like a QA run that has no suite of its own).
+    static var inMemory: ShellDefaults { ShellDefaults(defaults: InMemoryDefaults(), qaSuite: "memory") }
+
     /// AppKit's window-frame autosave always writes the standard domain, so a QA run keeps frames for the run only.
     var autosavesWindowFrames: Bool { qaSuite == nil }
 
