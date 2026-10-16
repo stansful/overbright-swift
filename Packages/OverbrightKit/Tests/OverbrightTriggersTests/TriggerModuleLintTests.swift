@@ -52,7 +52,7 @@ import Testing
         let orderIn = ["order" + "Front", "makeKeyAndOrder" + "Front", "order" + "Back", "order" + "Window(",
                        "run" + "Modal"]
         let sources = files(under: Self.sources)
-        let found = hits(orderIn, in: sources, except: ["Windows/WindowPresenting.swift"])
+        let found = hits(orderIn, in: sources, except: ["Windows/System" + "WindowPresenter.swift"])
         #expect(found.isEmpty, "windows reach the screen only through the system presenter: \(found)")
         #expect(!hits(["order" + "FrontRegardless"], in: sources).isEmpty, "the presenter itself is scanned")
     }

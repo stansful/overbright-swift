@@ -4,7 +4,8 @@
 // A pass whose colour attachment uses `loadAction = .clear` and that encodes no draw call needs no pipeline state,
 // hence no function and no library: no `.metal` file, no `default.metallib`, no Metal Toolchain [VERIFIED off screen:
 // an rgba16Float texture cleared to 1.6 read back 1.5996 with `makeDefaultLibrary()` returning nil].
-// `NoShaderAPITests` keeps every library, function and pipeline API out of this module.
+// `TriggerModuleLintTests.theModuleUsesNoShaderLibraryFunctionOrPipeline` (a source scan) and `CompiledSymbolTests`
+// (the compiled module's symbols) keep every library, function and pipeline API out of this module.
 import CoreGraphics
 import Metal
 import QuartzCore

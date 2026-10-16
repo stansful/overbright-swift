@@ -3,15 +3,7 @@
 // service stops. ARCHITECTURE.md §3.6 (`openWindowCount`), §7.4 (stop order). Thread: main.
 //
 // Entries are weak: a handle the engine drops is gone from the count, and its window goes with it (`TriggerHost`
-// tears down in its deinit), so no window ever outlives its handle.
-
-/// A trigger or overlay handle as the registry sees it.
-protocol RegisteredWindowOwner: AnyObject {
-    /// Whether the handle's window exists now.
-    var hasOpenWindow: Bool { get }
-    /// Orders the window out and releases everything (the handle's own `remove()`).
-    func remove()
-}
+// tears down in its deinit), so no window ever outlives its handle. Handles conform to `RegisteredWindowOwner`.
 
 /// Weak list of the handles a factory made.
 final class TriggerWindowRegistry {
