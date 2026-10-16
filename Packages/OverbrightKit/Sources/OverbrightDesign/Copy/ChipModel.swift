@@ -62,10 +62,20 @@ public nonisolated struct ChipModel: Hashable, Sendable {
     }
 
     /// The chip of `status` while `banner` shows: the phase chip, else the first reason of its decision that is
-    /// per-display and not the banner's own.
+    /// per-display and not the banner's own, else, on a display that can dim but not boost, its verdict badge.
     public static func make(for status: DisplayStatus, banner: Banner?, context: ChipContext) -> ChipModel? {
         let reason = chipReason(in: status.decision?.reasons ?? [], display: status.key, banner: banner)
-        return make(reason: reason, phase: status.phase, failedTries: status.failedTries, context: context)
+        if let chip = make(reason: reason, phase: status.phase, failedTries: status.failedTries, context: context) {
+            return chip
+        }
+        guard let verdict = status.decision?.eligibility.verdict, !verdict.allowsBoost, verdict.allowsDim else { return nil }
+        return Self.verdict(verdict, in: context.language)
+    }
+
+    /// The verdict badge of a display that can dim but not boost, as a neutral chip whose popover holds the verdict's
+    /// sentence and fix (DESIGN.md §5.10, §12.2).
+    public static func verdict(_ verdict: DisplayVerdict, in language: CopyLanguage = .app) -> ChipModel? {
+        ChipCopy.chip(for: .notSupported(verdict), failedTries: 0, context: ChipContext(language: language))
     }
 
     /// The reason a card's chip shows: the first per-display reason (`isGlobal == false`) that has a chip and is not

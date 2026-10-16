@@ -168,6 +168,24 @@ import Testing
         #expect(model.explanation.hasPrefix("macOS allows ×1.40 right now."))
     }
 
+    /// A display that can dim but not boost shows its verdict badge even at Standard, when no reason applies.
+    @Test func aDimOnlyDisplayShowsItsBadgeAtStandard() throws {
+        let decision = DisplayDecision(key: Self.display, target: .neutral, reasons: [],
+                                       eligibility: EligibilityResult(verdict: .notHDR, advisories: [],
+                                                                      defaultBoostEnabled: false, defaultMechanism: .table),
+                                       mechanism: .table, domain: .encoded, requestedGain: 1)
+        let status = DisplayStatus(key: Self.display, name: "Office Display", phase: .idle, decision: decision,
+                                   appliedGain: 1, appliedFactor: 1, mechanism: .table, strategy: nil, lastReading: nil,
+                                   sdrWhite: nil)
+        let chip = try #require(ChipModel.make(for: status, banner: nil, context: ChipContext(language: english)))
+        #expect(chip.text == "Not supported" && chip.color == .neutral)
+        // A display that cannot dim either is in the "Why?" rows, not a card: no chip from here.
+        var virtual = status
+        virtual.decision?.eligibility.verdict = .virtualDisplay
+        #expect(ChipModel.make(for: virtual, banner: nil, context: ChipContext(language: english)) == nil)
+        #expect(ChipModel.verdict(.turnOnHDR, in: english)?.text == "HDR is off")
+    }
+
     /// Every English chip fits its line: 280 pt (DESIGN.md §5.7, §16).
     @Test(arguments: everyReason) func everyChipFitsTheCard(reason: LimitReason) {
         guard let model = chip(reason) else { return }
