@@ -1,0 +1,122 @@
+# Overbright — Chinese, Traditional (繁體中文, `zh-Hant`) terminology sheet
+
+Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the register, voice and
+typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
+deleted. Overbright’s own names are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they
+read “—”. `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
+
+## Register and typography
+
+Register and typography (follow macOS 27 Traditional Chinese, Taiwan vocabulary; zh-HK falls back here):
+
+- Address the user as 你 (never 您), as macOS does. Sentences (footnotes, errors, permission reasons, VoiceOver
+  announcements) end in 。; buttons, menu items, toggles, pickers and headers are short verb or noun phrases without
+  final punctuation (打開, 加入小工具, 顯示選單列圖像).
+- Apple's verbs: Open 打開 · Close 關閉 · Quit 結束 · Add 加入 · New 新增 · Remove 移除 · Delete 刪除 · Copy 拷貝
+  (Duplicate = 複製) · Undo 還原 · Show/Hide 顯示/隱藏 · Turn on/off 開啟/關閉 · Click 按一下 · Double-click 按兩下 ·
+  Drag 拖移 · Try again 再試一次 · Skip 略過 · Continue 繼續 · Cancel 取消 · Done 完成 · Rename 重新命名.
+- Questions as Apple does: 要刪除「%@」嗎？ · 要重置所有設定嗎？
+- No spaces between Chinese and Latin text, digits or placeholders (打開Overbright, %lld個項目, macOS 14.2或以上版本);
+  Latin words keep their own spaces (Apple Events, Liquid Glass, Force Touch). One exception, as Finder numbers copies
+  (未命名檔案夾 2): a numbered default name keeps the space (未命名 %lld); a page is 第%lld頁.
+- Quotes 「…」 (secondary 『…』) around app names, System Settings panes and settings in running text and in buttons that
+  name them, exactly as macOS: 打開「系統設定」, 在「捷徑」中, 「隱私權與安全性」▸「輔助使用」, 打開「%@」. Overbright's own name
+  is never quoted (關於Overbright, 結束Overbright). User content in 「%@」 (要刪除「%@」嗎？).
+- Full-width punctuation ，。：；？！（）; full-width colon with no space (狀態：%@); full-width parentheses around
+  Chinese or placeholders (自動（%@）, 版本%1$@（%2$@）). Separator " · " and arrows/keys (⌘K, ⌥←) kept as in English;
+  ▸ between Settings path parts without spaces (「設定」▸「權限」).
+- Ellipsis: macOS zh_TW writes the midline ellipsis ⋯ (U+22EF) in every menu item and progress text (設定⋯, 載入中⋯,
+  886 of 886 system strings that end in "…" in English). Overbright follows macOS: ⋯, never "..." and not U+2026.
+  Review decision: keep ⋯, so Overbright's 設定⋯ / 檢查更新項目⋯ match the system menus beside them; the generic U+2026
+  note in languages.json is the template line shared by every language (the validator accepts both).
+- Instructions: Apple's zh_TW writes "verb + 來 + purpose" (按一下來評分此遊戲, 拖移來變更縮放, 用三指點兩下並拖移來…), so
+  按兩下來重新命名, 拖移來重新排序 and 向下拉來打開 follow macOS; don't "correct" them to 以.
+- Literary particles (之, 其 in place of 它的) are avoided in short UI copy; plain modern phrasing as macOS.
+- Search keyword lists keep the ASCII separator of the English key (", " or a space): the code splits on it. They may add
+  the English word as an extra synonym (HUD, OSD, Spotify).
+- No grammatical plural: every plural key has the single form `other`; counters 個 (items, apps), 項 (to-dos), 格 (grid
+  cells), 天, 分鐘, 毫秒. Units as macOS: %@點 (pt), %@像素 (px), %lld毫秒 (ms).
+- Width: CJK glyphs are ≈ 1 em wide; the compact wing (48 pt at 13 pt) holds 3 characters. Wing words: 完成, 失敗,
+  已拷貝, 已暫停, 已恢復, 嗨.
+
+## Apple names (`apple-terms.py zh-Hant` on macOS 27.0.1 — never paraphrased)
+
+| English | zh-Hant |
+|---|---|
+| System Settings | 系統設定 |
+| Finder | Finder |
+| Shortcuts | 捷徑 |
+| Photos | 照片 |
+| TV | TV |
+| QuickTime Player | QuickTime Player |
+| Privacy & Security | 隱私權與安全性 |
+| Accessibility | 輔助使用 |
+| General | 一般 |
+| Appearance | 外觀 |
+| Menu Bar | 選單列 |
+| Control Center | 控制中心 |
+| Focus | 專注模式 |
+| Displays | 顯示器 |
+| Keyboard | 鍵盤 |
+| Keyboard Shortcuts… | 鍵盤快速鍵⋯ |
+| Lock Screen | 鎖定畫面 |
+| Battery | 電池 |
+| Energy | 電量 |
+| Screen Saver | 螢幕保護程式 |
+| Login Items | 登入項目 |
+| Login Items & Extensions | 登入項目與延伸功能 |
+| Brightness | 亮度 |
+| Automatically adjust brightness | 自動調整亮度 |
+| True Tone | 原彩 |
+| High Dynamic Range | 高動態範圍 |
+| Preset | 預設組 |
+| Night Shift… | 夜覽⋯ |
+| Color profile | 色彩描述 |
+| Refresh rate | 更新頻率 |
+| Allow in the Menu Bar | 在選單列中允許 |
+| Low Power Mode | 低耗電模式 |
+| Do Not Disturb | 勿擾模式 |
+| Camera | 相機 |
+| Open Anyway | 強制打開 |
+| Applications | 應用程式 |
+| Reduce motion | 減少動態效果 |
+| Reduce transparency | 減少透明度 |
+| Increase contrast | 增加對比 |
+| Differentiate without color | 不以顏色來區分 |
+| VoiceOver | 旁白 |
+
+## Overbright’s own names
+
+| English | zh-Hant | Note |
+|---|---|---|
+| Overbright | Overbright | never translated or transliterated |
+| Standard (the brightness macOS shows) | — | never “100 %” or “normal mode” |
+| extra brightness (the boost half) | — | never “boost”, “HDR mode”, “EDR” |
+| Dim below minimum (the setting) | — | the incumbent’s name for it is never used |
+| Dimmed (the state) · Dim All Displays / Stop Dimming (actions) | — | not “night mode” |
+| Brighter · Less Bright (one step) | — | never “Dimmer”: it reads like Dim |
+| Back to Standard (the instant off) | — | not “panic”, not “reset brightness” |
+| Indoor · Bright room · Sunlight · Max (presets) | — | “Max” is a preset only |
+| Safe · Peak (ceilings) | — | Peak, never “Max”, for a ceiling; one short word each (segments) |
+| Compatibility mode · Color table (methods) | — | never “fallback” or “overlay” |
+| Fill Light (the edge light for video calls) | — | never “ring light” |
+| extra range (headroom, in user copy) | — | “headroom” only in Advanced and diagnostics |
+| Calibrate… · Run Self-Test… · Reset Display Colors… | — |  |
+| Keep this level? · Go Back · Keep | — | the very-dark-level prompt |
+| Pause · Paused · Resume | — | a temporary stop; never “disabled” |
+
+## Carried from Cranny (generic interface words)
+
+| English | zh-Hant | Note |
+|---|---|---|
+| Overbright | Overbright | never translated or transliterated; no space around it (打開Overbright) |
+| click | 按一下 | 按一下瀏海 |
+| Welcome / setup | 歡迎使用 / 設定 | 略過設定 |
+| Shortcuts (Apple's app) | 捷徑 | 「捷徑」 in running text and buttons |
+| keyboard shortcut | 快速鍵 | Apple's 快速鍵 |
+| Settings (Overbright) | 設定 | Settings… = 設定⋯ |
+| Allow / Grant | 允許 | Allow… / Grant… = 允許⋯ |
+| Reset to Default | 重置為預設值 | Changed from the default = 與預設值不同 |
+| App not installed | App未安裝 |  |
+| Never (timeout 0) | 永不 |  |
+| Try again / Retry | 再試一次 |  |

@@ -1,0 +1,112 @@
+# Overbright — Korean (한국어, `ko`) terminology sheet
+
+Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the register, voice and
+typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
+deleted. Overbright’s own names are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they
+read “—”. `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
+
+## Register and typography
+
+Register and style follow Korean macOS 27 (checked in the system's own loctables):
+
+- **Sentences** in the formal polite style macOS uses: statements “-습니다”, requests “-십시오”
+  (“나중에 다시 시도하십시오.”, “인터넷 연결을 확인하십시오.”). No “당신”; “you/your” is omitted or, where
+  needed, “사용자의” as Apple does.
+- **Buttons, menu items, toggles, picker options and titles** are noun phrases, as macOS writes them:
+  “취소”, “완료”, “열기”, “Overbright 종료”, “업데이트 확인…”, “메뉴 막대 아이콘 보기”, “로그인 시 열기”.
+  Show-toggles are “… 보기” (System Settings: “메뉴 막대에서 보기”, “배터리 잔량 보기”); hide-toggles “… 가리기”.
+  States and confirmations end in “-됨” (“일시 정지됨”, “복사됨”, “허용됨”).
+- **Quotes**: ‘…’ around names and setting names (macOS: “‘%@’ 압축”, “‘세게 클릭 및 햅틱 피드백’ 업데이트”);
+  “…” only inside them. Ellipsis … (one character). No straight quotes.
+- **Particles** after a placeholder use both forms: ‘%@’을(를), 이(가), 은(는), 와(과), (으)로. After *Overbright*
+  (vowel ending, 크래니) always 는 / 가 / 를 / 와 / 의 / 에서 / 로. After any other Latin name, choose by how
+  it is read: “Spotify를”, “macOS가”, “PDF를”, “AirDrop으로”, “JPEG으로” (제이펙), “1600px로”.
+- **Counts**: one plural form (`other`) with a counter: “%lld개 항목”, “%lld칸”, “%lld일”, “%lld분”, “%lld ms”.
+- **Typed input**: hints that show what the user can type keep the Latin units the parsers accept: the timer
+  hint is “25 또는 90s”, never “90초” (DurationParser reads only English and Russian units).
+- **Spacing**: 띄어쓰기 as Apple (“일시 정지”, “하루 종일”, “미리 알림”); Latin names keep their spelling.
+- **Overbright** is never translated or transliterated (no “크래니” in copy).
+
+## Apple names (`apple-terms.py ko` on macOS 27.0.1 — never paraphrased)
+
+| English | ko |
+|---|---|
+| System Settings | 시스템 설정 |
+| Finder | Finder |
+| Shortcuts | 단축어 |
+| Photos | 사진 |
+| TV | TV |
+| QuickTime Player | QuickTime Player |
+| Privacy & Security | 개인정보 보호 및 보안 |
+| Accessibility | 손쉬운 사용 |
+| General | 일반 |
+| Appearance | 화면 모드 |
+| Menu Bar | 메뉴 막대 |
+| Control Center | 제어 센터 |
+| Focus | 집중 모드 |
+| Displays | 디스플레이 |
+| Keyboard | 키보드 |
+| Keyboard Shortcuts… | 키보드 단축키… |
+| Lock Screen | 잠금 화면 |
+| Battery | 배터리 |
+| Energy | 에너지 |
+| Screen Saver | 화면 보호기 |
+| Login Items | 로그인 항목 |
+| Login Items & Extensions | 로그인 항목 및 확장 프로그램 |
+| Brightness | 밝기 |
+| Automatically adjust brightness | 자동으로 밝기 조절 |
+| True Tone | True Tone |
+| High Dynamic Range | 고명암 대비 |
+| Preset | 프리셋 |
+| Night Shift… | Night Shift… |
+| Color profile | 색상 프로필 |
+| Refresh rate | 재생률 |
+| Allow in the Menu Bar | 메뉴 막대에서 허용 |
+| Low Power Mode | 저전력 모드 |
+| Do Not Disturb | 방해금지 모드 |
+| Camera | 카메라 |
+| Open Anyway | 그래도 열기 |
+| Applications | 응용 프로그램 |
+| Reduce motion | 동작 줄이기 |
+| Reduce transparency | 투명도 줄이기 |
+| Increase contrast | 대비 증가 |
+| Differentiate without color | 색상 제외하고 구별 |
+| VoiceOver | VoiceOver |
+
+## Overbright’s own names
+
+| English | ko | Note |
+|---|---|---|
+| Overbright | Overbright | never translated or transliterated |
+| Standard (the brightness macOS shows) | — | never “100 %” or “normal mode” |
+| extra brightness (the boost half) | — | never “boost”, “HDR mode”, “EDR” |
+| Dim below minimum (the setting) | — | the incumbent’s name for it is never used |
+| Dimmed (the state) · Dim All Displays / Stop Dimming (actions) | — | not “night mode” |
+| Brighter · Less Bright (one step) | — | never “Dimmer”: it reads like Dim |
+| Back to Standard (the instant off) | — | not “panic”, not “reset brightness” |
+| Indoor · Bright room · Sunlight · Max (presets) | — | “Max” is a preset only |
+| Safe · Peak (ceilings) | — | Peak, never “Max”, for a ceiling; one short word each (segments) |
+| Compatibility mode · Color table (methods) | — | never “fallback” or “overlay” |
+| Fill Light (the edge light for video calls) | — | never “ring light” |
+| extra range (headroom, in user copy) | — | “headroom” only in Advanced and diagnostics |
+| Calibrate… · Run Self-Test… · Reset Display Colors… | — |  |
+| Keep this level? · Go Back · Keep | — | the very-dark-level prompt |
+| Pause · Paused · Resume | — | a temporary stop; never “disabled” |
+
+## Carried from Cranny (generic interface words)
+
+| English | ko | Note |
+|---|---|---|
+| Overbright | Overbright | never translated; Overbright는 / Overbright가 / Overbright를; also the open panel (“Overbright 열기”) |
+| Settings | 설정 | “설정 ▸ 키보드” |
+| Reset to Default | 기본값으로 재설정 |  |
+| Changed from the default | 기본값에서 변경됨 |  |
+| Allow… / Grant… | 허용… |  |
+| Preview (Settings stage) | 미리보기 |  |
+| Never (timeout 0) | 안 함 | Apple’s value word |
+| Off / On (values) | 끔 / 켬 | Apple’s value words |
+| Shortcuts (Apple app) · a shortcut | 단축어 · 단축어 | “단축어 실행”; never “바로 가기” |
+| keyboard shortcut | 단축키 | “키보드 단축키” |
+| Remove (from a list) | 제거 | “선반에서 제거”, “빠른 앱에서 제거”; 삭제 only for deleting data (note, to-do, pipeline) |
+| App not installed | 설치되지 않은 앱 |  |
+| Welcome (window) | Overbright 시작하기 | Apple: “Mac 시작하기” |
