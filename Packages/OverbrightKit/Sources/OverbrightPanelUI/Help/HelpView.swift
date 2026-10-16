@@ -1,18 +1,94 @@
-// OverbrightPanelUI/Help/HelpView.swift — the local Help window's content. DESIGN.md §12.6.
-// Seam written by WP0a (ARCHITECTURE.md §10.0): the initializer is fixed (the shell's Help window hosts it); WP10
-// writes the entries and scrolls to `anchor`. The WP0a body is empty.
+// OverbrightPanelUI/Help/HelpView.swift — the local Help window's content. DESIGN.md §12.6, §2.0 rule 3 (the host
+// applies `.overbrightThemeRoot` once), §15 (VoiceOver: each answer is a heading plus its text).
+// Seam written by WP0a (ARCHITECTURE.md §10.0): `init(anchor:)` is fixed (the shell's Help window hosts it); WP10 adds
+// `init(anchor:backToStandardKeys:)` so answer 3 can show the live shortcut, and scrolls to the anchor.
+import OverbrightCore
+import OverbrightDesign
 import SwiftUI
 
 /// Every Help entry, scrolled to `anchor` ("no-extra-range", "control-center", …) when given.
 public struct HelpView: View {
     private let anchor: String?
+    private let backToStandardKeys: String?
 
-    /// Help, optionally at `anchor`.
-    public init(anchor: String?) { self.anchor = anchor }
+    /// Help, optionally at `anchor` (answer 3 without a shortcut).
+    public init(anchor: String?) { self.init(anchor: anchor, backToStandardKeys: nil) }
 
-    /// WP0a placeholder: an empty scroll view.
-    public var body: some View {
-        ScrollView { EmptyView() }
-            .frame(minWidth: 480, minHeight: 360)
+    /// Help at `anchor`; `backToStandardKeys` is the live key caps of Back to Standard (`ShortcutCenter.displayString`).
+    public init(anchor: String?, backToStandardKeys: String?) {
+        self.anchor = anchor
+        self.backToStandardKeys = backToStandardKeys
     }
+
+    /// The answers, in order.
+    var entries: [HelpEntry] { HelpEntry.all(backToStandardKeys: backToStandardKeys) }
+
+    /// The anchor the view scrolls to: a known one, else none (the top).
+    var resolvedAnchor: String? { HelpView.resolve(anchor) }
+
+    /// A known anchor, or nil for nil and unknown ones (the window then opens at the top).
+    public static func resolve(_ anchor: String?) -> String? {
+        guard let anchor, HelpEntry.Anchor.all.contains(anchor) else { return nil }
+        return anchor
+    }
+
+    public var body: some View {
+        ScrollViewReader { proxy in
+            ScrollView {
+                VStack(alignment: .leading, spacing: Space.xxl) {
+                    ForEach(entries) { entry in
+                        HelpEntryView(entry: entry, isHighlighted: entry.id == resolvedAnchor)
+                            .id(entry.id)
+                    }
+                }
+                .padding(Space.xxl)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .onAppear { scroll(proxy) }
+            .onChange(of: anchor) { scroll(proxy) }
+        }
+        .frame(minWidth: 480, idealWidth: 520, minHeight: 360, idealHeight: 520)
+    }
+
+    private func scroll(_ proxy: ScrollViewProxy) {
+        guard let target = resolvedAnchor else { return }
+        proxy.scrollTo(target, anchor: .top)
+    }
+}
+
+/// One answer: the question as a heading, then the answer.
+private struct HelpEntryView: View {
+    let entry: HelpEntry
+    let isHighlighted: Bool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Space.s) {
+            Text(verbatim: entry.question)
+                .font(.headline)
+                .accessibilityAddTraits(.isHeader)
+            Text(verbatim: entry.answer)
+                .font(.body)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+                .textSelection(.enabled)
+        }
+        .padding(Space.m)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background {
+            if isHighlighted {
+                RoundedRectangle(cornerRadius: Radius.card, style: .continuous).fill(.tint.opacity(0.08))
+            }
+        }
+        .accessibilityElement(children: .combine)
+    }
+}
+
+#Preview("Help") {
+    HelpView(anchor: nil, backToStandardKeys: "⌃⌥⌘0")
+        .overbrightThemeRoot()
+}
+
+#Preview("Help · at an anchor, no shortcut") {
+    HelpView(anchor: HelpEntry.Anchor.controlCenter)
+        .overbrightThemeRoot()
 }
