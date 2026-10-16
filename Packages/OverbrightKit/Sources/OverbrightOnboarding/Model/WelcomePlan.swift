@@ -1,7 +1,9 @@
-// OverbrightOnboarding/Model/WelcomePlan.swift — which steps the Welcome window shows, in what order, and what the last
-// step offers (pure). DESIGN.md §8. Ported from Cranny's WelcomePlan (the owner's MIT code); seeded by WP0b
-// (ARCHITECTURE.md §10.2), owned by WP12 (§10.14), which adds the rest of what depends on this Mac.
+// OverbrightOnboarding/Model/WelcomePlan.swift — which steps the Welcome window shows, in what order, and what they
+// offer on this build (pure). DESIGN.md §8. Ported from Cranny's WelcomePlan (the owner's MIT code); seeded by WP0b
+// (ARCHITECTURE.md §10.2), owned by WP12 (§10.14). What depends on this Mac's displays, settings and shortcuts is
+// read live by the steps (`WelcomeDisplayRow`, `WelcomeCard`, `FindItShortcut`), so a change shows at once.
 import Foundation
+import OverbrightCore
 
 /// The visible steps for this Mac. Numbers are 1-based, as VoiceOver reads them ("Step 2 of 5").
 nonisolated struct WelcomePlan: Equatable, Sendable {
@@ -9,6 +11,10 @@ nonisolated struct WelcomePlan: Equatable, Sendable {
     let steps: [WelcomeStep]
     /// The Done step's "Check for updates on GitHub" switch: only when this build has a repository (D2).
     let showsUpdateToggle: Bool
+
+    /// The shortcuts step 4 shows, in order, when registered: Turn on or off, Back to Standard, Dim Below Minimum On
+    /// or Off (DESIGN.md §8).
+    static let shortcuts: [ShortcutID] = [.toggle, .standard, .dimToggle]
 
     /// The plan for a build with (`updatesConfigured`) or without an update check.
     init(updatesConfigured: Bool) {
