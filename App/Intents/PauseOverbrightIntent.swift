@@ -1,5 +1,7 @@
 // App/Intents/PauseOverbrightIntent.swift — "Pause Overbright" (DESIGN.md §12.8). ARCHITECTURE.md §4.9, §7.7, §10.10;
-// D18. A one-line adapter over `IntentRouter` (the engine owns the pause deadline).
+// D18. A one-line adapter over `IntentRouter` (the engine owns the pause deadline). The duration goes to the router as
+// a plain number of seconds: `Duration.seconds(Double)` traps on an infinite, not-a-number or huge value, which a crafted
+// shortcut can pass, so the router bounds it (§9.2 rule 2).
 import AppIntents
 import Foundation
 import OverbrightIntents
@@ -29,7 +31,7 @@ struct PauseOverbrightIntent: AppIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult {
-        try await router.pause(for: .seconds(duration.converted(to: .seconds).value))
+        try await router.pause(forSeconds: duration.converted(to: .seconds).value)
         return .result()
     }
 }

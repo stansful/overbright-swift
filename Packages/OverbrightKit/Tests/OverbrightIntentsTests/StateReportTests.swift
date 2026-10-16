@@ -57,6 +57,24 @@ import Testing
         #expect(empty.dialog == "Overbright is on.")
     }
 
+    /// The dialog's sentences join as the language writes two sentences: a space in English and Russian, none in
+    /// Japanese and Chinese, whose sentences end in "。" (a literal space showed and was spoken there).
+    @Test func theSentencesJoinAsTheLanguageWritesThem() async throws {
+        func language(_ code: String) throws -> Bundle {
+            try #require(Bundle.module.path(forResource: code, ofType: "lproj").flatMap(Bundle.init(path:)), "\(code)")
+        }
+        #expect(IntentRouter.joined([]) == "" && IntentRouter.joined(["One."]) == "One.")
+        #expect(IntentRouter.joined(["One.", "Two.", "Three."]) == "One. Two. Three.")         // the development language
+        #expect(IntentRouter.joined(["Раз.", "Два."], bundle: try language("ru")) == "Раз. Два.")
+        for code in ["ja", "zh-Hans", "zh-Hant"] {
+            #expect(IntentRouter.joined(["一。", "二。", "三。"], bundle: try language(code)) == "一。二。三。", "\(code)")
+        }
+        let (router, boost) = connected(.builtinXDRLidOpen)
+        boost.status.isOn = true
+        let report = try await router.stateReport(valueText: { _ in "x" }, bundle: try language("ja"))
+        #expect(!report.dialog.contains("。 ") && report.dialog.contains("。\u{2068}"))
+    }
+
     @Test func theShortcutsAppOffersDisplaysThatCanBoostOrDim() async throws {
         let (router, boost) = connected(.sidecar)
         #expect(try await router.displayChoices().map(\.key) == [DisplayFixture.Keys.builtIn, DisplayFixture.Keys.sidecar])

@@ -4,8 +4,11 @@
 // seam. Every intent method waits for the connection and for `BoostStatus.isReady` (at most `readinessTimeout`, then
 // `IntentRouterError.notReady`, "Overbright is still starting"), so an intent that launched Overbright runs after the
 // launch check and the launch behaviour: a turn-on from an intent therefore overrides "Launch, keep off" (an explicit
-// user action). Values are in the canonical units of DESIGN.md §1 principle 4: presets or light multipliers, dim
-// light in percent of Standard. Main actor, like the engine; the adapters' `perform()` is `@MainActor` and one line.
+// user action). The router observes the engine's readiness only while an intent waits, so the engine's status changes
+// (a ramp's every step) cost it nothing otherwise. Values are in the canonical units of DESIGN.md §1 principle 4:
+// presets or light multipliers, dim light in percent of Standard; a pause is at most `longestPause` long, whatever
+// number a shortcut passes (an infinite or not-a-number duration never reaches `Duration` or `Date` arithmetic, which
+// would trap, §9.2 rule 2). Main actor, like the engine; the adapters' `perform()` is `@MainActor` and one line.
 import Foundation
 import OverbrightChannel
 import OverbrightCore
@@ -20,6 +23,10 @@ private let log = Log.logger(.intents)
 public final class IntentRouter {
     /// How long an intent waits for the connection and for the engine to be ready.
     public static let readinessTimeout: Duration = .seconds(5)
+    /// The longest pause an intent sets (a longer one, an infinite one included, is cut to it).
+    public static let longestPause: TimeInterval = 24 * 60 * 60
+    /// The pause of a duration that is not a number (the Pause intent's default, one hour).
+    public static let fallbackPause: TimeInterval = 60 * 60
 
     private let time: any TimeSource
     private let timeout: Duration
@@ -67,10 +74,7 @@ public final class IntentRouter {
             pendingFocus = nil
             signals.setFocusDirective(directive)
         }
-        readiness = observe({ boost.status.isReady }) { [weak self] isReady in
-            if isReady { self?.resumeWaiters() }
-        }
-        if boost.status.isReady { resumeWaiters() }
+        watchReadiness()
     }
 
     // MARK: One method per intent (DESIGN.md §12.8)
@@ -102,10 +106,14 @@ public final class IntentRouter {
         boost.setDimLight(Double(min(max(percent, 2), 99)) / 100, for: display, source: .intent)
     }
 
-    /// Pause Overbright for `duration` (from now, on the wall clock the user sees).
-    public func pause(for duration: Duration) async throws {
+    /// Pause Overbright for `duration` (from now, on the wall clock the user sees; at most `longestPause`).
+    public func pause(for duration: Duration) async throws { try await pause(forSeconds: duration.timeInterval) }
+
+    /// Pause Overbright for `seconds`, as the Shortcuts app passes them (any `Double`: negative is no pause, longer
+    /// than `longestPause` or infinite is `longestPause`, not a number is `fallbackPause`).
+    public func pause(forSeconds seconds: Double) async throws {
         let boost = try await ready()
-        boost.pause(until: time.wallClock.addingTimeInterval(max(duration, .zero).timeInterval), source: .intent)
+        boost.pause(until: time.wallClock.addingTimeInterval(Self.pauseInterval(seconds)), source: .intent)
     }
 
     /// Resume Overbright.
@@ -176,7 +184,10 @@ public final class IntentRouter {
             self?.resumeWaiter(id)
         }
         await withTaskCancellationHandler {
-            await withCheckedContinuation { waiters[id] = $0 }
+            await withCheckedContinuation { continuation in
+                waiters[id] = continuation
+                watchReadiness()
+            }
         } onCancel: {
             Task { @MainActor [weak self] in self?.resumeWaiter(id) }
         }
@@ -188,11 +199,35 @@ public final class IntentRouter {
         return boost
     }
 
-    private func resumeWaiter(_ id: UInt64) { waiters.removeValue(forKey: id)?.resume() }
+    /// Whether the router observes the engine's readiness now (only while an intent waits on a connected router).
+    var isWatchingReadiness: Bool { readiness != nil }
+
+    /// Observes the engine's readiness while intents wait for it; resumes them at once when it is ready already.
+    private func watchReadiness() {
+        guard readiness == nil, let boost, !waiters.isEmpty else { return }
+        if boost.status.isReady {
+            resumeWaiters()
+            return
+        }
+        readiness = observe({ boost.status.isReady }) { [weak self] isReady in
+            if isReady { self?.resumeWaiters() }
+        }
+    }
+
+    private func stopWatchingReadiness() {
+        readiness?.cancel()
+        readiness = nil
+    }
+
+    private func resumeWaiter(_ id: UInt64) {
+        waiters.removeValue(forKey: id)?.resume()
+        if waiters.isEmpty { stopWatchingReadiness() }
+    }
 
     private func resumeWaiters() {
         let continuations = waiters.values
         waiters.removeAll()
+        stopWatchingReadiness()
         for continuation in continuations { continuation.resume() }
     }
 
@@ -217,6 +252,12 @@ public final class IntentRouter {
     static func knownVerdict(_ status: DisplayStatus) -> DisplayVerdict? {
         guard let verdict = status.decision?.eligibility.verdict, verdict != .checking else { return nil }
         return verdict
+    }
+
+    /// The length of a pause of `seconds`: 0 … `longestPause`, `fallbackPause` for not a number.
+    static func pauseInterval(_ seconds: Double) -> TimeInterval {
+        guard !seconds.isNaN else { return fallbackPause }
+        return min(max(seconds, 0), longestPause)
     }
 
     /// The request in canonical units: a multiplier is a light gain of at least ×1 (a non-finite one is ×1).
