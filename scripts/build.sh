@@ -6,6 +6,8 @@
 #   CONFIGURATION=Debug scripts/build.sh
 #   CONTROLS=1 scripts/build.sh      # keep the dormant Control Center extension (D18; default 1 when TEAM_ID is set)
 #   SIGN_IDENTITY="Developer ID Application: Jane Doe (TEAMID1234)" TEAM_ID=TEAMID1234 scripts/build.sh
+#   OVERBRIGHT_GITHUB_REPOSITORY=owner/repo scripts/build.sh   # the update check's repository (release.yml sets it;
+#                                                              # empty, the default, = no update check, no network)
 #
 # The OverbrightControls extension target is always built (so it stays compile-checked) and embedded by Xcode; unless
 # CONTROLS=1, the copy in build/ drops it and is re-signed (scripts/lib.sh drop_controls_extension).
@@ -32,6 +34,12 @@ fi
 MARKETING_VERSION="${MARKETING_VERSION:-$(tr -d "[:space:]" < "$ROOT/VERSION")}"
 overrides+=(MARKETING_VERSION="$MARKETING_VERSION")
 [[ -n "${BUILD_NUMBER:-}" ]] && overrides+=(CURRENT_PROJECT_VERSION="$BUILD_NUMBER")
+# The GitHub repository of the update check (Info.plist OverbrightGitHubRepository, D2): "owner/repo", or empty.
+if [[ -n "${OVERBRIGHT_GITHUB_REPOSITORY:-}" ]]; then
+  [[ "$OVERBRIGHT_GITHUB_REPOSITORY" =~ ^[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$ ]] \
+    || die "OVERBRIGHT_GITHUB_REPOSITORY must be owner/repo, got '$OVERBRIGHT_GITHUB_REPOSITORY'"
+  overrides+=(OVERBRIGHT_GITHUB_REPOSITORY="$OVERBRIGHT_GITHUB_REPOSITORY")
+fi
 
 PRODUCT="$DERIVED_DIR/Build/Products/$CONFIGURATION/$APP_NAME.app"
 
@@ -132,4 +140,5 @@ log "Built $APP"
 log "  version $(plist_value "$APP" CFBundleShortVersionString) ($(plist_value "$APP" CFBundleVersion))"
 log "  $(lipo -archs "$APP/Contents/MacOS/$APP_NAME" | sed 's/^/archs: /')"
 log "  Controls extension: $controls"
+log "  update check: $(plist_value "$APP" OverbrightGitHubRepository | sed 's/^$/off (no repository)/')"
 log "  $(codesign -dv "$APP" 2>&1 | grep -E '^(Signature|TeamIdentifier|CodeDirectory)' | tr '\n' ' ')"

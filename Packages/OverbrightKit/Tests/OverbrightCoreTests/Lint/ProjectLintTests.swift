@@ -1,7 +1,8 @@
 // OverbrightCoreTests/Lint/ProjectLintTests.swift — the Xcode project's build settings that scripts/check-modules.sh
 // cannot see (ARCHITECTURE.md §8.6): the app target (App/, its intent adapters) and the dormant Controls extension
 // (Controls/, Shared/) compile only in the Xcode build, so zero warnings has to be a setting of theirs; and a Debug
-// build links its binary once, so the App Intents metadata is always extracted (§7.7, scripts/smoke.sh).
+// build links its binary once, so the App Intents metadata is always extracted (§7.7, scripts/smoke.sh); and the
+// update check's repository is a build setting a release can set (D2).
 import Foundation
 import Testing
 
@@ -30,6 +31,18 @@ import Testing
     func debugBuildsLinkOnce(configuration: String) throws {
         let settings = try #require(Self.buildSettings(of: configuration, in: project), "\(configuration)")
         #expect(settings["ENABLE_DEBUG_DYLIB"] == "NO", "\(configuration)")
+    }
+
+    /// D2, §8.6: the update check's repository comes from the build setting, empty in the project (no network), so
+    /// `scripts/build.sh` can pass the one release.yml publishes from; a literal in Info.plist could not be set.
+    @Test(arguments: [appDebug, appRelease])
+    func updateRepositoryIsABuildSetting(configuration: String) throws {
+        let settings = try #require(Self.buildSettings(of: configuration, in: project), "\(configuration)")
+        #expect(settings["OVERBRIGHT_GITHUB_REPOSITORY"] == "", "\(configuration)")
+        let plist = try String(contentsOf: SourceScan.repository.appending(path: "App/Info.plist"), encoding: .utf8)
+        let entry = try NSRegularExpression(
+            pattern: "<key>OverbrightGitHubRepository</key>\\s*<string>\\$\\(OVERBRIGHT_GITHUB_REPOSITORY\\)</string>")
+        #expect(!SourceScan.matches(entry, in: plist).isEmpty, "App/Info.plist takes $(OVERBRIGHT_GITHUB_REPOSITORY)")
     }
 
     /// The parser reads one configuration's settings and nothing of the next one.

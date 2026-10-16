@@ -55,9 +55,11 @@
 	     each Metal device comes from CGDirectDisplayCopyCurrentMetalDevice (ARCHITECTURE.md §8.6). -->
 	<key>NSSupportsAutomaticGraphicsSwitching</key>
 	<true/>
-	<!-- "owner/repo" for the GitHub Releases update check. Empty = update check disabled, no network at all (D2). -->
+	<!-- "owner/repo" for the GitHub Releases update check. Empty = update check disabled, no network at all (D2). The
+	     build setting OVERBRIGHT_GITHUB_REPOSITORY is empty in the project; scripts/build.sh passes it from the
+	     environment, and release.yml sets it to the repository the release is published from. -->
 	<key>OverbrightGitHubRepository</key>
-	<string></string>
+	<string>$(OVERBRIGHT_GITHUB_REPOSITORY)</string>
 	<!-- overbright://settings[/<pane>] opens Settings; overbright://control?set=… is the dormant control's route
 	     (ARCHITECTURE.md §7.7). Nothing else. -->
 	<key>CFBundleURLTypes</key>

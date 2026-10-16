@@ -5,6 +5,8 @@
 #   - the report: gammaWrites == 0 and triggerWindows == 0 (nothing touched the displays), `displays` is a list
 #     (CI VMs have none), every OverbrightKit resource bundle is embedded, the Edit menu exists;
 #   - privacy: no entitlement except Debug's get-task-allow, no *UsageDescription key, LSUIElement is true;
+#   - the update check (D2): OverbrightGitHubRepository is empty (no network) or "owner/repo", and equals
+#     $OVERBRIGHT_GITHUB_REPOSITORY when that is set (release.yml builds with it);
 #   - languages: CFBundleLocalizations lists exactly the languages of scripts/l10n/languages.json; every translation
 #     the String Catalogs hold is compiled into its bundle and no stale .lproj is left (scripts/check-lproj.py); the
 #     report's Design sentence in Russian is Russian (a package bundle without its table falls back to English);
@@ -77,10 +79,11 @@ if [[ -d "$APPEX" ]]; then
     || die "codesign could not read the Controls extension's entitlements"
 fi
 controls_enabled && want_controls=1 || want_controls=0
-/usr/bin/python3 -I - "$APP" "$ENTITLEMENTS" "$APPEX_ENTITLEMENTS" "$want_controls" "$ROOT/scripts/l10n/languages.json" <<'PY' \
-  || die "the app's entitlements, privacy keys, languages, extension or intents are wrong (see above)"
-import json, os, plistlib, sys
-app, entitlements_path, appex_entitlements_path, want_controls, languages_path = sys.argv[1:6]
+/usr/bin/python3 -I - "$APP" "$ENTITLEMENTS" "$APPEX_ENTITLEMENTS" "$want_controls" "$ROOT/scripts/l10n/languages.json" \
+  "${OVERBRIGHT_GITHUB_REPOSITORY:-}" <<'PY' \
+  || die "the app's entitlements, privacy keys, update check, languages, extension or intents are wrong (see above)"
+import json, os, plistlib, re, sys
+app, entitlements_path, appex_entitlements_path, want_controls, languages_path, wanted_repository = sys.argv[1:7]
 
 def entitlements_at(path):
     if not os.path.exists(path):
@@ -97,6 +100,12 @@ info = plistlib.load(open(os.path.join(app, "Contents/Info.plist"), "rb"))
 problems += [f"{k} present: Overbright asks for no permission" for k in sorted(info) if k.endswith("UsageDescription")]
 if info.get("LSUIElement") is not True:
     problems.append("LSUIElement is not true (Overbright is a menu bar app)")
+# The update check (D2): empty = off and no network; otherwise the GitHub repository it asks.
+repository = info.get("OverbrightGitHubRepository")
+if not isinstance(repository, str) or (repository and not re.fullmatch(r"[A-Za-z0-9._-]+/[A-Za-z0-9._-]+", repository)):
+    problems.append(f"OverbrightGitHubRepository is {repository!r}: it must be empty or owner/repo")
+elif wanted_repository and repository != wanted_repository:
+    problems.append(f"OverbrightGitHubRepository is {repository!r}, but the build asked for {wanted_repository!r}")
 
 languages = json.load(open(languages_path, encoding="utf-8"))
 codes = [l["code"] for l in languages]
@@ -139,9 +148,9 @@ else:
     if "OverbrightFocusFilter" in actions and not any(p.endswith(".FocusConfiguration") for p in focus):
         problems.append("OverbrightFocusFilter is not a Focus filter (no FocusConfiguration system protocol)")
 
-print("\n".join(problems) or "privacy OK: no entitlements, no usage strings, LSUIElement; %d languages advertised; "
-      "Controls extension %s; %d intents in the metadata" % (len(advertised), "present" if appexes else "absent",
-                                                              len(intents)))
+print("\n".join(problems) or "privacy OK: no entitlements, no usage strings, LSUIElement; update check %s; "
+      "%d languages advertised; Controls extension %s; %d intents in the metadata"
+      % (f"asks {repository}" if repository else "off", len(advertised), "present" if appexes else "absent", len(intents)))
 sys.exit(1 if problems else 0)
 PY
 

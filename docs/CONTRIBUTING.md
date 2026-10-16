@@ -155,7 +155,10 @@ Settings-window defaults: `-OverbrightQAAppearance light|dark`, `-OverbrightQASn
 its close button would), `-OverbrightQASettingsMenuItem <s>` (performs the app menu's ⌘, item after that many
 seconds, as the key would; no input is synthesized), and `-OverbrightQAKeyboardLayout <id>` (key caps
 in another layout, for example `com.apple.keylayout.German`; read wherever key caps are drawn). Debug builds also
-take `-OverbrightGitHubRepository owner/repo` to try the update check against a scratch repository.
+take `-OverbrightGitHubRepository owner/repo` to try the update check against a scratch repository. A build's own
+repository is the build setting `OVERBRIGHT_GITHUB_REPOSITORY` (empty in the project: no update check):
+`OVERBRIGHT_GITHUB_REPOSITORY=owner/repo make build` sets it, and `release.yml` builds with the repository it publishes
+from; smoke checks the value.
 
 **Right to left:** pass `-AppleLanguages "(ar)" -AppleTextDirection YES` (AppKit mirrors only with both).
 

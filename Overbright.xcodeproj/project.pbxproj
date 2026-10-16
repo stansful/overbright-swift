@@ -379,6 +379,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				OVERBRIGHT_GITHUB_REPOSITORY = "";
 				PRODUCT_BUNDLE_IDENTIFIER = app.overbright.Overbright;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -409,6 +410,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				OVERBRIGHT_GITHUB_REPOSITORY = "";
 				PRODUCT_BUNDLE_IDENTIFIER = app.overbright.Overbright;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;

@@ -110,7 +110,9 @@ after 10 seconds.
 - Everything stays on your Mac: settings in the app's preferences, self-test logs in
   `~/Library/Application Support/app.overbright.Overbright/`, caches in `~/Library/Caches/app.overbright.Overbright/`.
 - The only network request is the optional daily update check against this project's GitHub Releases page (no
-  identifiers, no cookies). It is off until you turn it on, and absent from builds that have no repository set.
+  identifiers, no cookies). It is off until you turn it on. Releases published here ask this repository; a build
+  from source has no repository set, and so no update check, unless you build it with
+  `OVERBRIGHT_GITHUB_REPOSITORY=owner/repo`.
 - Copy Diagnostics puts a technical report on the clipboard; nothing is ever sent anywhere.
 
 ## Languages
