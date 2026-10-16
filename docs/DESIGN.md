@@ -651,7 +651,7 @@ The compiled icon, "Overbright", version and build; **Check for Updates** with t
 ## 8. Welcome
 
 - **Window:** 640 × 480, hidden title bar, not resizable, centred on the main display. The top half is a stage (the before/after card or an illustration), the bottom half holds copy and controls on the system background. Progress dots plus "Step 2 of 5" for VoiceOver; ↩ continues, ⌘[ goes back, Esc asks "Skip setup?" (the close button counts as Skip). A **Quit Overbright** text button sits bottom-leading on every step.
-- **Skip** (and closing the window) applies every default, including the login item ("Open Overbright, keep it off", registered with `SMAppService.mainApp`). **Done** applies the choices of step 3.
+- **Skip** (and closing the window) applies every default, including the login item ("Open Overbright, keep it off", registered with `SMAppService.mainApp`). **Done** applies the choices of step 3. As built (WP14): Skip drops every choice made in Welcome and registers the default login item also on a later Welcome opened from Settings ▸ About; the other settings Welcome shows are at their defaults on a first run, and a later Skip leaves them as Settings holds them (resetting them is Reset All's job, §7.8).
 - Shown at the first launch that is not a login launch (after the launch check and the move-to-Applications offer) and from Settings ▸ About; never again once finished or skipped.
 
 | Step | Headline | Body (exact English) | Stage and interaction |
