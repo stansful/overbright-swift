@@ -29,12 +29,13 @@ extension DisplayController {
         if trigger != nil || overlay != nil { startLinger() }
     }
 
-    /// Removes the kept trigger after `triggerLinger` while still suspended.
+    /// Removes the kept trigger after `triggerLinger` while still suspended. A shield whose baseline write failed left
+    /// the table scaled: it is written again first, and the window stays while it still fails (§4.5 invariant 2).
     func startLinger() {
         lingerSlot.run { [weak self] in
             guard let self else { return }
             do { try await self.deps.time.sleep(for: EngineTiming.triggerLinger) } catch { return }
-            guard case .suspended = self.phase else { return }
+            guard case .suspended = self.phase, self.writeBaselineNow() else { return }
             let windows = (self.trigger, self.overlay)
             self.trigger = nil
             self.overlay = nil
@@ -83,10 +84,7 @@ extension DisplayController {
         case .neutral:
             generation += 1
             cancelAllTasks()
-            writeBaselineNow()
-            removeWindows()
-            phase = .idle
-            settled()
+            landAndGoIdle(kind: rampKind)
         case .dim(let light):
             generation += 1
             cancelAllTasks()
@@ -173,7 +171,10 @@ extension DisplayController {
         stopRebase()
         lingerSlot.cancel()
         target = .neutral
-        if phase.isFailed { return }
+        if phase.isFailed {
+            writeBaselineNow()                                            // a landing that failed earlier, once more
+            return
+        }
         guard isScaledOrDimmed else {
             rampSlot.cancel()
             removeWindows()
@@ -193,12 +194,14 @@ extension DisplayController {
         disarm(kind: kind, rateLimited: false)
     }
 
-    /// Waits for the running ramp (the ramped stop).
+    /// Waits for the running ramp (the ramped stop), and for a retry that replaced it after a failed write (bounded by
+    /// the repair budget).
     func waitUntilSettled() async {
-        await rampSlot.wait()
+        while rampSlot.isRunning { await rampSlot.wait() }
     }
 
-    /// `stopNow()`: baseline at once, windows removed, no tasks.
+    /// `stopNow()`: baseline at once, windows removed, no tasks. Synchronous by contract (quit, the instruments): if
+    /// WindowServer refuses the baseline, the display stays marked and the engine's ledger pass writes it again.
     func stopNow() {
         generation += 1
         cancelAllTasks()

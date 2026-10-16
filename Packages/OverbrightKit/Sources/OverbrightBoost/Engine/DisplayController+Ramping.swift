@@ -25,45 +25,55 @@ extension DisplayController {
     ///   - rateLimited: false for Back to Standard and the ramped stop, which never wait (they always work, §4.9).
     func startRamp(to gain: Double, kind: RampPlanner.Kind? = nil, origin: Origin, finalPhase: EnginePhase?,
                    removesWindowsAtEnd: Bool = false, setsRampingPhase: Bool = true, rateLimited: Bool = true) {
+        startRamp(RampSpec(gain: gain, kind: kind ?? rampKind, origin: origin, finalPhase: finalPhase,
+                           removesWindowsAtEnd: removesWindowsAtEnd, rateLimited: rateLimited),
+                  setsRampingPhase: setsRampingPhase)
+    }
+
+    /// Starts `ramp` (a new one, or a retry after a failed write).
+    func startRamp(_ ramp: RampSpec, setsRampingPhase: Bool) {
         rampSerial &+= 1
         let serial = rampSerial
         let stamp = generation
-        let kind = kind ?? rampKind
-        let direction: FlickerGuard.Direction = gain >= appliedGain ? .up : .down
-        let delay = rateLimited ? flicker.delay(before: direction, at: deps.time.now) : .zero
+        let direction: FlickerGuard.Direction = ramp.gain >= appliedGain ? .up : .down
+        let delay = ramp.rateLimited ? flicker.delay(before: direction, at: deps.time.now) : .zero
         // The phase always names the ramp in flight: a ramp to idle is a disarm, anything else is ramping.
-        if setsRampingPhase { phase = finalPhase == .idle ? .disarming : .ramping }
+        if setsRampingPhase { phase = ramp.finalPhase == .idle ? .disarming : .ramping }
         rampSlot.run { [weak self] in
             guard let self else { return }
             if delay > .zero {
                 guard await self.sleep(delay, stamp), self.rampSerial == serial else { return }
             }
-            await self.runRamp(to: gain, kind: kind, origin: origin, finalPhase: finalPhase,
-                               removesWindowsAtEnd: removesWindowsAtEnd, serial: serial, stamp: stamp)
+            await self.runRamp(ramp, serial: serial, stamp: stamp)
         }
     }
 
-    /// The ramp itself: ≥ 6 writes, smoothstep in stops, the last one exactly at the target (§5.7).
-    func runRamp(to gain: Double, kind: RampPlanner.Kind, origin: Origin, finalPhase: EnginePhase?,
-                 removesWindowsAtEnd: Bool, serial: UInt64, stamp: UInt64) async {
+    /// The ramp itself: ≥ 6 writes, smoothstep in stops, the last one exactly at the target (§5.7). The final phase
+    /// is set, and windows removed, only once the table is at the target: a failed step goes to `rampStepFailed`.
+    func runRamp(_ ramp: RampSpec, serial: UInt64, stamp: UInt64) async {
         let start = appliedGain
-        if abs(gain - start) > 1e-9 {
-            let direction: FlickerGuard.Direction = gain > start ? .up : .down
-            if flicker.record(direction, at: deps.time.now, origin: origin) {
+        if abs(ramp.gain - start) > 1e-9 {
+            let direction: FlickerGuard.Direction = ramp.gain > start ? .up : .down
+            if flicker.record(direction, at: deps.time.now, origin: ramp.origin) {
                 fail(.oscillation)
                 return
             }
-            let plan = RampPlanner.plan(from: start, to: gain, kind: kind)
+            let plan = RampPlanner.plan(from: start, to: ramp.gain, kind: ramp.kind)
             for step in plan.gains {
                 guard await sleep(plan.interval, stamp), rampSerial == serial else { return }
-                guard writeGain(step) else { break }
+                let before = appliedGain
+                if writeGain(step) { continue }
+                // A hang recovery or a trip took over; otherwise land, then finish or retry.
+                guard isCurrent(stamp), rampSerial == serial,
+                      await rampStepFailed(ramp, before: before, serial: serial, stamp: stamp) else { return }
+                break
             }
         }
         guard isCurrent(stamp), rampSerial == serial else { return }
-        if removesWindowsAtEnd, appliedGain <= 1 + TableWriter.neutralTolerance {
-            if finalPhase == .dimmed { removeTrigger() } else { removeWindows() }
+        if ramp.removesWindowsAtEnd, appliedGain <= 1 + TableWriter.neutralTolerance {
+            if ramp.finalPhase == .dimmed { removeTrigger() } else { removeWindows() }
         }
-        if let finalPhase { phase = finalPhase }
+        if let finalPhase = ramp.finalPhase { phase = finalPhase }
         settled()
     }
 
@@ -88,7 +98,8 @@ extension DisplayController {
     }
 
     /// One write of light gain `gain` through `TableWriter` (or the overlay). False when nothing was written; a
-    /// refusal by a stale epoch starts the hang recovery, any other refusal lands on the baseline at once.
+    /// refusal by a stale epoch starts the hang recovery, any other refusal lands on the baseline at once; a
+    /// WindowServer error leaves the applied state as it was (the caller lands or retries).
     func writeGain(_ gain: Double) -> Bool {
         guard !isOffConsole, parameters.isSessionActive else { return false }
         if mechanism == .overlay { return setOverlayGain(gain) }
@@ -167,9 +178,14 @@ extension DisplayController {
     /// counted by the oscillation detector unless the headroom readings moved monotonically.
     func lowerForSafety() {
         let before = appliedGain
+        let stamp = generation
         rampSerial &+= 1
         rampSlot.cancel()
-        guard writeGain(appliedGain) else { return }
+        guard writeGain(appliedGain) else {
+            // Never stay above 0.98 × H because a write failed: the baseline at once (unless a hang recovery took over).
+            if isCurrent(stamp) { writeBaselineNow() }
+            return
+        }
         deps.journal.record("interlock.lowered", display: key,
                             values: ["before": before, "after": appliedGain, "headroom": lastReading?.current ?? 0],
                             time: deps.time)

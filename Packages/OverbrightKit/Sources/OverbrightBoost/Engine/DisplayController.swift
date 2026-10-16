@@ -2,8 +2,8 @@
 // §4.3 (transitions), §4.5 (invariants), §4.6 (generations and the hang epoch). MainActor.
 // This file holds the state; decisions live in `DisplayController+Decisions.swift`, trips and shared helpers in
 // `+Support`, arming in `+Arming`, the gate and re-gating in `+Gate`, capture in `+Capture`, ramps and raises in
-// `+Ramping`, events in `+Events`, re-basing in `+Rebase`, the drift check in `+Drift`, and the self-test and
-// calibration seam in `+Driving`.
+// `+Ramping`, failed writes in `+WriteFailure`, events in `+Events`, re-basing in `+Rebase`, the drift check in
+// `+Drift`, and the self-test and calibration seam in `+Driving`.
 import Foundation
 import OverbrightCore
 import OverbrightPolicy

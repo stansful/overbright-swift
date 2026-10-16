@@ -1,6 +1,6 @@
 // OverbrightBoost/Engine/DisplayController+Support.swift — trips and the helpers every part of the controller uses (readings,
-// generations, the baseline write, window removal, journal codes). ARCHITECTURE.md §4.3, §4.5 invariants 2 and 7, §4.6.
-// MainActor.
+// generations, the baseline write, window removal, journal codes). ARCHITECTURE.md §4.3, §4.5 invariants 2, 4 and 7,
+// §4.6. MainActor.
 import Foundation
 import OverbrightCore
 import OverbrightPolicy
@@ -70,22 +70,46 @@ extension DisplayController {
     var lastWriteIsScaled: Bool { abs((lastWrite?.factor ?? 1) - 1) > TableWriter.neutralTolerance }
 
     /// Writes the baseline now when the table (or overlay) is scaled or dimmed, or our latest write was (one write,
-    /// never refused).
-    func writeBaselineNow() {
-        defer { appliedGain = 1; appliedFactor = 1; appliedLimit = nil }
-        guard isScaledOrDimmed || (mechanism == .table && lastWriteIsScaled) else { return }
-        if mechanism == .overlay {
-            try? overlay?.setFactor(1, headroomRequest: 1)
-            return
+    /// never refused by the epoch). True when the display is at its baseline afterwards. When WindowServer (or the
+    /// overlay) throws, the applied state is kept, so the display still counts as scaled or dimmed: the ledger keeps its
+    /// entry, the trigger stays (see `+WriteFailure`) and the next stop, disarm or reduction writes it again.
+    @discardableResult
+    func writeBaselineNow() -> Bool {
+        guard isScaledOrDimmed || (mechanism == .table && lastWriteIsScaled) else {
+            resetApplied()
+            return true
         }
-        guard let baseline else { return }
+        if mechanism == .overlay {
+            do {
+                try overlay?.setFactor(1, headroomRequest: 1)
+            } catch {
+                deps.journal.record("overlay.failed", display: key, time: deps.time, category: .trigger)
+                return false
+            }
+            resetApplied()
+            return true
+        }
+        guard let baseline else {
+            resetApplied()                                                // nothing to restore with (a rescue forgot it)
+            return true
+        }
         do {
             try deps.writer.writeBaseline(baseline, to: ref)
-            lastWrite = (baseline, 1)
         } catch {
             deps.journal.record("baseline.writeFailed", display: key, time: deps.time, category: .gamma)
             log.error("baseline write failed: \(String(describing: error), privacy: .public)")
+            return false
         }
+        lastWrite = (baseline, 1)
+        resetApplied()
+        return true
+    }
+
+    /// The table (or overlay) is at its baseline.
+    func resetApplied() {
+        appliedGain = 1
+        appliedFactor = 1
+        appliedLimit = nil
     }
 
     /// Orders out the trigger and the overlay (after the table is back at its baseline, §4.5 invariant 2). The safety
@@ -100,6 +124,7 @@ extension DisplayController {
         overlay = nil
         windows.0?.remove()
         windows.1?.remove()
+        if mechanism == .overlay { resetApplied() }                     // the overlay was the whole effect
         lingerSlot.cancel()
     }
 

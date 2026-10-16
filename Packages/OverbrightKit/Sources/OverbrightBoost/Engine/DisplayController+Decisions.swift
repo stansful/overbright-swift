@@ -6,7 +6,8 @@ import OverbrightPolicy
 
 extension DisplayController {
     /// Applies the reducer's decision for this display. `requested` marks a change the user asked for (slider,
-    /// preset, step, intent, Focus): it raises at once and never counts towards the oscillation detector.
+    /// preset, step, intent, Focus): it raises at once and never counts towards the oscillation detector. A display
+    /// at rest whose last landing failed writes its baseline again first.
     func update(_ decision: DisplayDecision, parameters: WriteParameters, requested: Bool) {
         let parametersChanged = parameters != self.parameters
         self.decision = decision
@@ -15,6 +16,7 @@ extension DisplayController {
         let changed = !Self.sameTarget(decision.target, target)
         target = decision.target
         guard !isOffConsole, parameters.isSessionActive, !isDriven else { return }
+        retryLandingAtRest()
         if decision.mechanism != mechanism {
             guard isActive || isScaledOrDimmed else {
                 mechanism = decision.mechanism
@@ -105,9 +107,7 @@ extension DisplayController {
         case .suspended:
             generation += 1
             cancelAllTasks()
-            writeBaselineNow()
-            removeWindows()
-            phase = .idle
+            landAndGoIdle(kind: kind, rateLimited: rateLimited)
         default:
             generation += 1
             armSlot.cancel(); burstSlot.cancel(); driftSlot.cancel(); lingerSlot.cancel()

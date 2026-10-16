@@ -2,7 +2,7 @@
 // random event sequences (seeded, reproducible), every write above the base is backed by a reading of the same display
 // at most 150 ms old with `G ≤ 0.97 × H`, no trigger is removed while its table is scaled, every sequence that ends
 // with the master off leaves every table at its baseline with no window and no task, and at least 30 % of the
-// sequences reach `boosted` (so the property is not vacuous).
+// sequences reach `boosted` (so the property is not vacuous). WindowServer refusing a write is one of the actions.
 import Foundation
 import OverbrightCore
 import OverbrightPolicy
@@ -82,10 +82,10 @@ import Testing
     }
 
     /// One random action: user requests, shields and wakes, headroom moves, resets by other writers, occlusion,
-    /// reconfiguration, pauses and retries.
+    /// reconfiguration, pauses and retries, and WindowServer refusing the next write.
     private func act(_ h: EngineHarness, keys: [DisplayKey], random: inout SeededGenerator) {
         let key = keys[Int.random(in: 0..<keys.count, using: &random)]
-        switch Int.random(in: 0..<16, using: &random) {
+        switch Int.random(in: 0..<17, using: &random) {
         case 0, 1:
             h.engine.setOn(true, source: .panel)
         case 2:
@@ -126,9 +126,11 @@ import Testing
             } else {
                 h.engine.resume(source: .menu)
             }
-        default:
+        case 15:
             h.engine.retry(key)
             h.engine.toggleDim(source: .menu)
+        default:
+            h.gamma.failNextWrite(with: .coreGraphics(code: 1000))
         }
     }
 }
