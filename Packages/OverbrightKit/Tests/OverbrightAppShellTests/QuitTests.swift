@@ -1,8 +1,8 @@
 // OverbrightAppShellTests/QuitTests.swift — the quit of ARCHITECTURE.md §7.4 as built (`QuitFlow`): a user quit is
 // cancelled once, waits for the launch work, stops the services (Boost first, the ramp included) and terminates again;
-// a quit Apple Event terminates at once (no "User canceled" for scripts, the Dock or a logout); before any launch work
-// nothing is stopped. Over the real engine and the simulated ports, the stop leaves every table at its base and no
-// trigger open.
+// a quit Apple Event terminates at once (no "User canceled" for scripts, the Dock or a logout), also while a user quit
+// is stopping; before any launch work nothing is stopped. Over the real engine and the simulated ports, the stop leaves
+// every table at its base and no trigger open.
 import AppKit
 import CoreServices
 import Foundation
@@ -64,6 +64,39 @@ import Testing
         #expect(flow.reply(isQuitEvent: false) == .terminateCancel)
         #expect(flow.state == .stopping && record.stops == 1 && record.terminations == 0)
         release?.resume()
+        #expect(await eventually { record.terminations == 1 })
+    }
+
+    /// §7.4: a quit Apple Event (log out, restart, shut down, the Dock, a script) is never cancelled, also while a
+    /// user quit waits for the launch or ramps down; `applicationWillTerminate` then writes the baselines.
+    @Test func aQuitEventWhileStoppingTerminatesAtOnce() async {
+        let record = Record()
+        var release: CheckedContinuation<Void, Never>?
+        let flow = QuitFlow(gate: await launchedGate(), stop: {
+            record.stops += 1
+            await withCheckedContinuation { release = $0 }
+        }, terminate: { record.terminations += 1 })
+        #expect(flow.reply(isQuitEvent: false) == .terminateCancel)
+        #expect(await eventually { release != nil })
+        #expect(flow.state == .stopping)
+        #expect(flow.reply(isQuitEvent: true) == .terminateNow)
+        #expect(record.stops == 1 && record.terminations == 0)
+        release?.resume()
+        #expect(await eventually { record.terminations == 1 })
+    }
+
+    /// The same while the user quit still waits for the launch work (`LaunchGate`, at most 3 s).
+    @Test func aQuitEventDuringTheLaunchWaitTerminatesAtOnce() async {
+        let record = Record()
+        let gate = LaunchGate()
+        var finishLaunch: CheckedContinuation<Void, Never>?
+        gate.launch { await withCheckedContinuation { finishLaunch = $0 } }
+        #expect(await eventually { finishLaunch != nil })
+        let flow = QuitFlow(gate: gate, stop: { record.stops += 1 }, terminate: { record.terminations += 1 })
+        #expect(flow.reply(isQuitEvent: false) == .terminateCancel)
+        #expect(flow.reply(isQuitEvent: true) == .terminateNow)
+        #expect(record.stops == 0)
+        finishLaunch?.resume()
         #expect(await eventually { record.terminations == 1 })
     }
 

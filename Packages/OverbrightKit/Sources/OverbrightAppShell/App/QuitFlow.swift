@@ -8,7 +8,9 @@
 // app, WP0a], so no ramp step could run. A quit Apple Event (`kAEQuitApplication`: another app, a script, the Dock,
 // Activity Monitor, log out, restart, shut down) is never cancelled, so its sender never sees "User canceled" (-128)
 // and a logout is never held up: it terminates at once, and `applicationWillTerminate` runs every `stopNow()`, which
-// writes the baselines synchronously. Before any launch work (a command-line mode) nothing is stopped.
+// writes the baselines synchronously. That holds while a user quit is stopping too (its `LaunchGate` wait and the
+// ramped stop): a second quit from inside the app is cancelled, a quit Apple Event is not. Before any launch work (a
+// command-line mode) nothing is stopped.
 import AppKit
 import OverbrightBoost
 import OverbrightCore
@@ -44,7 +46,9 @@ final class QuitFlow {
         case .stopped:
             return .terminateNow
         case .stopping:
-            return .terminateCancel
+            guard isQuitEvent else { return .terminateCancel }       // a second user quit waits for the first
+            log.info("quit: a quit event while stopping terminates now")    // a logout is never held up
+            return .terminateNow
         case .running:
             if isQuitEvent { return .terminateNow }
             state = .stopping
