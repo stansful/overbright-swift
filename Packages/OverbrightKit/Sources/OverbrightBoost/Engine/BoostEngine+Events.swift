@@ -44,8 +44,8 @@ extension BoostEngine {
             continued = continued.filter { $0.value != processID }
             for controller in all { controller.appTerminated(processID: processID) }
         case .hdrSuppressionBegan, .hdrSuppressionEnded, .thermalChanged, .powerChanged, .activeSpaceChanged,
-             .appActivated, .appLaunched:
-            break
+             .appActivated, .appLaunched, .scheduleBoundary:
+            break                                                         // the re-reduction below reads them
         }
         calibrationSession?.handle(event)                                // a lock or the display's removal ends it
         updateAggregates()

@@ -85,6 +85,17 @@ import Testing
         #expect(h.signals.boostActiveCalls.last == false)
     }
 
+    /// Signals' schedule boundary (§7.1) re-reduces once, with nothing else to do.
+    @Test func aScheduleBoundaryReReduces() async throws {
+        let h = EngineHarness()
+        await h.start(on: true)
+        await h.advance(.milliseconds(100))
+        let before = h.inputs.count
+        h.signals.emit(.scheduleBoundary)
+        await h.settle()
+        #expect(h.inputs.count == before + 1)
+    }
+
     /// The self-test drives the controllers (decisions wait while it runs), holds the master off and restores it.
     @Test func selfTestHoldsTheMasterOffAndRestoresIt() async throws {
         let h = EngineHarness()
