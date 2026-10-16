@@ -46,6 +46,7 @@ lint:            ## Copy rules, competitor denylist (catalogs + every repository
 	  if [[ -n "$$shaders" ]]; then echo "error: Metal shader sources are not allowed (ARCHITECTURE.md D22):"; echo "$$shaders"; exit 1; fi; \
 	  echo "No Metal shader sources"
 	@/usr/bin/python3 -I scripts/check-lproj.py --self-test
+	@/usr/bin/python3 -I scripts/l10n/validate.py --self-test
 	@/usr/bin/python3 -I scripts/soak_judge.py --self-test
 
 strings:         ## Sync the package's String Catalogs with the keys used in code

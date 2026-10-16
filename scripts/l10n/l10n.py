@@ -377,7 +377,8 @@ def placeholders(text):
 # tooltips and Settings search keywords are never constrained. `ratio` is the length ratio over English (in display
 # columns, CJK counted double) above which validate.py warns when there is no `budget`; `budget` is a rough number of
 # display columns (≈ 6 pt each) the place holds. These are warnings only: the fit tests measure the real widths.
-_VOICE_ALWAYS = re.compile(r"^(voiceover|settings search)|\(voiceover\)|tooltip|search (keyword|words)", re.IGNORECASE)
+_VOICE_ALWAYS = re.compile(r"^(voiceover|settings search)|\(voiceover\)|tooltip|\bhelp tag\b|search (keyword|words)",
+                           re.IGNORECASE)                    # help tags are tooltips: macOS wraps them
 _VOICE_UNLESS_SHOWN = re.compile(r"voiceover (label|value|hint|action|announcement)", re.IGNORECASE)
 _SHOWN_TOO = re.compile(r"\bchips?\b|\breadout\b|value tag|\bHUD\b|\bsegment\b", re.IGNORECASE)
 SURFACE_RULES = [
@@ -396,9 +397,12 @@ SURFACE_RULES = [
     ("valueTag", re.compile(r"value tag", re.I), 240,
      "Slider value tag: ≤ 240 pt (the track width); a “small gain” suffix may wrap. Measured by the PanelUI fit tests.",
      1.3, 40),
-    ("chip", re.compile(r"\bchips?\b(?! row)", re.I), 280,
-     "Chip: a status chip sits on its own line (≤ 280 pt); the three footer guard chips share a 292-pt row and drop to "
-     "glyph + value when they do not fit. One or two short words. Measured by ChipFitTests.", 1.4, 16),
+    ("chip", re.compile(r"\bstatus chip\b|\bchip label\b", re.I), 280,
+     "Status chip: it sits on its own line under the card's slider, ≤ 280 pt with its glyph; a few words. Measured by "
+     "ChipFitTests.", 1.4, 36),
+    ("chip", re.compile(r"^Panel ▸ Footer chip:", re.I), 292,
+     "Footer chip: the three guard chips share a 292-pt row and drop to glyph + value when they do not fit; one or "
+     "two short words. Measured by ChipFitTests.", 1.4, 16),
     ("segment", re.compile(r"\bsegment\b|picker segment", re.I), None,
      "Segment of a segmented picker (Safe / Peak): shares the row with its siblings; one short word.", 1.4, 12),
     ("control", re.compile(r"^Control Center\b", re.I), None,
@@ -406,6 +410,11 @@ SURFACE_RULES = [
     ("column", re.compile(r"column header", re.I), None, "Table column header: one or two words.", 1.4, 12),
 ]
 # Menus (comment "Menu: …") are not constrained: NSMenu sizes itself (title case in English).
+MENU_SURFACE = re.compile(r"^Menu\b")
+# A comment that mentions a chip names the chip's own label only when it is a status chip, a footer chip (surface
+# "Panel ▸ Footer chip") or says "chip label"; what a chip opens is not its label: the popover's sentences, its
+# action buttons and a footer chip's menu items and submenus size themselves.
+NOT_THE_CHIP_LABEL = re.compile(r"popover|chip action|\bbutton\b|menu item|submenu", re.I)
 
 
 def surface(comment):
@@ -420,9 +429,11 @@ def constraint(comment):
     comment = comment or ""
     if _VOICE_ALWAYS.search(comment) or (_VOICE_UNLESS_SHOWN.search(comment) and not _SHOWN_TOO.search(comment)):
         return False, None
+    if MENU_SURFACE.match(surface(comment) or ""):
+        return False, None
     for kind, pattern, width, hint, ratio, budget in SURFACE_RULES:
         match = pattern.search(comment)
-        if not match:
+        if not match or (kind == "chip" and NOT_THE_CHIP_LABEL.search(comment)):
             continue
         if kind == "explicit":
             number = int(match.group(1))
