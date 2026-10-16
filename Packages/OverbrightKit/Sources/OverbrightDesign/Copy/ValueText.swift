@@ -80,7 +80,9 @@ public nonisolated struct ValueText: Hashable, Sendable {
         return CopyFormat.sentences(hint, estimate, in: language)
     }
 
-    /// "small gain on this display": the value tag's suffix when Max is below ×1.3 (DESIGN.md §5.5).
+    /// "small gain on this display": the value tag's suffix on a display whose Max is small (DESIGN.md §5.5, §5.13).
+    /// The host decides when it applies and adds it to the canonical text (`CopyFormat.parts`), never to a guard's
+    /// words (`guarded(by:)`); `BoostSlider` shows its `valueText` as it is.
     public static func smallGain(in language: CopyLanguage = .app) -> String {
         String(localized: "small gain on this display", bundle: language.bundle, locale: language.locale,
                comment: "Panel: value tag suffix when the display’s Max is below ×1.3, as in “Max · ×1.20 · small gain on this display”")

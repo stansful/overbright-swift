@@ -31,6 +31,8 @@ import Testing
             .spokenValue { _ in "" }
             .extraRange(ValueText.extraRange(allowed: 1.55, peak: 2.6))
             .dimmedLevel(LevelMapping.position(forDimLight: 0.25))
+            .dimHalfReason(nil)
+            .focusBinding(nil as FocusState<Int?>.Binding?, equals: 0)
         _ = StatusChip(model, actions: [ChipAction(title: "", perform: {})])
         _ = GuardChip(GuardChipModel(symbol: .timer, text: "", accessibilityLabel: ""),
                       menu: [.item(title: "", isChecked: true, perform: {}), .separator, .submenu(title: "", items: [])])

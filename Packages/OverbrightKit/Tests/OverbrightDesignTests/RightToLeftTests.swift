@@ -1,6 +1,6 @@
 // OverbrightDesignTests/RightToLeftTests.swift — the right-to-left rules (Theme/RightToLeft.swift; DESIGN.md §5.5 "Right
 // to left", §16): physical input converted to the layout, names isolated inside sentences, and the slider mirrored
-// like a system slider (dim on the right, boost on the left, glyphs swapped). Ported in part from Cranny's
+// like a system slider (dim on the right, boost on the left; the end glyphs are its row's). Ported in part from Cranny's
 // RightToLeftTests (the owner's MIT code).
 import AppKit
 import OverbrightCore
@@ -84,27 +84,15 @@ import Testing
         #expect(rtlWarm.upperBound <= 155 && rtlWarm.lowerBound < 50, "right to left: \(rtlWarm)")
     }
 
-    /// The glyphs swap: the small sun is at the dim end, which is on the right in Arabic.
-    @Test func theEndGlyphsSwap() throws {
+    /// The slider draws no end glyphs in either direction (the card's slider row draws `sun.min` and `sun.max.fill`
+    /// and mirrors them with its HStack, DESIGN.md §5.4): at Standard the only dark marks are the preset ticks on the
+    /// boost half of the 240-pt track (30 … 270 pt on a 300-pt canvas), right of centre in English, left in Arabic.
+    @Test func theSliderLeavesTheEndGlyphsToItsRow() throws {
         let size = CGSize(width: 300, height: 40)
         func darkInk(_ p: RenderedPixels.Pixel) -> Bool { p.r < 0.6 && p.g < 0.6 && p.b < 0.6 && p.a > 0.5 }
-        // At Standard nothing is filled: the only dark ink at the far edges is the glyphs.
-        let ltr = try render(slider(0), size: size)
-        let rtl = try render(slider(0), size: size, direction: .rightToLeft)
-        let ltrLeft = ltr.count { darkInk($0) }
-        #expect(ltrLeft > 0)
-        let leftGlyphLTR = try #require(ltr.xRange(of: darkInk))
-        let leftGlyphRTL = try #require(rtl.xRange(of: darkInk))
-        #expect(abs(leftGlyphLTR.lowerBound - leftGlyphRTL.lowerBound) < 2, "both have a glyph at the left edge")
-        // The small sun has less ink than the filled big sun; mirrored, the ink at each edge swaps.
-        func ink(_ pixels: RenderedPixels, x range: ClosedRange<Int>) -> Int {
-            var n = 0
-            for y in 0..<pixels.height { for x in range where darkInk(pixels.pixel(x: x, y: y)) { n += 1 } }
-            return n
-        }
-        let leftLTR = ink(ltr, x: 0...60), rightLTR = ink(ltr, x: (ltr.width - 60)...(ltr.width - 1))
-        let leftRTL = ink(rtl, x: 0...60), rightRTL = ink(rtl, x: (rtl.width - 60)...(rtl.width - 1))
-        #expect(leftLTR < rightLTR, "sun.min left, sun.max.fill right: \(leftLTR) vs \(rightLTR)")
-        #expect(leftRTL > rightRTL, "mirrored: \(leftRTL) vs \(rightRTL)")
+        let ltr = try #require(try render(slider(0), size: size).xRange(of: darkInk), "the ticks are drawn")
+        let rtl = try #require(try render(slider(0), size: size, direction: .rightToLeft).xRange(of: darkInk))
+        #expect(ltr.lowerBound > 150 && ltr.upperBound <= 270.5, "left to right: ink at \(ltr)")
+        #expect(rtl.lowerBound >= 29.5 && rtl.upperBound < 150, "right to left: ink at \(rtl)")
     }
 }

@@ -221,10 +221,11 @@ import Testing
         #expect(m.haptic(from: .standard, to: .standard) == nil)
     }
 
-    @Test func smallGainIsFlaggedBelowTimesOnePointThree() {
-        #expect(model(top: 1.2, presets: [.max]).isSmallGain)
-        #expect(!model(top: 1.3).isSmallGain)
+    /// The suffix's words; the host decides when it applies and adds it to the canonical text, not the slider.
+    @Test func theSmallGainSuffixReads() {
         #expect(ValueText.smallGain(in: english) == "small gain on this display")
+        #expect(CopyFormat.parts("Max · ×1.20", ValueText.smallGain(in: english), in: english)
+                == "Max · ×1.20 · small gain on this display")
     }
 
     // MARK: Value tag and VoiceOver defaults
@@ -364,7 +365,7 @@ import Testing
         let pixels = try render(slider(0.9, allowed: 1.55, half: .active), size: Self.size)
         let warm = OverbrightColor.boostWarm(dark: false, highContrast: false)
         let warmRange = try #require(pixels.xRange { $0.isClose(to: warm) })
-        // The track starts 30 pt in (10 pt margin + 14-pt glyph + 6-pt gap); the detent is at 150.
+        // The slider is the 240-pt track alone, centred in 300 pt: it starts 30 pt in, the detent is at 150.
         let markerX = 30 + 240 * (1 + log(1.55) / log(2.587)) / 2
         #expect(abs(warmRange.lowerBound - 150) < 2, "warm from the detent: \(warmRange)")
         // Beyond the marker the hatch replaces the warm fill, so the warm run ends at the marker.

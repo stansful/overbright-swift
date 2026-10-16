@@ -42,8 +42,6 @@ public nonisolated struct BoostSliderModel: Hashable, Sendable {
     public static let dimStopLights = [0.5, 0.25, 0.10, 0.05, 0.02]
     /// The boost half needs a top of at least ×1.05 (DESIGN.md §5.5 "Disabled boost half").
     public static let minimumTop = 1.05
-    /// Max below this adds "small gain on this display" to the value tag.
-    public static let smallGainTop = 1.3
 
     /// The model of one slider.
     public init(top: Double, allowedNow: Double?, presets: [LevelPreset], dimEnabled: Bool, boostHalf: BoostHalfState) {
@@ -77,9 +75,6 @@ public nonisolated struct BoostSliderModel: Hashable, Sendable {
 
     /// The fill right of the detent is the warm colour (extra light is on screen); otherwise it is hatched.
     public var boostFillIsWarm: Bool { boostHalf == .active && boostEnabled }
-
-    /// Max is below ×1.3: the value tag adds "small gain on this display".
-    public var isSmallGain: Bool { boostEnabled && top < Self.smallGainTop }
 
     // MARK: Geometry
 
