@@ -103,7 +103,7 @@ public struct BoostSlider: View {
                 .overlay(alignment: .topLeading) { valueTag(model) }
             endGlyph(.sunMaxFill)
         }
-        .background { if isPointerOver { ScrollWheelAnchor(steps: scroll) } }
+        .background { if isPointerOver { ScrollWheelAnchor(steps: scroll, target: scrollTarget(model)) } }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(verbatim: Self.label(accessibilityName)))
         .accessibilityValue(Text(verbatim: spokenValue?(level) ?? Self.spoken(valueText(level), at: level, top: top,
@@ -230,14 +230,22 @@ public struct BoostSlider: View {
         switch phase {
         case .active:
             if !isPointerOver { isPointerOver = true }
-            scroll.start { notches in scrolled(notches) }
+            scroll.start(scrollTarget(model))
         case .ended:
             isPointerOver = false
             scroll.stop()
         }
     }
 
-    private func scrolled(_ notches: Int) -> Bool {
+    /// What scrolling does now: whole notches step the level (and are consumed only when it moved); part of a notch
+    /// is taken while a notch that way would still move it.
+    private func scrollTarget(_ model: BoostSliderModel) -> ScrollWheelSteps.Target {
+        ScrollWheelSteps.Target(direction: direction,
+                                canMove: { notches in model.step(from: level, by: notches) != level },
+                                step: { notches in scrolled(notches, model) })
+    }
+
+    private func scrolled(_ notches: Int, _ model: BoostSliderModel) -> Bool {
         let next = model.step(from: level, by: notches)
         guard next != level else { return false }
         set(next, commit: true)
