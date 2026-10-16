@@ -117,7 +117,7 @@ System text styles only; SF Pro Rounded with monospaced digits for live numbers 
 | `readout` | 13 medium, SF Pro Rounded, monospaced digits | "Bright room · ×1.29 · ≈ 775 nits" |
 | `chip` | 11 medium (`.caption` medium) | status chips, footer chips |
 | `caption` | 11 regular, `secondaryLabelColor` | "Compatibility mode" under the readout |
-| `banner` | 12 regular (`.callout`), up to 3 lines | "Paused because…" |
+| `banner` | 12 regular (`.callout`), as many lines as the sentence needs (never cut; an app name in it is middle-truncated) | "Paused because…" |
 | `valueTag` | 11 semibold, rounded, monospaced digits | the tag above the slider thumb |
 | `hudValue` | 15 semibold, rounded, monospaced digits | HUD value |
 | `hudLabel` | 11 regular | HUD display name and reasons |
@@ -394,7 +394,7 @@ A chip appears **on its own line under the readout**, only when a **per-display*
 
 ### 5.8 Banners
 
-At most one banner, between the header and the first card, for **a reason that applies to all displays** (a user pause, a conflict, Focus, heat, Low Power, battery, the schedule) or an attention state (a stop to prevent flicker, colours changed by another app): `card` fill tinted 10 % with the semantic colour, a 14-pt glyph, the sentence (`banner`, up to 3 lines) and up to two text buttons (primary first). Banners reflect state, so they have no close button; they leave with `bannerOut` when the cause clears, and the next reason in precedence takes their place. The same sentence is the first line of the right-click menu (§4.3). Precedence and exact copy: §12.3.
+At most one banner, between the header and the first card, for **a reason that applies to all displays** (a user pause, a conflict, Focus, heat, Low Power, battery, the schedule) or an attention state (a stop to prevent flicker, colours changed by another app): `card` fill tinted 10 % with the semantic colour, a 14-pt glyph, the sentence (`banner`) and up to two text buttons (primary first). The sentence is never cut: the banner grows in height for a long translation while the card list below scrolls, and only an app name in it is middle-truncated (to 200 pt, as a chip does), with the full sentence in the help tag and VoiceOver. Banners reflect state, so they have no close button; they leave with `bannerOut` when the cause clears, and the next reason in precedence takes their place. The same sentence is the first line of the right-click menu (§4.3). Precedence and exact copy: §12.3.
 
 ### 5.9 Footer guard chips
 

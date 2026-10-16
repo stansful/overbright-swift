@@ -16,7 +16,7 @@ public nonisolated enum OverbrightFont: String, CaseIterable, Sendable {
     case chip
     /// "Compatibility mode" under the readout: 11 regular, secondary.
     case caption
-    /// Banner sentences: 12 regular, up to three lines.
+    /// Banner sentences: 12 regular, as many lines as the sentence takes.
     case banner
     /// The value tag above the slider thumb: 11 semibold, rounded, monospaced digits.
     case valueTag

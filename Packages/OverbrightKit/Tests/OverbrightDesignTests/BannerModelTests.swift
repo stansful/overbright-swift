@@ -90,6 +90,37 @@ import Testing
         #expect(banner(.thermalCritical).symbol == .thermometerHigh)
     }
 
+    /// A banner names an app in full when it fits `nameWidth`; a longer name is cut in the middle in the shown sentence
+    /// (as a chip does) and kept whole in `accessibilityLabel`, the help tag and VoiceOver (DESIGN.md §5.7, §5.8).
+    @Test func aLongAppNameIsCutInTheMiddle() {
+        let long = ConflictingApp(entryID: "s1", severity: .booster, bundleID: nil, processID: 1,
+                                  displayName: "Extended Professional Brightness Utility for Studio Displays and Projectors")
+        let model = banner(.conflict(long))
+        #expect(model.accessibilityLabel == "Paused because \u{2068}\(long.displayName)\u{2069} also changes display brightness. Quit it, or use Compatibility mode, which works alongside it.")
+        let shown = model.sentence.firstMatch(of: /\u{2068}(.*)\u{2069}/).map { String($0.output.1) } ?? ""
+        #expect(shown.hasPrefix("Extended Pro") && shown.hasSuffix("Projectors") && shown.contains("…"),
+                "\(model.sentence)")
+        #expect(OverbrightFont.banner.width(of: shown) <= BannerModel.nameWidth, "«\(shown)»")
+        #expect(banner(.conflict(Self.booster)).accessibilityLabel == banner(.conflict(Self.booster)).sentence)
+    }
+
+    /// The cut keeps whole characters, drops the spaces beside the ellipsis and fits the width it is given.
+    @Test func middleTruncationFitsAndKeepsWholeCharacters() {
+        let font = OverbrightFont.banner
+        #expect("Booster".overbrightMiddleTruncated(toFit: 200, in: font) == "Booster")
+        let name = "Alpha Beta Gamma Delta Epsilon Zeta Eta Theta Iota Kappa Lambda"
+        for width in [40.0, 80, 120, 200] {
+            let cut = name.overbrightMiddleTruncated(toFit: width, in: font)
+            #expect(font.width(of: cut) <= width, "\(width): «\(cut)»")
+            #expect(cut.hasPrefix("Al") && cut.hasSuffix("da") && cut.contains("…"), "\(width): «\(cut)»")
+            #expect(!cut.contains(" …") && !cut.contains("… "), "\(width): «\(cut)»")
+        }
+        let family = String(repeating: "👨‍👩‍👧‍👦", count: 40)
+        let cut = family.overbrightMiddleTruncated(toFit: 120, in: font)
+        #expect(cut.allSatisfy { $0 == "…" || $0 == "👨‍👩‍👧‍👦" }, "«\(cut)» splits a character")
+        #expect("".overbrightMiddleTruncated(toFit: 10, in: font).isEmpty)
+    }
+
     /// The fixed seam builds the same words in the app's language.
     @Test func theSeamBuilds() {
         #expect(!BannerModel.make(.lowPowerMode).sentence.isEmpty)
