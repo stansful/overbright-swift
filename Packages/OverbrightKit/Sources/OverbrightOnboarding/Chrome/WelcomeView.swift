@@ -66,16 +66,12 @@ private struct SkipConfirmation: ViewModifier {
     @Bindable var session: WelcomeSession
 
     func body(content: Content) -> some View {
-        content.alert(Text("Skip setup?", bundle: .module, comment: "Welcome: title of the alert Esc and the close button lead to"),
-                      isPresented: $session.isConfirmingSkip) {
+        content.alert(Text(verbatim: OnboardingCopy.skipTitle), isPresented: $session.isConfirmingSkip) {
             Button { session.skip() } label: { Text(verbatim: OnboardingCopy.skip) }
-            Button(role: .cancel) {} label: {
-                Text("Continue Setup", bundle: .module, comment: "Welcome: the Skip setup alert’s button that stays in setup (title case)")
-            }
+            Button(role: .cancel) {} label: { Text(verbatim: OnboardingCopy.continueSetup) }
             Button { session.quit() } label: { Text(verbatim: OnboardingCopy.quit) }
         } message: {
-            Text("Overbright uses its defaults. You can see this again in Settings ▸ About.", bundle: .module,
-                 comment: "Welcome: message of the Skip setup alert")
+            Text(verbatim: OnboardingCopy.skipMessage)
         }
     }
 }

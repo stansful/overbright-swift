@@ -18,3 +18,14 @@ extension View {
         searchTarget(info).overbrightSettingRow(isDefault: isDefault, reset: reset)
     }
 }
+
+#Preview("Row conventions") {
+    let services = OverbrightServices.preview()
+    Form {
+        Toggle(isOn: services.settings.binding(GeneralSettings.haptics)) { Text(verbatim: "Haptic feedback") }
+            .settingRow(SettingsRowInfo(.general, "haptics", title: "Haptic feedback"), settings: services.settings,
+                        key: GeneralSettings.haptics)
+    }
+    .formStyle(.grouped)
+    .frame(width: 420, height: 120)
+}

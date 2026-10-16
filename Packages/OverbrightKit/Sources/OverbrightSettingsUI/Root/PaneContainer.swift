@@ -19,3 +19,15 @@ struct PaneContainer: View {
             }
     }
 }
+
+#Preview("Pane with its footer") {
+    PaneContainer(pane: .pane(.general), services: .preview())
+        .environment(SettingsNavigator(target: "general"))
+        .frame(width: 650, height: 400)
+}
+
+#Preview("About (no footer)") {
+    PaneContainer(pane: .pane(.about), services: .preview())
+        .environment(SettingsNavigator(target: "about"))
+        .frame(width: 650, height: 400)
+}
