@@ -18,7 +18,7 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
@@ -78,7 +78,7 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
@@ -132,7 +132,7 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
@@ -156,19 +156,19 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
@@ -192,7 +192,7 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%1$@: %2$@."
           }
         },
@@ -233,8 +233,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright je vypnutý."
           }
         },
         "da" : {
@@ -287,8 +287,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright je isključen."
           }
         },
         "hu" : {
@@ -341,8 +341,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright jest wyłączony."
           }
         },
         "pt-BR" : {
@@ -365,20 +365,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright выключен."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright je vypnuté."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright je izklopljen."
           }
         },
         "sv" : {
@@ -401,8 +401,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is off."
+            "state" : "translated",
+            "value" : "Overbright вимкнено."
           }
         },
         "vi" : {
@@ -442,8 +442,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright je zapnutý."
           }
         },
         "da" : {
@@ -496,8 +496,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright je uključen."
           }
         },
         "hu" : {
@@ -550,8 +550,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright jest włączony."
           }
         },
         "pt-BR" : {
@@ -574,20 +574,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright включён."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright je zapnuté."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright je vklopljen."
           }
         },
         "sv" : {
@@ -610,8 +610,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is on."
+            "state" : "translated",
+            "value" : "Overbright увімкнено."
           }
         },
         "vi" : {
@@ -651,8 +651,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright se ještě spouští. Zkuste to za chvíli znovu."
           }
         },
         "da" : {
@@ -705,8 +705,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright se još pokreće. Pokušajte ponovno za trenutak."
           }
         },
         "hu" : {
@@ -759,8 +759,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright nadal się uruchamia. Spróbuj ponownie za chwilę."
           }
         },
         "pt-BR" : {
@@ -783,20 +783,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright ещё запускается. Повторите попытку чуть позже."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright sa ešte spúšťa. Skúste to o chvíľu znova."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright se še zaganja. Poskusite znova čez trenutek."
           }
         },
         "sv" : {
@@ -819,8 +819,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright is still starting. Try again in a moment."
+            "state" : "translated",
+            "value" : "Overbright ще запускається. Спробуйте ще раз за мить."
           }
         },
         "vi" : {
@@ -860,8 +860,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Tento monitor není připojený."
           }
         },
         "da" : {
@@ -914,8 +914,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Taj zaslon nije priključen."
           }
         },
         "hu" : {
@@ -968,8 +968,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Ten wyświetlacz nie jest podłączony."
           }
         },
         "pt-BR" : {
@@ -992,20 +992,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Этот дисплей не подключён."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Tento displej nie je pripojený."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Ta zaslon ni priključen."
           }
         },
         "sv" : {
@@ -1028,8 +1028,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "That display isn’t connected."
+            "state" : "translated",
+            "value" : "Цей дисплей не підʼєднано."
           }
         },
         "vi" : {
@@ -1069,8 +1069,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Tento monitor nelze ztmavit."
           }
         },
         "da" : {
@@ -1123,8 +1123,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Ovaj zaslon ne može se zatamniti."
           }
         },
         "hu" : {
@@ -1177,8 +1177,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Tego wyświetlacza nie można przyciemnić."
           }
         },
         "pt-BR" : {
@@ -1201,20 +1201,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Этот дисплей нельзя затемнить."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Tento displej sa nedá stmaviť."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Tega zaslona ni mogoče zatemniti."
           }
         },
         "sv" : {
@@ -1237,8 +1237,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t be dimmed."
+            "state" : "translated",
+            "value" : "Цей дисплей не можна затемнити."
           }
         },
         "vi" : {
@@ -1278,8 +1278,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Tento monitor nepodporuje extra jas."
           }
         },
         "da" : {
@@ -1332,8 +1332,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Ovaj zaslon ne može prikazati dodatnu svjetlinu."
           }
         },
         "hu" : {
@@ -1386,8 +1386,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Ten wyświetlacz nie może pokazywać dodatkowej jasności."
           }
         },
         "pt-BR" : {
@@ -1410,20 +1410,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Этот дисплей не поддерживает дополнительную яркость."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Tento displej nepodporuje extra jas."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Ta zaslon ne podpira dodatne svetlosti."
           }
         },
         "sv" : {
@@ -1446,8 +1446,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "This display can’t show extra brightness."
+            "state" : "translated",
+            "value" : "Цей дисплей не підтримує додаткову яскравість."
           }
         },
         "vi" : {

@@ -18,8 +18,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "All Displays"
+            "state" : "translated",
+            "value" : "Všechny monitory"
           }
         },
         "da" : {
@@ -72,8 +72,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "All Displays"
+            "state" : "translated",
+            "value" : "Svi zasloni"
           }
         },
         "hu" : {
@@ -126,8 +126,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "All Displays"
+            "state" : "translated",
+            "value" : "Wszystkie wyświetlacze"
           }
         },
         "pt-BR" : {
@@ -150,20 +150,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "All Displays"
+            "state" : "translated",
+            "value" : "Все дисплеи"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "All Displays"
+            "state" : "translated",
+            "value" : "Všetky displeje"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "All Displays"
+            "state" : "translated",
+            "value" : "Vsi zasloni"
           }
         },
         "sv" : {
@@ -186,8 +186,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "All Displays"
+            "state" : "translated",
+            "value" : "Усі дисплеї"
           }
         },
         "vi" : {
@@ -227,8 +227,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "Zpět na standardní jas"
           }
         },
         "da" : {
@@ -281,8 +281,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "Vrati na standardno"
           }
         },
         "hu" : {
@@ -335,8 +335,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "Wróć do standardu"
           }
         },
         "pt-BR" : {
@@ -359,20 +359,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "Вернуться к стандарту"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "Späť na štandardný jas"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "Nazaj na standardno svetlost"
           }
         },
         "sv" : {
@@ -395,8 +395,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "Повернутися до стандарту"
           }
         },
         "vi" : {
@@ -436,8 +436,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change Hours…"
+            "state" : "translated",
+            "value" : "Změnit rozvrh…"
           }
         },
         "da" : {
@@ -490,8 +490,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change Hours…"
+            "state" : "translated",
+            "value" : "Promijeni raspored…"
           }
         },
         "hu" : {
@@ -544,8 +544,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change Hours…"
+            "state" : "translated",
+            "value" : "Zmień godziny…"
           }
         },
         "pt-BR" : {
@@ -568,20 +568,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change Hours…"
+            "state" : "translated",
+            "value" : "Изменить часы работы…"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change Hours…"
+            "state" : "translated",
+            "value" : "Zmeniť rozvrh…"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change Hours…"
+            "state" : "translated",
+            "value" : "Spremeni urnik …"
           }
         },
         "sv" : {
@@ -604,8 +604,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change Hours…"
+            "state" : "translated",
+            "value" : "Змінити години…"
           }
         },
         "vi" : {
@@ -645,8 +645,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change Power Rules…"
+            "state" : "translated",
+            "value" : "Změnit pravidla napájení…"
           }
         },
         "da" : {
@@ -699,8 +699,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change Power Rules…"
+            "state" : "translated",
+            "value" : "Promijeni pravila napajanja…"
           }
         },
         "hu" : {
@@ -753,8 +753,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change Power Rules…"
+            "state" : "translated",
+            "value" : "Zmień reguły zasilania…"
           }
         },
         "pt-BR" : {
@@ -777,20 +777,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change Power Rules…"
+            "state" : "translated",
+            "value" : "Изменить правила питания…"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change Power Rules…"
+            "state" : "translated",
+            "value" : "Zmeniť pravidlá napájania…"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change Power Rules…"
+            "state" : "translated",
+            "value" : "Spremeni pravila napajanja …"
           }
         },
         "sv" : {
@@ -813,8 +813,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Change Power Rules…"
+            "state" : "translated",
+            "value" : "Змінити правила живлення…"
           }
         },
         "vi" : {
@@ -854,8 +854,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue Anyway"
+            "state" : "translated",
+            "value" : "Přesto pokračovat"
           }
         },
         "da" : {
@@ -908,8 +908,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue Anyway"
+            "state" : "translated",
+            "value" : "Nastavi svejedno"
           }
         },
         "hu" : {
@@ -962,8 +962,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue Anyway"
+            "state" : "translated",
+            "value" : "Kontynuuj mimo to"
           }
         },
         "pt-BR" : {
@@ -986,20 +986,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue Anyway"
+            "state" : "translated",
+            "value" : "Всё равно продолжить"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue Anyway"
+            "state" : "translated",
+            "value" : "Pokračovať aj tak"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue Anyway"
+            "state" : "translated",
+            "value" : "Vseeno nadaljuj"
           }
         },
         "sv" : {
@@ -1022,8 +1022,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue Anyway"
+            "state" : "translated",
+            "value" : "Все одно продовжити"
           }
         },
         "vi" : {
@@ -1063,8 +1063,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim All Displays"
+            "state" : "translated",
+            "value" : "Ztmavit všechny monitory"
           }
         },
         "da" : {
@@ -1117,8 +1117,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim All Displays"
+            "state" : "translated",
+            "value" : "Zatamni sve zaslone"
           }
         },
         "hu" : {
@@ -1171,8 +1171,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim All Displays"
+            "state" : "translated",
+            "value" : "Przyciemnij wszystkie wyświetlacze"
           }
         },
         "pt-BR" : {
@@ -1195,20 +1195,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim All Displays"
+            "state" : "translated",
+            "value" : "Затемнить все дисплеи"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim All Displays"
+            "state" : "translated",
+            "value" : "Stmaviť všetky displeje"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim All Displays"
+            "state" : "translated",
+            "value" : "Zatemni vse zaslone"
           }
         },
         "sv" : {
@@ -1231,8 +1231,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim All Displays"
+            "state" : "translated",
+            "value" : "Затемнити всі дисплеї"
           }
         },
         "vi" : {
@@ -1272,8 +1272,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light"
+            "state" : "translated",
+            "value" : "Osvětlení obličeje"
           }
         },
         "da" : {
@@ -1326,8 +1326,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light"
+            "state" : "translated",
+            "value" : "Osvjetljenje lica"
           }
         },
         "hu" : {
@@ -1380,8 +1380,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light"
+            "state" : "translated",
+            "value" : "Światło wypełniające"
           }
         },
         "pt-BR" : {
@@ -1404,20 +1404,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light"
+            "state" : "translated",
+            "value" : "Подсветка лица"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light"
+            "state" : "translated",
+            "value" : "Osvetlenie tváre"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light"
+            "state" : "translated",
+            "value" : "Osvetlitev obraza"
           }
         },
         "sv" : {
@@ -1440,8 +1440,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fill Light"
+            "state" : "translated",
+            "value" : "Підсвітка обличчя"
           }
         },
         "vi" : {
@@ -1481,8 +1481,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Go Back"
+            "state" : "translated",
+            "value" : "Vrátit"
           }
         },
         "da" : {
@@ -1535,8 +1535,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Go Back"
+            "state" : "translated",
+            "value" : "Vrati"
           }
         },
         "hu" : {
@@ -1589,8 +1589,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Go Back"
+            "state" : "translated",
+            "value" : "Przywróć"
           }
         },
         "pt-BR" : {
@@ -1613,20 +1613,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Go Back"
+            "state" : "translated",
+            "value" : "Вернуть"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Go Back"
+            "state" : "translated",
+            "value" : "Vrátiť"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Go Back"
+            "state" : "translated",
+            "value" : "Vrni"
           }
         },
         "sv" : {
@@ -1649,8 +1649,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Go Back"
+            "state" : "translated",
+            "value" : "Повернути"
           }
         },
         "vi" : {
@@ -1689,9 +1689,33 @@
           }
         },
         "cs" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Going back in %lld s"
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Návrat za %lld s"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Návrat za %lld s"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Návrat za %lld s"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Návrat za %lld s"
+                }
+              }
+            }
           }
         },
         "da" : {
@@ -1761,9 +1785,27 @@
           }
         },
         "hr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Going back in %lld s"
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Vraćanje za %lld s"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Vraćanje za %lld s"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Vraćanje za %lld s"
+                }
+              }
+            }
           }
         },
         "hu" : {
@@ -1815,9 +1857,33 @@
           }
         },
         "pl" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Going back in %lld s"
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Przywrócenie za %lld s"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Przywrócenie za %lld s"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Przywrócenie za %lld s"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Przywrócenie za %lld s"
+                }
+              }
+            }
           }
         },
         "pt-BR" : {
@@ -1839,21 +1905,93 @@
           }
         },
         "ru" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Going back in %lld s"
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Возврат через %lld с"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Возврат через %lld с"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Возврат через %lld с"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Возврат через %lld с"
+                }
+              }
+            }
           }
         },
         "sk" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Going back in %lld s"
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Návrat o %lld s"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Návrat o %lld s"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Návrat o %lld s"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Návrat o %lld s"
+                }
+              }
+            }
           }
         },
         "sl" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Going back in %lld s"
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Vrnitev čez %lld s"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Vrnitev čez %lld s"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Vrnitev čez %lld s"
+                }
+              },
+              "two" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Vrnitev čez %lld s"
+                }
+              }
+            }
           }
         },
         "sv" : {
@@ -1875,9 +2013,33 @@
           }
         },
         "uk" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Going back in %lld s"
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Повернення через %lld с"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Повернення через %lld с"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Повернення через %lld с"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Повернення через %lld с"
+                }
+              }
+            }
           }
         },
         "vi" : {
@@ -1917,8 +2079,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Help"
+            "state" : "translated",
+            "value" : "Nápověda"
           }
         },
         "da" : {
@@ -1971,8 +2133,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Help"
+            "state" : "translated",
+            "value" : "Pomoć"
           }
         },
         "hu" : {
@@ -2025,8 +2187,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Help"
+            "state" : "translated",
+            "value" : "Pomoc"
           }
         },
         "pt-BR" : {
@@ -2049,20 +2211,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Help"
+            "state" : "translated",
+            "value" : "Справка"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Help"
+            "state" : "translated",
+            "value" : "Pomocník"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Help"
+            "state" : "translated",
+            "value" : "Pomoč"
           }
         },
         "sv" : {
@@ -2085,8 +2247,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Help"
+            "state" : "translated",
+            "value" : "Довідка"
           }
         },
         "vi" : {
@@ -2126,8 +2288,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Keep"
+            "state" : "translated",
+            "value" : "Ponechat"
           }
         },
         "da" : {
@@ -2180,8 +2342,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Keep"
+            "state" : "translated",
+            "value" : "Zadrži"
           }
         },
         "hu" : {
@@ -2234,8 +2396,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Keep"
+            "state" : "translated",
+            "value" : "Pozostaw"
           }
         },
         "pt-BR" : {
@@ -2258,20 +2420,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Keep"
+            "state" : "translated",
+            "value" : "Оставить"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Keep"
+            "state" : "translated",
+            "value" : "Ponechať"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Keep"
+            "state" : "translated",
+            "value" : "Ohrani"
           }
         },
         "sv" : {
@@ -2294,8 +2456,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Keep"
+            "state" : "translated",
+            "value" : "Залишити"
           }
         },
         "vi" : {
@@ -2335,8 +2497,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Keep this level?"
+            "state" : "translated",
+            "value" : "Ponechat tuto úroveň?"
           }
         },
         "da" : {
@@ -2389,8 +2551,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Keep this level?"
+            "state" : "translated",
+            "value" : "Zadržati ovu razinu?"
           }
         },
         "hu" : {
@@ -2443,8 +2605,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Keep this level?"
+            "state" : "translated",
+            "value" : "Pozostawić ten poziom?"
           }
         },
         "pt-BR" : {
@@ -2467,20 +2629,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Keep this level?"
+            "state" : "translated",
+            "value" : "Оставить этот уровень?"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Keep this level?"
+            "state" : "translated",
+            "value" : "Ponechať túto úroveň?"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Keep this level?"
+            "state" : "translated",
+            "value" : "Želite ohraniti to raven?"
           }
         },
         "sv" : {
@@ -2503,8 +2665,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Keep this level?"
+            "state" : "translated",
+            "value" : "Залишити цей рівень?"
           }
         },
         "vi" : {
@@ -2601,26 +2763,26 @@
             "plural" : {
               "few" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld seconds."
+                  "state" : "translated",
+                  "value" : "Ponechat tuto úroveň? Návrat za %lld sekundy."
                 }
               },
               "many" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld seconds."
+                  "state" : "translated",
+                  "value" : "Ponechat tuto úroveň? Návrat za %lld sekund."
                 }
               },
               "one" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld second."
+                  "state" : "translated",
+                  "value" : "Ponechat tuto úroveň? Návrat za %lld sekundu."
                 }
               },
               "other" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld seconds."
+                  "state" : "translated",
+                  "value" : "Ponechat tuto úroveň? Návrat za %lld sekund."
                 }
               }
             }
@@ -2811,20 +2973,20 @@
             "plural" : {
               "few" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld seconds."
+                  "state" : "translated",
+                  "value" : "Zadržati ovu razinu? Vraćanje za %lld sekunde."
                 }
               },
               "one" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld second."
+                  "state" : "translated",
+                  "value" : "Zadržati ovu razinu? Vraćanje za %lld sekundu."
                 }
               },
               "other" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld seconds."
+                  "state" : "translated",
+                  "value" : "Zadržati ovu razinu? Vraćanje za %lld sekundi."
                 }
               }
             }
@@ -2961,26 +3123,26 @@
             "plural" : {
               "few" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld seconds."
+                  "state" : "translated",
+                  "value" : "Pozostawić ten poziom? Przywrócenie za %lld sekundy."
                 }
               },
               "many" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld seconds."
+                  "state" : "translated",
+                  "value" : "Pozostawić ten poziom? Przywrócenie za %lld sekund."
                 }
               },
               "one" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld second."
+                  "state" : "translated",
+                  "value" : "Pozostawić ten poziom? Przywrócenie za %lld sekundę."
                 }
               },
               "other" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld seconds."
+                  "state" : "translated",
+                  "value" : "Pozostawić ten poziom? Przywrócenie za %lld sekundy."
                 }
               }
             }
@@ -3063,26 +3225,26 @@
             "plural" : {
               "few" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld seconds."
+                  "state" : "translated",
+                  "value" : "Оставить этот уровень? Возврат через %lld секунды."
                 }
               },
               "many" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld seconds."
+                  "state" : "translated",
+                  "value" : "Оставить этот уровень? Возврат через %lld секунд."
                 }
               },
               "one" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld second."
+                  "state" : "translated",
+                  "value" : "Оставить этот уровень? Возврат через %lld секунду."
                 }
               },
               "other" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld seconds."
+                  "state" : "translated",
+                  "value" : "Оставить этот уровень? Возврат через %lld секунды."
                 }
               }
             }
@@ -3093,26 +3255,26 @@
             "plural" : {
               "few" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld seconds."
+                  "state" : "translated",
+                  "value" : "Ponechať túto úroveň? Návrat o %lld sekundy."
                 }
               },
               "many" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld seconds."
+                  "state" : "translated",
+                  "value" : "Ponechať túto úroveň? Návrat o %lld sekúnd."
                 }
               },
               "one" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld second."
+                  "state" : "translated",
+                  "value" : "Ponechať túto úroveň? Návrat o %lld sekundu."
                 }
               },
               "other" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld seconds."
+                  "state" : "translated",
+                  "value" : "Ponechať túto úroveň? Návrat o %lld sekúnd."
                 }
               }
             }
@@ -3123,26 +3285,26 @@
             "plural" : {
               "few" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld seconds."
+                  "state" : "translated",
+                  "value" : "Želite ohraniti to raven? Vrnitev čez %lld sekunde."
                 }
               },
               "one" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld second."
+                  "state" : "translated",
+                  "value" : "Želite ohraniti to raven? Vrnitev čez %lld sekundo."
                 }
               },
               "other" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld seconds."
+                  "state" : "translated",
+                  "value" : "Želite ohraniti to raven? Vrnitev čez %lld sekund."
                 }
               },
               "two" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld seconds."
+                  "state" : "translated",
+                  "value" : "Želite ohraniti to raven? Vrnitev čez %lld sekundi."
                 }
               }
             }
@@ -3201,26 +3363,26 @@
             "plural" : {
               "few" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld seconds."
+                  "state" : "translated",
+                  "value" : "Залишити цей рівень? Повернення через %lld секунди."
                 }
               },
               "many" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld seconds."
+                  "state" : "translated",
+                  "value" : "Залишити цей рівень? Повернення через %lld секунд."
                 }
               },
               "one" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld second."
+                  "state" : "translated",
+                  "value" : "Залишити цей рівень? Повернення через %lld секунду."
                 }
               },
               "other" : {
                 "stringUnit" : {
-                  "state" : "needs_review",
-                  "value" : "Keep this level? Going back in %lld seconds."
+                  "state" : "translated",
+                  "value" : "Залишити цей рівень? Повернення через %lld секунди."
                 }
               }
             }
@@ -3281,7 +3443,7 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "OK"
           }
         },
@@ -3335,8 +3497,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "OK"
+            "state" : "translated",
+            "value" : "U redu"
           }
         },
         "hu" : {
@@ -3389,7 +3551,7 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "OK"
           }
         },
@@ -3413,20 +3575,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "OK"
+            "state" : "translated",
+            "value" : "ОК"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "OK"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "OK"
+            "state" : "translated",
+            "value" : "V redu"
           }
         },
         "sv" : {
@@ -3449,7 +3611,7 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "OK"
           }
         },
@@ -3490,8 +3652,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open System Settings"
+            "state" : "translated",
+            "value" : "Otevřít Nastavení systému"
           }
         },
         "da" : {
@@ -3544,8 +3706,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open System Settings"
+            "state" : "translated",
+            "value" : "Otvori Postavke sustava"
           }
         },
         "hu" : {
@@ -3598,8 +3760,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open System Settings"
+            "state" : "translated",
+            "value" : "Otwórz Ustawienia systemowe"
           }
         },
         "pt-BR" : {
@@ -3622,20 +3784,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open System Settings"
+            "state" : "translated",
+            "value" : "Открыть Системные настройки"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open System Settings"
+            "state" : "translated",
+            "value" : "Otvoriť Systémové nastavenia"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open System Settings"
+            "state" : "translated",
+            "value" : "Odpri Nastavitve sistema"
           }
         },
         "sv" : {
@@ -3658,8 +3820,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open System Settings"
+            "state" : "translated",
+            "value" : "Відкрити Системні параметри"
           }
         },
         "vi" : {
@@ -3699,8 +3861,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Help"
+            "state" : "translated",
+            "value" : "Nápověda pro Overbright"
           }
         },
         "da" : {
@@ -3753,8 +3915,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Help"
+            "state" : "translated",
+            "value" : "Pomoć za Overbright"
           }
         },
         "hu" : {
@@ -3807,8 +3969,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Help"
+            "state" : "translated",
+            "value" : "Pomoc aplikacji Overbright"
           }
         },
         "pt-BR" : {
@@ -3831,20 +3993,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Help"
+            "state" : "translated",
+            "value" : "Справка Overbright"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Help"
+            "state" : "translated",
+            "value" : "Pomocník pre Overbright"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Help"
+            "state" : "translated",
+            "value" : "Pomoč za aplikacijo Overbright"
           }
         },
         "sv" : {
@@ -3867,8 +4029,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Help"
+            "state" : "translated",
+            "value" : "Довідка Overbright"
           }
         },
         "vi" : {
@@ -3908,8 +4070,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright off"
+            "state" : "translated",
+            "value" : "Overbright je vypnutý"
           }
         },
         "da" : {
@@ -3962,8 +4124,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright off"
+            "state" : "translated",
+            "value" : "Overbright isključen"
           }
         },
         "hu" : {
@@ -4016,8 +4178,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright off"
+            "state" : "translated",
+            "value" : "Overbright wyłączony"
           }
         },
         "pt-BR" : {
@@ -4040,20 +4202,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright off"
+            "state" : "translated",
+            "value" : "Overbright выключен"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright off"
+            "state" : "translated",
+            "value" : "Overbright je vypnuté"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright off"
+            "state" : "translated",
+            "value" : "Overbright je izklopljen"
           }
         },
         "sv" : {
@@ -4076,8 +4238,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright off"
+            "state" : "translated",
+            "value" : "Overbright вимкнено"
           }
         },
         "vi" : {
@@ -4117,8 +4279,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright on"
+            "state" : "translated",
+            "value" : "Overbright je zapnutý"
           }
         },
         "da" : {
@@ -4171,8 +4333,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright on"
+            "state" : "translated",
+            "value" : "Overbright uključen"
           }
         },
         "hu" : {
@@ -4225,8 +4387,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright on"
+            "state" : "translated",
+            "value" : "Overbright włączony"
           }
         },
         "pt-BR" : {
@@ -4249,20 +4411,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright on"
+            "state" : "translated",
+            "value" : "Overbright включён"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright on"
+            "state" : "translated",
+            "value" : "Overbright je zapnuté"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright on"
+            "state" : "translated",
+            "value" : "Overbright je vklopljen"
           }
         },
         "sv" : {
@@ -4285,8 +4447,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright on"
+            "state" : "translated",
+            "value" : "Overbright увімкнено"
           }
         },
         "vi" : {
@@ -4326,8 +4488,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, dimmed"
+            "state" : "translated",
+            "value" : "Overbright, ztmaveno"
           }
         },
         "da" : {
@@ -4380,8 +4542,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, dimmed"
+            "state" : "translated",
+            "value" : "Overbright, zatamnjeno"
           }
         },
         "hu" : {
@@ -4434,8 +4596,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, dimmed"
+            "state" : "translated",
+            "value" : "Overbright, przyciemniono"
           }
         },
         "pt-BR" : {
@@ -4458,20 +4620,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, dimmed"
+            "state" : "translated",
+            "value" : "Overbright, затемнение"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, dimmed"
+            "state" : "translated",
+            "value" : "Overbright, stmavené"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, dimmed"
+            "state" : "translated",
+            "value" : "Overbright, zatemnjeno"
           }
         },
         "sv" : {
@@ -4494,8 +4656,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, dimmed"
+            "state" : "translated",
+            "value" : "Overbright, затемнено"
           }
         },
         "vi" : {
@@ -4535,8 +4697,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, needs attention"
+            "state" : "translated",
+            "value" : "Overbright, vyžaduje pozornost"
           }
         },
         "da" : {
@@ -4589,8 +4751,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, needs attention"
+            "state" : "translated",
+            "value" : "Overbright, potrebna pažnja"
           }
         },
         "hu" : {
@@ -4643,8 +4805,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, needs attention"
+            "state" : "translated",
+            "value" : "Overbright, wymaga uwagi"
           }
         },
         "pt-BR" : {
@@ -4667,20 +4829,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, needs attention"
+            "state" : "translated",
+            "value" : "Overbright, требуется внимание"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, needs attention"
+            "state" : "translated",
+            "value" : "Overbright, vyžaduje pozornosť"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, needs attention"
+            "state" : "translated",
+            "value" : "Overbright, potrebna je pozornost"
           }
         },
         "sv" : {
@@ -4703,8 +4865,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, needs attention"
+            "state" : "translated",
+            "value" : "Overbright, потрібна увага"
           }
         },
         "vi" : {
@@ -4744,8 +4906,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, off"
+            "state" : "translated",
+            "value" : "Overbright, vypnuto"
           }
         },
         "da" : {
@@ -4798,8 +4960,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, off"
+            "state" : "translated",
+            "value" : "Overbright, isključen"
           }
         },
         "hu" : {
@@ -4852,8 +5014,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, off"
+            "state" : "translated",
+            "value" : "Overbright, wyłączony"
           }
         },
         "pt-BR" : {
@@ -4876,20 +5038,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, off"
+            "state" : "translated",
+            "value" : "Overbright, выключен"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, off"
+            "state" : "translated",
+            "value" : "Overbright, vypnuté"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, off"
+            "state" : "translated",
+            "value" : "Overbright, izklopljeno"
           }
         },
         "sv" : {
@@ -4912,8 +5074,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, off"
+            "state" : "translated",
+            "value" : "Overbright, вимкнено"
           }
         },
         "vi" : {
@@ -4953,8 +5115,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, on"
+            "state" : "translated",
+            "value" : "Overbright, zapnuto"
           }
         },
         "da" : {
@@ -5007,8 +5169,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, on"
+            "state" : "translated",
+            "value" : "Overbright, uključen"
           }
         },
         "hu" : {
@@ -5061,8 +5223,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, on"
+            "state" : "translated",
+            "value" : "Overbright, włączony"
           }
         },
         "pt-BR" : {
@@ -5085,20 +5247,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, on"
+            "state" : "translated",
+            "value" : "Overbright, включён"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, on"
+            "state" : "translated",
+            "value" : "Overbright, zapnuté"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, on"
+            "state" : "translated",
+            "value" : "Overbright, vklopljeno"
           }
         },
         "sv" : {
@@ -5121,8 +5283,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, on"
+            "state" : "translated",
+            "value" : "Overbright, увімкнено"
           }
         },
         "vi" : {
@@ -5162,8 +5324,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, paused"
+            "state" : "translated",
+            "value" : "Overbright, pozastaveno"
           }
         },
         "da" : {
@@ -5216,8 +5378,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, paused"
+            "state" : "translated",
+            "value" : "Overbright, pauziran"
           }
         },
         "hu" : {
@@ -5270,8 +5432,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, paused"
+            "state" : "translated",
+            "value" : "Overbright, wstrzymany"
           }
         },
         "pt-BR" : {
@@ -5294,20 +5456,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, paused"
+            "state" : "translated",
+            "value" : "Overbright, на паузе"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, paused"
+            "state" : "translated",
+            "value" : "Overbright, pozastavené"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, paused"
+            "state" : "translated",
+            "value" : "Overbright, začasno ustavljeno"
           }
         },
         "sv" : {
@@ -5330,8 +5492,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, paused"
+            "state" : "translated",
+            "value" : "Overbright, призупинено"
           }
         },
         "vi" : {
@@ -5371,8 +5533,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, preparing"
+            "state" : "translated",
+            "value" : "Overbright, příprava"
           }
         },
         "da" : {
@@ -5425,8 +5587,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, preparing"
+            "state" : "translated",
+            "value" : "Overbright, priprema"
           }
         },
         "hu" : {
@@ -5479,8 +5641,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, preparing"
+            "state" : "translated",
+            "value" : "Overbright, przygotowywanie"
           }
         },
         "pt-BR" : {
@@ -5503,20 +5665,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, preparing"
+            "state" : "translated",
+            "value" : "Overbright, подготовка"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, preparing"
+            "state" : "translated",
+            "value" : "Overbright, príprava"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, preparing"
+            "state" : "translated",
+            "value" : "Overbright, pripravljanje"
           }
         },
         "sv" : {
@@ -5539,8 +5701,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright, preparing"
+            "state" : "translated",
+            "value" : "Overbright, підготовка"
           }
         },
         "vi" : {
@@ -5580,8 +5742,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright’s icon isn’t visible"
+            "state" : "translated",
+            "value" : "Ikona aplikace Overbright není vidět"
           }
         },
         "da" : {
@@ -5634,8 +5796,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright’s icon isn’t visible"
+            "state" : "translated",
+            "value" : "Ikona aplikacije Overbright nije vidljiva"
           }
         },
         "hu" : {
@@ -5688,8 +5850,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright’s icon isn’t visible"
+            "state" : "translated",
+            "value" : "Ikona Overbright jest niewidoczna"
           }
         },
         "pt-BR" : {
@@ -5712,20 +5874,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright’s icon isn’t visible"
+            "state" : "translated",
+            "value" : "Значок Overbright не виден"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright’s icon isn’t visible"
+            "state" : "translated",
+            "value" : "Ikona apky Overbright nie je viditeľná"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright’s icon isn’t visible"
+            "state" : "translated",
+            "value" : "Ikona aplikacije Overbright ni vidna"
           }
         },
         "sv" : {
@@ -5748,8 +5910,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright’s icon isn’t visible"
+            "state" : "translated",
+            "value" : "Значок Overbright не видно"
           }
         },
         "vi" : {
@@ -5789,8 +5951,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for 1 Hour"
+            "state" : "translated",
+            "value" : "Pozastavit na hodinu"
           }
         },
         "da" : {
@@ -5843,8 +6005,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for 1 Hour"
+            "state" : "translated",
+            "value" : "Pauziraj na sat vremena"
           }
         },
         "hu" : {
@@ -5897,8 +6059,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for 1 Hour"
+            "state" : "translated",
+            "value" : "Wstrzymaj na godzinę"
           }
         },
         "pt-BR" : {
@@ -5921,20 +6083,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for 1 Hour"
+            "state" : "translated",
+            "value" : "Приостановить на час"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for 1 Hour"
+            "state" : "translated",
+            "value" : "Pozastaviť na hodinu"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for 1 Hour"
+            "state" : "translated",
+            "value" : "Začasno ustavi za eno uro"
           }
         },
         "sv" : {
@@ -5957,8 +6119,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for 1 Hour"
+            "state" : "translated",
+            "value" : "Призупинити на годину"
           }
         },
         "vi" : {
@@ -5998,8 +6160,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Paused Until %@"
+            "state" : "translated",
+            "value" : "Pozastaveno do %@"
           }
         },
         "da" : {
@@ -6052,8 +6214,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Paused Until %@"
+            "state" : "translated",
+            "value" : "Pauzirano do %@"
           }
         },
         "hu" : {
@@ -6106,8 +6268,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Paused Until %@"
+            "state" : "translated",
+            "value" : "Wstrzymano do %@"
           }
         },
         "pt-BR" : {
@@ -6130,20 +6292,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Paused Until %@"
+            "state" : "translated",
+            "value" : "Пауза до %@"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Paused Until %@"
+            "state" : "translated",
+            "value" : "Pozastavené do %@"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Paused Until %@"
+            "state" : "translated",
+            "value" : "Začasno ustavljeno do %@"
           }
         },
         "sv" : {
@@ -6166,8 +6328,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Paused Until %@"
+            "state" : "translated",
+            "value" : "Призупинено до %@"
           }
         },
         "vi" : {
@@ -6207,8 +6369,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Quit Overbright"
+            "state" : "translated",
+            "value" : "Ukončit Overbright"
           }
         },
         "da" : {
@@ -6261,8 +6423,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Quit Overbright"
+            "state" : "translated",
+            "value" : "Zatvori aplikaciju Overbright"
           }
         },
         "hu" : {
@@ -6315,8 +6477,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Quit Overbright"
+            "state" : "translated",
+            "value" : "Zakończ Overbright"
           }
         },
         "pt-BR" : {
@@ -6339,20 +6501,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Quit Overbright"
+            "state" : "translated",
+            "value" : "Завершить Overbright"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Quit Overbright"
+            "state" : "translated",
+            "value" : "Ukončiť Overbright"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Quit Overbright"
+            "state" : "translated",
+            "value" : "Zapri Overbright"
           }
         },
         "sv" : {
@@ -6375,8 +6537,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Quit Overbright"
+            "state" : "translated",
+            "value" : "Завершити Overbright"
           }
         },
         "vi" : {
@@ -6416,8 +6578,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Resume"
+            "state" : "translated",
+            "value" : "Pokračovat"
           }
         },
         "da" : {
@@ -6470,8 +6632,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Resume"
+            "state" : "translated",
+            "value" : "Nastavi"
           }
         },
         "hu" : {
@@ -6524,8 +6686,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Resume"
+            "state" : "translated",
+            "value" : "Wznów"
           }
         },
         "pt-BR" : {
@@ -6548,20 +6710,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Resume"
+            "state" : "translated",
+            "value" : "Возобновить"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Resume"
+            "state" : "translated",
+            "value" : "Pokračovať"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Resume"
+            "state" : "translated",
+            "value" : "Nadaljuj"
           }
         },
         "sv" : {
@@ -6584,8 +6746,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Resume"
+            "state" : "translated",
+            "value" : "Відновити"
           }
         },
         "vi" : {
@@ -6625,8 +6787,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Settings…"
+            "state" : "translated",
+            "value" : "Nastavení…"
           }
         },
         "da" : {
@@ -6679,8 +6841,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Settings…"
+            "state" : "translated",
+            "value" : "Postavke…"
           }
         },
         "hu" : {
@@ -6733,8 +6895,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Settings…"
+            "state" : "translated",
+            "value" : "Ustawienia…"
           }
         },
         "pt-BR" : {
@@ -6757,20 +6919,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Settings…"
+            "state" : "translated",
+            "value" : "Настройки…"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Settings…"
+            "state" : "translated",
+            "value" : "Nastavenia…"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Settings…"
+            "state" : "translated",
+            "value" : "Nastavitve …"
           }
         },
         "sv" : {
@@ -6793,8 +6955,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Settings…"
+            "state" : "translated",
+            "value" : "Параметри…"
           }
         },
         "vi" : {
@@ -6834,8 +6996,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Show Panel"
+            "state" : "translated",
+            "value" : "Zobrazit panel"
           }
         },
         "da" : {
@@ -6888,8 +7050,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Show Panel"
+            "state" : "translated",
+            "value" : "Prikaži ploču"
           }
         },
         "hu" : {
@@ -6942,8 +7104,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Show Panel"
+            "state" : "translated",
+            "value" : "Pokaż panel"
           }
         },
         "pt-BR" : {
@@ -6966,20 +7128,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Show Panel"
+            "state" : "translated",
+            "value" : "Показать панель"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Show Panel"
+            "state" : "translated",
+            "value" : "Zobraziť panel"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Show Panel"
+            "state" : "translated",
+            "value" : "Prikaži ploščo"
           }
         },
         "sv" : {
@@ -7002,8 +7164,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Show Panel"
+            "state" : "translated",
+            "value" : "Показати панель"
           }
         },
         "vi" : {
@@ -7043,8 +7205,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Stop Dimming"
+            "state" : "translated",
+            "value" : "Zrušit ztmavení"
           }
         },
         "da" : {
@@ -7097,8 +7259,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Stop Dimming"
+            "state" : "translated",
+            "value" : "Ukloni zatamnjenje"
           }
         },
         "hu" : {
@@ -7151,8 +7313,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Stop Dimming"
+            "state" : "translated",
+            "value" : "Zakończ przyciemnianie"
           }
         },
         "pt-BR" : {
@@ -7175,20 +7337,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Stop Dimming"
+            "state" : "translated",
+            "value" : "Убрать затемнение"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Stop Dimming"
+            "state" : "translated",
+            "value" : "Zrušiť stmavenie"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Stop Dimming"
+            "state" : "translated",
+            "value" : "Izklopi zatemnitev"
           }
         },
         "sv" : {
@@ -7211,8 +7373,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Stop Dimming"
+            "state" : "translated",
+            "value" : "Прибрати затемнення"
           }
         },
         "vi" : {
@@ -7252,8 +7414,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To show it, turn on Overbright under Allow in the Menu Bar in Menu Bar settings."
+            "state" : "translated",
+            "value" : "Chcete‑li ji zobrazit, zapněte Overbright v seznamu Povolit v řádku nabídek v nastavení Řádek nabídek."
           }
         },
         "da" : {
@@ -7306,8 +7468,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To show it, turn on Overbright under Allow in the Menu Bar in Menu Bar settings."
+            "state" : "translated",
+            "value" : "Da biste je prikazali, uključite Overbright pod “Dozvoli u traci s izbornicima” u odjeljku Traka s izbornicima u Postavkama sustava."
           }
         },
         "hu" : {
@@ -7360,8 +7522,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To show it, turn on Overbright under Allow in the Menu Bar in Menu Bar settings."
+            "state" : "translated",
+            "value" : "Aby była widoczna, włącz Overbright na liście „Pozwalaj na pasku menu” w ustawieniach „Pasek menu”."
           }
         },
         "pt-BR" : {
@@ -7384,20 +7546,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To show it, turn on Overbright under Allow in the Menu Bar in Menu Bar settings."
+            "state" : "translated",
+            "value" : "Чтобы он появился, включите Overbright в списке «Разрешить в строке меню» в разделе «Строка меню» Системных настроек."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To show it, turn on Overbright under Allow in the Menu Bar in Menu Bar settings."
+            "state" : "translated",
+            "value" : "Ak ju chcete zobraziť, zapnite Overbright v časti Povoliť položky v lište v nastaveniach Lišta."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To show it, turn on Overbright under Allow in the Menu Bar in Menu Bar settings."
+            "state" : "translated",
+            "value" : "Če jo želite prikazati, v nastavitvah Menijska vrstica vklopite Overbright pod »Dovoljeno v menijski vrstici«."
           }
         },
         "sv" : {
@@ -7420,8 +7582,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To show it, turn on Overbright under Allow in the Menu Bar in Menu Bar settings."
+            "state" : "translated",
+            "value" : "Щоб він зʼявився, увімкніть Overbright у списку «Дозволити на смузі меню» в розділі «Смуга меню» Системних параметрів."
           }
         },
         "vi" : {
@@ -7461,8 +7623,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Try Again"
+            "state" : "translated",
+            "value" : "Zkusit znovu"
           }
         },
         "da" : {
@@ -7515,8 +7677,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Try Again"
+            "state" : "translated",
+            "value" : "Pokušaj ponovno"
           }
         },
         "hu" : {
@@ -7569,8 +7731,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Try Again"
+            "state" : "translated",
+            "value" : "Spróbuj ponownie"
           }
         },
         "pt-BR" : {
@@ -7593,20 +7755,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Try Again"
+            "state" : "translated",
+            "value" : "Повторить"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Try Again"
+            "state" : "translated",
+            "value" : "Skúsiť znova"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Try Again"
+            "state" : "translated",
+            "value" : "Poskusi znova"
           }
         },
         "sv" : {
@@ -7629,8 +7791,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Try Again"
+            "state" : "translated",
+            "value" : "Повторити"
           }
         },
         "vi" : {
@@ -7670,8 +7832,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Off Overbright"
+            "state" : "translated",
+            "value" : "Vypnout Overbright"
           }
         },
         "da" : {
@@ -7724,8 +7886,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Off Overbright"
+            "state" : "translated",
+            "value" : "Isključi Overbright"
           }
         },
         "hu" : {
@@ -7778,8 +7940,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Off Overbright"
+            "state" : "translated",
+            "value" : "Wyłącz Overbright"
           }
         },
         "pt-BR" : {
@@ -7802,20 +7964,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Off Overbright"
+            "state" : "translated",
+            "value" : "Выключить Overbright"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Off Overbright"
+            "state" : "translated",
+            "value" : "Vypnúť Overbright"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Off Overbright"
+            "state" : "translated",
+            "value" : "Izklopi Overbright"
           }
         },
         "sv" : {
@@ -7838,8 +8000,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn Off Overbright"
+            "state" : "translated",
+            "value" : "Вимкнути Overbright"
           }
         },
         "vi" : {
@@ -7879,8 +8041,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Zapnout Overbright"
           }
         },
         "da" : {
@@ -7933,8 +8095,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Uključi Overbright"
           }
         },
         "hu" : {
@@ -7987,8 +8149,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Włącz Overbright"
           }
         },
         "pt-BR" : {
@@ -8011,20 +8173,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Включить Overbright"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Zapnúť Overbright"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Vklopi Overbright"
           }
         },
         "sv" : {
@@ -8047,8 +8209,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Увімкнути Overbright"
           }
         },
         "vi" : {
@@ -8088,8 +8250,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Update Available: Overbright %@…"
+            "state" : "translated",
+            "value" : "Dostupná aktualizace: Overbright %@…"
           }
         },
         "da" : {
@@ -8142,8 +8304,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Update Available: Overbright %@…"
+            "state" : "translated",
+            "value" : "Dostupno ažuriranje: Overbright %@…"
           }
         },
         "hu" : {
@@ -8196,8 +8358,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Update Available: Overbright %@…"
+            "state" : "translated",
+            "value" : "Dostępne uaktualnienie: Overbright %@…"
           }
         },
         "pt-BR" : {
@@ -8220,20 +8382,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Update Available: Overbright %@…"
+            "state" : "translated",
+            "value" : "Доступно обновление: Overbright %@…"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Update Available: Overbright %@…"
+            "state" : "translated",
+            "value" : "Dostupná aktualizácia: Overbright %@…"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Update Available: Overbright %@…"
+            "state" : "translated",
+            "value" : "Na voljo je posodobitev: Overbright %@ …"
           }
         },
         "sv" : {
@@ -8256,8 +8418,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Update Available: Overbright %@…"
+            "state" : "translated",
+            "value" : "Доступне оновлення: Overbright %@…"
           }
         },
         "vi" : {
@@ -8297,8 +8459,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use Compatibility Mode"
+            "state" : "translated",
+            "value" : "Použít režim kompatibility"
           }
         },
         "da" : {
@@ -8351,8 +8513,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use Compatibility Mode"
+            "state" : "translated",
+            "value" : "Koristi način kompatibilnosti"
           }
         },
         "hu" : {
@@ -8405,8 +8567,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use Compatibility Mode"
+            "state" : "translated",
+            "value" : "Użyj trybu zgodności"
           }
         },
         "pt-BR" : {
@@ -8429,20 +8591,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use Compatibility Mode"
+            "state" : "translated",
+            "value" : "Включить режим совместимости"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use Compatibility Mode"
+            "state" : "translated",
+            "value" : "Použiť režim kompatibility"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use Compatibility Mode"
+            "state" : "translated",
+            "value" : "Uporabi način združljivosti"
           }
         },
         "sv" : {
@@ -8465,8 +8627,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use Compatibility Mode"
+            "state" : "translated",
+            "value" : "Увімкнути режим сумісності"
           }
         },
         "vi" : {
@@ -8506,8 +8668,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "macOS may be hiding it, or the menu bar is too full to show it. You can still open Overbright from Finder or Spotlight."
+            "state" : "translated",
+            "value" : "Možná ji skrývá macOS nebo je řádek nabídek příliš zaplněný. Overbright můžete i nadále otevřít z Finderu nebo pomocí Spotlightu."
           }
         },
         "da" : {
@@ -8560,8 +8722,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "macOS may be hiding it, or the menu bar is too full to show it. You can still open Overbright from Finder or Spotlight."
+            "state" : "translated",
+            "value" : "macOS je možda skriva ili je traka s izbornicima prepuna da bi je prikazala. Overbright i dalje možete otvoriti iz Findera ili Spotlighta."
           }
         },
         "hu" : {
@@ -8614,8 +8776,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "macOS may be hiding it, or the menu bar is too full to show it. You can still open Overbright from Finder or Spotlight."
+            "state" : "translated",
+            "value" : "macOS może ją ukrywać albo pasek menu jest zbyt zapełniony, aby ją pokazać. Nadal możesz otworzyć Overbright z Findera lub ze Spotlight."
           }
         },
         "pt-BR" : {
@@ -8638,20 +8800,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "macOS may be hiding it, or the menu bar is too full to show it. You can still open Overbright from Finder or Spotlight."
+            "state" : "translated",
+            "value" : "Возможно, его скрывает macOS или в строке меню не хватает места. Overbright по-прежнему можно открыть из Finder или Spotlight."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "macOS may be hiding it, or the menu bar is too full to show it. You can still open Overbright from Finder or Spotlight."
+            "state" : "translated",
+            "value" : "Možno ju skrýva macOS alebo je lišta príliš plná. Overbright môžete aj naďalej otvoriť z Findera alebo zo Spotlightu."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "macOS may be hiding it, or the menu bar is too full to show it. You can still open Overbright from Finder or Spotlight."
+            "state" : "translated",
+            "value" : "Morda jo skriva macOS ali pa je menijska vrstica prepolna. Overbright lahko še vedno odprete iz Finderja ali Spotlighta."
           }
         },
         "sv" : {
@@ -8674,8 +8836,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "macOS may be hiding it, or the menu bar is too full to show it. You can still open Overbright from Finder or Spotlight."
+            "state" : "translated",
+            "value" : "Можливо, його приховує macOS або на смузі меню забракло місця. Overbright і далі можна відкрити з Finder або Spotlight."
           }
         },
         "vi" : {
@@ -8715,8 +8877,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "macOS may be hiding it, or the menu bar is too full to show it. You can still use %@, or open Overbright from Finder or Spotlight."
+            "state" : "translated",
+            "value" : "Možná ji skrývá macOS nebo je řádek nabídek příliš zaplněný. I nadále můžete použít %@ nebo Overbright otevřít z Finderu či pomocí Spotlightu."
           }
         },
         "da" : {
@@ -8769,8 +8931,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "macOS may be hiding it, or the menu bar is too full to show it. You can still use %@, or open Overbright from Finder or Spotlight."
+            "state" : "translated",
+            "value" : "macOS je možda skriva ili je traka s izbornicima prepuna da bi je prikazala. I dalje možete pritisnuti %@ ili otvoriti Overbright iz Findera ili Spotlighta."
           }
         },
         "hu" : {
@@ -8823,8 +8985,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "macOS may be hiding it, or the menu bar is too full to show it. You can still use %@, or open Overbright from Finder or Spotlight."
+            "state" : "translated",
+            "value" : "macOS może ją ukrywać albo pasek menu jest zbyt zapełniony, aby ją pokazać. Nadal możesz użyć skrótu %@ albo otworzyć Overbright z Findera lub ze Spotlight."
           }
         },
         "pt-BR" : {
@@ -8847,20 +9009,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "macOS may be hiding it, or the menu bar is too full to show it. You can still use %@, or open Overbright from Finder or Spotlight."
+            "state" : "translated",
+            "value" : "Возможно, его скрывает macOS или в строке меню не хватает места. Вы по-прежнему можете нажать %@ или открыть Overbright из Finder или Spotlight."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "macOS may be hiding it, or the menu bar is too full to show it. You can still use %@, or open Overbright from Finder or Spotlight."
+            "state" : "translated",
+            "value" : "Možno ju skrýva macOS alebo je lišta príliš plná. Aj naďalej môžete použiť %@ alebo otvoriť Overbright z Findera či zo Spotlightu."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "macOS may be hiding it, or the menu bar is too full to show it. You can still use %@, or open Overbright from Finder or Spotlight."
+            "state" : "translated",
+            "value" : "Morda jo skriva macOS ali pa je menijska vrstica prepolna. Še vedno lahko uporabite %@ ali odprete Overbright iz Finderja ali Spotlighta."
           }
         },
         "sv" : {
@@ -8883,8 +9045,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "macOS may be hiding it, or the menu bar is too full to show it. You can still use %@, or open Overbright from Finder or Spotlight."
+            "state" : "translated",
+            "value" : "Можливо, його приховує macOS або на смузі меню забракло місця. Ви й далі можете натиснути %@ або відкрити Overbright з Finder чи Spotlight."
           }
         },
         "vi" : {

@@ -18,8 +18,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "Extra jas"
           }
         },
         "da" : {
@@ -72,8 +72,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "Dod. svjetlina"
           }
         },
         "hu" : {
@@ -126,8 +126,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "Dod. jasność"
           }
         },
         "pt-BR" : {
@@ -150,20 +150,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "Доп. яркость"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "Extra jas"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "Dodatna svetlost"
           }
         },
         "sv" : {
@@ -186,8 +186,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra Brightness"
+            "state" : "translated",
+            "value" : "Дод. яскравість"
           }
         },
         "vi" : {
@@ -227,8 +227,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra brightness"
+            "state" : "translated",
+            "value" : "Extra jas"
           }
         },
         "da" : {
@@ -281,8 +281,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra brightness"
+            "state" : "translated",
+            "value" : "Dod. svjetlina"
           }
         },
         "hu" : {
@@ -335,8 +335,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra brightness"
+            "state" : "translated",
+            "value" : "Dod. jasność"
           }
         },
         "pt-BR" : {
@@ -359,20 +359,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra brightness"
+            "state" : "translated",
+            "value" : "Доп. яркость"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra brightness"
+            "state" : "translated",
+            "value" : "Extra jas"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra brightness"
+            "state" : "translated",
+            "value" : "Dodatna svetlost"
           }
         },
         "sv" : {
@@ -395,8 +395,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra brightness"
+            "state" : "translated",
+            "value" : "Дод. яскравість"
           }
         },
         "vi" : {
@@ -436,7 +436,7 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },
@@ -490,7 +490,7 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },
@@ -544,7 +544,7 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },
@@ -568,19 +568,19 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },
@@ -604,7 +604,7 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Overbright"
           }
         },

@@ -18,8 +18,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "Kalibrace: %@"
           }
         },
         "da" : {
@@ -72,8 +72,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "Kalibracija: %@"
           }
         },
         "hu" : {
@@ -126,8 +126,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "Kalibracja: %@"
           }
         },
         "pt-BR" : {
@@ -150,20 +150,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "Калибровка: %@"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "Kalibrácia: %@"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "Umerjanje: %@"
           }
         },
         "sv" : {
@@ -186,8 +186,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Calibrate %@"
+            "state" : "translated",
+            "value" : "Калібрування: %@"
           }
         },
         "vi" : {
@@ -227,8 +227,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Autotest Overbright %@"
           }
         },
         "da" : {
@@ -281,8 +281,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Overbright samoprovjera %@"
           }
         },
         "hu" : {
@@ -335,8 +335,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Autotest Overbright %@"
           }
         },
         "pt-BR" : {
@@ -359,20 +359,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Самопроверка Overbright %@"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Autotest Overbright %@"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Samopreizkus Overbright %@"
           }
         },
         "sv" : {
@@ -395,8 +395,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright Self-Test %@"
+            "state" : "translated",
+            "value" : "Самоперевірка Overbright %@"
           }
         },
         "vi" : {
@@ -436,8 +436,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "Autotest"
           }
         },
         "da" : {
@@ -490,8 +490,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "Samoprovjera"
           }
         },
         "hu" : {
@@ -544,8 +544,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "Autotest"
           }
         },
         "pt-BR" : {
@@ -568,20 +568,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "Самопроверка"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "Autotest"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "Samopreizkus"
           }
         },
         "sv" : {
@@ -604,8 +604,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Self-Test"
+            "state" : "translated",
+            "value" : "Самоперевірка"
           }
         },
         "vi" : {

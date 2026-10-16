@@ -18,8 +18,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "Přesunout Overbright do složky Aplikace?"
           }
         },
         "da" : {
@@ -72,8 +72,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "Premjestiti Overbright u mapu Aplikacije?"
           }
         },
         "hu" : {
@@ -126,8 +126,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "Przenieść Overbright do folderu Aplikacje?"
           }
         },
         "pt-BR" : {
@@ -150,20 +150,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "Переместить Overbright в папку «Программы»?"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "Presunúť Overbright do priečinka Aplikácie?"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "Želite premakniti Overbright v mapo Aplikacije?"
           }
         },
         "sv" : {
@@ -186,8 +186,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move Overbright to the Applications folder?"
+            "state" : "translated",
+            "value" : "Перемістити Overbright у папку «Програми»?"
           }
         },
         "vi" : {
@@ -227,8 +227,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "Přesunout do složky Aplikace"
           }
         },
         "da" : {
@@ -281,8 +281,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "Premjesti u Aplikacije"
           }
         },
         "hu" : {
@@ -335,8 +335,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "Przenieś do folderu Aplikacje"
           }
         },
         "pt-BR" : {
@@ -359,20 +359,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "Переместить в «Программы»"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "Presunúť do priečinka Aplikácie"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "Premakni v mapo Aplikacije"
           }
         },
         "sv" : {
@@ -395,8 +395,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Move to Applications"
+            "state" : "translated",
+            "value" : "Перемістити в «Програми»"
           }
         },
         "vi" : {
@@ -436,8 +436,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "Teď ne"
           }
         },
         "da" : {
@@ -490,8 +490,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "Ne sada"
           }
         },
         "hu" : {
@@ -544,8 +544,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "Nie teraz"
           }
         },
         "pt-BR" : {
@@ -568,20 +568,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "Не сейчас"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "Teraz nie"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "Ne zdaj"
           }
         },
         "sv" : {
@@ -604,8 +604,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Not Now"
+            "state" : "translated",
+            "value" : "Не зараз"
           }
         },
         "vi" : {
@@ -645,7 +645,7 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "OK"
           }
         },
@@ -699,8 +699,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "OK"
+            "state" : "translated",
+            "value" : "U redu"
           }
         },
         "hu" : {
@@ -753,7 +753,7 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "OK"
           }
         },
@@ -777,20 +777,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "OK"
+            "state" : "translated",
+            "value" : "ОК"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "OK"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "OK"
+            "state" : "translated",
+            "value" : "V redu"
           }
         },
         "sv" : {
@@ -813,7 +813,7 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "OK"
           }
         },
@@ -854,8 +854,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "Overbright se nepodařilo přesunout. Přetáhněte ho do složky Aplikace ve Finderu."
           }
         },
         "da" : {
@@ -908,8 +908,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "Overbright nije moguće premjestiti. Povucite ga u mapu Aplikacije u Finderu."
           }
         },
         "hu" : {
@@ -962,8 +962,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "Nie można przenieść Overbright. Przeciągnij go do folderu Aplikacje w Finderze."
           }
         },
         "pt-BR" : {
@@ -986,20 +986,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "Не удалось переместить Overbright. Перетащите его в папку «Программы» в Finder."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "Overbright sa nepodarilo presunúť. Potiahnite ho do priečinka Aplikácie vo Finderi."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "Aplikacije Overbright ni bilo mogoče premakniti. Povlecite jo v mapo Aplikacije v Finderju."
           }
         },
         "sv" : {
@@ -1022,8 +1022,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright couldn’t be moved. Drag it to the Applications folder in Finder."
+            "state" : "translated",
+            "value" : "Не вдалося перемістити Overbright. Перетягніть його в папку «Програми» у Finder."
           }
         },
         "vi" : {
@@ -1272,8 +1272,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "Akce v aplikaci Zkratky a otevírání při přihlášení fungují, jen když je Overbright ve složce Aplikace."
           }
         },
         "da" : {
@@ -1326,8 +1326,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "Radnje u aplikaciji Prečaci i otvaranje kod prijave rade samo ako je Overbright u mapi Aplikacije."
           }
         },
         "hu" : {
@@ -1380,8 +1380,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "Czynności w aplikacji Skróty i otwieranie podczas logowania działają tylko z folderu Aplikacje."
           }
         },
         "pt-BR" : {
@@ -1404,20 +1404,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "Действия в приложении «Команды» и открытие при входе работают, только если Overbright находится в папке «Программы»."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "Akcie v apke Skratky a otváranie po prihlásení fungujú, len keď je Overbright v priečinku Aplikácie."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "Dejanja v aplikaciji Bližnjice in odpiranje ob prijavi delujejo le, če je Overbright v mapi Aplikacije."
           }
         },
         "sv" : {
@@ -1440,8 +1440,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts actions and opening at login work only from Applications."
+            "state" : "translated",
+            "value" : "Дії в програмі «Команди» і відкриття під час входу працюють, лише якщо Overbright у папці «Програми»."
           }
         },
         "vi" : {

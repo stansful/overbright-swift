@@ -436,7 +436,7 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub nenašel vydání aplikace Overbright. Zkuste to znovu později."
           }
         },
@@ -490,7 +490,7 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub nije pronašao izdanja aplikacije Overbright. Pokušajte ponovno kasnije."
           }
         },
@@ -544,7 +544,7 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub nie znalazł wydań Overbright. Spróbuj ponownie później."
           }
         },
@@ -568,19 +568,19 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub не нашёл выпуски Overbright. Попробуйте позже."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub nenašiel vydania apky Overbright. Skúste to znova neskôr."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub ni našel izdaj aplikacije Overbright. Poskusite znova pozneje."
           }
         },
@@ -604,7 +604,7 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub не знайшов випусків Overbright. Спробуйте пізніше."
           }
         },

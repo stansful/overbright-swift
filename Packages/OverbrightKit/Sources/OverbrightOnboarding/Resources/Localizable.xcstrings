@@ -227,8 +227,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "Zpět na standardní jas"
           }
         },
         "da" : {
@@ -281,8 +281,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "Vrati na standardno"
           }
         },
         "hu" : {
@@ -335,8 +335,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "Wróć do standardu"
           }
         },
         "pt-BR" : {
@@ -359,20 +359,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "Вернуться к стандарту"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "Späť na štandardný jas"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "Nazaj na standardno svetlost"
           }
         },
         "sv" : {
@@ -395,8 +395,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Back to Standard"
+            "state" : "translated",
+            "value" : "Повернутися до стандарту"
           }
         },
         "vi" : {
@@ -436,8 +436,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Battery level"
+            "state" : "translated",
+            "value" : "Úroveň nabití"
           }
         },
         "da" : {
@@ -490,8 +490,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Battery level"
+            "state" : "translated",
+            "value" : "Razina baterije"
           }
         },
         "hu" : {
@@ -544,8 +544,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Battery level"
+            "state" : "translated",
+            "value" : "Poziom baterii"
           }
         },
         "pt-BR" : {
@@ -568,20 +568,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Battery level"
+            "state" : "translated",
+            "value" : "Уровень заряда"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Battery level"
+            "state" : "translated",
+            "value" : "Úroveň nabitia"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Battery level"
+            "state" : "translated",
+            "value" : "Raven baterije"
           }
         },
         "sv" : {
@@ -604,8 +604,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Battery level"
+            "state" : "translated",
+            "value" : "Рівень заряду"
           }
         },
         "vi" : {
@@ -645,8 +645,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Check for updates on GitHub"
+            "state" : "translated",
+            "value" : "Vyhledávat aktualizace na GitHubu"
           }
         },
         "da" : {
@@ -699,8 +699,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Check for updates on GitHub"
+            "state" : "translated",
+            "value" : "Traži ažuriranja na GitHubu"
           }
         },
         "hu" : {
@@ -753,8 +753,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Check for updates on GitHub"
+            "state" : "translated",
+            "value" : "Sprawdzaj uaktualnienia w serwisie GitHub"
           }
         },
         "pt-BR" : {
@@ -777,20 +777,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Check for updates on GitHub"
+            "state" : "translated",
+            "value" : "Проверять обновления на GitHub"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Check for updates on GitHub"
+            "state" : "translated",
+            "value" : "Vyhľadávať aktualizácie na GitHube"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Check for updates on GitHub"
+            "state" : "translated",
+            "value" : "Preverjaj posodobitve na GitHubu"
           }
         },
         "sv" : {
@@ -813,8 +813,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Check for updates on GitHub"
+            "state" : "translated",
+            "value" : "Перевіряти оновлення на GitHub"
           }
         },
         "vi" : {
@@ -854,8 +854,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Click for the panel, right-click for the menu"
+            "state" : "translated",
+            "value" : "Kliknutím otevřete panel, kliknutím pravým tlačítkem nabídku"
           }
         },
         "da" : {
@@ -908,8 +908,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Click for the panel, right-click for the menu"
+            "state" : "translated",
+            "value" : "Klik za ploču, desni klik za izbornik"
           }
         },
         "hu" : {
@@ -962,8 +962,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Click for the panel, right-click for the menu"
+            "state" : "translated",
+            "value" : "Kliknij, aby otworzyć panel; kliknij prawym przyciskiem, aby otworzyć menu"
           }
         },
         "pt-BR" : {
@@ -986,20 +986,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Click for the panel, right-click for the menu"
+            "state" : "translated",
+            "value" : "Нажатие открывает панель, нажатие правой кнопкой — меню"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Click for the panel, right-click for the menu"
+            "state" : "translated",
+            "value" : "Kliknutím otvoríte panel, kliknutím pravým tlačidlom menu"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Click for the panel, right-click for the menu"
+            "state" : "translated",
+            "value" : "Klik odpre ploščo, desni klik pa meni"
           }
         },
         "sv" : {
@@ -1022,8 +1022,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Click for the panel, right-click for the menu"
+            "state" : "translated",
+            "value" : "Клацання відкриває панель, клацання правою кнопкою — меню"
           }
         },
         "vi" : {
@@ -1272,8 +1272,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue Setup"
+            "state" : "translated",
+            "value" : "Pokračovat v průvodci"
           }
         },
         "da" : {
@@ -1326,8 +1326,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue Setup"
+            "state" : "translated",
+            "value" : "Nastavi postavljanje"
           }
         },
         "hu" : {
@@ -1380,8 +1380,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue Setup"
+            "state" : "translated",
+            "value" : "Kontynuuj konfigurowanie"
           }
         },
         "pt-BR" : {
@@ -1404,20 +1404,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue Setup"
+            "state" : "translated",
+            "value" : "Продолжить настройку"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue Setup"
+            "state" : "translated",
+            "value" : "Pokračovať v úvodnom nastavení"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue Setup"
+            "state" : "translated",
+            "value" : "Nadaljuj nastavitev"
           }
         },
         "sv" : {
@@ -1440,8 +1440,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Continue Setup"
+            "state" : "translated",
+            "value" : "Продовжити налаштування"
           }
         },
         "vi" : {
@@ -1481,8 +1481,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim Below Minimum On or Off"
+            "state" : "translated",
+            "value" : "Zapnout nebo vypnout ztmavení pod minimum"
           }
         },
         "da" : {
@@ -1535,8 +1535,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim Below Minimum On or Off"
+            "state" : "translated",
+            "value" : "Uključi ili isključi zatamnjenje ispod minimuma"
           }
         },
         "hu" : {
@@ -1589,8 +1589,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim Below Minimum On or Off"
+            "state" : "translated",
+            "value" : "Włącz lub wyłącz przyciemnianie poniżej minimum"
           }
         },
         "pt-BR" : {
@@ -1613,20 +1613,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim Below Minimum On or Off"
+            "state" : "translated",
+            "value" : "Включить или выключить затемнение ниже минимума"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim Below Minimum On or Off"
+            "state" : "translated",
+            "value" : "Zapnúť alebo vypnúť stmavenie pod minimum"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim Below Minimum On or Off"
+            "state" : "translated",
+            "value" : "Vklopi ali izklopi zatemnitev pod minimum"
           }
         },
         "sv" : {
@@ -1649,8 +1649,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dim Below Minimum On or Off"
+            "state" : "translated",
+            "value" : "Увімкнути або вимкнути затемнення нижче мінімуму"
           }
         },
         "vi" : {
@@ -1899,8 +1899,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Don’t open at login"
+            "state" : "translated",
+            "value" : "Neotevírat při přihlášení"
           }
         },
         "da" : {
@@ -1953,8 +1953,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Don’t open at login"
+            "state" : "translated",
+            "value" : "Ne otvaraj kod prijave"
           }
         },
         "hu" : {
@@ -2007,8 +2007,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Don’t open at login"
+            "state" : "translated",
+            "value" : "Nie otwieraj podczas logowania"
           }
         },
         "pt-BR" : {
@@ -2031,20 +2031,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Don’t open at login"
+            "state" : "translated",
+            "value" : "Не открывать при входе"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Don’t open at login"
+            "state" : "translated",
+            "value" : "Neotvárať po prihlásení"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Don’t open at login"
+            "state" : "translated",
+            "value" : "Ne odpri ob prijavi"
           }
         },
         "sv" : {
@@ -2067,8 +2067,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Don’t open at login"
+            "state" : "translated",
+            "value" : "Не відкривати під час входу"
           }
         },
         "vi" : {
@@ -2108,8 +2108,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra light uses more power, so Overbright steps back on its own. Choose how it starts."
+            "state" : "translated",
+            "value" : "Víc světla spotřebuje víc energie, proto se Overbright v případě potřeby sám pozastaví. Zvolte, jak se má spouštět."
           }
         },
         "da" : {
@@ -2162,8 +2162,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra light uses more power, so Overbright steps back on its own. Choose how it starts."
+            "state" : "translated",
+            "value" : "Dodatno svjetlo troši više energije, pa se Overbright sam povlači kad treba. Odaberite kako se pokreće."
           }
         },
         "hu" : {
@@ -2216,8 +2216,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra light uses more power, so Overbright steps back on its own. Choose how it starts."
+            "state" : "translated",
+            "value" : "Dodatkowe światło zużywa więcej energii, więc Overbright w razie potrzeby sam się wstrzymuje. Wybierz, jak ma się uruchamiać."
           }
         },
         "pt-BR" : {
@@ -2240,20 +2240,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra light uses more power, so Overbright steps back on its own. Choose how it starts."
+            "state" : "translated",
+            "value" : "Дополнительный свет расходует больше энергии, поэтому Overbright сам приостанавливается, когда это нужно. Выберите, как он будет запускаться."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra light uses more power, so Overbright steps back on its own. Choose how it starts."
+            "state" : "translated",
+            "value" : "Viac svetla spotrebuje viac energie, preto sa Overbright v prípade potreby automaticky pozastaví. Zvoľte, ako sa má spúšťať."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra light uses more power, so Overbright steps back on its own. Choose how it starts."
+            "state" : "translated",
+            "value" : "Več svetlobe porabi več energije, zato se Overbright po potrebi sam začasno ustavi. Izberite, kako naj se zažene."
           }
         },
         "sv" : {
@@ -2276,8 +2276,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Extra light uses more power, so Overbright steps back on its own. Choose how it starts."
+            "state" : "translated",
+            "value" : "Додаткове світло витрачає більше енергії, тому Overbright сам призупиняється, коли це потрібно. Виберіть, як він запускатиметься."
           }
         },
         "vi" : {
@@ -2317,8 +2317,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "How Overbright behaves"
+            "state" : "translated",
+            "value" : "Jak se Overbright chová"
           }
         },
         "da" : {
@@ -2371,8 +2371,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "How Overbright behaves"
+            "state" : "translated",
+            "value" : "Kako se Overbright ponaša"
           }
         },
         "hu" : {
@@ -2425,8 +2425,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "How Overbright behaves"
+            "state" : "translated",
+            "value" : "Jak działa Overbright"
           }
         },
         "pt-BR" : {
@@ -2449,20 +2449,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "How Overbright behaves"
+            "state" : "translated",
+            "value" : "Как ведёт себя Overbright"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "How Overbright behaves"
+            "state" : "translated",
+            "value" : "Ako sa Overbright správa"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "How Overbright behaves"
+            "state" : "translated",
+            "value" : "Kako se Overbright obnaša"
           }
         },
         "sv" : {
@@ -2485,8 +2485,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "How Overbright behaves"
+            "state" : "translated",
+            "value" : "Як поводиться Overbright"
           }
         },
         "vi" : {
@@ -2526,8 +2526,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "It also backs off when your Mac gets warm."
+            "state" : "translated",
+            "value" : "Jas sníží také, když se Mac zahřeje."
           }
         },
         "da" : {
@@ -2580,8 +2580,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "It also backs off when your Mac gets warm."
+            "state" : "translated",
+            "value" : "Povlači se i kad se Mac zagrije."
           }
         },
         "hu" : {
@@ -2634,8 +2634,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "It also backs off when your Mac gets warm."
+            "state" : "translated",
+            "value" : "Ogranicza też jasność, gdy Mac się nagrzewa."
           }
         },
         "pt-BR" : {
@@ -2658,20 +2658,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "It also backs off when your Mac gets warm."
+            "state" : "translated",
+            "value" : "Кроме того, он снижает яркость, когда Mac нагревается."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "It also backs off when your Mac gets warm."
+            "state" : "translated",
+            "value" : "Jas zníži aj vtedy, keď sa Mac zahreje."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "It also backs off when your Mac gets warm."
+            "state" : "translated",
+            "value" : "Svetlost zmanjša tudi, ko se Mac segreje."
           }
         },
         "sv" : {
@@ -2694,8 +2694,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "It also backs off when your Mac gets warm."
+            "state" : "translated",
+            "value" : "Крім того, він знижує яскравість, коли Mac нагрівається."
           }
         },
         "vi" : {
@@ -2735,8 +2735,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "None of your displays has extra range right now. The next step shows why."
+            "state" : "translated",
+            "value" : "Žádný z vašich monitorů teď nemá rezervu jasu. Proč, uvidíte v dalším kroku."
           }
         },
         "da" : {
@@ -2789,8 +2789,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "None of your displays has extra range right now. The next step shows why."
+            "state" : "translated",
+            "value" : "Nijedan vaš zaslon trenutačno nema rezervu svjetline. Sljedeći korak pokazuje zašto."
           }
         },
         "hu" : {
@@ -2843,8 +2843,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "None of your displays has extra range right now. The next step shows why."
+            "state" : "translated",
+            "value" : "Żaden z Twoich wyświetlaczy nie ma teraz zapasu jasności. Następny krok pokaże dlaczego."
           }
         },
         "pt-BR" : {
@@ -2867,20 +2867,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "None of your displays has extra range right now. The next step shows why."
+            "state" : "translated",
+            "value" : "Сейчас ни у одного из ваших дисплеев нет запаса яркости. На следующем шаге будет видно почему."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "None of your displays has extra range right now. The next step shows why."
+            "state" : "translated",
+            "value" : "Žiadny z vašich displejov teraz nemá rezervu jasu. Prečo, uvidíte v ďalšom kroku."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "None of your displays has extra range right now. The next step shows why."
+            "state" : "translated",
+            "value" : "Noben od vaših zaslonov trenutno nima rezerve svetlosti. Zakaj, boste videli v naslednjem koraku."
           }
         },
         "sv" : {
@@ -2903,8 +2903,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "None of your displays has extra range right now. The next step shows why."
+            "state" : "translated",
+            "value" : "Зараз жоден із ваших дисплеїв не має запасу яскравості. На наступному кроці буде видно чому."
           }
         },
         "vi" : {
@@ -2944,8 +2944,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Only this card is brighter. It’s a preview: the real result depends on your display."
+            "state" : "translated",
+            "value" : "Jasnější je jen tato karta. Jde o náhled: skutečný výsledek závisí na vašem monitoru."
           }
         },
         "da" : {
@@ -2998,8 +2998,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Only this card is brighter. It’s a preview: the real result depends on your display."
+            "state" : "translated",
+            "value" : "Svjetlija je samo ova kartica. To je pretpregled: stvarni rezultat ovisi o vašem zaslonu."
           }
         },
         "hu" : {
@@ -3052,8 +3052,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Only this card is brighter. It’s a preview: the real result depends on your display."
+            "state" : "translated",
+            "value" : "Jaśniejsza jest tylko ta karta. To podgląd: rzeczywisty efekt zależy od wyświetlacza."
           }
         },
         "pt-BR" : {
@@ -3076,20 +3076,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Only this card is brighter. It’s a preview: the real result depends on your display."
+            "state" : "translated",
+            "value" : "Ярче стала только эта карточка. Это предварительный просмотр: реальный результат зависит от вашего дисплея."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Only this card is brighter. It’s a preview: the real result depends on your display."
+            "state" : "translated",
+            "value" : "Jasnejšia je len táto karta. Ide o náhľad: skutočný výsledok závisí od vášho displeja."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Only this card is brighter. It’s a preview: the real result depends on your display."
+            "state" : "translated",
+            "value" : "Svetlejša je le ta kartica. To je predogled: dejanski rezultat je odvisen od vašega zaslona."
           }
         },
         "sv" : {
@@ -3112,8 +3112,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Only this card is brighter. It’s a preview: the real result depends on your display."
+            "state" : "translated",
+            "value" : "Яскравішою стала лише ця картка. Це попередній перегляд: справжній результат залежить від вашого дисплея."
           }
         },
         "vi" : {
@@ -3153,8 +3153,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open Overbright again from Finder or Spotlight to see Settings."
+            "state" : "translated",
+            "value" : "Chcete‑li zobrazit Nastavení, otevřete Overbright znovu z Finderu nebo pomocí Spotlightu."
           }
         },
         "da" : {
@@ -3207,8 +3207,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open Overbright again from Finder or Spotlight to see Settings."
+            "state" : "translated",
+            "value" : "Da biste vidjeli postavke, ponovno otvorite Overbright iz Findera ili Spotlighta."
           }
         },
         "hu" : {
@@ -3261,8 +3261,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open Overbright again from Finder or Spotlight to see Settings."
+            "state" : "translated",
+            "value" : "Aby zobaczyć ustawienia, otwórz Overbright ponownie z Findera lub ze Spotlight."
           }
         },
         "pt-BR" : {
@@ -3285,20 +3285,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open Overbright again from Finder or Spotlight to see Settings."
+            "state" : "translated",
+            "value" : "Чтобы попасть в настройки, снова откройте Overbright из Finder или Spotlight."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open Overbright again from Finder or Spotlight to see Settings."
+            "state" : "translated",
+            "value" : "Ak chcete zobraziť Nastavenia, znova otvorte Overbright z Findera alebo zo Spotlightu."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open Overbright again from Finder or Spotlight to see Settings."
+            "state" : "translated",
+            "value" : "Če želite odpreti nastavitve, znova odprite Overbright iz Finderja ali Spotlighta."
           }
         },
         "sv" : {
@@ -3321,8 +3321,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open Overbright again from Finder or Spotlight to see Settings."
+            "state" : "translated",
+            "value" : "Щоб перейти до параметрів, знову відкрийте Overbright із Finder або Spotlight."
           }
         },
         "vi" : {
@@ -3362,8 +3362,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open and turn on"
+            "state" : "translated",
+            "value" : "Otevírat a zapínat"
           }
         },
         "da" : {
@@ -3416,8 +3416,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open and turn on"
+            "state" : "translated",
+            "value" : "Otvori i uključi"
           }
         },
         "hu" : {
@@ -3470,8 +3470,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open and turn on"
+            "state" : "translated",
+            "value" : "Otwieraj i włączaj"
           }
         },
         "pt-BR" : {
@@ -3494,20 +3494,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open and turn on"
+            "state" : "translated",
+            "value" : "Открывать и включать"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open and turn on"
+            "state" : "translated",
+            "value" : "Otvárať a zapínať"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open and turn on"
+            "state" : "translated",
+            "value" : "Odpri in vklopi"
           }
         },
         "sv" : {
@@ -3530,8 +3530,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open and turn on"
+            "state" : "translated",
+            "value" : "Відкривати й вмикати"
           }
         },
         "vi" : {
@@ -3571,8 +3571,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open, keep off"
+            "state" : "translated",
+            "value" : "Otevírat, nezapínat"
           }
         },
         "da" : {
@@ -3625,8 +3625,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open, keep off"
+            "state" : "translated",
+            "value" : "Otvori, ne uključuj"
           }
         },
         "hu" : {
@@ -3679,8 +3679,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open, keep off"
+            "state" : "translated",
+            "value" : "Otwieraj bez włączania"
           }
         },
         "pt-BR" : {
@@ -3703,20 +3703,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open, keep off"
+            "state" : "translated",
+            "value" : "Открывать, не включая"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open, keep off"
+            "state" : "translated",
+            "value" : "Otvárať, nezapínať"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open, keep off"
+            "state" : "translated",
+            "value" : "Odpri, ne vklopi"
           }
         },
         "sv" : {
@@ -3739,8 +3739,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Open, keep off"
+            "state" : "translated",
+            "value" : "Відкривати, не вмикаючи"
           }
         },
         "vi" : {
@@ -3780,8 +3780,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright asks GitHub once a day. Nothing else is sent."
+            "state" : "translated",
+            "value" : "Overbright se jednou denně zeptá GitHubu. Nic dalšího se neodesílá."
           }
         },
         "da" : {
@@ -3834,8 +3834,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright asks GitHub once a day. Nothing else is sent."
+            "state" : "translated",
+            "value" : "Overbright provjerava GitHub jednom dnevno. Ništa se drugo ne šalje."
           }
         },
         "hu" : {
@@ -3888,8 +3888,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright asks GitHub once a day. Nothing else is sent."
+            "state" : "translated",
+            "value" : "Overbright łączy się z serwisem GitHub raz dziennie. Nic innego nie jest wysyłane."
           }
         },
         "pt-BR" : {
@@ -3912,20 +3912,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright asks GitHub once a day. Nothing else is sent."
+            "state" : "translated",
+            "value" : "Overbright обращается к GitHub раз в день. Больше ничего не отправляется."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright asks GitHub once a day. Nothing else is sent."
+            "state" : "translated",
+            "value" : "Overbright sa raz denne opýta GitHubu. Nič iné sa neodosiela."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright asks GitHub once a day. Nothing else is sent."
+            "state" : "translated",
+            "value" : "Overbright enkrat na dan preveri GitHub. Nič drugega se ne pošlje."
           }
         },
         "sv" : {
@@ -3948,8 +3948,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright asks GitHub once a day. Nothing else is sent."
+            "state" : "translated",
+            "value" : "Overbright звертається до GitHub раз на день. Більше нічого не надсилається."
           }
         },
         "vi" : {
@@ -3989,8 +3989,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright checks what each display can do."
+            "state" : "translated",
+            "value" : "Overbright zjistí, co který monitor umí."
           }
         },
         "da" : {
@@ -4043,8 +4043,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright checks what each display can do."
+            "state" : "translated",
+            "value" : "Overbright provjerava mogućnosti svakog zaslona."
           }
         },
         "hu" : {
@@ -4097,8 +4097,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright checks what each display can do."
+            "state" : "translated",
+            "value" : "Overbright sprawdza możliwości każdego wyświetlacza."
           }
         },
         "pt-BR" : {
@@ -4121,20 +4121,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright checks what each display can do."
+            "state" : "translated",
+            "value" : "Overbright проверяет возможности каждого дисплея."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright checks what each display can do."
+            "state" : "translated",
+            "value" : "Overbright zistí, čo ktorý displej dokáže."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright checks what each display can do."
+            "state" : "translated",
+            "value" : "Overbright preveri, kaj zmore posamezni zaslon."
           }
         },
         "sv" : {
@@ -4157,8 +4157,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright checks what each display can do."
+            "state" : "translated",
+            "value" : "Overbright перевіряє можливості кожного дисплея."
           }
         },
         "vi" : {
@@ -4198,8 +4198,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright lives in the menu bar."
+            "state" : "translated",
+            "value" : "Overbright najdete na řádku nabídek."
           }
         },
         "da" : {
@@ -4252,8 +4252,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright lives in the menu bar."
+            "state" : "translated",
+            "value" : "Overbright se nalazi u traci s izbornicima."
           }
         },
         "hu" : {
@@ -4306,8 +4306,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright lives in the menu bar."
+            "state" : "translated",
+            "value" : "Overbright znajduje się na pasku menu."
           }
         },
         "pt-BR" : {
@@ -4330,20 +4330,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright lives in the menu bar."
+            "state" : "translated",
+            "value" : "Overbright находится в строке меню."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright lives in the menu bar."
+            "state" : "translated",
+            "value" : "Overbright nájdete v lište."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright lives in the menu bar."
+            "state" : "translated",
+            "value" : "Overbright je v menijski vrstici."
           }
         },
         "sv" : {
@@ -4366,8 +4366,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright lives in the menu bar."
+            "state" : "translated",
+            "value" : "Overbright розташований на смузі меню."
           }
         },
         "vi" : {
@@ -4407,8 +4407,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright uses its defaults. You can see this again in Settings ▸ About."
+            "state" : "translated",
+            "value" : "Overbright použije výchozí nastavení. Průvodce můžete znovu zobrazit v Nastavení ▸ O aplikaci."
           }
         },
         "da" : {
@@ -4461,8 +4461,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright uses its defaults. You can see this again in Settings ▸ About."
+            "state" : "translated",
+            "value" : "Overbright koristi standardne postavke. Ovo možete ponovno vidjeti u odjeljku Postavke ▸ Opis."
           }
         },
         "hu" : {
@@ -4515,8 +4515,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright uses its defaults. You can see this again in Settings ▸ About."
+            "state" : "translated",
+            "value" : "Overbright użyje ustawień domyślnych. Możesz to obejrzeć ponownie w sekcji Ustawienia ▸ Informacje."
           }
         },
         "pt-BR" : {
@@ -4539,20 +4539,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright uses its defaults. You can see this again in Settings ▸ About."
+            "state" : "translated",
+            "value" : "Overbright будет работать с настройками по умолчанию. Приветствие можно снова показать в разделе Настройки ▸ О программе."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright uses its defaults. You can see this again in Settings ▸ About."
+            "state" : "translated",
+            "value" : "Overbright použije predvolené nastavenia. Úvodné nastavenie môžete znova zobraziť v Nastaveniach ▸ O aplikácii."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright uses its defaults. You can see this again in Settings ▸ About."
+            "state" : "translated",
+            "value" : "Overbright bo uporabil privzete nastavitve. To lahko znova prikažete v Nastavitvah ▸ O aplikaciji."
           }
         },
         "sv" : {
@@ -4575,8 +4575,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Overbright uses its defaults. You can see this again in Settings ▸ About."
+            "state" : "translated",
+            "value" : "Overbright працюватиме з типовими параметрами. Привітання можна знову показати в розділі Параметри ▸ Про програму."
           }
         },
         "vi" : {
@@ -4616,8 +4616,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for full-screen video"
+            "state" : "translated",
+            "value" : "Pozastavovat u videa na celou obrazovku"
           }
         },
         "da" : {
@@ -4670,8 +4670,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for full-screen video"
+            "state" : "translated",
+            "value" : "Pauziraj za video preko cijelog zaslona"
           }
         },
         "hu" : {
@@ -4724,8 +4724,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for full-screen video"
+            "state" : "translated",
+            "value" : "Wstrzymuj przy wideo na pełnym ekranie"
           }
         },
         "pt-BR" : {
@@ -4748,20 +4748,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for full-screen video"
+            "state" : "translated",
+            "value" : "Приостанавливать при полноэкранном видео"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for full-screen video"
+            "state" : "translated",
+            "value" : "Pozastavovať pri videu na celej obrazovke"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for full-screen video"
+            "state" : "translated",
+            "value" : "Začasno ustavi pri celozaslonskem videu"
           }
         },
         "sv" : {
@@ -4784,8 +4784,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause for full-screen video"
+            "state" : "translated",
+            "value" : "Призупиняти для повноекранного відео"
           }
         },
         "vi" : {
@@ -4825,8 +4825,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause in Low Power Mode"
+            "state" : "translated",
+            "value" : "Pozastavovat v režimu nízké spotřeby"
           }
         },
         "da" : {
@@ -4879,8 +4879,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause in Low Power Mode"
+            "state" : "translated",
+            "value" : "Pauziraj kad je uključen Mod slabog napajanja"
           }
         },
         "hu" : {
@@ -4933,8 +4933,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause in Low Power Mode"
+            "state" : "translated",
+            "value" : "Wstrzymuj w trybie Niskie zużycie energii"
           }
         },
         "pt-BR" : {
@@ -4957,20 +4957,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause in Low Power Mode"
+            "state" : "translated",
+            "value" : "Приостанавливать в режиме энергосбережения"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause in Low Power Mode"
+            "state" : "translated",
+            "value" : "Pozastavovať v režime nízkej spotreby"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause in Low Power Mode"
+            "state" : "translated",
+            "value" : "Začasno ustavi v načinu nizke porabe"
           }
         },
         "sv" : {
@@ -4993,8 +4993,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause in Low Power Mode"
+            "state" : "translated",
+            "value" : "Призупиняти в режимі економії заряду"
           }
         },
         "vi" : {
@@ -5034,8 +5034,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause on battery below"
+            "state" : "translated",
+            "value" : "Pozastavovat na baterii při nabití pod"
           }
         },
         "da" : {
@@ -5088,8 +5088,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause on battery below"
+            "state" : "translated",
+            "value" : "Pauziraj na bateriji ispod"
           }
         },
         "hu" : {
@@ -5142,8 +5142,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause on battery below"
+            "state" : "translated",
+            "value" : "Wstrzymuj na baterii poniżej"
           }
         },
         "pt-BR" : {
@@ -5166,20 +5166,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause on battery below"
+            "state" : "translated",
+            "value" : "Приостанавливать при заряде аккумулятора ниже"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause on battery below"
+            "state" : "translated",
+            "value" : "Pozastavovať na batérii pri nabití pod"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause on battery below"
+            "state" : "translated",
+            "value" : "Začasno ustavi na bateriji pod"
           }
         },
         "sv" : {
@@ -5202,8 +5202,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pause on battery below"
+            "state" : "translated",
+            "value" : "Призупиняти, якщо заряд акумулятора нижче"
           }
         },
         "vi" : {
@@ -5243,7 +5243,7 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Ukončit Overbright"
           }
         },
@@ -5297,7 +5297,7 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Zatvori aplikaciju Overbright"
           }
         },
@@ -5351,7 +5351,7 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Zakończ Overbright"
           }
         },
@@ -5375,20 +5375,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Завершить Overbright"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Ukončiť Overbright"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Zapri aplikacijo Overbright"
+            "state" : "translated",
+            "value" : "Zapri Overbright"
           }
         },
         "sv" : {
@@ -5411,7 +5411,7 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Завершити Overbright"
           }
         },
@@ -5452,8 +5452,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Recommended"
+            "state" : "translated",
+            "value" : "Doporučeno"
           }
         },
         "da" : {
@@ -5506,8 +5506,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Recommended"
+            "state" : "translated",
+            "value" : "Preporučeno"
           }
         },
         "hu" : {
@@ -5560,8 +5560,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Recommended"
+            "state" : "translated",
+            "value" : "Zalecane"
           }
         },
         "pt-BR" : {
@@ -5584,20 +5584,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Recommended"
+            "state" : "translated",
+            "value" : "Рекомендуется"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Recommended"
+            "state" : "translated",
+            "value" : "Odporúčané"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Recommended"
+            "state" : "translated",
+            "value" : "Priporočeno"
           }
         },
         "sv" : {
@@ -5620,8 +5620,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Recommended"
+            "state" : "translated",
+            "value" : "Рекомендовано"
           }
         },
         "vi" : {
@@ -5661,8 +5661,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts app and Control Center"
+            "state" : "translated",
+            "value" : "Aplikace Zkratky a Ovládací centrum"
           }
         },
         "da" : {
@@ -5715,8 +5715,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts app and Control Center"
+            "state" : "translated",
+            "value" : "Aplikacija Prečaci i Kontrolni centar"
           }
         },
         "hu" : {
@@ -5769,8 +5769,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts app and Control Center"
+            "state" : "translated",
+            "value" : "Aplikacja Skróty i Centrum sterowania"
           }
         },
         "pt-BR" : {
@@ -5793,20 +5793,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts app and Control Center"
+            "state" : "translated",
+            "value" : "Приложение «Команды» и Пункт управления"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts app and Control Center"
+            "state" : "translated",
+            "value" : "Apka Skratky a Ovládacie centrum"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts app and Control Center"
+            "state" : "translated",
+            "value" : "Aplikacija Bližnjice in Nadzorno središče"
           }
         },
         "sv" : {
@@ -5829,8 +5829,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Shortcuts app and Control Center"
+            "state" : "translated",
+            "value" : "Програма «Команди» і Центр керування"
           }
         },
         "vi" : {
@@ -6503,8 +6503,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To put Overbright in Control Center or the menu bar, make a shortcut with Turn Overbright On or Off, then add Control Center’s Run Shortcut control."
+            "state" : "translated",
+            "value" : "Chcete‑li mít Overbright v Ovládacím centru nebo na řádku nabídek, vytvořte zkratku s akcí „Zapnout nebo vypnout Overbright“ a pak do Ovládacího centra přidejte ovládací prvek Spustit zkratku."
           }
         },
         "da" : {
@@ -6557,8 +6557,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To put Overbright in Control Center or the menu bar, make a shortcut with Turn Overbright On or Off, then add Control Center’s Run Shortcut control."
+            "state" : "translated",
+            "value" : "Da biste Overbright stavili u Kontrolni centar ili traku s izbornicima, izradite prečac s radnjom “Uključi ili isključi Overbright”, a zatim u Kontrolni centar dodajte kontrolu “Pokreni prečac”."
           }
         },
         "hu" : {
@@ -6611,8 +6611,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To put Overbright in Control Center or the menu bar, make a shortcut with Turn Overbright On or Off, then add Control Center’s Run Shortcut control."
+            "state" : "translated",
+            "value" : "Aby dodać Overbright do Centrum sterowania lub paska menu, utwórz skrót z czynnością „Włącz lub wyłącz Overbright”, a następnie dodaj w Centrum sterowania element „Uruchom skrót”."
           }
         },
         "pt-BR" : {
@@ -6635,20 +6635,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To put Overbright in Control Center or the menu bar, make a shortcut with Turn Overbright On or Off, then add Control Center’s Run Shortcut control."
+            "state" : "translated",
+            "value" : "Чтобы добавить Overbright в Пункт управления или строку меню, создайте быструю команду с действием «Включить или выключить Overbright», а затем добавьте в Пункт управления элемент «Запустить быструю команду»."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To put Overbright in Control Center or the menu bar, make a shortcut with Turn Overbright On or Off, then add Control Center’s Run Shortcut control."
+            "state" : "translated",
+            "value" : "Ak chcete mať Overbright v Ovládacom centre alebo v lište, vytvorte skratku s akciou „Zapnúť alebo vypnúť Overbright“ a potom do Ovládacieho centra pridajte ovládací prvok Spustiť skratku."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To put Overbright in Control Center or the menu bar, make a shortcut with Turn Overbright On or Off, then add Control Center’s Run Shortcut control."
+            "state" : "translated",
+            "value" : "Če želite Overbright dodati v Nadzorno središče ali menijsko vrstico, ustvarite bližnjico z dejanjem »Vklopi ali izklopi Overbright«, nato pa v Nadzorno središče dodajte krmilno funkcijo »Zaženi bližnjico«."
           }
         },
         "sv" : {
@@ -6671,8 +6671,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "To put Overbright in Control Center or the menu bar, make a shortcut with Turn Overbright On or Off, then add Control Center’s Run Shortcut control."
+            "state" : "translated",
+            "value" : "Щоб додати Overbright до Центру керування або на смугу меню, створіть швидку команду з дією «Увімкнути або вимкнути Overbright», а потім додайте до Центру керування елемент «Запустити швидку команду»."
           }
         },
         "vi" : {
@@ -6712,8 +6712,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Zapnout Overbright"
           }
         },
         "da" : {
@@ -6766,8 +6766,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Uključi Overbright"
           }
         },
         "hu" : {
@@ -6820,8 +6820,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Włącz Overbright"
           }
         },
         "pt-BR" : {
@@ -6844,20 +6844,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Включить Overbright"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Zapnúť Overbright"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Vklopi Overbright"
           }
         },
         "sv" : {
@@ -6880,8 +6880,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn On Overbright"
+            "state" : "translated",
+            "value" : "Увімкнути Overbright"
           }
         },
         "vi" : {
@@ -6921,8 +6921,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn on or off"
+            "state" : "translated",
+            "value" : "Zapnout nebo vypnout"
           }
         },
         "da" : {
@@ -6975,8 +6975,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn on or off"
+            "state" : "translated",
+            "value" : "Uključi ili isključi"
           }
         },
         "hu" : {
@@ -7029,8 +7029,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn on or off"
+            "state" : "translated",
+            "value" : "Włącz lub wyłącz"
           }
         },
         "pt-BR" : {
@@ -7053,20 +7053,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn on or off"
+            "state" : "translated",
+            "value" : "Включить или выключить"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn on or off"
+            "state" : "translated",
+            "value" : "Zapnúť alebo vypnúť"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn on or off"
+            "state" : "translated",
+            "value" : "Vklopi ali izklopi"
           }
         },
         "sv" : {
@@ -7089,8 +7089,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn on or off"
+            "state" : "translated",
+            "value" : "Увімкнути або вимкнути"
           }
         },
         "vi" : {
@@ -7130,8 +7130,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use extra brightness"
+            "state" : "translated",
+            "value" : "Používat extra jas"
           }
         },
         "da" : {
@@ -7184,8 +7184,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use extra brightness"
+            "state" : "translated",
+            "value" : "Koristi dodatnu svjetlinu"
           }
         },
         "hu" : {
@@ -7238,8 +7238,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use extra brightness"
+            "state" : "translated",
+            "value" : "Używaj dodatkowej jasności"
           }
         },
         "pt-BR" : {
@@ -7262,20 +7262,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use extra brightness"
+            "state" : "translated",
+            "value" : "Использовать дополнительную яркость"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use extra brightness"
+            "state" : "translated",
+            "value" : "Používať extra jas"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use extra brightness"
+            "state" : "translated",
+            "value" : "Uporabi dodatno svetlost"
           }
         },
         "sv" : {
@@ -7298,8 +7298,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use extra brightness"
+            "state" : "translated",
+            "value" : "Використовувати додаткову яскравість"
           }
         },
         "vi" : {
@@ -7339,8 +7339,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use your display’s extra range"
+            "state" : "translated",
+            "value" : "Využijte rezervu jasu svého monitoru"
           }
         },
         "da" : {
@@ -7393,8 +7393,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use your display’s extra range"
+            "state" : "translated",
+            "value" : "Iskoristite rezervu svjetline zaslona"
           }
         },
         "hu" : {
@@ -7447,8 +7447,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use your display’s extra range"
+            "state" : "translated",
+            "value" : "Wykorzystaj zapas jasności wyświetlacza"
           }
         },
         "pt-BR" : {
@@ -7471,20 +7471,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use your display’s extra range"
+            "state" : "translated",
+            "value" : "Используйте запас яркости дисплея"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use your display’s extra range"
+            "state" : "translated",
+            "value" : "Využite rezervu jasu svojho displeja"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use your display’s extra range"
+            "state" : "translated",
+            "value" : "Izkoristite rezervo svetlosti zaslona"
           }
         },
         "sv" : {
@@ -7507,8 +7507,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Use your display’s extra range"
+            "state" : "translated",
+            "value" : "Використовуйте запас яскравості дисплея"
           }
         },
         "vi" : {
@@ -7548,7 +7548,7 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Vítá vás Overbright"
           }
         },
@@ -7602,7 +7602,7 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Dobro došli u Overbright"
           }
         },
@@ -7656,7 +7656,7 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Witaj w Overbright"
           }
         },
@@ -7680,19 +7680,19 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Добро пожаловать в Overbright"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Vitajte v Overbright"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Dobrodošli v aplikaciji Overbright"
           }
         },
@@ -7716,7 +7716,7 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Вітаємо в Overbright"
           }
         },
@@ -7757,8 +7757,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "When you log in"
+            "state" : "translated",
+            "value" : "Při přihlášení"
           }
         },
         "da" : {
@@ -7811,8 +7811,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "When you log in"
+            "state" : "translated",
+            "value" : "Kad se prijavite"
           }
         },
         "hu" : {
@@ -7865,8 +7865,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "When you log in"
+            "state" : "translated",
+            "value" : "Podczas logowania"
           }
         },
         "pt-BR" : {
@@ -7889,20 +7889,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "When you log in"
+            "state" : "translated",
+            "value" : "При входе в систему"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "When you log in"
+            "state" : "translated",
+            "value" : "Po prihlásení"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "When you log in"
+            "state" : "translated",
+            "value" : "Ob prijavi"
           }
         },
         "sv" : {
@@ -7925,8 +7925,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "When you log in"
+            "state" : "translated",
+            "value" : "Під час входу в систему"
           }
         },
         "vi" : {
@@ -7966,8 +7966,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Where to find Overbright"
+            "state" : "translated",
+            "value" : "Kde Overbright najdete"
           }
         },
         "da" : {
@@ -8020,8 +8020,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Where to find Overbright"
+            "state" : "translated",
+            "value" : "Gdje pronaći Overbright"
           }
         },
         "hu" : {
@@ -8074,8 +8074,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Where to find Overbright"
+            "state" : "translated",
+            "value" : "Gdzie znaleźć Overbright"
           }
         },
         "pt-BR" : {
@@ -8098,20 +8098,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Where to find Overbright"
+            "state" : "translated",
+            "value" : "Где найти Overbright"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Where to find Overbright"
+            "state" : "translated",
+            "value" : "Kde nájdete Overbright"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Where to find Overbright"
+            "state" : "translated",
+            "value" : "Kje najdete Overbright"
           }
         },
         "sv" : {
@@ -8134,8 +8134,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Where to find Overbright"
+            "state" : "translated",
+            "value" : "Де знайти Overbright"
           }
         },
         "vi" : {
@@ -8175,8 +8175,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your display can show light brighter than ordinary white. Overbright lets everyday content use that range, so the screen stays readable in a bright room or in sunlight. For the most light, turn your display brightness all the way up first; Overbright adds to it. Drag the divider to compare."
+            "state" : "translated",
+            "value" : "Váš monitor dokáže zobrazit světlo jasnější než běžná bílá. Overbright umožní běžnému obsahu tento rozsah využít, takže obrazovka zůstane čitelná i ve světlé místnosti nebo na slunci. Pro co nejvíc světla nejdřív nastavte jas monitoru na maximum; Overbright přidá světlo navíc. Přetažením předělu porovnáte rozdíl."
           }
         },
         "da" : {
@@ -8229,8 +8229,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your display can show light brighter than ordinary white. Overbright lets everyday content use that range, so the screen stays readable in a bright room or in sunlight. For the most light, turn your display brightness all the way up first; Overbright adds to it. Drag the divider to compare."
+            "state" : "translated",
+            "value" : "Vaš zaslon može prikazati svjetlo jače od obične bijele. Overbright omogućuje svakodnevnom sadržaju da koristi tu rezervu, pa zaslon ostaje čitljiv u svijetloj prostoriji ili na suncu. Za najviše svjetla najprije povećajte svjetlinu zaslona do kraja; Overbright dodaje svjetlo povrh nje. Povucite razdjelnik za usporedbu."
           }
         },
         "hu" : {
@@ -8283,8 +8283,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your display can show light brighter than ordinary white. Overbright lets everyday content use that range, so the screen stays readable in a bright room or in sunlight. For the most light, turn your display brightness all the way up first; Overbright adds to it. Drag the divider to compare."
+            "state" : "translated",
+            "value" : "Twój wyświetlacz może pokazywać światło jaśniejsze niż zwykła biel. Overbright pozwala codziennym treściom korzystać z tego zapasu, aby ekran pozostawał czytelny w jasnym pomieszczeniu lub na słońcu. Aby uzyskać jak najwięcej światła, najpierw ustaw maksymalną jasność wyświetlacza; Overbright dodaje światło ponad nią. Przeciągnij separator, aby porównać."
           }
         },
         "pt-BR" : {
@@ -8307,20 +8307,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your display can show light brighter than ordinary white. Overbright lets everyday content use that range, so the screen stays readable in a bright room or in sunlight. For the most light, turn your display brightness all the way up first; Overbright adds to it. Drag the divider to compare."
+            "state" : "translated",
+            "value" : "Ваш дисплей может показывать свет ярче обычного белого. Overbright позволяет повседневному контенту использовать этот запас, чтобы экран оставался читаемым в светлой комнате или на солнце. Чтобы было как можно ярче, сначала поднимите яркость дисплея до максимума: Overbright добавляет свет поверх неё. Перетащите разделитель, чтобы сравнить."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your display can show light brighter than ordinary white. Overbright lets everyday content use that range, so the screen stays readable in a bright room or in sunlight. For the most light, turn your display brightness all the way up first; Overbright adds to it. Drag the divider to compare."
+            "state" : "translated",
+            "value" : "Váš displej dokáže zobraziť svetlo jasnejšie než bežná biela. Overbright umožní bežnému obsahu tento rozsah využiť, takže obrazovka zostane čitateľná aj vo svetlej miestnosti alebo na slnku. Ak chcete čo najviac svetla, najprv nastavte jas displeja na maximum; Overbright pridáva navyše. Potiahnutím deliacej čiary porovnáte rozdiel."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your display can show light brighter than ordinary white. Overbright lets everyday content use that range, so the screen stays readable in a bright room or in sunlight. For the most light, turn your display brightness all the way up first; Overbright adds to it. Drag the divider to compare."
+            "state" : "translated",
+            "value" : "Vaš zaslon lahko prikaže svetlobo, ki je svetlejša od običajne bele. Overbright omogoči, da vsakdanja vsebina izkoristi ta razpon, zato zaslon ostane berljiv tudi v svetli sobi ali na soncu. Za čim več svetlobe najprej nastavite najvišjo svetlost zaslona; Overbright doda še več. Za primerjavo povlecite ločilno črto."
           }
         },
         "sv" : {
@@ -8343,8 +8343,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your display can show light brighter than ordinary white. Overbright lets everyday content use that range, so the screen stays readable in a bright room or in sunlight. For the most light, turn your display brightness all the way up first; Overbright adds to it. Drag the divider to compare."
+            "state" : "translated",
+            "value" : "Ваш дисплей може показувати світло, яскравіше за звичайний білий. Overbright дає змогу повсякденному вмісту використовувати цей запас, щоб екран залишався читабельним у світлій кімнаті чи на сонці. Щоб було якомога яскравіше, спершу підніміть яскравість дисплея до максимуму: Overbright додає світло поверх неї. Перетягніть розділювач, щоб порівняти."
           }
         },
         "vi" : {
@@ -8384,8 +8384,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your displays"
+            "state" : "translated",
+            "value" : "Vaše monitory"
           }
         },
         "da" : {
@@ -8438,8 +8438,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your displays"
+            "state" : "translated",
+            "value" : "Vaši zasloni"
           }
         },
         "hu" : {
@@ -8492,8 +8492,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your displays"
+            "state" : "translated",
+            "value" : "Twoje wyświetlacze"
           }
         },
         "pt-BR" : {
@@ -8516,20 +8516,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your displays"
+            "state" : "translated",
+            "value" : "Ваши дисплеи"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your displays"
+            "state" : "translated",
+            "value" : "Vaše displeje"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your displays"
+            "state" : "translated",
+            "value" : "Vaši zasloni"
           }
         },
         "sv" : {
@@ -8552,8 +8552,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Your displays"
+            "state" : "translated",
+            "value" : "Ваші дисплеї"
           }
         },
         "vi" : {

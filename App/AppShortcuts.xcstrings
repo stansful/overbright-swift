@@ -19,8 +19,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "Zpět na standardní jas v aplikaci ${applicationName}"
           }
         },
         "da" : {
@@ -81,8 +81,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "Vrati na standardno u aplikaciji ${applicationName}"
           }
         },
         "hu" : {
@@ -135,8 +135,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "Wróć do standardu w ${applicationName}"
           }
         },
         "pt-BR" : {
@@ -159,20 +159,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "Вернуться к стандарту в ${applicationName}"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "Späť na štandardný jas v apke ${applicationName}"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "Nazaj na standardno svetlost v aplikaciji ${applicationName}"
           }
         },
         "sv" : {
@@ -195,8 +195,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "${applicationName} back to Standard"
+            "state" : "translated",
+            "value" : "Повернутися до стандарту в ${applicationName}"
           }
         },
         "vi" : {
@@ -237,8 +237,8 @@
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "Zapnout nebo vypnout ${applicationName}"
           }
         },
         "da" : {
@@ -299,8 +299,8 @@
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "Uključi ili isključi ${applicationName}"
           }
         },
         "hu" : {
@@ -353,8 +353,8 @@
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "Włącz lub wyłącz ${applicationName}"
           }
         },
         "pt-BR" : {
@@ -377,20 +377,20 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "Включить или выключить ${applicationName}"
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "Zapnúť alebo vypnúť ${applicationName}"
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "Vklopi ali izklopi ${applicationName}"
           }
         },
         "sv" : {
@@ -413,8 +413,8 @@
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Turn ${applicationName} on or off"
+            "state" : "translated",
+            "value" : "Увімкнути або вимкнути ${applicationName}"
           }
         },
         "vi" : {
