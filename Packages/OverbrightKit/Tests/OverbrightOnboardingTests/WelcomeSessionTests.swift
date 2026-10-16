@@ -83,6 +83,14 @@ import Testing
         #expect(session.outcome == .quit && app.calls == ["quit"])
     }
 
+    /// Quitting Overbright while Welcome is open (⌘Q, a script) is a quit, not a Skip: Welcome shows again next time.
+    @Test func quittingTheAppWhileOpenRecordsNothing() {
+        let (session, services, app, box) = makeSession(step: .defaults)
+        session.appWillTerminate()
+        #expect(session.outcome == .quit && box.outcomes.isEmpty && app.calls.isEmpty)
+        #expect(services.settings[OnboardingSettings.completedVersion] == nil)
+    }
+
     /// A scripted visual QA run (`--qa-welcome`) applies and records nothing.
     @Test func visualQARecordsNothing() {
         let (session, services, app, box) = makeSession(records: false)

@@ -25,6 +25,9 @@ final class WelcomeWindowController: NSObject, NSWindowDelegate {
     private(set) var session: WelcomeSession?
     /// The app that was frontmost before the window opened gets activation back when it closes.
     private var previousApp: NSRunningApplication?
+    /// The app is quitting (⌘Q, the menu, a script): a close then is a quit, not a Skip.
+    private var isTerminating = false
+    private var terminateObserver: (any NSObjectProtocol)?
 
     /// A controller for the app's services.
     convenience init(services: OverbrightServices) {
@@ -35,6 +38,15 @@ final class WelcomeWindowController: NSObject, NSWindowDelegate {
     init(services: OverbrightServices, arguments: LaunchArguments) {
         self.services = services
         self.arguments = arguments
+        super.init()
+        terminateObserver = NotificationCenter.default.addObserver(forName: NSApplication.willTerminateNotification,
+                                                                   object: nil, queue: .main) { [weak self] _ in
+            MainActor.assumeIsolated { self?.isTerminating = true }               // queue: .main
+        }
+    }
+
+    isolated deinit {
+        if let terminateObserver { NotificationCenter.default.removeObserver(terminateObserver) }
     }
 
     /// Shows Welcome at `step` (a `WelcomeStep` name; unknown or nil = the first step), or brings the open window
@@ -88,8 +100,10 @@ final class WelcomeWindowController: NSObject, NSWindowDelegate {
     }
 
     func windowWillClose(_ notification: Notification) {
-        // The close button before an outcome counts as Skip (DESIGN.md §8).
-        session?.windowWillClose()
+        // The close button before an outcome counts as Skip (DESIGN.md §8); quitting Overbright while Welcome is open
+        // records nothing, like its Quit Overbright button.
+        log.info("welcome closing\(self.isTerminating ? " (quitting)" : "", privacy: .public)")
+        if isTerminating { session?.appWillTerminate() } else { session?.windowWillClose() }
         window = nil
         session = nil
         // Cooperative activation hand-back, only while Overbright is still the active app: a close button clicked from

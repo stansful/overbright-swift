@@ -102,6 +102,12 @@ private let log = Log.logger(.onboarding)
         _ = end(.skipped)
     }
 
+    /// Overbright quits while Welcome is open (⌘Q, the menu, a script): like Quit Overbright, nothing is recorded,
+    /// so Welcome shows again at the next launch. `onFinish` does not run (the window is going away with the app).
+    public func appWillTerminate() {
+        _ = end(.quit)
+    }
+
     /// Records `outcome` once; false when Welcome already ended.
     private func end(_ outcome: WelcomeOutcome) -> Bool {
         guard self.outcome == nil else { return false }
