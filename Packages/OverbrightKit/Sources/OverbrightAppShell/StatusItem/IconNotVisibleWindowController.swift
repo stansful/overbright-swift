@@ -110,7 +110,7 @@ private struct IconNotVisibleView: View {
                 Spacer()
                 Button(action: openSettings) {
                     Text(verbatim: String(localized: "Open System Settings", table: "StatusMenu", bundle: .module,
-                                          comment: "Menu bar icon window: opens Menu Bar settings in System Settings"))
+                                          comment: "Menu: opens the System Settings pane the text names (banner action, menu bar icon window)"))
                 }
                 Button(action: dismiss) {
                     Text(verbatim: String(localized: "OK", table: "StatusMenu", bundle: .module,

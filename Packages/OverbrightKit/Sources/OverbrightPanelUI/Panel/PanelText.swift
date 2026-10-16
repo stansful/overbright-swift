@@ -39,7 +39,7 @@ enum PanelText {
                bundle: .module, comment: "Panel: the one-time calibration tip; the placeholder is a display name")
     }
     static var calibrate: String {
-        String(localized: "Calibrate…", bundle: .module, comment: "Panel: the calibration tip’s button that opens the calibration")
+        String(localized: "Calibrate…", bundle: .module, comment: "Panel: opens the calibration of this display (card context menu, calibration tip)")
     }
     static var notNow: String {
         String(localized: "Not now", bundle: .module, comment: "Panel: the calibration tip’s button that dismisses it")
@@ -48,7 +48,7 @@ enum PanelText {
     // MARK: Fill Light card
 
     static var fillLight: String {
-        String(localized: "Fill Light", bundle: .module, comment: "Panel: title of the Fill Light card")
+        String(localized: "Fill Light", bundle: .module, comment: "Panel: Fill Light (the ⋯ menu row that turns it on or off, and the title of its card)")
     }
     static var display: String {
         String(localized: "Display", bundle: .module, comment: "Panel: Fill Light card, the display pop-up’s label")

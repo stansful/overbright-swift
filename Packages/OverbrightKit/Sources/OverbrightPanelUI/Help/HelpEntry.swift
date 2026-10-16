@@ -2,6 +2,7 @@
 // §12.6 (exact English), §16 (key caps come from the live binding; the variant without a shortcut when it is cleared).
 // No network: Help is local (DESIGN.md §0 #15).
 import Foundation
+import OverbrightCore
 
 /// One Help answer.
 public struct HelpEntry: Identifiable, Hashable {
@@ -72,8 +73,7 @@ public struct HelpEntry: Identifiable, Hashable {
                                      bundle: .module, comment: "Help: answer about the brightness keys")),
             HelpEntry(id: Anchor.battery,
                       question: String(localized: "Does it use more battery?", bundle: .module, comment: "Help: question"),
-                      answer: String(localized: "Yes. More light takes more power, roughly in proportion. By default Overbright pauses below 20 % battery and in Low Power Mode.",
-                                     bundle: .module, comment: "Help: answer about battery use")),
+                      answer: batteryAnswer),
             HelpEntry(id: Anchor.menuBarIcon,
                       question: String(localized: "Where is the menu bar icon?", bundle: .module,
                                        comment: "Help: question"),
@@ -85,6 +85,14 @@ public struct HelpEntry: Identifiable, Hashable {
                       answer: String(localized: "To put Overbright in Control Center or the menu bar, make a shortcut with Turn Overbright On or Off, then add Control Center’s Run Shortcut control.",
                                      bundle: .module, comment: "Help: the Run Shortcut recipe")),
         ]
+    }
+
+    /// Answer 7 with the default battery level through FormatStyle ("20%", "20 %").
+    static var batteryAnswer: String {
+        let level = (Double(AutomationSettings.batteryThreshold.defaultValue) / 100).formatted(.percent)
+        return String(localized: "Yes. More light takes more power, roughly in proportion. By default Overbright pauses below \(level) battery and in Low Power Mode.",
+                      bundle: .module,
+                      comment: "Help: answer about battery use; the placeholder is the default battery level, e.g. “20%”")
     }
 
     /// Answer 3 with the live Back to Standard key caps, or without them (DESIGN.md §12.6, §16).

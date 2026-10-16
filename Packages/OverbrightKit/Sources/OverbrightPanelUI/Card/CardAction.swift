@@ -36,7 +36,7 @@ public nonisolated enum CardAction: Hashable, Sendable {
             String(localized: "Try again", bundle: .module, comment: "Panel ▸ Display card: chip action that clears a stop")
         case .learnMore:
             String(localized: "Learn more", bundle: .module,
-                   comment: "Panel ▸ Display card: chip action that opens the Help window at the matching answer")
+                   comment: "Panel: link that opens the Help window at the matching answer")
         case .runSelfTest:
             String(localized: "Run self-test…", bundle: .module,
                    comment: "Panel ▸ Display card: chip action that opens the self-test")

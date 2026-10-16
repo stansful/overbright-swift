@@ -106,7 +106,7 @@ enum StatusMenuText {
                    comment: "Menu: banner action that continues next to an app that changes display colors")
         case .openSystemSettings:
             String(localized: "Open System Settings", table: "StatusMenu", bundle: .module,
-                   comment: "Menu: banner action that opens the System Settings pane the banner names")
+                   comment: "Menu: opens the System Settings pane the text names (banner action, menu bar icon window)")
         case .tryAgain:
             String(localized: "Try Again", table: "StatusMenu", bundle: .module, comment: "Menu: banner action that clears a stop")
         case .changePowerRules:

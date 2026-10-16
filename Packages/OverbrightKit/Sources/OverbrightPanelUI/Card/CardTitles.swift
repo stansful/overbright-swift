@@ -30,7 +30,7 @@ public enum CardTitles {
 
     /// "MPG322UX (2)".
     static func numbered(_ name: String, _ number: Int) -> String {
-        String(localized: "\(Bidi.isolated(name)) (\(number))", bundle: .module,
+        String(localized: "\(Bidi.isolated(name)) (\(number.formatted()))", bundle: .module,
                comment: "Panel: the name of one of several displays with the same name; the number tells them apart")
     }
 }

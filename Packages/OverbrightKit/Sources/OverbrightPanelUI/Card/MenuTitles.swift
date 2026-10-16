@@ -37,7 +37,8 @@ public enum MenuTitles {
 
     /// Opens the calibration.
     public static var calibrate: String {
-        String(localized: "Calibrate…", bundle: .module, comment: "Menu: card context menu row that opens the calibration")
+        String(localized: "Calibrate…", bundle: .module,
+               comment: "Panel: opens the calibration of this display (card context menu, calibration tip)")
     }
 
     /// Opens Settings ▸ Displays at the display.
@@ -63,7 +64,7 @@ public enum MenuTitles {
 
     /// Fill Light (checked while on).
     public static var fillLight: String {
-        String(localized: "Fill Light", bundle: .module, comment: "Menu: turns Fill Light on or off")
+        String(localized: "Fill Light", bundle: .module, comment: "Panel: Fill Light (the ⋯ menu row that turns it on or off, and the title of its card)")
     }
 
     /// Opens Settings.
