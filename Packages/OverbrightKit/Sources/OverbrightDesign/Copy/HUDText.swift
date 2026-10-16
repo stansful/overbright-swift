@@ -79,6 +79,13 @@ public nonisolated struct HUDText: Hashable, Sendable {
         }
     }
 
+    /// The short reason line of `reason` as the HUD and the slider's value tag write it (DESIGN.md §5.5, §12.9):
+    /// "Paused: Low Power Mode", "Limited: Mac is warm", "Paused until 14:20"; a per-display reason repeats its chip
+    /// ("Paused: video"). Nil for master off and shielded, which have no line.
+    public static func reasonLine(for reason: LimitReason, in language: CopyLanguage = .app) -> String? {
+        line(for: reason, userCaused: true, in: language)
+    }
+
     // MARK: Private
 
     /// Level changes show for shortcuts, the Shortcuts app and a Focus (Back to Standard arrives through them).

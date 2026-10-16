@@ -89,6 +89,20 @@ import Testing
         #expect(hud(.blocked(.lowPowerMode), source: .shortcut)?.symbol == .pauseFill)
     }
 
+    /// The reason line on its own, for the slider's value tag and any other surface that names a guard: the same words
+    /// as the HUD (ARCHITECTURE.md §8.8: one key per sentence).
+    @Test func theReasonLineIsPublic() {
+        #expect(HUDText.reasonLine(for: .lowPowerMode, in: english) == "Paused: Low Power Mode")
+        #expect(HUDText.reasonLine(for: .thermalSerious, in: english) == "Limited: Mac is warm")
+        #expect(HUDText.reasonLine(for: .fullScreenVideo, in: english) == "Paused: video")
+        #expect(HUDText.reasonLine(for: .masterOff, in: english) == nil)
+        #expect(HUDText.reasonLine(for: .shielded, in: english) == nil)
+        for reason in [LimitReason.lowPowerMode, .onBattery, .battery(percent: 12, threshold: 20), .thermalCritical,
+                       .outsideSchedule, .focusOff] {
+            #expect(HUDText.reasonLine(for: reason, in: english) == hud(.automationStopped(reason))?.reason, "\(reason)")
+        }
+    }
+
     /// Off shows "Off"; a level shows the readout's own value text, byte for byte (DESIGN.md §1 principle 4).
     @Test func levelValuesAreTheReadoutsText() throws {
         let off = try #require(hud(.level, source: .shortcut, status: status(isOn: false)))

@@ -86,6 +86,19 @@ public nonisolated struct ValueText: Hashable, Sendable {
                comment: "Panel: value tag suffix when the display’s Max is below ×1.3, as in “Max · ×1.20 · small gain on this display”")
     }
 
+    /// The value tag while a guard pauses the display (DESIGN.md §5.5 "Paused"): moving the slider stores the level
+    /// but does not lift battery, Low Power Mode, heat, the schedule or a Focus, so the tag names the guard ("Paused:
+    /// Low Power Mode"). Nil for every other reason: a pause the user set ends when the slider moves, a warm Mac only
+    /// caps the level (the tag keeps its value), and per-display reasons have their chip.
+    public static func guarded(by reason: LimitReason, in language: CopyLanguage = .app) -> ValueText? {
+        switch reason {
+        case .battery, .onBattery, .lowPowerMode, .thermalCritical, .outsideSchedule, .focusOff:
+            return HUDText.reasonLine(for: reason, in: language).map(same)
+        default:
+            return nil
+        }
+    }
+
     // MARK: Private
 
     private static func allowsNow(_ multiplier: String, in language: CopyLanguage) -> String {
