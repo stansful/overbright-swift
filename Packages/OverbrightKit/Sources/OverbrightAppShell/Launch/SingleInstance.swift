@@ -95,7 +95,7 @@ enum SingleInstance {
         guard !arguments.isCommandLineMode, let bundleID = environment.bundleIdentifier else { return false }
         var others = environment.running(bundleID)
             .filter { $0.processIdentifier != environment.processIdentifier && !$0.isSimulated }
-        if let moved = arguments.int(after: afterMoveArgument).map(pid_t.init),
+        if let moved = arguments.int(after: afterMoveArgument).flatMap({ pid_t(exactly: $0) }),   // never traps (§9.2)
            others.contains(where: { $0.processIdentifier == moved }) {
             // The copy that moved itself exits before it starts anything: never an engine to hand over to.
             if !environment.waitForExit(moved, moveWait) {

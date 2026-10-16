@@ -43,6 +43,15 @@ private let me = SingleInstance.Instance(processIdentifier: 200, bundleURL: URL(
         #expect(system.reopened == [100])                                        // the other one, never itself
     }
 
+    /// A hand-typed `--after-move` beyond pid_t's range names no process and never traps (§9.2 rule 2, WP13).
+    @Test func anOutOfRangeAfterMoveIsIgnored() {
+        let system = FakeSystem()
+        system.running = [installed, me]
+        let arguments = LaunchArguments(["Overbright", SingleInstance.afterMoveArgument, "99999999999"])
+        #expect(SingleInstance.handOverIfRunning(arguments: arguments, environment: system.environment()))
+        #expect(system.reopened == [100] && system.waitedFor.isEmpty)
+    }
+
     /// Alone (only this process runs), the launch carries on.
     @Test func aLoneInstanceCarriesOn() {
         let system = FakeSystem()
