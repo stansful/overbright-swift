@@ -4,7 +4,7 @@ Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the re
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
 deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
 Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
-are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+were decided in WP15 (ARCHITECTURE.md §10.17, §8.8); the table shows them as the catalogs ship them.
 `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
@@ -56,7 +56,7 @@ dash (English "—"); "&" only where Apple uses it (pane names). Nouns capitaliz
 | Do Not Disturb | Nicht stören |
 | Camera | Kamera |
 | Open Anyway | Dennoch öffnen |
-| Applications | Apps |
+| Applications | Programme |
 | Reduce motion | Bewegung reduzieren |
 | Reduce transparency | Transparenz reduzieren |
 | Increase contrast | Kontrast erhöhen |
@@ -68,20 +68,21 @@ dash (English "—"); "&" only where Apple uses it (pane names). Nouns capitaliz
 | English | de | Note |
 |---|---|---|
 | Overbright | Overbright | never translated or transliterated |
-| Standard (the brightness macOS shows) | — | never “100 %” or “normal mode” |
-| extra brightness (the boost half) | — | never “boost”, “HDR mode”, “EDR” |
-| Dim below minimum (the setting) | — | the incumbent’s name for it is never used |
-| Dimmed (the state) · Dim All Displays / Stop Dimming (actions) | — | not “night mode” |
-| Brighter · Less Bright (one step) | — | never “Dimmer”: it reads like Dim |
-| Back to Standard (the instant off) | — | not “panic”, not “reset brightness” |
-| Indoor · Bright room · Sunlight · Max (presets) | — | “Max” is a preset only |
-| Safe · Peak (ceilings) | — | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | — | never “fallback” or “overlay” |
-| Fill Light (the edge light for video calls) | — | never “ring light” |
-| extra range (headroom, in user copy) | — | “headroom” only in Advanced and diagnostics |
-| Calibrate… · Run Self-Test… · Reset Display Colors… | — |  |
-| Keep this level? · Go Back · Keep | — | the very-dark-level prompt |
-| Pause · Paused · Resume | — | a temporary stop; never “disabled” |
+| Settings panes: General · Displays · Automations · Shortcuts · Fill Light · Advanced · About | Allgemein · Displays · Automationen · Tastenkombinationen · Aufhelllicht · Erweitert · Info | the sidebar and window titles |
+| Standard (the brightness macOS shows) | Standard | never “100 %” or “normal mode” |
+| extra brightness (the boost half) | “Zusatzhelligkeit verwenden” (Use extra brightness) | never “boost”, “HDR mode”, “EDR” |
+| Dim below minimum (the setting) | “Abdunkeln unter Minimum ein/aus” (Dim Below Minimum On or Off) | the incumbent’s name for it is never used |
+| Dimmed (the state) · Dim All Displays / Stop Dimming (actions) | Abgedunkelt · Alle Displays abdunkeln / Abdunkeln beenden | not “night mode” |
+| Brighter · Less Bright (one step) | Heller · Weniger hell | never “Dimmer”: it reads like Dim |
+| Back to Standard (the instant off) | Zurück zu Standard | not “panic”, not “reset brightness” |
+| Indoor · Bright room · Sunlight · Max (presets) | Drinnen · Heller Raum · Sonnenlicht · Maximum | “Max” is a preset only |
+| Safe · Peak (ceilings) | Sicher · Spitze | Peak, never “Max”, for a ceiling; one short word each (segments) |
+| Compatibility mode · Color table (methods) | Kompatibilitätsmodus · Farbtabelle | never “fallback” or “overlay” |
+| Fill Light (the edge light for video calls) | Aufhelllicht | never “ring light” |
+| extra range (headroom, in user copy) | Helligkeitsreserve | “headroom” only in Advanced and diagnostics |
+| Calibrate… · Run Self-Test… · Reset Display Colors… | Kalibrieren … · Selbsttest ausführen … · Displayfarben zurücksetzen … |  |
+| Keep this level? · Go Back · Keep | Diese Stufe behalten? · Zurück · Behalten | the very-dark-level prompt |
+| Pause · Paused · Resume | “Overbright pausieren” (Pause Overbright) · Pausiert · Fortsetzen | a temporary stop; never “disabled” |
 
 ## Carried from Cranny (generic interface words)
 

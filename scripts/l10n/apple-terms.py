@@ -11,9 +11,11 @@ Tone, High Dynamic Range, Preset…), accessibility settings and a few system fe
 own words for them so people find the right switch ("Turn on High Dynamic Range for this display in Displays
 settings": German "Hochkontrastbild"). Ported from Cranny; ARCHITECTURE.md §8.8. The tool reads them from the
 system: app names from each app's
-InfoPlist.loctable (or <lproj>/InfoPlist.strings), everything else by looking up the English text in the
-loctables of System Settings' extensions (/System/Library/ExtensionKit/Extensions), TCC, Finder and a few
-frameworks, then taking the same key in the language. A term macOS does not have (or names differently on
+InfoPlist.loctable (or <lproj>/InfoPlist.strings), the Applications folder from SystemFolderLocalizations (the name
+Finder shows for /Applications; FinderKit's “Applications” is a grouping label, German “Apps” for the folder
+“Programme”), everything else by looking up the English text in the loctables of System Settings' extensions
+(/System/Library/ExtensionKit/Extensions), TCC, Finder and a few frameworks, then taking the same key in the
+language. A term macOS does not have (or names differently on
 another macOS version) comes out as null, with a note on stderr. Soft hyphens (U+00AD, German line-break hints)
 are removed; no-break spaces are kept as macOS writes them.
 
@@ -40,6 +42,7 @@ ACCESSIBILITY = f"{EXT}/AccessibilitySettingsExtension.appex/Contents/Resources/
 DISPLAYS = f"{EXT}/DisplaysExt.appex/Contents/Resources/Localizable.loctable"
 FINDER = "/System/Library/PrivateFrameworks/FinderKit.framework/Resources/LocalizableMerged.loctable"
 TCC = "/System/Library/PrivateFrameworks/TCC.framework/Resources/Localizable.loctable"
+SYSTEM_FOLDERS = "/System/Library/CoreServices/SystemFolderLocalizations"
 
 
 def pane(name):
@@ -47,8 +50,8 @@ def pane(name):
     return f"{EXT}/{name}.appex/Contents/Resources/InfoPlist.loctable"
 
 
-# English term -> where macOS keeps it, best first: ("app", bundle path) or ("table", loctable path or glob).
-# Terms without sources are searched in DEFAULT_TABLES.
+# English term -> where macOS keeps it, best first: ("app", bundle path), ("folder", English folder name) or
+# ("table", loctable path or glob). Terms without sources are searched in DEFAULT_TABLES.
 TERMS = {
     # Apps (the bundle's display name)
     "System Settings": [("app", f"{APPS}/System Settings.app")],
@@ -84,7 +87,7 @@ TERMS = {
     "Do Not Disturb": [("table", "/System/Library/PrivateFrameworks/DoNotDisturb.framework/Resources/Localizable.loctable")],
     "Camera": [("table", PRIVACY)],
     "Open Anyway": [("table", PRIVACY)],
-    "Applications": [("table", FINDER)],
+    "Applications": [("folder", "Applications")],
     # Accessibility settings named in copy
     "Reduce motion": [("table", ACCESSIBILITY)],
     "Reduce transparency": [("table", ACCESSIBILITY)],
@@ -185,6 +188,16 @@ def from_app(path, codes):
     return None
 
 
+def from_folder(name, codes):
+    """(value, path, key): the name Finder shows for a system folder (/Applications/.localized) in the language."""
+    for code in codes:
+        path = os.path.join(SYSTEM_FOLDERS, f"{code}.lproj", "SystemFolderLocalizations.strings")
+        table = load_plist(path)
+        if isinstance(table, dict) and isinstance(table.get(name), str):
+            return clean(table[name]), path, name
+    return None
+
+
 def lookup(term, code):
     """{"value", "source", "key", "alternatives"} for one term, or None."""
     codes = apple_codes(code)
@@ -196,6 +209,10 @@ def lookup(term, code):
             if hit:
                 found.append(hit[:3])
                 extra = hit[3]
+        elif kind == "folder":
+            hit = from_folder(spec, codes)
+            if hit:
+                found.append(hit)
         else:
             found += list(from_table(term, spec, codes))
         if found:

@@ -4,7 +4,7 @@ Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the re
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
 deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
 Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
-are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+were decided in WP15 (ARCHITECTURE.md §10.17, §8.8); the table shows them as the catalogs ship them.
 `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
@@ -86,20 +86,23 @@ Register and style, following macOS 27 in Slovenian (checked in the system's own
 | English | sl | Note |
 |---|---|---|
 | Overbright | Overbright | never translated or transliterated |
-| Standard (the brightness macOS shows) | — | never “100 %” or “normal mode” |
-| extra brightness (the boost half) | — | never “boost”, “HDR mode”, “EDR” |
-| Dim below minimum (the setting) | — | the incumbent’s name for it is never used |
-| Dimmed (the state) · Dim All Displays / Stop Dimming (actions) | — | not “night mode” |
-| Brighter · Less Bright (one step) | — | never “Dimmer”: it reads like Dim |
-| Back to Standard (the instant off) | — | not “panic”, not “reset brightness” |
-| Indoor · Bright room · Sunlight · Max (presets) | — | “Max” is a preset only |
-| Safe · Peak (ceilings) | — | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | — | never “fallback” or “overlay” |
-| Fill Light (the edge light for video calls) | — | never “ring light” |
-| extra range (headroom, in user copy) | — | “headroom” only in Advanced and diagnostics |
-| Calibrate… · Run Self-Test… · Reset Display Colors… | — |  |
-| Keep this level? · Go Back · Keep | — | the very-dark-level prompt |
-| Pause · Paused · Resume | — | a temporary stop; never “disabled” |
+| Settings panes: General · Displays · Automations · Shortcuts · Fill Light · Advanced · About | Splošno · Zasloni · Avtomatizacije · Bližnjice na tipkovnici · Osvetlitev obraza · Napredno · O aplikaciji | the sidebar and window titles |
+| Standard (the brightness macOS shows) | Standardno | never “100 %” or “normal mode” |
+| extra brightness (the boost half) | “Uporabi dodatno svetlost” (Use extra brightness) | never “boost”, “HDR mode”, “EDR” |
+| Dim below minimum (the setting) | “Vklopi ali izklopi zatemnitev pod minimum” (Dim Below Minimum On or Off) | the incumbent’s name for it is never used |
+| Dimmed (the state) · Dim All Displays / Stop Dimming (actions) | Zatemnjeno · Zatemni vse zaslone / Izklopi zatemnitev | not “night mode” |
+| Brighter · Less Bright (one step) | Svetleje · Manj svetlo | never “Dimmer”: it reads like Dim |
+| Back to Standard (the instant off) | Nazaj na standardno svetlost | not “panic”, not “reset brightness” |
+| Indoor · Bright room · Sunlight · Max (presets) | V sobi · Svetla soba · Na soncu · Maksimum | “Max” is a preset only |
+| Safe · Peak (ceilings) | Varno · Vrh | Peak, never “Max”, for a ceiling; one short word each (segments) |
+| Compatibility mode · Color table (methods) | Način združljivosti · Barvna tabela | never “fallback” or “overlay” |
+| Fill Light (the edge light for video calls) | Osvetlitev obraza | never “ring light” |
+| extra range (headroom, in user copy) | Rezerva svetlosti | “headroom” only in Advanced and diagnostics |
+| Calibrate… · Run Self-Test… · Reset Display Colors… | Umeri … · Zaženi samopreizkus … · Ponastavi barve zaslonov … |  |
+| Keep this level? · Go Back · Keep | Želite ohraniti to raven? · Vrni · Ohrani | the very-dark-level prompt |
+| Pause · Paused · Resume | “Začasno ustavi Overbright” (Pause Overbright) · Začasno ustavljeno · Nadaljuj | a temporary stop; never “disabled” |
+
+Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its 292 pt in full in every language (`FooterFitTests`), so the Auto-pause chip reads “Premori” (off: “Brez premorov”).
 
 ## Carried from Cranny (generic interface words)
 

@@ -4,7 +4,7 @@ Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the re
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
 deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
 Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
-are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+were decided in WP15 (ARCHITECTURE.md §10.17, §8.8); the table shows them as the catalogs ship them.
 `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
@@ -84,20 +84,23 @@ _Reviewed 2026-10-14 (independent review): rows marked ★ changed or were added
 | English | ca | Note |
 |---|---|---|
 | Overbright | Overbright | never translated or transliterated |
-| Standard (the brightness macOS shows) | — | never “100 %” or “normal mode” |
-| extra brightness (the boost half) | — | never “boost”, “HDR mode”, “EDR” |
-| Dim below minimum (the setting) | — | the incumbent’s name for it is never used |
-| Dimmed (the state) · Dim All Displays / Stop Dimming (actions) | — | not “night mode” |
-| Brighter · Less Bright (one step) | — | never “Dimmer”: it reads like Dim |
-| Back to Standard (the instant off) | — | not “panic”, not “reset brightness” |
-| Indoor · Bright room · Sunlight · Max (presets) | — | “Max” is a preset only |
-| Safe · Peak (ceilings) | — | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | — | never “fallback” or “overlay” |
-| Fill Light (the edge light for video calls) | — | never “ring light” |
-| extra range (headroom, in user copy) | — | “headroom” only in Advanced and diagnostics |
-| Calibrate… · Run Self-Test… · Reset Display Colors… | — |  |
-| Keep this level? · Go Back · Keep | — | the very-dark-level prompt |
-| Pause · Paused · Resume | — | a temporary stop; never “disabled” |
+| Settings panes: General · Displays · Automations · Shortcuts · Fill Light · Advanced · About | General · Pantalles · Automatitzacions · Dreceres de teclat · Llum de farciment · Avançat · Informació | the sidebar and window titles |
+| Standard (the brightness macOS shows) | Estàndard | never “100 %” or “normal mode” |
+| extra brightness (the boost half) | “Utilitza la brillantor extra” (Use extra brightness) | never “boost”, “HDR mode”, “EDR” |
+| Dim below minimum (the setting) | “Activa o desactiva l’atenuació per sota del mínim” (Dim Below Minimum On or Off) | the incumbent’s name for it is never used |
+| Dimmed (the state) · Dim All Displays / Stop Dimming (actions) | Atenuat · Atenua totes les pantalles / Deixa d’atenuar | not “night mode” |
+| Brighter · Less Bright (one step) | Més brillant · Menys brillant | never “Dimmer”: it reads like Dim |
+| Back to Standard (the instant off) | Torna a Estàndard | not “panic”, not “reset brightness” |
+| Indoor · Bright room · Sunlight · Max (presets) | Interior · Sala lluminosa · Llum solar · Màxim | “Max” is a preset only |
+| Safe · Peak (ceilings) | Segur · Pic | Peak, never “Max”, for a ceiling; one short word each (segments) |
+| Compatibility mode · Color table (methods) | Mode de compatibilitat · Taula de colors | never “fallback” or “overlay” |
+| Fill Light (the edge light for video calls) | Llum de farciment | never “ring light” |
+| extra range (headroom, in user copy) | Marge extra | “headroom” only in Advanced and diagnostics |
+| Calibrate… · Run Self-Test… · Reset Display Colors… | Calibra… · Executa l’autoprova… · Restableix els colors de les pantalles… |  |
+| Keep this level? · Go Back · Keep | Vols mantenir aquest nivell? · Torna enrere · Mantén | the very-dark-level prompt |
+| Pause · Paused · Resume | “Posa l’Overbright en pausa” (Pause Overbright) · En pausa · Reprèn | a temporary stop; never “disabled” |
+
+Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its 292 pt in full in every language (`FooterFitTests`), so the Auto-pause chip reads “Autopausa” (off: “Sense autopausa”) and the Timer chip “Sense límit” for No timer.
 
 ## Carried from Cranny (generic interface words)
 

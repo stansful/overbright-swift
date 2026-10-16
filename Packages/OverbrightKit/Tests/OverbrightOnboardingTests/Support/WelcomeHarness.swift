@@ -17,6 +17,12 @@ final class WelcomeEnglishMarker {}
 /// The bundle that yields English source strings.
 let englishBundle = Bundle(for: WelcomeEnglishMarker.self)
 
+/// This module's strings in `code`, one of the languages WP15's all-language fit tests run (`CopyLanguage.available`);
+/// English, which has no table of its own, gives the source strings.
+func onboardingBundle(_ code: String) -> Bundle {
+    Bundle.onboardingStrings(code) ?? englishBundle
+}
+
 /// One Welcome session and the fakes behind it.
 @MainActor struct WelcomeHarness {
     let session: WelcomeSession

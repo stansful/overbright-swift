@@ -1,6 +1,6 @@
 // OverbrightSettingsUITests/SettingsSegmentFitTests.swift — the segmented controls of Settings fit their row
 // (ARCHITECTURE.md §8.8 width rule `segment`, DESIGN.md §16): Safe / Peak (and Regular / Fine) stay segments in English
-// and in the pseudo-long locale (+40 %), measured as the control draws them (Russian and every language are WP15's;
+// and in the pseudo-long locale (+40 %), measured as the control draws them, and in every language Overbright ships (WP15;
 // a choice row whose segments do not fit becomes a pop-up, `ChoiceRow`).
 import AppKit
 import OverbrightCore
@@ -42,5 +42,19 @@ import Testing
         let labels = StepSize.allCases.map { $0.localizedName(in: english) }
         #expect(FitMeasure.idealWidth(segments(labels)) <= Self.segmentBudget)
         #expect(FitMeasure.idealWidth(segments(labels.map(PseudoLocale.lengthen))) <= Self.segmentBudget)
+    }
+
+    /// WP15: Safe / Peak and Regular / Fine stay segments in every language Overbright ships (Design's catalog), and
+    /// Peak is never the preset's word Max.
+    @Test(arguments: CopyLanguage.available)
+    func theSegmentsFitInEveryLanguage(_ code: String) {
+        let language = CopyLanguage.named(code) ?? .english()
+        let ceilings = CapMode.allCases.map { $0.localizedName(in: language) }
+        #expect(!ceilings.contains(LevelPreset.max.localizedName(in: language)), "\(code): \(ceilings)")
+        for labels in [ceilings, StepSize.allCases.map { $0.localizedName(in: language) }] {
+            let width = FitMeasure.idealWidth(segments(labels))
+            #expect(width > 40 && width <= Self.segmentBudget,
+                    "\(code): \(labels) \(width) pt of \(Self.segmentBudget)")
+        }
     }
 }

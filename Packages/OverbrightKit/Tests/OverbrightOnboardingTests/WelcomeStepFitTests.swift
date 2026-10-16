@@ -5,6 +5,7 @@
 // (step 3's switches, step 4's menu bar and key caps) must fit the stage; step 1's card is sized by the stage. Step 2
 // uses the whole page: with the owner's two displays and with three, every row shows at once under Design's real
 // verdict words, in English and pseudo-long; with more than fit, the rows scroll, with every row in the scroll view.
+// WP15 runs the steps, the stage and step 2's rows in every language Overbright ships (`everyStepFitsInEveryLanguage`).
 import AppKit
 import OverbrightCore
 import OverbrightDesign
@@ -34,14 +35,15 @@ import Testing
         VStack(alignment: .leading, spacing: Space.l) { content() }
     }
 
-    /// The lower half of every step with `transform` applied to its words.
-    static func lowers(_ transform: @escaping (String) -> String) -> [(String, AnyView)] {
+    /// The lower half of every step with `transform` applied to its words from `bundle` (English by default).
+    static func lowers(in bundle: Bundle = englishBundle,
+                       _ transform: @escaping (String) -> String) -> [(String, AnyView)] {
         let services = WelcomePreview.services(updatesConfigured: true)
         let choices = WelcomeChoices()
-        let hello = HelloStep.Copy.localized(in: englishBundle).map(transform)
-        let defaults = DefaultsStep.Copy.localized(in: englishBundle).map(transform)
-        let findIt = FindItStep.Copy.localized(in: englishBundle).map(transform)
-        let done = DoneStep.Copy.localized(in: englishBundle).map(transform)
+        let hello = HelloStep.Copy.localized(in: bundle).map(transform)
+        let defaults = DefaultsStep.Copy.localized(in: bundle).map(transform)
+        let findIt = FindItStep.Copy.localized(in: bundle).map(transform)
+        let done = DoneStep.Copy.localized(in: bundle).map(transform)
         return [
             ("hello", AnyView(lower { HelloLower(copy: hello, card: .preview(display: DisplayFixture.Keys.builtIn,
                                                                                gain: 1.29)) })),
@@ -61,11 +63,12 @@ import Testing
         ]
     }
 
-    /// The stage content of steps 3 and 4 with `transform` applied to its words.
-    static func stages(_ transform: @escaping (String) -> String) -> [(String, AnyView)] {
+    /// The stage content of steps 3 and 4 with `transform` applied to its words from `bundle` (English by default).
+    static func stages(in bundle: Bundle = englishBundle,
+                       _ transform: @escaping (String) -> String) -> [(String, AnyView)] {
         let services = WelcomePreview.services()
-        let defaults = DefaultsStep.Copy.localized(in: englishBundle).map(transform)
-        let findIt = FindItStep.Copy.localized(in: englishBundle).map(transform)
+        let defaults = DefaultsStep.Copy.localized(in: bundle).map(transform)
+        let findIt = FindItStep.Copy.localized(in: bundle).map(transform)
         return [
             ("defaults", AnyView(GuardSwitches(choices: WelcomeChoices(), settings: services.settings, copy: defaults))),
             ("findIt", AnyView(FindItStage(shortcuts: FindItShortcut.rows(services.shortcuts), copy: findIt)
@@ -186,6 +189,51 @@ import Testing
             let width = FitMeasure.width(LoginOptions(choices: WelcomeChoices(), settings: services.settings, copy: copy),
                                          offered: Self.width)
             #expect(width <= Self.width, "\(width) pt of \(Self.width)")
+        }
+    }
+
+    // MARK: Every language (WP15)
+
+    /// In every language Overbright ships: every step's lower half fits between the stage and the footer, the stage's
+    /// controls fit the stage, the login cards stay in the window, and step 2 shows two and three displays at once
+    /// under the language's own verdict words.
+    @Test(arguments: CopyLanguage.available)
+    func everyStepFitsInEveryLanguage(_ code: String) throws {
+        let bundle = onboardingBundle(code)
+        let budget = Self.lowerBudget
+        for (name, view) in Self.lowers(in: bundle, { $0 }) {
+            let height = FitMeasure.height(view, width: Self.width)
+            #expect(height > 0 && height <= budget, "\(code), \(name): \(height) pt of \(budget)")
+        }
+        for (name, view) in Self.stages(in: bundle, { $0 }) {
+            let height = FitMeasure.height(view, width: Self.width)
+            #expect(height > 0 && height <= StepMetrics.stageContentHeight,
+                    "\(code), \(name): \(height) pt of \(StepMetrics.stageContentHeight)")
+        }
+        let services = WelcomePreview.services()
+        let login = FitMeasure.width(LoginOptions(choices: WelcomeChoices(), settings: services.settings,
+                                                  copy: DefaultsStep.Copy.localized(in: bundle)), offered: Self.width)
+        #expect(login <= Self.width, "\(code), login cards: \(login) pt of \(Self.width)")
+
+        let language = CopyLanguage.named(code) ?? .english()
+        var copy = DisplaysStep.Copy.localized(in: bundle)
+        copy.verdictLanguage = language
+        for count in [2, 3] {
+            let services = count == 2 ? WelcomePreview.services(.russianNames) : WelcomePreview.threeDisplays
+            let rows = WelcomeDisplayRow.rows(in: services, language: language)
+            try #require(rows.count == count)
+            let header = FitMeasure.height(StepHeader(title: copy.title, message: copy.message), width: Self.width)
+            let list = FitMeasure.height(DisplayRowList(rows: rows, switchTitle: copy.useExtraBrightness,
+                                                        actions: WelcomeDisplayActions(services: services,
+                                                                                       choices: WelcomeChoices())),
+                                         width: Self.width)
+            let rowBudget = Self.pageHeight - StepMetrics.titleBarInset - header - Space.l
+            #expect(list > 0 && list <= rowBudget, "\(code), \(count) displays: \(list) pt of \(rowBudget)")
+            let session = WelcomeSession(services: services, initialStep: .displays, recordsOutcome: false) { _ in }
+            let window = Self.window(DisplaysStep(session: session, copy: copy))
+            let host = try #require(window.contentView)
+            #expect(scrollViews(in: host).isEmpty, "\(code), \(count) displays: the rows scroll")
+            window.contentView = nil
         }
     }
 }

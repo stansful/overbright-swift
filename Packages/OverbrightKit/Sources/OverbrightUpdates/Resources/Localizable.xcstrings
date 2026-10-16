@@ -424,205 +424,205 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "لم يعثر GitHub على إصدارات Overbright. حاول مرة أخرى لاحقًا."
           }
         },
         "ca" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "El GitHub no ha trobat les versions del Overbright. Torna‑ho a provar més tard."
+            "state" : "translated",
+            "value" : "El GitHub no ha trobat les versions de l’Overbright. Torna‑ho a provar més tard."
           }
         },
         "cs" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub nenašel vydání aplikace Overbright. Zkuste to znovu později."
           }
         },
         "da" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub kunne ikke finde Overbrights udgivelser. Prøv igen senere."
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub hat keine Versionen von Overbright gefunden. Versuche es später erneut."
           }
         },
         "el" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Το GitHub δεν βρήκε τις εκδόσεις του Overbright. Δοκιμάστε ξανά αργότερα."
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub no ha encontrado las versiones de Overbright. Inténtalo de nuevo más tarde."
           }
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "GitHub ei löytänyt Overbrightn julkaisuja. Yritä myöhemmin uudelleen."
+            "state" : "translated",
+            "value" : "GitHub ei löytänyt Overbrightin julkaisuja. Yritä myöhemmin uudelleen."
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "GitHub n’a pas trouvé les versions de Overbright. Réessayez plus tard."
+            "state" : "translated",
+            "value" : "GitHub n’a pas trouvé les versions d’Overbright. Réessayez plus tard."
           }
         },
         "he" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "לא נמצאו ב-GitHub גירסאות של Overbright. יש לנסות שוב מאוחר יותר."
           }
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub को Overbright की रिलीज़ नहीं मिलीं। बाद में फिर कोशिश करें।"
           }
         },
         "hr" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub nije pronašao izdanja aplikacije Overbright. Pokušajte ponovno kasnije."
           }
         },
         "hu" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "A GitHub nem találta a Overbright kiadásait. Próbálja újra később."
+            "state" : "translated",
+            "value" : "A GitHub nem találta az Overbright kiadásait. Próbálja újra később."
           }
         },
         "id" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub tidak menemukan rilis Overbright. Coba lagi nanti."
           }
         },
         "it" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub non ha trovato le versioni di Overbright. Riprova più tardi."
           }
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHubでOverbrightのリリースが見つかりませんでした。しばらくしてからもう一度お試しください。"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "GitHub에서 Overbright의 릴리즈를 찾을 수 없습니다. 나중에 다시 시도하십시오."
+            "state" : "translated",
+            "value" : "GitHub에서 Overbright의 릴리스를 찾을 수 없습니다. 나중에 다시 시도하십시오."
           }
         },
         "ms" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub tidak menemui keluaran Overbright. Cuba lagi nanti."
           }
         },
         "nb" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub fant ikke Overbrights utgivelser. Prøv igjen senere."
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub kan de releases van Overbright niet vinden. Probeer het later opnieuw."
           }
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub nie znalazł wydań Overbright. Spróbuj ponownie później."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "O GitHub não encontrou as versões do Overbright. Tente novamente mais tarde."
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "O GitHub não encontrou as versões do Overbright. Volte a tentar mais tarde."
           }
         },
         "ro" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub nu a găsit versiunile Overbright. Reîncercați mai târziu."
           }
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub не нашёл выпуски Overbright. Попробуйте позже."
           }
         },
         "sk" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub nenašiel vydania apky Overbright. Skúste to znova neskôr."
           }
         },
         "sl" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub ni našel izdaj aplikacije Overbright. Poskusite znova pozneje."
           }
         },
         "sv" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub hittade inga versioner av Overbright. Försök igen senare."
           }
         },
         "th" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub ไม่พบรุ่นที่เผยแพร่ของ Overbright ลองอีกครั้งในภายหลัง"
           }
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "GitHub, Overbright’nin sürümlerini bulamadı. Daha sonra yeniden deneyin."
+            "state" : "translated",
+            "value" : "GitHub, Overbright’ın sürümlerini bulamadı. Daha sonra yeniden deneyin."
           }
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub не знайшов випусків Overbright. Спробуйте пізніше."
           }
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub không tìm thấy các bản phát hành của Overbright. Hãy thử lại sau."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub上找不到Overbright的发布版本。请稍后再试。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "GitHub找不到Overbright的發行版本。請稍後再試一次。"
           }
         }
@@ -939,7 +939,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "릴리즈 정보를 읽을 수 없습니다."
+            "value" : "릴리스 정보를 읽을 수 없습니다."
           }
         },
         "ms" : {

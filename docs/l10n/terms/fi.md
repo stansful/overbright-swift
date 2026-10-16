@@ -4,7 +4,7 @@ Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the re
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
 deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
 Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
-are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+were decided in WP15 (ARCHITECTURE.md §10.17, §8.8); the table shows them as the catalogs ship them.
 `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
@@ -22,7 +22,7 @@ on alle 20 %.”) — never an imperative addressed to the user. Progress “X o
 
 ### The brand
 
-“Overbright” is never translated. It ends in a consonant, so it inflects with a linking -i- (Overbrightin, Overbrightiin, Overbrightille); Cranny’s harmony question does not arise the same way. The forms are WP15’s decision (ARCHITECTURE.md §10.17); until then every brand-bearing string is marked needs_review.
+“Overbright” is never translated. It ends in a consonant, so it inflects with a linking -i- (Overbrightin, Overbrightiin, Overbrightille); Cranny’s harmony question does not arise the same way. WP15 confirmed these forms (ARCHITECTURE.md §10.17): the shipped strings use Overbrightin, Overbrightia and Overbrightiin, and compounds take a hyphen (Overbright-ohje).
 
 ## Apple names (`apple-terms.py fi` on macOS 27.0.1 — never paraphrased)
 
@@ -75,20 +75,21 @@ on alle 20 %.”) — never an imperative addressed to the user. Progress “X o
 | English | fi | Note |
 |---|---|---|
 | Overbright | Overbright | never translated or transliterated |
-| Standard (the brightness macOS shows) | — | never “100 %” or “normal mode” |
-| extra brightness (the boost half) | — | never “boost”, “HDR mode”, “EDR” |
-| Dim below minimum (the setting) | — | the incumbent’s name for it is never used |
-| Dimmed (the state) · Dim All Displays / Stop Dimming (actions) | — | not “night mode” |
-| Brighter · Less Bright (one step) | — | never “Dimmer”: it reads like Dim |
-| Back to Standard (the instant off) | — | not “panic”, not “reset brightness” |
-| Indoor · Bright room · Sunlight · Max (presets) | — | “Max” is a preset only |
-| Safe · Peak (ceilings) | — | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | — | never “fallback” or “overlay” |
-| Fill Light (the edge light for video calls) | — | never “ring light” |
-| extra range (headroom, in user copy) | — | “headroom” only in Advanced and diagnostics |
-| Calibrate… · Run Self-Test… · Reset Display Colors… | — |  |
-| Keep this level? · Go Back · Keep | — | the very-dark-level prompt |
-| Pause · Paused · Resume | — | a temporary stop; never “disabled” |
+| Settings panes: General · Displays · Automations · Shortcuts · Fill Light · Advanced · About | Yleiset · Näytöt · Automaatiot · Oikotiet · Täytevalo · Lisävalinnat · Tietoja | the sidebar and window titles |
+| Standard (the brightness macOS shows) | Vakio | never “100 %” or “normal mode” |
+| extra brightness (the boost half) | “Käytä lisäkirkkautta” (Use extra brightness) | never “boost”, “HDR mode”, “EDR” |
+| Dim below minimum (the setting) | “Himmennys alle minimin päälle tai pois” (Dim Below Minimum On or Off) | the incumbent’s name for it is never used |
+| Dimmed (the state) · Dim All Displays / Stop Dimming (actions) | Himmennetty · Himmennä kaikki näytöt / Lopeta himmennys | not “night mode” |
+| Brighter · Less Bright (one step) | Lisää kirkkautta · Vähennä kirkkautta | never “Dimmer”: it reads like Dim |
+| Back to Standard (the instant off) | Takaisin vakiotasolle | not “panic”, not “reset brightness” |
+| Indoor · Bright room · Sunlight · Max (presets) | Sisätila · Valoisa huone · Auringonvalo · Maksimi | “Max” is a preset only |
+| Safe · Peak (ceilings) | Turvallinen · Huippu | Peak, never “Max”, for a ceiling; one short word each (segments) |
+| Compatibility mode · Color table (methods) | Yhteensopivuustila · Väritaulukko | never “fallback” or “overlay” |
+| Fill Light (the edge light for video calls) | Täytevalo | never “ring light” |
+| extra range (headroom, in user copy) | Kirkkausvara | “headroom” only in Advanced and diagnostics |
+| Calibrate… · Run Self-Test… · Reset Display Colors… | Kalibroi… · Suorita itsetesti… · Palauta näyttöjen värit… |  |
+| Keep this level? · Go Back · Keep | Pidetäänkö tämä taso? · Palaa · Pidä | the very-dark-level prompt |
+| Pause · Paused · Resume | “Tauota Overbright” (Pause Overbright) · Tauolla · Jatka | a temporary stop; never “disabled” |
 
 ## Carried from Cranny (generic interface words)
 

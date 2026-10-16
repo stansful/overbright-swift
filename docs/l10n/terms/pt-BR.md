@@ -4,7 +4,7 @@ Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the re
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
 deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
 Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
-are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+were decided in WP15 (ARCHITECTURE.md §10.17, §8.8); the table shows them as the catalogs ship them.
 `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
@@ -92,20 +92,23 @@ read on this Mac). Brazilian vocabulary only: arquivo, tela, câmera, app, apaga
 | English | pt-BR | Note |
 |---|---|---|
 | Overbright | Overbright | never translated or transliterated |
-| Standard (the brightness macOS shows) | — | never “100 %” or “normal mode” |
-| extra brightness (the boost half) | — | never “boost”, “HDR mode”, “EDR” |
-| Dim below minimum (the setting) | — | the incumbent’s name for it is never used |
-| Dimmed (the state) · Dim All Displays / Stop Dimming (actions) | — | not “night mode” |
-| Brighter · Less Bright (one step) | — | never “Dimmer”: it reads like Dim |
-| Back to Standard (the instant off) | — | not “panic”, not “reset brightness” |
-| Indoor · Bright room · Sunlight · Max (presets) | — | “Max” is a preset only |
-| Safe · Peak (ceilings) | — | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | — | never “fallback” or “overlay” |
-| Fill Light (the edge light for video calls) | — | never “ring light” |
-| extra range (headroom, in user copy) | — | “headroom” only in Advanced and diagnostics |
-| Calibrate… · Run Self-Test… · Reset Display Colors… | — |  |
-| Keep this level? · Go Back · Keep | — | the very-dark-level prompt |
-| Pause · Paused · Resume | — | a temporary stop; never “disabled” |
+| Settings panes: General · Displays · Automations · Shortcuts · Fill Light · Advanced · About | Geral · Telas · Automações · Atalhos de teclado · Luz de Preenchimento · Avançado · Sobre | the sidebar and window titles |
+| Standard (the brightness macOS shows) | Padrão | never “100 %” or “normal mode” |
+| extra brightness (the boost half) | “Usar brilho extra” (Use extra brightness) | never “boost”, “HDR mode”, “EDR” |
+| Dim below minimum (the setting) | “Ativar ou Desativar Escurecimento Abaixo do Mínimo” (Dim Below Minimum On or Off) | the incumbent’s name for it is never used |
+| Dimmed (the state) · Dim All Displays / Stop Dimming (actions) | Escurecido · Escurecer Todas as Telas / Parar de Escurecer | not “night mode” |
+| Brighter · Less Bright (one step) | Mais Brilho · Menos Brilho | never “Dimmer”: it reads like Dim |
+| Back to Standard (the instant off) | Voltar ao Padrão | not “panic”, not “reset brightness” |
+| Indoor · Bright room · Sunlight · Max (presets) | Ambiente interno · Luz intensa · Luz do sol · Máximo | “Max” is a preset only |
+| Safe · Peak (ceilings) | Seguro · Pico | Peak, never “Max”, for a ceiling; one short word each (segments) |
+| Compatibility mode · Color table (methods) | Modo de Compatibilidade · Tabela de cores | never “fallback” or “overlay” |
+| Fill Light (the edge light for video calls) | Luz de Preenchimento | never “ring light” |
+| extra range (headroom, in user copy) | Margem de brilho | “headroom” only in Advanced and diagnostics |
+| Calibrate… · Run Self-Test… · Reset Display Colors… | Calibrar… · Executar Autoteste… · Redefinir Cores da Tela… |  |
+| Keep this level? · Go Back · Keep | Manter este nível? · Voltar · Manter | the very-dark-level prompt |
+| Pause · Paused · Resume | “Pausar Overbright” (Pause Overbright) · Pausado · Retomar | a temporary stop; never “disabled” |
+
+Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its 292 pt in full in every language (`FooterFitTests`), so the Auto-pause chip reads “Autopausa” (off: “Sem autopausa”).
 
 ## Carried from Cranny (generic interface words)
 

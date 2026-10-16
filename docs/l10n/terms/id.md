@@ -4,7 +4,7 @@ Carried from Cranny’s sheet for this language (ARCHITECTURE.md §10.2): the re
 typography decisions are language facts and stay; Cranny’s notch, widget and ambient-light rows are
 deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
 Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
-are decided in WP15 (ARCHITECTURE.md §10.17, §8.8); until then they read “—”.
+were decided in WP15 (ARCHITECTURE.md §10.17, §8.8); the table shows them as the catalogs ship them.
 `scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
@@ -72,20 +72,23 @@ Reviewed 2026-10-14 (independent review).
 | English | id | Note |
 |---|---|---|
 | Overbright | Overbright | never translated or transliterated |
-| Standard (the brightness macOS shows) | — | never “100 %” or “normal mode” |
-| extra brightness (the boost half) | — | never “boost”, “HDR mode”, “EDR” |
-| Dim below minimum (the setting) | — | the incumbent’s name for it is never used |
-| Dimmed (the state) · Dim All Displays / Stop Dimming (actions) | — | not “night mode” |
-| Brighter · Less Bright (one step) | — | never “Dimmer”: it reads like Dim |
-| Back to Standard (the instant off) | — | not “panic”, not “reset brightness” |
-| Indoor · Bright room · Sunlight · Max (presets) | — | “Max” is a preset only |
-| Safe · Peak (ceilings) | — | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | — | never “fallback” or “overlay” |
-| Fill Light (the edge light for video calls) | — | never “ring light” |
-| extra range (headroom, in user copy) | — | “headroom” only in Advanced and diagnostics |
-| Calibrate… · Run Self-Test… · Reset Display Colors… | — |  |
-| Keep this level? · Go Back · Keep | — | the very-dark-level prompt |
-| Pause · Paused · Resume | — | a temporary stop; never “disabled” |
+| Settings panes: General · Displays · Automations · Shortcuts · Fill Light · Advanced · About | Umum · Layar · Otomatisasi · Pintasan papan ketik · Cahaya Pengisi · Lanjutan · Mengenai | the sidebar and window titles |
+| Standard (the brightness macOS shows) | Standar | never “100 %” or “normal mode” |
+| extra brightness (the boost half) | “Gunakan kecerahan ekstra” (Use extra brightness) | never “boost”, “HDR mode”, “EDR” |
+| Dim below minimum (the setting) | “Nyalakan atau Matikan Peredupan di Bawah Minimum” (Dim Below Minimum On or Off) | the incumbent’s name for it is never used |
+| Dimmed (the state) · Dim All Displays / Stop Dimming (actions) | Diredupkan · Redupkan Semua Layar / Hentikan Peredupan | not “night mode” |
+| Brighter · Less Bright (one step) | Lebih Cerah · Kurang Cerah | never “Dimmer”: it reads like Dim |
+| Back to Standard (the instant off) | Kembali ke Standar | not “panic”, not “reset brightness” |
+| Indoor · Bright room · Sunlight · Max (presets) | Dalam ruangan · Ruang terang · Sinar matahari · Maksimum | “Max” is a preset only |
+| Safe · Peak (ceilings) | Aman · Puncak | Peak, never “Max”, for a ceiling; one short word each (segments) |
+| Compatibility mode · Color table (methods) | Mode kompatibilitas · Tabel warna | never “fallback” or “overlay” |
+| Fill Light (the edge light for video calls) | Cahaya Pengisi | never “ring light” |
+| extra range (headroom, in user copy) | Rentang ekstra | “headroom” only in Advanced and diagnostics |
+| Calibrate… · Run Self-Test… · Reset Display Colors… | Kalibrasi… · Jalankan Uji Mandiri… · Atur Ulang Warna Layar… |  |
+| Keep this level? · Go Back · Keep | Pertahankan level ini? · Kembali · Pertahankan | the very-dark-level prompt |
+| Pause · Paused · Resume | “Jeda Overbright” (Pause Overbright) · Dijeda · Lanjutkan | a temporary stop; never “disabled” |
+
+Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its 292 pt in full in every language (`FooterFitTests`), so the Auto-pause chip reads “Jeda auto” (off: “Tanpa jeda auto”).
 
 ## Carried from Cranny (generic interface words)
 
