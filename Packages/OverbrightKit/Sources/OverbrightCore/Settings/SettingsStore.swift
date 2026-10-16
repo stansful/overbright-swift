@@ -51,6 +51,17 @@ import os
     /// "Reset All Settings…" (EngineRecords are restored by the caller: they are records, not settings).
     public func resetAll() { reset(prefix: Self.keyPrefix) }
 
+    /// The ids of the keys stored in `defaults` ("displays.linkLevels"): setting a default removes a key, so these are
+    /// the settings that differ from their defaults. Names only, never values (diagnostics `nonDefaultSettings`,
+    /// ARCHITECTURE.md §8.4); launch-argument seeds and the settings revision are not listed. Read-only.
+    public func storedKeyIDs() -> [String] {
+        let arguments = defaults.volatileDomain(forName: UserDefaults.argumentDomain)
+        return defaults.dictionaryRepresentation().keys
+            .filter { $0.hasPrefix(Self.keyPrefix) && $0 != Self.revisionKey && arguments[$0] == nil }
+            .map { String($0.dropFirst(Self.keyPrefix.count)) }
+            .sorted()
+    }
+
     /// Opaque copy of every persisted key: taken before "Reset All" so Undo can restore it.
     public nonisolated struct Snapshot: Sendable { fileprivate let values: [String: Data] }
     /// Every persisted key (the settings revision included), for Undo of "Reset All".

@@ -8,7 +8,7 @@
     var serviceName: String { get }
     /// Starts the service (the first I/O, hardware or network access).
     func start() async
-    /// The normal stop (ramps). Quit awaits it with a 1 s timeout (`.terminateLater`, §7.4).
+    /// The normal stop (ramps). A user quit awaits it with a 1 s timeout before terminating (§7.4).
     func stop() async
     /// Synchronous fallback from `applicationWillTerminate`: no ramp, baselines written at once.
     func stopNow()

@@ -22,9 +22,10 @@ import Testing
         await time.advance(by: .milliseconds(99))
         #expect(log.entries.isEmpty)
         await time.advance(by: .milliseconds(150))
-        #expect(log.entries == ["early", "tie-a", "tie-b"])
+        // Ties are resumed in registration order, but the executor may run the two woken tasks either way round.
+        #expect(log.entries.first == "early" && Set(log.entries.dropFirst()) == ["tie-a", "tie-b"])
         await time.advance(by: .seconds(1))
-        #expect(log.entries == ["early", "tie-a", "tie-b", "late"] && time.sleeperCount == 0)
+        #expect(log.entries.count == 4 && log.entries.last == "late" && time.sleeperCount == 0)
         #expect(time.now == MonotonicInstant(sinceOrigin: .milliseconds(1249)))
         #expect(time.wallClock == start.addingTimeInterval(1.249))
     }

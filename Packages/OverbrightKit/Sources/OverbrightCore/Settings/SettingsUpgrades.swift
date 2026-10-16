@@ -16,10 +16,10 @@ extension SettingsStore {
     /// Where the install's settings revision is kept (not a `SettingKey`: no pane shows it, Reset All keeps it).
     static let revisionKey = keyPrefix + "revision"
     /// Today's settings revision; add a step to `upgrade(from:)` with each bump.
-    static let currentRevision = 0
+    public static let currentRevision = 0
 
-    /// The install's settings revision: today's for a fresh install, 0 for one from before revisions existed.
-    var storedRevision: Int? { defaults.object(forKey: Self.revisionKey) as? Int }
+    /// The settings revision stored by this install, nil before the first upgrade ran (diagnostics `settingsRevision`).
+    public var storedRevision: Int? { defaults.object(forKey: Self.revisionKey) as? Int }
 
     /// Brings settings stored by an earlier version up to today's revision, once (idempotent). Call at launch before
     /// the services start; values change through the store, so anything already reading a key updates.
