@@ -120,6 +120,31 @@ import Testing
         #expect(gamma.table(of: 1) == base)
     }
 
+    /// A scaled write the port refused before any WindowServer call (the display is not online, or has no table)
+    /// changed nothing on screen: the ledger is left as it was, so a display never scaled holds no entry (the hang
+    /// watchdog and the boost marker follow the ledger) and a scaled one keeps the baseline it was marked with.
+    @Test func aWriteThatNeverReachedWindowServerLeavesTheLedgerAsItWas() throws {
+        let (writer, gamma, ledger, time, _) = make()
+        for error in [GammaError.displayGone, .noTable] {
+            gamma.failNextWrite(with: error)
+            #expect(throws: error) {
+                try writer.write(request(1.3), to: facts.ref, reading: reading(2.667, at: time.now), epoch: 0)
+            }
+            #expect(!ledger.isMarked(facts.ref.key), "\(error)")
+        }
+        try writer.write(request(0.5), to: facts.ref, reading: nil, epoch: 0)
+        var other = request(0.6)
+        other.baseline = base.scaled(by: 0.9)
+        gamma.failNextWrite(with: .displayGone)
+        #expect(throws: GammaError.displayGone) { try writer.write(other, to: facts.ref, reading: nil, epoch: 0) }
+        #expect(ledger.entries().map(\.baseline) == [base])                     // the entry of the dim on screen
+        gamma.failNextWrite(with: .coreGraphics(code: 1001))                     // WindowServer may have taken it
+        #expect(throws: GammaError.coreGraphics(code: 1001)) {
+            try writer.write(other, to: facts.ref, reading: nil, epoch: 0)
+        }
+        #expect(ledger.entries().map(\.baseline) == [other.baseline])
+    }
+
     /// The calibration path (§5.2): bounded by the session's `maxFactor` and the reading's calibration ceiling, never by
     /// the boost interlock's `0.97 × H`, which the sweep must pass to find where white clips (C-BOOST-5).
     @Test func calibrationFactorsAreBoundedByMaxAndTheCeiling() throws {
