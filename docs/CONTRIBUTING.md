@@ -221,7 +221,8 @@ needs a `UserDefaults` takes `InMemoryDefaults()`. Never create a `UserDefaults(
 (`noCodeCreatesAPreferencesSuite`).
 
 **Testing.** Swift Testing only, in `Tests/<Target>Tests`. Test against the Core fakes and `ManualTimeSource`; never
-bound main-actor scheduling with a short real-time wait (TestSupport's `eventually` waits up to 30 s).
+bound main-actor scheduling with a short real-time wait (TestSupport's `eventually` waits 30 s and, on a main actor
+busy with other tests, until it checked the condition as often as an idle one would in that time).
 
 ## Definition of done (ARCHITECTURE.md §9.3)
 
