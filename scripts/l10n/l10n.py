@@ -370,7 +370,7 @@ def placeholders(text):
 # How export.py marks keys shown in fixed-width places. The comment of every key starts with its surface
 # ("Panel ▸ Display card: …", "HUD: …", "Settings ▸ Displays: …"); the rules below read that comment, first match
 # wins. Widths come from ARCHITECTURE.md §8.8 and DESIGN.md §16: a status chip sits on its own line (≤ 280 pt); the
-# three footer guard chips share a 292-pt row and drop to glyph + value on overflow; the readout ("Bright room ·
+# three footer guard chips share a 304-pt row and drop to glyph + value on overflow; the readout ("Bright room ·
 # ×1.29") holds ≤ 200 pt in rounded monospaced digits; the value tag of the slider ≤ 240 pt (the track width; a
 # "small gain" suffix may wrap); the HUD ≤ 200 pt of text; the Safe/Peak segments share one segmented control; Control
 # Center control titles hold about 14 columns (review only); menus size themselves. Text that only VoiceOver speaks,
@@ -397,7 +397,7 @@ SURFACE_RULES = [
      "Slider value tag: ≤ 240 pt (the track width); a “small gain” suffix may wrap. Measured by the PanelUI fit tests.",
      1.3, 40),
     ("chip", re.compile(r"\bchips?\b(?! row)", re.I), 280,
-     "Chip: a status chip sits on its own line (≤ 280 pt); the three footer guard chips share a 292-pt row and drop to "
+     "Chip: a status chip sits on its own line (≤ 280 pt); the three footer guard chips share a 304-pt row and drop to "
      "glyph + value when they do not fit. One or two short words. Measured by ChipFitTests.", 1.4, 16),
     ("segment", re.compile(r"\bsegment\b|picker segment", re.I), None,
      "Segment of a segmented picker (Safe / Peak): shares the row with its siblings; one short word.", 1.4, 12),

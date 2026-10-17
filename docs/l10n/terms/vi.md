@@ -108,3 +108,5 @@ Register and typography (as macOS writes Vietnamese):
 | Launch at login / Open at login | Mở khi đăng nhập | Apple's term |
 | Login Items | Mục đăng nhập | glossary |
 | update / check for updates | bản cập nhật / kiểm tra bản cập nhật |  |
+
+Fit (WP14): the footer’s default row (Battery, Auto-pause, Timer) must fit its 304 pt in full in every language, measured with its glyphs (`FooterFitTests`), so the Timer chip reads “Tắt hẹn giờ” for No timer.

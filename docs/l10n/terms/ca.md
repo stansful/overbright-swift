@@ -100,7 +100,7 @@ _Reviewed 2026-10-14 (independent review): rows marked ★ changed or were added
 | Keep this level? · Go Back · Keep | Vols mantenir aquest nivell? · Torna enrere · Mantén | the very-dark-level prompt |
 | Pause · Paused · Resume | “Posa l’Overbright en pausa” (Pause Overbright) · En pausa · Reprèn | a temporary stop; never “disabled” |
 
-Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its 292 pt in full in every language (`FooterFitTests`), so the Auto-pause chip reads “Autopausa” (off: “Sense autopausa”) and the Timer chip “Sense límit” for No timer.
+Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its 304 pt in full in every language (`FooterFitTests`), so the Auto-pause chip reads “Autopausa” (off: “Sense autopausa”) and the Timer chip “Sense límit” for No timer.
 
 ## Carried from Cranny (generic interface words)
 

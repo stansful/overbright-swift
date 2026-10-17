@@ -97,7 +97,7 @@ Register and style, as macOS writes Greek:
 | Keep this level? · Go Back · Keep | Να μείνει αυτό το επίπεδο; · Επιστροφή · Διατήρηση | the very-dark-level prompt |
 | Pause · Paused · Resume | “Παύση Overbright” (Pause Overbright) · Σε παύση · Συνέχιση | a temporary stop; never “disabled” |
 
-Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its 292 pt in full in every language (`FooterFitTests`), so the Auto-pause chip reads “Παύσεις” (off: “Χωρίς παύσεις”) and the Timer chip “Χωρίς όριο” for No timer. The Indoor preset is “Κλειστός χώρος”: the HUD shows a preset and its value in 200 pt (`HUDFitTests`).
+Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its 304 pt in full in every language (`FooterFitTests`), so the Auto-pause chip reads “Παύσεις” (off: “Χωρίς παύσεις”) and the Timer chip “Χωρίς όριο” for No timer. The Indoor preset is “Κλειστός χώρος”: the HUD shows a preset and its value in 200 pt (`HUDFitTests`).
 
 ## Carried from Cranny (generic interface words)
 

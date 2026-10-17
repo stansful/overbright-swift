@@ -70,7 +70,7 @@ field of each item:
 - **russian** is the reviewed Russian translation, an extra reference for meaning and tone.
 - **translation** already holds the language's text where the catalogs have it; `state` is `"translated"` then.
 - **constrained** / **maxWidth**: the text sits in a fixed-width place. `maxWidth.hint` says how much room there is:
-  a status chip ≤ 280 pt on its own line, the three footer chips ≤ 292 pt together, the readout ≤ 200 pt, the slider's
+  a status chip ≤ 280 pt on its own line, the three footer chips ≤ 304 pt together, the readout ≤ 200 pt, the slider's
   value tag ≤ 240 pt, the HUD ≤ 200 pt, the Safe / Peak segments, Control Center titles about 14 columns.
   Measured-width tests render these strings in every language and fail when one does not fit, so prefer the shortest
   natural wording.

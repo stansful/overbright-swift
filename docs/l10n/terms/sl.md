@@ -102,7 +102,7 @@ Register and style, following macOS 27 in Slovenian (checked in the system's own
 | Keep this level? · Go Back · Keep | Želite ohraniti to raven? · Vrni · Ohrani | the very-dark-level prompt |
 | Pause · Paused · Resume | “Začasno ustavi Overbright” (Pause Overbright) · Začasno ustavljeno · Nadaljuj | a temporary stop; never “disabled” |
 
-Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its 292 pt in full in every language (`FooterFitTests`), so the Auto-pause chip reads “Premori” (off: “Brez premorov”).
+Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its 304 pt in full in every language (`FooterFitTests`), so the Auto-pause chip reads “Premori” (off: “Brez premorov”).
 
 ## Carried from Cranny (generic interface words)
 

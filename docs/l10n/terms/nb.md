@@ -115,3 +115,5 @@ adjectives in common gender (“Overbright, lukket”). Compounds with a name ta
 | Reset to Default · Changed from the default | Gjenopprett standard · Endret fra standard |  |
 | click | klikk / klikke (på) | Apple: “Klikk på …” |
 | Acknowledgments | Takk til |  |
+
+Fit (WP14): the footer’s default row (Battery, Auto-pause, Timer) must fit its 304 pt in full in every language, measured with its glyphs (`FooterFitTests`), so the Timer chip reads “Uten tidtaker” for No timer.

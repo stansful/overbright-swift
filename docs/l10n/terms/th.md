@@ -108,3 +108,5 @@ Register and typography (as macOS writes Thai):
 | Launch at login / Open at login | เปิดเมื่อเข้าสู่ระบบ | Apple's term |
 | Login Items | รายการเข้าสู่ระบบ | glossary |
 | update / check for updates | อัปเดต / ตรวจหารายการอัปเดต | Apple's term; Update Available = มีรายการอัปเดต; Version %@ is available = เวอร์ชัน %@ พร้อมให้ใช้งานแล้ว (not “มีเวอร์ชัน %@ แล้ว”, which reads “you already have”) |
+
+Fit (WP14): the footer’s default row (Battery, Auto-pause, Timer) must fit its 304 pt in full in every language, measured with its glyphs (`FooterFitTests`), so the Auto-pause chip reads “พักอัตโนมัติ”.

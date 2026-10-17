@@ -93,7 +93,7 @@ or the Apple pattern “Sil: “%@””. Dotted/dotless i: İ/i, I/ı. Turkish 
 | Keep this level? · Go Back · Keep | Bu düzey korunsun mu? · Geri Dön · Koru | the very-dark-level prompt |
 | Pause · Paused · Resume | “Overbright’ı Duraklat” (Pause Overbright) · Duraklatıldı · Sürdür | a temporary stop; never “disabled” |
 
-Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its 292 pt in full in every language (`FooterFitTests`), so the Auto-pause chip reads “Duraklatma” (off: “Duraklatma yok”) and the Timer chip “Süresiz” for No timer.
+Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its 304 pt in full in every language (`FooterFitTests`), so the Auto-pause chip reads “Duraklatma” (off: “Duraklatma yok”) and the Timer chip “Süresiz” for No timer.
 
 ## Carried from Cranny (generic interface words)
 

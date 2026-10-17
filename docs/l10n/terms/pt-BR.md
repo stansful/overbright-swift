@@ -108,7 +108,7 @@ read on this Mac). Brazilian vocabulary only: arquivo, tela, câmera, app, apaga
 | Keep this level? · Go Back · Keep | Manter este nível? · Voltar · Manter | the very-dark-level prompt |
 | Pause · Paused · Resume | “Pausar Overbright” (Pause Overbright) · Pausado · Retomar | a temporary stop; never “disabled” |
 
-Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its 292 pt in full in every language (`FooterFitTests`), so the Auto-pause chip reads “Autopausa” (off: “Sem autopausa”).
+Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its 304 pt in full in every language (`FooterFitTests`), so the Auto-pause chip reads “Autopausa” (off: “Sem autopausa”) and, measured with its glyphs (WP14), the Battery chip “Menos de 20 %” for Below 20 %.
 
 ## Carried from Cranny (generic interface words)
 
