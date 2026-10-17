@@ -2,7 +2,8 @@
 // (ARCHITECTURE.md §10.5): no `.metal` file and no Metal library, function or pipeline API (D22); only the system
 // presenter orders a window in, and no test can reach it (§9.1, D24); EDR layer properties stay in this module's
 // strategy, surface and overlay files; only allowlisted values reach a `.public` log, so no error description does
-// (§9.2 rule 8). API names are split in two here, so this file never matches its own scans.
+// (§9.2 rule 8; the scan is `Support/PublicLogLint.swift`). API names are split in two here, so this file never matches
+// its own scans.
 import Foundation
 import Testing
 
@@ -104,6 +105,18 @@ import Testing
                 + #"    log.error("\(summary, privacy: .public)")"# + "\n" + "}",
             #"var summary = LoggedError.publicSummary(error)"# + "\n" + #"summary = error.localizedDescription"# + "\n"
                 + #"log.error("\(summary, privacy: .public)")"#,
+            // A summary that a compound assignment extends, or whose binding goes on after the call, is no summary.
+            #"var summary = LoggedError.publicSummary(error)"# + "\n" + #"summary += String(describing: error)"# + "\n"
+                + #"log.error("\(summary, privacy: .public)")"#,
+            #"var summary = LoggedError.publicSummary(error)"# + "\n" + #"summary+=detail"# + "\n"
+                + #"log.error("\(summary, privacy: .public)")"#,
+            #"let summary = LoggedError.publicSummary(error) + String(describing: error)"# + "\n"
+                + #"log.error("\(summary, privacy: .public)")"#,
+            #"let summary = LoggedError.publicSummary(error).appending(detail)"# + "\n"
+                + #"log.error("\(summary, privacy: .public)")"#,
+            #"let summary = LoggedError.publicSummary(error)"# + "\n" + #"    + error.localizedDescription"# + "\n"
+                + #"log.error("\(summary, privacy: .public)")"#,
+            #"log.error("\(LoggedError.publicSummary(error).appending(detail), privacy: .public)")"#,
             // A stray `\(` (in a raw string) cannot hide a later `.public` interpolation from the scan.
             ##"let pattern = #"\("#"## + "\n" + #"log.error("\(detail, privacy: .public)")"#,
         ]
@@ -122,6 +135,10 @@ import Testing
                 + #"    log.error("\(summary, privacy: .public)")"# + "\n" + "}" + "\n"
                 + #"func b(_ error: any Error) {"# + "\n" + #"    let summary: String = LoggedError.publicSummary(error)"#
                 + "\n" + #"    if summary == "" { return }"# + "\n" + #"    log.error("\(summary, privacy: .public)")"# + "\n" + "}",
+            #"let summary = LoggedError.publicSummary(error)  // the file name only"# + "\n"
+                + #"if summary.count <= 80, retries >= 1 { log.error("\(summary, privacy: .public)") }"#,
+            #"let summary ="# + "\n" + #"    LoggedError.publicSummary(error)"# + "\n"
+                + #"log.error("\(summary, privacy: .public)")"#,
         ]
         for code in allowed {
             #expect(try PublicLogLint.violations(in: lines(code)).isEmpty, "\(code)")
@@ -136,127 +153,5 @@ import Testing
                                     "Overlay/CompatibilityOverlay.swift"]
         let found = hits(properties, in: files(under: Self.sources), except: allowed)
         #expect(found.isEmpty, "EDR surfaces are built only by the strategies, surfaces and the overlay: \(found)")
-    }
-}
-
-/// The `.public` log allowlist of this module (§9.2 rule 8): every `\(value, privacy: .public)` interpolation must be a
-/// `LoggedError` summary (inline, or a name every binding of which in the file is one), a case's raw value, one of our
-/// asset file names, an ID or a count. Anything else, a description bound to a name first included, is a violation.
-/// The file is scanned as one text, so an interpolation split across lines is judged whole, and a `privacy: .public`
-/// the scan cannot attribute to one interpolation's last argument is a violation too (C-PLATFORM-10).
-enum PublicLogLint {
-    /// One `\( … )` interpolation: the line it starts on and its top-level, comma-separated arguments, each with the
-    /// character offsets it spans in the scanned text.
-    struct Interpolation {
-        var line: Int
-        var arguments: [(text: String, span: Range<Int>)]
-    }
-
-    /// The line numbers of `.public` interpolations off the allowlist, and of `privacy: .public` outside any
-    /// interpolation's last argument, in one file's code lines (sorted, each once).
-    static func violations(in lines: [(Int, String)]) throws -> [Int] {
-        let (characters, lineOf) = text(of: lines)
-        let summaries = try summaryNames(in: lines)
-        var found = Set<Int>()
-        var publicArguments: [Range<Int>] = []
-        for interpolation in interpolations(in: characters, lineOf: lineOf) {
-            guard interpolation.arguments.count > 1, let last = interpolation.arguments.last, isPublic(last.text) else {
-                continue
-            }
-            publicArguments.append(last.span)
-            if !isAllowed(interpolation.arguments[0].text, summaries: summaries) { found.insert(interpolation.line) }
-        }
-        for offset in try publicPrivacyOffsets(in: String(characters))
-        where !publicArguments.contains(where: { $0.contains(offset) }) {
-            found.insert(lineOf[offset])
-        }
-        return found.sorted()
-    }
-
-    /// Whether an interpolation argument is `privacy: .public`.
-    static func isPublic(_ argument: String) -> Bool {
-        argument.filter { !$0.isWhitespace } == "privacy:.public"
-    }
-
-    /// Whether `expression` may be logged `.public`.
-    static func isAllowed(_ expression: String, summaries: Set<String>) -> Bool {
-        let value = expression.trimmingCharacters(in: .whitespacesAndNewlines)
-        if value.hasPrefix("LoggedError.publicSummary(") && value.hasSuffix(")") && !value.contains("+") { return true }
-        if summaries.contains(value) || value == "count" { return true }
-        let path = value.split(separator: ".", omittingEmptySubsequences: false)
-        guard path.count > 1, path.allSatisfy({ !$0.isEmpty && $0.allSatisfy { $0.isLetter || $0.isNumber || $0 == "_" } })
-        else { return false }
-        return ["rawValue", "fileName", "id", "count"].contains(String(path[path.count - 1]))
-    }
-
-    /// The names bound to `LoggedError.publicSummary(…)` and to nothing else anywhere in the file: a name that one
-    /// function binds to a summary and another to a description is no summary (C-PLATFORM-10). Every `name =` and
-    /// `name: Type =` counts as a binding, `let`, `var` and plain assignments alike (`==`, `!=`, `<=`, `>=` and
-    /// compound assignments do not).
-    static func summaryNames(in lines: [(Int, String)]) throws -> Set<String> {
-        let binding = try Regex(#"\b(\w+)\s*(?::\s*[\w.?!<>\[\]]+\s*)?=(?!=)\s*"#)
-        var summaries = Set<String>(), others = Set<String>()
-        for (_, line) in lines {
-            for match in line.matches(of: binding) {
-                guard let name = match.output[1].substring.map(String.init) else { continue }
-                if line[match.range.upperBound...].hasPrefix("LoggedError.publicSummary(") {
-                    summaries.insert(name)
-                } else {
-                    others.insert(name)
-                }
-            }
-        }
-        return summaries.subtracting(others)
-    }
-
-    /// The code lines as one text (each line followed by a newline) and the line number of every character.
-    static func text(of lines: [(Int, String)]) -> (characters: [Character], lineOf: [Int]) {
-        var characters: [Character] = [], lineOf: [Int] = []
-        for (number, line) in lines {
-            for character in line + "\n" {
-                characters.append(character)
-                lineOf.append(number)
-            }
-        }
-        return (characters, lineOf)
-    }
-
-    /// The character offsets of every `privacy: .public` (any spacing) in `text`.
-    static func publicPrivacyOffsets(in text: String) throws -> [Int] {
-        let privacy = try Regex(#"privacy\s*:\s*\.public\b"#)
-        return text.matches(of: privacy).map { text.distance(from: text.startIndex, to: $0.range.lowerBound) }
-    }
-
-    /// Every `\( … )` interpolation in `characters`, across line ends: its top-level arguments end at a comma or at
-    /// the closing parenthesis.
-    static func interpolations(in characters: [Character], lineOf: [Int]) -> [Interpolation] {
-        var found: [Interpolation] = []
-        var index = 0
-        while index + 1 < characters.count {
-            guard characters[index] == "\\", characters[index + 1] == "(" else { index += 1; continue }
-            var depth = 1, cursor = index + 2, start = cursor, current = ""
-            var arguments: [(text: String, span: Range<Int>)] = []
-            while cursor < characters.count, depth > 0 {
-                let character = characters[cursor]
-                if character == "(" { depth += 1 }
-                if character == ")" { depth -= 1 }
-                if depth == 1, character == "," {
-                    arguments.append((current, start..<cursor)); current = ""; start = cursor + 1
-                } else if depth > 0 {
-                    current.append(character)
-                }
-                cursor += 1
-            }
-            arguments.append((current, start..<max(start, cursor - 1)))
-            found.append(Interpolation(line: lineOf[index], arguments: arguments))
-            index = cursor
-        }
-        return found
-    }
-
-    /// The top-level, comma-separated arguments of every `\( … )` interpolation in one line.
-    static func interpolations(in line: String) -> [[String]] {
-        let (characters, lineOf) = text(of: [(1, line)])
-        return interpolations(in: characters, lineOf: lineOf).map { $0.arguments.map(\.text) }
     }
 }
