@@ -7,6 +7,7 @@ Ported from Cranny; ARCHITECTURE.md §8.7, §8.8, D3.
     python3 -I scripts/l10n/validate.py --shipped             # every language marked "shipped" (make strings-check)
     python3 -I scripts/l10n/validate.py --shipped --release   # … and no key pending translation (release.yml)
     python3 -I scripts/l10n/validate.py de de.json --glossary de-terms.json   # also compare with Apple's terms
+    python3 -I scripts/l10n/validate.py --self-test           # the width classifier on known comments (make lint)
 
 Errors:
 - completeness: every key of the export has a translation (a file made with --missing-only must still hold every key
@@ -415,7 +416,43 @@ def check_language_entry(report, code):
                                                 f"{sorted(icu, key=l10n.PLURAL_ORDER.index)}")
 
 
+# (translator comment, the width rule it must get: (kind, maxWidthPt) or None for unconstrained). Menus size
+# themselves; a chip's popover, actions, buttons, menu items and submenus are not its label; help tags wrap.
+CLASSIFIER_CASES = [
+    ("Menu: chip action (title case)", None),
+    ("Menu: Battery footer chip, submenu of levels", None),
+    ("Menu: Timer footer chip, no auto-off", None),
+    ("Panel ▸ Display card: status chip, the Mac is warm", ("chip", 280)),
+    ("Panel ▸ Footer chip: Battery chip, extra brightness only on the power adapter", ("chip", 304)),
+    ("Panel ▸ Footer chip: the auto-off timer is not set", ("chip", 304)),
+    ("Panel ▸ Footer chip: Timer chip menu item, no auto-off timer (title case)", None),
+    ("Panel ▸ Footer chip: Battery chip submenu of battery levels (title case)", None),
+    ("Panel ▸ Display card: ends the popover of the Safe and OLED limit chips", None),
+    ("Panel ▸ Display card: popover of the Preparing… chip", None),
+    ("Panel ▸ Display card: chip action that opens the self-test", None),
+    ("Panel: chip or banner button that tries a stopped display again (sentence case)", None),
+    ("Panel ▸ Display card: help tag of the readout", None),
+    ("Panel ▸ Display card: the readout of a boosted display", ("readout", 200)),
+    ("HUD: the value line", ("hud", 200)),
+    ("Panel ▸ Display card: slider value tag at a preset", ("valueTag", 240)),
+    ("VoiceOver: the chip's label", None),
+]
+
+
+def self_test():
+    failures = []
+    for comment, expected in CLASSIFIER_CASES:
+        _, limit = l10n.constraint(comment)
+        got = (limit["kind"], limit["maxWidthPt"]) if limit else None
+        if got != expected:
+            failures.append(f"{comment!r}: expected {expected}, got {got}")
+    print("\n".join(failures) or f"width classifier self-test OK ({len(CLASSIFIER_CASES)} comments)")
+    return 1 if failures else 0
+
+
 def main(argv):
+    if argv == ["--self-test"]:
+        return self_test()
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     parser.add_argument("language", nargs="?", help="language code from scripts/l10n/languages.json")
     parser.add_argument("file", nargs="?", help="translator JSON (from export.py, \"translation\" filled in)")

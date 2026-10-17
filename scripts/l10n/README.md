@@ -2,7 +2,7 @@
 
 Overbright's text lives in String Catalogs: every table of every OverbrightKit target
 (`Packages/OverbrightKit/Sources/<Target>/Resources/*.xcstrings`: `Localizable` plus a co-tenant's own table such as
-Boost's `Safety` or AppShell's `StatusMenu` and `Calibration`), the app target's `App/InfoPlist.xcstrings`,
+AppShell's `StatusMenu` and `Calibration`; Boost's `Safety` is reserved and empty), the app target's `App/InfoPlist.xcstrings`,
 `App/Localizable.xcstrings` (App Intents and the Focus filter) and `App/AppShortcuts.xcstrings`, and
 `Controls/Localizable.xcstrings` once the Control Center extension ships. English is the source; all 35 languages of
 `languages.json` ship from day one (ARCHITECTURE.md §8.8). Russian is the owner's review language and the pivot for
@@ -76,9 +76,12 @@ field of each item:
   natural wording.
 
 How the exporter decides `constrained` (`l10n.SURFACE_RULES`): it reads the comment; text only VoiceOver speaks,
-tooltips and Settings search keywords are never constrained; otherwise the first of these that the comment mentions
-decides — an explicit limit ("at most 48 pt", "≤ 10 characters"), "keep it short" / "very short", the HUD, a readout,
-the value tag, a chip, a picker segment, a Control Center title, a table column header. Menus are not constrained.
+tooltips and help tags, Settings search keywords and every `Menu: …` comment are never constrained; otherwise the
+first of these that the comment mentions decides — an explicit limit ("at most 48 pt", "≤ 10 characters"), "keep it
+short" / "very short", the HUD, a readout, the value tag, a chip's own label (a "status chip", a `Panel ▸ Footer
+chip:` label or a "chip label"; a chip's popover, chip actions, buttons, menu items and submenus are not its label),
+a picker segment, a Control Center title, a table column header. The column budget is about 36 for a status chip and
+16 for a footer chip. `validate.py --self-test` (run by `make lint`) checks the rules on known comments.
 
 ## Rules for every language
 

@@ -17,13 +17,13 @@ debug:           ## Debug build (host arch) -> build/Overbright.app
 run:             ## Debug build + launch with --off --qa-simulate (never boosts); scripts/run.sh -- <args> overrides
 	@scripts/run.sh
 
-smoke:           ## Run build/Overbright.app --diagnostics: bundles, Edit menu, privacy none, intents, nothing written
+smoke:           ## Run build/Overbright.app --diagnostics: bundles + translations, Edit menu, privacy none, intents, nothing written
 	@scripts/smoke.sh
 
-qa-matrix:       ## Debug app under --qa-simulate: every fixture's scenario, symbol/banner/chips checked (after make debug)
+qa-matrix:       ## Debug app under --qa-simulate: every fixture's scenario, symbol/banner/chips checked; Welcome writes nothing (after make debug)
 	@scripts/qa-matrix.sh
 
-soak:            ## Debug app under --qa-simulate for MINUTES (30): footprint, idle wake-ups while off vs a control (after make debug)
+soak:            ## Debug app under --qa-simulate for MINUTES (30, at least 17): footprint growth per cycle, no periodic own wake-ups while off (after make debug)
 	@scripts/soak.sh
 
 dist: build      ## zip + dmg + sha256 (+ notarization with SIGN_IDENTITY/TEAM_ID/NOTARY_PROFILE) -> dist/
@@ -36,15 +36,18 @@ test:            ## swift test for OverbrightKit (FILTER=<Suite or Target> narro
 	@. scripts/lib.sh && ensure_xcode && cd "$$PACKAGE_DIR" && \
 	  swift test "$${SWIFTPM_FLAGS[@]}" --scratch-path .build-test $(if $(FILTER),--filter '$(FILTER)')
 
-tsan:            ## swift test under the Thread Sanitizer (FILTER=HangWatchdogTests; CI runs it)
+tsan:            ## swift test under the Thread Sanitizer (CI: FILTER='HangWatchdog|OffMain|GammaWriteGate|BoostColorTests|StatusSymbolTests')
 	@. scripts/lib.sh && ensure_xcode && cd "$$PACKAGE_DIR" && \
 	  swift test "$${SWIFTPM_FLAGS[@]}" --sanitize=thread --scratch-path .build-tsan $(if $(FILTER),--filter '$(FILTER)')
 
-lint:            ## Copy rules, competitor denylist (catalogs + sources) and no Metal shader sources (D22)
+lint:            ## Copy rules, competitor denylist (catalogs + every repository file), no Metal shader sources (D22), script self-tests
 	@/usr/bin/python3 -I scripts/lint-copy.py
 	@shaders="$$(find Packages App Controls Shared -name '*.metal' -not -path '*/.build*' 2>/dev/null)"; \
 	  if [[ -n "$$shaders" ]]; then echo "error: Metal shader sources are not allowed (ARCHITECTURE.md D22):"; echo "$$shaders"; exit 1; fi; \
 	  echo "No Metal shader sources"
+	@/usr/bin/python3 -I scripts/check-lproj.py --self-test
+	@/usr/bin/python3 -I scripts/l10n/validate.py --self-test
+	@/usr/bin/python3 -I scripts/soak_judge.py --self-test
 
 strings:         ## Sync the package's String Catalogs with the keys used in code
 	@scripts/sync-strings.sh

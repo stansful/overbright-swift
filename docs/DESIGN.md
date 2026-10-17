@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| Status | **v0.2, proposed** (2026-10-16), written with `docs/ARCHITECTURE.md` before any code and revised with it after a design review (ARCHITECTURE.md Appendix B lists every finding and its fix). This file is the single source of truth for every pixel, colour, motion, word and sound in Overbright; ARCHITECTURE.md owns behaviour, contracts and the work plan. Where they disagree, raise it; neither silently wins. |
+| Status | **As built through WP13 and WP15** (2026-10-17). Written as v0.2 with `docs/ARCHITECTURE.md` before any code and revised with it after a design review (ARCHITECTURE.md Appendix B lists every finding and its fix); "As built" notes record where the code settled a detail this file left open or changed one with the owner's ruling. This file is the single source of truth for every pixel, colour, motion, word and sound in Overbright; ARCHITECTURE.md owns behaviour, contracts and the work plan. Where they disagree, raise it; neither silently wins. |
 | Applies to | The menu bar extra and its menu, the panel, the HUD and the Keep-this-level prompt, the Help window, the Settings window, the Welcome window, the calibration window, the self-test sheet, Fill Light, the app icon, every string (including Shortcuts, Spotlight and Focus). |
 | Platform | macOS 14.0 deployment target. Liquid Glass (26+) only behind `#available`, always with a designed 14/15 fallback. macOS 27's global glass-opacity slider and fixed window radius are respected by never hard-coding translucency or window corner radii. |
 | Clean room | Original work for Overbright (MIT). Nothing from the incumbent commercial app (its code, assets, icon, UI text or feature names) or from any GPL project. Competitors were studied only through public product pages, store listings, reviews and issue-tracker titles (`docs/research/ux-landscape.md`). The incumbent is named only in ARCHITECTURE.md D3. |
@@ -67,7 +67,7 @@ Each principle has a test that a build passes or fails.
 
 ### 2.0 Placement and rules
 
-- **Where:** `Packages/OverbrightKit/Sources/OverbrightDesign/` (`Color.swift`, `Typography.swift`, `Layout.swift`, `Motion.swift`, `Theme.swift`, `Symbols.swift`, `RightToLeft.swift`, `Components/`, `Copy/` — the localized names and sentences of every Core and Policy enum and their builders, ARCHITECTURE.md §8.8).
+- **Where:** `Packages/OverbrightKit/Sources/OverbrightDesign/`. As built: `Tokens/` (one file per family: `OverbrightColor`, `BoostColor`, `SemanticColor`, `SRGBA`, `Typography`, `Space`, `Radius`, `StrokeWidth`, `HitTarget`, `GlyphSize`, `OverbrightShadow`, `SurfaceMaterial`, `OverbrightMotion`, `OverbrightSymbol`), `Theme/` (`OverbrightTheme`, its root modifier, `RightToLeft`, haptics), `Styles/` (button styles, the focus ring), `Components/`, `Settings/` (row conventions, `SettingsStore.binding(_:)`) and `Copy/` (the localized names and sentences of every Core and Policy enum and their builders, ARCHITECTURE.md §8.8).
 - **Rules:**
   1. No module outside Design writes a literal colour, font size, spacing, radius or animation.
   2. Views read `@Environment(\.overbright)` (an `OverbrightTheme`), never raw accessibility flags.
@@ -90,7 +90,9 @@ Each principle has a test that a build passes or fails.
 | `dimFill` | `secondaryLabelColor` over the track | same | `labelColor` | slider fill left of the detent |
 | **`boostWarm`** | **#B35F00** | **#FFB020** | **#8F4A00** (light) / **#FFC65C** (dark) | slider fill right of the detent while extra light is on screen, the HUD bar, focus of the boost zone. **Never text, never a background behind text, never a status, never while off or paused.** |
 | `inactiveHatch` | 45° hatch, 1-pt `secondaryLabelColor` lines every 3 pt, over the track | same | `labelColor` lines | the boost-side fill while Overbright is off or paused (nothing is brighter), the part of the boost half macOS does not allow now, and a boost half that is turned off for the display |
-| `allowedMarker` | `labelColor`, 2 × 10 pt | same | same | where the thumb will stop now (§5.5) |
+| `allowedMarker` | `labelColor`, 2 × 24 pt, drawn over the thumb in a 1-pt `panelBackground` halo | same | same | where the thumb will stop now (§5.5) |
+| `thumb` | white | white | white | the slider thumb and the Welcome card's divider handle (§2.4) |
+| `thumbRing` | none (clear) | none (clear) | `labelColor`, 1 pt | the white thumb's edge on the opaque white card (§15) |
 | `neutral` | `secondaryLabelColor` glyph on a 15 % `systemGray` tint | same | `labelColor` glyph | neutral chips and banners |
 | `info` / `warning` / `danger` / `success` | `systemBlue` / `systemOrange` / `systemRed` / `systemGreen` | same | the system's accessible variants | chip and banner glyphs and tints; always paired with text |
 
@@ -103,6 +105,8 @@ Each principle has a test that a build passes or fails.
 | `dimFill`, `tick`, `inactiveHatch` lines, `detentMark` (secondary over the track) | 3.72 · 5.10 | 4.07 · 6.22 |
 | `allowedMarker` (label over the track) | 11.74 · 16.10 | 7.18 · 10.96 |
 | `neutral` glyph on its tint | 3.86 (glyph vs tint); text in `labelColor` 13.39 | 4.65; text 8.63 |
+
+As built (WP14): the allowed-now marker is also drawn over the white thumb, where it reads in its own ink in Light and by its dark `panelBackground` halo in Dark (near-white ink on a white thumb); under Increase Contrast the thumb's `thumbRing` stands at least 3:1 off both the white thumb and the opaque card in Light, and the white thumb stands 3:1 off the dark card by itself. `BoostSliderDrawingTests` read both from rendered pixels. The readout is text on the card in `labelColor` in every state, "Off" included (§5.6), and `ContrastAuditTests` render the "Off" readout to check it reaches 4.5:1 in every palette and appearance.
 
 The v0.1 tokens that failed are gone: `headroomAvailable` (`tertiaryLabelColor`, 1.88:1 on the light card) and the 1-px `quaternaryLabelColor` outline (1.25:1). System orange (#FF9500, 2.0:1 on light backgrounds) fails 3:1 in Light mode, which is why the boost zone has its own token. Text never uses `boostWarm`; chip and banner text uses `labelColor` on a 15 % tint of the semantic colour, so text contrast is the system's own, and the coloured glyph is redundant with the words. Text is never faded by lowering a view's opacity (secondary text at 60 % opacity falls to 2.1:1).
 
@@ -140,21 +144,24 @@ The live readout never uses `.contentTransition(.numericText)` (it grows CoreGra
   | `keycap` | 4 | 4 |
   | `focusRingOutset` | 3 | 3 |
 
-- **Strokes** (`StrokeWidth`): hairline = 1 device pixel; regular 1; focus ring 2; slider track 4 (6 while dragging); detent tick 1.5 × 8 pt; preset ticks 1 × 5 pt; allowed marker 2 × 10 pt.
+- **Strokes** (`StrokeWidth`): hairline = 1 device pixel; regular 1; focus ring 2; slider track 4 (6 while dragging); detent tick 1.5 × 8 pt; preset ticks 1 × 5 pt; allowed marker 2 × 24 pt (`allowedMarker`: taller than the 20-pt thumb and drawn over it, so it shows where the thumb rests on it) in a 1-pt halo of the panel background (`allowedMarkerHalo`, `panelBackground`).
 - **Hit targets** (`HitTarget`): ≥ 28 × 24 pt for every panel control (the 20-pt slider thumb takes a 28-pt hit area inside the control; footer chips at least 28 pt wide); widening happens inside the button style, never with an outer frame (Cranny gotcha).
-- **Elevation:** the system's window shadow for the panel and the HUD; cards have none (a hairline only).
+- **Glyph sizes** (`GlyphSize`, as built in WP9; SF Symbols beside text, `.font(.system(size: GlyphSize.chip))`, never a literal): `chip` 12 (status and footer chips, and the spinner that stands in for a chip's glyph) · `banner` 14 · `sliderEnd` 14 (`sun.min` / `sun.max.fill` at the ends of a card's slider row, drawn by the card) · `hud` 20 (the HUD's leading glyph).
+- **Elevation:** the system's window shadow for the panel and the HUD; cards have none (a hairline only). The few shadows Overbright draws itself are `OverbrightShadow` tokens (as built in WP9; `.overbrightShadow(_:)`, never a literal): `thumb`, the slider thumb and the Welcome card's divider handle (black 30 %, blur 1, 0.5 pt down, the system slider thumb's) · `valueTag`, the value tag's lift off the track (black 15 %, blur 2, 1 pt down).
 
 ### 2.4 Materials
 
 | Surface | macOS 26+ | macOS 14/15 | Reduce Transparency |
 |---|---|---|---|
-| Panel container | Liquid Glass (`NSGlassEffectView`, `.standard` style), corner radius `Radius.panel` | `NSVisualEffectView(.popover, .behindWindow, .active)` masked to `Radius.panel` | opaque `windowBackgroundColor` |
-| HUD, Keep-this-level prompt | Liquid Glass (`NSGlassEffectView`, `.standard`) | `NSVisualEffectView(.hudWindow)` | opaque |
+| Panel container | Liquid Glass (`NSGlassEffectView`, `.regular` style), corner radius `Radius.panel` | `NSVisualEffectView(.popover, .behindWindow, .active)` masked to `Radius.panel` | opaque `windowBackgroundColor` |
+| HUD, Keep-this-level prompt | Liquid Glass (`NSGlassEffectView`, `.regular`) | `NSVisualEffectView(.hudWindow)` | opaque |
 | Cards, banners | `card` fill (no glass, content layer) | same | same |
-| Slider thumb | white; takes glass only while dragged (system behaviour of transient controls) | white with system shadow | white |
+| Slider thumb | white (the `thumb` colour token, white in every appearance); takes glass only while dragged (system behaviour of transient controls) | white with the `thumb` shadow | white |
 | Settings, Welcome, Help | system (sidebar and toolbar glass from AppKit; we add none) | system | system |
 
 Glass is never stacked on glass, and nothing translucent sits behind text without a card.
+
+As built (WP9, `SurfaceMaterial`): the macOS 27 SDK's `NSGlassEffectView.Style` has `.regular` and `.clear` only, so the containers use `.regular`; Increase Contrast takes the opaque container too (the theme's `highContrast` palette, like Reduce Transparency's `opaque`), and the dragged thumb never takes glass under either.
 
 ### 2.5 Theme and environment
 
@@ -253,7 +260,7 @@ Built-in Display                        ▸ Standard
                                           Sunlight
                                           Max
                                           ─────
-                                          Dimmed · 25 %
+                                          Dimmed · 25%
                                           ─────
                                           Don't Use on This Display      ("Use Extra Brightness on This Display" when off)
 MPG322UX OLED                           ▸ …           (one submenu per display that can boost or dim; "All Displays ▸" when levels are linked)
@@ -268,7 +275,7 @@ Quit Overbright                           ⌘Q
 ```
 
 - Key equivalents (`‹live›`) show the **live** global shortcut in the current keyboard layout, or nothing when the shortcut is cleared or failed to register (Cranny's `MenuKeyEquivalent`). As built (WP14): named keys (Space, Return, Tab, Delete, Esc, the arrows, F1–F12) come from the combo's key code, never from their localized caps ("Пробел", "Leertaste"); a character key comes from the caps of the current layout.
-- Preset items list only the presets shown on that display (§5.5); the dim item uses the last dim level (default "Dimmed · 25 %", light relative to Standard).
+- Preset items list only the presets shown on that display (§5.5); the dim item uses the last dim level (default "Dimmed · 25%", light relative to Standard).
 - **Don't Use on This Display** turns extra brightness off for that display and returns it to Standard (dims undone); the opposite item turns extra brightness on (an OLED shows its notice first, §12.4).
 - With no display that can boost, the presets are replaced by a disabled "No Extra Brightness on This Display"; a display that can only dim keeps Standard and Dimmed.
 - **Back to Standard is not in this menu**: Turn Off already sits in the first group and does the same, a little slower. Back to Standard stays on its shortcut, in the Dock menu and in the Shortcuts app.
@@ -339,27 +346,27 @@ Quit Overbright                           ⌘Q
 
 - `card` fill, `cardStroke` hairline, `Radius.card`, padding 12, 8 pt between cards. Every display that can boost **or dim** gets a full card. As built (WP14): one card style (`panelCard`) for the display cards, the calibration tip, the Fill Light card and the expanded "Why?" rows, each exactly 304 pt wide, so their edges line up with each other and the banner, all opaque with a full-strength hairline under Increase Contrast.
 - **Title:** display name (`cardTitle`, up to two lines). With linked levels a `link` glyph precedes the name of every card ("Same level on all displays"). Two displays with the same name get " (1)", " (2)" in UUID order, as macOS does.
-- **Slider row** (§5.5) with `sun.min` at the dim end and `sun.max.fill` at the boost end (14 pt, `secondaryLabelColor`), 6 pt gaps: a 240-pt track whose boost half is 120 pt. The glyphs draw 16 and 17 pt wide, so each sits in a 14 × 14 frame and the row is exactly the 280-pt inner width.
+- **Slider row** (§5.5) with `sun.min` at the dim end and `sun.max.fill` at the boost end (14 pt, `secondaryLabelColor`), 6 pt gaps: a 240-pt track whose boost half is 120 pt (the thumb's centre travels 220 pt of it, §5.5). The glyphs draw 16 and 17 pt wide, so each sits in a 14 × 14 frame and the row is exactly the 280-pt inner width.
 - **Readout** (§5.6). In Compatibility mode a `caption` line "Compatibility mode" sits under it, with the method's footnote (§7.4) as its help tag.
 - **Chip line** (§5.7): only when a per-display reason applies. The chip and an inline **Turn on** share the line when both fit its 280 pt; otherwise Turn on drops under the chip.
-- **Context menu** (right-click, ⌃-click, or ⌃↩ while the card's slider has keyboard focus): the shown presets · Dimmed · 25 % · separator · Calibrate… · Settings for This Display… (Overbright's Settings ▸ Displays at this display) · Don't Use on This Display / Use Extra Brightness on This Display · Try Again (only when failed). Every item is also a **VoiceOver custom action** on the card and on its slider (where VoiceOver lands), and the items that fix a limit (Try again, Continue anyway, Turn on, Choose Peak…) are also actions in the chip's popover, so nothing depends on right-click.
+- **Context menu** (right-click, ⌃-click, or ⌃↩ while the card's slider has keyboard focus): the shown presets · Dimmed · 25% · separator · Calibrate… · Settings for This Display… (Overbright's Settings ▸ Displays at this display) · Don't Use on This Display / Use Extra Brightness on This Display · Try Again (only when failed). Every item is also a **VoiceOver custom action** on the card and on its slider (where VoiceOver lands), and the items that fix a limit (Try again, Continue anyway, Turn on, Choose Peak…) are also actions in the chip's popover, so nothing depends on right-click.
 - **Extra brightness off for this display** (opt-in displays, or after "Don't Use on This Display"): the boost half draws with `inactiveHatch` and the chip "Extra brightness off" offers **Turn on**. Moving the thumb past the detent turns it on as well; an OLED display shows the OLED notice first (§12.4), and the thumb waits at Standard until the notice is answered (asked when the move ends, for the level it ended at; a move back to Standard or below asks nothing). Dimming always works. The thumb, the value tag, VoiceOver's value, the HUD bar and the menus' checkmark show the level the display has: Standard while the boost half is off or unavailable, whatever level is stored for the next turn-on (as built, WP14).
 
 ### 5.5 The level slider (`BoostSlider`)
 
 | Aspect | Specification |
 |---|---|
-| Track | 240 pt, 4 pt high (6 pt while dragging), `track` colour, capsule ends |
+| Track | 240 pt, 4 pt high (6 pt while dragging), `track` colour, capsule ends. The thumb's centre travels the track inset by its radius at both ends, as a system slider's does: 220 pt, from 10 pt in at the dim end through Standard at the centre to 10 pt in at Max, so the thumb never overhangs the track into the 6-pt gap before the end glyphs. Ticks, fills, the detent, the marker, the value tag and drags follow the same travel |
 | Detent | a 1.5 × 8 pt `detentMark` at the centre: **Standard** |
 | Fills | drawn over the track. Left of the detent: `dimFill` from the detent to the thumb. Right of the detent: `boostWarm` from the detent to the thumb **while extra light is on screen**; while Overbright is off or paused, the same span is drawn with `inactiveHatch` (nothing is brighter, so nothing is warm) |
-| Allowed now | while boosting with a reading: a 2 × 10 pt `allowedMarker` where the thumb stops now — macOS's current limit, or the decision's own cap when one binds (heat, Safe, near full brightness: the figure the readout's "asked ×…" states) — and `inactiveHatch` beyond it to the end of the boost half; it moves in steps of ×0.01, the figure its help tag states, not with every headroom poll. Hidden when there is no reading (off, never armed) |
+| Allowed now | while boosting with a reading: a 2 × 24 pt `allowedMarker` where the thumb stops now — macOS's current limit, or the decision's own cap when one binds (heat, Safe, near full brightness: the figure the readout's "asked ×…" states) — drawn over the thumb in a 1-pt `panelBackground` halo (the thumb often rests just past it while a limit binds, so a marker under the thumb would be hidden), and `inactiveHatch` beyond it to the end of the boost half; it moves in steps of ×0.01, the figure its help tag states, not with every headroom poll. Hidden when there is no reading (off, never armed) |
 | Ticks | 1 × 5 pt `tick` marks at the **shown** presets (Indoor 25 %, Bright room 50 %, Sunlight 75 %, Max 100 % of the boost half; a preset below ×1.1 or within 0.1 stop of the next shown one is hidden, ARCHITECTURE.md §5.3); none on the dim half |
-| Thumb | 20 pt white circle with the system shadow (glass while dragged on macOS 26+); 28 pt hit area |
+| Thumb | 20 pt white circle (`thumb`) with the system shadow (glass while dragged on macOS 26+), a 1-pt `thumbRing` under Increase Contrast; 28 pt hit area; its centre on the inset travel of the Track row |
 | Snapping | within ±3 % of the detent or a shown tick, a slow drag settles there (`detentSnap`) with an `.alignment` haptic at the detent and `.levelChange` at a preset; a fast drag passes through |
-| Value tag | while dragging or hovering the thumb: a capsule 6 pt above it (`valueTag`) with the canonical value text: "Bright room · ×1.29" at a preset, "Standard" at the detent, "×1.42" between presets, "Dimmed · 25 %" on the dim half; "≈" before the multiplier while not calibrated; "· small gain on this display" when Max is at most ×1.3; while a guard pauses the display, the reason ("Paused: Low Power Mode") |
+| Value tag | while dragging or hovering the thumb: a capsule 6 pt above it (`valueTag`) with the canonical value text: "Bright room · ×1.29" at a preset, "Standard" at the detent, "×1.42" between presets, "Dimmed · 25%" on the dim half; "≈" before the multiplier while not calibrated; "· small gain on this display" when Max is at most ×1.3; while a guard pauses the display, the reason ("Paused: Low Power Mode") |
 | Disabled boost half | when boosting is not possible (verdict, or the Safe top below ×1.05): the right half draws with `inactiveHatch`, the thumb stops at the detent, and hovering the half shows the reason as a help tag |
 | Disabled dim half | displays without a transfer table (virtual) or in a reference preset: the left half is disabled the same way |
-| Keyboard (focused) | ← / → by **1/12 stop** of light (≈ 6 %) · ⌥← / ⌥→ to the previous/next named stop (Standard, the shown presets; on the dim half 50 %, 25 %, 10 %, 5 %, 2 % of Standard light) · Home = Standard · End = Max · scrolling adjusts by 1/12 stop per notch · ⌃↩ opens the card's context menu. A key step never crosses Standard: the next press continues past it |
+| Keyboard (focused) | ← / → by **1/12 stop** of light (≈ 6 %) · ⌥← / ⌥→ to the previous/next named stop (Standard, the shown presets; on the dim half 50 %, 25 %, 10 %, 5 %, 2 % of Standard light) · Home = Standard · End = Max · scrolling adjusts by 1/12 stop per notch, following the hand (§15) · ⌃↩ opens the card's context menu. A key step never crosses Standard: the next press continues past it |
 | VoiceOver | one adjustable element: label "Level, ‹display name›"; value in canonical units: "Bright room, 1.29 times" / "Standard" / "Dimmed, 25 percent" / "1.42 times"; uncalibrated: "Bright room, about 1.29 times, not calibrated"; increment and decrement move between named stops; custom actions "Standard", "Max", "Dimmed", and the card's context-menu items; custom content "Extra range": "macOS allows 1.55 times now. This display can reach 2.6 times at most." |
 | Right to left | the whole control mirrors like a system slider (dim on the right, boost on the left, glyphs swap) |
 | Master off | moving the slider turns Overbright on (direct manipulation is intent); the readout then updates |
@@ -374,19 +381,19 @@ Per-step light changes are the same on every display, because steps are in stops
 
 | State | Readout |
 |---|---|
-| Off | "Off" (`tertiaryLabelColor`) |
+| Off | "Off" (`labelColor`, as every state: the word says the state, and text is never faded; `tertiaryLabelColor` read 2.5:1 on the dark card) |
 | Standard | "Standard" |
 | Boosting at a preset, calibrated, SDR white trusted | "Bright room · ×1.29 · ≈ 775 nits" |
 | Boosting at a preset, calibrated | "Bright room · ×1.29" |
 | Boosting, not calibrated | "Bright room · ≈ ×1.29" |
 | Between presets | "×1.42" (+ " · ≈ 852 nits" when known; "≈ ×1.42" when not calibrated) |
 | Limited below the requested level | "×1.21 · asked ×1.47" |
-| Dimmed | "Dimmed · 25 %" (light relative to Standard) |
+| Dimmed | "Dimmed · 25%" (light relative to Standard) |
 | Preparing | "Preparing…" |
 
 The multiplier is a light gain, formatted with one or two decimals by `FormatStyle` (locale decimal separator); nits are rounded to the nearest 5 and always prefixed "≈". The readout's help tag adds: "For the most light, turn your display brightness all the way up first; Overbright adds to it." and, while not calibrated, "Not calibrated: this is an estimate." with **Calibrate…** in the card's context menu and as a VoiceOver action.
 
-**Allowed-now marker** (part of `BoostSlider`, §5.5): shows where the thumb will stop now. Its help tag and VoiceOver custom content: "macOS allows ×1.55 now. This display can reach ×2.6 at most." (the second figure is the Peak ceiling at full brightness). It shows at a glance why the thumb cannot go further, and how much further the display could go.
+**Allowed-now marker** (part of `BoostSlider`, §5.5): shows where the thumb will stop now, drawn over the thumb so it shows even where the thumb rests on it. Its help tag and VoiceOver custom content: "macOS allows ×1.55 now. This display can reach ×2.6 at most." (the second figure is the Peak ceiling at full brightness). It shows at a glance why the thumb cannot go further, and how much further the display could go.
 
 ### 5.7 Status chips
 
@@ -458,7 +465,7 @@ Every state below is a named status in PanelUI's `ScriptedStatuses` (`--qa-state
 | `below-full-brightness` | the taper binds: chip "Below full brightness" |
 | `preparing` | first arm, chip "Preparing…", symbol `preparing` |
 | `no-extra-range`, `still-no-extra-range` | failed ladder, first and after two tries (Self-Test, Compatibility mode, Help link) |
-| `dimmed` | built-in at "Dimmed · 25 %", dim fill |
+| `dimmed` | built-in at "Dimmed · 25%", dim fill |
 | `extra-brightness-off` | an opt-in HDR external: hatched boost half, chip with Turn On |
 | `linked` | two cards with link glyphs moving together |
 | `banner-battery`, `banner-low-power`, `banner-heat`, `banner-paused`, `banner-focus`, `banner-schedule` | each global banner with its buttons, and no chips repeating it |
@@ -484,7 +491,7 @@ Every state below is a named status in PanelUI's `ScriptedStatuses` (`--qa-state
 - **When:** (1) the level or on/off state changes through a **global shortcut, the Shortcuts app, a Focus filter or Back to Standard**; (2) a turn-on from the **icon, a shortcut or the Shortcuts app** is not ready within 0.5 s ("Preparing…"); (3) a requested change is blocked by a guard; (4) an **automation stops, caps or resumes** extra brightness on a visible display: the timer ends, the battery threshold or "on battery" applies, Low Power Mode, heat, the schedule boundary, and the return when the cause clears. **Never** for changes made in the panel, the menu or Settings (they show their own state), and never for full-screen, app or game pauses, which the user caused. General ▸ "Show level changes on screen" turns the HUD's window off; VoiceOver still hears every change it would show (§15: a global shortcut has no other non-visual feedback), also while the Keep-this-level prompt holds the HUD's place. Back to Standard shows from every source, the Dock menu's included.
 - **Where:** horizontally centred on the display whose level changed (the display under the pointer for "all"), 64 pt above the bottom of its visible frame (above the Dock), clear of the system's own brightness indicator and notification banners.
 - **Geometry:** 280 × 56 pt, `Radius.hud`, material per §2.4.
-- **Content:** leading glyph 20 pt (`sun.max.fill` boosting, `sun.min` dimmed, `sun.max` Standard or off, `hourglass` preparing, `pause.fill` blocked or paused, `thermometer.medium` heat); centre: the display name (`hudLabel`, only with two or more displays) above a 150-pt level bar drawn like the slider (detent mark, `dimFill` left, `boostWarm` right, no thumb, the theme's palette); trailing value (`hudValue`) in canonical units: "Bright room · ×1.29", "×1.42", "Standard", "Dimmed · 25 %", "Off". As built (WP14): the name has its own line above the value and the bar (the full 200 pt, middle-truncated only beyond it); value and bar show the level the display is set to — the panel's thumb — at once, never the lagging on-screen state; a turn-on's "Preparing…" line stays until the display is ready (at most 3 s), then the level reached shows for 1.5 s.
+- **Content:** leading glyph 20 pt (`sun.max.fill` boosting, `sun.min` dimmed, `sun.max` Standard or off, `hourglass` preparing, `pause.fill` blocked or paused, `thermometer.medium` heat); centre: the display name (`hudLabel`, only with two or more displays) above a 150-pt level bar drawn like the slider (detent mark, `dimFill` left, `boostWarm` right, no thumb, the theme's palette); trailing value (`hudValue`) in canonical units: "Bright room · ×1.29", "×1.42", "Standard", "Dimmed · 25%", "Off". As built (WP14): the name has its own line above the value and the bar (the full 200 pt, middle-truncated only beyond it); value and bar show the level the display is set to — the panel's thumb — at once, never the lagging on-screen state; a turn-on's "Preparing…" line stays until the display is ready (at most 3 s), then the level reached shows for 1.5 s.
 - **Reasons:** for (2)–(4) the bar is replaced by one line (`hudLabel`, exact copy §12.9): "Preparing…", "Paused: battery below 20 %", "Off: timer ended", "Limited: Mac is warm", "Extra brightness is back", …
 - **Timing:** `hudIn`, stays 1.5 s after the last change (3 s for automation reasons), `hudOut`. A new change updates the visible HUD; there are never two.
 - **Never** activates, takes clicks or appears in screenshots where macOS honours `sharingType = .none`.
@@ -665,6 +672,12 @@ The compiled icon, "Overbright", version and build; **Check for Updates** with t
 
 The calibration check is not part of Welcome: it asks for changes that are unsafe while boosted and only makes sense once extra brightness is in use. It is offered once, as the calibration tip card, after the first boost (§5.3).
 
+**As built (WP12, confirmed by the contract owner in WP14).** Four details settled differently from the text above, each kept:
+- **Step 2 has no stage band.** Its rows are its stage: the step uses the whole page, the headline under the title bar and the rows below it down to the footer, so two or three displays show at once (more scroll visibly). A half-height stage would leave room for barely one row.
+- **The rows are Welcome's own views over `DisplayCardModel`**, not PanelUI's `DisplayCardView`: step 2 shows a glyph, name, verdict, fix and switch, never a slider, and the model gives it the panel's own limit, switch default and top, so the two never disagree.
+- **Done applies the choices of steps 2 and 3.** The "Use extra brightness" switches wait with step 3's choices; Skip and the close button drop them, so Skip still applies every default and nothing else.
+- **Step 2 shows only two advisories,** Compatibility mode and OLED care (§12.1). "Not calibrated" would repeat on every row of a first run while calibration is not part of Welcome, and the auto-brightness advisory is Settings only (§7.4).
+
 ---
 
 ## 9. Calibration
@@ -734,7 +747,7 @@ The supported sentence quotes the display's current limit (Safe by default) and,
 | `noGammaTable` | Not supported | "macOS doesn't let apps adjust this display." | — |
 | `checking` | Checking… | "Overbright is reading this display." | — |
 
-Advisories (a second line under the verdict): `compatibilityModeAdvised` "On this Mac, macOS ignores color table changes, so Overbright uses Compatibility mode." · `oledCare` "OLED display: extra brightness stays lower and pauses after 5 minutes without input." · `autoBrightnessInteracts` (Settings only, §7.4) · `notCalibrated` "Not calibrated. Numbers are estimates, and Overbright uses a safe default."
+Advisories (a second line under the verdict): `compatibilityModeAdvised` "On this Mac, macOS ignores color table changes, so Overbright uses Compatibility mode." · `oledCare` "OLED display: extra brightness stays lower and pauses after 5 minutes without input." · `autoBrightnessInteracts` (Settings only, §7.4) · `notCalibrated` (not in Welcome step 2, §8) "Not calibrated. Numbers are estimates, and Overbright uses a safe default."
 
 "High Dynamic Range", "Displays", "Automatically adjust brightness", "True Tone", "Night Shift", "Preset", "Menu Bar", "Allow in the Menu Bar", "Battery", "Focus" and "Login Items" are macOS's own names and must match macOS in every language (German: "Hochkontrastbild" for High Dynamic Range).
 
@@ -815,7 +828,8 @@ The same sentence is the first, disabled line of the right-click menu, and its p
 | Multiplier | "×" + 2 significant decimals, locale separator | ×1.29 / ×1,29 |
 | Multiplier, not calibrated | "≈ ×" … | ≈ ×1.29 / ≈ ×1,29 |
 | Nits | "≈ " + number rounded to 5 + plural "nits" | ≈ 775 nits / ≈ 775 нит |
-| Dim level | "Dimmed · " + percent of Standard light, `FormatStyle` | Dimmed · 25 % / Затемнено · 25 % |
+| Dim level | "Dimmed · " + percent of Standard light, `FormatStyle` | Dimmed · 25% / Затемнено · 25 % |
+| Percent | the locale's percent format (`CopyFormat.percent`: `FormatStyle` percent, no decimals), never a literal "%" after a number | 25% in English; 25 % in Russian, German and French (as built in WP9: dim levels and battery levels in copy) |
 | Temperature | `Measurement<UnitTemperature>` in kelvin | 5,100 K / 5 100 K |
 | Durations | `Duration.UnitsFormatStyle` | 23 min / 23 мин |
 | Time of day | locale 12/24 h | 2:20 PM / 14:20 |
@@ -865,7 +879,7 @@ Announcements go through the app-wide `Announcer` (Cranny): results and alerts a
 | `ReturnToStandardIntent` | Back to Standard | "Turns Overbright off at once. Your levels are kept for next time." | — |
 
 - **Parameters:** Display ("Display"; type name "Display", plural "Displays"; empty = "All Displays"); Level ("Level": the presets Indoor, Bright Room, Sunlight, Max, or "Multiplier", a number such as 1.3); Percent ("Brightness", 2–99 % of Standard light); Duration ("Duration").
-- **Get State dialog:** "Overbright is on. Built-in Display: Bright room · ×1.29. MPG322UX OLED: Dimmed · 25 %." / "Overbright is off." (the result value is on/off).
+- **Get State dialog:** "Overbright is on. Built-in Display: Bright room · ×1.29. MPG322UX OLED: Dimmed · 25%." / "Overbright is off." (the result value is on/off).
 - **Errors:** "Overbright is still starting. Try again in a moment." · "That display isn't connected." · "This display can't show extra brightness." · "This display can't be dimmed."
 - **Focus filter:** title "Overbright"; parameter "Overbright" with the options "Leave Alone", "Off", "On", and "Level" (shown with On); display representation "Overbright: Leave Alone" · "Overbright: Off" · "Overbright: On at ‹Level›".
 - **App Shortcuts:** "Turn \(.applicationName) on or off" (short title "Turn On or Off", image `sun.max`) and "\(.applicationName) back to Standard" (short title "Back to Standard", image `sun.min`).
@@ -873,7 +887,7 @@ Announcements go through the app-wide `Announcer` (Cranny): results and alerts a
 
 ### 12.9 HUD lines, announcements and confirmations
 
-- **HUD values:** "Bright room · ×1.29", "×1.42", "Standard", "Dimmed · 25 %", "Off".
+- **HUD values:** "Bright room · ×1.29", "×1.42", "Standard", "Dimmed · 25%", "Off".
 - **HUD reasons:** "Preparing…" · "Paused until 14:20" · "Off for this Focus" · "Paused: battery below 20 %" · "Paused: on battery" · "Paused: Low Power Mode" · "Paused: Mac is hot" · "Limited: Mac is warm" · "Paused: outside set hours" · "Off: timer ended" · "Extra brightness is back".
 - **Keep this level?** — "Keep this level?" / "Going back in 10 s" [Go Back] [Keep]; VoiceOver: "Keep this level? Going back in 10 seconds."
 - **Announcements:** "Overbright on" · "Overbright off" · "Overbright turned off: the timer ended." · "Fill Light on" · "Fill Light off".
@@ -917,9 +931,11 @@ None. Overbright ships no audio and plays no system sound.
 
 ## 14. App icon brief: "Past white"
 
-**Concept.** A white screen whose light does not stay inside its frame. On a graphite squircle sits a rounded, slightly tilted-up white rectangle (the screen at ordinary white); from its upper trailing corner a soft bloom of light spills **over the frame's edge** into the dark, brighter than the white rectangle itself. It reads as "brighter than white", which is what the app does, and stays legible at 16 px as a white tile with a glowing corner on a dark ground.
+**Concept.** A white screen whose light does not stay inside its frame. On a graphite squircle sits a rounded, slightly tilted-up (leaning back) white rectangle (the screen at ordinary white); from its upper trailing corner a soft bloom of light spills **over the frame's edge** into the dark, brighter than the white rectangle itself. It reads as "brighter than white", which is what the app does, and stays legible at 16 px as a white tile with a glowing corner on a dark ground.
 
-- **Colours:** body graphite (Light: P3 (0.17, 0.18, 0.21) → (0.07, 0.075, 0.09) top to bottom; Dark: (0.05, 0.05, 0.06) → (0.03, 0.03, 0.04)); screen white (P3 0.96); bloom: a white core fading through a pale warm tint (#FFE7C2 at 40 %) to transparent; a 3-pt keyline in `boostWarm` dark (#FFB020) along the stretch of the screen's edge that the bloom crosses (the product's one warm accent as the mark's signature).
+- **Colours:** body graphite (Light: P3 (0.17, 0.18, 0.21) → (0.07, 0.075, 0.09) top to bottom; Dark: (0.05, 0.05, 0.06) → (0.03, 0.03, 0.04)); screen white below white (P3 0.90 at the top → 0.84 at the bottom), so the bloom's core reads brighter than the screen; bloom: a white-hot core on the screen's upper trailing corner, straddling the frame, then a warm white falling off to nothing within about a quarter of the body (no half-transparent tint over a wide area: plus-lighter turns it into a grey-brown haze over the graphite); a 9-pt keyline in `boostWarm` dark (#FFB020) along the stretch of the screen's edge that the bloom crosses (the product's one warm accent as the mark's signature, wide enough to show at 128 px).
+- **Shape:** the screen is 0.66 × 0.44 of the body with a 0.05 corner radius, centred slightly below the middle; "tilted up" is a perspective lean (the top edge 5 % narrower than the bottom), never a rotation in the image plane, which reads as crooked.
+- **As built (WP14):** the WP0a version (a 0.40-body bloom with a 40 % warm middle stop, a P3 0.96 screen, a 4° in-plane tilt, a 3-pt keyline) read as a blank card with a smudge at 16, 32 and 128 px; `scripts/render-icon.swift` now draws the values above, with the keyline inside the screen's edge (stroked at twice its width and clipped to the screen, so the silhouette stays the rounded screen; centred on the edge it stood half outside and stepped up where it began, like a folder tab), and `AppIconLintTests` (Core) checks the rendered layers: no wide half-transparent haze, a white core brighter than the screen on its upper trailing corner, level top and bottom edges with a narrower top, a keyline at least 7 px wide at 1024. The 16/32/128/512 renders of the compiled icon were reviewed light and dark; the side-by-side comparison with the incumbent's icon stays with WP17 (HARDWARE-TEST §15).
 - **Icon Composer** (`App/AppIcon.icon`, two groups, Cranny's structure): group "Screen" (`screen.png`, glass on for the system's specular edge, neutral shadow) and group "Bloom" (`bloom.png`, blend `plus-lighter`, glass off, no shadow); `fill-specializations` with the dark fill; `supported-platforms.squares = ["macOS"]`. Layers are rendered by `scripts/render-icon.swift` (`make icon`); never edit the PNGs. Tinted and Clear appearances let the system tint the bloom while the screen silhouette carries the mark.
 - **Must not resemble the incumbent's icon:** no sun disc, no rays, no yellow-to-orange gradient field, no heavy rounded lettering. Before release a reviewer compares both icons side by side at 16, 32, 128 and 512 px and records the result in the WP17 pull request.
 - **In-app use:** About and Welcome show the compiled icon (`NSApp.applicationIconImage`); actool generates the macOS 14/15 fallback.
@@ -1033,6 +1049,6 @@ PanelUI adds `DisplayCardView`, `FillLightCard`, `HelpView` and `ScriptedStatuse
 
 - Contrast values of §2.1: computed with the WCAG 2.x formula over the stated reference colours, with fills composited over the track.
 - Symbols of §13.1: each found in `name_availability.plist` with the minimum macOS shown (incl. `zzz` and `hourglass`, 10.15); none in `symbol_restrictions.strings` (663 entries).
-- `NSGlassEffectView` (macOS 26) with `.standard` and `.clear` styles: present in the macOS 27 SDK headers.
+- `NSGlassEffectView` (macOS 26) with the `.regular` and `.clear` styles (`NSGlassEffectView.h`: Regular and Clear only): present in the macOS 27 SDK headers.
 - Numbers in copy (×1.67, ×1.40, ≈ 1,000 nits only with a trusted SDR white, ×1.55, 1.61 / 3.00, the preset gains) match ARCHITECTURE.md §5.3 and §5.6.
-- Nothing here has been rendered yet; WP9/WP10 snapshots are the first visual verification.
+- Rendered since: the snapshot suites (`OVERBRIGHT_SNAPSHOT_DIR`, Light, Dark and Increase Contrast, local only) of WP9 (tokens and components), WP10 (panel, menu, HUD, Help), WP11 (Settings, calibration, self-test), WP12 (every Welcome step, US, German and French key caps) and WP13 (`make qa-matrix` panel captures per fixture) are where this file's pixels were reviewed; WP15's fit tests measured every width rule in all 35 languages.

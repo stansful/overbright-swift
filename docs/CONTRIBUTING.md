@@ -11,7 +11,9 @@ shows, so a few of its rules exist to protect your own screen while you work. Th
   For the record, the app is Vivid by Lumen Digital, named only on lines that carry the lint's marker. <!-- denylist-ok -->
   `scripts/lint-copy.py` and the Core test `noDenylistedNamesOutsideAllowlist` reject its name, its maker's and those
   of other display tools in every catalog (keys, values and translator comments, every language) and in every text
-  file under `Packages/`, `App/`, `Controls/`, `Shared/`, `scripts/` and `docs/`. The allowlist is short: the
+  file of the repository: what git tracks plus untracked files `.gitignore` does not exclude, so the root's README,
+  notices, Makefile and `.gitattributes`, the workflows, the Xcode project and `Package.swift` as much as the sources,
+  tests, scripts and docs (without git, a walk of the root minus build outputs and caches). The allowlist is short: the
   conflict catalogue's bundle-ID literals (`Sources/OverbrightPolicy/Conflicts/ConflictCatalog.swift`), the denylist
   definitions in the two scripts (lines marked `denylist-ok`), Markdown lines carrying `<!-- denylist-ok -->`, and
   `docs/research/`. Other apps' names reach the UI only at runtime, through `NSRunningApplication.localizedName`.
@@ -73,8 +75,8 @@ test and packaging.
 <repo>/scripts/check-modules.sh OverbrightBoost   # one target alone, zero warnings (logs in build/logs/)
 make -C <repo> test FILTER=OverbrightBoostTests    # swift test --filter, scratch path .build-test
 make -C <repo> check                               # every target alone (JOBS=4; TEST=1 adds swift test)
-make -C <repo> tsan FILTER=HangWatchdogTests       # Thread Sanitizer (CI runs it)
-make -C <repo> lint                                # copy rules, competitor denylist, no shader files
+make -C <repo> tsan FILTER='HangWatchdog|OffMain|GammaWriteGate|BoostColorTests|StatusSymbolTests'   # Thread Sanitizer (CI's filter)
+make -C <repo> lint                                # copy rules, competitor denylist, no shader files, script self-tests
 make -C <repo> strings                             # add new English keys to the String Catalogs
 make -C <repo> l10n-pending                        # mark them pending in every language (docs/TRANSLATING.md)
 make -C <repo> strings-check                       # catalogs in sync + copy rules + every shipped language valid
@@ -82,8 +84,8 @@ make -C <repo> probe-check                         # SDK name-collision probes a
 make -C <repo> build                               # universal Release → build/Overbright.app; CONTROLS=1 keeps the appex
 make -C <repo> smoke                               # --diagnostics only: gammaWrites == 0, triggerWindows == 0, …
 SIMULATE=1 make -C <repo> smoke                    # agents: never launches on the real ports (Debug: --qa-simulate)
-make -C <repo> qa-matrix                           # after `make debug`: every fixture's scenario under --qa-simulate
-make -C <repo> soak                                # after `make debug`: 30 minutes under --qa-simulate (MINUTES=…)
+make -C <repo> qa-matrix                           # after `make debug`: every fixture's scenario, Welcome writes nothing
+make -C <repo> soak                                # after `make debug`: 30 minutes under --qa-simulate (MINUTES ≥ 17)
 make -C <repo> run                                 # Debug build, simulated displays, a dev settings suite
 make -C <repo> dist                                # zip + dmg + sha256 (+ notarization when signing)
 make -C <repo> distclean                           # also every .build-* scratch dir
@@ -135,7 +137,8 @@ the key is `-overbright.<namespace>.<name>` and the value the setting's JSON as 
 
 ### Visual QA hooks (Debug builds only)
 
-No hook posts input or asks for a permission. Launch arguments (`LaunchArguments`, `App/QAHooks.swift`):
+No hook posts input or asks for a permission. Launch arguments (`LaunchArguments`,
+`Packages/OverbrightKit/Sources/OverbrightAppShell/App/QAHooks.swift`):
 
 | Argument | Effect |
 |---|---|
@@ -155,7 +158,10 @@ No hook posts input or asks for a permission. Launch arguments (`LaunchArguments
 its close button would), `-OverbrightQASettingsMenuItem <s>` (performs the app menu's ⌘, item after that many
 seconds, as the key would; no input is synthesized), and `-OverbrightQAKeyboardLayout <id>` (key caps
 in another layout, for example `com.apple.keylayout.German`; read wherever key caps are drawn). Debug builds also
-take `-OverbrightGitHubRepository owner/repo` to try the update check against a scratch repository.
+take `-OverbrightGitHubRepository owner/repo` to try the update check against a scratch repository. A build's own
+repository is the build setting `OVERBRIGHT_GITHUB_REPOSITORY` (empty in the project: no update check):
+`OVERBRIGHT_GITHUB_REPOSITORY=owner/repo make build` sets it, and `release.yml` builds with the repository it publishes
+from; smoke checks the value.
 
 **Right to left:** pass `-AppleLanguages "(ar)" -AppleTextDirection YES` (AppKit mirrors only with both).
 

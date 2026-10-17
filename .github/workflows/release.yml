@@ -56,10 +56,14 @@ jobs:
       - name: Every shipped language translated, none pending (scripts/l10n/README.md)
         run: /usr/bin/python3 -I scripts/l10n/validate.py --shipped --release --quiet
 
-      - name: Build (universal; with TEAM_ID set, CONTROLS defaults to 1)
+      - name: Build (universal; with TEAM_ID set, CONTROLS defaults to 1; the update check asks this repository)
+        env:
+          OVERBRIGHT_GITHUB_REPOSITORY: ${{ github.repository }}
         run: scripts/build.sh
 
       - name: Launch smoke test
+        env:
+          OVERBRIGHT_GITHUB_REPOSITORY: ${{ github.repository }}
         run: scripts/smoke.sh
 
       - name: Package (+ notarize when signing is configured)

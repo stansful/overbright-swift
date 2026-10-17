@@ -94,6 +94,8 @@ TERMS = {
     "Increase contrast": [("table", ACCESSIBILITY)],
     "Differentiate without color": [("table", ACCESSIBILITY)],
     "VoiceOver": [("table", ACCESSIBILITY)],
+    # Key caps spelled out in copy and in the shortcut recorder (the name menus show for the key)
+    "Space": [("table", "/System/Library/Frameworks/AppKit.framework/Resources/FunctionKeyNames.loctable")],
 }
 
 # Searched, in this order, for terms whose own sources do not have them.

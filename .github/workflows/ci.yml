@@ -28,7 +28,7 @@ jobs:
           xcodebuild -version
           swift --version
 
-      - name: Lint (copy rules per language, the clean-room denylist over catalogs and sources, no Metal shader sources)
+      - name: Lint (copy rules per language, the clean-room denylist over catalogs and every repository file, no Metal shader sources, script self-tests)
         run: make lint
 
       - name: Shipped languages are complete and valid (placeholders, plural forms, quotes; new keys may be pending)
@@ -37,8 +37,12 @@ jobs:
       - name: Every OverbrightKit module builds on its own (zero warnings) + unit tests
         run: JOBS=3 TEST=1 scripts/check-modules.sh
 
-      - name: Thread Sanitizer (hang watchdog, background-queue writers)
-        run: make tsan FILTER=HangWatchdogTests
+      # The off-main tests of ARCHITECTURE.md §9.2 rule 9 (every <Source>OffMainTests suite, the warm colour's
+      # provider in BoostColorTests, the status item's drawing handler in StatusSymbolTests), the hang watchdog and the
+      # gamma write gate. SignalStopTests (the signal queue) join once their timeouts are made robust for the
+      # sanitizer's slowdown (review item C-BOOST-14): add `|SignalStop` to the filter then.
+      - name: Thread Sanitizer (hang watchdog, gamma write gate, the off-main entry points)
+        run: make tsan FILTER='HangWatchdog|OffMain|GammaWriteGate|BoostColorTests|StatusSymbolTests'
 
       - name: SDK name-collision probes are up to date
         run: CHECK=1 scripts/name-probe.sh

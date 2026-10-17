@@ -21,7 +21,10 @@ Every language, the source included, in keys, values and translator comments:
 - Clean room (D3): no competitor product or company names (the denylist below).
 
 The source scan (D3; also the Core test noDenylistedNamesOutsideAllowlist) looks for the same names in every text file
-under Packages/OverbrightKit/Sources, Packages/OverbrightKit/Tests, App, Controls, Shared, scripts and docs, except:
+of the repository: every file git tracks, and every untracked file .gitignore does not exclude (outside a git
+checkout, every file under the root except build outputs, SwiftPM caches and per-user state). That covers the repo
+root (README.md, THIRD_PARTY_NOTICES.md, Makefile, .gitattributes), .github/workflows, Overbright.xcodeproj and
+Package.swift as well as the sources, tests, scripts and docs. Allowed:
 (1) Packages/OverbrightKit/Sources/OverbrightPolicy/Conflicts/ConflictCatalog.swift, inside string literals shaped
 like a bundle ID or an executable name only; (2) the denylist definitions in scripts/lint-copy.py and
 scripts/l10n/l10n.py, only on lines marked denylist-ok; (3) Markdown lines carrying <!-- denylist-ok -->;
@@ -40,6 +43,7 @@ import glob
 import json
 import os
 import re
+import subprocess
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -94,8 +98,10 @@ DENYLIST_CASED = re.compile(r"\bLunar\b|lunar\.app|fyi\.lunar")  # denylist-ok
 SETTINGS_PATH = re.compile(r"System Settings\s*▸")
 LANGUAGES = os.path.join(ROOT, "scripts/l10n/languages.json")
 
-# The source scan (D3).
-SCAN_DIRS = [f"{PACKAGE}/Sources", f"{PACKAGE}/Tests", "App", "Controls", "Shared", "scripts", "docs"]
+# The source scan (D3): every text file of the repository (scanned_files).
+WALK_SKIPPED = {".git", ".swiftpm", "__pycache__", "build", "dist", "DerivedData", ".derived", "xcuserdata", ".idea"}
+MUST_SCAN = ["README.md", "THIRD_PARTY_NOTICES.md", "Makefile", ".github/workflows/ci.yml", f"{PACKAGE}/Package.swift",
+             "Overbright.xcodeproj/project.pbxproj", "docs/ARCHITECTURE.md"]
 CONFLICT_CATALOG = f"{PACKAGE}/Sources/OverbrightPolicy/Conflicts/ConflictCatalog.swift"
 MARKED_DEFINITIONS = {"scripts/lint-copy.py", "scripts/l10n/l10n.py"}
 SKIP_SUFFIXES = (".png", ".jpg", ".jpeg", ".icns", ".pdf", ".mov", ".car", ".zip", ".dmg")
@@ -238,26 +244,39 @@ def allowed_line(rel, line, match_text):
     return False
 
 
+def scanned_files():
+    """Repository-relative paths of the files the clean-room scan reads (binary formats left out): what git tracks plus
+    the untracked files .gitignore does not exclude, or, outside a git checkout, a walk of the root without build
+    outputs, SwiftPM caches and per-user state. The same set as SourceScan.repositoryFiles() in the Core tests."""
+    try:
+        listed = subprocess.run(["git", "-C", ROOT, "ls-files", "-z", "--cached", "--others", "--exclude-standard"],
+                                capture_output=True, check=True).stdout.decode("utf-8")
+        paths = {path for path in listed.split("\0") if path}
+    except (OSError, subprocess.CalledProcessError, UnicodeDecodeError):
+        paths = set()
+        for current, dirs, files in os.walk(ROOT):
+            dirs[:] = [d for d in dirs if not d.startswith(".build") and d not in WALK_SKIPPED]
+            paths.update(os.path.relpath(os.path.join(current, file), ROOT) for file in files)
+    return sorted(path for path in paths
+                  if not path.endswith(SKIP_SUFFIXES) and os.path.basename(path) != ".DS_Store"
+                  and os.path.isfile(os.path.join(ROOT, path)))
+
+
 def source_problems():
     problems = []
-    for directory in SCAN_DIRS:
-        base = os.path.join(ROOT, directory)
-        for current, dirs, files in os.walk(base):
-            dirs[:] = sorted(d for d in dirs if not d.startswith(".build") and d not in ("__pycache__", ".swiftpm"))
-            for file in sorted(files):
-                if file.endswith(SKIP_SUFFIXES) or file == ".DS_Store":
-                    continue
-                path = os.path.join(current, file)
-                rel = os.path.relpath(path, ROOT)
-                try:
-                    with open(path, encoding="utf-8") as handle:
-                        lines = handle.readlines()
-                except (UnicodeDecodeError, OSError):
-                    continue
-                for number, line in enumerate(lines, 1):
-                    found = denylisted(line)
-                    if found and not allowed_line(rel, line, found):
-                        problems.append(f"{rel}:{number}: competitor name “{found}” outside the D3 allowlist")
+    files = scanned_files()
+    problems += [f"{path}: not in the clean-room scan (scripts/lint-copy.py scanned_files)" for path in MUST_SCAN
+                 if path not in files]
+    for rel in files:
+        try:
+            with open(os.path.join(ROOT, rel), encoding="utf-8") as handle:
+                lines = handle.readlines()
+        except (UnicodeDecodeError, OSError):
+            continue
+        for number, line in enumerate(lines, 1):
+            found = denylisted(line)
+            if found and not allowed_line(rel, line, found):
+                problems.append(f"{rel}:{number}: competitor name “{found}” outside the D3 allowlist")
     return problems
 
 

@@ -5,10 +5,12 @@ small menu bar app that lets a capable display go past its standard maximum, dis
 limit it runs into, and always brings the display back to a neutral picture. Free and open source (MIT), no account,
 no analytics.
 
-> **Status: 0.1.0, in development.** The scaffold, the contracts, the settings and welcome windows' infrastructure, the
-> shortcut center and the update check exist; the brightness engine and most of the interface are being built. It is
-> not ready to use yet. The plan lives in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and the design in
-> [docs/DESIGN.md](docs/DESIGN.md).
+> **Status: 0.1.0, pre-release.** The brightness engine and the whole interface are built and tested against
+> simulated displays: extra brightness and dimming per display, the panel, menu, on-screen indicator, Help, Settings,
+> Welcome, Fill Light, shortcuts, Shortcuts actions and the Focus filter, in 35 languages. Two steps remain before
+> the first release: the owner's session on real displays, which tunes the engine's limits and timings
+> ([docs/HARDWARE-TEST.md](docs/HARDWARE-TEST.md)), and the release itself (signing, the final icon, notes). How it is
+> built is in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), how it looks and reads in [docs/DESIGN.md](docs/DESIGN.md).
 
 ## What it does
 
@@ -110,7 +112,9 @@ after 10 seconds.
 - Everything stays on your Mac: settings in the app's preferences, self-test logs in
   `~/Library/Application Support/app.overbright.Overbright/`, caches in `~/Library/Caches/app.overbright.Overbright/`.
 - The only network request is the optional daily update check against this project's GitHub Releases page (no
-  identifiers, no cookies). It is off until you turn it on, and absent from builds that have no repository set.
+  identifiers, no cookies). It is off until you turn it on. Releases published here ask this repository; a build
+  from source has no repository set, and so no update check, unless you build it with
+  `OVERBRIGHT_GITHUB_REPOSITORY=owner/repo`.
 - Copy Diagnostics puts a technical report on the clipboard; nothing is ever sent anywhere.
 
 ## Languages
@@ -120,8 +124,8 @@ Hrvatski · Magyar · Bahasa Indonesia · Italiano · 日本語 · 한국어 · 
 Polski · Português (Brasil) · Português (Portugal) · Română · Русский · Slovenčina · Slovenščina · Svenska · ไทย ·
 Türkçe · Українська · Tiếng Việt · 简体中文 · 繁體中文
 
-English is the original. Translations are in progress; [docs/TRANSLATING.md](docs/TRANSLATING.md) shows how to fix or
-review a language.
+English is the original. All 35 languages are translated; corrections are welcome, and
+[docs/TRANSLATING.md](docs/TRANSLATING.md) shows how to fix or review a language.
 
 ## Contributing
 

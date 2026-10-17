@@ -15,7 +15,7 @@ for code: [ARCHITECTURE.md §8.8](ARCHITECTURE.md); the copy voice and vocabular
 
 | What | Where |
 |---|---|
-| Strings of the package, one or more tables per module | `Packages/OverbrightKit/Sources/<Target>/Resources/*.xcstrings` (`Localizable`, plus a co-tenant's table: Boost's `Safety`, AppShell's `StatusMenu` and `Calibration`) |
+| Strings of the package, one or more tables per module | `Packages/OverbrightKit/Sources/<Target>/Resources/*.xcstrings` (`Localizable`, plus a co-tenant's table: AppShell's `StatusMenu` and `Calibration`; Boost's `Safety` and Boost's, Core's, Displays', Signals' and Triggers' `Localizable` exist but hold no key, because those modules show no text of their own) |
 | Shortcuts actions, the Focus filter, Shortcuts phrases | `App/Localizable.xcstrings`, `App/AppShortcuts.xcstrings` |
 | App name and copyright | `App/InfoPlist.xcstrings` (no permission prompts: Overbright asks for none) |
 | Control Center control (only when it ships) | `Controls/Localizable.xcstrings` |
@@ -59,7 +59,8 @@ What to look at when you review a language:
 - **Apple's words.** People look for System Settings panes and the settings inside them by the name macOS shows them.
   Overbright points at Displays settings by name — "Brightness", "Automatically adjust brightness", "True Tone",
   "High Dynamic Range" (German «Hochkontrastbild»), "Preset", "Night Shift…", "Color profile" — and at Battery, Low
-  Power Mode, Focus, Login Items, Control Center, Menu Bar and "Allow in the Menu Bar". `apple-terms.py <lang>` reads
+  Power Mode, Focus, Login Items, Control Center, Menu Bar and "Allow in the Menu Bar", and spells the space bar's key
+  cap as macOS menus do ("Space": German «Leertaste», Russian «Пробел»). `apple-terms.py <lang>` reads
   those names from this Mac (`--details` shows where each comes from); `validate.py --glossary` warns when an Apple
   term stayed English.
 - **Register and tone** as macOS uses them in your language (du/Sie, tu/vous, siz…; the `notes` in `languages.json`
@@ -109,7 +110,8 @@ These hold in every language. `validate.py` checks the mechanical ones; the rest
   room there is: a status chip ≤ 280 pt on its own line, the three footer guard chips ≤ 304 pt together (they drop to
   glyph + value when they do not fit), the readout ≤ 200 pt, the slider's value tag ≤ 240 pt, the HUD ≤ 200 pt of
   text, the Safe / Peak segments one short word each, Control Center titles about 14 columns. Prefer the shortest
-  natural wording. Tooltips, VoiceOver labels and Settings search keywords are never constrained.
+  natural wording. Tooltips and help tags, VoiceOver labels, Settings search keywords and menus (including a footer
+  chip's menu items and a chip's popover and buttons) are never constrained.
 - **Measured-width tests** render the constrained strings of every language and fail when one does not fit:
   `ChipFitTests`, `ReadoutFitTests`, `FooterFitTests`, `HUDFitTests` (PanelUI) and `SettingsSegmentFitTests`
   (Settings). A failure names the language and the measured width. Shorten the wording; changing a layout to make
