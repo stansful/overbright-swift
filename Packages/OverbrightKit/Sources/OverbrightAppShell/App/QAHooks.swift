@@ -25,10 +25,12 @@
 //   -OverbrightQAAppearance light|dark   pins the app's appearance, so every surface follows it
 //
 // Everything that shows a surface (the panel, the menu, the HUD, Settings, Welcome, the calibration window, Help) and
-// the snapshot is timed from the end of the launch work (`BoostStatus.isReady`, at most `readinessWait`): before it,
-// the calibration window had no engine to ask for a session and Help no registered shortcut. `--qa-exit-after` and
-// `--qa-hang-main` count from the launch. QA hooks never synthesize input and never ask for permissions. A scenario and
-// a `--qa-hud` level change run only over the simulated ports.
+// the snapshot is timed from the end of the launch work (`isLaunchWorkDone`: every service started and
+// `BoostStatus.isReady`, at most `readinessWait`): before it, the calibration window had no engine to ask for a session
+// and Help no registered shortcut. Under `--qa-state` the scripted status is ready from the start, so there the
+// services' start alone decides (WP14). `--qa-exit-after` and `--qa-hang-main` count from the launch. QA hooks never
+// synthesize input and never ask for permissions. A scenario and a `--qa-hud` level change run only over the simulated
+// ports.
 #if DEBUG
 import AppKit
 import Foundation
@@ -118,8 +120,9 @@ enum QAHooks {
             }
         }
         let boost = targets.shell.services.boost
+        let runner = targets.shell.runner
         return Task {
-            await waitUntilReady(boost)
+            await waitUntilReady(boost, runner: runner)
             guard !Task.isCancelled else { return }
             showSurfaces(arguments, targets: targets)
             guard let script = arguments.qaScript else { return }
@@ -148,12 +151,24 @@ enum QAHooks {
         }
     }
 
-    /// Returns once the engine is ready (the launch work is done), or after `readinessWait`.
-    static func waitUntilReady(_ boost: any BoostControl, polling interval: Duration = .milliseconds(100)) async {
+    /// The launch work is done: every service started (or the stop began) and the engine is ready. The scripted
+    /// status of `--qa-state` is ready from the start, so there the runner alone decides: Help then shows once HotKeys
+    /// registered its shortcuts, not while it is still starting.
+    static func isLaunchWorkDone(_ boost: any BoostControl, runner: ServiceRunner) -> Bool {
+        guard boost.status.isReady else { return false }
+        switch runner.phase {
+        case .idle, .starting: return false
+        case .started, .stopping, .stopped: return true
+        }
+    }
+
+    /// Returns once the launch work is done (`isLaunchWorkDone`), or after `readinessWait`.
+    static func waitUntilReady(_ boost: any BoostControl, runner: ServiceRunner,
+                               polling interval: Duration = .milliseconds(100)) async {
         let deadline = ContinuousClock.now + readinessWait
-        while !boost.status.isReady, !Task.isCancelled {
+        while !isLaunchWorkDone(boost, runner: runner), !Task.isCancelled {
             guard ContinuousClock.now < deadline else {
-                log.error("QA: the engine was not ready after \(readinessWait.timeInterval, privacy: .public) s; showing the surfaces anyway")
+                log.error("QA: the launch work was not done after \(readinessWait.timeInterval, privacy: .public) s; showing the surfaces anyway")
                 return
             }
             try? await Task.sleep(for: interval)

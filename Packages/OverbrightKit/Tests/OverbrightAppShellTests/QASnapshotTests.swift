@@ -2,14 +2,15 @@
 // `--qa-snapshot` draws a window's SwiftUI root again in an opaque, non-vibrant host, so a dark surface keeps light
 // text on a dark background (`cacheDisplay` of the window's own views drew black text over the material);
 // `-OverbrightQAAppearance` pins the whole app's appearance; `--qa-panel` keeps the panel open on clicks elsewhere;
-// the surfaces wait for the launch work (`QAHooks.apply` too), and a level HUD is captured while it shows. Windows are
-// built, never ordered in.
+// the surfaces wait for the launch work, the services' start included (`QAHooks.apply` too; under `--qa-state` too),
+// and a level HUD is captured while it shows. Windows are built, never ordered in.
 #if DEBUG
 import Foundation
 import AppKit
 import OverbrightCore
 import OverbrightDesign
 import OverbrightPanelUI
+import OverbrightTestSupport
 import SwiftUI
 import Testing
 @testable import OverbrightAppShell
@@ -103,12 +104,13 @@ import Testing
 
     /// The surfaces wait for the launch work: the wait ends once the engine is ready, not before.
     @Test func theSurfacesWaitForTheLaunchWork() async {
-        final class Flag { var isSet = false }
         let boost = PreviewBoostControl(fixture: .builtinXDRLidOpen)
         boost.status.isReady = false
+        let runner = ServiceRunner(stack: ServiceStack(), time: ManualTimeSource(), journal: RingBufferJournal())
+        await runner.start()                                                  // no service: started at once
         let shown = Flag()
         let waiting = Task {
-            await QAHooks.waitUntilReady(boost, polling: .milliseconds(5))
+            await QAHooks.waitUntilReady(boost, runner: runner, polling: .milliseconds(5))
             shown.isSet = true
         }
         try? await Task.sleep(for: .milliseconds(100))
@@ -118,9 +120,51 @@ import Testing
         #expect(shown.isSet)
     }
 
-    /// `QAHooks.apply` itself holds every surface back until the engine is ready: neither the snapshot (due at once)
-    /// nor `--qa-hud`'s level (due 1 s in) comes while the launch work runs, both come once it is done. No window is
-    /// ordered in (the HUD presents none; the test process shows no window, so the capture writes only its folder).
+    /// The scripted status of `--qa-state` is ready from the start, so there the services decide: the surfaces wait
+    /// until every service started (Help, for one, until HotKeys registered its shortcuts), not only for `isReady`
+    /// (DOC-QA-STATE-READINESS).
+    @Test func aScriptedStateWaitsForTheServicesToStart() async {
+        let boost = PreviewBoostControl(fixture: .builtinXDRLidOpen)
+        #expect(boost.status.isReady)                                         // as every scripted status
+        let hotKeys = SlowStartingService()
+        let runner = ServiceRunner(stack: ServiceStack(hotKeys: hotKeys), time: ManualTimeSource(),
+                                   journal: RingBufferJournal())
+        let starting = Task { await runner.start() }
+        #expect(await eventually { hotKeys.isStarting })
+        #expect(!QAHooks.isLaunchWorkDone(boost, runner: runner))
+        let shown = Flag()
+        let waiting = Task {
+            await QAHooks.waitUntilReady(boost, runner: runner, polling: .milliseconds(5))
+            shown.isSet = true
+        }
+        try? await Task.sleep(for: .milliseconds(100))
+        #expect(!shown.isSet, "a surface showed while HotKeys was still starting")
+        hotKeys.finishStart()
+        await starting.value
+        await waiting.value
+        #expect(shown.isSet && QAHooks.isLaunchWorkDone(boost, runner: runner))
+    }
+
+    /// `--qa-menu` closes its menu by itself: AppKit tracks a menu in `.eventTracking` inside the main-actor job that
+    /// opened it, so no task (and no default-mode timer) runs until it closes, and the run never reached its snapshot
+    /// or `--qa-exit-after`; the close comes from a timer in the common modes, which fires there (WP14 visual QA). The
+    /// test spins the main run loop in `.eventTracking` as a menu does; no menu opens.
+    @Test func theQAMenuClosesWhileItTracks() {
+        var fired = false
+        let timer = StatusItemController.runInEveryMode(after: 0.05) { fired = true }
+        defer { timer.invalidate() }
+        let deadline = Date().addingTimeInterval(10)
+        while !fired, Date() < deadline {
+            RunLoop.main.run(mode: .eventTracking, before: Date().addingTimeInterval(0.05))
+        }
+        #expect(fired, "the close never fired while the menu tracked")
+        #expect(StatusItemController.menuQAOpenTime > 0 && StatusItemController.menuQAOpenTime <= 3)
+    }
+
+    /// `QAHooks.apply` itself holds every surface back until the services started and the engine is ready: neither the
+    /// snapshot (due at once) nor `--qa-hud`'s level (due 1 s in) comes while the launch work runs, both come once it
+    /// is done. No window is ordered in (the HUD presents none; the test process shows no window, so the capture writes
+    /// only its folder).
     @Test func applyShowsNothingBeforeTheLaunchWork() async throws {
         _ = NSApplication.shared                                              // the capture reads `NSApp.windows`
         let folder = FileManager.default.temporaryDirectory
@@ -147,14 +191,33 @@ import Testing
         func levelWasSet() -> Bool { boost.calls.contains { $0.hasPrefix("setLevel(") } }
         try? await Task.sleep(for: .milliseconds(1_300))
         #expect(!exists(folder) && !levelWasSet(), "a surface showed before the launch work was done")
+        await shell.runner.start()
         boost.status.isReady = true
         let deadline = ContinuousClock.now + .seconds(5)
         while !(exists(folder) && levelWasSet()), ContinuousClock.now < deadline {
             try? await Task.sleep(for: .milliseconds(20))
         }
         #expect(exists(folder) && levelWasSet())
+        shell.runner.stopNow()
     }
 
     private func exists(_ url: URL) -> Bool { FileManager.default.fileExists(atPath: url.path(percentEncoded: false)) }
+}
+/// A flag a waiting task sets.
+@MainActor private final class Flag { var isSet = false }
+
+/// A service whose start suspends until `finishStart()` (as HotKeys' registration takes its time).
+@MainActor private final class SlowStartingService: ServiceLifecycle {
+    let serviceName = "HotKeys"
+    private(set) var isStarting = false
+    private var starting: CheckedContinuation<Void, Never>?
+
+    func start() async {
+        isStarting = true
+        await withCheckedContinuation { starting = $0 }
+    }
+    func stop() async {}
+    func stopNow() {}
+    func finishStart() { starting?.resume(); starting = nil }
 }
 #endif
