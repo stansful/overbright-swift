@@ -1,11 +1,13 @@
 // OverbrightOnboardingTests/WelcomeStepFitTests.swift — every step's copy and controls fit the fixed 640 × 480 window
 // (DESIGN.md §8; §16: "constrained strings are measured … English and a pseudo-long locale during development, all 35
 // in WP15"; ARCHITECTURE.md §9.1 UI row). Measured, never counted: the heights SwiftUI lays out at the window's width.
-// The lower half (the step's header and controls) must fit between the stage and the footer; the stage's own controls
-// (step 3's switches, step 4's menu bar and key caps) must fit the stage; step 1's card is sized by the stage. Step 2
-// uses the whole page: with the owner's two displays and with three, every row shows at once under Design's real
-// verdict words, in English and pseudo-long; with more than fit, the rows scroll, with every row in the scroll view.
-// WP15 runs the steps, the stage and step 2's rows in every language Overbright ships (`everyStepFitsInEveryLanguage`).
+// The lower half (the step's header and controls) must fit between the stage and the footer: under the full stage on
+// steps 1, 4 and 5, under the compact stage on steps 2 and 3 (`StageSize`, WP14 C-ONBOARD-1), and on step 5 above the
+// footer with Turn On Overbright, whose progress dots take a line of their own in English; step 4's stage content
+// (the menu bar and key caps) must fit the stage; step 1's card is sized by the stage. Step 2: with the owner's two
+// displays and with three, every row shows at once under Design's real verdict words, in English and pseudo-long;
+// with more than fit, the rows scroll, with every row in the scroll view. WP15 runs the steps, the stage and step 2's
+// rows in every language Overbright ships (`everyStepFitsInEveryLanguage`).
 import AppKit
 import OverbrightCore
 import OverbrightDesign
@@ -17,17 +19,24 @@ import Testing
     /// The width of the lower half and of the stage's content: the window minus its side insets.
     static let width = WelcomeMetrics.window.width - 2 * WelcomeMetrics.inset
 
-    /// The height of a step's page: the window minus the footer (as `WelcomeView` pads it).
-    static var pageHeight: CGFloat {
-        let session = WelcomeSession(services: .preview(), initialStep: .defaults, recordsOutcome: false) { _ in }
-        let footer = FitMeasure.height(WelcomeFooter(session: session).padding(.vertical, Space.xl),
-                                       width: WelcomeMetrics.window.width)
-        return WelcomeMetrics.window.height - footer
+    /// The height of a step's page: the window minus the footer as `WelcomeView` places it, with the progress dots in
+    /// its row (every step but the last one with Turn On Overbright, `WelcomeFooterFitTests`).
+    static var pageHeight: CGFloat { pageHeight(under: WelcomeChromeSnapshotTests.session(.defaults)) }
+
+    /// The page of the last step with Turn On Overbright, whose footer puts the dots on their own line above its
+    /// buttons in English (no other footer does, in any language): a line shorter. Step 5 is measured under it.
+    static var lastPageHeight: CGFloat { pageHeight(under: WelcomeChromeSnapshotTests.session(.done, turnOn: true)) }
+
+    /// The window minus the footer of `session` in English.
+    static func pageHeight(under session: WelcomeSession) -> CGFloat {
+        let footer = WelcomeFooter(session: session, labels: WelcomeFooterFitTests.english).inWindow
+        return WelcomeMetrics.window.height - FitMeasure.height(footer, width: WelcomeMetrics.window.width)
     }
 
-    /// The height of the lower half: the page minus the stage, its divider and the content's top padding.
-    static var lowerBudget: CGFloat {
-        pageHeight - WelcomeMetrics.stageHeight - StrokeWidth.regular - Space.xl
+    /// The height of the lower half under a stage of `size`: the page (`page`) minus the stage, its divider and the
+    /// copy's top padding.
+    static func lowerBudget(_ size: StageSize, page: CGFloat = pageHeight) -> CGFloat {
+        page - size.headlineTop
     }
 
     /// A step's lower half as `StepLayout` stacks it.
@@ -35,9 +44,11 @@ import Testing
         VStack(alignment: .leading, spacing: Space.l) { content() }
     }
 
-    /// The lower half of every step with `transform` applied to its words from `bundle` (English by default).
+    /// The lower half of every step with `transform` applied to its words from `bundle` (English by default), and the
+    /// height it has: under the stage it sits under, and above the footer of its step (step 5's has Turn On
+    /// Overbright, the tallest footer). Step 2's is measured with its rows, `stepTwoShowsEveryRowAtOnce`.
     static func lowers(in bundle: Bundle = englishBundle,
-                       _ transform: @escaping (String) -> String) -> [(String, AnyView)] {
+                       _ transform: @escaping (String) -> String) -> [(String, CGFloat, AnyView)] {
         let services = WelcomePreview.services(updatesConfigured: true)
         let choices = WelcomeChoices()
         let hello = HelloStep.Copy.localized(in: bundle).map(transform)
@@ -45,49 +56,52 @@ import Testing
         let findIt = FindItStep.Copy.localized(in: bundle).map(transform)
         let done = DoneStep.Copy.localized(in: bundle).map(transform)
         return [
-            ("hello", AnyView(lower { HelloLower(copy: hello, card: .preview(display: DisplayFixture.Keys.builtIn,
-                                                                               gain: 1.29)) })),
-            ("hello-none", AnyView(lower { HelloLower(copy: hello, card: .noneCapable) })),
-            ("defaults", AnyView(lower {
+            ("hello", lowerBudget(.regular), AnyView(lower {
+                HelloLower(copy: hello, card: .preview(display: DisplayFixture.Keys.builtIn, gain: 1.29))
+            })),
+            ("hello-none", lowerBudget(.regular), AnyView(lower { HelloLower(copy: hello, card: .noneCapable) })),
+            ("hello-other-display", lowerBudget(.regular), AnyView(lower {
+                HelloLower(copy: hello, card: .otherDisplay)
+            })),
+            ("defaults", lowerBudget(.compact), AnyView(lower {
                 StepHeader(title: defaults.title, message: defaults.message)
+                GuardSwitches(choices: choices, settings: services.settings, copy: defaults)
                 LoginOptions(choices: choices, settings: services.settings, copy: defaults)
             })),
-            ("findIt", AnyView(lower {
+            ("findIt", lowerBudget(.regular), AnyView(lower {
                 StepHeader(title: findIt.title, message: findIt.message)
                 FindItLower(copy: findIt)
             })),
-            ("done", AnyView(lower {
+            ("done", lowerBudget(.regular, page: lastPageHeight), AnyView(lower {
                 StepHeader(title: done.title)
+                DoneSummary(choices: choices, settings: services.settings, copy: done.summary)
                 UpdateSwitch(choices: choices, settings: services.settings, copy: done)
             })),
         ]
     }
 
-    /// The stage content of steps 3 and 4 with `transform` applied to its words from `bundle` (English by default).
+    /// The stage content of step 4 with `transform` applied to its words from `bundle` (English by default).
     static func stages(in bundle: Bundle = englishBundle,
                        _ transform: @escaping (String) -> String) -> [(String, AnyView)] {
         let services = WelcomePreview.services()
-        let defaults = DefaultsStep.Copy.localized(in: bundle).map(transform)
         let findIt = FindItStep.Copy.localized(in: bundle).map(transform)
         return [
-            ("defaults", AnyView(GuardSwitches(choices: WelcomeChoices(), settings: services.settings, copy: defaults))),
             ("findIt", AnyView(FindItStage(shortcuts: FindItShortcut.rows(services.shortcuts), copy: findIt)
                 .fixedSize(horizontal: false, vertical: true))),
         ]
     }
 
     @Test func theLowerHalfFitsInEnglish() {
-        let budget = Self.lowerBudget
-        #expect(budget > 150 && budget < 260)                                    // the window's own arithmetic
-        for (name, view) in Self.lowers({ $0 }) {
+        #expect(Self.lowerBudget(.regular) > 150 && Self.lowerBudget(.regular) < 260)   // the window's own arithmetic
+        #expect(Self.lowerBudget(.compact) > 300 && Self.lowerBudget(.compact) < 400)
+        for (name, budget, view) in Self.lowers({ $0 }) {
             let height = FitMeasure.height(view, width: Self.width)
             #expect(height > 0 && height <= budget, "\(name): \(height) pt of \(budget)")
         }
     }
 
     @Test func theLowerHalfFitsInThePseudoLongLocale() {
-        let budget = Self.lowerBudget
-        for (name, view) in Self.lowers(PseudoLocale.lengthen) {
+        for (name, budget, view) in Self.lowers(PseudoLocale.lengthen) {
             let height = FitMeasure.height(view, width: Self.width)
             #expect(height <= budget, "\(name), pseudo-long: \(height) pt of \(budget)")
         }
@@ -143,7 +157,7 @@ import Testing
                                                         actions: WelcomeDisplayActions(services: services,
                                                                                        choices: WelcomeChoices())),
                                          width: Self.width)
-            let budget = Self.pageHeight - StepMetrics.titleBarInset - header - Space.l
+            let budget = Self.lowerBudget(.compact) - header - Space.l
             #expect(list > 0 && list <= budget, "\(count) displays, \(language.name): \(list) pt of \(budget)")
 
             let session = WelcomeSession(services: services, initialStep: .displays, recordsOutcome: false) { _ in }
@@ -200,8 +214,7 @@ import Testing
     @Test(arguments: CopyLanguage.available)
     func everyStepFitsInEveryLanguage(_ code: String) throws {
         let bundle = onboardingBundle(code)
-        let budget = Self.lowerBudget
-        for (name, view) in Self.lowers(in: bundle, { $0 }) {
+        for (name, budget, view) in Self.lowers(in: bundle, { $0 }) {
             let height = FitMeasure.height(view, width: Self.width)
             #expect(height > 0 && height <= budget, "\(code), \(name): \(height) pt of \(budget)")
         }
@@ -227,7 +240,7 @@ import Testing
                                                         actions: WelcomeDisplayActions(services: services,
                                                                                        choices: WelcomeChoices())),
                                          width: Self.width)
-            let rowBudget = Self.pageHeight - StepMetrics.titleBarInset - header - Space.l
+            let rowBudget = Self.lowerBudget(.compact) - header - Space.l
             #expect(list > 0 && list <= rowBudget, "\(code), \(count) displays: \(list) pt of \(rowBudget)")
             let session = WelcomeSession(services: services, initialStep: .displays, recordsOutcome: false) { _ in }
             let window = Self.window(DisplaysStep(session: session, copy: copy))

@@ -3,6 +3,7 @@
 // from Cranny's WelcomePlanTests (the owner's MIT code) onto Overbright's five steps; extended by WP12.
 import Foundation
 import OverbrightCore
+import OverbrightDesign
 import Testing
 @testable import OverbrightOnboarding
 
@@ -71,5 +72,32 @@ private final class BundleMarker {}
         let russian = try #require(Bundle.onboardingStrings("ru"))
         #expect(ProgressDots.label(current: 2, count: 5, bundle: russian) == "Шаг 2 из 5")
         #expect(ProgressDots.label(current: 5, count: 2, bundle: russian) == "Шаг 5 из 2")   // the numbers keep their order
+    }
+
+    /// Every translated language's strings resolve from the module bundle's own `.lproj` folder, also while many
+    /// lookups run at once (the lookup through `path(forResource:ofType:)` once returned nil under parallel load,
+    /// WP14 C-ONBOARD-3); a language the catalogs do not have, or a path in its place, gives nil.
+    @Test func everyLanguageResolvesUnderParallelLoad() async throws {
+        let codes = CopyLanguage.available.filter { $0 != "en" }
+        #expect(codes.count == 34)
+        let resolved = await withTaskGroup(of: (String, Bool).self) { group in
+            for round in 0..<8 {
+                for code in codes {
+                    group.addTask {
+                        let bundle = Bundle.onboardingStrings(code)
+                        return ("\(code)#\(round)", bundle?.bundleURL.lastPathComponent == "\(code).lproj")
+                    }
+                }
+            }
+            var results: [String: Bool] = [:]
+            for await (name, found) in group { results[name] = found }
+            return results
+        }
+        #expect(resolved.count == codes.count * 8)
+        #expect(resolved.filter { !$0.value }.keys.sorted() == [])
+        #expect(Bundle.onboardingStrings("tlh") == nil)
+        #expect(Bundle.onboardingStrings("../ru") == nil && Bundle.onboardingStrings("") == nil)
+        let russian = try #require(Bundle.onboardingStrings("ru"))
+        #expect(OnboardingCopy.done(in: russian) != OnboardingCopy.done(in: Bundle(for: BundleMarker.self)))
     }
 }

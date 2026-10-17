@@ -2,7 +2,10 @@
 // before/after card at Bright room on a display that can show extra brightness, else a static illustration. Only the
 // card is brighter: its right part is our own EDR content (Design's `EDRPreviewSurface`), no table is written, and
 // the card is registered with `OwnEDRSurfaces` on the display its window is on while it is visible (ARCHITECTURE.md
-// D6: the engine counts it as range already held), never in a simulated run, where the card is an SDR stand-in.
+// D6: the engine counts it as range already held), never in a simulated run, where the card is an SDR stand-in. The
+// card only ever shows the light of the display it is drawn on: when the window is on a display that cannot show extra
+// brightness (Sidecar, an LCD, an XDR on Safe) while another can, the stage shows the illustration and asks to move
+// the window, rather than another display's Bright room drawn where Overbright would add nothing (WP14 C-ONBOARD-4).
 import OverbrightCore
 import OverbrightPolicy
 
@@ -14,14 +17,28 @@ enum WelcomeCard: Hashable {
     case checking
     /// None of the displays has extra range now: the illustration and "The next step shows why."
     case noneCapable
+    /// The window is on a display without extra range while another display has it: the illustration and "Move this
+    /// window to another display to compare."
+    case otherDisplay
 
     /// The level the right part of the card shows.
     static let level = LevelPreset.brightRoom
 
-    /// The card for `rows`: the display the window is on when it can boost, else the first that can (built-in first).
+    /// The card for `rows` in a window on `windowDisplay`: that display's Bright room when it can boost; the
+    /// illustration with `otherDisplay` when it cannot but another display can, or `checking` while it is not read
+    /// yet. Before the window's display is known (and in a simulated run, which never reads it) the first display that
+    /// can boost (built-in first), drawn as the SDR stand-in because nothing is held (`drawsStandIn`).
     static func make(rows: [WelcomeDisplayRow], windowDisplay: DisplayKey?) -> WelcomeCard {
         let capable = rows.filter(\.canBoost)
-        if let row = capable.first(where: { $0.key == windowDisplay }) ?? capable.first {
+        if let windowDisplay {
+            if let row = capable.first(where: { $0.key == windowDisplay }) {
+                return .preview(display: row.key, gain: gain(top: row.top))
+            }
+            guard let own = rows.first(where: { $0.key == windowDisplay }), own.verdict != .checking else {
+                return .checking
+            }
+            if !capable.isEmpty { return .otherDisplay }
+        } else if let row = capable.first {
             return .preview(display: row.key, gain: gain(top: row.top))
         }
         return rows.contains { $0.verdict == .checking } ? .checking : .noneCapable

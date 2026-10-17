@@ -20,8 +20,7 @@ import Testing
     /// The footer as the window lays it out: between the window's side insets.
     static func footer(_ session: WelcomeSession, labels: WelcomeFooter.Labels = .localized) -> some View {
         WelcomeFooter(session: session, labels: labels)
-            .padding(.horizontal, WelcomeMetrics.inset)
-            .padding(.vertical, Space.xl)
+            .inWindow
             .frame(width: WelcomeMetrics.window.width)
     }
 
@@ -39,7 +38,7 @@ import Testing
         }
     }
 
-    /// The last step in the pseudo-long locale: the dots step aside, every button stays whole.
+    /// The last step in the pseudo-long locale: the dots stay centred above the buttons, every button stays whole.
     @Test(arguments: ChromeAppearance.allCases)
     func theLongLastFooterKeepsItsButtons(_ appearance: ChromeAppearance) throws {
         let long = WelcomeFooterFitTests.english.map(PseudoLocale.lengthen)

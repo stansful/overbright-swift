@@ -8,9 +8,11 @@
 // setting is at its default, so the steps show the defaults; Welcome opened again from Settings ▸ About shows what the
 // person has. Done writes the touched choices (step 2's switches with the OLED notices accepted for them, step 3's
 // guards, step 5's update switch) and applies the launch behaviour (the login item follows it through `AppControl`).
-// Skip and the close button drop every choice made in Welcome and apply the stored launch behaviour, which on a first
-// run is the default: the login item is registered and nothing else changes. A later Skip never resets what the
-// person set in Settings; resetting is Reset All's job, with its confirmation and Undo (DESIGN.md §7.8).
+// Skip and the close button drop every choice made in Welcome and apply the default launch behaviour, as DESIGN.md §8
+// reads ("applies every default, including the login item"): the login item is registered as "Open Overbright, keep
+// it off", also on a later Welcome opened from Settings ▸ About (WP14 C-ONBOARD-5). Nothing else is written: the
+// other settings Welcome shows are at their defaults on a first run, and a later Skip leaves them as Settings holds
+// them; resetting them is Reset All's job, with its confirmation and Undo (DESIGN.md §7.8).
 import Foundation
 import Observation
 import OverbrightCore
@@ -105,10 +107,10 @@ import OverbrightCore
         services.app?.setLaunchBehavior(launchBehavior(in: settings))
     }
 
-    /// Skip, or the close button: Welcome's own choices are dropped and the stored launch behaviour applies (the
-    /// default on a first run, so the login item is registered as "Open Overbright, keep it off").
+    /// Skip, or the close button: Welcome's own choices are dropped and the default launch behaviour applies, so the
+    /// login item is registered as "Open Overbright, keep it off" (DESIGN.md §8), whatever was stored before.
     func applyDefaults(to services: OverbrightServices) {
-        services.app?.setLaunchBehavior(services.settings[GeneralSettings.launchBehavior])
+        services.app?.setLaunchBehavior(GeneralSettings.launchBehavior.defaultValue)
     }
 
     /// Step 2's switches: each changed display's preference, with the OLED notice accepted for it, as Settings ▸

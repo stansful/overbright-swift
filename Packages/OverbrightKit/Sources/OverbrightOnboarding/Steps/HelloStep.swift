@@ -1,11 +1,12 @@
 // OverbrightOnboarding/Steps/HelloStep.swift — Welcome step 1 Hello (DESIGN.md §8, §0 #12; D16): the before/after card
 // on the stage (a sample page at Standard on the left and at Bright room on the right of a draggable divider, our own
 // EDR content in this window only, Design's `EDRPreviewSurface`), or a static illustration when no display can show
-// extra brightness. Nothing outside the card changes: no table is written, nothing turns on. The card registers with
-// `OwnEDRSurfaces` on the window's display while it shows EDR content (`EDRCardHold`), and draws its SDR stand-in
-// whenever it holds nothing: while the window is hidden (so it holds no extra range nobody sees) and until the window's
-// display is known, so no EDR content is ever on screen unregistered. Seeded by WP0b with its headline; built by WP12
-// (ARCHITECTURE.md §10.14).
+// extra brightness, or when the window's own display cannot while another can (then the caption asks to move the
+// window: the card only shows the light of the display it is on). Nothing outside the card changes: no table is
+// written, nothing turns on. The card registers with `OwnEDRSurfaces` on the window's display while it shows EDR
+// content (`EDRCardHold`), and draws its SDR stand-in whenever it holds nothing: while the window is hidden (so it
+// holds no extra range nobody sees) and until the window's display is known, so no EDR content is ever on screen
+// unregistered. Seeded by WP0b with its headline; built by WP12 (ARCHITECTURE.md §10.14).
 import Foundation
 import OverbrightCore
 import OverbrightDesign
@@ -33,6 +34,8 @@ struct HelloStep: View {
         var caption: String
         /// The sentence when no display has extra range.
         var noneCapable: String
+        /// The sentence when the window's display has no extra range but another display has.
+        var otherDisplay: String
 
         /// The words in the current language.
         static var localized: Copy { localized(in: .module) }
@@ -48,13 +51,16 @@ struct HelloStep: View {
                                  comment: "Welcome ▸ Hello: caption under the before/after card (only the card is brighter)"),
                  noneCapable: String(localized: "None of your displays has extra range right now. The next step shows why.",
                                      bundle: bundle,
-                                     comment: "Welcome ▸ Hello: shown instead of the card when no display can show extra brightness"))
+                                     comment: "Welcome ▸ Hello: shown instead of the card when no display can show extra brightness"),
+                 otherDisplay: String(localized: "This display has no extra range right now. Move this window to another display to compare.",
+                                      bundle: bundle,
+                                      comment: "Welcome ▸ Hello: shown instead of the card when the display the Welcome window is on cannot show extra brightness but another display can"))
         }
 
         /// Every string passed through `transform` (the fit tests' pseudo-long locale).
         func map(_ transform: (String) -> String) -> Copy {
             Copy(title: transform(title), message: transform(message), caption: transform(caption),
-                 noneCapable: transform(noneCapable))
+                 noneCapable: transform(noneCapable), otherDisplay: transform(otherDisplay))
         }
     }
 
@@ -64,10 +70,11 @@ struct HelloStep: View {
         let card = WelcomeCard.make(rows: rows, windowDisplay: windowDisplay)
         let simulated = WelcomeCard.simulates(services)
         let held = card.heldDisplay(windowDisplay: windowDisplay, isWindowVisible: isWindowVisible, simulated: simulated)
+        let pictured = rows.first { $0.key == windowDisplay } ?? rows.first
         StepLayout {
             StepStage {
                 HelloStage(card: card, divider: $divider, simulated: WelcomeCard.drawsStandIn(held: held),
-                           illustration: rows.first?.isBuiltIn == true ? .laptopComputer : .display)
+                           illustration: pictured?.isBuiltIn == true ? .laptopComputer : .display)
             }
             .background { if !simulated { WindowScreenReader { windowDisplay = $0 } } }
         } content: {
@@ -90,7 +97,7 @@ struct HelloStage: View {
     @Binding var divider: Double
     /// Draw the card's SDR stand-in (simulated run, the window is hidden, or its display is not held yet).
     let simulated: Bool
-    /// The glyph shown instead of the card: the laptop when the first display is built in.
+    /// The glyph shown instead of the card: the laptop when the window's display (else the first) is built in.
     var illustration = OverbrightSymbol.display
 
     var body: some View {
@@ -98,7 +105,7 @@ struct HelloStage: View {
         case .preview(_, let gain):
             EDRPreviewSurface(gain: gain, divider: $divider, simulated: simulated)
                 .frame(maxWidth: StepMetrics.cardWidth, maxHeight: StepMetrics.stageContentHeight)
-        case .checking, .noneCapable:
+        case .checking, .noneCapable, .otherDisplay:
             Image(symbol: illustration)
                 .resizable()
                 .scaledToFit()
@@ -131,6 +138,7 @@ struct HelloLower: View {
         switch card {
         case .preview: copy.caption
         case .noneCapable: copy.noneCapable
+        case .otherDisplay: copy.otherDisplay
         case .checking: nil
         }
     }

@@ -12,6 +12,8 @@ nonisolated enum StepMetrics {
     static let stageBottomInset = Space.xl
     /// The height the stage's content gets.
     static let stageContentHeight = WelcomeMetrics.stageHeight - titleBarInset - stageBottomInset
+    /// The widest a compact stage's glyph row may be: centred, it stays clear of the window buttons at the leading edge.
+    static let compactStageContentWidth: CGFloat = 320
     /// Step 1's before/after card: the stage's content height, at most this wide.
     static let cardWidth: CGFloat = 448
     /// The frame of the illustration of a step without a card (step 1 without a capable display, step 5's app icon).
@@ -24,6 +26,8 @@ nonisolated enum StepMetrics {
     static let keyCapColumn: CGFloat = 92
     /// Step 3's login option cards.
     static let optionCardHeight: CGFloat = 44
+    /// The glyph column of step 5's summary lines.
+    static let summaryGlyphColumn: CGFloat = 20
     /// Step 2's fade at the bottom edge of its rows while they scroll.
     static let scrollFade = Space.xxxl
 }

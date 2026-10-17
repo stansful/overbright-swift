@@ -1,6 +1,7 @@
-// OverbrightOnboarding/Steps/DefaultsStep.swift — Welcome step 3 Defaults (DESIGN.md §8): the guard switches on the stage
-// (Pause on battery below ‹level›, Pause in Low Power Mode, Pause for full-screen video, and the note that it also
-// backs off when the Mac gets warm), then the three login option cards under the copy (Open and turn on · Open, keep
+// OverbrightOnboarding/Steps/DefaultsStep.swift — Welcome step 3 Defaults (DESIGN.md §8), with the split of every step
+// (WP14 C-ONBOARD-1): a compact stage with the guards' glyphs, the headline and body that introduce the controls, then
+// the guard switches (Pause on battery below ‹level›, Pause in Low Power Mode, Pause for full-screen video, and the
+// note that it also backs off when the Mac gets warm) and the three login option cards (Open and turn on · Open, keep
 // off, "Recommended" · Don't open at login). The choices wait in `WelcomeChoices` until Done; Skip drops them.
 // Seeded by WP0b with its headline; built by WP12 (ARCHITECTURE.md §10.14).
 import Foundation
@@ -30,7 +31,7 @@ struct DefaultsStep: View {
         var fullScreenVideo: String
         /// The note under the switches.
         var warmNote: String
-        /// VoiceOver's name of the login cards.
+        /// VoiceOver's name of the login cards, and the label of the login line of step 5's summary.
         var loginGroup: String
         /// The login cards, in order.
         var openAndTurnOn: String
@@ -60,7 +61,7 @@ struct DefaultsStep: View {
                  warmNote: String(localized: "It also backs off when your Mac gets warm.", bundle: bundle,
                                   comment: "Welcome ▸ Defaults: note under the switches (extra brightness is limited by heat)"),
                  loginGroup: String(localized: "When you log in", bundle: bundle,
-                                    comment: "VoiceOver: Welcome ▸ Defaults, the group of the three login option cards"),
+                                    comment: "Welcome ▸ Defaults and Done: VoiceOver’s name of the three login option cards, and the label before the chosen card’s title in the Done step’s summary"),
                  openAndTurnOn: String(localized: "Open and turn on", bundle: bundle,
                                        comment: "Welcome ▸ Defaults: login option card (open Overbright at login and turn it on)"),
                  openKeepOff: String(localized: "Open, keep off", bundle: bundle,
@@ -90,14 +91,16 @@ struct DefaultsStep: View {
         }
     }
 
+    /// The compact stage's glyphs: the battery, Low Power Mode, full-screen video and heat, in the order of the copy.
+    static let stageSymbols: [OverbrightSymbol] = [.battery25Percent, .boltFill, .playRectangleFill, .thermometerMedium]
+
     var body: some View {
-        StepLayout {
-            StepStage {
-                GuardSwitches(choices: session.choices, settings: session.services.settings, copy: copy)
-            }
+        StepLayout(stage: .compact) {
+            StepStage(.compact) { StageGlyphs(symbols: Self.stageSymbols) }
         } content: {
             StepHeader(title: copy.title, message: copy.message)
                 .welcomeStepHeader()
+            GuardSwitches(choices: session.choices, settings: session.services.settings, copy: copy)
             LoginOptions(choices: session.choices, settings: session.services.settings, copy: copy)
         }
         .welcomeStepRoot()

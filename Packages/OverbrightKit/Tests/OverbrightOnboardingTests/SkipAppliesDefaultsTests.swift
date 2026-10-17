@@ -4,8 +4,8 @@
 // run every setting Welcome asks about is at its default, so a Skip leaves exactly the defaults and registers the
 // default login item, whatever was picked before it (step 2's switches included); Done writes the picks and applies
 // the chosen login behaviour; Quit Overbright applies nothing. Welcome opened again from Settings ▸ About shows the
-// stored settings, and a Skip there resets nothing the person set in Settings (Reset All is the one reset, with its
-// own confirmation and Undo).
+// stored settings; a Skip there registers the default login item, as DESIGN.md §8 reads (WP14 C-ONBOARD-5), and resets
+// nothing else the person set in Settings (Reset All is the one reset, with its own confirmation and Undo).
 import Foundation
 import OverbrightCore
 import Testing
@@ -133,23 +133,29 @@ import Testing
         #expect(harness.app.calls == ["quit"] && harness.services.settings[OnboardingSettings.completedVersion] == nil)
     }
 
-    /// Welcome opened again from Settings ▸ About shows the stored settings; a Skip there keeps them and re-applies the
-    /// stored login behaviour, and Done writes only what was changed.
-    @Test func aLaterRunKeepsWhatSettingsHold() throws {
-        let harness = try WelcomeHarness(step: .defaults) { services in
-            services.settings[AutomationSettings.batteryThreshold] = 30
-            services.settings[AutomationSettings.batteryGuard] = .onlyOnAdapter
-            services.settings[GeneralSettings.launchBehavior] = .launchAndEnable
+    /// Welcome opened again from Settings ▸ About shows the stored settings; a Skip there (or the close button)
+    /// registers the default login item, "Open Overbright, keep it off" (DESIGN.md §8: "Skip … applies every default,
+    /// including the login item"), and keeps every other setting; Done writes only what was changed.
+    @Test(arguments: [false, true])
+    func aLaterRunKeepsWhatSettingsHold(_ closes: Bool) throws {
+        for stored in [LaunchBehavior.launchAndEnable, .dontLaunch] {
+            let harness = try WelcomeHarness(step: .defaults) { services in
+                services.settings[AutomationSettings.batteryThreshold] = 30
+                services.settings[AutomationSettings.batteryGuard] = .onlyOnAdapter
+                services.settings[GeneralSettings.launchBehavior] = stored
+            }
+            let choices = harness.session.choices, settings = harness.services.settings
+            #expect(choices.batteryThreshold(in: settings) == 30 && choices.launchBehavior(in: settings) == stored)
+            #expect(choices.pausesOnBattery(in: settings))                       // "Pause on battery" counts as on
+            choices.pauseInLowPowerMode = false
+            choices.launchBehavior = stored
+            if closes { harness.session.windowWillClose() } else { harness.session.skip() }
+            #expect(settings[AutomationSettings.batteryThreshold] == 30)
+            #expect(settings[AutomationSettings.batteryGuard] == .onlyOnAdapter)
+            #expect(settings[AutomationSettings.pauseInLowPowerMode])
+            #expect(harness.app.calls == ["setLaunchBehavior(launchOnly)"], "stored \(stored), closed: \(closes)")
+            #expect(harness.app.loginItem == .enabled)                            // the app stores it with the login item
         }
-        let choices = harness.session.choices, settings = harness.services.settings
-        #expect(choices.batteryThreshold(in: settings) == 30 && choices.launchBehavior(in: settings) == .launchAndEnable)
-        #expect(choices.pausesOnBattery(in: settings))                           // "Pause on battery" counts as on
-        choices.pauseInLowPowerMode = false
-        harness.session.skip()
-        #expect(settings[AutomationSettings.batteryThreshold] == 30)
-        #expect(settings[AutomationSettings.batteryGuard] == .onlyOnAdapter)
-        #expect(settings[AutomationSettings.pauseInLowPowerMode])
-        #expect(harness.app.calls == ["setLaunchBehavior(launchAndEnable)"])
 
         let again = try WelcomeHarness(step: .done) { services in
             services.settings[AutomationSettings.batteryGuard] = .onlyOnAdapter
