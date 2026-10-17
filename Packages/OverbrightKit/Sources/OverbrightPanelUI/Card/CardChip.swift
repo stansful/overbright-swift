@@ -1,5 +1,6 @@
 // OverbrightPanelUI/Card/CardChip.swift — which reason a card's chip shows, and the actions of its popover.
-// ARCHITECTURE.md §6.2, §7.2 (a stop caused by an S1 booster offers Compatibility mode, never Continue anyway);
+// ARCHITECTURE.md §6.2, §7.2 (a stop caused by an S1 booster offers Compatibility mode, never Continue anyway, and it
+// continues next to the app on that display, as the banner's does);
 // DESIGN.md §5.7, §12.2 (actions and their destinations). The words are Design's (`ChipModel.make`); this file decides
 // only WHICH reason and WHAT each action does.
 import OverbrightCore
@@ -57,7 +58,7 @@ public enum CardChip {
         case .fullScreenVideo?, .fullScreenApp?, .game?: return [.changeRules]
         case .pausedApp?: return [.editApps]
         case .tripped(.attributedDrift(let app))?:
-            return app.severity == .booster ? [.useCompatibilityMode] : [.continueAnyway(app)]
+            return app.severity == .booster ? [.continueInCompatibilityMode(app)] : [.continueAnyway(app)]
         case .tripped(.foreignTableAtLaunch)?: return [.openDisplaySettings]
         case .tripped?: return [.tryAgain]
         default: return []

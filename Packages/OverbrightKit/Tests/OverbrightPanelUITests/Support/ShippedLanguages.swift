@@ -42,14 +42,12 @@ nonisolated struct PanelWords {
     let bundle: Bundle
     let locale: Locale
 
-    init(_ code: String) {
-        bundle = ShippedLanguages.panel(code) ?? .module
+    /// The words of `code`; nil when its `.lproj` folder is missing, so a fit test requires it instead of measuring
+    /// English in its place (C-PANEL-33).
+    init?(_ code: String) {
+        guard let table = ShippedLanguages.panel(code) else { return nil }
+        bundle = table
         locale = Locale(identifier: code)
-    }
-
-    /// The `.lproj` folder of every shipped language is there (so no test reads English in its place).
-    static func everyLanguageHasItsTable() -> [String] {
-        ShippedLanguages.codes.filter { ShippedLanguages.panel($0) == nil }
     }
 
     func below(_ percent: String) -> String { String(localized: "Below \(percent)", bundle: bundle, locale: locale) }

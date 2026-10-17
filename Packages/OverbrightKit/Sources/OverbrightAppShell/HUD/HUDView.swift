@@ -16,6 +16,13 @@ struct HUDView: View {
     let level: LevelPosition?
     /// Extra light is on screen (the bar's boost fill is warm only then).
     let isBoosting: Bool
+    /// Receives the frames of the name, the value and the bar (layout tests; nil in the app, where nothing is measured).
+    var layoutReport: (@MainActor (LayoutPart, CGRect) -> Void)? = nil
+
+    /// A line whose frame `layoutReport` receives, in the HUD's 280 × 56-pt coordinate space.
+    enum LayoutPart: Hashable { case name, value, bar }
+    /// The name of the HUD's coordinate space.
+    nonisolated static let coordinateSpace = "HUDView"
 
     /// The level bar's width.
     static let barWidth: CGFloat = 150
@@ -43,11 +50,13 @@ struct HUDView: View {
                         Text(verbatim: value)
                             .font(OverbrightFont.hudValue.font)
                             .lineLimit(1)
+                            .modifier(HUDLayoutReporting(part: .value, report: layoutReport))
                             .frame(maxWidth: Self.textWidth, alignment: .leading)
                     }
                     if let level {
                         HUDLevelBar(level: level, isBoosting: isBoosting)
                             .frame(width: Self.barWidth, height: StrokeWidth.trackDragging)
+                            .modifier(HUDLayoutReporting(part: .bar, report: layoutReport))
                     }
                 }
             }
@@ -55,6 +64,7 @@ struct HUDView: View {
         }
         .padding(.horizontal, Space.l)
         .frame(width: HUDPlacement.size.width, height: HUDPlacement.size.height)
+        .coordinateSpace(.named(Self.coordinateSpace))
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(verbatim: text.announcement))
     }
@@ -65,7 +75,24 @@ struct HUDView: View {
             .foregroundStyle(.secondary)
             .lineLimit(1)
             .truncationMode(.middle)
+            .modifier(HUDLayoutReporting(part: .name, report: layoutReport))
             .frame(maxWidth: Self.textWidth, alignment: .leading)
+    }
+}
+
+/// Sends a line's frame in the HUD to `report`, only when there is one (layout tests).
+private struct HUDLayoutReporting: ViewModifier {
+    let part: HUDView.LayoutPart
+    let report: (@MainActor (HUDView.LayoutPart, CGRect) -> Void)?
+
+    func body(content: Content) -> some View {
+        if let report {
+            content.onGeometryChange(for: CGRect.self) { proxy in
+                proxy.frame(in: .named(HUDView.coordinateSpace))
+            } action: { report(part, $0) }
+        } else {
+            content
+        }
     }
 }
 

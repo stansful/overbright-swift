@@ -42,6 +42,11 @@ public struct PanelCommands {
         case .changeRules: openSettings(SettingsLinks.appRules)
         case .editApps: openSettings(SettingsLinks.pausedApps)
         case .continueAnyway(let app): services.boost.continueAnyway(app)
+        case .continueInCompatibilityMode(let app):
+            // A booster is let through only when continued AND on the overlay (§7.2): both, or the display stays
+            // stopped behind a conflict. Continuing clears the drift trips the app caused.
+            useCompatibilityMode(on: [card.key])
+            services.boost.continueAnyway(app)
         }
     }
 

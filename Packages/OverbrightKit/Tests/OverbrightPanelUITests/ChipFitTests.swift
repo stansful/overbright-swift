@@ -119,7 +119,7 @@ import Testing
         let language = ShippedLanguages.design(code)
         let chip = try #require(ChipModel.make(reason: .boostNotEnabled, phase: .idle, failedTries: 0,
                                                context: ChipContext(language: language)))
-        let title = PanelWords(code).turnOn
+        let title = try #require(PanelWords(code), "\(code): no PanelUI table").turnOn
         func button() -> some View {
             Button {} label: { Text(verbatim: title) }.buttonStyle(OverbrightLinkButtonStyle())
         }

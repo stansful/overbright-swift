@@ -267,7 +267,8 @@ import Testing
         #expect(kinds([.tripped(.foreignTableAtLaunch)]) == [.openDisplaySettings])
         let booster = ConflictingApp(entryID: "b", severity: .booster, bundleID: nil, processID: 1, displayName: "B")
         let colorApp = ConflictingApp(entryID: "c", severity: .gammaWriter, bundleID: nil, processID: 2, displayName: "C")
-        #expect(kinds([.tripped(.attributedDrift(booster))]) == [.useCompatibilityMode])   // never Continue anyway
+        #expect(kinds([.tripped(.attributedDrift(booster))]) == [.continueInCompatibilityMode(booster)])   // not Continue
+        #expect(CardAction.continueInCompatibilityMode(booster).title == CardAction.useCompatibilityMode.title)
         #expect(kinds([.tripped(.attributedDrift(colorApp))]) == [.continueAnyway(colorApp)])
         #expect(kinds([.headroom]).isEmpty)
         #expect(kinds([.thermalSerious]).isEmpty)

@@ -2,12 +2,14 @@
 // §8.8 width rule `hud`): every value and reason of §12.9 in the HUD's type, in English and the pseudo-long locale
 // (+40 %), plus whatever Design's `HUDText` makes for the gallery's HUD states; in every language Overbright ships
 // (WP15) the values, the reasons and the Keep-this-level prompt are measured too; the HUD itself is
-// 280 × 56 pt whatever it says, and its bar draws the level. Measured in hosting views without a window.
+// 280 × 56 pt whatever it says, its lines are laid out as §6 says (the frames the view reports, in a window that is
+// never ordered in), and its bar draws the level. Text is measured in hosting views without a window.
 import AppKit
 import OverbrightCore
 import OverbrightDesign
 import OverbrightPanelUI
 import OverbrightPolicy
+import OverbrightTestSupport
 import SwiftUI
 import Testing
 @testable import OverbrightAppShell
@@ -163,16 +165,37 @@ import Testing
         #expect(frame.midX == visible.midX && frame.minY == visible.minY + 64 && frame.size == HUDPlacement.size)
     }
 
-    @Test func theValueKeepsItsWidthBesideTheBar() {
+    /// The frames of the HUD's lines for `text`, as the view lays them out in its 280 × 56 pt.
+    private func layout(of text: HUDText) async -> [HUDView.LayoutPart: CGRect] {
+        final class Frames { var parts: [HUDView.LayoutPart: CGRect] = [:] }
+        let frames = Frames()
+        let view = HUDView(text: text, level: LevelPosition(0.75), isBoosting: true,
+                           layoutReport: { frames.parts[$0] = $1 })
+        let host = NSHostingView(rootView: view.overbrightThemeRoot())
+        host.frame = CGRect(origin: .zero, size: HUDPlacement.size)
+        let window = NSWindow(contentRect: host.frame, styleMask: [.borderless], backing: .buffered, defer: true)
+        window.contentView = host
+        defer { window.contentView = nil }
+        let expected = text.displayName == nil ? 2 : 3
+        _ = await eventually {
+            host.layoutSubtreeIfNeeded()
+            return frames.parts.count == expected
+        }
+        return frames.parts
+    }
+
+    @Test func theValueKeepsItsWidthBesideTheBar() async throws {
         // The longest English value next to a display name still shows whole (the bar has its own line).
-        let text = HUDText(symbol: .sunMaxFill, displayName: "Built-in Retina Display", value: "Sunlight · ≈ ×2.04",
-                           reason: nil, announcement: "")
-        let full = NSHostingView(rootView: Text(verbatim: "Sunlight · ≈ ×2.04").font(Self.valueFont).fixedSize())
-            .fittingSize.width
+        let value = "Sunlight · ≈ ×2.04"
+        let text = HUDText(symbol: .sunMaxFill, displayName: "Built-in Retina Display", value: value, reason: nil,
+                           announcement: "")
+        let full = width(value, Self.valueFont)
         #expect(full <= HUDView.textWidth)
-        let hud = NSHostingView(rootView: HUDView(text: text, level: LevelPosition(0.75), isBoosting: true)
-            .overbrightThemeRoot())
-        #expect(hud.fittingSize == HUDPlacement.size)
+        let lines = await layout(of: text)
+        let drawn = try #require(lines[.value])
+        let bar = try #require(lines[.bar])
+        #expect(abs(drawn.width - full) <= 0.5, "the value is cut: \(drawn.width) of \(full) pt")
+        #expect(drawn.maxY <= bar.minY, "the bar is not under the value")
     }
 
     @Test func theBoostFillIsWarmOnlyWithExtraLight() throws {
@@ -217,19 +240,30 @@ import Testing
                                                            preset: nil, isEstimate: true, dimPercent: nil)).text)
     }
 
-    /// With two displays the name has its own line above the value and the bar, as wide as the HUD's text (C-PANEL-11).
-    @Test func theNameHasItsOwnLineAboveTheValue() {
+    /// With two displays the name has its own line above the value and the bar, drawn whole (not "Built…splay") and
+    /// at the value's leading edge, and all three lines stay inside the HUD (C-PANEL-11); with one display there is no
+    /// name line.
+    @Test func theNameHasItsOwnLineAboveTheValue() async throws {
         let name = "Built-in Liquid Retina XDR Display"
-        let full = NSHostingView(rootView: Text(verbatim: name).font(Self.labelFont).fixedSize()).fittingSize.width
-        #expect(full <= HUDView.textWidth)                                  // shown whole, not "Built…splay"
+        let full = width(name, Self.labelFont)
+        #expect(full <= HUDView.textWidth)
         let text = HUDText(symbol: .sunMaxFill, displayName: name, value: "Sunlight · ≈ ×2.04", reason: nil,
                            announcement: "")
-        let size = NSHostingView(rootView: HUDView(text: text, level: LevelPosition(0.75), isBoosting: true)
-            .overbrightThemeRoot()).fittingSize
-        #expect(size == HUDPlacement.size)
+        let lines = await layout(of: text)
+        let nameLine = try #require(lines[.name])
+        let value = try #require(lines[.value])
+        let bar = try #require(lines[.bar])
+        #expect(abs(nameLine.width - full) <= 0.5, "the name is cut: \(nameLine.width) of \(full) pt")
+        #expect(nameLine.maxY <= value.minY, "the name is not above the value: \(nameLine) \(value)")
+        #expect(abs(nameLine.minX - value.minX) <= 0.5, "the name and the value start at \(nameLine.minX), \(value.minX)")
+        #expect(value.maxY <= bar.minY, "the bar is not under the value")
+        let hud = CGRect(origin: .zero, size: HUDPlacement.size)
+        for line in [nameLine, value, bar] {
+            #expect(hud.contains(line), "a line leaves the HUD: \(line)")
+        }
         let alone = HUDText(symbol: .sunMaxFill, displayName: nil, value: "Sunlight · ≈ ×2.04", reason: nil,
                             announcement: "")
-        #expect(NSHostingView(rootView: HUDView(text: alone, level: LevelPosition(0.75), isBoosting: true)
-            .overbrightThemeRoot()).fittingSize == HUDPlacement.size)
+        let single = await layout(of: alone)
+        #expect(single[.name] == nil && single[.value] != nil && single[.bar] != nil, "\(single)")
     }
 }

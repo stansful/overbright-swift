@@ -79,6 +79,8 @@ import Testing
              "Overbright stopped on this display to prevent flicker.", [.tryAgain]),
             (.tripped(.attributedDrift(Self.colorApp)), "Stopped: \u{2068}Warmth\u{2069}", .exclamationMarkTriangleFill, .danger,
              "\u{2068}Warmth\u{2069} changed the colors of this display.", [.continueAnyway]),
+            (.tripped(.attributedDrift(Self.booster)), "Stopped: \u{2068}Booster\u{2069}", .exclamationMarkTriangleFill, .danger,
+             "\u{2068}Booster\u{2069} changed the colors of this display.", [.useCompatibilityMode]),   // S1: never Continue
             (.tripped(.foreignTableAtLaunch), "Colors changed", .exclamationMarkTriangleFill, .danger,
              "Another app changed this display’s colors in a way Overbright can’t reset.", [.openSystemSettings]),
         ]

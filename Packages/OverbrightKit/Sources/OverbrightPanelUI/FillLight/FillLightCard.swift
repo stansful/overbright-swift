@@ -3,7 +3,9 @@
 // DESIGN.md §5.3, §7.7 (ranges, the warmth slider's Cool and Warm ends), §11, §5.12 (Space or Return opens the
 // pop-up, ← and → move a focused slider); ARCHITECTURE.md §3.8 (`FillLightSettings`). One grid: a label column in
 // `.callout`, the controls, and a value column as wide as the widest value, so both sliders start and end at the same x
-// whatever they show. The light itself is WP7's; the card edits its settings.
+// whatever they show; the controls column (the pop-up, no wider than the sliders, and the sliders) takes the rest of the
+// 280-pt inner width, so the value column ends at the card's inner edge (C-PANEL-15). The light itself is WP7's; the
+// card edits its settings.
 import Foundation
 import OverbrightCore
 import OverbrightDesign
@@ -13,6 +15,8 @@ import SwiftUI
 public struct FillLightCard: View {
     private let services: OverbrightServices
     private let focus: FocusState<PanelFocus?>.Binding?
+    /// Receives the frames of the card's controls (layout tests; nil in the app, where nothing is measured).
+    private var layoutReport: (@MainActor (LayoutPart, CGRect) -> Void)?
     @Environment(\.panelMenuPresenter) private var menus
     @State private var displayAnchor = MenuAnchorReference()
 
@@ -33,6 +37,12 @@ public struct FillLightCard: View {
     /// One ← / → press on the warmth slider: 100 K, Settings' step.
     static let warmthStep = 100.0 / 3500
 
+    /// A control whose frame `layoutReport` receives, in the coordinate space of the card's content (the 280-pt inner
+    /// width, origin at its leading edge).
+    enum LayoutPart: Hashable { case display, brightness, warmth, brightnessValue, warmthValue }
+    /// The name of the content's coordinate space.
+    nonisolated static let coordinateSpace = "FillLightCard.content"
+
     public var body: some View {
         let settings = services.settings
         VStack(alignment: .leading, spacing: Space.s) {
@@ -44,28 +54,34 @@ public struct FillLightCard: View {
                     .controlSize(.small)
                     .panelFocus(focus, .fillLightTurnOff, activate: turnOff)
             }
+            // No cell spans columns and none is unsized: either keeps the grid from giving the controls column the
+            // rest of the width (C-PANEL-15). A long display name truncates in the pop-up, whose menu lists it whole.
             Grid(alignment: .leading, horizontalSpacing: Space.s, verticalSpacing: Space.s) {
                 GridRow {
                     label(PanelText.display)
                     displayPicker
-                        .gridCellColumns(2)
+                        .modifier(LayoutReporting(part: .display, report: layoutReport))
                 }
                 GridRow {
                     label(PanelText.brightness)
                     slider(PanelText.brightness, value: settings.binding(FillLightSettings.brightness),
                            in: Self.brightnessRange, step: Self.brightnessStep, focusValue: .fillLightBrightness,
                            valueText: Self.percentText(settings[FillLightSettings.brightness]))
+                        .modifier(LayoutReporting(part: .brightness, report: layoutReport))
                     valueColumn(Self.percentText(settings[FillLightSettings.brightness]))
+                        .modifier(LayoutReporting(part: .brightnessValue, report: layoutReport))
                 }
                 GridRow {
                     label(PanelText.warmth)
                     slider(PanelText.warmth, value: settings.binding(FillLightSettings.warmth), in: Self.warmthRange,
                            step: Self.warmthStep, focusValue: .fillLightWarmth,
                            valueText: Self.kelvinText(warmth: settings[FillLightSettings.warmth]))
+                        .modifier(LayoutReporting(part: .warmth, report: layoutReport))
                     valueColumn(Self.kelvinText(warmth: settings[FillLightSettings.warmth]))
+                        .modifier(LayoutReporting(part: .warmthValue, report: layoutReport))
                 }
                 GridRow {                                               // the warmth slider's ends (Settings' words)
-                    Color.clear.gridCellUnsizedAxes([.horizontal, .vertical])
+                    Color.clear.frame(width: 0, height: 0)              // an empty label cell
                     HStack {
                         Text(verbatim: PanelText.cool)
                         Spacer(minLength: Space.s)
@@ -74,10 +90,10 @@ public struct FillLightCard: View {
                     .font(OverbrightFont.caption.font)
                     .foregroundStyle(.secondary)
                     .accessibilityHidden(true)
-                    Color.clear.gridCellUnsizedAxes([.horizontal, .vertical])
                 }
             }
         }
+        .coordinateSpace(.named(Self.coordinateSpace))
         .panelCard()
         .accessibilityElement(children: .contain)
         .accessibilityLabel(Text(verbatim: PanelText.fillLight))
@@ -144,6 +160,13 @@ public struct FillLightCard: View {
 
     private func turnOff() { services.fillLight.setOn(false, source: .panel) }
 
+    /// The card whose control frames go to `report` (layout tests).
+    func reportingLayout(_ report: @escaping @MainActor (LayoutPart, CGRect) -> Void) -> FillLightCard {
+        var card = self
+        card.layoutReport = report
+        return card
+    }
+
     // MARK: Values
 
     /// The values that are the widest each column can show ("100 %", "6,500 K"), for its fixed width.
@@ -165,6 +188,22 @@ public struct FillLightCard: View {
     /// `value` moved one `step` toward the range's end (or its start), kept in `range`.
     static func stepped(_ value: Double, in range: ClosedRange<Double>, by step: Double, towardEnd: Bool) -> Double {
         min(max(value + (towardEnd ? step : -step), range.lowerBound), range.upperBound)
+    }
+}
+
+/// Sends a control's frame in the card's content to `report`, only when there is one (layout tests).
+private struct LayoutReporting: ViewModifier {
+    let part: FillLightCard.LayoutPart
+    let report: (@MainActor (FillLightCard.LayoutPart, CGRect) -> Void)?
+
+    func body(content: Content) -> some View {
+        if let report {
+            content.onGeometryChange(for: CGRect.self) { proxy in
+                proxy.frame(in: .named(FillLightCard.coordinateSpace))
+            } action: { report(part, $0) }
+        } else {
+            content
+        }
     }
 }
 

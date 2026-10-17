@@ -91,8 +91,8 @@ import Testing
 
     /// The footer rows in `code`'s words: the default settings, each other battery rule beside the default chips, and
     /// the widest settings ("Below 20 %", "Auto-pause · Off", "Off in 1 h 30 min").
-    private func rows(in code: String) -> [(name: String, chips: [FooterChip])] {
-        let words = PanelWords(code)
+    private func rows(in code: String) throws -> [(name: String, chips: [FooterChip])] {
+        let words = try #require(PanelWords(code), "\(code): no PanelUI table")
         let percent = words.percent(20)
         let duration = words.duration(minutes: 90)
         func localized(_ chips: [FooterChip], battery: String = words.below(percent),
@@ -118,7 +118,7 @@ import Testing
     /// footer as drawn never leaves its row.
     @Test(arguments: ShippedLanguages.codes)
     func everyRowFitsInEveryLanguage(_ code: String) throws {
-        let rows = rows(in: code)
+        let rows = try rows(in: code)
         let defaultRow = try #require(rows.first { $0.name == "default" })
         let width = rowWidth(defaultRow.chips, .full)
         #expect(width > 0 && width <= PanelLayout.footerWidth, "\(code): the default footer row is \(width) pt")
