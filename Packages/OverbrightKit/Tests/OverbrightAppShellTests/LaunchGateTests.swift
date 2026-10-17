@@ -1,6 +1,7 @@
 // OverbrightAppShellTests/LaunchGateTests.swift — the launch work and the quit work in order (ARCHITECTURE.md §7.4).
 // Ported from Cranny's LifecycleTests (the owner's MIT code).
 import Foundation
+import OverbrightTestSupport
 import Testing
 @testable import OverbrightAppShell
 
@@ -30,10 +31,10 @@ private final class Journal {
         #expect(gate.phase == .launching && gate.runsTerminateHooks)
         #expect(gate.defersQuit { journal.entries.append("quit") })
         #expect(gate.defersQuit { journal.entries.append("second quit") })        // shares the first reply
-        for _ in 0..<100 where journal.release == nil { try await Task.sleep(for: .milliseconds(10)) }
+        #expect(await eventually { journal.release != nil })
         #expect(journal.entries.isEmpty)
         journal.release?.resume()
-        for _ in 0..<100 where !journal.entries.contains("quit") { try await Task.sleep(for: .milliseconds(10)) }
+        #expect(await eventually { journal.entries.contains("quit") })
         #expect(journal.entries == ["launched", "quit"] && gate.phase == .launched)
         #expect(!gate.defersQuit { Issue.record("launched: quits at once") })
     }
@@ -44,7 +45,7 @@ private final class Journal {
         let journal = Journal()
         gate.launch { try? await Task.sleep(for: .seconds(60)) }
         #expect(gate.defersQuit(atMost: .milliseconds(50)) { journal.entries.append("quit") })
-        for _ in 0..<200 where journal.entries.isEmpty { try await Task.sleep(for: .milliseconds(10)) }
+        #expect(await eventually { !journal.entries.isEmpty })
         #expect(journal.entries == ["quit"] && gate.phase == .launching)
     }
 }

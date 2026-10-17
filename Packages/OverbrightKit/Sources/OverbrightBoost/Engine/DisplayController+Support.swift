@@ -77,6 +77,14 @@ extension DisplayController {
     /// Our latest table write was above the baseline (it needed the trigger's EDR request).
     var lastWriteIsAboveBase: Bool { (lastWrite?.factor ?? 1) > 1 + TableWriter.neutralTolerance }
 
+    /// The table may be off its baseline although nothing is applied: our latest table write was scaled, or the safety
+    /// ledger still holds the display. `TableWriter` marks the display before every scaled write and keeps the mark
+    /// when WindowServer throws (the table may have taken it, §4.5 invariant 9), while the applied state stays at the
+    /// baseline. Every landing writes the baseline then, which also empties the entry: the hang watchdog and the boost
+    /// marker follow the ledger (D7, §4.6), so a stale entry would keep them on while nothing is scaled (§7.1,
+    /// DESIGN.md §17).
+    var tableMayBeOffBaseline: Bool { (mechanism == .table && lastWriteIsScaled) || deps.ledger.isMarked(key) }
+
     /// After a landing WindowServer refused: the trigger has to stay, because our write above the baseline may still be
     /// on screen (it is, or the table cannot be read). Once WindowServer replaced it (a reset, a new base), the
     /// windows may go.
@@ -85,28 +93,33 @@ extension DisplayController {
         return (try? deps.gamma.read(ref.id)).map(isOurs) ?? true
     }
 
-    /// Writes the baseline now when the table (or overlay) is scaled or dimmed, or our latest write was (one write,
-    /// never refused by the epoch). True when the display is at its baseline afterwards. When WindowServer (or the
-    /// overlay) throws, the applied state is kept, so the display still counts as scaled or dimmed: the ledger keeps its
-    /// entry, the trigger stays (see `+WriteFailure`) and the next stop, disarm or reduction writes it again.
+    /// Writes the baseline now when the table (or overlay) is scaled or dimmed, or the table may be off its baseline
+    /// (`tableMayBeOffBaseline`: our latest write was scaled, or the ledger still holds the display); one write, never
+    /// refused by the epoch. True when the display is at its baseline afterwards. When WindowServer (or the overlay)
+    /// throws, the applied state is kept, so the display still counts as scaled or dimmed: the ledger keeps its entry,
+    /// the trigger stays (see `+WriteFailure`) and the next stop, disarm or reduction writes it again.
     @discardableResult
     func writeBaselineNow() -> Bool {
-        guard isScaledOrDimmed || (mechanism == .table && lastWriteIsScaled) else {
+        guard isScaledOrDimmed || tableMayBeOffBaseline else {
             resetApplied()
             return true
         }
-        if mechanism == .overlay {
+        if mechanism == .overlay, isScaledOrDimmed {
             do {
                 try overlay?.setFactor(1, headroomRequest: 1)
             } catch {
                 deps.journal.record("overlay.failed", display: key, time: deps.time, category: .trigger)
                 return false
             }
-            resetApplied()
-            return true
+            guard deps.ledger.isMarked(key) else {                        // the overlay was the whole effect
+                resetApplied()
+                return true
+            }
         }
-        guard let baseline else {
-            resetApplied()                                                // nothing to restore with (a rescue forgot it)
+        // Without a baseline of its own (a rescue forgot it), a marked display lands on the ledger's: what the hang
+        // watchdog would write.
+        guard let baseline = baseline ?? deps.ledger.entry(for: key)?.baseline else {
+            resetApplied()                                                // nothing to restore with
             return true
         }
         do {

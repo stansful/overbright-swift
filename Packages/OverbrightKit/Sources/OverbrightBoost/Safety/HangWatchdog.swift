@@ -4,12 +4,14 @@
 // `TableWriter.writeBaselines(fromLedger:)` under the ledger lock (`EmergencyRestore`), and never calls
 // `DispatchQueue.main.sync`. Owned by WP5 (seeded by WP0a with the §10.0 signatures).
 //
-// While active (the engine switches it on while any display is scaled or dimmed), the timer sends a ping to the main
-// queue every `hangPing` (2 s). A ping still unanswered `hangTimeout` (3 s) after it was sent means the main thread is
-// stuck: under the ledger lock the watchdog bumps the hang epoch, writes every ledger baseline and forgets the entries,
-// then raises the fired flag and journals `hang.fired`. It fires once per stall; the next pong re-arms it. A stall is
-// therefore caught 3–5 s after it starts (3 s when it starts right after a ping, 5 s right before one). The timer wakes
-// only at ping times and at one timeout deadline, never in between.
+// While active (the safety ledger's occupancy observer switches it on while the ledger holds any display, from the
+// write that marks the first one to the write that empties it: `SafetyLedger.observeOccupancy`, which calls `setActive`
+// inside the ledger lock), the timer sends a ping to the main queue every `hangPing` (2 s). A ping still unanswered
+// `hangTimeout` (3 s) after it was sent means the main thread is stuck: under the ledger lock the watchdog bumps the
+// hang epoch, writes every ledger baseline and forgets the entries, then raises the fired flag and journals
+// `hang.fired`. It fires once per stall; the next pong re-arms it. A stall is therefore caught 3–5 s after it starts
+// (3 s when it starts while a ping waits for its answer, almost 5 s when it starts just after an answer). The timer
+// wakes only at ping times and at one timeout deadline, never in between.
 import Dispatch
 import Foundation
 import OverbrightCore
@@ -17,10 +19,11 @@ import os
 
 nonisolated private let log = Log.logger(.engine)
 
-/// Ping-pong with the main thread every 2 s while any display is scaled; a ping unanswered for 3 s bumps the hang
-/// epoch and writes every ledger baseline, then records that it fired.
+/// Ping-pong with the main thread every 2 s while the safety ledger holds any display; a ping unanswered for 3 s bumps
+/// the hang epoch and writes every ledger baseline, then records that it fired.
 public nonisolated final class HangWatchdog: Sendable {
-    /// Everything that changes, behind one lock (never held while the ledger lock is taken).
+    /// Everything that changes, behind one lock. Lock order: the ledger's, then this one (`setActive` runs inside the
+    /// ledger lock); this lock is never held while the ledger lock is taken.
     struct State {
         var timer: (any DispatchSourceTimer)?
         /// Bumped on every switch, so a tick from an older timer does nothing.
@@ -33,9 +36,22 @@ public nonisolated final class HangWatchdog: Sendable {
         /// Fired since the engine last asked.
         var firedFlag = false
         var fires = 0
+        var pings = 0
         var pongs = 0
-        /// Uptime (ns) of the last restore (tests check the 3–5 s window).
+        /// Uptime (ns) of the last restore.
         var lastFiredAt: UInt64?
+        /// Uptime (ns) the ping whose timeout fired the last restore was sent at.
+        var firedPingSentAt: UInt64?
+    }
+
+    /// What one tick does.
+    enum Step: Hashable, Sendable {
+        /// Nothing: the ping that is out has not timed out yet, or the watchdog already fired for this stall.
+        case idle
+        /// Send ping `id` to the pinged queue.
+        case ping(UInt64)
+        /// The ping timed out: restore.
+        case fire
     }
 
     private let writer: TableWriter
@@ -68,8 +84,9 @@ public nonisolated final class HangWatchdog: Sendable {
 
     // MARK: Engine interface
 
-    /// Runs while any display is scaled or dimmed (the engine switches it); off, it holds no timer and does no work.
-    /// Safe from any thread.
+    /// Runs while the safety ledger holds any display: the engine hands this to `SafetyLedger.observeOccupancy`, whose
+    /// observer calls it inside the ledger lock (lock order: the ledger's, then the watchdog's state), so it must never
+    /// use the ledger. Off, it holds no timer and does no work. Safe from any thread.
     public func setActive(_ active: Bool) {
         state.withLock { s in
             if active {
@@ -112,32 +129,30 @@ public nonisolated final class HangWatchdog: Sendable {
     var pongCount: Int { state.withLock { $0.pongs } }
     /// Uptime (ns) of the last restore.
     var lastFiredAt: UInt64? { state.withLock { $0.lastFiredAt } }
+    /// Uptime (ns) the ping whose timeout fired the last restore was sent at.
+    var lastTimedOutPingSentAt: UInt64? { state.withLock { $0.firedPingSentAt } }
+    /// Pings sent since the watchdog was made.
+    var pingCount: Int { state.withLock { $0.pings } }
+
+    /// Returns once every timer handler queued before the call has run: after `setActive(false)` no tick, and no
+    /// restore, is left in flight (a cancelled timer calls its handler no more).
+    func drainQueue() async {
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            queue.async { continuation.resume() }
+        }
+    }
 
     // MARK: Watchdog queue
 
     /// The timer's handler (on the watchdog's queue; any thread in tests): send a ping, wait for its timeout, or fire.
     func tick(generation: UInt64) {
-        enum Step { case idle, ping(UInt64), fire }
         let now = DispatchTime.now().uptimeNanoseconds
-        let timeoutNanos = Self.nanoseconds(timeout)
+        let interval = Self.nanoseconds(pingInterval), timeout = Self.nanoseconds(timeout)
         let step: Step = state.withLock { s in
             guard s.generation == generation, let timer = s.timer else { return .idle }
-            guard let sent = s.pingSentAt else {
-                s.pingID &+= 1
-                s.pingSentAt = now
-                timer.schedule(deadline: .now() + Self.interval(pingInterval), leeway: Self.leeway)
-                return .ping(s.pingID)
-            }
-            let waited = now >= sent ? now - sent : 0
-            guard waited >= timeoutNanos else {
-                timer.schedule(deadline: .now() + .nanoseconds(Int(clamping: timeoutNanos - waited)),
-                               leeway: Self.leeway)
-                return .idle
-            }
-            timer.schedule(deadline: .now() + Self.interval(pingInterval), leeway: Self.leeway)
-            guard !s.firedForStall else { return .idle }
-            s.firedForStall = true
-            return .fire
+            let (step, next) = Self.step(&s, at: now, interval: interval, timeout: timeout)
+            timer.schedule(deadline: .now() + .nanoseconds(Int(clamping: next)), leeway: Self.leeway)
+            return step
         }
         switch step {
         case .idle: break
@@ -148,14 +163,38 @@ public nonisolated final class HangWatchdog: Sendable {
 
     /// The pinged queue answered ping `id` (on the main queue; nonisolated, so it never traps off main).
     func pong(_ id: UInt64) {
-        let recovered: Bool = state.withLock { s in
-            guard s.pingID == id, s.pingSentAt != nil else { return false }
-            s.pingSentAt = nil
-            s.pongs += 1
-            defer { s.firedForStall = false }
-            return s.firedForStall
-        }
+        let recovered = state.withLock { Self.answer(&$0, ping: id) }
         if recovered { log.info("hang watchdog: the main thread answers again") }
+    }
+
+    /// One tick at uptime `now` (ns) on the state alone: send a ping when none is out; once the ping that is out has
+    /// waited `timeout`, fire, once per stall; otherwise nothing. Returns the step and the delay (ns) to the next tick:
+    /// `interval` after a ping or a timeout, else the rest of the ping's timeout, so the timer wakes only at ping times
+    /// and at one deadline. Pure, so `HangWatchdogTests` checks the 3–5 s window on explicit times.
+    static func step(_ s: inout State, at now: UInt64, interval: UInt64,
+                     timeout: UInt64) -> (step: Step, next: UInt64) {
+        guard let sent = s.pingSentAt else {
+            s.pingID &+= 1
+            s.pingSentAt = now
+            s.pings += 1
+            return (.ping(s.pingID), interval)
+        }
+        let waited = now >= sent ? now - sent : 0
+        guard waited >= timeout else { return (.idle, timeout - waited) }
+        guard !s.firedForStall else { return (.idle, interval) }
+        s.firedForStall = true
+        s.firedPingSentAt = sent
+        return (.fire, interval)
+    }
+
+    /// Ping `id` was answered, on the state alone: true when the answer ends a stall the watchdog fired for (the next
+    /// stall may fire again). An answer to an older ping, or after a switch, changes nothing.
+    static func answer(_ s: inout State, ping id: UInt64) -> Bool {
+        guard s.pingID == id, s.pingSentAt != nil else { return false }
+        s.pingSentAt = nil
+        s.pongs += 1
+        defer { s.firedForStall = false }
+        return s.firedForStall
     }
 
     private func fire() {
@@ -175,11 +214,7 @@ public nonisolated final class HangWatchdog: Sendable {
 
     // MARK: Helpers
 
-    private static func nanoseconds(_ duration: Duration) -> UInt64 {
+    static func nanoseconds(_ duration: Duration) -> UInt64 {
         UInt64(max(duration.timeInterval, 0) * 1_000_000_000)
-    }
-
-    private static func interval(_ duration: Duration) -> DispatchTimeInterval {
-        .nanoseconds(Int(clamping: nanoseconds(duration)))
     }
 }

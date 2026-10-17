@@ -142,7 +142,8 @@ import Testing
 
     @Test(arguments: ShippedLanguages.codes)
     func valueTagsFitTheTrackInEveryLanguage(_ code: String) throws {
-        let tags = Self.valueTags(in: try #require(ShippedLanguages.design(code), "\(code): no Design table"))
+        let language = try #require(ShippedLanguages.design(code), "\(code): no Design table")
+        let tags = Self.valueTags(in: language)
         #expect(tags.count == 15, "\(code)")
         let failures = tags.compactMap { text -> String? in
             let width = FitMeasure.textWidth(text, Self.valueTagFont)

@@ -3,6 +3,8 @@
 // at most 150 ms old with `G ≤ 0.97 × H`, no trigger is removed while its table is scaled, every sequence that ends
 // with the master off leaves every table at its baseline with no window and no task, and at least 30 % of the
 // sequences reach `boosted` (so the property is not vacuous). WindowServer refusing a write is one of the actions.
+// A sequence does not depend on how loaded the machine is: the engine, its fakes and its tasks all run on the main
+// actor, whose jobs run in the order they were queued, and time moves only with the manual clock (§9.1).
 import Foundation
 import OverbrightCore
 import OverbrightPolicy
@@ -35,6 +37,13 @@ import Testing
             }
         }
         #expect(Double(boosted) >= 0.3 * Double(Self.sequences), "\(boosted) of \(Self.sequences) reached boosted")
+    }
+
+    /// The sequence that once left a table off its base and a task running after off, in a loaded parallel run of an
+    /// earlier engine (WP14 leftovers); it replays the same way under any load.
+    @Test func theSequenceThatFailedUnderLoadKeepsTheInvariants() async {
+        let outcome = await run(seed: 13_576_627_718_912_785_137)
+        #expect(outcome.breaches.isEmpty, "\(outcome.breaches)")
     }
 
     // MARK: One sequence
@@ -72,8 +81,9 @@ import Testing
         h.signals.snapshot.isSystemSleeping = false
         h.engine.setOn(false, source: .panel)
         await h.advance(.seconds(2), step: Self.step, yields: Self.yields)
-        // One yield per coarse step keeps 10 000 sequences fast, but under a loaded parallel run (Thread Sanitizer) a
-        // task can simply be late: let what is left finish with full yields before anything counts as left behind.
+        // One yield per coarse step keeps 10 000 sequences fast, but a task that hops more than once per step falls
+        // behind (the same hops on every run, in queue order): let what is left finish with full yields before
+        // anything counts as left behind.
         if h.engine.activeTaskCount != 0 {
             _ = await h.advance(until: { h.engine.activeTaskCount == 0 }, limit: .seconds(30))
         }

@@ -3,8 +3,8 @@
 // reducer, one `DisplayController` per display, synchronous shield delivery, pause and auto-off, the HUD's
 // `lastChange`, the low-level confirmation, and the self-test, calibration and rescue entry points through WP5's seams.
 // This file holds the state, the initializers, the lifecycle and status publication; requests live in
-// `BoostEngine+Control.swift`, the policy loop and HUD changes in `+Policy`, events and deadlines in `+Events`, the
-// instruments in `+Instruments`. MainActor.
+// `BoostEngine+Control.swift`, the low-level confirmation in `+LowLevel`, the policy loop and HUD changes in `+Policy`,
+// events and deadlines in `+Events`, the instruments in `+Instruments`. MainActor.
 import CoreGraphics
 import Foundation
 import Observation

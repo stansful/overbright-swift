@@ -193,11 +193,7 @@ import Testing
         #expect(!exists(folder) && !levelWasSet(), "a surface showed before the launch work was done")
         await shell.runner.start()
         boost.status.isReady = true
-        let deadline = ContinuousClock.now + .seconds(5)
-        while !(exists(folder) && levelWasSet()), ContinuousClock.now < deadline {
-            try? await Task.sleep(for: .milliseconds(20))
-        }
-        #expect(exists(folder) && levelWasSet())
+        #expect(await eventually { exists(folder) && levelWasSet() })
         shell.runner.stopNow()
     }
 

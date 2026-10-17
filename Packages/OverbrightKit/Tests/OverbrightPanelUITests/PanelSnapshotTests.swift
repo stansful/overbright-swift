@@ -2,8 +2,9 @@
 // (the HUD states are the shell's HUD snapshots, and the window-only states its window snapshots), in Light, Dark and
 // Increase Contrast (ARCHITECTURE.md §9.1: `NSHostingView.cacheDisplay`, in-process, never ordered in). Every render
 // is checked (the panel's width, ink on the canvas, the appearances differ), and key renders against their layout: a
-// header and a footer that both draw, at the panel's edges, the panel's 320 pt, the master switch drawn as in a key
-// window. A render is taken at the size the panel settles on. The PNGs are written only with
+// header and a footer that both draw at the panel's edges, the panel's 320 pt, the master switch drawn as in a key
+// window. A render is taken at the panel's settled size: the card list shrinks to its measured cards after the first
+// layout (C-PANEL-13), so the first fitting size is too tall (C-PANEL-31). The PNGs are written only with
 // `OVERBRIGHT_SNAPSHOT_DIR=<dir>` (into `<dir>/PanelUI/`), for a person to review.
 import AppKit
 import OverbrightCore
@@ -74,19 +75,18 @@ import Testing
         return rep
     }
 
-    /// The first and the last row (pixels from the top) with a pixel that differs from the top-left one (the
-    /// background).
-    private func inkRows(_ rep: NSBitmapImageRep) -> (first: Int, last: Int)? {
+    /// The first and the last row (pixels from the top) with any pixel that differs from the top-left one.
+    private func inkRows(_ rep: NSBitmapImageRep) -> ClosedRange<Int>? {
         guard let background = rep.colorAt(x: 2, y: 2) else { return nil }
         func hasInk(_ y: Int) -> Bool {
             stride(from: 0, to: rep.pixelsWide, by: 1).contains { x in
-                rep.colorAt(x: x, y: y).map { abs($0.brightnessComponent - background.brightnessComponent) > 0.08 }
-                    ?? false
+                guard let color = rep.colorAt(x: x, y: y) else { return false }
+                return abs(color.brightnessComponent - background.brightnessComponent) > 0.08
             }
         }
         guard let first = (0..<rep.pixelsHigh).first(where: hasInk),
               let last = (0..<rep.pixelsHigh).reversed().first(where: hasInk) else { return nil }
-        return (first, last)
+        return first...last
     }
 
     /// The share of pixels that differ from the top-left one (the background), in the band of rows `rows` (pixels from
@@ -122,8 +122,9 @@ import Testing
     }
 
     /// Key states draw what their layout says: 320 pt wide, a header and a footer with ink in their 44-pt bands, and
-    /// at least the content between them. The header's ink starts and the footer's ends as far from the edges as in
-    /// the two-display panel: no blank band above the header or below the footer (C-PANEL-31).
+    /// at least the content between them. The header's ink starts, and the footer's ends, where they do on the
+    /// two-display panel: a render taller than the panel centres the content and adds a blank band above the header
+    /// and below the footer (four displays sized from the first layout's 112-pt cards, C-PANEL-31).
     @Test(arguments: ["boosting", "off", "banner-battery", "nothing-capable", "four-displays", "fill-light-card"])
     func keyStatesDrawTheirHeaderAndFooter(_ name: String) async throws {
         let rep = try await render(name, .light)
@@ -133,14 +134,17 @@ import Testing
         let bar = Int(PanelLayout.barHeight * scale)
         #expect(inkFraction(rep, rows: 0..<bar) > 0.01, "\(name): no header")
         #expect(inkFraction(rep, rows: (rep.pixelsHigh - bar)..<rep.pixelsHigh) > 0.01, "\(name): no footer")
-        let boosting = try await render("boosting", .light)
-        let (ink, reference) = (try #require(inkRows(rep)), try #require(inkRows(boosting)))
-        let (top, referenceTop) = (Double(ink.first) / scale, Double(reference.first) / scale)
-        let bottom = Double(rep.pixelsHigh - 1 - ink.last) / scale
-        let referenceBottom = Double(boosting.pixelsHigh - 1 - reference.last) / scale
-        #expect(top <= referenceTop + 2, "\(name): the header's ink starts \(top) pt down, \(referenceTop) pt in boosting")
-        #expect(bottom <= referenceBottom + 2,
-                "\(name): the footer's ink ends \(bottom) pt above the bottom, \(referenceBottom) pt in boosting")
+        let (above, below) = try blankEdges(rep, name)
+        let (top, bottom) = try blankEdges(try await render("boosting", .light), "boosting")
+        #expect(abs(above - top) <= 2 && abs(below - bottom) <= 2,
+                "\(name): \(above) pt blank above the header and \(below) pt below the footer, not \(top) and \(bottom)")
+    }
+
+    /// The blank rows (points) above the first ink and below the last.
+    private func blankEdges(_ rep: NSBitmapImageRep, _ name: String) throws -> (above: Double, below: Double) {
+        let scale = Double(rep.pixelsWide) / Double(rep.size.width)
+        let ink = try #require(inkRows(rep), "\(name): nothing drawn")
+        return (Double(ink.lowerBound) / scale, Double(rep.pixelsHigh - 1 - ink.upperBound) / scale)
     }
 
     /// The master switch of an "on" panel draws in the accent colour although the panel is not key when clicked open

@@ -133,7 +133,9 @@ extension DisplayController {
         }
     }
 
-    /// Ramp to 1 → baseline → remove the trigger (§4.5 invariant 2) → idle. The quit's stop is not rate-limited.
+    /// Ramp to 1 → baseline → remove the trigger (§4.5 invariant 2) → idle. The quit's stop is not rate-limited. With
+    /// nothing applied there is no ramp, but a table that may be off its baseline (`tableMayBeOffBaseline`) gets the
+    /// baseline before the windows go; a refused write is retried at rest by the reduction it asks for.
     func disarm(kind: RampPlanner.Kind, rateLimited: Bool = true) {
         switch phase {
         case .idle, .failed:
@@ -147,6 +149,7 @@ extension DisplayController {
             armSlot.cancel(); burstSlot.cancel(); driftSlot.cancel(); lingerSlot.cancel()
             guard isScaledOrDimmed else {
                 rampSlot.cancel()
+                if !writeBaselineNow() { notify(needsReduction: true) }
                 removeWindows()
                 phase = .idle
                 return

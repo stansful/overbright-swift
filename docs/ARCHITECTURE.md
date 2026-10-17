@@ -2464,7 +2464,7 @@ The `overlay` mechanism walks the same table with `OverlayHandle` instead of tri
 6. **Shielded means neutral.** On lock, screensaver, screens asleep, will-sleep or session resign, every scaled or dimmed display is at its baseline **when the event handler returns** (test: `shieldIsNeutralWhenEmitReturns`, with the fake table checked right after `emit`).
 7. **Generations and epochs.** Every async continuation (poll, ramp step, rung timeout, settle, retry) compares its generation with the controller's and does nothing when stale. Every scaled write carries the controller's epoch stamp; only the re-gate path re-stamps it after a hang.
 8. **Flicker safety.** No two opposing transitions within 500 ms on one display; the oscillation detector suspends a display that keeps reversing (§5.8). Safety drops are exempt from the rate limiter; they count towards the detector unless the headroom readings moved monotonically.
-9. **Ledger before write.** The `SafetyLedger` marks a display scaled, with its baseline, before the scaled write is issued, under the lock held across the write, and unmarks it after the baseline write returns.
+9. **Ledger before write.** The `SafetyLedger` marks a display scaled, with its baseline, before the scaled write is issued, under the lock held across the write, and unmarks it after the baseline write returns. As built (WP14): a scaled write that WindowServer refuses keeps the mark (the table may have taken it), so every landing (`writeBaselineNow`, the at-rest retry, a disarm or Back to Standard with nothing applied, the end of a calibration) treats a marked display as possibly off its baseline and writes the baseline, which empties the entry; a write the port refused before any WindowServer call (`displayGone`, `noTable`) puts the ledger back as it was (`StaleLedgerTests`, `TableWriterTests`).
 10. **No name logic.** No code path compares `DisplayFacts.name` (lint test over `Sources/` for `.name ==`, `.name.contains` and `localizedName` comparisons).
 11. **One engine, on the console (D27).** No write happens while the session is not on the console; a second engine instance exits before its launch check.
 12. **Every reapply ramps.** A reapply after a reset, a base adoption or another app's termination ramps over ≤ 300 ms and journals its cause.
@@ -3563,6 +3563,10 @@ Every finding of the v0.1 design review and where it is addressed. "Refined" mea
 ---
 
 ## Changelog
+
+### 2026-10-17 — WP14 leftovers: engine edge cases and deterministic tests
+
+A scaled write that throws no longer leaves a stale safety-ledger entry that kept the hang watchdog and the boost marker on while off: every landing writes the baseline of a marked display, and a write refused before WindowServer leaves the ledger as it was (§4.5 invariant 9; C-BOOST-1 regression, `StaleLedgerTests`). The low-level confirmation lives in `BoostEngine+LowLevel.swift`; `HangWatchdog`'s comments say the ledger's occupancy observer switches it, inside the ledger lock. Tests that depended on how a loaded machine schedules threads no longer do (§9.1): the signal stop's wait is injected, the hang watchdog's tick and answer are pure functions checked on explicit uptimes (the 3–5 s window, once per stall) and its real-timer tests wait for queues through blocks queued on them, the fuzz replays the seed that once failed under load, and short real-time polls in the shell and update tests became `eventually` or explicit synchronization. `CopyLanguage.named` opens a language's `.lproj` folder by path (an empty code gave German, a path another folder), and the fit tests require each language's tables instead of measuring English in their place (C-PANEL-33). Panel snapshots are taken at the panel's settled size, and the key-state check compares where the header and footer draw (C-PANEL-31).
 
 ### 2026-10-17 — WP14 docs as built (C-RELEASE-15, C-RELEASE-18) and the strict soak
 

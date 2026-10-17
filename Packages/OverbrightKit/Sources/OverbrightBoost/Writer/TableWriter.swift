@@ -231,18 +231,38 @@ public nonisolated final class TableWriter: Sendable {
         }
     }
 
-    /// `baseline × factor`, with the ledger marked first and the epoch checked, all under the ledger lock.
+    /// `baseline × factor`, with the ledger marked first and the epoch checked, all under the ledger lock. When
+    /// WindowServer throws, the mark stays: the table may have taken the write, so the display counts as possibly off
+    /// its baseline until a landing writes the baseline (`DisplayController.tableMayBeOffBaseline`). A write the port
+    /// refused before any WindowServer call (`reachedWindowServer`) changed nothing: the ledger is put back as it was,
+    /// in the same critical section, so a display that was never scaled holds no entry.
     private func writeScaled(_ baseline: GammaTable, factor: Double, to display: DisplayRef, epoch: UInt64) throws {
         let stale: UInt64? = try ledger.withLock { state in
             guard state.hangEpoch == epoch else { return state.hangEpoch }
+            let previous = state.entries[display.key]
             state.entries[display.key] = SafetyLedger.Entry(display: display, baseline: baseline)
-            try gamma.write(baseline.scaled(by: factor), to: display.id)
+            do {
+                try gamma.write(baseline.scaled(by: factor), to: display.id)
+            } catch let error as GammaError where !Self.reachedWindowServer(error) {
+                state.entries[display.key] = previous
+                throw error
+            }
             return nil
         }
         if let stale {
             refuse("interlock.refusedStaleEpoch", display: display,
                    values: ["epoch": Double(epoch), "hangEpoch": Double(stale)])
             throw GammaError.writeRefused
+        }
+    }
+
+    /// Whether a write that threw `error` may have reached WindowServer. The port checks that the display is online
+    /// and has a table before it calls CoreGraphics (`displayGone`, `noTable`; §3.6), and a refusal is never sent;
+    /// a CoreGraphics error came back from the call itself, so its table may be on screen.
+    static func reachedWindowServer(_ error: GammaError) -> Bool {
+        switch error {
+        case .coreGraphics: true
+        case .displayGone, .noTable, .writeRefused: false
         }
     }
 

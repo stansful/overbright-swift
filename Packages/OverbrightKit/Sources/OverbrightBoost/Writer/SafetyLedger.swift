@@ -86,6 +86,9 @@ public nonisolated final class SafetyLedger: @unchecked Sendable {
     /// Whether `display` is recorded as scaled or dimmed.
     public func isMarked(_ display: DisplayKey) -> Bool { withLock { $0.entries[display] != nil } }
 
+    /// The entry of `display`, if it is recorded (its baseline is what the hang watchdog would write).
+    public func entry(for display: DisplayKey) -> Entry? { withLock { $0.entries[display] } }
+
     /// The displays recorded as scaled or dimmed.
     public var markedDisplays: Set<DisplayKey> { withLock { Set($0.entries.keys) } }
 }

@@ -93,12 +93,19 @@ private actor GatedUpdateTransport: UpdateTransport {
 /// `Task.sleep` does.
 @MainActor private final class ManualSleeper {
     private(set) var waits: [TimeInterval] = []
+    /// Waits that ended because their task was cancelled (a schedule the checker dropped).
+    private(set) var cancelled = 0
     private var released = 0
 
     func sleep(_ wait: TimeInterval) async throws {
         waits.append(wait)
         let index = waits.count
-        while released < index { try await Task.sleep(for: .milliseconds(5)) }
+        do {
+            while released < index { try await Task.sleep(for: .milliseconds(5)) }
+        } catch {
+            cancelled += 1
+            throw error
+        }
     }
 
     func release() { released = waits.count }
@@ -332,7 +339,7 @@ private func available(_ tag: String) throws -> UpdateState {
         let first = Task { await checker.check() }
         #expect(await eventuallyAsync { await transport.requests.count == 1 })
         let second = Task { await checker.check(userInitiated: false) }
-        try await Task.sleep(for: .milliseconds(50))                                     // the second check waits as well
+        for _ in 0..<10 { await Task.yield() }                    // the second check runs up to the request in flight
         await transport.open()
         let expected = try available("v0.2.0")
         let (one, two) = (await first.value, await second.value)
@@ -380,9 +387,8 @@ private func available(_ tag: String) throws -> UpdateState {
         #expect(await eventually { sleeper.waits == [UpdateChecker.launchDelay] })       // never checked: a minute after launch
 
         settings[UpdateSettings.automatic] = false                                        // turned off before the sleep ends
-        try await Task.sleep(for: .milliseconds(100))
-        sleeper.release()
-        try await Task.sleep(for: .milliseconds(100))
+        #expect(await eventually { sleeper.cancelled == 1 })                             // the schedule went with it
+        sleeper.release()                                                                 // nothing is left to wake
         #expect(await transport.requests.isEmpty && sleeper.waits.count == 1)
 
         settings[UpdateSettings.automatic] = true                                         // on again: a new schedule
