@@ -50,8 +50,14 @@ extension BoostEngine {
             continued = continued.filter { $0.value != processID }
             for controller in all { controller.appTerminated(processID: processID) }
             guard endsContinuation else { return }
+        case .appLaunched:
+            // A launch changes nothing the engine holds: a conflicting app reaches the reducer through the observed
+            // snapshot (Signals updates `conflicts` before it posts the event), which schedules the re-reduction
+            // itself. So a launch costs no publish and no reduction, as a plain termination (agents and helpers launch
+            // several times a minute on a busy Mac).
+            return
         case .hdrSuppressionBegan, .hdrSuppressionEnded, .thermalChanged, .powerChanged, .activeSpaceChanged,
-             .appActivated, .appLaunched, .scheduleBoundary:
+             .appActivated, .scheduleBoundary:
             break                                                         // the re-reduction below reads them
         }
         calibrationSession?.handle(event)                                // a lock or the display's removal ends it

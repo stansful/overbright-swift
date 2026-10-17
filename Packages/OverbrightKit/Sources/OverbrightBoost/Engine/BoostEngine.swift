@@ -79,6 +79,11 @@ import OverbrightPolicy
     /// The running self-test (a driven display whose trigger is lost stops there).
     @ObservationIgnored var selfTestRunner: SelfTestRunner?
     @ObservationIgnored var boostSourcesActive = false
+    #if DEBUG
+    /// Every time `status` actually changed (each one re-arms every observer and invalidates the panel); tests count
+    /// them (DESIGN.md §17).
+    @ObservationIgnored var publishCount = 0
+    #endif
 
     /// The engine over explicit dependencies: what the composition root uses, because the services hub needs the
     /// engine before it exists. Constructing it does no I/O; `start()` does.
@@ -213,7 +218,11 @@ import OverbrightPolicy
         let next = BoostStatus(isOn: isMasterOn, isReady: isReady, pausedUntil: pausedUntil, autoOffAt: autoOffAt,
                                displays: statuses, banner: lastDecision?.banner, symbol: symbol(),
                                lastChange: lastChange, pendingLowLevel: pendingLowLevel)
-        if next != status { status = next }
+        guard next != status else { return }
+        status = next
+        #if DEBUG
+        publishCount += 1
+        #endif
     }
 
     /// The reducer's symbol, with `preparing` while a display that should boost is arming or gating and none is
