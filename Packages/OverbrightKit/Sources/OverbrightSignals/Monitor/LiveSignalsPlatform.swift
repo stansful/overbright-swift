@@ -64,6 +64,15 @@ final class LiveSignalsPlatform: SignalsPlatform {
     /// `NSWorkspace.runningApplications`.
     func runningApplications() -> [RunningAppInfo] { NSWorkspace.shared.runningApplications.map(RunningAppInfo.init) }
 
+    /// The regular apps among `candidates`, looked up one process at a time (`NSRunningApplication(processIdentifier:)`
+    /// knows the same applications as `runningApplications`). Never the whole list: an `NSRunningApplication`'s process
+    /// ID and activation policy are dynamic properties, which AppKit re-fetches from LaunchServices (one synchronous
+    /// XPC per app) once the list changed, and the list changes every few seconds; mapping ≈ 100 apps cost ≈ 7.5 ms of
+    /// CPU per check on a busy Mac, the window owners' five lookups ≈ 0.6 ms for the whole check.
+    func regularProcessIDs(among candidates: Set<Int32>) -> Set<Int32> {
+        candidates.filter { NSRunningApplication(processIdentifier: $0)?.activationPolicy == .regular }
+    }
+
     /// KVO on `NSWorkspace.shared.runningApplications` (AppKit updates it on the main run loop).
     func observeRunningApplications(_ handler: @escaping @MainActor @Sendable (RunningAppsChange) -> Void)
         -> ObservationToken {

@@ -3,7 +3,10 @@
 // A check is requested by events (Space change, app activation, a regular app's termination, screen parameters, wake)
 // and, while boosted, by the 2 s re-check; requests are debounced 0.6 s (Space animations produce transient window
 // lists). One check reads the window list off the main actor, then on the main actor the screens (and whether they have
-// separate Spaces), running apps, the frontmost app and the display-sleep assertions, applies the sticky menu-bar
+// separate Spaces), which of the windows' owners are regular apps (`SignalsPlatform.regularProcessIDs(among:)`: a few
+// lookups instead of mapping every running app, whose dynamic properties AppKit re-fetches from LaunchServices once the
+// list changed: ≈ 7.5 → 0.6 ms of CPU per check), the frontmost app (the only app mapped in full, for the games
+// category, read once per bundle) and the display-sleep assertions, applies the sticky menu-bar
 // absence and `FullScreenDetector.evaluate`, and publishes full-screen displays, full-screen-video displays and the
 // frontmost app (its displays, `isPlaying`, `isGame`) in ONE outcome, so the snapshot never shows a half-updated front.
 // When a sticky absence masks a present menu bar, one more check runs as the mask expires. Nothing is pending while no
@@ -93,12 +96,14 @@ final class FullScreenTracker {
 
     private func evaluate(_ list: WindowListSnapshot) -> (outcome: Outcome, resolvesAt: MonotonicInstant?) {
         let screens = platform.screens()
-        let apps = platform.runningApplications()
         let front = platform.frontmostApplication()
         let holders = platform.displaySleepHolders()
         let ignored = Set([platform.ownProcessID] + [platform.dockProcessID()].compactMap { $0 })
+        // The detector asks whether an owner is regular only for this list's layer-0 windows that are not ignored
+        // (`FullScreenDetector.counts`), so the answer for these owners alone decides exactly what the whole set did.
+        let owners = Set(list.windows.lazy.filter { $0.layer == 0 }.map(\.ownerPID)).subtracting(ignored)
         let context = FullScreenDetector.Context(frontmostPID: front?.processID, ignoredPIDs: ignored,
-                                                 regularPIDs: Set(apps.filter(\.isRegular).map(\.processID)),
+                                                 regularPIDs: platform.regularProcessIDs(among: owners),
                                                  displaySleepHolders: holders ?? [])
         let separateSpaces = platform.screensHaveSeparateSpaces()
         let observed = FullScreenDetector.observedMenuBar(windows: list.windows, displays: screens,

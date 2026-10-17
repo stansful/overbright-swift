@@ -19,7 +19,7 @@
 // exception keeps that stable: an idle pause in effect keeps its 2 s input poll until input returns, because the pause
 // itself turns the boost off (see `applyBoostSources`); a shield suspends the poll and keeps the pause. Two
 // event-driven pieces also run while the boost is inactive, as §7.1's table lists them with the notifications: the
-// full-screen re-check 0.6 s after a Space, app or screen event (≈ 3 ms of reads; it is what ends a full-screen or
+// full-screen re-check 0.6 s after a Space, app or screen event (≈ 0.6 ms of CPU; it is what ends a full-screen or
 // per-app pause) and the one re-check when a sticky menu-bar absence expires.
 //
 // Thread: main. Entry points the system may call on other threads (thermal, Low Power, IOKit callbacks, the

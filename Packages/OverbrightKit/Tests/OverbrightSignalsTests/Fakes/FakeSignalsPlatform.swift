@@ -40,6 +40,11 @@ import OverbrightCore
     var separateSpaces = true
 
     private(set) var powerReads = 0
+    /// Reads of the whole running list, and of the regular apps' process IDs alone.
+    private(set) var runningReads = 0
+    private(set) var regularReads = 0
+    /// The candidates of every `regularProcessIDs(among:)` call.
+    private(set) var regularCandidates: [Set<Int32>] = []
     private(set) var windowReads = 0
     /// The `windowServerPID` each window read was given.
     private(set) var windowServerHints: [Int32?] = []
@@ -60,7 +65,13 @@ import OverbrightCore
     func reduceMotion() -> Bool { reduceMotionValue }
     func isHDRSuppressed() -> Bool { hdrSuppressed }
     func frontmostApplication() -> RunningAppInfo? { frontmost }
-    func runningApplications() -> [RunningAppInfo] { running }
+    func runningApplications() -> [RunningAppInfo] { runningReads += 1; return running }
+    /// Like the live platform, it never reads the whole list for this; records what it was asked about.
+    func regularProcessIDs(among candidates: Set<Int32>) -> Set<Int32> {
+        regularReads += 1
+        regularCandidates.append(candidates)
+        return Set(running.lazy.filter { $0.isRegular && candidates.contains($0.processID) }.map(\.processID))
+    }
     func observeRunningApplications(_ handler: @escaping @MainActor @Sendable (RunningAppsChange) -> Void)
         -> ObservationToken {
         runningListObservers += 1
