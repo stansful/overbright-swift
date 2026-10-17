@@ -268,10 +268,20 @@ enum DiagnosticsReport {
 
     /// A verdict sentence of Design's catalog, looked up in `language` (catalog wiring check).
     private static func designString(language: String) -> String {
-        guard let path = Bundle.main.path(forResource: "OverbrightKit_OverbrightDesign", ofType: "bundle"),
-              let bundle = Bundle(path: path) else { return "(no bundle)" }
-        guard let lproj = bundle.path(forResource: language, ofType: "lproj"),
-              let localized = Bundle(path: lproj) else { return "(no \(language) localization)" }
+        let path = Bundle.main.path(forResource: "OverbrightKit_OverbrightDesign", ofType: "bundle")
+        return designString(language: language, in: path.flatMap(Bundle.init(path:)))
+    }
+
+    /// The same sentence in `design`'s `<language>.lproj` folder, opened by its path as `CopyLanguage.named` opens it:
+    /// `Bundle.path(forResource:ofType:)` can miss a folder that is on disk and answers an empty name with whichever
+    /// localization it lists first.
+    static func designString(language: String, in design: Bundle?) -> String {
+        guard let resources = design?.resourceURL else { return "(no bundle)" }
+        let folder = resources.appendingPathComponent("\(language).lproj", isDirectory: true)
+        var isDirectory: ObjCBool = false
+        guard !language.isEmpty, !language.contains("/"),
+              FileManager.default.fileExists(atPath: folder.path, isDirectory: &isDirectory), isDirectory.boolValue,
+              let localized = Bundle(url: folder) else { return "(no \(language) localization)" }
         return localized.localizedString(forKey: "Overbright is reading this display.", value: "(missing)", table: nil)
     }
 
