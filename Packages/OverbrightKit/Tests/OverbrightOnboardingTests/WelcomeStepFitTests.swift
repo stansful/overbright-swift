@@ -228,7 +228,7 @@ import Testing
                                                   copy: DefaultsStep.Copy.localized(in: bundle)), offered: Self.width)
         #expect(login <= Self.width, "\(code), login cards: \(login) pt of \(Self.width)")
 
-        let language = CopyLanguage.named(code) ?? .english()
+        let language = try #require(CopyLanguage.named(code), "\(code): no Design table")   // never English instead
         var copy = DisplaysStep.Copy.localized(in: bundle)
         copy.verdictLanguage = language
         for count in [2, 3] {
