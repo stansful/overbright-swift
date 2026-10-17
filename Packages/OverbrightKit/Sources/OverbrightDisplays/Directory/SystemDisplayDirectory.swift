@@ -7,7 +7,9 @@
 // - begin flag → `displayConfigurationBegan` (once per burst; no display queries);
 // - remove flag → `displayRemoved(id)` at once, then the display leaves `displays` (no debounce);
 // - after phase → a full pass 0.5 s after the last callback (`displaysReconfigured`) and a confirming pass at 2 s;
-// - screen parameters → the cheap facts again (unless a pass is pending), then `screenParametersChanged`.
+// - screen parameters → the online IDs and NSScreen facts again (unless a pass is pending), the CoreGraphics facts
+//   of the last read reused while the online IDs are the same (no table read per notification, energy D1), then
+//   `screenParametersChanged`.
 // Events reach `addEventObserver` handlers synchronously on main; the composition root relays them into the engine's
 // event stream (WP13). Clamshell: the built-in display is left out while the lid is closed. Hardware mirrors: a member
 // without its own NSScreen is `isMirrored` (dim only). Names are for the UI only; no code compares them (D8).
@@ -31,7 +33,8 @@ public final class SystemDisplayDirectory: DisplayDirectory, ServiceLifecycle {
     /// rule). Constructing it touches nothing; `start()` does.
     public init(time: any TimeSource = SystemTimeSource(), gamma: any GammaPort = CoreGraphicsGamma()) {
         model = DisplayDirectoryModel(time: time,
-                                      readRaw: { CoreGraphicsDisplayReader.onlineDisplays(gamma: gamma) },
+                                      readScreens: { CoreGraphicsDisplayReader.onlineScreens() },
+                                      readDisplays: { CoreGraphicsDisplayReader.displays(in: $0, gamma: gamma) },
                                       readRegistry: { await IORegistryReader.snapshot() })
         context = ReconfigurationContext(receiver: model)
     }

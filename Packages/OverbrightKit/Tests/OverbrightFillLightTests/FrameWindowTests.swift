@@ -153,6 +153,64 @@ import Testing
         #expect(presents.calls.count == 2)
     }
 
+    // MARK: Nothing redrawn without a change (DESIGN.md §17; energy D2)
+
+    // The window's `refresh()` comes with every screen-parameters notification, which macOS also posts on every
+    // headroom move (up to 122 a second), and applies the same frame again. Core Animation drops a set whose value
+    // equals the current one (measured: an equal path, colour, frame or scale reports no change to the layer's
+    // delegate), so as long as `apply` hands it equal values nothing is committed: no mask re-rasterized, no
+    // full-screen window recomposited, and no skip logic of our own is needed (an explicit skip saved 0.9 µs of CPU per
+    // refresh, so it was not kept). These tests fail if either side stops holding. The window itself is never ordered
+    // in during tests, so the layers carry the proof; the Metal path presents a drawable on every visible refresh by
+    // design (a refresh after wake may have to replace a purged drawable).
+
+    @Test func anUnchangedApplyChangesNoLayer() throws {
+        let layers = FillLightLayers(rendering: .sdr, display: 0)
+        let style = edrStyle(value: 0.8, request: nil)
+        layers.apply(style, geometry: geometry, scale: 2)
+        let path = try #require(layers.mask.path)
+        let color = try #require(layers.content.backgroundColor)
+        for _ in 0..<3 { #expect(layers.apply(style, geometry: geometry, scale: 2)) }
+        #expect(layers.mask.path === path)                                  // still the first path: no change
+        #expect(layers.content.backgroundColor === color)                   // still the first colour
+        #expect(layers.root.frame == geometry.bounds && layers.mask.contentsScale == 2)
+    }
+
+    @Test func anUnchangedApplyKeepsTheTaggedColour() throws {
+        guard #available(macOS 26.0, *) else { return }
+        let layers = FillLightLayers(rendering: .taggedLayer, display: 0)
+        layers.apply(edrStyle(), geometry: geometry, scale: 2)
+        let color = try #require(layers.content.backgroundColor)
+        layers.apply(edrStyle(), geometry: geometry, scale: 2)
+        #expect(layers.content.backgroundColor === color)
+        #expect(layers.content.preferredDynamicRange == .high)              // the EDR request stays as it was
+    }
+
+    @Test func aChangedScreenLaysTheFrameOutAgain() {
+        let layers = FillLightLayers(rendering: .sdr, display: 0)
+        let style = edrStyle(value: 0.8, request: nil)
+        layers.apply(style, geometry: geometry, scale: 2)
+        // Another display mode: a new frame size.
+        let resized = FrameGeometry(displaySize: CGSize(width: 1_512, height: 982), menuBarHeight: 37, safeAreaTop: 32,
+                                    width: 48, reachesTop: false)
+        layers.apply(style, geometry: resized, scale: 2)
+        #expect(layers.mask.path == resized.path && layers.root.frame == resized.bounds)
+        // No notch band and a lower menu bar band, then another backing scale.
+        let unnotched = FrameGeometry(displaySize: CGSize(width: 1_512, height: 982), menuBarHeight: 24, safeAreaTop: 0,
+                                      width: 48, reachesTop: false)
+        layers.apply(style, geometry: unnotched, scale: 1)
+        #expect(layers.mask.path == unnotched.path && layers.mask.contentsScale == 1)
+    }
+
+    @Test func aChangedStyleRecoloursAndKeepsTheMask() throws {
+        let layers = FillLightLayers(rendering: .sdr, display: 0)
+        layers.apply(edrStyle(value: 0.8, request: nil), geometry: geometry, scale: 2)
+        let path = try #require(layers.mask.path)
+        layers.apply(edrStyle(value: 0.6, request: nil), geometry: geometry, scale: 2)
+        #expect(layers.mask.path === path)
+        #expect(abs((rgba(layers.content.backgroundColor).first ?? 0) - 0.6) < 1e-6)
+    }
+
     @Test func changingTheStyleRecoloursInPlace() throws {
         guard #available(macOS 26.0, *) else { return }
         let layers = FillLightLayers(rendering: .taggedLayer, display: 0)

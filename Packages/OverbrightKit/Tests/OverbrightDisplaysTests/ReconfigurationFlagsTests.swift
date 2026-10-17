@@ -2,7 +2,8 @@
 // (ARCHITECTURE.md §4.3, §7.1, §10.4; D9), on a `ManualTimeSource`: the begin flag reports
 // `displayConfigurationBegan` once per burst and queries nothing; the remove flag reports `displayRemoved(id)` and
 // drops the display at once, before any debounce; the after phase is debounced 0.5 s and confirmed at 2 s; screen
-// parameter changes refresh the cheap facts only while no pass is pending.
+// parameter changes refresh the NSScreen facts only while no pass is pending (what they read:
+// `ScreenParametersRefreshTests`).
 import CoreGraphics
 import OverbrightCore
 import Testing
@@ -28,11 +29,13 @@ import Testing
     @Test func beginFlagReportsOncePerBurstAndQueriesNothing() async {
         let harness = await DirectoryHarness.started()
         let reads = harness.raw.reads
+        let screenReads = harness.raw.screenReads
         let generation = harness.model.generation
         harness.callback(1, .beginConfigurationFlag)
         harness.callback(2, .beginConfigurationFlag)
         #expect(harness.events == [.displayConfigurationBegan])
         #expect(harness.raw.reads == reads)                       // no display query in the begin phase
+        #expect(harness.raw.screenReads == screenReads)
         #expect(harness.model.generation == generation)
         // The after phase ends the burst; the next burst reports again.
         harness.callback(1, .setModeFlag)
@@ -172,7 +175,9 @@ import Testing
         // During a reconfiguration the displays are in flux: event only, the pass reads everything.
         harness.callback(2, .setModeFlag)
         harness.raw.displays = [RawDisplayFixtures.builtIn()]
+        let screenReads = harness.raw.screenReads
         harness.model.screenParametersChanged()
+        #expect(harness.raw.screenReads == screenReads)          // nothing read while the pass is pending
         #expect(harness.model.displays.count == 2)
         #expect(harness.events.last == .screenParametersChanged)
         await harness.advance(.milliseconds(500))
