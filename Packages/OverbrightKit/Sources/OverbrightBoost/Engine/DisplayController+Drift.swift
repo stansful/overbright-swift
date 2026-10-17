@@ -106,6 +106,7 @@ extension DisplayController {
                   again.matches(read, tolerance: Self.sameTableTolerance),
                   case .accept = BaselineRules.capture(read, expectedBase: profile, previous: baseline) else { return }
             baseline = read
+            expectedBase = profile
             if deps.ledger.isMarked(key) { deps.ledger.markScaled(ref, baseline: read) }
             deps.journal.record("baseline.adopted", display: key, values: ["cause": Double(ReapplyCause.adoption.rawValue)],
                                 time: deps.time)

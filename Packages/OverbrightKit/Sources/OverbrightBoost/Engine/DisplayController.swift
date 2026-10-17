@@ -61,6 +61,9 @@ import OverbrightPolicy
     // MARK: Tables
 
     var baseline: GammaTable?
+    /// The profile base `baseline` was captured or adopted against (§4.8): a re-base replaces a baseline only when the
+    /// profile base moved away from it, so a foreign baseline survives every reconfiguration that changed nothing.
+    var expectedBase: GammaTable?
     var appliedGain = 1.0
     var appliedFactor = 1.0
     var appliedLimit: LimitReason?

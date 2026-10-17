@@ -66,6 +66,7 @@ extension BoostEngine {
         let outcome = await rescue.rescueNow()
         for controller in controllers.values {
             controller.baseline = nil
+            controller.expectedBase = nil
             controller.lastWrite = nil
             if controller.trip == .foreignTableAtLaunch { controller.clearTrip() }
         }

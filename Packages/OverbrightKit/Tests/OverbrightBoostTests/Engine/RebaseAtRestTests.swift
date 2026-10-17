@@ -114,6 +114,76 @@ import Testing
         #expect(h.codes.contains("baseline.keptOverOwnWrite"))
     }
 
+    /// A base event judged while suspended off the console cannot write the new base (D27): it stays pending, so once
+    /// back on the console the display at rest gets the new base instead of keeping the old curve (C-BOOST-16).
+    @Test func aBaseEventJudgedOffTheConsoleIsWrittenOnceBack() async throws {
+        let h = EngineHarness()
+        await h.start()
+        #expect(await h.boost())
+        h.signals.snapshot.isSessionActive = false
+        h.signals.emit(.sessionResigned)
+        await h.advance(.milliseconds(200))
+        #expect(h.phase() == .suspended(.notOnConsole) && h.table() == base)
+        let before = h.gamma.writeCount
+        h.gamma.changeBase(newBase, for: 1, appliesNow: false)
+        h.signals.emit(.colorProfileChanged)
+        await h.advance(.seconds(2))
+        #expect(h.gamma.writeCount == before && h.controller()?.baseline == newBase)
+        #expect(h.controller()?.pendingRebase != nil)                    // judged, but not written
+        h.engine.setOn(false, source: .panel)
+        await h.advance(.seconds(1))
+        h.signals.snapshot.isSessionActive = true
+        h.signals.emit(.sessionBecameActive)
+        await h.advance(.seconds(1))
+        #expect(h.phase() == .idle && h.table() == newBase && h.controller()?.pendingRebase == nil)
+        await expectNextArmUsesTheNewBase(h)
+    }
+
+    /// A foreign baseline (a continued S2 app's curve) survives a reconfiguration that changed no profile: the re-base
+    /// at rest finds our table still on screen, and the profile base differs from the baseline only because the
+    /// baseline is foreign (C-BOOST-17). The boosted re-base keeps it too.
+    @Test(arguments: [false, true])
+    func aForeignBaselineSurvivesAReconfiguration(boosted: Bool) async throws {
+        let h = EngineHarness()
+        let curve = newBase
+        h.gamma.foreignWrite(curve, to: 1)                                  // a warm-light tool's curve, kept going
+        await h.start()
+        #expect(await h.boost())
+        #expect(h.controller()?.baseline == curve && h.codes.contains("baseline.foreign"))
+        if !boosted {
+            h.engine.setOn(false, source: .panel)
+            await h.advance(.seconds(1))
+            #expect(h.phase() == .idle && h.table() == curve)
+        }
+        let adoptions = h.codes.filter { $0 == "baseline.adopted" }.count
+        h.signals.emit(.displaysReconfigured)
+        await h.advance(.seconds(3))
+        #expect(h.controller()?.baseline == curve)
+        #expect(h.codes.filter { $0 == "baseline.adopted" }.count == adoptions)
+        if boosted {
+            let factor = h.controller()?.appliedFactor ?? 1
+            #expect(factor > 1 && h.table()?.matches(curve.scaled(by: factor), tolerance: 1e-6) == true)
+        } else {
+            #expect(h.table() == curve)
+        }
+    }
+
+    /// Once WindowServer's new table is adopted at rest, our old write is no longer on screen: another writer that
+    /// puts that old table back is a foreign writer, and the next arm captures its table instead of keeping the profile
+    /// base as if it were our stale write (C-BOOST-18).
+    @Test func ourOldTableRestoredByAnotherWriterIsForeign() async throws {
+        let h = EngineHarness()
+        await boostThenOff(h)
+        h.gamma.changeBase(newBase, for: 1)
+        h.signals.emit(.displaysReconfigured)
+        await h.advance(.seconds(3))
+        #expect(h.controller()?.baseline == newBase && h.controller()?.lastWrite == nil)
+        h.gamma.foreignWrite(base, to: 1)                                   // the old table, from another writer
+        #expect(await h.boost())
+        #expect(h.controller()?.baseline == base && h.codes.contains("baseline.foreign"))
+        #expect(!h.codes.contains("baseline.keptOverOwnWrite"))
+    }
+
     /// A calibration's fresh baseline never captures our old write either; the next reduction writes the new base.
     @Test func aDrivenSessionNeverCapturesOurOldWrite() async throws {
         let h = EngineHarness()
