@@ -3,7 +3,7 @@
 # own: on some shells `a && b` chains abort silently (docs/CONTRIBUTING.md).
 SHELL := /bin/bash
 
-.PHONY: help build debug run smoke qa-matrix soak dist check test tsan lint strings strings-check copy-check l10n-check l10n-pending probe probe-check icon list clean distclean
+.PHONY: help build debug run smoke qa-matrix soak perf perf-compare dist check test tsan lint strings strings-check copy-check l10n-check l10n-pending probe probe-check icon list clean distclean
 
 help:            ## Show this help
 	@grep -E '^[a-z0-9-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  make %-14s %s\n", $$1, $$2}'
@@ -26,6 +26,13 @@ qa-matrix:       ## Debug app under --qa-simulate: every fixture's scenario, sym
 soak:            ## Debug app under --qa-simulate for MINUTES (30, at least 17): footprint growth per cycle; no own idle wake-up in the final off phase, none beating periodically after launch (after make debug)
 	@scripts/soak.sh
 
+perf:            ## Energy phases of a Debug app under --qa-simulate -> build/logs/perf/<variant>/ (RUNS="ui events", APP=, VARIANT=; after make debug)
+	@APP="$(APP)" VARIANT="$(VARIANT)" scripts/perf.sh $(RUNS)
+
+perf-compare:    ## Per phase: own CPU, own wake-ups, footprint, busy split and §17 verdicts of two perf folders (A=<dir> B=<dir>)
+	@if [[ -z "$(A)" || -z "$(B)" ]]; then echo "usage: make perf-compare A=build/logs/perf/<a> B=build/logs/perf/<b>"; exit 2; fi
+	@scripts/perf.sh compare "$(A)" "$(B)"
+
 dist: build      ## zip + dmg + sha256 (+ notarization with SIGN_IDENTITY/TEAM_ID/NOTARY_PROFILE) -> dist/
 	@scripts/dist.sh
 
@@ -40,7 +47,7 @@ tsan:            ## swift test under the Thread Sanitizer (CI: FILTER='HangWatch
 	@. scripts/lib.sh && ensure_xcode && cd "$$PACKAGE_DIR" && \
 	  swift test "$${SWIFTPM_FLAGS[@]}" --sanitize=thread --scratch-path .build-tsan $(if $(FILTER),--filter '$(FILTER)')
 
-lint:            ## Copy rules, competitor denylist (catalogs + every repository file), no Metal shader sources (D22), script self-tests
+lint:            ## Copy rules, competitor denylist (catalogs + every repository file), no Metal shader sources (D22), script syntax and self-tests
 	@/usr/bin/python3 -I scripts/lint-copy.py
 	@shaders="$$(find Packages App Controls Shared -name '*.metal' -not -path '*/.build*' 2>/dev/null)"; \
 	  if [[ -n "$$shaders" ]]; then echo "error: Metal shader sources are not allowed (ARCHITECTURE.md D22):"; echo "$$shaders"; exit 1; fi; \
@@ -48,6 +55,7 @@ lint:            ## Copy rules, competitor denylist (catalogs + every repository
 	@/usr/bin/python3 -I scripts/check-lproj.py --self-test
 	@/usr/bin/python3 -I scripts/l10n/validate.py --self-test
 	@/usr/bin/python3 -I scripts/soak_judge.py --self-test
+	@for script in scripts/*.sh; do /bin/bash -n "$$script" || exit 1; done; echo "Shell scripts parse (bash -n)"
 
 strings:         ## Sync the package's String Catalogs with the keys used in code
 	@scripts/sync-strings.sh

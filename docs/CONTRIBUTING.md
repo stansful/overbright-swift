@@ -86,6 +86,8 @@ make -C <repo> smoke                               # --diagnostics only: gammaWr
 SIMULATE=1 make -C <repo> smoke                    # agents: never launches on the real ports (Debug: --qa-simulate)
 make -C <repo> qa-matrix                           # after `make debug`: every fixture's scenario, Welcome writes nothing
 make -C <repo> soak                                # after `make debug`: 30 minutes under --qa-simulate (MINUTES ≥ 17); no own wake-up in the last off phase
+make -C <repo> perf RUNS=ui                        # after `make debug`: energy phases under --qa-simulate → build/logs/perf/<variant>/perf.md
+make -C <repo> perf-compare A=<dir> B=<dir>        # two perf folders side by side: own CPU, own wake-ups, footprint, §17 verdicts
 make -C <repo> run                                 # Debug build, simulated displays, a dev settings suite
 make -C <repo> dist                                # zip + dmg + sha256 (+ notarization when signing)
 make -C <repo> distclean                           # also every .build-* scratch dir
@@ -180,6 +182,52 @@ Skipped unless their variable is set; never run in CI:
 | `OVERBRIGHT_SNAPSHOT_DIR=<dir>` | Snapshot suites write PNGs for review into `<dir>/<Target>/`. |
 | `OVERBRIGHT_INTEGRATION=1` | Tests that show windows on screen (never with EDR content). |
 | `OVERBRIGHT_HARDWARE=1` | The owner's hardware session only (docs/HARDWARE-TEST.md 1.13): read-only real display ports (`RealDisplayReadTests`: capacity, read, profile base, the IORegistry walk) and the off-screen Metal clear (`MetalClearPassTests`). |
+
+## Measuring energy
+
+`scripts/perf.sh` (`make perf`, ARCHITECTURE.md §8.7) measures a Debug build under `--qa-simulate` against
+DESIGN.md §17, phase by phase. Each run launches the app once with a scripted scenario and a unique
+`--qa-defaults-suite`, which it deletes afterwards; beside it runs the soak's control app
+(`scripts/soak-control.swift`), a menu bar app that subscribes to what Overbright subscribes to at rest. Every number
+is the app's minus the control's:
+
+- **CPU** is CPU time (`proc_pid_rusage` user + system) over a clean window, as % of one core. The Mac may be busy
+  with other work: never judge by `top`'s instantaneous %.
+- **Wake-ups** are interrupt wake-ups (`ri_interrupt_wkups`) per second. `top`'s IDLEW counts only platform idle
+  exits and reads 0 for every process on a loaded Mac, so it judges nothing.
+- **Memory** is the `footprint` total (what Activity Monitor's Memory column shows), never RSS. Any in-process Metal
+  work makes the GPU driver charge ≈ 237 MB of graphics footprint until 1–3 s after the last frame.
+- `sample` (hot stacks and a busy-sample split by subsystem), `footprint` and `vmmap --summary` run after each window.
+  The lock state and the load average are recorded with every reading.
+
+| Run | What it measures |
+|---|---|
+| `launch` | launch to ready, with a `sample` of the first 10 s |
+| `base` | off, boosted, the panel open (steady and while the level moves at 10 Hz), a ramp storm and the HUD with the panel closed, dimmed, back to off (≈ 21 min) |
+| `ruleoff`, `two` | boosted with the full-screen-video rule off; two boosting displays (`russian-names`) |
+| `ui` | off, one panel open and close, the ramp storm and the HUD, back to off (≈ 7 min) |
+| `events` | 1,500 screen-parameters events 10 ms apart while off and while boosted, then bursts of 120 at 8 ms every 5 s with the panel closed and open: CPU per event |
+| `panelcycle` | the panel opened and closed 10 times while off: CPU per open and the footprint after |
+| `timeline` | interrupt wake-ups every second for 300 s while two displays are boosted: seconds with two wake-ups, gaps |
+
+```zsh
+make -C <repo> debug
+cp -R <repo>/build/Overbright.app <repo>/build/Overbright-base.app   # or build the base in its own worktree
+make -C <repo> perf RUNS="ui events" APP=build/Overbright-base.app VARIANT=base
+make -C <repo> perf RUNS="ui events"                                  # your build → build/logs/perf/Overbright/
+make -C <repo> perf-compare A=build/logs/perf/base B=build/logs/perf/Overbright
+<repo>/scripts/perf.sh summarize <repo>/build/logs/perf/Overbright    # the tables again (perf.md, perf.csv)
+```
+
+**Protocol.** Measure the base and your branch alternately in one session, every steady phase at least twice, and
+report the repeat pair, never a single window. Discard a window when the system log shows a click on the status item
+or the panel inside it (`/usr/bin/log show --last 30m --predicate 'subsystem == "app.overbright.Overbright"'`: "panel
+closes: outsideClick", AppKit `trackMouse`), and run it again. `PHASE`, `MEASURE`, `SETTLE` and `SAMPLE` change the
+windows (`SAMPLE=0` skips `sample`).
+
+**Safety.** perf.sh refuses a Release build, runs only the simulated ports (D24), never posts input and never attaches
+a debugger: `sample`, `footprint` and `vmmap` read the process. Do not attach `lldb -p` or `xctrace --attach` to a QA
+run either: lldb asks for a password on screen and makes `footprint` and `sample` hang.
 
 ## Engineering rules (summary of ARCHITECTURE.md §8–§9)
 
