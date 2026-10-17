@@ -206,6 +206,54 @@ nonisolated final class ScriptedRunningList: NSObject, @unchecked Sendable {
         token.cancel()
     }
 
+    /// A report matches only the processes it adds, each once whichever source reported it first; a termination
+    /// matches nothing; no report re-reads the list.
+    @Test func aReportMatchesOnlyTheAppsItAddsOnce() async {
+        let counter = CountingMatcher()
+        let harness = SignalsHarness(match: counter.match)
+        harness.platform.running = [shade, editor]
+        harness.apps.apps = [shade, editor]
+        await harness.start()
+        #expect(counter.asked.sorted() == [203, 204] && harness.apps.listReads == 1)    // the start's full scan
+        let center = harness.platform.workspaceCenter
+        harness.platform.changeRunningList(added: [booster])                            // the list first
+        harness.platform.post(NSWorkspace.didLaunchApplicationNotification, in: center, app: booster)
+        harness.platform.post(NSWorkspace.didLaunchApplicationNotification, in: center, app: tint)   // the notification first
+        harness.platform.changeRunningList(added: [tint])
+        #expect(counter.asked.suffix(2) == [201, 202] && counter.asked.count == 4)
+        harness.platform.changeRunningList(removed: [booster, shade])
+        harness.platform.post(NSWorkspace.didTerminateApplicationNotification, in: center, app: tint)
+        #expect(counter.asked.count == 4 && harness.apps.listReads == 1)
+        #expect(harness.monitor.snapshot.conflicts.isEmpty)
+        // A reused process ID is a new launch: matched again.
+        harness.platform.changeRunningList(added: [RunningAppInfo(bundleID: "com.example.shade", processID: 201)])
+        #expect(counter.asked.count == 5 && harness.monitor.snapshot.conflicts.map(\.entryID) == ["test-shade"])
+    }
+
+    /// A launch the reports missed (the running list changed but nobody said so) is found by the next full scan: on
+    /// every path into boosting, when the session becomes active, after a wake and on a report without an app. Until
+    /// then a report about another app does not find it.
+    @Test(arguments: ["boost", "session", "wake", "launch", "termination"]) func aFullScanFindsWhatTheReportsMissed(path: String)
+        async {
+        let harness = SignalsHarness()
+        await harness.start()
+        let center = harness.platform.workspaceCenter
+        harness.apps.apps = [booster]                                                   // never reported
+        harness.platform.changeRunningList(added: [editor])
+        #expect(harness.monitor.snapshot.conflicts.isEmpty && harness.apps.listReads == 1)
+        harness.monitor.setBoostActive(false)                                           // leaving the boost scans nothing
+        #expect(harness.apps.listReads == 1)
+        switch path {
+        case "boost": harness.monitor.setBoostActive(true)
+        case "session": harness.platform.post(NSWorkspace.sessionDidBecomeActiveNotification, in: center)
+        case "wake": harness.platform.post(NSWorkspace.didWakeNotification, in: center)
+        case "launch": harness.platform.post(NSWorkspace.didLaunchApplicationNotification, in: center)
+        default: harness.platform.post(NSWorkspace.didTerminateApplicationNotification, in: center)
+        }
+        #expect(harness.monitor.snapshot.conflicts.map(\.entryID) == ["test-booster"], "\(path)")
+        #expect(harness.apps.listReads == 2, "\(path)")
+    }
+
     @Test func stopEndsTheRunningListObservation() async {
         let harness = SignalsHarness()
         await harness.start()

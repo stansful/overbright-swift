@@ -19,7 +19,7 @@
 // exception keeps that stable: an idle pause in effect keeps its 2 s input poll until input returns, because the pause
 // itself turns the boost off (see `applyBoostSources`); a shield suspends the poll and keeps the pause. Two
 // event-driven pieces also run while the boost is inactive, as §7.1's table lists them with the notifications: the
-// full-screen re-check 0.6 s after a Space, app or screen event (≈ 3 ms of reads; it is what ends a full-screen or
+// full-screen re-check 0.6 s after a Space, app or screen event (≈ 0.6 ms of CPU; it is what ends a full-screen or
 // per-app pause) and the one re-check when a sticky menu-bar absence expires.
 //
 // Thread: main. Entry points the system may call on other threads (thermal, Low Power, IOKit callbacks, the
@@ -60,6 +60,12 @@ private let log = Log.logger(.signals)
     @ObservationIgnored var isWatching = false
     /// Which launches and terminations were posted (seeded with the running list at `start()`).
     @ObservationIgnored var appEvents = AppEventFilter()
+    /// The running conflicts by process ID, which `snapshot.conflicts` lists in order: set by a full scan, then kept
+    /// one launch and termination at a time (`SignalsMonitor+Apps.swift`).
+    @ObservationIgnored var conflictsByPID: [Int32: ConflictingApp] = [:]
+    /// Every process matched since the last full scan, a conflict or not: the second report of one launch is not
+    /// matched again.
+    @ObservationIgnored var matchedProcesses: Set<Int32> = []
     /// `start()` ran and `stop()` did not.
     @ObservationIgnored public private(set) var isStarted = false
     /// The engine's last `setBoostActive(_:)`.
@@ -119,11 +125,12 @@ private let log = Log.logger(.signals)
     }
 
     /// Starts or stops the boost-only sources. `true` first reads the power source and battery percent synchronously
-    /// (no event: the caller reduces right after).
+    /// and re-scans the running conflicts in full (no event: the caller reduces right after).
     public func setBoostActive(_ active: Bool) {
         if active != isBoostActive { record("signals.boostActive", ["active": active ? 1 : 0]) }
         isBoostActive = active
         if active { refreshPowerNow() }
+        if active, isStarted { rescanConflicts() }
         applyBoostSources()
         if active, isStarted { fullScreen.request() }
     }
@@ -173,6 +180,9 @@ private let log = Log.logger(.signals)
         guard !isStarted else { return }
         isStarted = true
         let session = platform.sessionState()
+        let scan = conflictProbe?.scan()
+        matchedProcesses = scan?.processIDs ?? []
+        conflictsByPID = Self.byProcess(scan?.conflicts ?? [])
         update { snapshot in
             snapshot.power = platform.readPower()
             snapshot.thermal = platform.thermalLevel()
@@ -180,7 +190,7 @@ private let log = Log.logger(.signals)
             snapshot.isSessionActive = session.isOnConsole
             snapshot.reduceMotion = platform.reduceMotion()
             snapshot.isHDRSuppressed = platform.isHDRSuppressed()
-            snapshot.conflicts = conflictProbe?.runningConflicts() ?? []
+            snapshot.conflicts = scan?.conflicts ?? []
             snapshot.focus = focusStore.directive
         }
         appEvents = AppEventFilter(running: Set(platform.runningApplications().map(\.processID)))

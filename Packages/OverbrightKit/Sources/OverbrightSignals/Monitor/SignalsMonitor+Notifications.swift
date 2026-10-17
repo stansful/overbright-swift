@@ -42,6 +42,7 @@ extension SignalsMonitor {
         }
         onMain(.workspaceNotifications, workspace, NSWorkspace.didWakeNotification) { monitor, _ in
             monitor.update { $0.isSystemSleeping = false }
+            monitor.rescanConflicts()                                     // a full scan after the sleep
             monitor.post(.didWake)
             monitor.didWake()
         }
@@ -63,6 +64,7 @@ extension SignalsMonitor {
         }
         onMain(.workspaceNotifications, workspace, NSWorkspace.sessionDidBecomeActiveNotification) { monitor, _ in
             monitor.update { $0.isSessionActive = true }
+            monitor.rescanConflicts()                                     // back on the console: a full scan
             monitor.post(.sessionBecameActive)
             monitor.shieldChanged()
             monitor.fullScreen.request()

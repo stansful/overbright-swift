@@ -141,6 +141,31 @@ import Testing
         #expect(harness.time.sleeperCount == 0)                              // nothing waits afterwards
     }
 
+    /// A check asks which of its windows' owners are regular apps (ours and the Dock never), with an answer equal to
+    /// the filtered running list, and never reads the whole list (AppKit re-fetches every listed app's dynamic
+    /// properties from LaunchServices: most of a check's cost).
+    @Test func aCheckAsksOnlyAboutTheOwnersOfItsWindows() async {
+        let harness = SignalsHarness()
+        let platform = harness.platform
+        platform.running = [RunningAppInfo(bundleID: "com.example.editor", processID: F.editor),
+                            RunningAppInfo(bundleID: "com.example.shade", processID: F.shade, isRegular: false),
+                            RunningAppInfo(bundleID: "com.example.player", processID: F.player)]
+        let everyone: Set<Int32> = [F.editor, F.shade, F.player, 4242]
+        #expect(platform.regularProcessIDs(among: everyone)
+                    == Set(platform.runningApplications().filter(\.isRegular).map(\.processID)).intersection(everyone))
+        platform.screenList = [F.msiAlone]
+        platform.windows = WindowListSnapshot(windows: [F.window(F.player, 0, 0, 2560, 1440), F.window(F.shade, 0, 0, 800, 600),
+                                                        F.window(platform.ownProcessID, 10, 10, 300, 200)],
+                                              windowServerPID: F.windowServer)
+        await harness.start()                                                // seeds the launch filter from the list
+        let listReads = platform.runningReads, regularReads = platform.regularReads
+        await harness.advance(.seconds(1))                                   // the launch check
+        #expect(platform.windowReads == 1)
+        #expect(platform.runningReads == listReads && platform.regularReads == regularReads + 1)
+        #expect(platform.regularCandidates.last == [F.player, F.shade])
+        #expect(harness.monitor.snapshot.fullScreenDisplays == [DisplayFixture.Keys.mpg322ux])   // a regular app's cover
+    }
+
     @Test func anUnreadableAssertionListLeavesPlayingUnknown() async {
         let harness = SignalsHarness()
         harness.platform.frontmost = RunningAppInfo(bundleID: "com.example.player", processID: F.player)

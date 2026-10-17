@@ -2,6 +2,8 @@
 // and drift attribution with the libproc fallback. ARCHITECTURE.md §3.6, §7.2, §10.8. Synthetic IDs only (D3).
 import AppKit
 import OverbrightCore
+import OverbrightPolicy
+import OverbrightTestSupport
 import Testing
 @testable import OverbrightSignals
 
@@ -85,6 +87,77 @@ import Testing
         #expect(seen.map(\.1) == [["test-booster"], ["test-booster", "test-tint"], ["test-booster", "test-tint"],
                                   ["test-tint"]])
         token.cancel()
+    }
+
+    /// Without an injected matcher the probe matches with Policy's prepared catalogue: case, `-setapp` twins, team-confirmed
+    /// prefixes and executables as §7.2 states them, and never Overbright itself.
+    @Test func theLiveProbeMatchesWithThePreparedCatalogue() {
+        let apps = FakeRunningApps()
+        apps.apps = [shade, editor, ourselves,
+                     RunningAppInfo(bundleID: "COM.EXAMPLE.booster-setapp", processID: 207, localizedName: "Booster"),
+                     RunningAppInfo(bundleID: "com.example.Dimmer-Pro", processID: 205, bundleURL: dimmerURL, localizedName: "Dimmer"),
+                     RunningAppInfo(bundleID: nil, processID: 300, executableName: "EXAMPLE-BOOST", isRegular: false)]
+        apps.teams[dimmerURL] = "team123456"
+        let probe = RunningAppsConflictProbe(catalog: TestCatalog.all, ownBundleID: "app.overbright.Overbright", source: apps)
+        #expect(probe.runningConflicts().map(\.entryID) == ["test-booster", "test-tool", "test-dimmer", "test-shade"])
+        #expect(probe.runningConflicts().map(\.processID) == [207, 300, 205, 203])
+        #expect(apps.teamReads == [dimmerURL])                              // read once, only for the team-naming prefix
+        let scan = probe.scan()
+        #expect(scan.processIDs == [203, 204, 100, 207, 205, 300] && scan.conflicts == probe.runningConflicts())
+    }
+
+    /// Seeded launches, terminations and reused process IDs, reported by the running list, the notifications or both in
+    /// either order, with full scans in between: once every report of a step has arrived, the snapshot holds what a
+    /// full scan of the list finds, and the matcher was asked once per launched process plus once per app a full scan
+    /// listed.
+    @Test(arguments: [UInt64(1), 2, 3]) func randomReportsKeepTheConflictsOfAFullScan(seed: UInt64) async {
+        let counter = CountingMatcher()
+        let harness = SignalsHarness(match: counter.match)
+        let identities = [booster, tint, shade, editor,
+                          RunningAppInfo(bundleID: "com.example.dimmer.pro", processID: 0, bundleURL: dimmerURL),
+                          RunningAppInfo(bundleID: nil, processID: 0, executableName: "example-boost", isRegular: false),
+                          RunningAppInfo(bundleID: "com.example.helper.xpc", processID: 0, isRegular: false)]
+        harness.apps.teams[dimmerURL] = "TEAM123456"
+        await harness.start()
+        var random = SeededGenerator(seed: seed)
+        var expectedAsks = 0
+        let center = harness.platform.workspaceCenter
+        for step in 0..<300 {
+            let running = harness.apps.apps
+            let roll = Int.random(in: 0..<10, using: &random)
+            if roll < 5 || running.isEmpty {                                  // a launch, under a free (maybe reused) PID
+                let used = Set(running.map(\.processID))
+                guard let pid = (Int32(1000)...Int32(1011)).filter({ !used.contains($0) }).randomElement(using: &random),
+                      var app = identities.randomElement(using: &random) else { continue }
+                app.processID = pid
+                expectedAsks += 1
+                let notifyFirst = app.isRegular && Bool.random(using: &random)
+                if notifyFirst { harness.platform.post(NSWorkspace.didLaunchApplicationNotification, in: center, app: app) }
+                harness.apps.apps.append(app)
+                harness.platform.changeRunningList(added: [app])
+                if app.isRegular && !notifyFirst && Bool.random(using: &random) {
+                    harness.platform.post(NSWorkspace.didLaunchApplicationNotification, in: center, app: app)
+                }
+            } else if roll < 9, let app = running.randomElement(using: &random) {   // a termination
+                let notifyFirst = app.isRegular && Bool.random(using: &random)
+                if notifyFirst { harness.platform.post(NSWorkspace.didTerminateApplicationNotification, in: center, app: app) }
+                harness.apps.apps.removeAll { $0.processID == app.processID }
+                harness.platform.changeRunningList(removed: [app])
+                if app.isRegular && !notifyFirst {
+                    harness.platform.post(NSWorkspace.didTerminateApplicationNotification, in: center, app: app)
+                }
+            } else {                                                          // a full scan: boost, session or wake
+                expectedAsks += running.count
+                switch Int.random(in: 0..<3, using: &random) {
+                case 0: harness.monitor.setBoostActive(true); harness.monitor.setBoostActive(false)
+                case 1: harness.platform.post(NSWorkspace.sessionDidBecomeActiveNotification, in: center)
+                default: harness.platform.post(NSWorkspace.didWakeNotification, in: center)
+                }
+            }
+            #expect(harness.monitor.snapshot.conflicts == harness.probe.runningConflicts(), "seed \(seed), step \(step)")
+            expectedAsks += harness.apps.apps.count                           // the reference scan just above
+            #expect(counter.asked.count == expectedAsks, "seed \(seed), step \(step)")
+        }
     }
 
     @Test func driftIsAttributedToARunningAppFirst() async {

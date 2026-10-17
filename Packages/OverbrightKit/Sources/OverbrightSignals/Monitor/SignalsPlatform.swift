@@ -31,6 +31,9 @@ import OverbrightCore
     func frontmostApplication() -> RunningAppInfo?
     /// `NSWorkspace.runningApplications`.
     func runningApplications() -> [RunningAppInfo]
+    /// The process IDs among `candidates` that are regular (Dock) apps of `runningApplications()`: all the full-screen
+    /// check needs from the running list (the owners of the windows it judges), without reading every app.
+    func regularProcessIDs(among candidates: Set<Int32>) -> Set<Int32>
     /// Observes `NSWorkspace.runningApplications` by KVO (`.old`, `.new`): the apps that joined and left, on the main
     /// actor. It also reports the agent and accessory apps the launch and termination notifications miss.
     func observeRunningApplications(_ handler: @escaping @MainActor @Sendable (RunningAppsChange) -> Void)
@@ -62,4 +65,11 @@ import OverbrightCore
     func observePowerSourceSwitches(_ handler: @escaping @MainActor @Sendable () -> Void) -> ObservationToken?
     /// Starts the IOKit every-change notification (battery percent); nil when unavailable.
     func observeBatteryChanges(_ handler: @escaping @MainActor @Sendable () -> Void) -> ObservationToken?
+}
+
+extension SignalsPlatform {
+    /// The regular apps among `candidates`, filtered from `runningApplications()`.
+    func regularProcessIDs(among candidates: Set<Int32>) -> Set<Int32> {
+        Set(runningApplications().lazy.filter { $0.isRegular && candidates.contains($0.processID) }.map(\.processID))
+    }
 }
