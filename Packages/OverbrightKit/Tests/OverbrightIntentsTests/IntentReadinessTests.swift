@@ -99,6 +99,45 @@ import Testing
         #expect(Set(boost.calls) == ["setDimLight(0.5,all,intent)", "resume(intent)"])
     }
 
+    /// The readiness observation lives only while an intent waits: none for a ready engine or with nobody waiting
+    /// (the engine's status changes, a ramp's every step, then cost the router nothing), one while an intent waits,
+    /// none again once it ran or gave up.
+    @Test func theRouterObservesReadinessOnlyWhileAnIntentWaits() async throws {
+        let router = IntentRouter(time: time)
+        let boost = notReadyEngine()
+        connect(router, boost)
+        #expect(!router.isWatchingReadiness)                       // connected, nobody waits
+        let request = Task { try await router.toggle() }
+        #expect(await eventually { router.isWatchingReadiness && time.sleeperCount == 1 })
+        boost.status.isReady = true
+        try await request.value
+        #expect(!router.isWatchingReadiness)
+        boost.status.isReady = false                               // the engine stops and starts again
+        let late = Task { try await router.resume() }
+        #expect(await eventually { router.isWatchingReadiness })
+        await time.advance(by: IntentRouter.readinessTimeout)
+        await #expect(throws: IntentRouterError.notReady) { try await late.value }
+        #expect(!router.isWatchingReadiness)                       // gave up: the observation ended with it
+        boost.status.isReady = true
+        try await router.turnOff()                                 // ready: no observation at all
+        #expect(!router.isWatchingReadiness)
+        #expect(boost.calls == ["toggle(intent)", "setOn(false,intent)"])
+    }
+
+    /// An intent that waits before the connection starts the observation when the router connects.
+    @Test func aRequestBeforeTheConnectionWatchesOnceConnected() async throws {
+        let router = IntentRouter(time: time)
+        let request = Task { try await router.toggle() }
+        #expect(await eventually { time.sleeperCount == 1 })
+        #expect(!router.isWatchingReadiness)                       // nothing to observe yet
+        let boost = notReadyEngine()
+        connect(router, boost)
+        #expect(router.isWatchingReadiness)
+        boost.status.isReady = true
+        try await request.value
+        #expect(!router.isWatchingReadiness)
+    }
+
     @Test func aCancelledIntentStopsWaiting() async {
         let router = IntentRouter(time: time)
         let request = Task { try await router.toggle() }

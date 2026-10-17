@@ -8,10 +8,11 @@ import OverbrightIntents
 /// A display in the Shortcuts app, identified by its `DisplayKey`; "All Displays" is an entity of its own, so the
 /// summary reads "Set extra brightness of All Displays to Bright Room".
 struct DisplayEntity: AppEntity {
-    /// No `numericFormat` (the plural): every Display parameter takes one value, and the extracted metadata keys a
-    /// numeric format as "${int} Displays" while the compiler extracts "%lld Displays", so one of them could never be
-    /// localized.
-    static let typeDisplayRepresentation: TypeDisplayRepresentation = "Display"
+    /// "Display", plural "Displays" (DESIGN.md §12.8). The numeric format is a plain "%lld Displays" literal, not the
+    /// `\(placeholder: .int)` interpolation: the metadata extractor keys that one as "${int} Displays" while the compiler
+    /// extracts "%lld Displays", so one of them could never be localized; the literal is keyed "%lld Displays" by both
+    /// and gets its plural forms from the catalog (Apple's Notes keys its entities' plurals the same way).
+    static let typeDisplayRepresentation = TypeDisplayRepresentation(name: "Display", numericFormat: "%lld Displays")
     static let defaultQuery = DisplayQuery()
 
     /// The identifier of "All Displays" (never a display UUID).

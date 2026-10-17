@@ -119,9 +119,6 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
         } else if let closedFrame {
             window.setFrame(closedFrame, display: false)
         }
-        #if DEBUG
-        applyQAAppearance(to: window)
-        #endif
         return window
     }
 
@@ -140,15 +137,7 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
     }
 
     #if DEBUG
-    /// Visual QA (Debug only): `-OverbrightQAAppearance light|dark` pins this window's appearance (Settings otherwise
-    /// follows the system).
-    private func applyQAAppearance(to window: NSWindow) {
-        switch defaults.string(forKey: "OverbrightQAAppearance") {
-        case "light": window.appearance = NSAppearance(named: .aqua)
-        case "dark": window.appearance = NSAppearance(named: .darkAqua)
-        default: break
-        }
-    }
+    // `-OverbrightQAAppearance light|dark` pins the whole app's appearance, this window's too (QAHooks+Snapshot.swift).
 
     /// Visual QA (Debug only): `-OverbrightQASnapshot <file.png>` renders the window's own view hierarchy to a PNG after
     /// `-OverbrightQASnapshotDelay` seconds (default 3). Unlike `screencapture`, it works while the displays sleep.

@@ -54,6 +54,24 @@ import Testing
                                 "pause(\(time.wallClock.timeIntervalSinceReferenceDate),intent)"])
     }
 
+    /// A crafted shortcut can pass any number of seconds (§9.2 rule 2: no trap): an infinite or huge pause is the
+    /// longest one (24 h), not a number is the default hour, a negative one is none. `Duration.seconds(Double)` traps on
+    /// all but the last, so the adapter hands the router the plain number.
+    @Test func everyPauseLengthIsSafe() async throws {
+        let (router, boost, _) = connected()
+        let now = time.wallClock
+        for seconds in [Double.infinity, 1e30, .nan, -.infinity, -5, 90, .greatestFiniteMagnitude] {
+            try await router.pause(forSeconds: seconds)
+        }
+        try await router.pause(for: .seconds(Int64.max))
+        let day = now.addingTimeInterval(IntentRouter.longestPause).timeIntervalSinceReferenceDate
+        let hour = now.addingTimeInterval(IntentRouter.fallbackPause).timeIntervalSinceReferenceDate
+        let none = now.timeIntervalSinceReferenceDate
+        let ninety = now.addingTimeInterval(90).timeIntervalSinceReferenceDate
+        #expect(boost.calls == [day, day, hour, none, none, ninety, day, day].map { "pause(\($0),intent)" })
+        #expect(IntentRouter.longestPause == 86_400 && IntentRouter.fallbackPause == 3_600)
+    }
+
     @Test func aDisplayThatIsNotConnectedIsAnError() async {
         let (router, boost, _) = connected()
         let gone = DisplayKey(rawValue: "0B21E7F1-FFFF-4000-8000-0000000000FF")

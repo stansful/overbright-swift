@@ -2,7 +2,10 @@
 // §12.4; ARCHITECTURE.md §7.4): asked only outside /Applications or for a translocated copy, Not Now remembered per
 // version, the move itself in a temporary folder (no real app is moved, no alert is shown, nothing is relaunched). A
 // successful move relaunches and quits before anything else of the launch can run; a failed relaunch puts the bundle
-// back, says so and carries on. The real quit is checked in a child process (an exit test).
+// back (and the older copy back from the Trash), says so and carries on; a bundle that cannot go back stays in
+// Applications, and the alert says so. A move or copy that fails after the older copy went to the Trash brings it
+// back. Esc answers "Not Now". The real quit is checked in a child process (an exit test).
+import AppKit
 import Darwin
 import Foundation
 import OverbrightCore
@@ -13,7 +16,7 @@ private let home = URL(filePath: "/Users/me", directoryHint: .isDirectory)
 
 /// A scripted user and system: the answers given, and what the mover did, in order.
 @MainActor private final class Script {
-    enum Event: Equatable { case asked, failureShown, relaunched(String), quit }
+    enum Event: Equatable { case asked, failureShown, strandedShown, relaunched(String), quit }
 
     var answer: ApplicationsMover.Answer = .notNow
     /// The error the relaunch throws (nil: LaunchServices launched the moved copy).
@@ -27,15 +30,16 @@ private let home = URL(filePath: "/Users/me", directoryHint: .isDirectory)
 
     var prompts: ApplicationsMover.Prompts {
         ApplicationsMover.Prompts(ask: { self.events.append(.asked); return self.answer },
-                                  reportFailure: { self.events.append(.failureShown) })
+                                  reportFailure: { self.events.append(.failureShown) },
+                                  reportStranded: { self.events.append(.strandedShown) })
     }
     func relaunch(_ url: URL) throws {
         events.append(.relaunched(url.standardizedFileURL.path(percentEncoded: false)))
         if let relaunchError { throw relaunchError }
     }
     func quit() { events.append(.quit) }
-    /// Older copies are removed, never put in the user's Trash.
-    nonisolated func trash(_ url: URL) throws { try FileManager.default.removeItem(at: url) }
+    /// Older copies go to a "Trash" folder next to the sandbox's Applications folder, never to the user's Trash.
+    nonisolated func trash(_ url: URL) throws -> URL? { try sandboxTrash(url) }
 
     func mover(settings: SettingsStore, bundle: URL, applications: URL,
                arguments: [String] = ["Overbright"]) -> ApplicationsMover {
@@ -68,11 +72,34 @@ private func sandboxRoot(_ name: String) -> URL {
     FileManager.default.temporaryDirectory.appending(path: "overbright-mover-\(name)", directoryHint: .isDirectory)
 }
 
+/// The sandbox's stand-in for the Trash: `<sandbox>/Trash/<UUID>/<name>`; returns the new location, as the Trash does.
+private nonisolated func sandboxTrash(_ url: URL) throws -> URL? {
+    let folder = url.deletingLastPathComponent().deletingLastPathComponent()
+        .appending(path: "Trash/\(UUID().uuidString)", directoryHint: .isDirectory)
+    try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+    let trashed = folder.appending(path: url.lastPathComponent, directoryHint: .isDirectory)
+    try FileManager.default.moveItem(at: url, to: trashed)
+    return trashed
+}
+
+/// An older `Overbright.app` in `applications` holding the file `Contents/older` (so tests tell the copies apart).
+private func olderCopy(in applications: URL) throws -> URL {
+    let older = applications.appending(path: "Overbright.app", directoryHint: .isDirectory)
+    try FileManager.default.createDirectory(at: older.appending(path: "Contents", directoryHint: .isDirectory),
+                                            withIntermediateDirectories: true)
+    try Data("older".utf8).write(to: older.appending(path: "Contents/older"))
+    return older
+}
+
 private func hasQuarantine(_ url: URL) -> Bool {
     getxattr(url.path(percentEncoded: false), BundleMove.quarantineAttribute, nil, 0, 0, 0) >= 0
 }
 
 private func exists(_ url: URL) -> Bool { FileManager.default.fileExists(atPath: url.path(percentEncoded: false)) }
+
+private func setMode(_ mode: Int, of url: URL) throws {
+    try FileManager.default.setAttributes([.posixPermissions: mode], ofItemAtPath: url.path(percentEncoded: false))
+}
 
 private struct LaunchRefused: Error {}
 
@@ -132,8 +159,7 @@ private struct LaunchRefused: Error {}
     @Test func moveMovesClearsQuarantineRelaunchesAndQuits() throws {
         let (bundle, applications) = try sandbox()
         defer { try? FileManager.default.removeItem(at: applications.deletingLastPathComponent()) }
-        let older = applications.appending(path: "Overbright.app", directoryHint: .isDirectory)
-        try FileManager.default.createDirectory(at: older, withIntermediateDirectories: true)
+        _ = try olderCopy(in: applications)
         let settings = SettingsStore(defaults: InMemoryDefaults())
         let script = Script()
         script.answer = .move
@@ -143,6 +169,7 @@ private struct LaunchRefused: Error {}
         #expect(!exists(bundle))                                                  // moved, not copied
         #expect(exists(moved.appending(path: "Contents/Info.plist")))
         #expect(!hasQuarantine(moved) && !hasQuarantine(moved.appending(path: "Contents/Info.plist")))
+        #expect(!exists(moved.appending(path: "Contents/older")))                // the older copy is in the Trash
         #expect(settings[OnboardingSettings.declinedMoveVersion] == nil)
     }
 
@@ -163,8 +190,93 @@ private struct LaunchRefused: Error {}
         #expect(settings[OnboardingSettings.declinedMoveVersion] == nil)
     }
 
+    /// The move had put an older copy in the Trash: after the failed relaunch the bundle goes back, and the older copy
+    /// comes back to Applications from the Trash (WP0b left it there).
+    @Test func aFailedRelaunchBringsTheOlderCopyBackFromTheTrash() throws {
+        let (bundle, applications) = try sandbox()
+        defer { try? FileManager.default.removeItem(at: applications.deletingLastPathComponent()) }
+        let older = try olderCopy(in: applications)
+        let script = Script()
+        script.answer = .move
+        script.relaunchError = LaunchRefused()
+        script.mover(settings: SettingsStore(defaults: InMemoryDefaults()), bundle: bundle, applications: applications)
+            .offerIfNeeded()
+        #expect(script.failures == 1 && script.quits == 0)
+        #expect(exists(bundle.appending(path: "Contents/Info.plist")))
+        #expect(exists(older.appending(path: "Contents/older")))                 // back in Applications
+        #expect(!exists(older.appending(path: "Contents/Info.plist")))           // and not the moved bundle
+    }
+
+    /// `putBack` of a copy (the original stayed): the copy goes through the trash, the older copy comes back.
+    @Test func undoingACopyRestoresTheOlderCopy() throws {
+        let (bundle, applications) = try sandbox()
+        defer { try? FileManager.default.removeItem(at: applications.deletingLastPathComponent()) }
+        let older = try olderCopy(in: applications)
+        let placement = try BundleMove.perform(bundle, into: applications, copyOnly: true, trash: sandboxTrash)
+        #expect(placement.trashedOlderCopy != nil && !exists(older.appending(path: "Contents/older")))
+        let undo = BundleMove.putBack(placement, to: bundle, trash: sandboxTrash)
+        #expect(undo == BundleMove.Undo(originalExists: true, olderCopyRestored: true))
+        #expect(exists(older.appending(path: "Contents/older")) && exists(bundle))
+    }
+
+    /// The Trash may not say where it put the copy (a nil URL): the copy is still gone, so the older copy comes back.
+    @Test func undoingACopyRestoresTheOlderCopyWhenTheTrashSaysNothing() throws {
+        let (bundle, applications) = try sandbox()
+        defer { try? FileManager.default.removeItem(at: applications.deletingLastPathComponent()) }
+        let older = try olderCopy(in: applications)
+        let placement = try BundleMove.perform(bundle, into: applications, copyOnly: true, trash: sandboxTrash)
+        let undo = BundleMove.putBack(placement, to: bundle, trash: { url in _ = try sandboxTrash(url); return nil })
+        #expect(undo == BundleMove.Undo(originalExists: true, olderCopyRestored: true))
+        #expect(exists(older.appending(path: "Contents/older")))                 // back in Applications
+        #expect(!exists(older.appending(path: "Contents/Info.plist")))
+    }
+
+    /// The copy itself fails after the older copy went to the Trash (the source cannot be read): the older copy comes
+    /// back to Applications before the error is thrown, and whatever the failed copy left goes to the Trash.
+    @Test func aFailedCopyBringsTheOlderCopyBack() throws {
+        let (bundle, applications) = try sandbox()
+        let info = bundle.appending(path: "Contents/Info.plist")
+        defer {
+            try? setMode(0o644, of: info)
+            try? FileManager.default.removeItem(at: applications.deletingLastPathComponent())
+        }
+        let older = try olderCopy(in: applications)
+        try setMode(0o000, of: info)
+        #expect(throws: (any Error).self) {
+            try BundleMove.perform(bundle, into: applications, copyOnly: true, trash: sandboxTrash)
+        }
+        #expect(exists(older.appending(path: "Contents/older")))                 // back in Applications
+        #expect(!exists(older.appending(path: "Contents/Info.plist")))           // not a partial new copy
+        #expect(exists(info))                                                     // the source stays
+    }
+
+    /// "Move" when the bundle can be neither moved (its folder is read-only) nor copied (it cannot be read): the
+    /// failure alert, no relaunch, and the older copy the move had put in the Trash is back in Applications.
+    @Test func aFailedMoveBringsTheOlderCopyBackAndSaysSo() throws {
+        let (bundle, applications) = try sandbox()
+        let downloads = bundle.deletingLastPathComponent()
+        let info = bundle.appending(path: "Contents/Info.plist")
+        defer {
+            try? setMode(0o755, of: downloads)
+            try? setMode(0o644, of: info)
+            try? FileManager.default.removeItem(at: applications.deletingLastPathComponent())
+        }
+        let older = try olderCopy(in: applications)
+        try setMode(0o000, of: info)
+        try setMode(0o555, of: downloads)
+        let settings = SettingsStore(defaults: InMemoryDefaults())
+        let script = Script()
+        script.answer = .move
+        script.mover(settings: settings, bundle: bundle, applications: applications).offerIfNeeded()
+        #expect(script.events == [.asked, .failureShown])
+        #expect(exists(older.appending(path: "Contents/older")))                 // back in Applications
+        #expect(!exists(older.appending(path: "Contents/Info.plist")))
+        #expect(exists(info))
+    }
+
     /// The bundle cannot go back (its folder became read-only): this copy cannot run from a path that is gone, so it
-    /// quits after the alert.
+    /// quits after an alert that says Overbright is in Applications now (not that it "couldn't be moved"); the older
+    /// copy stays in the Trash, because the new one has its place.
     @Test func aBundleThatCannotGoBackQuitsAfterTheAlert() throws {
         let (bundle, applications) = try sandbox()
         let downloads = bundle.deletingLastPathComponent()
@@ -172,6 +284,7 @@ private struct LaunchRefused: Error {}
             try? FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: downloads.path(percentEncoded: false))
             try? FileManager.default.removeItem(at: applications.deletingLastPathComponent())
         }
+        _ = try olderCopy(in: applications)
         let settings = SettingsStore(defaults: InMemoryDefaults())
         let script = Script()
         script.answer = .move
@@ -186,8 +299,9 @@ private struct LaunchRefused: Error {}
             },
             quit: script.quit, trash: script.trash)
         mover.offerIfNeeded()
-        #expect(script.failures == 1 && script.events.last == .quit)
-        #expect(!exists(bundle) && exists(applications.appending(path: "Overbright.app")))
+        #expect(script.failures == 0 && script.events.suffix(2) == [.strandedShown, .quit])
+        #expect(!exists(bundle) && exists(applications.appending(path: "Overbright.app/Contents/Info.plist")))
+        #expect(!exists(applications.appending(path: "Overbright.app/Contents/older")))
     }
 
     /// A translocated or read-only source is copied (it cannot be removed), quarantine cleared on the copy only; when
@@ -195,11 +309,11 @@ private struct LaunchRefused: Error {}
     @Test func copyOnlyKeepsTheSourceAndAFailedRelaunchRemovesTheCopy() throws {
         let (bundle, applications) = try sandbox()
         defer { try? FileManager.default.removeItem(at: applications.deletingLastPathComponent()) }
-        let trash: (URL) throws -> Void = { try FileManager.default.removeItem(at: $0) }
-        let moved = try BundleMove.perform(bundle, into: applications, copyOnly: true, trash: trash)
+        let placement = try BundleMove.perform(bundle, into: applications, copyOnly: true, trash: sandboxTrash)
+        let moved = placement.moved
         #expect(exists(bundle) && hasQuarantine(bundle))
-        #expect(!hasQuarantine(moved))
-        #expect(BundleMove.putBack(moved, to: bundle, trash: trash))
+        #expect(!hasQuarantine(moved) && placement.trashedOlderCopy == nil)
+        #expect(BundleMove.putBack(placement, to: bundle, trash: sandboxTrash) == BundleMove.Undo(originalExists: true))
         #expect(exists(bundle) && !exists(moved))
     }
 
@@ -230,12 +344,23 @@ private struct LaunchRefused: Error {}
                 let mover = ApplicationsMover(
                     settings: SettingsStore(defaults: InMemoryDefaults()), bundleURL: bundle, version: "0.1.0",
                     arguments: LaunchArguments(["Overbright"]), destinationFolder: applications,
-                    prompts: ApplicationsMover.Prompts(ask: { .move }, reportFailure: { exit(EX_SOFTWARE) }),
-                    relaunch: { _ in }, quit: ApplicationsMover.exitAfterRelaunch,
-                    trash: { try FileManager.default.removeItem(at: $0) })
+                    prompts: ApplicationsMover.Prompts(ask: { .move }, reportFailure: { exit(EX_SOFTWARE) },
+                                                       reportStranded: { exit(EX_SOFTWARE) }),
+                    relaunch: { _ in }, quit: ApplicationsMover.exitAfterRelaunch, trash: { try sandboxTrash($0) })
                 mover.offerIfNeeded()
                 exit(EX_SOFTWARE)                                                 // the rest of the launch
             }
         }
+    }
+
+    /// The offer's alert (DESIGN.md §12.4): [Move to Applications] is the default (Return), and Esc answers "Not Now"
+    /// (NSAlert gives Escape only to a button titled Cancel). Built, never shown.
+    @Test func escapeAnswersNotNow() {
+        let alert = ApplicationsMover.askAlert()
+        #expect(alert.buttons.map(\.title) == ["Move to Applications", "Not Now"])
+        #expect(alert.buttons[0].keyEquivalent == "\r")
+        #expect(alert.buttons[1].keyEquivalent == "\u{1b}")
+        #expect(ApplicationsMover.strandedAlert().buttons.map(\.title) == ["OK"])
+        #expect(ApplicationsMover.strandedAlert().messageText.hasPrefix("Overbright is now in the Applications folder"))
     }
 }
