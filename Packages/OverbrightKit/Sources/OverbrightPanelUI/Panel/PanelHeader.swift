@@ -1,6 +1,7 @@
 // OverbrightPanelUI/Panel/PanelHeader.swift — the panel's header: the status symbol in its current state, the name,
 // the master switch and the "⋯" menu. DESIGN.md §5.3 (items in order: Dim All Displays / Stop Dimming · Fill Light ✓ ·
-// Settings… ⌘, · Run Self-Test… · Help · Quit Overbright ⌘Q), §12.7 (VoiceOver: the switch is "Overbright").
+// Settings… ⌘, · Run Self-Test… · Help · Quit Overbright ⌘Q; Space or Return on the focused "⋯" opens the same rows,
+// §5.12), §12.7 (VoiceOver: the switch is "Overbright").
 import OverbrightCore
 import OverbrightDesign
 import SwiftUI
@@ -27,6 +28,34 @@ public nonisolated enum OverflowItem: Hashable, Sendable {
         [.dimAll(isDimmed: isDimmed), .fillLight(isOn: fillLightOn), .separator, .settings, .selfTest, .help, .separator,
          .quit]
     }
+
+    /// The row's title (title case: menus are AppKit chrome); empty for a separator.
+    @MainActor public var title: String {
+        switch self {
+        case .dimAll(let isDimmed): isDimmed ? MenuTitles.stopDimming : MenuTitles.dimAll
+        case .fillLight: MenuTitles.fillLight
+        case .separator: ""
+        case .settings: MenuTitles.settings
+        case .selfTest: MenuTitles.runSelfTest
+        case .help: MenuTitles.help
+        case .quit: MenuTitles.quit
+        }
+    }
+
+    /// The row draws a checkmark (Fill Light while on).
+    public var isChecked: Bool {
+        if case .fillLight(true) = self { return true }
+        return false
+    }
+
+    /// The ⌘ key equivalent shown on the row ("," for Settings…, "q" for Quit Overbright).
+    public var keyEquivalent: String {
+        switch self {
+        case .settings: ","
+        case .quit: "q"
+        default: ""
+        }
+    }
 }
 
 /// The header row.
@@ -36,6 +65,8 @@ struct PanelHeader: View {
     let symbol: (StatusSymbolState) -> Image
     let commands: PanelCommands
     let focus: FocusState<PanelFocus?>.Binding
+    @Environment(\.panelMenuPresenter) private var menus
+    @State private var overflowAnchor = MenuAnchorReference()
 
     var body: some View {
         HStack(spacing: Space.s) {
@@ -52,9 +83,7 @@ struct PanelHeader: View {
                                  set: { commands.services.boost.setOn($0, source: .panel) })) {
                 Text(verbatim: "Overbright")
             }
-            .toggleStyle(.switch)
-            .controlSize(.small)
-            .labelsHidden()
+            .toggleStyle(PanelSwitchStyle())                       // accent while on, in a panel that is not key
             .accessibilityLabel(Text(verbatim: "Overbright"))
             .panelFocus(focus, .masterSwitch, cornerRadius: HitTarget.minimum.height / 2) {
                 commands.services.boost.setOn(!status.isOn, source: .panel)
@@ -65,10 +94,14 @@ struct PanelHeader: View {
         .frame(height: PanelLayout.barHeight)
     }
 
+    private var overflowItems: [OverflowItem] {
+        OverflowItem.items(isDimmed: DimState.isEveryDisplayDimmed(status), fillLightOn: fillLightOn)
+    }
+
     private var overflowMenu: some View {
-        Menu {
-            ForEach(Array(OverflowItem.items(isDimmed: DimState.isEveryDisplayDimmed(status), fillLightOn: fillLightOn)
-                .enumerated()), id: \.offset) { _, item in
+        let commands = commands
+        return Menu {
+            ForEach(Array(overflowItems.enumerated()), id: \.offset) { _, item in
                 row(item)
             }
         } label: {
@@ -78,33 +111,52 @@ struct PanelHeader: View {
         .menuIndicator(.hidden)
         .buttonStyle(IconButtonStyle())
         .fixedSize()
+        .background { MenuAnchor(reference: overflowAnchor) }
         .accessibilityLabel(Text(verbatim: PanelText.overflowLabel))
-        .panelFocus(focus, .overflow)
+        .panelFocus(focus, .overflow) {
+            menus.present(overflowAnchor, KeyboardMenu.items(overflowItems) { Self.perform($0, commands: commands) })
+        }
     }
 
     @ViewBuilder
     private func row(_ item: OverflowItem) -> some View {
+        let commands = commands
         switch item {
-        case .dimAll(let isDimmed):
-            Button { commands.services.boost.toggleDim(source: .panel) } label: {
-                Text(verbatim: isDimmed ? MenuTitles.stopDimming : MenuTitles.dimAll)
-            }
         case .fillLight(let isOn):
-            Toggle(isOn: Binding(get: { isOn }, set: { commands.services.fillLight.setOn($0, source: .panel) })) {
-                Text(verbatim: MenuTitles.fillLight)
+            Toggle(isOn: Binding(get: { isOn }, set: { _ in Self.perform(item, commands: commands) })) {
+                Text(verbatim: item.title)
             }
         case .separator:
             Divider()
-        case .settings:
-            Button { commands.openSettings(nil) } label: { Text(verbatim: MenuTitles.settings) }
-                .keyboardShortcut(",", modifiers: .command)
-        case .selfTest:
-            Button { commands.openSettings(SettingsLinks.selfTest) } label: { Text(verbatim: MenuTitles.runSelfTest) }
-        case .help:
-            Button { commands.showHelp(nil) } label: { Text(verbatim: MenuTitles.help) }
-        case .quit:
-            Button { commands.quit() } label: { Text(verbatim: MenuTitles.quit) }
-                .keyboardShortcut("q", modifiers: .command)
+        default:
+            if item.keyEquivalent.isEmpty {
+                Button { Self.perform(item, commands: commands) } label: { Text(verbatim: item.title) }
+            } else {
+                Button { Self.perform(item, commands: commands) } label: { Text(verbatim: item.title) }
+                    .keyboardShortcut(KeyEquivalent(Character(item.keyEquivalent)), modifiers: .command)
+            }
         }
     }
+
+    /// What a row of the "⋯" menu does (the pointer's menu and the keyboard's run the same).
+    static func perform(_ item: OverflowItem, commands: PanelCommands) {
+        switch item {
+        case .dimAll: commands.services.boost.toggleDim(source: .panel)
+        case .fillLight(let isOn): commands.services.fillLight.setOn(!isOn, source: .panel)
+        case .separator: break
+        case .settings: commands.openSettings(nil)
+        case .selfTest: commands.openSettings(SettingsLinks.selfTest)
+        case .help: commands.showHelp(nil)
+        case .quit: commands.quit()
+        }
+    }
+}
+
+#Preview("Header") {
+    @Previewable @FocusState var focus: PanelFocus?
+    let services = ScriptedStatuses.services(named: "boosting") ?? OverbrightServices.preview()
+    PanelHeader(status: services.boost.status, fillLightOn: false, symbol: { _ in Image(symbol: .sunMaxFill) },
+                commands: PanelCommands(services: services, source: .panel), focus: $focus)
+        .frame(width: PanelLayout.width)
+        .overbrightThemeRoot()
 }

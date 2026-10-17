@@ -116,3 +116,5 @@ adjectives in common gender (“Overbright, lukket”). Compounds with a name ta
 | click | klikk / klikke (på) | Apple: “Klikk på …” |
 | Acknowledgments | Takk til |  |
 | Space (the space bar in key caps) | Mellomrom | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is Mellomromstast |
+
+Fit (WP14): the footer’s default row (Battery, Auto-pause, Timer) must fit its 304 pt in full in every language, measured with its glyphs (`FooterFitTests`), so the Timer chip reads “Uten tidtaker” for No timer.

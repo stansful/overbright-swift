@@ -1,7 +1,8 @@
 // OverbrightAppShell/StatusItem/StatusMenuModel.swift — the rows of the right-click / ⌃-click menu as data, built
 // fresh each time the menu opens. DESIGN.md §4.3 (rows, order and exact English, live key equivalents, per-display
 // quick levels with the shown presets, "All Displays ▸" while linked, the pause line + Resume, Update Available),
-// §4.2 (toggle mode puts Show Panel first), §12.3 (the banner's sentence and action as the first two lines).
+// §4.2 (toggle mode puts Show Panel first), §12.3 (the banner's sentence, naming the display a stop happened on, and
+// its action as the first two lines).
 // Menus cannot be rendered; `dump()` is what tests and `--qa-menu` read.
 import Foundation
 import OverbrightCore
@@ -56,8 +57,9 @@ struct StatusMenuModel {
         let status = services.boost.status
         let settings = services.settings
         var rows: [StatusMenuRow] = []
+        let titles = CardTitles.titles(for: status.displays)
         if let banner = status.banner {
-            rows.append(.status(BannerModel.make(banner).sentence))
+            rows.append(.status(BannerModel.make(banner, displayNames: titles, in: .app).sentence))
             if let action = BannerAction.primary(for: banner) { rows.append(.bannerAction(action)) }
         }
         if settings[GeneralSettings.clickAction] == .toggle { rows.append(.showPanel) }
@@ -67,7 +69,6 @@ struct StatusMenuModel {
                             key: MenuKeyEquivalent.of(.dimToggle, in: services.shortcuts)))
 
         let shown = status.displays.filter { !PanelContent.isNonCapable($0) }
-        let titles = CardTitles.titles(for: status.displays)
         var cards: [DisplayKey: DisplayCardModel] = [:]
         for display in shown { cards[display.key] = DisplayCardModel(status: display, isMasterOn: status.isOn, services: services) }
         let lastDimLight = settings[DisplaySettings.lastDimLight]

@@ -109,3 +109,5 @@ Register and typography (as macOS writes Thai):
 | Login Items | รายการเข้าสู่ระบบ | glossary |
 | update / check for updates | อัปเดต / ตรวจหารายการอัปเดต | Apple's term; Update Available = มีรายการอัปเดต; Version %@ is available = เวอร์ชัน %@ พร้อมให้ใช้งานแล้ว (not “มีเวอร์ชัน %@ แล้ว”, which reads “you already have”) |
 | Space (the space bar in key caps) | Space | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is Space bar |
+
+Fit (WP14): the footer’s default row (Battery, Auto-pause, Timer) must fit its 304 pt in full in every language, measured with its glyphs (`FooterFitTests`), so the Auto-pause chip reads “พักอัตโนมัติ”.

@@ -118,3 +118,5 @@ System Settings and Shortcuts loctables):
 | pre-release | тестова версія | “Включно з тестовими версіями”; “попередня версія” means *previous* |
 | When Overbright quits | До завершення роботи Overbright | Apple: “до завершення її роботи” |
 | Space (the space bar in key caps) | Пробіл | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is Пробіл |
+
+Fit (WP14): the footer’s default row (Battery, Auto-pause, Timer) must fit its 304 pt in full in every language, measured with its glyphs (`FooterFitTests`), so the Timer chip reads “Без ліміту” for No timer.

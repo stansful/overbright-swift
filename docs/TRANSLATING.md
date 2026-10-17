@@ -106,7 +106,7 @@ These hold in every language. `validate.py` checks the mechanical ones; the rest
 - **System Settings by pane name**, never by a path ("in Displays settings"). Overbright's own Settings may use
   paths ("Settings ▸ Automations").
 - **Constrained strings.** Items with `"constrained": true` sit in a fixed-width place; `maxWidth.hint` says how much
-  room there is: a status chip ≤ 280 pt on its own line, the three footer guard chips ≤ 292 pt together (they drop to
+  room there is: a status chip ≤ 280 pt on its own line, the three footer guard chips ≤ 304 pt together (they drop to
   glyph + value when they do not fit), the readout ≤ 200 pt, the slider's value tag ≤ 240 pt, the HUD ≤ 200 pt of
   text, the Safe / Peak segments one short word each, Control Center titles about 14 columns. Prefer the shortest
   natural wording. Tooltips, VoiceOver labels and Settings search keywords are never constrained.

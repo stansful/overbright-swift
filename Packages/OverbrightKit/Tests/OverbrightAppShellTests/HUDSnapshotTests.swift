@@ -90,9 +90,10 @@ import Testing
                 #expect(rep.pixelsWide >= Int(HUDPlacement.promptSize.width), "\(name)")
             } else {
                 let change = try #require(status.lastChange, "\(name)")
-                let text = HUDText.make(change, status: status) ?? Self.standIn(change, status)
-                let display = change.display ?? status.displays.first?.key
-                let level = HUDController.level(of: display, status: status, settings: services.settings)
+                let display = HUDContent.shownDisplay(for: change, underPointer: nil, status: status)
+                let text = HUDContent.text(for: change, status: status, on: display, services: services)
+                    ?? Self.standIn(change, status)
+                let level = HUDContent.level(of: display, status: status, services: services)
                 rep = try render(HUDView(text: text, level: level,
                                          isBoosting: HUDController.isBoosting(display, status: status)), appearance)
                 #expect(rep.pixelsWide >= Int(HUDPlacement.size.width), "\(name)")

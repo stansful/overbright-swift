@@ -120,7 +120,7 @@ import Testing
 
     /// Every readout fits its line, or drops the preset name and then fits (the card's fallback).
     @Test(arguments: ShippedLanguages.codes)
-    func readoutsFitOneLineInEveryLanguage(_ code: String) {
+    func readoutsFitOneLineInEveryLanguage(_ code: String) throws {
         let language = ShippedLanguages.design(code)
         let builder = ScriptedStatuses.names.compactMap(ScriptedStatuses.services(named:)).flatMap { services in
             services.boost.status.displays.map { display in
@@ -136,7 +136,7 @@ import Testing
                 : "«\(full)» \(fullWidth) pt, without the preset \(numbersWidth) pt"
         }
         #expect(failures.isEmpty, "\(code): readouts wider than \(PanelLayout.readoutWidth) pt: \(failures)")
-        let caption = PanelWords(code).compatibilityMode
+        let caption = try #require(PanelWords(code), "\(code): no PanelUI table").compatibilityMode
         #expect(FitMeasure.textWidth(caption, .caption) <= PanelLayout.readoutWidth, "\(code): «\(caption)»")
     }
 

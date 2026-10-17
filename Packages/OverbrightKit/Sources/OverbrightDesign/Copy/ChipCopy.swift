@@ -121,7 +121,8 @@ nonisolated enum ChipCopy {
                         String(localized: "Stopped: \(name)", bundle: b, locale: l,
                                comment: "Panel ▸ Display card: status chip, an app changed this display’s colors; the argument is its name"),
                         String(localized: "\(name) changed the colors of this display.", bundle: b, locale: l,
-                               comment: "Panel ▸ Display card: popover of Stopped: ‹App›"), [.continueAnyway])
+                               comment: "Panel ▸ Display card: popover of Stopped: ‹App›"),
+                        [app.severity == .booster ? .useCompatibilityMode : .continueAnyway])   // S1: §7.2
         case .tripped(.foreignTableAtLaunch):
             return chip(.exclamationMarkTriangleFill, .danger,
                         String(localized: "Colors changed", bundle: b, locale: l,

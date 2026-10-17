@@ -1,6 +1,6 @@
 // OverbrightDesign/Copy/GuardChipModel.swift — what one footer guard chip shows. DESIGN.md §5.9, §12.7.
 // Seam written by WP0a (ARCHITECTURE.md §10.0); WP9 owns it. A footer chip shows its setting, never a live value
-// (the timer's countdown excepted); when the three chips do not fit 292 pt, each drops to glyph + `compactText`.
+// (the timer's countdown excepted); when the three chips do not fit 304 pt, each drops to glyph + `compactText`.
 import Foundation
 import OverbrightCore
 

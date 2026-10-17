@@ -110,3 +110,5 @@ many (millions; same wording as other), other.
 | Esc / Return / Space / Delete / Command | Échap / Retour / Espace / Supprimer / Commande | Apple FR key names in prose; key caps stay symbols |
 | Paused / Done states | En pause / Terminé |  |
 | Space (the space bar in key caps) | Espace | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is Barre d’espace |
+
+Fit (WP14): the footer’s default row (Battery, Auto-pause, Timer) must fit its 304 pt in full in every language, measured with its glyphs (`FooterFitTests`), so the Timer chip reads “Sans limite” for No timer.

@@ -18,12 +18,12 @@ public struct PanelCommands {
     /// Opens a System Settings pane (tests record it).
     public let openURL: @MainActor (URL) -> Void
 
-    /// Commands over `services`.
+    /// Commands over `services`. Without `confirmOLED` the OLED notice names the configured idle pause.
     public init(services: OverbrightServices, source: ControlSource, close: @escaping @MainActor () -> Void = {},
-                confirmOLED: @escaping @MainActor (String) -> Bool = OLEDNotice.confirm,
+                confirmOLED: (@MainActor (String) -> Bool)? = nil,
                 openURL: @escaping @MainActor (URL) -> Void = { NSWorkspace.shared.open($0) }) {
         self.services = services; self.source = source; self.close = close
-        self.confirmOLED = confirmOLED; self.openURL = openURL
+        self.confirmOLED = confirmOLED ?? OLEDNotice.confirmer(services.settings); self.openURL = openURL
     }
 
     /// Runs `action` for `card`'s display.
@@ -42,6 +42,11 @@ public struct PanelCommands {
         case .changeRules: openSettings(SettingsLinks.appRules)
         case .editApps: openSettings(SettingsLinks.pausedApps)
         case .continueAnyway(let app): services.boost.continueAnyway(app)
+        case .continueInCompatibilityMode(let app):
+            // A booster is let through only when continued AND on the overlay (§7.2): both, or the display stays
+            // stopped behind a conflict. Continuing clears the drift trips the app caused.
+            useCompatibilityMode(on: [card.key])
+            services.boost.continueAnyway(app)
         }
     }
 

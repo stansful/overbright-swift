@@ -1,7 +1,8 @@
 // OverbrightAppShell/StatusItem/IconNotVisibleWindowController.swift — "Overbright's icon isn't visible": a small
 // window shown when the visibility check finds the icon hidden by macOS or the notch, at most once per app version
 // (`OnboardingSettings.hiddenIconNoticeVersion`). DESIGN.md §4.4 (exact English; the shortcut clause only with a
-// registered toggle shortcut; the last sentence on macOS 26 and later; [Open System Settings] [OK]), §16;
+// registered toggle shortcut; the last sentence on macOS 26 and later, joined by Design's localized sentence joiner;
+// [Open System Settings] [OK]; the window is titled with its heading, so VoiceOver and Mission Control name it), §16;
 // ARCHITECTURE.md §7.6 (Cranny's alert-window recipe: a normal window that activates the app).
 import AppKit
 import Foundation
@@ -61,9 +62,15 @@ final class IconNotVisibleWindowController {
         let window = NSWindow(contentRect: CGRect(x: 0, y: 0, width: 420, height: 200),
                               styleMask: [.titled, .closable], backing: .buffered, defer: false)
         window.contentViewController = NSHostingController(rootView: view)
-        window.title = ""
+        window.title = Self.heading
         window.isReleasedWhenClosed = false
         return window
+    }
+
+    /// "Overbright's icon isn't visible": the window's title and its heading.
+    static var heading: String {
+        String(localized: "Overbright’s icon isn’t visible", table: "StatusMenu", bundle: .module,
+               comment: "Menu bar icon window: title")
     }
 
     /// "Allow in the Menu Bar" exists on macOS 26 and later.
@@ -88,20 +95,19 @@ final class IconNotVisibleWindowController {
         let second = String(localized: "To show it, turn on Overbright under Allow in the Menu Bar in Menu Bar settings.",
                             table: "StatusMenu", bundle: .module,
                             comment: "Menu bar icon window: second sentence on macOS 26 and later")
-        return first + " " + second
+        return CopyFormat.sentences(first, second)
     }
 }
 
 /// The window's content.
-private struct IconNotVisibleView: View {
+struct IconNotVisibleView: View {
     let message: String
     let openSettings: () -> Void
     let dismiss: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: Space.l) {
-            Text(verbatim: String(localized: "Overbright’s icon isn’t visible", table: "StatusMenu", bundle: .module,
-                                  comment: "Menu bar icon window: title"))
+            Text(verbatim: IconNotVisibleWindowController.heading)
                 .font(.headline)
                 .accessibilityAddTraits(.isHeader)
             Text(verbatim: message)
@@ -122,4 +128,10 @@ private struct IconNotVisibleView: View {
         .padding(Space.xxl)
         .frame(width: 420)
     }
+}
+
+#Preview("Icon not visible") {
+    IconNotVisibleView(message: IconNotVisibleWindowController.message(toggleKeys: "⌃⌥⌘B", namesMenuBarSetting: true),
+                       openSettings: {}, dismiss: {})
+        .overbrightThemeRoot()
 }

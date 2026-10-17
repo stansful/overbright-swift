@@ -109,7 +109,7 @@ ajustes, app).
 | Keep this level? · Go Back · Keep | Manter este nível? · Restabelecer · Manter | the very-dark-level prompt |
 | Pause · Paused · Resume | “Pausar o Overbright” (Pause Overbright) · Em pausa · Retomar | a temporary stop; never “disabled” |
 
-Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its 292 pt in full in every language (`FooterFitTests`), so the Auto-pause chip reads “Autopausa” (off: “Sem autopausa”) and the Timer chip “Sem limite” for No timer.
+Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its 304 pt in full in every language (`FooterFitTests`), so the Auto-pause chip reads “Autopausa” (off: “Sem autopausa”) and the Timer chip, measured with its glyphs (WP14), “Ilimitado” for No timer.
 
 ## Carried from Cranny (generic interface words)
 

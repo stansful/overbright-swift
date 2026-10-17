@@ -106,7 +106,7 @@ display (צג) = masculine; camera (מצלמה) = feminine.
 | Keep this level? · Go Back · Keep | להשאיר את הרמה הזו? · חזרה · השארה | the very-dark-level prompt |
 | Pause · Paused · Resume | “השהיית Overbright” (Pause Overbright) · מושהה · המשך | a temporary stop; never “disabled” |
 
-Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its 292 pt in full in every language (`FooterFitTests`), so the Auto-pause chip reads “השהיות” (off: “ללא השהיות”).
+Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its 304 pt in full in every language (`FooterFitTests`), so the Auto-pause chip reads “השהיות” (off: “ללא השהיות”).
 
 ## Carried from Cranny (generic interface words)
 

@@ -14,6 +14,9 @@ public nonisolated enum CardAction: Hashable, Sendable {
     case runSelfTest
     /// Switches the display to Compatibility mode ("Use Compatibility mode").
     case useCompatibilityMode
+    /// Next to an S1 booster that changed the display's colors: switches the display to Compatibility mode, which
+    /// writes no table, and continues next to the app ("Use Compatibility mode"; ARCHITECTURE.md §7.2).
+    case continueInCompatibilityMode(ConflictingApp)
     /// Turns extra brightness on for the display ("Turn on"; an OLED asks first).
     case turnOnExtraBrightness
     /// The verdict's fix in System Settings ▸ Displays ("Open System Settings").
@@ -40,7 +43,7 @@ public nonisolated enum CardAction: Hashable, Sendable {
         case .runSelfTest:
             String(localized: "Run self-test…", bundle: .module,
                    comment: "Panel ▸ Display card: chip action that opens the self-test")
-        case .useCompatibilityMode:
+        case .useCompatibilityMode, .continueInCompatibilityMode:
             String(localized: "Use Compatibility mode", bundle: .module,
                    comment: "Panel ▸ Display card: chip action that switches the display to Compatibility mode")
         case .turnOnExtraBrightness:

@@ -2,8 +2,9 @@
 // Back to Standard shortcut in answer 3, or without it once it is cleared (DESIGN.md §12.6, §16). The window itself
 // is never ordered in by a test.
 import AppKit
+import Observation
 import OverbrightCore
-import OverbrightPanelUI
+@testable import OverbrightPanelUI
 import SwiftUI
 import Testing
 @testable import OverbrightAppShell
@@ -33,4 +34,29 @@ import Testing
         let size = NSHostingView(rootView: controller.content()).fittingSize
         #expect(size.width >= 480 && size.height >= 360)
     }
+
+    /// The open window's answer 3 follows the shortcut center: it registers after the window opened (any `--qa-help`
+    /// run), is rebound or cleared while it is open (C-PANEL-16).
+    @Test func theOpenWindowObservesTheShortcut() throws {
+        let center = PreviewShortcutCenter()
+        center.set(.standard, nil)                                          // not registered yet when Help opens
+        let view = HelpView(anchor: HelpEntry.Anchor.backToStandard, shortcuts: center)
+        let answer = { view.entries.first { $0.id == HelpEntry.Anchor.backToStandard }?.answer ?? "" }
+        #expect(!answer().contains("⌃⌥⌘"))
+        let changed = Flag()
+        withObservationTracking { _ = answer() } onChange: { changed.set() }
+        center.set(.standard, KeyCombo(keyCode: 29, modifiers: [.control, .option, .command]))
+        #expect(changed.isSet)                                              // the view's body would run again
+        #expect(answer().contains("⌃⌥⌘0"))
+        center.set(.standard, nil)
+        #expect(!answer().contains("⌃⌥⌘"))
+    }
+}
+
+/// A flag an observation's change handler sets (it may run on any thread).
+private nonisolated final class Flag: @unchecked Sendable {
+    private let lock = NSLock()
+    private var value = false
+    func set() { lock.withLock { value = true } }
+    var isSet: Bool { lock.withLock { value } }
 }

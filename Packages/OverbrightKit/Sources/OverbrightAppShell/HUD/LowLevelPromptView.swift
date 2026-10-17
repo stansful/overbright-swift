@@ -67,3 +67,10 @@ struct LowLevelPromptView: View {
         .accessibilityElement(children: .contain)
     }
 }
+
+#Preview("Keep this level?") {
+    let model = LowLevelPromptModel()
+    model.secondsLeft = 10
+    return LowLevelPromptView(model: model, keep: {}, goBack: {})
+        .overbrightThemeRoot()
+}

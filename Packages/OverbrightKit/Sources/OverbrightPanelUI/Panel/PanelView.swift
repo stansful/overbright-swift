@@ -1,8 +1,11 @@
 // OverbrightPanelUI/Panel/PanelView.swift — the panel's content: header, Fill Light card, banner, calibration tip, the
 // empty-state sentence, one card per display that can boost or dim, the "Why?" row, footer chips. DESIGN.md §5.1–§5.12
-// (the card list scrolls beyond the height cap or from four displays on; header, banner and footer stay), §2.0 rule 3
-// (the shell's hosting view applies `.overbrightThemeRoot` once). The window, its glass and its placement are the
-// shell's (`PanelController`).
+// (the card list scrolls beyond the height cap or from four displays on: three whole cards and a 24-pt peek of the
+// next one, shrinking when the cap binds; header, banner and footer stay), §5.11 (the "Why?" rows start expanded when
+// no display can boost), §12.3 (banners name the display), §2.0 rule 3 (the shell's hosting view applies
+// `.overbrightThemeRoot` once). The master switch draws its "on" state in the accent colour although the panel is not
+// key when clicked open (§5.1, `PanelSwitchStyle`). The window, its glass and its placement are the shell's
+// (`PanelController`).
 import OverbrightCore
 import OverbrightDesign
 import SwiftUI
@@ -15,15 +18,20 @@ public struct PanelView: View {
     private let commands: PanelCommands
     @FocusState private var focus: PanelFocus?
     @State private var whyExpanded = false
+    /// The measured heights of the cards in a scrolling list (the viewport ends on a card boundary).
+    @State private var cardHeights: [DisplayKey: CGFloat] = [:]
     @Environment(\.overbright) private var theme
 
     /// The panel over `services`. `symbol` draws the status symbol (the shell's code-drawn template); `close` closes
     /// the panel before an action opens another window; `takesFocus` puts keyboard focus on the master switch (the
-    /// panel was opened by keyboard or VoiceOver); `expandsWhy` opens with the "Why?" row expanded (snapshots).
+    /// panel was opened by keyboard or VoiceOver); `expandsWhy` opens with the "Why?" row expanded (snapshots; it also
+    /// starts expanded when no display can show extra brightness, DESIGN.md §5.11).
     public init(services: OverbrightServices, symbol: @escaping (StatusSymbolState) -> Image = { _ in Image(symbol: .sunMax) },
                 takesFocus: Bool = false, expandsWhy: Bool = false, close: @escaping @MainActor () -> Void = {}) {
         self.services = services
-        _whyExpanded = State(initialValue: expandsWhy)
+        let nothingCapable = PanelContent(status: services.boost.status, tipShown: true, calibrated: [],
+                                          fillLightOn: false, hasBattery: false).showsNothingCapable
+        _whyExpanded = State(initialValue: expandsWhy || nothingCapable)
         self.symbol = symbol
         self.takesFocus = takesFocus
         commands = PanelCommands(services: services, source: .panel, close: close)
@@ -57,7 +65,7 @@ public struct PanelView: View {
             .animation(theme.animation(status.banner == nil ? .bannerOut : .bannerIn), value: status.banner)
             Divider()
             footer(content, status: status)
-                .padding(.horizontal, Space.l)
+                .padding(.horizontal, PanelLayout.outerPadding)
         }
         .frame(width: PanelLayout.width)
         .onKeyPress(.tab, phases: .down) { press in
@@ -78,6 +86,11 @@ public struct PanelView: View {
 
     // MARK: Sections
 
+    /// The banner of `banner`, naming the display a stop happened on by its card title (DESIGN.md §12.3).
+    static func bannerModel(_ banner: Banner, status: BoostStatus) -> BannerModel {
+        BannerModel.make(banner, displayNames: CardTitles.titles(for: status.displays), in: .app)
+    }
+
     private func bannerView(_ banner: Banner, status: BoostStatus) -> some View {
         let action = BannerAction.primary(for: banner)
         let commands = commands
@@ -87,8 +100,8 @@ public struct PanelView: View {
             primary = { action.perform(commands, status: status) }
             activate = { action.perform(commands, status: status) }
         }
-        return PausedBanner(BannerModel.make(banner), primary: primary, secondary: nil)
-            .panelFocus($focus, .bannerPrimary, cornerRadius: Radius.card, activate: activate)
+        return PausedBanner(Self.bannerModel(banner, status: status), primary: primary, secondary: nil)
+            .panelFocus($focus, .bannerPrimary, cornerRadius: Radius.card, activate: activate ?? {})
             .transition(theme.reduceMotion ? .opacity : .move(edge: .top).combined(with: .opacity))
     }
 
@@ -105,6 +118,7 @@ public struct PanelView: View {
             ForEach(content.cards, id: \.key) { display in
                 DisplayCardView(status: display, isMasterOn: status.isOn, services: services, title: titles[display.key],
                                 focus: $focus, commands: commands)
+                    .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { cardHeights[display.key] = $0 }
             }
             if !content.nonCapable.isEmpty {
                 NonCapableRow(displays: content.nonCapable, titles: titles, isExpanded: $whyExpanded,
@@ -112,8 +126,13 @@ public struct PanelView: View {
             }
         }
         if content.cards.count > PanelLayout.visibleCardsBeforeScrolling {
-            ScrollView { list }
-                .frame(height: PanelLayout.scrollingListHeight)
+            // Three whole cards and a faded peek of the next (a scroll cue, never a card cut through its slider); the
+            // list gives way first when the panel's height cap binds, so the footer always shows.
+            let heights = content.cards.prefix(PanelLayout.visibleCardsBeforeScrolling).compactMap { cardHeights[$0.key] }
+            ScrollView { list.padding(.bottom, PanelLayout.scrollPeek) }
+                .mask { PanelScrollFade() }
+                .frame(maxHeight: PanelLayout.scrollingListHeight(cardHeights: heights))
+                .layoutPriority(-1)
         } else {
             ViewThatFits(in: .vertical) {
                 list

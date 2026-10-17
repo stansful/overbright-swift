@@ -95,7 +95,7 @@ Nouns after a number stay singular ("3 elem", "5 kijelző"), so the one/other pl
 | Keep this level? · Go Back · Keep | Megtartja ezt a szintet? · Vissza · Megtartás | the very-dark-level prompt |
 | Pause · Paused · Resume | “Az Overbright szüneteltetése” (Pause Overbright) · Szüneteltetve · Folytatás | a temporary stop; never “disabled” |
 
-Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its 292 pt in full in every language (`FooterFitTests`), so the Auto-pause chip reads “Autoszünet” (off: “Autoszünet ki”).
+Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its 304 pt in full in every language (`FooterFitTests`), so the Auto-pause chip reads “Autoszünet” (off: “Autoszünet ki”).
 
 ## Carried from Cranny (generic interface words)
 

@@ -16,9 +16,14 @@ nonisolated enum ShippedLanguages {
         CopyLanguage.named(code) ?? .english()
     }
 
-    /// PanelUI's own table in `code`.
+    /// PanelUI's own table in `code`: the `.lproj` folder inside the module's resources, built from its URL (a
+    /// `path(forResource:ofType:)` lookup can come back nil under parallel load, C-PANEL-33); nil when the folder is
+    /// missing, so a caller can require it instead of silently reading English.
     static func panel(_ code: String) -> Bundle? {
-        Bundle.module.path(forResource: code, ofType: "lproj").flatMap(Bundle.init(path:))
+        guard let resources = Bundle.module.resourceURL else { return nil }
+        let folder = resources.appendingPathComponent("\(code).lproj", isDirectory: true)
+        guard FileManager.default.fileExists(atPath: folder.path) else { return nil }
+        return Bundle(url: folder)
     }
 
     /// The codes of `scripts/l10n/languages.json` (the list the catalogs, `Info.plist` and the release check share).
@@ -37,8 +42,11 @@ nonisolated struct PanelWords {
     let bundle: Bundle
     let locale: Locale
 
-    init(_ code: String) {
-        bundle = ShippedLanguages.panel(code) ?? .module
+    /// The words of `code`; nil when its `.lproj` folder is missing, so a fit test requires it instead of measuring
+    /// English in its place (C-PANEL-33).
+    init?(_ code: String) {
+        guard let table = ShippedLanguages.panel(code) else { return nil }
+        bundle = table
         locale = Locale(identifier: code)
     }
 
@@ -61,4 +69,6 @@ nonisolated struct PanelWords {
 
     /// The readout caption of a display in Compatibility mode.
     var compatibilityMode: String { String(localized: "Compatibility mode", bundle: bundle, locale: locale) }
+    /// The card's inline "Turn on".
+    var turnOn: String { String(localized: "Turn on", bundle: bundle, locale: locale) }
 }

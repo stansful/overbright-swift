@@ -267,7 +267,7 @@ Help
 Quit Overbright                           ⌘Q
 ```
 
-- Key equivalents (`‹live›`) show the **live** global shortcut in the current keyboard layout, or nothing when the shortcut is cleared or failed to register (Cranny's `MenuKeyEquivalent`).
+- Key equivalents (`‹live›`) show the **live** global shortcut in the current keyboard layout, or nothing when the shortcut is cleared or failed to register (Cranny's `MenuKeyEquivalent`). As built (WP14): named keys (Space, Return, Tab, Delete, Esc, the arrows, F1–F12) come from the combo's key code, never from their localized caps ("Пробел", "Leertaste"); a character key comes from the caps of the current layout.
 - Preset items list only the presets shown on that display (§5.5); the dim item uses the last dim level (default "Dimmed · 25 %", light relative to Standard).
 - **Don't Use on This Display** turns extra brightness off for that display and returns it to Standard (dims undone); the opposite item turns extra brightness on (an OLED shows its notice first, §12.4).
 - With no display that can boost, the presets are replaced by a disabled "No Extra Brightness on This Display"; a display that can only dim keeps Standard and Dimmed.
@@ -331,19 +331,19 @@ Quit Overbright                           ⌘Q
 ### 5.3 Header
 
 - Leading: the status symbol in its current state (16 pt), then "Overbright" (`panelTitle`).
-- Trailing: the **master switch** (`Toggle`, `.switch`, `.controlSize(.small)`; VoiceOver "Overbright, on"), then the overflow button "⋯" (`IconButtonStyle`) with a menu: **Dim All Displays** ("Stop Dimming" while dimmed) · **Fill Light** (✓ while on) · separator · **Settings… ⌘,** · **Run Self-Test…** · **Help** · separator · **Quit Overbright ⌘Q**.
-- **Fill Light card.** While Fill Light is on, a compact card appears above the display cards: "Fill Light" with a **Display** pop-up, **Brightness** and **Warmth** sliders (the same ranges as Settings) and a **Turn Off** button. It is the place to adjust the light during a call without opening Settings.
+- Trailing: the **master switch** (`Toggle`, small; VoiceOver "Overbright, on"; as built (WP14) drawn by `PanelSwitchStyle`, accent while on in any window state, because the panel is not key when clicked open and a system switch would draw its inactive grey for both states), then the overflow button "⋯" (`IconButtonStyle`) with a menu: **Dim All Displays** ("Stop Dimming" while dimmed) · **Fill Light** (✓ while on) · separator · **Settings… ⌘,** · **Run Self-Test…** · **Help** · separator · **Quit Overbright ⌘Q**.
+- **Fill Light card.** While Fill Light is on, a compact card appears above the display cards: "Fill Light" with a **Display** pop-up, **Brightness** and **Warmth** sliders (the same ranges as Settings) and a **Turn Off** button. It is the place to adjust the light during a call without opening Settings. As built (WP14): one grid of a `.callout` label column, the controls and a value column as wide as the widest value, so both sliders start and end at the same x; the controls (the Display pop-up, no wider than the sliders, and the sliders) take the rest of the 280-pt inner width, so the value column ends at the card's inner edge; "Cool" and "Warm" (Settings' words) under the Warmth slider.
 - **One-time calibration tip.** After the first boost on a display that can be calibrated, a dismissible card appears once: "Check that it works" / "A one-minute check makes sure extra brightness is right for ‹Display›." [Calibrate…] [Not now].
 
 ### 5.4 Display card
 
-- `card` fill, `cardStroke` hairline, `Radius.card`, padding 12, 8 pt between cards. Every display that can boost **or dim** gets a full card.
+- `card` fill, `cardStroke` hairline, `Radius.card`, padding 12, 8 pt between cards. Every display that can boost **or dim** gets a full card. As built (WP14): one card style (`panelCard`) for the display cards, the calibration tip, the Fill Light card and the expanded "Why?" rows, each exactly 304 pt wide, so their edges line up with each other and the banner, all opaque with a full-strength hairline under Increase Contrast.
 - **Title:** display name (`cardTitle`, up to two lines). With linked levels a `link` glyph precedes the name of every card ("Same level on all displays"). Two displays with the same name get " (1)", " (2)" in UUID order, as macOS does.
-- **Slider row** (§5.5) with `sun.min` at the dim end and `sun.max.fill` at the boost end (14 pt, `secondaryLabelColor`), 6 pt gaps: a 240-pt track whose boost half is 120 pt.
+- **Slider row** (§5.5) with `sun.min` at the dim end and `sun.max.fill` at the boost end (14 pt, `secondaryLabelColor`), 6 pt gaps: a 240-pt track whose boost half is 120 pt. The glyphs draw 16 and 17 pt wide, so each sits in a 14 × 14 frame and the row is exactly the 280-pt inner width.
 - **Readout** (§5.6). In Compatibility mode a `caption` line "Compatibility mode" sits under it, with the method's footnote (§7.4) as its help tag.
-- **Chip line** (§5.7): only when a per-display reason applies.
-- **Context menu** (right-click, ⌃-click, or ⌃↩ while the card's slider has keyboard focus): the shown presets · Dimmed · 25 % · separator · Calibrate… · Settings for This Display… (Overbright's Settings ▸ Displays at this display) · Don't Use on This Display / Use Extra Brightness on This Display · Try Again (only when failed). Every item is also a **VoiceOver custom action** on the card, and the items that fix a limit (Try again, Continue anyway, Turn on, Choose Peak…) are also actions in the chip's popover, so nothing depends on right-click.
-- **Extra brightness off for this display** (opt-in displays, or after "Don't Use on This Display"): the boost half draws with `inactiveHatch` and the chip "Extra brightness off" offers **Turn on**. Moving the thumb past the detent turns it on as well; an OLED display shows the OLED notice first (§12.4), and the thumb waits at Standard until the notice is answered. Dimming always works.
+- **Chip line** (§5.7): only when a per-display reason applies. The chip and an inline **Turn on** share the line when both fit its 280 pt; otherwise Turn on drops under the chip.
+- **Context menu** (right-click, ⌃-click, or ⌃↩ while the card's slider has keyboard focus): the shown presets · Dimmed · 25 % · separator · Calibrate… · Settings for This Display… (Overbright's Settings ▸ Displays at this display) · Don't Use on This Display / Use Extra Brightness on This Display · Try Again (only when failed). Every item is also a **VoiceOver custom action** on the card and on its slider (where VoiceOver lands), and the items that fix a limit (Try again, Continue anyway, Turn on, Choose Peak…) are also actions in the chip's popover, so nothing depends on right-click.
+- **Extra brightness off for this display** (opt-in displays, or after "Don't Use on This Display"): the boost half draws with `inactiveHatch` and the chip "Extra brightness off" offers **Turn on**. Moving the thumb past the detent turns it on as well; an OLED display shows the OLED notice first (§12.4), and the thumb waits at Standard until the notice is answered (asked when the move ends, for the level it ended at; a move back to Standard or below asks nothing). Dimming always works. The thumb, the value tag, VoiceOver's value, the HUD bar and the menus' checkmark show the level the display has: Standard while the boost half is off or unavailable, whatever level is stored for the next turn-on (as built, WP14).
 
 ### 5.5 The level slider (`BoostSlider`)
 
@@ -352,7 +352,7 @@ Quit Overbright                           ⌘Q
 | Track | 240 pt, 4 pt high (6 pt while dragging), `track` colour, capsule ends |
 | Detent | a 1.5 × 8 pt `detentMark` at the centre: **Standard** |
 | Fills | drawn over the track. Left of the detent: `dimFill` from the detent to the thumb. Right of the detent: `boostWarm` from the detent to the thumb **while extra light is on screen**; while Overbright is off or paused, the same span is drawn with `inactiveHatch` (nothing is brighter, so nothing is warm) |
-| Allowed now | while boosting with a reading: a 2 × 10 pt `allowedMarker` where macOS's current limit puts the thumb's stop, and `inactiveHatch` beyond it to the end of the boost half. Hidden when there is no reading (off, never armed) |
+| Allowed now | while boosting with a reading: a 2 × 10 pt `allowedMarker` where the thumb stops now — macOS's current limit, or the decision's own cap when one binds (heat, Safe, near full brightness: the figure the readout's "asked ×…" states) — and `inactiveHatch` beyond it to the end of the boost half; it moves in steps of ×0.01, the figure its help tag states, not with every headroom poll. Hidden when there is no reading (off, never armed) |
 | Ticks | 1 × 5 pt `tick` marks at the **shown** presets (Indoor 25 %, Bright room 50 %, Sunlight 75 %, Max 100 % of the boost half; a preset below ×1.1 or within 0.1 stop of the next shown one is hidden, ARCHITECTURE.md §5.3); none on the dim half |
 | Thumb | 20 pt white circle with the system shadow (glass while dragged on macOS 26+); 28 pt hit area |
 | Snapping | within ±3 % of the detent or a shown tick, a slow drag settles there (`detentSnap`) with an `.alignment` haptic at the detent and `.levelChange` at a preset; a fast drag passes through |
@@ -398,7 +398,7 @@ At most one banner, between the header and the first card, for **a reason that a
 
 ### 5.9 Footer guard chips
 
-Three menu chips (`GuardChip`, 24 pt high, 6 pt apart) in a 44-pt footer; each shows its **setting** (never a live value) and opens a short menu. They are shortcuts to the most-used Automations rows; Settings has the rest. Together they fit 292 pt in every language; when they would not, each drops to glyph + value.
+Three menu chips (`GuardChip`, 24 pt high, 6 pt apart, 6 pt of padding each side) in a 44-pt footer inset like the cards; each shows its **setting** (never a live value) and opens a short menu (also on Space or Return). They are shortcuts to the most-used Automations rows; Settings has the rest. Together they fit 304 pt, the cards' width, in every language, measured with their glyphs as they draw (`battery.25percent` is 21 pt wide); when they would not, each drops to glyph + value. VoiceOver reads each chip's name as its label and its setting as its value, once ("Battery limit, Below 20 %"). As built (WP14): the earlier 292-pt budget was checked with 12-pt glyphs and 10-pt text, so the drawn English default row (296 pt) dropped to glyph + value, where "20 %" read as a battery level; measured as drawn, the row takes the cards' 304 pt with 6-pt chip padding, and the longest translations were reworded to fit.
 
 | Chip | Label (state) | Menu |
 |---|---|---|
@@ -421,7 +421,7 @@ Displays with neither a boostable nor a dimmable verdict (virtual displays, refe
 | Paused (by you, or by a global guard) | The banner; cards at full opacity (text is never faded); boost fills with `inactiveHatch`; moving a slider ends a pause you set, while a guard pause stores the level |
 | First arm of a display | Chip "Preparing…" with a small progress indicator; slider usable; readout "Preparing…"; the symbol `preparing` |
 | Fill Light on | The Fill Light card above the display cards (§5.3) |
-| Four or more displays | Three cards visible, the rest scroll |
+| Four or more displays | Three whole cards (their measured heights) and a 24-pt faded peek of the next, the rest scroll; when the panel's height cap binds, the list gives way first so the footer always shows |
 | Locked or asleep | (the panel cannot be open) |
 
 ### 5.12 Keyboard
@@ -430,10 +430,10 @@ Displays with neither a boostable nor a dimmable verdict (virtual displays, refe
 |---|---|
 | Tab / ⇧Tab | master switch → for each card: its slider, its chip, its Turn on → "Why?" (then its fix buttons and Learn more links when expanded) → banner buttons → footer chips → the Fill Light card's controls (when shown) → "⋯" |
 | ↑ / ↓ | previous / next card's slider |
-| ← / →, ⌥← / ⌥→, Home, End | slider (§5.5) |
+| ← / →, ⌥← / ⌥→, Home, End | slider (§5.5); ← / → also step the Fill Light card's sliders |
 | ⌃↩ | the focused card's context menu |
-| Space | toggles the focused switch, or opens the focused chip's popover or footer chip's menu |
-| Return | the focused button, chip or "Why?" |
+| Space | toggles the focused switch, or opens the focused chip's popover, footer chip's menu, the "⋯" menu or the Fill Light card's display pop-up (the same rows as an AppKit menu at the control) |
+| Return | the focused button, chip or "Why?" (no panel button is a default button: Return never runs one that has no focus) |
 | Esc | closes an open popover or menu (focus returns to its chip), else the panel |
 | ⌘, | Settings |
 | ⌘Q | Quit Overbright |
@@ -481,10 +481,10 @@ Every state below is a named status in PanelUI's `ScriptedStatuses` (`--qa-state
 
 ## 6. HUD and the Keep-this-level prompt
 
-- **When:** (1) the level or on/off state changes through a **global shortcut, the Shortcuts app, a Focus filter or Back to Standard**; (2) a turn-on from the **icon, a shortcut or the Shortcuts app** is not ready within 0.5 s ("Preparing…"); (3) a requested change is blocked by a guard; (4) an **automation stops, caps or resumes** extra brightness on a visible display: the timer ends, the battery threshold or "on battery" applies, Low Power Mode, heat, the schedule boundary, and the return when the cause clears. **Never** for changes made in the panel, the menu or Settings (they show their own state), and never for full-screen, app or game pauses, which the user caused. General ▸ "Show level changes on screen" turns all of it off.
+- **When:** (1) the level or on/off state changes through a **global shortcut, the Shortcuts app, a Focus filter or Back to Standard**; (2) a turn-on from the **icon, a shortcut or the Shortcuts app** is not ready within 0.5 s ("Preparing…"); (3) a requested change is blocked by a guard; (4) an **automation stops, caps or resumes** extra brightness on a visible display: the timer ends, the battery threshold or "on battery" applies, Low Power Mode, heat, the schedule boundary, and the return when the cause clears. **Never** for changes made in the panel, the menu or Settings (they show their own state), and never for full-screen, app or game pauses, which the user caused. General ▸ "Show level changes on screen" turns the HUD's window off; VoiceOver still hears every change it would show (§15: a global shortcut has no other non-visual feedback), also while the Keep-this-level prompt holds the HUD's place. Back to Standard shows from every source, the Dock menu's included.
 - **Where:** horizontally centred on the display whose level changed (the display under the pointer for "all"), 64 pt above the bottom of its visible frame (above the Dock), clear of the system's own brightness indicator and notification banners.
 - **Geometry:** 280 × 56 pt, `Radius.hud`, material per §2.4.
-- **Content:** leading glyph 20 pt (`sun.max.fill` boosting, `sun.min` dimmed, `sun.max` Standard or off, `hourglass` preparing, `pause.fill` blocked or paused, `thermometer.medium` heat); centre: the display name (`hudLabel`, only with two or more displays) above a 150-pt level bar drawn like the slider (detent mark, `dimFill` left, `boostWarm` right, no thumb); trailing value (`hudValue`) in canonical units: "Bright room · ×1.29", "×1.42", "Standard", "Dimmed · 25 %", "Off".
+- **Content:** leading glyph 20 pt (`sun.max.fill` boosting, `sun.min` dimmed, `sun.max` Standard or off, `hourglass` preparing, `pause.fill` blocked or paused, `thermometer.medium` heat); centre: the display name (`hudLabel`, only with two or more displays) above a 150-pt level bar drawn like the slider (detent mark, `dimFill` left, `boostWarm` right, no thumb, the theme's palette); trailing value (`hudValue`) in canonical units: "Bright room · ×1.29", "×1.42", "Standard", "Dimmed · 25 %", "Off". As built (WP14): the name has its own line above the value and the bar (the full 200 pt, middle-truncated only beyond it); value and bar show the level the display is set to — the panel's thumb — at once, never the lagging on-screen state; a turn-on's "Preparing…" line stays until the display is ready (at most 3 s), then the level reached shows for 1.5 s.
 - **Reasons:** for (2)–(4) the bar is replaced by one line (`hudLabel`, exact copy §12.9): "Preparing…", "Paused: battery below 20 %", "Off: timer ended", "Limited: Mac is warm", "Extra brightness is back", …
 - **Timing:** `hudIn`, stays 1.5 s after the last change (3 s for automation reasons), `hudOut`. A new change updates the visible HUD; there are never two.
 - **Never** activates, takes clicks or appears in screenshots where macOS honours `sharingType = .none`.
@@ -760,7 +760,7 @@ Advisories (a second line under the verdict): `compatibilityModeAdvised` "On thi
 | `oledIdle` | Paused: idle | `zzz` | neutral | "Extra brightness pauses after 5 minutes without input on OLED displays. Move the pointer or press a key to continue." | — |
 | `conflict` (S3, not blocking) | ‹App› may interfere | `exclamationmark.circle.fill` | info | "‹App› can change display colors in some modes. If it does, Overbright stops on this display." | — |
 | `tripped` (flicker, repairs) | Stopped | `exclamationmark.triangle.fill` | danger | "Overbright stopped on this display to prevent flicker." | Try again |
-| `tripped` (attributed drift) | Stopped: ‹App› | `exclamationmark.triangle.fill` | danger | "‹App› changed the colors of this display." | Continue anyway |
+| `tripped` (attributed drift) | Stopped: ‹App› | `exclamationmark.triangle.fill` | danger | "‹App› changed the colors of this display." | Continue anyway (Use Compatibility mode when ‹App› is a booster, S1: this display switches to Compatibility mode and Overbright continues next to ‹App›, so it boosts again; two tables never compound, ARCHITECTURE.md §7.2) |
 | `tripped` (foreign table) | Colors changed | `exclamationmark.triangle.fill` | danger | "Another app changed this display's colors in a way Overbright can't reset." | Open System Settings |
 
 Reasons that apply to every display (a user pause, S1/S2 conflicts, Focus, heat that stops, Low Power, battery, the schedule) are never chips: the banner says them once (§12.3). A card also shows no chip for the reason the banner currently shows (a trip on that display).
@@ -787,7 +787,7 @@ Action destinations: "Choose Peak…" opens Settings ▸ Displays at the display
 | foreign table at launch | "Another app changed the display colors and they couldn't be reset. Change the color profile or preset in Displays settings and back, or log out." | Open System Settings |
 | flicker stop | "Overbright stopped on ‹Display› to prevent flicker." | Try again |
 | unattributed drift | "Another app keeps changing the colors of ‹Display›, so Overbright stopped there." | Try again |
-| attributed drift | "‹App› changed the colors of ‹Display›, so Overbright stopped there." | Continue anyway |
+| attributed drift | "‹App› changed the colors of ‹Display›, so Overbright stopped there." | Continue anyway (Use Compatibility mode when ‹App› is a booster, S1: two tables never compound, ARCHITECTURE.md §7.2) |
 | Focus | "Off because of the current Focus." | Open System Settings |
 | heat | "Paused because your Mac is hot. Overbright continues when it cools down." | — |
 | Low Power Mode | "Paused because Low Power Mode is on." | Change power rules… |
@@ -799,7 +799,7 @@ The same sentence is the first, disabled line of the right-click menu, and its p
 
 ### 12.4 Sheets and alerts (title-case buttons)
 
-- **OLED notice** (turning on extra brightness for an OLED display, from the switch, Turn on, or the first move into the boost half) — "Use extra brightness on this OLED display?" / "Bright content that stays in one place for a long time, like the menu bar, can wear OLED panels unevenly. Overbright keeps extra brightness lower on OLED displays and pauses it after 5 minutes without input." [Turn On] [Cancel]
+- **OLED notice** (turning on extra brightness for an OLED display, from the switch, Turn on, or the first move into the boost half) — "Use extra brightness on this OLED display?" / "Bright content that stays in one place for a long time, like the menu bar, can wear OLED panels unevenly. Overbright keeps extra brightness lower on OLED displays and pauses it after ‹OLED idle time› without input." [Turn On] [Cancel] (the configured Automations ▸ OLED displays time, 5 minutes by default, worded as Settings words it; the same in the panel, the menu, Welcome and Settings)
 - **First use of Peak** — "Use Peak on ‹Display›?" / "Peak lets the whole screen go above the level the display can hold for long. It uses noticeably more power and makes the display warmer; macOS lowers it when needed." [Use Peak] [Cancel]
 - **Hide the menu bar icon** and **Overbright's icon isn't visible** — §4.4.
 - **Move to Applications** (before Welcome, when launched from outside `/Applications`; asked again after an update if declined) — "Move Overbright to the Applications folder?" / "Shortcuts actions and opening at login work only from Applications." [Move to Applications] [Not Now] (Return moves, Esc is Not Now). Moving relaunches Overbright from its new place; an older copy there goes to the Trash. Failure: "Overbright couldn't be moved. Drag it to the Applications folder in Finder." [OK] (a failed move puts the older copy back from the Trash; a failed relaunch puts the bundle back, and the older copy too). If the moved copy can neither start nor go back: "Overbright is now in the Applications folder, but it couldn't be opened from there. Open it from the Applications folder in Finder." [OK], then this copy quits.
@@ -935,7 +935,7 @@ None. Overbright ships no audio and plays no system sound.
 | **Reduce Transparency** | Opaque panel, HUD and prompt (`windowBackgroundColor`); no glass; cards unchanged. |
 | **Increase Contrast** | `highContrast` palette: opaque cards with a full-strength separator hairline, darker or lighter `boostWarm` (§2.1), `labelColor` detent, ticks, dim fill and hatch lines, a 1-pt `labelColor` ring around the white slider thumb (token `thumbRing`), the focus ring at full accent. |
 | **Differentiate Without Color** | Colour never carries meaning alone: chips always have words; the boost half has preset ticks and the dim half none; "not allowed now" and "nothing is brighter" are a hatch, not a colour; the allowed-now marker is a shape; the HUD always shows its value as text; the status symbol's states differ in shape (outline, filled, dotted rays, small disc with dots, badges). |
-| **VoiceOver** | §12.7; the panel is one container "Overbright"; each card a container named after its display, with its context-menu items as custom actions; the slider adjustable with named stops and canonical values; decorative layers (fills, Fill Light, the welcome card's light) hidden; level changes and automation stops announced. |
+| **VoiceOver** | §12.7; the panel is one container "Overbright"; each card a container named after its display, with its context-menu items as custom actions; the slider adjustable with named stops and canonical values; decorative layers (fills, Fill Light, the welcome card's light) hidden; level changes and automation stops announced, also with the HUD's window turned off. |
 | **Keyboard and Full Keyboard Access** | §5.12 for the panel (every chip, "Why?", Turn on and the Fill Light card are reachable; ⌃↩ opens a card's context menu); Settings and Welcome follow Cranny's maps; every action has a key path; nothing is hover-only (the value tag and help tags repeat what VoiceOver and the readout say). |
 | **Pointer and motor** | 28 × 24 pt hit targets; slider snapping only on slow drags; scroll-wheel adjustment in stops, following the hand whether natural scrolling is on or off (wheel away or fingers up: brighter). |
 | **Time limits** | The HUD is informational. The Undo of Reset All stays available as a button until the Settings window closes and through ⌘Z (the banner itself fades after 10 s). "Keep this level?" reverts after 10 s on purpose: going back is the safe direction, and any Overbright shortcut or Return keeps the level. |
@@ -970,7 +970,7 @@ None. Overbright ships no audio and plays no system sound.
 
 - **Denylist (ARCHITECTURE.md D3):** no competitor product or company name in any key, value or translator comment, in any language; other apps' names appear only at runtime. No reference to Launchpad (removed in macOS 26).
 - **Numbers and units:** always `FormatStyle` / `Measurement` (§12.5); "≈ %lld nits" has plural forms in every language.
-- **Length:** Russian runs 15–35 % longer; constrained strings are measured in every language by fit tests (English and a pseudo-long locale during development, all 35 in WP15), and a failure is fixed by wording first: chips ≤ 280 pt (their own line), the footer row ≤ 292 pt for all three chips (else glyph + value), readout ≤ 200 pt, value tag ≤ 240 pt (a "small gain" suffix may wrap), HUD text ≤ 200 pt, Safe/Peak segments.
+- **Length:** Russian runs 15–35 % longer; constrained strings are measured in every language by fit tests (English and a pseudo-long locale during development, all 35 in WP15), and a failure is fixed by wording first: chips ≤ 280 pt (their own line), the footer row ≤ 304 pt for all three chips, glyphs included (else glyph + value), readout ≤ 200 pt, value tag ≤ 240 pt (a "small gain" suffix may wrap), HUD text ≤ 200 pt, Safe/Peak segments.
 - **Right to left** (Arabic, Hebrew): the panel, cards, slider, footer and Settings mirror; the status symbol does not; names inside sentences are bidi-isolated.
 - **35 languages** from day one; Russian is the owner's review language and the pivot for the rest.
 

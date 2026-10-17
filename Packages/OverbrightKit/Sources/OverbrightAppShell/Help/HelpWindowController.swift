@@ -1,6 +1,7 @@
 // OverbrightAppShell/Help/HelpWindowController.swift — the local Help window. ARCHITECTURE.md §7.6 (a small `NSWindow`
 // hosting PanelUI's `HelpView`, anchors per entry; opened from the panel, the menu, Settings and Welcome; needs no
-// other window), §10.12; DESIGN.md §12.6 (answer 3 names the live Back to Standard shortcut), §0 #15 (local, no
+// other window), §10.12; DESIGN.md §12.6 (answer 3 names the live Back to Standard shortcut: `HelpView` observes the
+// shortcut center, so a rebind, a clear or a registration after the window opened shows at once), §0 #15 (local, no
 // network). Seam written by WP0a (§10.0): `init(services:)` and `show(anchor:)` are fixed.
 import AppKit
 import Foundation
@@ -50,9 +51,9 @@ final class HelpWindowController {
     /// The live key caps of Back to Standard that answer 3 names (nil: cleared or not registered).
     var backToStandardKeys: String? { services.shortcuts.displayString(.standard) }
 
-    /// The window's content now (the live shortcut in answer 3).
+    /// The window's content (the live shortcut in answer 3, observed while the window is open).
     func content() -> some View {
-        HelpView(anchor: anchor, backToStandardKeys: backToStandardKeys)
+        HelpView(anchor: anchor, shortcuts: services.shortcuts)
             .overbrightThemeRoot()
     }
 

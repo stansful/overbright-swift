@@ -91,7 +91,7 @@ Register and style, as macOS writes Polish:
 | Keep this level? · Go Back · Keep | Pozostawić ten poziom? · Przywróć · Pozostaw | the very-dark-level prompt |
 | Pause · Paused · Resume | “Wstrzymaj Overbright” (Pause Overbright) · Wstrzymano · Wznów | a temporary stop; never “disabled” |
 
-Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its 292 pt in full in every language (`FooterFitTests`), so the Timer chip reads “Bez limitu” for No timer.
+Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its 304 pt in full in every language (`FooterFitTests`), so the Timer chip reads “Bez limitu” for No timer.
 
 ## Carried from Cranny (generic interface words)
 
