@@ -1,10 +1,11 @@
 // OverbrightOnboardingTests/WelcomeLayoutTests.swift — the Welcome window keeps one layout from step to step (DESIGN.md
-// §8; WP14 C-ONBOARD-1), measured on rendered pixels and laid-out heights: the progress dots sit in the centre of the
-// window on every step whose buttons leave the centre free, whatever the widths of the button groups; every step has
-// the same split, the stage on top and the headline right under its divider (the full stage on steps 1, 4 and 5, the
-// compact one on steps 2 and 3, whose controls come after the headline); step 5 sums up the defaults it applies; and a
-// display row puts its switch on its own line rather than wrapping the name beside it. Rendered in-process in windows
-// that are never ordered in.
+// §8; WP14 C-ONBOARD-1), measured on rendered pixels and laid-out heights: the progress dots show on every step, the
+// last one with Turn On Overbright included, in the centre of the window whatever the widths of the button groups (in
+// the row while the buttons leave the centre free, else on their own line just above it, the footer's only change of
+// height); every step has the same split, the stage on top and the headline right under its divider (the full stage
+// on steps 1, 4 and 5, the compact one on steps 2 and 3, whose controls come after the headline); step 5 sums up the
+// defaults it applies; and a display row puts its switch on its own line rather than wrapping the name beside it.
+// Rendered in-process in windows that are never ordered in.
 import AppKit
 import OverbrightCore
 import OverbrightDesign
@@ -28,42 +29,90 @@ import Testing
 
     // MARK: Progress dots
 
-    /// The horizontal extent of what is drawn on the footer's middle line within `range` (points from the window's
-    /// leading edge), nil when nothing is.
-    static func inkExtent(_ rep: NSBitmapImageRep, in range: ClosedRange<CGFloat>) -> ClosedRange<CGFloat>? {
-        let y = rep.size.height / 2
-        guard let background = color(rep, x: 2, y: y) else { return nil }
+    /// Every kind of footer: each step, and the last one with Turn On Overbright, whose three buttons are the widest.
+    static func footerSessions() -> [(String, WelcomeSession)] {
+        WelcomeStep.allCases.map { ("\($0)", WelcomeChromeSnapshotTests.session($0)) }
+            + [("done, Turn On", WelcomeChromeSnapshotTests.session(.done, turnOn: true))]
+    }
+
+    /// The size of the progress dots (the same on every step: one capsule and four dots).
+    static var dotsSize: CGSize {
+        let dots = ProgressDots(current: 1, count: WelcomeStep.allCases.count)
+        return CGSize(width: FitMeasure.idealWidth(dots),
+                      height: FitMeasure.height(dots, width: WelcomeMetrics.window.width))
+    }
+
+    /// The height of the footer's button row (as high on every step).
+    static var buttonRowHeight: CGFloat {
+        let footer = WelcomeFooter(session: WelcomeChromeSnapshotTests.session(.hello),
+                                   labels: WelcomeFooterFitTests.english)
+        return FitMeasure.height(footer.row(dots: .inRow), width: WelcomeFooterFitTests.budget)
+    }
+
+    /// The progress dots as the footer of `session` with `labels` draws them (as the window places it, in Light): where
+    /// they are, read from the footer's height (a line higher when they sit above the row), and the horizontal extent
+    /// of what is drawn on their middle line, in points from the window's leading edge, nil when nothing is. Above the
+    /// row the whole width of the line is read; in the row, the centre the `CentredRow` keeps clear of the buttons.
+    static func drawnDots(_ session: WelcomeSession, labels: WelcomeFooter.Labels) throws
+        -> (placement: WelcomeFooter.DotsPlacement, extent: ClosedRange<CGFloat>?) {
+        let rep = try ChromeSnapshot.render(WelcomeChromeSnapshotTests.footer(session, labels: labels), .light)
+        let row = buttonRowHeight, dots = dotsSize
+        let aboveRow = rep.size.height > 2 * WelcomeMetrics.footerPadding + row + 0.5
+        let y = WelcomeMetrics.footerPadding + (aboveRow ? dots.height : row) / 2
+        let centre = WelcomeMetrics.window.width / 2, reach = dots.width / 2 + Space.m
+        let range = aboveRow ? 0...(rep.size.width - 0.5) : (centre - reach)...(centre + reach)
+        let placement: WelcomeFooter.DotsPlacement = aboveRow ? .aboveRow : .inRow
+        guard let background = color(rep, x: 1, y: y) else { return (placement, nil) }
         let inked = stride(from: range.lowerBound, through: range.upperBound, by: 0.5).filter { x in
             distance(color(rep, x: x, y: y), background) > 0.02
         }
-        guard let first = inked.first, let last = inked.last else { return nil }
-        return first...last
+        guard let first = inked.first, let last = inked.last else { return (placement, nil) }
+        return (placement, first...last)
     }
 
-    /// On every step whose button groups leave the centre free, the dots are centred in the window, in English and in
-    /// Russian: they no longer drift with the width of the buttons. On the last step with Turn On Overbright the
-    /// buttons reach the centre, and the dots step aside rather than move.
+    /// Whether `extent` is the dots alone, centred in the window: its middle at the window's centre and its width the
+    /// dots'.
+    static func isCentredDots(_ extent: ClosedRange<CGFloat>) -> Bool {
+        abs((extent.lowerBound + extent.upperBound) / 2 - WelcomeMetrics.window.width / 2) <= 1
+            && abs(extent.upperBound - extent.lowerBound - dotsSize.width) <= 2
+    }
+
+    /// On every step, the last one with Turn On Overbright included, the dots are drawn centred in the window, in
+    /// English and in Russian: they never drift with the width of the buttons, and never hide. In English they sit in
+    /// the row on every step but the last one with Turn On Overbright, whose three buttons reach the centre: there
+    /// they sit just above the row.
     @Test(arguments: ["en", "ru"])
     func theDotsStayInTheCentreOfTheWindow(_ code: String) throws {
         let labels = WelcomeFooter.Labels.localized(in: code == "en" ? englishBundle : onboardingBundle(code))
-        let centre = WelcomeMetrics.window.width / 2
-        let dots = FitMeasure.idealWidth(ProgressDots(current: 1, count: WelcomeStep.allCases.count))
-        var centred: [WelcomeStep] = []
-        for step in WelcomeStep.allCases {
-            let session = WelcomeChromeSnapshotTests.session(step)
-            let rep = try ChromeSnapshot.render(WelcomeChromeSnapshotTests.footer(session, labels: labels), .light)
-            let free = FitMeasure.idealWidth(WelcomeFooter(session: session, labels: labels).row(showsDots: true))
-                <= WelcomeFooterFitTests.budget
-            guard free else { continue }
-            let extent = try #require(Self.inkExtent(rep, in: (centre - dots)...(centre + dots)), "\(code) \(step)")
-            #expect(abs((extent.lowerBound + extent.upperBound) / 2 - centre) <= 1, "\(code) \(step): \(extent)")
-            #expect(abs(extent.upperBound - extent.lowerBound - dots) <= 2, "\(code) \(step): \(extent)")
-            centred.append(step)
+        var placements: [WelcomeFooter.DotsPlacement] = []
+        for (name, session) in Self.footerSessions() {
+            let drawn = try Self.drawnDots(session, labels: labels)
+            let extent = try #require(drawn.extent, "\(code) \(name): no dots")
+            #expect(Self.isCentredDots(extent),
+                    "\(code) \(name): \(extent), the dots are \(Self.dotsSize.width) pt wide")
+            placements.append(drawn.placement)
         }
-        #expect(centred == WelcomeStep.allCases, "\(code): \(centred)")             // Done without Turn On included
-        let turnOn = WelcomeChromeSnapshotTests.session(.done, turnOn: true)
-        #expect(FitMeasure.idealWidth(WelcomeFooter(session: turnOn, labels: labels).row(showsDots: true))
-                > WelcomeFooterFitTests.budget, "\(code): the last step's buttons reach the centre")
+        #expect(placements.dropLast().allSatisfy { $0 == .inRow }, "\(code): \(placements)")
+        if code == "en" { #expect(placements.last == .aboveRow) }
+    }
+
+    /// Only the dots' own line changes the footer's height: with the dots in the row the footer is the button row
+    /// between its paddings, and above the row a line higher (the dots and the space under them). The page above it
+    /// is that much shorter there, on the last step with Turn On Overbright (`WelcomeStepFitTests` measures step 5
+    /// under that footer).
+    @Test func onlyTheDotsLineChangesTheFooterHeight() {
+        let width = WelcomeMetrics.window.width, row = Self.buttonRowHeight
+        let inRow = 2 * WelcomeMetrics.footerPadding + row
+        let aboveRow = inRow + Self.dotsSize.height + WelcomeMetrics.dotsSpacing
+        for (name, session) in Self.footerSessions() {
+            let footer = WelcomeFooter(session: session, labels: WelcomeFooterFitTests.english)
+            #expect(abs(FitMeasure.height(footer.row(dots: .inRow).padding(.vertical, WelcomeMetrics.footerPadding),
+                                          width: width) - inRow) < 0.5, "\(name)")
+            #expect(abs(FitMeasure.height(footer.row(dots: .aboveRow).padding(.vertical, WelcomeMetrics.footerPadding),
+                                          width: width) - aboveRow) < 0.5, "\(name)")
+        }
+        #expect(abs(WelcomeMetrics.window.height - inRow - WelcomeStepFitTests.pageHeight) < 0.5)
+        #expect(abs(WelcomeMetrics.window.height - aboveRow - WelcomeStepFitTests.lastPageHeight) < 0.5)
     }
 
     /// The centred row's arithmetic: twice the wider side, the middle and its spacing; the sides never matter alone.

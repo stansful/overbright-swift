@@ -1,12 +1,12 @@
-// OverbrightOnboarding/Chrome/WelcomeFooter.swift — the bottom row of every step (DESIGN.md §8): Quit Overbright
+// OverbrightOnboarding/Chrome/WelcomeFooter.swift — the bottom of every step (DESIGN.md §8): Quit Overbright
 // bottom-leading, Back (⌘[) and Continue (↩) trailing; the last step ends with Done, and with Turn On Overbright as the
-// primary button when a display can boost. The progress dots sit in the centre of the window, whatever the widths of
-// the two button groups (`CentredRow`), so they stay in one place from step to step (WP14 C-ONBOARD-1; they drifted
-// with the buttons between two spacers). Ported from Cranny's WelcomeFooter (the owner's MIT code). The row must fit
-// the window's width between its insets in every language (`WelcomeFooterFitTests`: English, the pseudo-long locale
-// and every shipped language). When a button group would reach the centre (the last step with Turn On Overbright:
-// Back, Done and Turn On Overbright), the progress dots step aside: the footer never truncates a button or moves the
-// dots off centre, and VoiceOver still hears the step from its header.
+// primary button when a display can boost. The progress dots show on every step, in the centre of the window, whatever
+// the widths of the two button groups (WP14 C-ONBOARD-1; between two spacers they drifted with the buttons): in the
+// row (`CentredRow`) while the buttons leave the centre free, else on their own line just above the row (the last step
+// with Turn On Overbright in most languages: Back, Done and Turn On Overbright reach the centre). That line is the only
+// thing that changes the footer's height; the dots never leave the centre or hide, and no button is ever truncated.
+// Ported from Cranny's WelcomeFooter (the owner's MIT code). The footer must fit the window's width between its insets
+// in every language (`WelcomeFooterFitTests`: English, the pseudo-long locale and every shipped language).
 import Foundation
 import OverbrightCore
 import OverbrightDesign
@@ -55,28 +55,46 @@ struct WelcomeFooter: View {
 
     var body: some View {
         ViewThatFits(in: .horizontal) {
-            row(showsDots: true)
-            row(showsDots: false)
+            row(dots: .inRow)
+            row(dots: .aboveRow)
         }
-        .controlSize(.large)
     }
 
-    /// The row, with the progress dots centred in it or without them (only the one that fits is shown, so its
-    /// shortcuts are the live ones).
-    @ViewBuilder func row(showsDots: Bool) -> some View {
-        if showsDots {
+    /// Where the progress dots go.
+    enum DotsPlacement {
+        /// In the centre of the button row, while both button groups leave it free.
+        case inRow
+        /// Centred on their own line just above the button row, where the buttons reach the centre.
+        case aboveRow
+    }
+
+    /// The footer with the progress dots at `placement` (only the one that fits is shown, so its shortcuts are the
+    /// live ones).
+    @ViewBuilder func row(dots placement: DotsPlacement) -> some View {
+        switch placement {
+        case .inRow:
             CentredRow(spacing: Space.l) {
                 quitButton
-                ProgressDots(current: session.stepNumber, count: session.stepCount)
+                dots
                 buttons
             }
-        } else {
-            HStack(spacing: Space.m) {
-                quitButton
-                Spacer(minLength: Space.l)
-                buttons
+            .controlSize(.large)
+        case .aboveRow:
+            VStack(spacing: WelcomeMetrics.dotsSpacing) {
+                dots
+                HStack(spacing: Space.m) {
+                    quitButton
+                    Spacer(minLength: Space.l)
+                    buttons
+                }
+                .controlSize(.large)
             }
         }
+    }
+
+    /// The progress dots.
+    private var dots: some View {
+        ProgressDots(current: session.stepNumber, count: session.stepCount)
     }
 
     /// Quit Overbright, bottom-leading.
@@ -109,10 +127,20 @@ struct WelcomeFooter: View {
     }
 }
 
+extension WelcomeFooter {
+    /// The footer as the window places it: between the window's side insets, under the page and above the window's
+    /// bottom edge (`WelcomeView`; the tests measure and draw it the same way).
+    var inWindow: some View {
+        padding(.horizontal, WelcomeMetrics.inset)
+            .padding(.vertical, WelcomeMetrics.footerPadding)
+    }
+}
+
 /// Three views in a row: the first at the leading edge, the last at the trailing edge, and the middle one centred in
 /// the row whatever the widths of the other two. Every view takes its ideal size (no button is ever truncated). Its
 /// ideal width keeps the middle view `spacing` clear of the wider side on both sides, so in a `ViewThatFits` the row
-/// gives way as soon as a side would reach the centre. SwiftUI mirrors it for right-to-left languages.
+/// gives way as soon as a side would come within `spacing` of the middle view. SwiftUI mirrors it for right-to-left
+/// languages.
 struct CentredRow: Layout {
     /// The least space between the middle view and either side.
     var spacing: CGFloat
@@ -141,8 +169,7 @@ struct CentredRow: Layout {
 
 #Preview("Footer · first step") {
     WelcomeFooter(session: WelcomeSession(services: .preview(), recordsOutcome: false) { _ in })
-        .padding(.horizontal, WelcomeMetrics.inset)
-        .padding(.vertical, Space.xl)
+        .inWindow
         .frame(width: WelcomeMetrics.window.width)
 }
 
@@ -150,7 +177,6 @@ struct CentredRow: Layout {
     let session = WelcomeSession(services: .preview(), initialStep: .done, recordsOutcome: false) { _ in }
     session.offersTurnOn = true
     return WelcomeFooter(session: session)
-        .padding(.horizontal, WelcomeMetrics.inset)
-        .padding(.vertical, Space.xl)
+        .inWindow
         .frame(width: WelcomeMetrics.window.width)
 }

@@ -35,8 +35,7 @@ public struct WelcomeView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .clipped()
             WelcomeFooter(session: session)
-                .padding(.horizontal, WelcomeMetrics.inset)
-                .padding(.vertical, Space.xl)
+                .inWindow
         }
         .animation(OverbrightTheme(reduceMotion: reduceMotion).animation(.contentSwap), value: session.step)
         .frame(width: WelcomeMetrics.window.width, height: WelcomeMetrics.window.height)

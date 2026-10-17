@@ -19,6 +19,11 @@ nonisolated enum WelcomeMetrics {
     static let inset = Space.huge
     /// The space between the stage's divider and the step's headline.
     static let copyTopPadding = Space.xl
+    /// The space above the footer (to the step's page) and below it (to the window's bottom edge).
+    static let footerPadding = Space.xl
+    /// The space between the progress dots and the button row under them, where the buttons reach the centre (closer
+    /// than the page above, so the dots read as part of the footer).
+    static let dotsSpacing = Space.m
     /// Corner radius of option and display cards in the window.
     static let cardRadius = Radius.card
     /// The size of a step's check badge.
