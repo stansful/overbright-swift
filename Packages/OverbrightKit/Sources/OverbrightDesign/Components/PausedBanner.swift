@@ -1,7 +1,9 @@
-// OverbrightDesign/Components/PausedBanner.swift — the panel's one banner. DESIGN.md §5.8, §12.3, §12.7.
+// OverbrightDesign/Components/PausedBanner.swift — the panel's one banner. DESIGN.md §2.2, §5.8, §12.3, §12.7.
 // Seam written by WP0a (ARCHITECTURE.md §10.0): the initializer is fixed. The card fill tinted 10 % with the semantic
-// colour, a 14-pt glyph, the sentence (`banner`, up to three lines) and up to two text buttons, primary first. Banners
-// reflect state, so they have no close button; they arrive with `bannerIn` and leave with `bannerOut`.
+// colour, a 14-pt glyph, the sentence (`banner`) and up to two text buttons, primary first. The sentence is never cut:
+// the banner grows in height for a long translation (the card list below scrolls), and only an app name in it is
+// middle-truncated (`BannerModel.nameWidth`), with the full sentence in the help tag and VoiceOver. Banners reflect
+// state, so they have no close button; they arrive with `bannerIn` and leave with `bannerOut`.
 import OverbrightCore
 import SwiftUI
 
@@ -27,8 +29,9 @@ public struct PausedBanner: View {
             VStack(alignment: .leading, spacing: Space.s) {
                 Text(verbatim: model.sentence)
                     .font(OverbrightFont.banner.font)
-                    .lineLimit(3)
                     .fixedSize(horizontal: false, vertical: true)
+                    .help(model.accessibilityLabel == model.sentence ? "" : model.accessibilityLabel)
+                    .accessibilityLabel(Text(verbatim: model.accessibilityLabel))
                 if hasButtons {
                     HStack(spacing: Space.l) {
                         Spacer(minLength: 0)
@@ -67,6 +70,10 @@ public struct PausedBanner: View {
         PausedBanner(BannerModel.make(.lowPowerMode), primary: {}, secondary: nil)
         PausedBanner(BannerModel.make(.thermalCritical), primary: nil, secondary: nil)
         PausedBanner(BannerModel.make(.focusOff), primary: {}, secondary: nil)
+        PausedBanner(BannerModel.make(.foreignTableAtLaunch), primary: {}, secondary: nil)
+        let app = ConflictingApp(entryID: "s1", severity: .booster, bundleID: nil, processID: 1,
+                                 displayName: "A Very Long Brightness Utility Name That Goes On")
+        PausedBanner(BannerModel.make(.conflict(app)), primary: {}, secondary: nil)
     }
     .padding()
     .frame(width: 320)

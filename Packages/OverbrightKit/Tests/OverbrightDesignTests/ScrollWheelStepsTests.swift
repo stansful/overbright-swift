@@ -2,9 +2,10 @@
 // slider (DESIGN.md §5.5, §15): a scroll in another window (Settings after the panel closed under the pointer) or
 // beside the slider passes through and leaves the level alone, and the listener stops when its window resigns key,
 // closes or is hidden. Over the slider a trackpad's part of a notch is taken while the level can still move that way
-// (the card list behind does not scroll between steps, DESIGN.md §5.1), horizontal scrolling is mirrored right to left,
-// and a listener that goes away stops listening. The windows are built, never ordered in; the events are made, never
-// posted.
+// (the card list behind does not scroll between steps, DESIGN.md §5.1), a notch follows the hand with natural
+// scrolling on or off, horizontal scrolling is mirrored right to left, and a listener that goes away removes its event
+// monitor and its window observers. The windows are built, never ordered in; the events are made, never posted (a made
+// event is never direction-inverted, so the inverted cases are checked on the deltas).
 import AppKit
 import CoreGraphics
 import OverbrightCore
@@ -54,8 +55,9 @@ import Testing
     }
 
     /// A listener over `scene`'s slider that steps `level` like the slider does.
-    private func listener(_ scene: Scene, level: Box, direction: LayoutDirection = .leftToRight) -> ScrollWheelSteps {
-        let steps = ScrollWheelSteps()
+    private func listener(_ scene: Scene, level: Box, direction: LayoutDirection = .leftToRight,
+                          registrations: ScrollWheelRegistrations = ScrollWheelRegistrations()) -> ScrollWheelSteps {
+        let steps = ScrollWheelSteps(registrations: registrations)
         steps.attach(scene.slider)
         steps.start(target(level, direction: direction))
         return steps
@@ -123,7 +125,7 @@ import Testing
         #expect(steps.notches(adding: 25) == 2)
     }
 
-    /// Right to left the boost end is on the left: a scroll to the right lowers the level, a scroll to the left raises
+    /// Right to left the boost end is on the left: a swipe to the right lowers the level, a swipe to the left raises
     /// it; vertical scrolling is the same in both directions (DESIGN.md §5.5 "Right to left").
     @Test(arguments: [LayoutDirection.leftToRight, .rightToLeft])
     func horizontalScrollingFollowsTheLayout(direction: LayoutDirection) throws {
@@ -131,12 +133,13 @@ import Testing
         let level = Box(LevelPosition(0.3))
         let steps = listener(scene, level: level, direction: direction)
         defer { steps.stop() }
-        let right = try ScrollEvents.precise(dx: 24)
-        #expect(abs(right.scrollingDeltaX) > abs(right.scrollingDeltaY))
-        let towardTrailing = right.scrollingDeltaX > 0
-        #expect(steps.handle(right, in: scene.panel, at: scene.insideSlider) == nil)
+        let sideways = try ScrollEvents.precise(dx: 24)
+        #expect(abs(sideways.scrollingDeltaX) > abs(sideways.scrollingDeltaY))
+        // AppKit's positive x is a scroll to the left unless natural scrolling inverted it.
+        let handMovedRight = sideways.isDirectionInvertedFromDevice == (sideways.scrollingDeltaX > 0)
+        #expect(steps.handle(sideways, in: scene.panel, at: scene.insideSlider) == nil)
         let raised = level.value.value > 0.3
-        #expect(raised == (towardTrailing == (direction == .leftToRight)), "\(direction): \(level.value)")
+        #expect(raised == (handMovedRight == (direction == .leftToRight)), "\(direction): \(level.value)")
         level.value = LevelPosition(0.3)
         #expect(steps.handle(try ScrollEvents.precise(dy: 24), in: scene.panel, at: scene.insideSlider) == nil)
         #expect(level.value.value > 0.3, "\(direction): up raises the level")
@@ -173,18 +176,56 @@ import Testing
     }
 
     /// Neither the event monitor nor the window observers keep a listener alive, so one that goes away while it listens
-    /// is released and its `isolated deinit` takes them down with it.
+    /// is released, and its `isolated deinit` removes the monitor and all three window observers.
     @Test func aListenerThatGoesAwayWhileListeningIsReleased() {
         let scene = scene()
+        let registrations = ScrollWheelRegistrations()
         weak var released: ScrollWheelSteps?
         do {
-            let steps = listener(scene, level: Box(.standard))
+            let steps = listener(scene, level: Box(.standard), registrations: registrations)
             #expect(steps.isListening)
+            #expect(registrations.monitors == 1 && registrations.observers == 3, "listening over its window")
             released = steps
         }
         #expect(released == nil)
+        #expect(registrations.monitors == 0, "the event monitor went with the listener")
+        #expect(registrations.observers == 0, "and so did its window observers")
         // Its window's notifications reach nobody now.
         NotificationCenter.default.post(name: NSWindow.didResignKeyNotification, object: scene.panel)
+    }
+
+    /// Restarting, stopping and moving between windows never leave a second monitor or stale observers behind.
+    @Test func registrationsStayBalanced() {
+        let scene = scene()
+        let registrations = ScrollWheelRegistrations()
+        let steps = listener(scene, level: Box(.standard), registrations: registrations)
+        steps.start(target(Box(.standard)))
+        #expect(registrations.monitors == 1, "a second start keeps the one monitor")
+        steps.attach(scene.slider)
+        #expect(registrations.observers == 3, "attaching again replaces the observers")
+        steps.stop()
+        #expect(registrations.monitors == 0 && registrations.observers == 3, "stopped, still attached")
+        steps.attach(nil)
+        #expect(registrations.monitors == 0 && registrations.observers == 0, "out of its window")
+    }
+
+    /// A notch follows the hand whatever the scroll direction setting: with natural scrolling (the macOS default)
+    /// the deltas are inverted, so pushing two fingers up or rolling the wheel away gives a negative `scrollingDeltaY`
+    /// and must still raise the level; the same goes for a swipe to the right, mirrored right to left.
+    @Test(arguments: [false, true])
+    func aNotchFollowsTheHand(naturalScrolling inverted: Bool) {
+        func delta(dx: CGFloat = 0, dy: CGFloat = 0, _ direction: LayoutDirection = .leftToRight) -> CGFloat {
+            ScrollWheelSteps.delta(dx: dx, dy: dy, invertedFromDevice: inverted, direction: direction)
+        }
+        // What AppKit reports for the hand moving up and to the right.
+        let up: CGFloat = inverted ? -12 : 12
+        let right: CGFloat = inverted ? 12 : -12
+        #expect(delta(dy: up) > 0, "up raises")
+        #expect(delta(dy: -up) < 0, "down lowers")
+        #expect(delta(dx: right) > 0, "right raises left to right")
+        #expect(delta(dx: right, .rightToLeft) < 0, "right lowers right to left")
+        #expect(delta(dx: -right, .rightToLeft) > 0, "left raises right to left")
+        #expect(delta(dx: right / 2, dy: up) == 12, "the larger axis wins")
     }
 }
 

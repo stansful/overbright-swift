@@ -73,15 +73,16 @@ import Testing
                     accessibilityName: "Built-in Display", valueText: { _ in "" }, onCommit: { _ in })
     }
 
-    /// The warm fill runs from the detent toward the boost end: right of centre in English, left of it in Arabic.
+    /// The warm fill runs from the detent toward the boost end: right of centre in English, left of it in Arabic. At
+    /// Max it shows up to the thumb, whose 20-pt disc ends at the track's end (30 … 270 pt on a 300-pt canvas).
     @Test func theBoostFillMirrors() throws {
         let size = CGSize(width: 300, height: 40)
         let ltr = try render(slider(1), size: size)
         let rtl = try render(slider(1), size: size, direction: .rightToLeft)
         let ltrWarm = try #require(ltr.xRange { $0.isClose(to: Self.warm) })
         let rtlWarm = try #require(rtl.xRange { $0.isClose(to: Self.warm) })
-        #expect(ltrWarm.lowerBound >= 145 && ltrWarm.upperBound > 250, "left to right: \(ltrWarm)")
-        #expect(rtlWarm.upperBound <= 155 && rtlWarm.lowerBound < 50, "right to left: \(rtlWarm)")
+        #expect(ltrWarm.lowerBound >= 145 && ltrWarm.upperBound > 245, "left to right: \(ltrWarm)")
+        #expect(rtlWarm.upperBound <= 155 && rtlWarm.lowerBound < 55, "right to left: \(rtlWarm)")
     }
 
     /// The slider draws no end glyphs in either direction (the card's slider row draws `sun.min` and `sun.max.fill`

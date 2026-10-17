@@ -26,6 +26,28 @@ import Testing
         #expect(BoostSliderModel.fraction(of: LevelPosition(1)) == 1)
         #expect(BoostSliderModel.level(atFraction: 0.75) == LevelPosition(0.5))
         #expect(BoostSliderTrack.width == 240)
+        #expect(BoostSliderTrack.x(of: .standard) == 120)
+    }
+
+    /// The thumb's centre travels the track inset by its radius, as a system slider's does: at Max and at the dim
+    /// floor the 20-pt thumb ends at the track's end instead of overhanging it by 10 pt into the 6-pt gap before the end
+    /// glyph (DESIGN.md §5.4). A drag maps back through the same travel, mirrored right to left.
+    @Test func theThumbTravelsInsideTheTrack() {
+        let radius = BoostSliderTrack.thumbSize / 2
+        #expect(BoostSliderTrack.travel == 220)
+        #expect(BoostSliderTrack.x(of: LevelPosition(-1)) == radius)
+        #expect(BoostSliderTrack.x(of: LevelPosition(1)) == BoostSliderTrack.width - radius)
+        for value in stride(from: -1.0, through: 1, by: 0.125) {
+            let x = BoostSliderTrack.x(of: LevelPosition(value))
+            #expect(x - radius >= 0 && x + radius <= BoostSliderTrack.width, "\(value): the thumb spans \(x - radius)…")
+            #expect(abs(BoostSliderTrack.fraction(atPhysicalX: x, direction: .leftToRight)
+                        - BoostSliderModel.fraction(of: LevelPosition(value))) < 1e-9, "\(value) maps back")
+            #expect(abs(BoostSliderTrack.fraction(atPhysicalX: BoostSliderTrack.width - x, direction: .rightToLeft)
+                        - BoostSliderModel.fraction(of: LevelPosition(value))) < 1e-9, "\(value) maps back right to left")
+        }
+        #expect(BoostSliderTrack.fraction(atPhysicalX: 3, direction: .leftToRight) == 0, "inside the end inset: the floor")
+        #expect(BoostSliderTrack.fraction(atPhysicalX: 238, direction: .leftToRight) == 1, "inside the end inset: Max")
+        #expect(BoostSliderTrack.fraction(atPhysicalX: 3, direction: .rightToLeft) == 1)
     }
 
     @Test func ticksSitAtTheShownPresetsOnTheBoostHalfOnly() {
@@ -365,8 +387,9 @@ import Testing
         let pixels = try render(slider(0.9, allowed: 1.55, half: .active), size: Self.size)
         let warm = OverbrightColor.boostWarm(dark: false, highContrast: false)
         let warmRange = try #require(pixels.xRange { $0.isClose(to: warm) })
-        // The slider is the 240-pt track alone, centred in 300 pt: it starts 30 pt in, the detent is at 150.
-        let markerX = 30 + 240 * (1 + log(1.55) / log(2.587)) / 2
+        // The slider is the 240-pt track alone, centred in 300 pt: it starts 30 pt in, the detent is at 150, and the
+        // thumb's 220-pt travel starts 10 pt (its radius) in from the track's end.
+        let markerX = 40 + 220 * (1 + log(1.55) / log(2.587)) / 2
         #expect(abs(warmRange.lowerBound - 150) < 2, "warm from the detent: \(warmRange)")
         // Beyond the marker the hatch replaces the warm fill, so the warm run ends at the marker.
         #expect(abs(warmRange.upperBound - markerX) < 3, "warm until the marker at \(markerX): \(warmRange)")

@@ -36,7 +36,7 @@ public nonisolated struct BoostSliderModel: Hashable, Sendable {
 
     /// Snapping reaches this far from the detent or a shown tick (in level units; ±3 %).
     public static let snapDistance = 0.03
-    /// A drag slower than this (level units per second, ≈ 150 pt/s on the 240-pt track) settles into a tick.
+    /// A drag slower than this (level units per second, ≈ 140 pt/s along the thumb's 220-pt travel) settles into a tick.
     public static let slowDragSpeed = 1.25
     /// Named stops on the dim half, as light relative to Standard (50 %, 25 %, 10 %, 5 %, 2 %).
     public static let dimStopLights = [0.5, 0.25, 0.10, 0.05, 0.02]
@@ -78,10 +78,10 @@ public nonisolated struct BoostSliderModel: Hashable, Sendable {
 
     // MARK: Geometry
 
-    /// The fraction of the track (0 at the leading, dim end; 1 at the boost end) of `level`.
+    /// The fraction of the thumb's travel (0 at the leading, dim end; 1 at the boost end) of `level`.
     public static func fraction(of level: LevelPosition) -> Double { (level.value + 1) / 2 }
 
-    /// The level at `fraction` of the track.
+    /// The level at `fraction` of the thumb's travel.
     public static func level(atFraction fraction: Double) -> LevelPosition { LevelPosition(fraction * 2 - 1) }
 
     /// The levels of the preset ticks (the shown presets on the boost half; none on the dim half).
@@ -145,8 +145,8 @@ public nonisolated struct BoostSliderModel: Hashable, Sendable {
 
     // MARK: Dragging
 
-    /// The level for a drag at `fraction` of the track moving at `speed` (level units per second): a slow drag within
-    /// ±3 % of the detent or a shown tick settles there; a fast one passes through.
+    /// The level for a drag at `fraction` of the thumb's travel moving at `speed` (level units per second): a slow drag
+    /// within ±3 % of the detent or a shown tick settles there; a fast one passes through.
     public func dragged(toFraction fraction: Double, speed: Double) -> LevelPosition {
         let raw = clamped(Self.level(atFraction: min(max(fraction, 0), 1)))
         guard speed < Self.slowDragSpeed else { return raw }

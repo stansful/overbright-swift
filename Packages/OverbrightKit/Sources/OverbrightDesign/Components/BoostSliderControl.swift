@@ -118,14 +118,15 @@ struct BoostSliderControl<Focus: Hashable>: View {
 
     // MARK: Input
 
-    private var thumbX: CGFloat { CGFloat(BoostSliderModel.fraction(of: level)) * BoostSliderTrack.width }
+    private var thumbX: CGFloat { BoostSliderTrack.x(of: level) }
 
     private func drag(_ model: BoostSliderModel) -> some Gesture {
         DragGesture(minimumDistance: 0, coordinateSpace: .local)
             .onChanged { value in
                 isDragging = true
-                let fraction = direction.fraction(atPhysicalX: value.location.x, width: BoostSliderTrack.width)
-                let speed = abs(Double(value.velocity.width)) / Double(BoostSliderTrack.width / 2)
+                let fraction = BoostSliderTrack.fraction(atPhysicalX: value.location.x, direction: direction)
+                // Level units per second: the thumb's travel spans the two units from the dim floor to Max.
+                let speed = abs(Double(value.velocity.width)) / Double(BoostSliderTrack.travel / 2)
                 let next = model.dragged(toFraction: fraction, speed: speed)
                 let snapped = next != BoostSliderModel.level(atFraction: fraction)
                 if let pattern = model.haptic(from: level, to: next) { haptics.play(pattern) }

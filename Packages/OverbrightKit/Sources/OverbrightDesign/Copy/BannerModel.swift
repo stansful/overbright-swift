@@ -1,7 +1,8 @@
 // OverbrightDesign/Copy/BannerModel.swift — what the panel's one banner shows. DESIGN.md §5.8, §12.3; ARCHITECTURE.md
 // §6.3. Seam written by WP0a (ARCHITECTURE.md §10.0): the type and `make(_:)` are fixed; WP9 writes the copy and the
 // precedence-specific actions. The same sentence is the first, disabled line of the status menu, and its primary action
-// the second line in title case.
+// the second line in title case. The panel shows the whole sentence, however many lines it takes; an app name in it is
+// middle-truncated to `nameWidth`, and `accessibilityLabel` keeps the full sentence for the help tag and VoiceOver.
 import Foundation
 import OverbrightCore
 
@@ -11,8 +12,10 @@ public nonisolated struct BannerModel: Hashable, Sendable {
     public var symbol: OverbrightSymbol
     /// The glyph colour and the 10 % card tint.
     public var color: SemanticColor
-    /// The sentence ("Paused because Low Power Mode is on."), already localized.
+    /// The sentence ("Paused because Low Power Mode is on."), already localized, an app name in it middle-truncated.
     public var sentence: String
+    /// The sentence with every name in full: VoiceOver's label, and the help tag when it differs from `sentence`.
+    public var accessibilityLabel: String
     /// The primary action's title (sentence case), if any.
     public var primaryTitle: String?
     /// The secondary action's title, if any.
@@ -25,7 +28,7 @@ public nonisolated struct BannerModel: Hashable, Sendable {
     /// A banner.
     public init(symbol: OverbrightSymbol, color: SemanticColor, sentence: String, primaryTitle: String?,
                 secondaryTitle: String?) {
-        self.symbol = symbol; self.color = color; self.sentence = sentence
+        self.symbol = symbol; self.color = color; self.sentence = sentence; accessibilityLabel = sentence
         self.primaryTitle = primaryTitle; self.secondaryTitle = secondaryTitle
     }
 
@@ -38,6 +41,11 @@ public nonisolated struct BannerModel: Hashable, Sendable {
         primaryMenuTitle = action?.menuTitle(in: language)
     }
 
+    /// The widest an app name may be in a banner sentence, in the `banner` font on one line (about the room a status
+    /// chip leaves a name): a longer one is middle-truncated, as in a chip, so one long name cannot make the banner
+    /// grow without bound.
+    public static let nameWidth: CGFloat = 200
+
     /// The banner of `banner` (DESIGN.md §12.3).
     public static func make(_ banner: Banner) -> BannerModel { make(banner, displayNames: [:], in: .app) }
 
@@ -47,6 +55,14 @@ public nonisolated struct BannerModel: Hashable, Sendable {
         func model(_ symbol: OverbrightSymbol, _ color: SemanticColor, _ sentence: String, _ action: FixAction?) -> BannerModel {
             BannerModel(symbol: symbol, color: color, sentence: sentence, action: action, in: language)
         }
+        /// A sentence that names `app`: shown with the name middle-truncated, labelled with it in full.
+        func model(_ symbol: OverbrightSymbol, _ color: SemanticColor, naming app: ConflictingApp, _ action: FixAction?,
+                   _ sentence: (String) -> String) -> BannerModel {
+            let short = app.displayName.overbrightMiddleTruncated(toFit: nameWidth, in: .banner)
+            var result = model(symbol, color, sentence(short.overbrightIsolated), action)
+            result.accessibilityLabel = sentence(app.displayName.overbrightIsolated)
+            return result
+        }
         func name(_ key: DisplayKey) -> String? { displayNames[key].map(\.overbrightIsolated) }
         switch banner {
         case let .userPaused(until):
@@ -55,17 +71,15 @@ public nonisolated struct BannerModel: Hashable, Sendable {
                          String(localized: "Overbright is paused until \(time).", bundle: b, locale: l,
                                 comment: "Panel: banner while the user paused Overbright; the argument is a time of day"), .resume)
         case let .conflict(app) where app.severity == .booster:
-            let app = app.displayName.overbrightIsolated
-            return model(.exclamationMarkTriangleFill, .warning,
-                         String(localized: "Paused because \(app) also changes display brightness. Quit it, or use Compatibility mode, which works alongside it.",
-                                bundle: b, locale: l, comment: "Panel: banner while another brightness app runs; the argument is its name"),
-                         .useCompatibilityMode)
+            return model(.exclamationMarkTriangleFill, .warning, naming: app, .useCompatibilityMode) { app in
+                String(localized: "Paused because \(app) also changes display brightness. Quit it, or use Compatibility mode, which works alongside it.",
+                       bundle: b, locale: l, comment: "Panel: banner while another brightness app runs; the argument is its name")
+            }
         case let .conflict(app):
-            let app = app.displayName.overbrightIsolated
-            return model(.exclamationMarkTriangleFill, .warning,
-                         String(localized: "Paused because \(app) changes display colors. Night Shift gives warm light without a conflict.",
-                                bundle: b, locale: l, comment: "Panel: banner while a color app runs; the argument is its name; “Night Shift” is macOS’s own name"),
-                         .continueAnyway)
+            return model(.exclamationMarkTriangleFill, .warning, naming: app, .continueAnyway) { app in
+                String(localized: "Paused because \(app) changes display colors. Night Shift gives warm light without a conflict.",
+                       bundle: b, locale: l, comment: "Panel: banner while a color app runs; the argument is its name; “Night Shift” is macOS’s own name")
+            }
         case .foreignTableAtLaunch:
             return model(.exclamationMarkTriangleFill, .danger,
                          String(localized: "Another app changed the display colors and they couldn’t be reset. Change the color profile or preset in Displays settings and back, or log out.",
@@ -86,13 +100,14 @@ public nonisolated struct BannerModel: Hashable, Sendable {
                         locale: l, comment: "Panel: banner after repeated color changes on a display whose name is unknown")
             return model(.exclamationMarkTriangleFill, .danger, sentence, .tryAgain)
         case let .attributedDrift(app, display):
-            let app = app.displayName.overbrightIsolated
-            let sentence = name(display).map {
-                String(localized: "\(app) changed the colors of \($0), so Overbright stopped there.", bundle: b, locale: l,
-                       comment: "Panel: banner after an app changed a display’s colors; the arguments are the app’s and the display’s names")
-            } ?? String(localized: "\(app) changed the colors of a display, so Overbright stopped there.", bundle: b, locale: l,
-                        comment: "Panel: banner after an app changed the colors of a display whose name is unknown")
-            return model(.exclamationMarkTriangleFill, .danger, sentence, .continueAnyway)
+            let display = name(display)
+            return model(.exclamationMarkTriangleFill, .danger, naming: app, .continueAnyway) { app in
+                display.map {
+                    String(localized: "\(app) changed the colors of \($0), so Overbright stopped there.", bundle: b, locale: l,
+                           comment: "Panel: banner after an app changed a display’s colors; the arguments are the app’s and the display’s names")
+                } ?? String(localized: "\(app) changed the colors of a display, so Overbright stopped there.", bundle: b,
+                            locale: l, comment: "Panel: banner after an app changed the colors of a display whose name is unknown")
+            }
         case .focusOff:
             return model(.moonFill, .neutral,
                          String(localized: "Off because of the current Focus.", bundle: b, locale: l,

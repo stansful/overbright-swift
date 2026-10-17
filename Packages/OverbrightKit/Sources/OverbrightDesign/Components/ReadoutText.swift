@@ -1,7 +1,9 @@
 // OverbrightDesign/Components/ReadoutText.swift — a card's readout line. DESIGN.md §5.6, §2.2, §12.7.
 // Seam written by WP0a (ARCHITECTURE.md §10.0): the initializer is fixed. Rounded with monospaced digits, the estimate
-// prefix while uncalibrated, "Off" in `tertiaryLabelColor`. Never a numeric content transition (it grows CoreGraphics'
-// glyph cache; Cranny gotcha): digits change in place.
+// prefix while uncalibrated. Every state is drawn in `labelColor`, "Off" included: the word says the state, and text
+// is never faded (DESIGN.md §2.1); `tertiaryLabelColor` measured 2.5:1 on the dark card and `secondaryLabelColor`
+// 3.9:1 on the light one, both under WCAG's 4.5:1 (ContrastAuditTests). Never a numeric content transition (it grows
+// CoreGraphics' glyph cache; Cranny gotcha): digits change in place.
 import OverbrightCore
 import OverbrightPolicy
 import SwiftUI
@@ -18,7 +20,7 @@ public struct ReadoutText: View {
         let text = ValueText.make(values)
         Text(verbatim: text.text)
             .font(OverbrightFont.readout.font)
-            .foregroundStyle(values.state == .off ? .tertiary : .primary)
+            .foregroundStyle(.primary)
             .lineLimit(1)
             .contentTransition(.identity)
             .help(values.state == .boost ? ValueText.readoutHelp(isEstimate: values.isEstimate) : "")
