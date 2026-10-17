@@ -34,6 +34,9 @@ public nonisolated enum OverbrightColor: String, CaseIterable, Sendable {
     case neutralTint
     /// The slider thumb and the welcome card's divider handle: white in every appearance (DESIGN.md §2.4).
     case thumb
+    /// The thumb's 1-pt outline: none in the standard and opaque palettes (the system shadow sets the thumb apart);
+    /// `labelColor` under Increase Contrast, where the opaque white card would swallow a white thumb (DESIGN.md §15).
+    case thumbRing
 
     /// The boost-zone colour of DESIGN.md §2.1: light, dark, and their Increase Contrast variants.
     public static func boostWarm(dark: Bool, highContrast: Bool) -> SRGBA {
@@ -86,6 +89,7 @@ public nonisolated enum OverbrightColor: String, CaseIterable, Sendable {
         case .neutralTint: return system(.systemGray, SemanticColor.chipTintOpacity)
         case .boostWarm: return Self.boostWarm(dark: false, highContrast: highContrast)
         case .thumb: return .white
+        case .thumbRing: return highContrast ? system(.labelColor) : SRGBA(white: 0, alpha: 0)
         }
     }
 }

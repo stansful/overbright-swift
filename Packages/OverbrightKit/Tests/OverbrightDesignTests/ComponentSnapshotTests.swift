@@ -46,12 +46,17 @@ struct ComponentSnapshotTests {
             .compactMap { ChipModel.make(reason: $0, phase: .boosted, failedTries: 0,
                                          context: ChipContext(allowedGain: 1.55, appName: "A Very Long Video Player Name",
                                                               language: language)) }
+        let longApp = ConflictingApp(entryID: "s1", severity: .booster, bundleID: nil, processID: 1,
+                                     displayName: "A Very Long Brightness Utility Name That Goes On")
         let banners: [Banner] = [.userPaused(until: Date(timeIntervalSince1970: 1_792_160_400)), .lowPowerMode,
                                  .battery(percent: 12, threshold: 20), .focusOff, .thermalCritical,
-                                 .flickerStop(display: DisplayKey(rawValue: "A"))]
+                                 .flickerStop(display: DisplayKey(rawValue: "A")), .foreignTableAtLaunch,
+                                 .conflict(longApp)]
         return [
             ("slider-boosting", CGSize(width: 320, height: 60), AnyView(slider(0.5, allowed: 2.2))),
             ("slider-limited-by-macos", CGSize(width: 320, height: 60), AnyView(slider(0.75, allowed: 1.55))),
+            ("slider-marker-under-thumb", CGSize(width: 320, height: 60), AnyView(slider(0.9, allowed: pow(Self.top, 0.88)))),
+            ("slider-max", CGSize(width: 320, height: 60), AnyView(slider(1))),
             ("slider-dimmed", CGSize(width: 320, height: 60), AnyView(slider(LevelMapping.position(forDimLight: 0.25).value))),
             ("slider-off", CGSize(width: 320, height: 60), AnyView(slider(0.5, half: .inactive))),
             ("slider-extra-brightness-off", CGSize(width: 320, height: 60), AnyView(slider(0, half: .switchedOff))),
@@ -63,7 +68,7 @@ struct ComponentSnapshotTests {
             ("chips", CGSize(width: 320, height: 520), AnyView(VStack(alignment: .leading, spacing: Space.s) {
                 ForEach(Array(chips.enumerated()), id: \.offset) { _, chip in StatusChip(chip, actions: []) }
             })),
-            ("banners", CGSize(width: 320, height: 520), AnyView(VStack(spacing: Space.m) {
+            ("banners", CGSize(width: 320, height: 820), AnyView(VStack(spacing: Space.m) {
                 ForEach(Array(banners.enumerated()), id: \.offset) { _, banner in
                     PausedBanner(BannerModel.make(banner, displayNames: [DisplayKey(rawValue: "A"): "Studio Display"],
                                                   in: language), primary: {}, secondary: nil)

@@ -117,7 +117,7 @@ System text styles only; SF Pro Rounded with monospaced digits for live numbers 
 | `readout` | 13 medium, SF Pro Rounded, monospaced digits | "Bright room · ×1.29 · ≈ 775 nits" |
 | `chip` | 11 medium (`.caption` medium) | status chips, footer chips |
 | `caption` | 11 regular, `secondaryLabelColor` | "Compatibility mode" under the readout |
-| `banner` | 12 regular (`.callout`), up to 3 lines | "Paused because…" |
+| `banner` | 12 regular (`.callout`), as many lines as the sentence needs (never cut; an app name in it is middle-truncated) | "Paused because…" |
 | `valueTag` | 11 semibold, rounded, monospaced digits | the tag above the slider thumb |
 | `hudValue` | 15 semibold, rounded, monospaced digits | HUD value |
 | `hudLabel` | 11 regular | HUD display name and reasons |
@@ -397,7 +397,7 @@ A chip appears **on its own line under the readout**, only when a **per-display*
 
 ### 5.8 Banners
 
-At most one banner, between the header and the first card, for **a reason that applies to all displays** (a user pause, a conflict, Focus, heat, Low Power, battery, the schedule) or an attention state (a stop to prevent flicker, colours changed by another app): `card` fill tinted 10 % with the semantic colour, a 14-pt glyph, the sentence (`banner`, up to 3 lines) and up to two text buttons (primary first). Banners reflect state, so they have no close button; they leave with `bannerOut` when the cause clears, and the next reason in precedence takes their place. The same sentence is the first line of the right-click menu (§4.3). Precedence and exact copy: §12.3.
+At most one banner, between the header and the first card, for **a reason that applies to all displays** (a user pause, a conflict, Focus, heat, Low Power, battery, the schedule) or an attention state (a stop to prevent flicker, colours changed by another app): `card` fill tinted 10 % with the semantic colour, a 14-pt glyph, the sentence (`banner`) and up to two text buttons (primary first). The sentence is never cut: the banner grows in height for a long translation while the card list below scrolls, and only an app name in it is middle-truncated (to 200 pt, as a chip does), with the full sentence in the help tag and VoiceOver. Banners reflect state, so they have no close button; they leave with `bannerOut` when the cause clears, and the next reason in precedence takes their place. The same sentence is the first line of the right-click menu (§4.3). Precedence and exact copy: §12.3.
 
 ### 5.9 Footer guard chips
 
@@ -659,7 +659,7 @@ The compiled icon, "Overbright", version and build; **Check for Updates** with t
 
 | Step | Headline | Body (exact English) | Stage and interaction |
 |---|---|---|---|
-| 1 Hello | Use your display's extra range | "Your display can show light brighter than ordinary white. Overbright lets everyday content use that range, so the screen stays readable in a bright room or in sunlight. For the most light, turn your display brightness all the way up first; Overbright adds to it. Drag the divider to compare." | **Before/after card:** a sample page (text on white) at Standard on the left and at Bright room on the right of a draggable divider, rendered as EDR content inside this window only (`EDRPreviewSurface`). Caption: "Only this card is brighter. It's a preview: the real result depends on your display." Without a capable display: a static illustration and "None of your displays has extra range right now. The next step shows why." The card pauses while the window is hidden. |
+| 1 Hello | Use your display's extra range | "Your display can show light brighter than ordinary white. Overbright lets everyday content use that range, so the screen stays readable in a bright room or in sunlight. For the most light, turn your display brightness all the way up first; Overbright adds to it. Drag the divider to compare." | **Before/after card:** a sample page (text on white) at Standard on the left and at Bright room on the right of a draggable divider (the card is a Tab stop: ← / → move the divider 10 %, mirrored right to left), rendered as EDR content inside this window only (`EDRPreviewSurface`). Caption: "Only this card is brighter. It's a preview: the real result depends on your display." Without a capable display: a static illustration and "None of your displays has extra range right now. The next step shows why." The card pauses while the window is hidden. |
 | 2 Displays | Your displays | "Overbright checks what each display can do." | One row per display: glyph, name, verdict (§12.1), fix button, **Use extra brightness** switch (OLED notice when turned on). The rows re-evaluate whenever the displays change (for example after HDR is turned on in System Settings) and cross-fade (`contentSwap`). |
 | 3 Defaults | How Overbright behaves | "Extra light uses more power, so Overbright steps back on its own. Choose how it starts." | Switches: **Pause on battery below 20 %** (with the level pop-up), **Pause in Low Power Mode**, **Pause for full-screen video**; note: "It also backs off when your Mac gets warm." Then three option cards for login: **Open and turn on** · **Open, keep off** (selected, "Recommended") · **Don't open at login**. |
 | 4 Find it | Where to find Overbright | "Overbright lives in the menu bar." | Rows: the menu bar symbol ("Click for the panel, right-click for the menu"); key caps of the live **Turn on or off**, **Back to Standard** and **Dim Below Minimum On or Off** shortcuts in the current keyboard layout (rows without a registered shortcut are left out); "Shortcuts app and Control Center" with the Run Shortcut recipe; "Open Overbright again from Finder or Spotlight to see Settings." |
@@ -944,11 +944,11 @@ None. Overbright ships no audio and plays no system sound.
 |---|---|
 | **Reduce Motion** | §3.2: cross-fades only; no slides, scales or symbol effects; snaps are immediate; brightness ramps shorten to 160 ms but never jump. |
 | **Reduce Transparency** | Opaque panel, HUD and prompt (`windowBackgroundColor`); no glass; cards unchanged. |
-| **Increase Contrast** | `highContrast` palette: opaque cards with a full-strength separator hairline, darker or lighter `boostWarm` (§2.1), `labelColor` detent, ticks, dim fill and hatch lines, the focus ring at full accent. |
+| **Increase Contrast** | `highContrast` palette: opaque cards with a full-strength separator hairline, darker or lighter `boostWarm` (§2.1), `labelColor` detent, ticks, dim fill and hatch lines, a 1-pt `labelColor` ring around the white slider thumb (token `thumbRing`), the focus ring at full accent. |
 | **Differentiate Without Color** | Colour never carries meaning alone: chips always have words; the boost half has preset ticks and the dim half none; "not allowed now" and "nothing is brighter" are a hatch, not a colour; the allowed-now marker is a shape; the HUD always shows its value as text; the status symbol's states differ in shape (outline, filled, dotted rays, small disc with dots, badges). |
 | **VoiceOver** | §12.7; the panel is one container "Overbright"; each card a container named after its display, with its context-menu items as custom actions; the slider adjustable with named stops and canonical values; decorative layers (fills, Fill Light, the welcome card's light) hidden; level changes and automation stops announced. |
 | **Keyboard and Full Keyboard Access** | §5.12 for the panel (every chip, "Why?", Turn on and the Fill Light card are reachable; ⌃↩ opens a card's context menu); Settings and Welcome follow Cranny's maps; every action has a key path; nothing is hover-only (the value tag and help tags repeat what VoiceOver and the readout say). |
-| **Pointer and motor** | 28 × 24 pt hit targets; slider snapping only on slow drags; scroll-wheel adjustment in stops. |
+| **Pointer and motor** | 28 × 24 pt hit targets; slider snapping only on slow drags; scroll-wheel adjustment in stops, following the hand whether natural scrolling is on or off (wheel away or fingers up: brighter). |
 | **Time limits** | The HUD is informational. The Undo of Reset All stays available as a button until the Settings window closes and through ⌘Z (the banner itself fades after 10 s). "Keep this level?" reverts after 10 s on purpose: going back is the safe direction, and any Overbright shortcut or Return keeps the level. |
 | **Flashing (WCAG 2.3.1)** | §3.4. |
 | **Photosensitivity** | Brightness changes ramp; the calibration flips are slow and announced; Back to Standard is always one shortcut away; very dark levels ask before staying. |
@@ -1030,7 +1030,7 @@ Displays use more power when brighter: that is the product, and the README says 
 | `StatusChip` | per-display limit and phase chips (§5.7, §12.2) | a button: glyph + text on a tint; popover with one sentence and its actions |
 | `GuardChip` | footer chips (§5.9) | a menu button showing its setting |
 | `PausedBanner` | the one banner (§5.8, §12.3) | glyph, sentence, up to two buttons |
-| `EDRPreviewSurface` | the Welcome card (§8) | EDR content in our own view, draggable divider, SDR stand-in under `--qa-simulate`, paused when hidden |
+| `EDRPreviewSurface` | the Welcome card (§8) | EDR content in our own view, divider moved by dragging, ← / → (10 %, mirrored right to left) or VoiceOver, SDR stand-in under `--qa-simulate`, paused when hidden |
 | `StepWedgeView` | the calibration squares (§9) | drawn in the screen's colour space on black |
 | `KeyCap` | shortcut key caps | renders the text it is given (from `ShortcutCenter.displayString`) in system colours |
 | `ChipButtonStyle`, `IconButtonStyle`, `OverbrightLinkButtonStyle` | buttons | hit-target widening inside the style |
