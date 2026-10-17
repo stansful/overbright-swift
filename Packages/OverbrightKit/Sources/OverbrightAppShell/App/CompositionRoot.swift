@@ -17,6 +17,13 @@
 //   (`simulatedFixture(for:)`): a missing name (`--off --qa-simulate`, or another switch right after it) or an unknown
 //   one is logged and falls back to `builtin-xdr-lid-open`, never to real ports. This holds in every build
 //   configuration, so it does not depend on the Release refusal below having run first.
+// - `--qa-simulate` plus `--qa-live-signals` (Debug only; energy work H4): the simulated wiring with the real
+//   `SignalsMonitor` and `RunningAppsConflictProbe` over the fake display directory, started and stopped with the
+//   other services, so perf and the soak see Signals' own work (the running-list churn, the full-screen and playback
+//   watch, the boost-only sources). They read the system only (NSWorkspace and its KVO, the window list, power
+//   assertions and sources, the session dictionary); gamma, headroom, triggers, every EDR surface and Fill Light,
+//   which keeps the fake signals so no camera rule or real event can order its frame in, stay fakes. A real lock or
+//   sleep reaches the engine, which shields the fake displays.
 // Constructing either wiring does no I/O, hardware or network access (test `constructingServicesTouchesNoHardware`);
 // `ServiceLifecycle.start()` does. Lifecycle order: Displays → Triggers → Signals → FillLight → HotKeys → Updates →
 // Intents → Boost last; stop in reverse, Boost first (D7, `ServiceStack`). The launch check runs before the first
@@ -63,6 +70,9 @@ enum CompositionRoot {
     /// footprint and in the soak's growth fit (energy work, H3).
     static let qaRecordLimit = 16
 
+    /// `--qa-live-signals`: with `--qa-simulate`, the real Signals over the simulated displays (see the file header).
+    static let liveSignalsSwitch = "--qa-live-signals"
+
     /// The Debug-only switches a build refuses to start with: none in a Debug build; in a Release build every
     /// `--qa-…` and `-OverbrightQA…` switch present (the app logs them and exits with `EX_USAGE` before anything
     /// starts, rather than ignoring them and wiring the real ports).
@@ -92,6 +102,13 @@ enum CompositionRoot {
         return fixture
     }
 
+    /// Whether a launch wires the real Signals over the simulated displays: a Debug build with both `--qa-simulate` and
+    /// `--qa-live-signals`. A Release build has refused the switch before this (its `--qa-` prefix); `debugBuild`
+    /// false still answers false, so the decision never depends on that refusal having run.
+    static func wiresLiveSignals(_ arguments: LaunchArguments, debugBuild: Bool = isDebugBuild) -> Bool {
+        debugBuild && arguments.qaSimulates && arguments.contains(liveSignalsSwitch)
+    }
+
     /// The context of a launch: the settings over `defaults`, and the real folders and Mac, or (simulated) temporary
     /// folders and the fixture's Mac.
     static func context(defaults: ShellDefaults, fixture: DisplayFixture?, time: any TimeSource) -> ShellContext {
@@ -109,13 +126,14 @@ enum CompositionRoot {
     /// The ports for this launch: the simulated ones whenever `--qa-simulate` is present (in any build; a Release
     /// build has refused the switch before this, see `refusedSwitches`), the real ones only without it.
     static func ports(for arguments: LaunchArguments, context: ShellContext) -> ShellPorts {
-        ports(fixture: simulatedFixture(for: arguments), context: context)
+        ports(fixture: simulatedFixture(for: arguments), context: context, liveSignals: wiresLiveSignals(arguments))
     }
 
-    /// The simulated ports over `fixture`, or the real ones for nil.
-    static func ports(fixture: DisplayFixture?, context: ShellContext) -> ShellPorts {
-        if let fixture { return simulatedPorts(fixture, context: context) }
-        return livePorts(context)
+    /// The simulated ports over `fixture` (with the real Signals when `liveSignals`), or the real ones for nil.
+    static func ports(fixture: DisplayFixture?, context: ShellContext, liveSignals: Bool = false) -> ShellPorts {
+        guard let fixture else { return livePorts(context) }
+        let ports = simulatedPorts(fixture, context: context)
+        return liveSignals ? withLiveSignals(ports, context: context) : ports
     }
 
     /// Core fakes over `fixture`: nothing reaches a display. `hotKeys` registers the shortcuts (tests pass a recorder,
@@ -144,6 +162,25 @@ enum CompositionRoot {
                           profileHasVCGT: { _ in nil }, backlightMilliNits: { nil },
                           services: ServiceStack(fillLight: fillLight, hotKeys: hotKeys, updates: updates),
                           relays: [], fixture: fixture)
+    }
+
+    /// `--qa-live-signals`: `ports` (the simulated ones) with the real `SignalsMonitor` and `RunningAppsConflictProbe`
+    /// in place of the fake signals and conflicts, over the fake directory, started and stopped by the service stack.
+    /// Fill Light keeps the fake signals it was built with; the fixture stays, so the D27 exemption and the scenario
+    /// runner still see the simulated wiring. Constructing it does no I/O (the monitor reads the system in `start()`).
+    static func withLiveSignals(_ ports: ShellPorts, context: ShellContext) -> ShellPorts {
+        let conflicts = RunningAppsConflictProbe(catalog: ConflictCatalog.entries)
+        let signals = SignalsMonitor(settings: context.settings, time: context.time, journal: context.journal,
+                                     displays: ports.displays, conflicts: conflicts)
+        var live = ports
+        live.signals = signals
+        live.launchCheckSignals = LaunchCheckSignals(base: signals, hasStarted: { [weak signals] in
+            signals?.isStarted ?? false
+        })
+        live.conflicts = conflicts
+        live.services.signals = signals
+        log.info("QA: --qa-live-signals: the real Signals over the simulated displays")
+        return live
     }
 
     /// The real ports (see the file header). Never constructed in a test (lint `noWritesInHardwareTests`).

@@ -35,6 +35,11 @@
 #              the footprint after
 #   timeline   russian-names boosted (both displays): the app's and the control's interrupt wake-ups every second
 #              for TIMELINE s (300): seconds with two wake-ups, gaps between own wake-ups
+#   signals    off, boosted and dimmed with --qa-live-signals: the real, read-only SignalsMonitor and conflict probe
+#              over the simulated displays (ARCHITECTURE.md §8.5), Fill Light's camera rule off, so its cost on this
+#              Mac (the running-list churn, the watch, the boost-only sources) shows; a locked screen or a running
+#              conflict-catalogue app keeps the engine from boosting: the engine line names it (by catalogue entry
+#              only) and such a boosted phase is not judged
 #
 #   make debug; make perf                              # → build/logs/perf/<variant>/
 #   make perf RUNS="ui events" APP=build/Overbright-opt.app VARIANT=opt
@@ -282,6 +287,12 @@ def timeline_of(run):
                 own_pct=max(cpu_ms - ctl_cpu_ms, 0) / 1000 / dur * 100, gaps=gaps,
                 locked="locked" if any("locked=1" in l for l in locks) else "unlocked")
 
+def reason_text(reason):
+    """A dump's reason, with a conflict named by its catalogue entry and severity only: under --qa-live-signals the
+    real probe reports a running app, whose name and bundle ID stay out of the report (ARCHITECTURE.md §9.2 rule 8)."""
+    m = re.match(r'conflict\(.*entryID: "([^"]*)".*severity: [\w.]*?(\w+),', reason)
+    return f"conflict({m.group(1)}, {m.group(2)})" if m else reason
+
 def engine_at_starts(run):
     """What the engine showed at each phase's start mark (the scenario's own dump: phase and reasons per display)."""
     states = {}
@@ -297,7 +308,8 @@ def engine_at_starts(run):
         if label.startswith(("start.", "begin.")):
             states[label.split(".", 1)[1]] = "; ".join(
                 f"{d.get('display', '?')} {d.get('phase', '?')}"
-                + (f" ({', '.join(d['reasons'])})" if d.get("reasons") else "") for d in dump.get("displays", []))
+                + (f" ({', '.join(reason_text(r) for r in d['reasons'])})" if d.get("reasons") else "")
+                for d in dump.get("displays", []))
     return states
 
 def collect(run):
@@ -347,6 +359,10 @@ def collect(run):
             row["verdict"] = f"{label}: {', '.join(bits)} → {'pass' if ok else '**MISS**'}"
             row["ok"] = ok
         rows[ph] = row
+    states = engine_at_starts(run)
+    for ph, row in rows.items():                            # a real conflict or lock kept the engine from boosting
+        if ph.startswith("boosted") and ph in states and " boosted" not in states[ph]:
+            row["verdict"], row["ok"] = "not judged: the engine was not boosted (see the engine line)", None
     return [ph for ph in phases if ph in rows], rows, stats
 
 def summarize(out):
@@ -591,13 +607,16 @@ script_for() {
                   "$(repeat 5 "panel open; wait 2; panel close; wait 2;")" 10)" ;;
     timeline) printf '%s; boost msi on; wait 2; on; wait 15; dump timeline.start; wait %s; dump timeline.end; off; wait 3; dump done; wait 2; quit' \
                "$pre" "$TIMELINE" ;;
-    *) die "unknown run $1 (launch, base, ruleoff, two, ui, events, panelcycle, timeline)" ;;
+    signals) printf '%s; %s; on; wait 12; %s; level bright-room; wait 3; dim 40; wait 5; %s; off; wait 3; dump done; wait 2; quit' \
+               "$pre" "$(steady off)" "$(steady boosted)" "$(steady dimmed)" ;;
+    *) die "unknown run $1 (launch, base, ruleoff, two, ui, events, panelcycle, timeline, signals)" ;;
   esac
 }
 fixture_for() { case "$1" in two|timeline) echo russian-names ;; *) echo builtin-xdr-lid-open ;; esac; }
 extra_args_for() {
   case "$1" in
     ruleoff) echo "-overbright.automations.pauseForFullScreenVideo $FALSE" ;;
+    signals) echo "--qa-live-signals -overbright.filllight.autoWithCamera $FALSE" ;;      # the namespace is "filllight"
     *) echo "" ;;
   esac
 }
@@ -719,7 +738,7 @@ run_one() {
 mkdir -p "$OUT"
 runs=("$@")
 (( ${#runs[@]} )) || runs=(launch base ruleoff two)
-KNOWN_RUNS="launch base ruleoff two ui events panelcycle timeline"
+KNOWN_RUNS="launch base ruleoff two ui events panelcycle timeline signals"
 for run in "${runs[@]}"; do                                        # an unknown run fails before anything starts
   [[ " $KNOWN_RUNS " == *" $run "* ]] || die "unknown run $run ($KNOWN_RUNS)"
 done

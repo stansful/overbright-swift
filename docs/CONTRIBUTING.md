@@ -147,6 +147,7 @@ No hook posts input or asks for a permission. Launch arguments (`LaunchArguments
 | `--qa-simulate [fixture]` | Core fakes for every display port over a fixture of ARCHITECTURE.md §3.9 (`builtin-xdr-lid-open`, `mpg322ux-hdr-on`, `lcd-only`, `hardware-mirror`, …); a missing or unknown name falls back to `builtin-xdr-lid-open`, never to the real ports. |
 | `--qa-defaults-suite <name>` | Keeps every setting the run writes in that suite (`Launch/QAHooks+Defaults.swift`); the app's own domain or a global one is refused and the run keeps its settings in memory. The Settings window's frame is not autosaved then. |
 | `--qa-state <name>` | Drives the panel with a named status of PanelUI's `ScriptedStatuses` (every chip, banner, phase and HUD of DESIGN.md §5.13); the state's settings go into the run's suite (in memory without one), and its Fill Light and "Why?" row show too. A scripted status is ready at once, so its surfaces wait only for the services to start (Help shows once the shortcuts are registered). |
+| `--qa-live-signals` | With `--qa-simulate` only: the real, read-only Signals (running apps, window list, power, session) over the simulated displays, for `make perf RUNS=signals`; every display port and Fill Light stay fakes, and the script's signal steps (lock, sleep, events, conflicts) are skipped. |
 | `--qa-panel`, `--qa-menu`, `--qa-hud <level>` | Opens the panel (it stays open on clicks elsewhere, and every close is logged with its cause), the status menu (its rows go to `qa-trace.txt`; it closes by itself after 3 s), the HUD (under `--qa-simulate` at that level; on the real displays only its generic change, never a level). Like every surface hook, they wait for the launch work (every service started and the status ready, at most 10 s). |
 | `--qa-settings <pane[#row]>` | Opens Settings at a pane (`general`, `displays`, `automations`, `shortcuts`, `fillLight`, `advanced`, `about`), scrolled to and highlighting a row. |
 | `--qa-welcome <step>` | Opens Welcome at `hello`, `displays`, `defaults`, `findIt` or `done`; takes no focus and records nothing. |
@@ -209,6 +210,7 @@ is the app's minus the control's:
 | `events` | 1,500 screen-parameters events 10 ms apart while off and while boosted, then bursts of 120 at 8 ms every 5 s with the panel closed and open: CPU per event |
 | `panelcycle` | the panel opened and closed 10 times while off: CPU per open and the footprint after |
 | `timeline` | interrupt wake-ups every second for 300 s while two displays are boosted: seconds with two wake-ups, gaps |
+| `signals` | off, boosted and dimmed (60 s windows) with `--qa-live-signals`: the real Signals' cost on this Mac. Its numbers depend on the apps running and on the lock state: a running conflict-catalogue app or a locked screen keeps the engine from boosting (the engine line names the reason, by catalogue entry only, and a boosted phase is then not judged) |
 
 ```zsh
 make -C <repo> debug

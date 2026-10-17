@@ -171,7 +171,8 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
         let defaults = ShellDefaults.forLaunch(arguments)
         let fixture = CompositionRoot.simulatedFixture(for: arguments)
         let context = CompositionRoot.context(defaults: defaults, fixture: fixture, time: time)
-        let ports = CompositionRoot.ports(fixture: fixture, context: context)
+        let ports = CompositionRoot.ports(fixture: fixture, context: context,
+                                          liveSignals: CompositionRoot.wiresLiveSignals(arguments))
         var scriptedStatus: BoostStatus?
         var scriptedFillLightOn = false
         #if DEBUG

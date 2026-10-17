@@ -1,7 +1,9 @@
 // OverbrightAppShell/App/ScenarioRunner.swift — DEBUG-only: runs a `ScenarioScript` over the simulated ports, the way
 // the system would deliver it: Signals' snapshot first, then the event, synchronously (§4.1, `FakeSystemSignals`).
 // ARCHITECTURE.md §8.5 (`--qa-script`), §10.15 (the QA matrix and `EndToEndScenarioTests` share it). It refuses to run
-// over real ports: `Rig(shell:)` is nil unless every port it drives is a Core fake.
+// over real display ports: `Rig(shell:)` is nil unless the wiring is the simulated one and the table and trigger ports
+// it reads are Core fakes. Under `--qa-live-signals` (the real, read-only Signals over the simulated displays) the
+// steps that the fake signals deliver are skipped and logged; the engine, panel and wait steps run.
 #if DEBUG
 import Foundation
 import OverbrightCore
@@ -14,18 +16,21 @@ final class ScenarioRunner {
     /// What a scenario drives: the hub and the fakes behind it.
     struct Rig {
         let services: OverbrightServices
-        let signals: FakeSystemSignals
-        let conflicts: FakeConflictProbe
+        /// The fake signals the scenario delivers through; nil under `--qa-live-signals`.
+        let signals: FakeSystemSignals?
+        /// The fake conflict probe; nil under `--qa-live-signals`.
+        let conflicts: FakeConflictProbe?
         let gamma: FakeGammaPort
         let triggers: FakeTriggerFactory
 
-        /// The rig of `shell`; nil unless its ports are the simulated ones.
+        /// The rig of `shell`; nil unless its ports are the simulated ones (the real Signals may stand in for the
+        /// fake ones, `--qa-live-signals`).
         init?(shell: Shell) {
-            guard shell.ports.fixture != nil, let signals = shell.ports.signals as? FakeSystemSignals,
-                  let conflicts = shell.ports.conflicts as? FakeConflictProbe,
-                  let gamma = shell.ports.gamma as? FakeGammaPort,
+            guard shell.ports.fixture != nil, let gamma = shell.ports.gamma as? FakeGammaPort,
                   let triggers = shell.ports.triggers as? FakeTriggerFactory else { return nil }
-            services = shell.services; self.signals = signals; self.conflicts = conflicts
+            services = shell.services
+            signals = shell.ports.signals as? FakeSystemSignals
+            conflicts = shell.ports.conflicts as? FakeConflictProbe
             self.gamma = gamma; self.triggers = triggers
         }
     }
@@ -74,7 +79,6 @@ final class ScenarioRunner {
     /// One step that changes something.
     func perform(_ step: ScenarioStep) {
         let boost = rig.services.boost
-        let signals = rig.signals
         switch step {
         case .on: boost.setOn(true, source: .shortcut)
         case .off: boost.setOn(false, source: .shortcut)
@@ -89,6 +93,22 @@ final class ScenarioRunner {
         case .pause(let seconds):
             boost.pause(until: rig.services.time.wallClock.addingTimeInterval(seconds), source: .panel)
         case .resume: boost.resume(source: .panel)
+        case .lock, .systemSleep, .screensSleep, .screensaver, .session, .event, .lowPower, .battery, .thermal,
+             .fullScreen, .focus, .conflict:
+            performSignal(step)
+        case .panel(let open): panel(open)
+        case .wait, .dump, .loop, .quit: break
+        }
+    }
+
+    /// A step the fake signals deliver (snapshot first, then the event); skipped and logged under
+    /// `--qa-live-signals`, whose real Signals reports the real system.
+    private func performSignal(_ step: ScenarioStep) {
+        guard let signals = rig.signals, let conflicts = rig.conflicts else {
+            log.error("QA: \(String(describing: step), privacy: .public) needs the simulated Signals; skipped")
+            return
+        }
+        switch step {
         case .lock(let locked):
             signals.snapshot.isScreenLocked = locked
             signals.emit(locked ? .locked : .unlocked)
@@ -121,9 +141,8 @@ final class ScenarioRunner {
             signals.snapshot.fullScreenVideoDisplays = video ? keys : []
             signals.emit(.activeSpaceChanged)
         case .focus(let directive): signals.setFocusDirective(directive)
-        case .conflict(let severity): setConflict(severity)
-        case .panel(let open): panel(open)
-        case .wait, .dump, .loop, .quit: break
+        case .conflict(let severity): setConflict(severity, signals: signals, conflicts: conflicts)
+        default: break
         }
     }
 
@@ -137,14 +156,14 @@ final class ScenarioRunner {
     }
 
     /// One synthetic catalogue app of `severity` launches (none: every one quits). Synthetic IDs only (D3).
-    private func setConflict(_ severity: ConflictSeverity?) {
-        for app in rig.signals.snapshot.conflicts { rig.signals.appTerminated(app, probe: rig.conflicts) }
+    private func setConflict(_ severity: ConflictSeverity?, signals: FakeSystemSignals, conflicts: FakeConflictProbe) {
+        for app in signals.snapshot.conflicts { signals.appTerminated(app, probe: conflicts) }
         guard let severity else { return }
         nextProcessID += 1
         let app = ConflictingApp(entryID: "qa-\(severity.rawValue)", severity: severity,
                                  bundleID: "com.example.qa.\(severity.rawValue)", processID: nextProcessID,
                                  displayName: "QA \(severity.rawValue)")
-        rig.signals.appLaunched(app, probe: rig.conflicts)
+        signals.appLaunched(app, probe: conflicts)
         log.info("QA: conflict \(severity.rawValue, privacy: .public) running")
     }
 }
