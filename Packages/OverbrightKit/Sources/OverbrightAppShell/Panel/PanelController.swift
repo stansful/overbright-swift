@@ -4,8 +4,10 @@
 // §3.1 (`panelIn` / `panelOut`), §3.2 (Reduce Motion: cross-fade only); D13. Seeded by WP0a: `init(services:)` and
 // `toggle(from:)` are fixed; anchored to the status button's window frame (never `NSStatusBar.system.thickness`),
 // with `PanelPlacement` keeping it on screen while the button is not placed yet and following the button's window.
-// Every close is logged with its cause. Debug QA: `--qa-panel` keeps the panel open on clicks elsewhere (a mouse-down
-// anywhere in the session closed it before the capture), and `--qa-state` can open it with the "Why?" row expanded.
+// Every close is logged with its cause, and the end of its fade releases the SwiftUI content: a closed panel does no
+// work (DESIGN.md §17), and each opening builds a fresh view anyway. Debug QA: `--qa-panel` keeps the panel open on
+// clicks elsewhere (a mouse-down anywhere in the session closed it before the capture), and `--qa-state` can open it
+// with the "Why?" row expanded.
 import AppKit
 import OverbrightCore
 import OverbrightDesign
@@ -79,11 +81,8 @@ final class PanelController {
 
     /// Opens the panel, with keyboard focus on its master switch when `takingFocus`.
     func show(from anchor: NSView?, takingFocus: Bool) {
-        let panel = self.panel ?? makePanel()
-        self.panel = panel
+        let panel = preparedPanel(takingFocus: takingFocus)
         self.anchor = anchor
-        isClosing = false
-        install(content(takingFocus: takingFocus), in: panel)
         let frame = place(panel, under: anchor)
         let reduceMotion = NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
         if !panel.isVisible {
@@ -105,24 +104,54 @@ final class PanelController {
     func close(_ cause: CloseCause = .request) {
         guard let panel, panel.isVisible, !isClosing else { return }
         log.info("panel closes: \(cause.rawValue, privacy: .public)")
-        isClosing = true
-        removeMonitors()
-        stopFollowingAnchor()
+        beginClosing()
         NSAnimationContext.runAnimationGroup({ context in
             context.duration = OverbrightMotion.Kind.panelOut.duration
             context.timingFunction = CAMediaTimingFunction(name: .easeIn)
             panel.animator().alphaValue = 0
         }, completionHandler: { [weak self] in
             MainActor.assumeIsolated {                                   // AppKit runs completions on the main thread
-                guard let self, self.isClosing else { return }
-                panel.orderOut(nil)
-                panel.alphaValue = 1
-                self.isClosing = false
+                self?.finishClosing()
             }
         })
     }
 
+    /// The first half of a close: from now on the panel counts as closed and watches neither outside clicks nor the
+    /// anchor.
+    func beginClosing() {
+        isClosing = true
+        removeMonitors()
+        stopFollowingAnchor()
+    }
+
+    /// The end of `panelOut`: orders the panel out and releases its SwiftUI content, so a closed panel keeps no view
+    /// graph that re-renders on every change of the engine's status (DESIGN.md §17: no work while closed). The window
+    /// stays for the next opening, which installs a fresh view anyway. A reopen during the fade took over
+    /// (`isClosing` is false again): its new content stays.
+    func finishClosing() {
+        guard isClosing, let panel else { return }
+        panel.orderOut(nil)
+        panel.alphaValue = 1
+        isClosing = false
+        panel.contentView = nil
+        hosting = nil
+    }
+
     // MARK: Content
+
+    /// The panel window with a fresh SwiftUI content, not yet placed or ordered in; `show` brings it forward, tests
+    /// call this alone. Opening counts as a reopen while a close still fades (`isClosing` becomes false).
+    @discardableResult
+    func preparedPanel(takingFocus: Bool) -> OverbrightPanel {
+        let panel = self.panel ?? makePanel()
+        self.panel = panel
+        isClosing = false
+        install(content(takingFocus: takingFocus), in: panel)
+        return panel
+    }
+
+    /// The SwiftUI content the panel hosts now (nil while closed).
+    var hostedContent: NSView? { hosting }
 
     private func makePanel() -> OverbrightPanel {
         let panel = OverbrightPanel(frame: CGRect(x: 0, y: 0, width: Self.width, height: 120))
@@ -191,7 +220,7 @@ final class PanelController {
     // MARK: Following the anchor, outside clicks
 
     /// Re-places the open panel whenever the anchor's window moves or changes screen.
-    private func follow(_ anchor: NSView?) {
+    func follow(_ anchor: NSView?) {
         stopFollowingAnchor()
         guard let window = anchor?.window else { return }
         let center = NotificationCenter.default
@@ -210,7 +239,7 @@ final class PanelController {
 
     /// Closes on a click in another app, or in another window of ours (the status button toggles by itself); never
     /// while `closesOnOutsideClicks` is false.
-    private func installMonitors() {
+    func installMonitors() {
         guard closesOnOutsideClicks, monitors.isEmpty else { return }
         if let global = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown],
                                                           handler: { [weak self] _ in self?.close(.outsideClick) }) {
@@ -238,6 +267,8 @@ final class PanelController {
 
     /// Whether outside clicks are being watched now (only while the panel is open and `closesOnOutsideClicks`).
     var watchesOutsideClicks: Bool { !monitors.isEmpty }
+    /// Whether the anchor's window is being followed now (only while the panel is open).
+    var followsAnchor: Bool { !anchorObservers.isEmpty }
 }
 
 private extension OverbrightMotion.Kind {

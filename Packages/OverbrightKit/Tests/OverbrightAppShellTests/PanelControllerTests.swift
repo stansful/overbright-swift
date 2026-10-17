@@ -1,9 +1,13 @@
 // OverbrightAppShellTests/PanelControllerTests.swift — the panel window's rules that need no window on screen
 // (DESIGN.md §5.1, §5.12, §2.4): ⌘W closes, ⌘, opens Settings, ⌘Q quits (nothing else is taken); the container is glass
 // on macOS 26+, the popover material on 14/15, opaque under Reduce Transparency and Increase Contrast; the panel grows
-// to 70 % of the screen's visible height and no further.
+// to 70 % of the screen's visible height and no further. A closed panel keeps its window but no SwiftUI content
+// (DESIGN.md §17: no work while closed), and a reopen during the close's fade keeps its new content. Nothing is
+// ordered in: `preparedPanel(takingFocus:)` builds what `show` brings forward, and the close's two halves run by hand.
 import AppKit
+import OverbrightCore
 import OverbrightPanelUI
+import OverbrightTestSupport
 import Testing
 @testable import OverbrightAppShell
 
@@ -50,5 +54,47 @@ import Testing
         panel.cancelOperation(nil)
         #expect(cancelled)
         #expect(!panel.isVisible)
+    }
+
+    @Test func theEndOfACloseReleasesTheContentAndKeepsTheWindow() async {
+        _ = NSApplication.shared
+        let controller = PanelController(services: .preview())
+        let anchorWindow = NSWindow(contentRect: CGRect(x: 0, y: 0, width: 38, height: 24), styleMask: [.borderless],
+                                    backing: .buffered, defer: true)
+        let anchor = NSView()
+        anchorWindow.contentView = anchor
+        weak var released: NSView?
+        let panel = autoreleasepool {
+            let panel = controller.preparedPanel(takingFocus: false)
+            released = controller.hostedContent
+            #expect(released != nil && panel.contentView != nil)
+            controller.installMonitors()
+            controller.follow(anchor)
+            #expect(controller.watchesOutsideClicks && controller.followsAnchor)
+            controller.beginClosing()                                         // the close starts its fade
+            #expect(!controller.isShown && !controller.watchesOutsideClicks && !controller.followsAnchor)
+            #expect(controller.hostedContent != nil)                          // drawn until the fade ends
+            controller.finishClosing()                                        // the fade's completion
+            return panel
+        }
+        #expect(controller.hostedContent == nil && panel.contentView == nil && !controller.isShown)
+        #expect(await eventually { released == nil }, "the closed panel's hosting view is still alive")
+        let reopened = controller.preparedPanel(takingFocus: false)           // the next opening: same window, new view
+        #expect(reopened === panel && controller.hostedContent != nil && panel.contentView != nil)
+        controller.finishClosing()                                            // no close pending: nothing happens
+        #expect(controller.hostedContent != nil)
+    }
+
+    @Test func aReopenDuringTheFadeKeepsItsNewContent() {
+        _ = NSApplication.shared
+        let controller = PanelController(services: .preview())
+        let panel = controller.preparedPanel(takingFocus: false)
+        let first = controller.hostedContent
+        controller.beginClosing()
+        controller.preparedPanel(takingFocus: false)                          // reopened while panelOut fades
+        let reopened = controller.hostedContent
+        #expect(reopened != nil && reopened !== first)
+        controller.finishClosing()                                            // the old fade's completion comes after
+        #expect(controller.hostedContent === reopened && panel.contentView != nil)
     }
 }
