@@ -135,6 +135,9 @@ public nonisolated enum EngineTiming {
     public static let lowLevelThreshold = 0.10
     /// … reverting after this long without an answer.
     public static let lowLevelConfirmTimeout: Duration = .seconds(10)
+    /// Levels set by a drag, steps or presets reach UserDefaults this long after the last change (every reader sees
+    /// them at once), and at once on stop, quit and every turn-off. Settings only: no safety state waits for it.
+    public static let levelPersistDelay: Duration = .milliseconds(500)
     /// A paused app's display resumes this long after the app leaves.
     public static let pausedAppResumeSettle: Duration = .seconds(1)
     /// An icon, shortcut or intent turn-on not ready this long after the request shows "Preparing…".

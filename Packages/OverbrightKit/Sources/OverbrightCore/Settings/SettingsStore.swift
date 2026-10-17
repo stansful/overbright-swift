@@ -46,6 +46,8 @@ import os
     let defaults: UserDefaults
     private var boxes: [String: AnyObject] = [:]
     private var reloadHandlers: [String: @MainActor () -> Void] = [:]
+    /// The `defaults` writes `setDeferringWrite` still owes, by key id; each writes its key's value as it is then.
+    private var deferredWrites: [String: @MainActor () -> Void] = [:]
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
 
@@ -59,12 +61,32 @@ import os
             let b = box(key)
             guard b.value != newValue else { return }
             b.value = newValue
-            if newValue == key.defaultValue {
-                defaults.removeObject(forKey: Self.keyPrefix + key.id)
-            } else if let data = try? encoder.encode(newValue) {
-                defaults.set(data, forKey: Self.keyPrefix + key.id)
-            }
+            deferredWrites[key.id] = nil
+            write(key, newValue)
         }
+    }
+
+    /// Sets `key` for every reader and observer at once, exactly as the subscript does, but owes the `defaults` write
+    /// (a JSON encode and a cfprefsd message) until `writeDeferred()`: a value that changes many times a second (a level
+    /// while a slider moves) is written once. A plain write of the key writes at once and settles what it owed.
+    public func setDeferringWrite<V>(_ key: SettingKey<V>, _ newValue: V) {
+        let b = box(key)
+        guard b.value != newValue else { return }
+        b.value = newValue
+        deferredWrites[key.id] = { [weak self, weak b] in
+            guard let self, let b else { return }
+            self.write(key, b.value)
+        }
+    }
+
+    /// Whether a value set with `setDeferringWrite` still owes its `defaults` write.
+    public var hasDeferredWrites: Bool { !deferredWrites.isEmpty }
+
+    /// Writes every value `setDeferringWrite` owes, as it is now.
+    public func writeDeferred() {
+        let owed = deferredWrites
+        deferredWrites = [:]
+        for write in owed.values { write() }
     }
 
     /// Drives the "changed from default" dot and per-row "Reset to Default".
@@ -99,6 +121,7 @@ import os
     }
     /// Replaces every key with `snapshot` and updates the live values (Undo of "Reset All").
     public func restore(_ snapshot: Snapshot) {
+        deferredWrites = [:]
         for key in defaults.dictionaryRepresentation().keys where key.hasPrefix(Self.keyPrefix) && key != Self.revisionKey {
             defaults.removeObject(forKey: key)
         }
@@ -107,6 +130,7 @@ import os
     }
 
     private func reset(prefix: String) {
+        deferredWrites = deferredWrites.filter { !(Self.keyPrefix + $0.key).hasPrefix(prefix) }
         for key in defaults.dictionaryRepresentation().keys where key.hasPrefix(prefix) && key != Self.revisionKey {
             defaults.removeObject(forKey: key)
         }
@@ -123,6 +147,15 @@ import os
             if b.value != v { b.value = v }
         }
         return b
+    }
+
+    /// Writes `value` to `defaults`; the default removes the key.
+    private func write<V>(_ key: SettingKey<V>, _ value: V) {
+        if value == key.defaultValue {
+            defaults.removeObject(forKey: Self.keyPrefix + key.id)
+        } else if let data = try? encoder.encode(value) {
+            defaults.set(data, forKey: Self.keyPrefix + key.id)
+        }
     }
 
     /// The persisted value, or the default (undecodable data is logged and ignored).

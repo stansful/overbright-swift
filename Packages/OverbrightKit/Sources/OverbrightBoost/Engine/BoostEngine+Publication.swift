@@ -41,6 +41,22 @@ extension BoostEngine {
                            pendingLowLevel: pendingLowLevel)
     }
 
+    /// The reducer's symbol, with `preparing` while a display that should boost is arming or gating and none is
+    /// boosted yet (§6.4: the reducer cannot see phases).
+    func symbol() -> StatusSymbolState {
+        guard isMasterOn else { return .off }
+        let symbol = lastDecision?.symbol ?? .on
+        guard symbol == .on || symbol == .preparing else { return symbol }
+        return isPreparingNow ? .preparing : .on
+    }
+
+    /// A display that should boost is arming or gating and none is ramping or boosted.
+    var isPreparingNow: Bool {
+        let boosting = controllers.values.filter { $0.targetGain != nil }
+        return boosting.contains(where: \.isPreparing)
+            && !boosting.contains { $0.phase == .boosted || $0.phase == .ramping }
+    }
+
     /// Whether `next` differs from `published` only in what may wait for the trailing publish: each display's reading
     /// and the grant learned from readings (`lastGrant`), and, while a display ramps (`ramping` or `disarming` in both),
     /// its applied gain and factor. Phase, target, decision, symbol, banner, `lastChange`, `pendingLowLevel`, on, ready,

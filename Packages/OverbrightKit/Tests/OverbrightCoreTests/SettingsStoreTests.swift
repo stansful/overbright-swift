@@ -211,4 +211,41 @@ import Testing
         box.value = 4
         #expect(changes.withLock { $0 } == 1 && box.value == 4)
     }
+
+    /// `setDeferringWrite`: every reader sees the value at once; `defaults` gets it only at `writeDeferred()` (once,
+    /// with the value as it is then); a plain write settles what was owed; a reset drops it.
+    @Test func deferredWritesReachDefaultsOnlyWhenWritten() {
+        let defaults = InMemoryDefaults()
+        let store = SettingsStore(defaults: defaults)
+        let key = "overbright.displays.linkedLevel"
+        for step in [0.3, 0.4, 0.5] {
+            store.setDeferringWrite(DisplaySettings.linkedLevel, LevelPosition(step))
+            #expect(store[DisplaySettings.linkedLevel] == LevelPosition(step))
+        }
+        #expect(defaults.data(forKey: key) == nil && store.hasDeferredWrites)
+        store.writeDeferred()
+        #expect(SettingsStore(defaults: defaults)[DisplaySettings.linkedLevel] == LevelPosition(0.5))
+        #expect(!store.hasDeferredWrites)
+
+        store.setDeferringWrite(DisplaySettings.linkedLevel, LevelPosition(0.6))
+        store[DisplaySettings.linkedLevel] = LevelPosition(0.7)                                // a plain write
+        #expect(!store.hasDeferredWrites)
+        #expect(SettingsStore(defaults: defaults)[DisplaySettings.linkedLevel] == LevelPosition(0.7))
+
+        store.setDeferringWrite(DisplaySettings.linkedLevel, LevelPosition(0.8))
+        store.reset(namespace: .displays)
+        #expect(!store.hasDeferredWrites && defaults.data(forKey: key) == nil)
+        #expect(store[DisplaySettings.linkedLevel] == DisplaySettings.linkedLevel.defaultValue)
+    }
+
+    /// A deferred value still notifies its key's observers at once.
+    @Test func aDeferredWriteObservesAtOnce() async {
+        let store = SettingsStore(defaults: InMemoryDefaults())
+        var seen: [LevelPosition] = []
+        let token = observe({ store[DisplaySettings.linkedLevel] }, onChange: { seen.append($0) })
+        store.setDeferringWrite(DisplaySettings.linkedLevel, LevelPosition(0.45))
+        for _ in 0..<10 { await Task.yield() }
+        #expect(seen == [LevelPosition(0.45)])
+        token.cancel()
+    }
 }
