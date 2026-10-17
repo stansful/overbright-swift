@@ -8,18 +8,19 @@ import Testing
 @testable import OverbrightBoost
 
 @Suite nonisolated struct HangWatchdogOffMainTests {
-    /// How long the real main queue may take to answer: in a parallel run the main actor serves the engine suites
-    /// between their yields, so a pong can wait seconds (a scheduling margin, not a product timing; C-BOOST-14).
-    private static let mainQueueMargin: Duration = .seconds(60)
+    /// How long the real main queue may take to answer: in a full parallel run the main actor serves every MainActor
+    /// suite between their yields, and one round trip has been seen to take more than 20 s on a loaded machine (a
+    /// scheduling margin, not a product timing; C-BOOST-14).
+    private static let mainQueueMargin: Duration = .seconds(120)
 
-    /// Switched on from a background queue, the timer pings the real main queue and gets answers: the handler ran on
-    /// the watchdog's queue and the pong on main, neither trapped. The timeout is longer than the margin, so a slow main
-    /// queue never makes it fire.
+    /// Switched on from a background queue, the timer pings the real main queue and gets an answer: the handler ran on
+    /// the watchdog's queue and the pong on main, neither trapped (one round trip shows it; how many fit in a time is
+    /// the scheduler's business). The timeout is longer than the margin, so a slow main queue never makes it fire.
     @Test func theTimerAndThePongRunAgainstTheRealMainQueue() async {
         let h = WatchdogHarness()
         let watchdog = h.watchdog(ping: .milliseconds(30), timeout: Self.mainQueueMargin * 2, queue: .main)
         DispatchQueue.global(qos: .utility).async { watchdog.setActive(true) }
-        #expect(await waitUntil(Self.mainQueueMargin) { watchdog.pongCount >= 3 })
+        #expect(await waitUntil(Self.mainQueueMargin) { watchdog.pongCount >= 1 })
         let switchedOff = LockedState(false)
         DispatchQueue.global(qos: .utility).async {
             watchdog.setActive(false)
