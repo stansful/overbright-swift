@@ -12,6 +12,8 @@ nonisolated final class WatchdogHarness: Sendable {
     let gamma = FakeGammaPort()
     let ledger = SafetyLedger()
     let journal = RingBufferJournal()
+    /// The writer's time source: the hang watchdog's ping grid follows it (D29); it moves only when a test says so.
+    let time = ManualTimeSource()
     let writer: TableWriter
     let base = GammaTable.identity(count: 256)
     let display = DisplayRef(key: DisplayFixture.Keys.builtIn, id: 1)
@@ -20,7 +22,7 @@ nonisolated final class WatchdogHarness: Sendable {
 
     init() {
         gamma.addDisplay(1, base: base, table: base.scaled(by: 1.3))
-        writer = TableWriter(gamma: gamma, ledger: ledger, time: ManualTimeSource(), journal: journal)
+        writer = TableWriter(gamma: gamma, ledger: ledger, time: time, journal: journal)
         ledger.markScaled(display, baseline: base)
     }
 

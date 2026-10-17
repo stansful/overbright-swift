@@ -1,18 +1,20 @@
 // OverbrightSignals/Monitor/SignalsMonitor+BoostSources.swift — the sources that run only while the boost is active,
-// and the settings that shape them. ARCHITECTURE.md §6.5, §7.1 (boost-only rows), §7.3, D10, D22.
+// and the settings that shape them. ARCHITECTURE.md §6.5, §7.1 (boost-only rows), §7.3, D10, D22, D28, D29.
 // - battery percent: IOKit's every-change source, only on battery (the source switch itself is always on);
 // - OLED idle: one deadline (`IdleScheduler`), only when an OLED display is online; once idle, the 2 s input poll runs
 //   until input returns even after the boost went inactive (the idle pause itself makes every OLED neutral; stopping
 //   the poll then would clear the flag, re-boost and pause again every few seconds while the user is away), except
-//   while shielded;
+//   while shielded. Each poll waits for the next point of the shared 2 s grid (D29), at most 2 s away; the deadline
+//   before it does not (it ends exactly where the threshold does);
 // - full-screen watch: the 2 s re-check while a full-screen or "while playing" rule is on (borderless games, players
 //   starting or stopping without a Space change). While the boost is inactive only events re-check (Space, app,
 //   screen, wake), so a pause that made every display neutral and whose player then stops without any such event
 //   lasts until the next one: keeping the watch then would mean a 2 s timer with the master off (§17). The watch is
 //   Signals' own timer, not a ride on the engine's drift check (ARCHITECTURE.md D28, WP14): the drift check runs per
-//   display inside Boost with its own phase, the full-screen state is one system-wide read here, and riding would
-//   need a `SystemSignals` requirement; the two 2 s sleeps' 10 % tolerance coalesces them only when their phases lie
-//   within 0.2 s, so the watch costs one wake-up every 2 s while it runs;
+//   display inside Boost, the full-screen state is one system-wide read here, and riding would need a `SystemSignals`
+//   requirement. Each tick waits for the next point of the shared 2 s grid of the one time source instead
+//   (`TimeSource.nextGridPoint`, D29), the points the hang watchdog's pings and the drift checks wait for too, so the
+//   watch shares their wake-up instead of costing its own; the first tick comes at most 2 s after the watch starts;
 // - schedule boundary: one sleep towards the next boundary (`ScheduleTimer`), only while a schedule is set.
 // While shielded (locked, screensaver, displays or system asleep, off the console) the first three stop, the OLED idle
 // poll too: nobody sees the screen, and the engine holds every display neutral. An idle pause keeps its flag until the
@@ -23,8 +25,8 @@ import Foundation
 import OverbrightCore
 
 extension SignalsMonitor {
-    /// The full-screen and playback re-check interval while boosted (the drift check's cadence, its own timer:
-    /// ARCHITECTURE.md D28, DESIGN.md §17).
+    /// The full-screen and playback re-check interval while boosted (the drift check's cadence, its own timer on the
+    /// shared grid: ARCHITECTURE.md D28, D29, DESIGN.md §17).
     static let watchInterval: Duration = .seconds(2)
 
     /// Starts or stops each boost-only source to match the state. While the screen cannot be seen
@@ -108,7 +110,13 @@ extension SignalsMonitor {
             idleTimer.cancel()
             return
         }
-        idleTimer.schedule(after: decision.nextCheck) { [weak self] in self?.evaluateIdle() }
+        let action: @MainActor () -> Void = { [weak self] in self?.evaluateIdle() }
+        if decision.isIdle, decision.nextCheck == IdleScheduler.inputPollInterval {
+            // The input poll: on the shared grid (D29), at most one poll interval away.
+            idleTimer.schedule(at: time.nextGridPoint(every: IdleScheduler.inputPollInterval), action)
+        } else {
+            idleTimer.schedule(after: decision.nextCheck, action)
+        }
     }
 
     // MARK: Full-screen watch
@@ -123,8 +131,10 @@ extension SignalsMonitor {
         }
     }
 
+    /// The next tick at the next point of the shared grid (D29): at most `watchInterval` away, never later than a
+    /// relative 2 s sleep would end.
     private func scheduleWatchTick() {
-        watchTimer.schedule(after: Self.watchInterval) { [weak self] in
+        watchTimer.schedule(at: time.nextGridPoint(every: Self.watchInterval)) { [weak self] in
             guard let self, self.isWatching else { return }
             self.scheduleWatchTick()
             Task { await self.fullScreen.check() }
