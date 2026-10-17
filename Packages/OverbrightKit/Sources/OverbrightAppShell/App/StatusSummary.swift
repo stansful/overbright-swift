@@ -61,7 +61,8 @@ struct StatusSummary: Equatable, Codable {
                            card: card, chip: chip?.text,
                            reasons: (display.decision?.reasons ?? []).map { String(describing: $0) })
         }
-        let banner = status.banner.map { BannerModel.make($0, displayNames: [:], in: english).sentence }
+        let titles = CardTitles.titles(for: status.displays)
+        let banner = status.banner.map { BannerModel.make($0, displayNames: titles, in: english).sentence }
         return StatusSummary(label: label, isOn: status.isOn, symbol: status.symbol.rawValue, banner: banner,
                              displays: displays, gammaWrites: gamma.writeCount, triggerWindows: triggers.openWindowCount)
     }

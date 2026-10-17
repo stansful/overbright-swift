@@ -5,6 +5,7 @@
 // the AppKit menu matches the rows, and its items act through the engine with source `.menu`.
 import AppKit
 import Foundation
+import Observation
 import OverbrightCore
 import OverbrightPanelUI
 import Testing
@@ -68,6 +69,25 @@ import Testing
         #expect(!kinds(paused.rows).contains("pause"))
     }
 
+    /// The first line names the display a stop happened on, and a booster's stop offers Compatibility Mode
+    /// (C-PANEL-9, C-PANEL-8).
+    @Test func theStatusLineNamesTheDisplayAndABoostersStopOffersCompatibilityMode() throws {
+        let services = try services("flicker-stop")
+        let boost = try #require(services.boost as? PreviewBoostControl)
+        let builtIn = DisplayFixture.Keys.builtIn
+        let name = try #require(CardTitles.titles(for: services.boost.status.displays)[builtIn])
+        #expect(StatusMenuModel.make(services: services).dump()[0].contains(name))
+        let booster = ConflictingApp(entryID: "b", severity: .booster, bundleID: nil, processID: 1, displayName: "B")
+        boost.status.banner = .attributedDrift(booster, display: builtIn)
+        let model = StatusMenuModel.make(services: services)
+        #expect(model.dump()[0].contains(name))
+        #expect(model.rows[1] == .bannerAction(.useCompatibilityMode(booster)))
+        #expect(model.dump()[1] == "Use Compatibility Mode")
+        let colorApp = ConflictingApp(entryID: "c", severity: .gammaWriter, bundleID: nil, processID: 2, displayName: "C")
+        boost.status.banner = .attributedDrift(colorApp, display: builtIn)
+        #expect(StatusMenuModel.make(services: services).rows[1] == .bannerAction(.continueAnyway(colorApp)))
+    }
+
     @Test func toggleModeStartsWithShowPanel() throws {
         let services = try services("boosting")
         services.settings[GeneralSettings.clickAction] = .toggle
@@ -117,6 +137,21 @@ import Testing
         #expect(rows.contains(.master(isOn: true, key: nil)) && rows.contains(.dimAll(isDimmed: false, key: nil)))
     }
 
+    /// The space bar shows as the menu's key equivalent in every language: named keys come from the key code, not
+    /// from their localized caps ("Пробел", "Leertaste", "空格键") (C-PANEL-19).
+    @Test func namedKeysComeFromTheKeyCode() {
+        let hyper: KeyCombo.Modifiers = [.control, .option, .command]
+        for caps in ["⌃⌥⌘Пробел", "⌃⌥⌘Leertaste", "⌃⌥⌘空格键", "⌃⌥⌘Space"] {
+            let center = CapsCenter(combo: KeyCombo(keyCode: 49, modifiers: hyper), caps: caps)
+            #expect(MenuKeyEquivalent.of(.toggle, in: center)
+                == MenuKeyEquivalent(key: " ", modifiers: [.control, .option, .command]), "\(caps)")
+        }
+        let f5 = CapsCenter(combo: KeyCombo(keyCode: 0x60, modifiers: hyper), caps: "⌃⌥⌘F5")
+        #expect(MenuKeyEquivalent.of(.toggle, in: f5)?.key == String(Character(UnicodeScalar(NSF5FunctionKey) ?? " ")))
+        let german = CapsCenter(combo: KeyCombo(keyCode: 27, modifiers: hyper), caps: "⌃⌥⌘ß")
+        #expect(MenuKeyEquivalent.of(.toggle, in: german)?.key == "ß")              // a character key: the layout's
+    }
+
     @Test func keyCapsOfAnyLayoutParse() {
         let hyper: KeyCombo.Modifiers = [.control, .option, .command]
         #expect(MenuKeyEquivalent.parse("⌃⌥⌘=", modifiers: hyper)?.key == "=")
@@ -156,4 +191,17 @@ import Testing
         #expect(app.calls == ["quit", "showHelp(-)"])
         #expect(panelShown == 0)
     }
+}
+
+/// A shortcut center whose one registered combo renders as `caps` (a localized layout's names).
+@MainActor @Observable private final class CapsCenter: ShortcutCenter {
+    let combo: KeyCombo
+    let caps: String
+
+    init(combo: KeyCombo, caps: String) { self.combo = combo; self.caps = caps }
+
+    func state(_ id: ShortcutID) -> ShortcutState { .registered(combo) }
+    func set(_ id: ShortcutID, _ combo: KeyCombo?) -> ShortcutState { state(id) }
+    func setRecording(_ recording: Bool) {}
+    func displayString(_ id: ShortcutID) -> String? { caps }
 }
