@@ -24,27 +24,33 @@ import Testing
     }
 
     private static func isOnGrid(_ instant: MonotonicInstant) -> Bool {
-        DisplayController.gridDelay(from: instant, every: period) == period
+        MonotonicInstant.nextGridPoint(after: instant, every: period) == instant + period
+    }
+
+    /// The wait from `instant` to the next point of the grid (Core's rule, `TimeSourceGridTests`).
+    private static func toGrid(_ instant: MonotonicInstant) -> Duration {
+        MonotonicInstant.nextGridPoint(after: instant, every: period) - instant
     }
 
     // MARK: The grid rule
 
-    /// On, just after and just before a grid point, and far from the origin: always in (0, period], ending on the grid.
-    @Test func gridDelayIsAtMostOnePeriodAndEndsOnTheGrid() {
-        let cases: [(Duration, Duration)] = [
-            (.zero, .seconds(2)), (.seconds(2), .seconds(2)), (.milliseconds(1), .milliseconds(1_999)),
-            (.milliseconds(1_999), .milliseconds(1)), (.milliseconds(3_250), .milliseconds(750)),
-            (.seconds(86_400 * 30) + .nanoseconds(1), .seconds(2) - .nanoseconds(1)),
-        ]
-        for (since, expected) in cases {
-            #expect(DisplayController.gridDelay(from: MonotonicInstant(sinceOrigin: since), every: Self.period) == expected)
-        }
-        for index in 0..<1_000 {
-            let now = MonotonicInstant(sinceOrigin: .microseconds(Int64(index) * 7_919))
-            let delay = DisplayController.gridDelay(from: now, every: Self.period)
-            #expect(delay > .zero && delay <= Self.period)
-            #expect(Self.isOnGrid(now + delay))
-        }
+    /// The drift loop sleeps to `TimeSource.nextGridPoint` of the engine's time source (the rule itself is Core's,
+    /// `TimeSourceGridTests`): with the clock off whole nanoseconds, every drift read still lands exactly on a grid
+    /// point, never before it and never twice on one.
+    @Test func aClockOffWholeNanosecondsStillTicksExactlyOnTheGrid() async throws {
+        let (h, port) = harness(.builtinXDRLidOpen)
+        await h.start()
+        #expect(await h.boost())
+        await h.advance(Duration(secondsComponent: 0, attosecondsComponent: 1) + .milliseconds(1_370))
+        #expect(!Self.isOnGrid(h.time.now))
+        await h.advance(.seconds(3))                                      // any recovery burst is over
+        port.resetCounts()
+        await h.advance(.seconds(20), step: .milliseconds(100))
+        let times = port.reads.map(\.time)
+        #expect(times.count == 10, "\(times.count) drift reads in 20 s")
+        #expect(times.allSatisfy(Self.isOnGrid), "\(times.map(\.sinceOrigin).prefix(6))")
+        #expect(Set(times).count == times.count)
+        #expect(h.phase() == .boosted)
     }
 
     // MARK: In the engine
@@ -63,8 +69,7 @@ import Testing
         #expect(await h.advance(until: { h.phase(msi) == .dimmed }))
         let msiSettled = h.time.now
         // Relative 2 s sleeps would have put the two displays' ticks on different phases.
-        #expect(DisplayController.gridDelay(from: builtInSettled, every: Self.period)
-                    != DisplayController.gridDelay(from: msiSettled, every: Self.period))
+        #expect(Self.toGrid(builtInSettled) != Self.toGrid(msiSettled))
         await h.advance(.milliseconds(2_100))
         let firstBuiltIn = try #require(port.reads.first { $0.display == h.id(h.builtIn) && $0.time > builtInSettled })
         let firstMSI = try #require(port.reads.first { $0.display == h.id(msi) && $0.time > msiSettled })

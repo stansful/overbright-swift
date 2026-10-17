@@ -17,11 +17,11 @@
 // Pings go out on the shared 2 s grid of the engine's time source (ARCHITECTURE.md D29; `TimeSource.nextGridPoint`):
 // the first one when the ledger fills, every later one at the next multiple of `hangPing` since the time source's
 // origin, at most `hangPing` away, so the ping and its main-queue pong share the wake-up of the drift checks
-// (`DisplayController.gridDelay` ends on the same points: `SharedGridTests`) and of Signals' watch, which wait for them
-// too. While a ping waits for its answer the timer wakes at the earlier of its timeout deadline and the next grid
-// point, so a new ping always follows an answer within `hangPing` (an answer that comes after a short first wait would
-// otherwise let the next ping slip to the deadline, and a stall right after it would take up to 6 s to catch). The
-// deadline itself (ping + `hangTimeout`), the 50 ms leeway and the once-per-stall rule are unchanged.
+// (`DisplayController.startDriftWatch` sleeps to the same points: `SharedGridTests`) and of Signals' watch, which
+// wait for them too. While a ping waits for its answer the timer wakes at the earlier of its timeout deadline and the
+// next grid point, so a new ping always follows an answer within `hangPing` (an answer that comes after a short first
+// wait would otherwise let the next ping slip to the deadline, and a stall right after it would take up to 6 s to
+// catch). The deadline itself (ping + `hangTimeout`), the 50 ms leeway and the once-per-stall rule are unchanged.
 import Dispatch
 import Foundation
 import OverbrightCore

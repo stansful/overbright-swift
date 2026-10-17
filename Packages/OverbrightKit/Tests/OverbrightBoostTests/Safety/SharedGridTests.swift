@@ -1,8 +1,8 @@
 // OverbrightBoostTests/Safety/SharedGridTests.swift — the drift checks and the hang watchdog's pings wait for the same
-// points of the shared 2 s grid (ARCHITECTURE.md D29). The drift loop sleeps `DisplayController.gridDelay` (E4), the
-// watchdog waits `HangWatchdog.nextPingDelay` (T2), and Signals' watch and the OLED input poll wait for
-// `TimeSource.nextGridPoint` (T3, `WatchGridTests`); all three must name one point, because a grid that only some of
-// the 2 s activities follow costs more wake-ups than none (D29: a relative timer never locks onto the grid).
+// points of the shared 2 s grid (ARCHITECTURE.md D29). The drift loop (E4) and Signals' watch and the OLED input poll
+// (T3, `WatchGridTests`) wait for `TimeSource.nextGridPoint`, the watchdog waits `HangWatchdog.nextPingDelay` (T2, in
+// whole nanoseconds for its dispatch timer); all of them must name one point, because a grid that only some of the 2 s
+// activities follow costs more wake-ups than none (D29: a relative timer never locks onto the grid).
 import Foundation
 import OverbrightCore
 import OverbrightTestSupport
@@ -18,23 +18,26 @@ import Testing
         #expect(EngineTiming.hangPing == .seconds(2))
     }
 
-    /// For 10 000 seeded readings up to 30 days from the origin, whole nanoseconds or not, the drift loop's sleep and
-    /// the watchdog's wait to its next ping are the same whole number of nanoseconds, in (0, 2 s], and end on
-    /// `nextGridPoint` (the drift sleep at most a fraction of a nanosecond after it, never before).
+    /// For 10 000 seeded readings up to 30 days from the origin, whole nanoseconds or not, the drift loop's sleep (to
+    /// `nextGridPoint` of the 2 s drift interval) and the watchdog's wait to its next ping end on the same point: the
+    /// sleep is in (0, 2 s], and the ping's whole nanoseconds are the sleep rounded up (never before the point, less
+    /// than a nanosecond after it).
     @Test func theDriftSleepAndTheNextPingEndOnTheSamePoint() {
         var generator = SeededGenerator(seed: 0x6772_6964)
         for index in 0..<10_000 {
             let whole = Int64.random(in: 0...(30 * 86_400 * 1_000_000_000), using: &generator)
             let fraction = index.isMultiple(of: 2) ? Int64.random(in: 1..<1_000_000_000, using: &generator) : 0
-            let floored = MonotonicInstant(sinceOrigin: .nanoseconds(whole))
             let now = MonotonicInstant(sinceOrigin: .nanoseconds(whole)
                                        + Duration(secondsComponent: 0, attosecondsComponent: fraction))
-            let drift = DisplayController.gridDelay(from: now, every: EngineTiming.watchdogInterval)
+            let drift = MonotonicInstant.nextGridPoint(after: now, every: EngineTiming.watchdogInterval) - now
             let ping = HangWatchdog.nextPingDelay(sinceOrigin: now.sinceOrigin, interval: EngineTiming.hangPing)
             let point = MonotonicInstant.nextGridPoint(after: now, every: Self.period)
             #expect(drift > .zero && drift <= Self.period, "\(now.sinceOrigin) → \(drift)")
             #expect(HangWatchdog.nanosecondsRoundedUp(drift) == ping, "\(now.sinceOrigin): \(drift) vs \(ping) ns")
-            #expect(floored + drift == point, "\(now.sinceOrigin) → \(drift), grid point \(point.sinceOrigin)")
+            #expect(now + drift == point, "\(now.sinceOrigin) → \(drift), grid point \(point.sinceOrigin)")
+            let pinged = now + .nanoseconds(Int64(ping))
+            #expect(pinged >= point && pinged - point < .nanoseconds(1),
+                    "\(now.sinceOrigin): ping at \(pinged.sinceOrigin)")
         }
     }
 
