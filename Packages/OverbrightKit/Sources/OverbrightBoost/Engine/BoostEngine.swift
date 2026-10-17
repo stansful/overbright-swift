@@ -72,6 +72,8 @@ import OverbrightPolicy
     @ObservationIgnored let lowLevelSlot = TaskSlot()
     @ObservationIgnored let scheduleSlot = TaskSlot()
     @ObservationIgnored let preparingSlot = TaskSlot()
+    /// The coalesced re-reduction of screen-parameters notifications (`scheduleScreenParametersReduce`).
+    @ObservationIgnored let screenParametersSlot = TaskSlot()
     @ObservationIgnored var observers: [ObservationToken] = []
     @ObservationIgnored var instrumentHold = false
     /// The running calibration (kept until its `onEnd`); the master stays off meanwhile.
@@ -190,6 +192,7 @@ import OverbrightPolicy
         observers = []
         isStarted = false
         reducePending = false
+        screenParametersSlot.cancel()
         updateAggregates()
         publish()
     }
@@ -198,14 +201,15 @@ import OverbrightPolicy
 
     /// Tasks alive in the engine and its controllers (zero while off and not dimmed, §4.5 invariant 4).
     var activeTaskCount: Int {
-        [pauseSlot, autoOffSlot, lowLevelSlot, scheduleSlot, preparingSlot].filter(\.isRunning).count
-            + controllers.values.map(\.activeTaskCount).reduce(0, +)
+        [pauseSlot, autoOffSlot, lowLevelSlot, scheduleSlot, preparingSlot, screenParametersSlot]
+            .filter(\.isRunning).count + controllers.values.map(\.activeTaskCount).reduce(0, +)
     }
 
     /// The live tasks by name ("pause", "<display>.drift"), for a test that reports one left running.
     var activeTaskNames: [String] {
         let engine = [("pause", pauseSlot), ("autoOff", autoOffSlot), ("lowLevel", lowLevelSlot),
-                      ("schedule", scheduleSlot), ("preparing", preparingSlot)].filter { $0.1.isRunning }.map(\.0)
+                      ("schedule", scheduleSlot), ("preparing", preparingSlot),
+                      ("screenParameters", screenParametersSlot)].filter { $0.1.isRunning }.map(\.0)
         return engine + controllers.values.sorted { $0.key < $1.key }.flatMap(\.activeTaskNames)
     }
 

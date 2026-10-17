@@ -103,6 +103,10 @@ public nonisolated enum EngineTiming {
 
     /// A suspended display keeps its trigger this long.
     public static let triggerLinger: Duration = .seconds(10)
+    /// The re-reduction a screen-parameters notification asks for runs on the trailing edge of this interval, at most
+    /// once per interval (macOS posts one per frame while headroom moves, up to 122/s). Coalescing only: the headroom
+    /// check and its safety drop stay synchronous in the event handler (D5, §4.3), and any other reduction runs at once.
+    public static let screenParametersReduceInterval: Duration = .milliseconds(100)
     /// Reconfiguration after-phase debounce …
     public static let reconfigurationDebounce: Duration = .milliseconds(500)
     /// … and the confirming pass (display removal is immediate).

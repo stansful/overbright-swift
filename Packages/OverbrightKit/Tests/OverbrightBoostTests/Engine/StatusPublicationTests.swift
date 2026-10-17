@@ -23,7 +23,7 @@ import Testing
         for _ in 0..<20 {
             await h.advance(.milliseconds(50))
             h.signals.emit(.screenParametersChanged)
-            await h.settle()
+            await h.advance(EngineTiming.screenParametersReduceInterval)  // the coalesced reduction (E2)
             // The reducer saw a reading taken now, not the published copy.
             let reading = try #require(h.inputs.last?.displays.first?.feedback.lastReading)
             #expect(reading.time == h.time.now)
@@ -45,7 +45,7 @@ import Testing
         await h.advance(.milliseconds(50))
         var published = h.engine.publishCount
         h.signals.emit(.screenParametersChanged)
-        await h.settle()
+        await h.advance(EngineTiming.screenParametersReduceInterval)
         #expect(h.engine.publishCount == published)
         #expect(h.inputs.last?.displays.first?.feedback.lastReading?.current == idle + 0.0002)
         #expect(h.displayStatus()?.lastReading?.current == idle)
@@ -53,7 +53,7 @@ import Testing
         await h.advance(.milliseconds(50))
         published = h.engine.publishCount
         h.signals.emit(.screenParametersChanged)
-        await h.settle()
+        await h.advance(EngineTiming.screenParametersReduceInterval)
         #expect(h.engine.publishCount == published + 1)
         #expect(h.displayStatus()?.lastReading?.current == idle + 0.25)
         #expect(h.displayStatus()?.lastReading?.time == h.time.now)

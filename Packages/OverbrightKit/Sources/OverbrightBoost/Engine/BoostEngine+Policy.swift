@@ -143,10 +143,12 @@ extension BoostEngine {
         }
     }
 
-    /// Reduces now and applies the decision to every controller (a pending coalesced reduction is subsumed).
+    /// Reduces now and applies the decision to every controller (a pending coalesced reduction, and a screen-parameters
+    /// reduction waiting for its interval, are subsumed).
     func reduceNow(_ request: ControlRequest? = nil) {
         guard isStarted else { return }
         reducePending = false
+        screenParametersSlot.cancel()
         refreshDeadlines()
         let input = policyInput()
         let decision = reduce(input)

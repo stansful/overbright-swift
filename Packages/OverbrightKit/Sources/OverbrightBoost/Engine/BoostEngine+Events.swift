@@ -63,7 +63,26 @@ extension BoostEngine {
         calibrationSession?.handle(event)                                // a lock or the display's removal ends it
         updateAggregates()
         publish()
-        scheduleReduce()
+        if case .screenParametersChanged = event {
+            scheduleScreenParametersReduce()                             // the safety check above already ran
+        } else {
+            scheduleReduce()
+        }
+    }
+
+    /// The re-reduction of a screen-parameters notification: macOS posts one per frame while headroom moves (bursts of
+    /// up to 122/s with every lock, unlock and HDR screensaver transition), so it runs on the trailing edge of
+    /// `screenParametersReduceInterval`, at most once per interval. What must be immediate already happened in `handle`:
+    /// each controller's `headroomEvent()` (the safety drop of D5, §4.3) and a trip's retry, which asks for its own
+    /// reduction. Any other reduction (an event, a request, a controller change, an observed input) runs at once and
+    /// subsumes this one (`reduceNow` cancels the slot).
+    func scheduleScreenParametersReduce() {
+        guard isStarted, !reducePending, !screenParametersSlot.isRunning else { return }
+        screenParametersSlot.run { [weak self] in
+            guard let self else { return }
+            do { try await self.time.sleep(for: EngineTiming.screenParametersReduceInterval) } catch { return }
+            self.reduceNow()
+        }
     }
 
     /// `kCGDisplayRemoveFlag`: its windows are ordered out at once and its controller and ledger entry dropped.
