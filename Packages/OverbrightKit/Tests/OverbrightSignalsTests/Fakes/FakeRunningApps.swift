@@ -12,8 +12,10 @@ import OverbrightPolicy
     var processes: [ProcessScanner.Process] = []
     private(set) var teamReads: [URL] = []
     private(set) var scans = 0
+    /// Reads of the running list (one per full pass).
+    private(set) var listReads = 0
 
-    func runningApplications() -> [RunningAppInfo] { apps }
+    func runningApplications() -> [RunningAppInfo] { listReads += 1; return apps }
     func teamID(ofBundleAt url: URL) -> String? { teamReads.append(url); return teams[url] }
     func scanProcesses() async -> [ProcessScanner.Process] { scans += 1; return processes }
 }
@@ -46,5 +48,15 @@ enum TestCatalog {
             }
         }
         return nil
+    }
+}
+
+/// A matcher that records which processes it was asked about, then answers as `TestCatalog.match`.
+@MainActor final class CountingMatcher {
+    private(set) var asked: [Int32] = []
+
+    func match(_ app: ConflictMatcher.RunningApp, in catalog: [ConflictCatalogEntry], ownBundleID: String) -> ConflictingApp? {
+        asked.append(app.processID)
+        return TestCatalog.match(app, in: catalog, ownBundleID: ownBundleID)
     }
 }

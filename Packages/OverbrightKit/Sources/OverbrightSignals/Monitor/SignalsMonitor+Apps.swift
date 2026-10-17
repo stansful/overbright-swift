@@ -2,9 +2,16 @@
 // ARCHITECTURE.md §7.1 ("Active Space, app activation, launch, termination"), §7.2, D9.
 // Two sources report them: the workspace's did-launch and did-terminate notifications (regular apps only on macOS 27)
 // and the KVO of `NSWorkspace.runningApplications` (every app, agent and accessory apps included: most boosters and
-// gamma writers run that way, `RunningAppsObserver`). Each report re-reads the conflicts first, so the snapshot is
+// gamma writers run that way, `RunningAppsObserver`). Each report updates the conflicts first, so the snapshot is
 // current when the event arrives; then `appLaunched` and `appTerminated` are posted once per process, whichever source
 // came first (`AppEventFilter`), and a regular app's termination requests the full-screen re-check.
+// Energy (DESIGN.md §17): the list changes 0.3–1 times a second on a busy Mac, so a report does not re-match the whole
+// list (≈ 14 ms with the as-built matcher). The conflicts are kept per process: a report drops the processes that
+// left and matches only those that joined, each once, whichever source reported it first (a few µs). A launched
+// app counts even before the list shows it; a terminated one no longer counts even while the list still shows it. A
+// full scan of the list re-syncs at start, on every path into boosting (`setBoostActive(true)`), when the session
+// becomes active, after a wake and on a notification without an app, so a change the KVO missed delays a banner only
+// until then and never lets a boost start past a conflict.
 // Thread: main (both sources deliver on the main run loop).
 import Foundation
 import OverbrightCore
@@ -25,7 +32,7 @@ extension SignalsMonitor {
     /// The workspace's did-launch notification.
     func appLaunchNotified(_ app: RunningAppInfo?) {
         guard let app else {                                     // no application to tell apart: post as reported
-            refreshConflicts(launched: [], terminated: [])
+            rescanConflicts()
             post(.appLaunched(bundleID: nil))
             return
         }
@@ -35,7 +42,7 @@ extension SignalsMonitor {
     /// The workspace's did-terminate notification.
     func appTerminationNotified(_ app: RunningAppInfo?) {
         guard let app else {
-            refreshConflicts(launched: [], terminated: [])
+            rescanConflicts()
             post(.appTerminated(bundleID: nil, processID: 0))
             fullScreen.request()
             return
@@ -51,7 +58,7 @@ extension SignalsMonitor {
     /// screen only while that app is frontmost (`FullScreenDetector.counts`), and when a frontmost accessory app quits,
     /// the next app's activation requests the re-check; a background-only process is never frontmost (C-SIGNALS-1).
     func appsChanged(_ change: RunningAppsChange) {
-        refreshConflicts(launched: change.added, terminated: Set(change.removed.map(\.processID)))
+        followConflicts(launched: change.added, terminated: Set(change.removed.map(\.processID)))
         let launched = change.added.filter { appEvents.shouldPostLaunch($0.processID) }
         let terminated = change.removed.filter { appEvents.shouldPostTermination($0.processID) }
         for app in launched { post(.appLaunched(bundleID: app.bundleID)) }
@@ -59,13 +66,42 @@ extension SignalsMonitor {
         if terminated.contains(where: \.isRegular) { fullScreen.request() }
     }
 
-    /// Re-reads the running conflicts after a launch or termination and publishes them.
-    func refreshConflicts(launched: [RunningAppInfo], terminated: Set<Int32>) {
+    /// Follows one launch-and-termination report: terminated processes leave the conflicts, and launched ones not
+    /// matched since the last full scan are matched (a process on both sides counts as terminated).
+    func followConflicts(launched: [RunningAppInfo], terminated: Set<Int32>) {
         guard let conflictProbe else { return }
-        let conflicts = conflictProbe.runningConflicts(launched: launched, terminated: terminated)
-        guard conflicts != snapshot.conflicts else { return }
-        update { $0.conflicts = conflicts }
-        record("conflicts.changed", ["count": Double(conflicts.count)])
-        log.info("conflicts: \(conflicts.map(\.entryID).joined(separator: ","), privacy: .public)")
+        var conflicts = conflictsByPID
+        for app in launched where !terminated.contains(app.processID) {
+            guard matchedProcesses.insert(app.processID).inserted else { continue }    // the second report of it
+            conflicts[app.processID] = conflictProbe.conflict(for: app)
+        }
+        for processID in terminated {
+            conflicts[processID] = nil
+            matchedProcesses.remove(processID)
+        }
+        publishConflicts(conflicts)
+    }
+
+    /// Re-scans the whole running list (a full pass of the probe) and publishes its conflicts.
+    func rescanConflicts() {
+        guard let conflictProbe else { return }
+        let scan = conflictProbe.scan()
+        matchedProcesses = scan.processIDs
+        publishConflicts(Self.byProcess(scan.conflicts))
+    }
+
+    /// `conflicts` keyed by process ID (a process listed twice keeps its most severe match).
+    static func byProcess(_ conflicts: [ConflictingApp]) -> [Int32: ConflictingApp] {
+        Dictionary(conflicts.map { ($0.processID, $0) }, uniquingKeysWith: { first, _ in first })
+    }
+
+    /// Keeps `conflicts` and publishes them, most severe first, when the list changed.
+    private func publishConflicts(_ conflicts: [Int32: ConflictingApp]) {
+        conflictsByPID = conflicts
+        let list = RunningAppsConflictProbe.ordered(conflicts.values)
+        guard list != snapshot.conflicts else { return }
+        update { $0.conflicts = list }
+        record("conflicts.changed", ["count": Double(list.count)])
+        log.info("conflicts: \(list.map(\.entryID).joined(separator: ","), privacy: .public)")
     }
 }

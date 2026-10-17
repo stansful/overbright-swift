@@ -35,6 +35,8 @@ public nonisolated enum ConflictMatcher {
 
     /// The catalogue entry `app` matches, as a `ConflictingApp`; nil for no match and for Overbright itself (our own
     /// bundle ID, helpers and extensions). The first matching entry wins, so a catalogue lists S1 first.
+    /// It normalizes the catalogue on every call: to match many apps against one catalogue, build a `Prepared` once
+    /// (same answers; `ConflictMatcherPreparedTests`).
     ///
     /// Rules, case-insensitive as LaunchServices compares bundle IDs: (1) an exact bundle ID or its "-setapp" twin;
     /// (2) a vendor prefix at an identifier boundary, unless the app is a helper or extension, and unless its known
@@ -64,13 +66,15 @@ public nonisolated enum ConflictMatcher {
         return entry.teamIDs.contains { $0.uppercased() == team.uppercased() }
     }
 
-    private static func hasPrefix(_ bundleID: String, _ prefix: String) -> Bool {
+    /// `prefix` starts `bundleID` at an identifier boundary (both lowercased; `Prepared` shares it).
+    static func hasPrefix(_ bundleID: String, _ prefix: String) -> Bool {
         guard !prefix.isEmpty, bundleID.hasPrefix(prefix) else { return false }
         let rest = bundleID.dropFirst(prefix.count)
         return rest.first.map(prefixBoundaries.contains) ?? true
     }
 
-    private static func isHelper(_ bundleID: String) -> Bool {
+    /// The last component of the lowercased `bundleID` names a helper or an extension (`Prepared` shares it).
+    static func isHelper(_ bundleID: String) -> Bool {
         let last = bundleID.split(separator: ".").last.map(String.init) ?? bundleID
         return helperMarkers.contains { last.contains($0) }
     }

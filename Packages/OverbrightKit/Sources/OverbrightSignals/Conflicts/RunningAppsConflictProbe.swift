@@ -1,12 +1,13 @@
 // OverbrightSignals/Conflicts/RunningAppsConflictProbe.swift — the real `ConflictProbe`. ARCHITECTURE.md §3.6, §7.2,
 // §7.4 (the launch rescue asks it before touching any table), §10.8.
 // Matching is Policy's pure `ConflictMatcher` over the catalogue (exact bundle ID and its `-setapp` twin, vendor
-// prefixes, executable names, optional team ID); this probe only feeds it: the running applications (read live on every
-// call, ≈ 0.04 ms, so the launch check before `SignalsMonitor.start()` already sees them; `SignalsMonitor` asks again on
-// every launch and termination, from the notifications and the running list's KVO), the signing team for bundles
-// whose ID starts with a catalogued prefix that names teams (read once per bundle and process), and, for an unexplained
-// drift, the libproc scan off the main actor. Names are never matched; `displayName` is `localizedName`, for the UI
-// only.
+// prefixes, executable names, optional team ID), prepared once (`ConflictMatcher.Prepared`: the catalogue normalized at
+// construction, ≈ 0.1 µs per app instead of ≈ 150 µs); this probe only feeds it: the running applications (read live on
+// every full pass, so the launch check before `SignalsMonitor.start()` already sees them; `SignalsMonitor` scans in
+// full on its start and on every path into boosting, and in between asks only about the apps a launch adds,
+// `conflict(for:)`), the signing team for bundles whose ID starts with a catalogued prefix that names teams (read once
+// per bundle and process), and, for an unexplained drift, the libproc scan off the main actor. Names are never matched;
+// `displayName` is `localizedName`, for the UI only.
 // Thread: main (the scan inside `attributeDrift()` runs off the main actor).
 import Foundation
 import OverbrightCore
@@ -20,20 +21,23 @@ public final class RunningAppsConflictProbe: ConflictProbe {
     private let catalog: [ConflictCatalogEntry]
     private let ownBundleID: String
     private let source: any RunningAppsSource
+    /// The catalogue normalized once: the live matcher, and which bundles need a team read.
+    private let prepared: ConflictMatcher.Prepared
     private let match: Matcher
     /// Signing teams by bundle and process (a relaunch after an update reads again).
     private var teams: [TeamKey: String?] = [:]
 
-    /// The live probe over `catalog` (Policy's conflict catalogue); `ownBundleID` is ignored by the matcher.
-    /// Constructing it touches nothing.
+    /// The live probe over `catalog` (Policy's conflict catalogue); apps with `ownBundleID` (ours, and its helpers and
+    /// extensions) never match. Constructing it touches nothing (it normalizes the catalogue in memory).
     public convenience init(catalog: [ConflictCatalogEntry], ownBundleID: String = Log.subsystem) {
-        self.init(catalog: catalog, ownBundleID: ownBundleID, source: WorkspaceRunningApps(), match: ConflictMatcher.match)
+        self.init(catalog: catalog, ownBundleID: ownBundleID, source: WorkspaceRunningApps())
     }
 
-    /// A probe over `source` with `match` (tests).
-    init(catalog: [ConflictCatalogEntry], ownBundleID: String, source: any RunningAppsSource,
-         match: @escaping Matcher) {
-        self.catalog = catalog; self.ownBundleID = ownBundleID; self.source = source; self.match = match
+    /// A probe over `source`; `match` replaces the prepared matcher (tests: a synthetic or counting matcher).
+    init(catalog: [ConflictCatalogEntry], ownBundleID: String, source: any RunningAppsSource, match: Matcher? = nil) {
+        let prepared = ConflictMatcher.Prepared(catalog: catalog, ownBundleID: ownBundleID)
+        self.catalog = catalog; self.ownBundleID = ownBundleID; self.source = source; self.prepared = prepared
+        self.match = match ?? { app, _, _ in prepared.match(app) }
     }
 
     /// The running catalogue matches, most severe first (S1, S2, S3, S4), then by process ID.
@@ -41,21 +45,21 @@ public final class RunningAppsConflictProbe: ConflictProbe {
         conflicts(in: source.runningApplications())
     }
 
-    /// The running matches right after a launch or termination (a workspace notification or a change of the running
-    /// list): launched apps count even if the running list does not show them yet, and terminated processes no longer
-    /// count even if it still does.
-    func runningConflicts(launched: [RunningAppInfo], terminated: Set<Int32>) -> [ConflictingApp] {
-        var apps = source.runningApplications().filter { !terminated.contains($0.processID) }
-        for app in launched where !terminated.contains(app.processID)
-            && !apps.contains(where: { $0.processID == app.processID }) {
-            apps.append(app)
-        }
-        return conflicts(in: apps)
+    /// One full pass over the running list: every listed process and the matches among them, most severe first
+    /// (`SignalsMonitor`'s full scan, after which it follows launches and terminations one app at a time).
+    func scan() -> (processIDs: Set<Int32>, conflicts: [ConflictingApp]) {
+        let apps = source.runningApplications()
+        return (Set(apps.map(\.processID)), conflicts(in: apps))
     }
 
     /// The matches among `apps`, most severe first.
     func conflicts(in apps: [RunningAppInfo]) -> [ConflictingApp] {
-        apps.compactMap(conflict(for:)).sorted { ($0.severity.rank, $0.processID) < ($1.severity.rank, $1.processID) }
+        Self.ordered(apps.compactMap(conflict(for:)))
+    }
+
+    /// `conflicts` most severe first (S1, S2, S3, S4), then by process ID: the order of every published list.
+    static func ordered(_ conflicts: some Sequence<ConflictingApp>) -> [ConflictingApp] {
+        conflicts.sorted { ($0.severity.rank, $0.processID) < ($1.severity.rank, $1.processID) }
     }
 
     /// The match for one app, if any.
@@ -91,10 +95,9 @@ public final class RunningAppsConflictProbe: ConflictProbe {
 
     /// The signing team, read only when a catalogued prefix with team IDs could match (cached per bundle).
     private func teamID(for app: RunningAppInfo) -> String? {
-        guard let bundleID = app.bundleID?.lowercased(), let url = app.bundleURL,
-              catalog.contains(where: { entry in
-                  !entry.teamIDs.isEmpty && entry.bundlePrefixes.contains { bundleID.hasPrefix($0.lowercased()) }
-              }) else { return nil }
+        guard let bundleID = app.bundleID, let url = app.bundleURL, prepared.readsTeam(forBundleID: bundleID) else {
+            return nil
+        }
         let key = TeamKey(bundle: url, processID: app.processID)
         if let cached = teams[key] { return cached }
         let team = source.teamID(ofBundleAt: url)

@@ -16,14 +16,16 @@ import OverbrightCore
     let monitor: SignalsMonitor
     var calendar: Calendar
 
-    init(fixture: DisplayFixture = .builtinXDRLidOpen, timeZone: TimeZone = TimeZone(identifier: "UTC") ?? .current) {
+    /// A harness whose probe matches with `match` (the synthetic catalogue's test matcher unless a test counts).
+    init(fixture: DisplayFixture = .builtinXDRLidOpen, timeZone: TimeZone = TimeZone(identifier: "UTC") ?? .current,
+         match: RunningAppsConflictProbe.Matcher? = nil) {
         settings = SettingsStore(defaults: defaults)
         directory = FakeDisplayDirectory(fixture: fixture)
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = timeZone
         self.calendar = calendar
         probe = RunningAppsConflictProbe(catalog: TestCatalog.all, ownBundleID: "app.overbright.Overbright",
-                                         source: apps, match: TestCatalog.match)
+                                         source: apps, match: match ?? TestCatalog.match)
         monitor = SignalsMonitor(settings: settings, time: time, journal: journal, displays: directory,
                                  platform: platform, conflicts: probe, calendar: calendar)
     }
