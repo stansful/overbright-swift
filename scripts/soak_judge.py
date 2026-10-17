@@ -30,10 +30,10 @@ Footprint: the first cycles fill caches that then stay, so growth is judged from
 the cycles and after cycles 1 and 2 is reported, not judged (WP13's 30-minute run: 31 MB off before the cycles, 42
 after cycle 1, 46 after cycle 2, 47 after cycle 3), so growth that stops by cycle 3 passes. The least-squares slope
 of the footprint after cycles 3…N is a leak when it exceeds LEAK_KB per cycle even at its lower 2-standard-error
-bound (a short run's slope is noisy: the 17-minute run's settling read 129 ± 142 KB per cycle, ± 2 standard errors
-as printed, so its lower bound is -13; a real 0.29 MB per cycle leak reads 288 ± 102, at least 186, even in a short
-run); and the footprint at the end must be within LEAK_MB of the one after cycle 3. A run needs at least 5 cycles
-after cycle 3 to be judged at all.
+bound (a short run's slope is noisy: WP14's settling run, its first 17-minute one, read 129 ± 142 KB per cycle, ± 2
+standard errors as printed, so its lower bound is -13; a real 0.29 MB per cycle leak reads 288 ± 102, at least 186,
+even in a short run); and the footprint at the end must be within LEAK_MB of the one after cycle 3. A run needs at
+least 5 cycles after cycle 3 to be judged at all.
 
     soak_judge.py <out> <leak_mb> <leak_kb_per_cycle> <app pid> <control pid>
     soak_judge.py --minimum-cycles        # the fewest cycles a run needs (scripts/soak.sh refuses shorter runs)
@@ -300,7 +300,7 @@ def self_test():
         ("footprint: WP13's 30-minute run", cycles([42.3, 46.5, 47.3, 47.5, 47.6, 47.4, 47.5, 47.7, 47.7, 47.7, 48.1, 48.0,
                                                     47.9, 48.1, 48.1, 47.9, 47.8, 48.1, 48.3, 48.2], end=48.0), False),
         ("footprint: the shortest run, settled", cycles([42.3, 46.5, 47.3, 47.5, 47.6, 47.4, 47.5, 47.7]), False),
-        ("footprint: WP14's 17-minute run, still settling",
+        ("footprint: WP14's settling run (its first 17-minute run)",
          cycles([42.4, 46.2, 46.5, 46.7, 46.8, 47.5, 47.1, 47.0], end=46.0), False),
         ("footprint: a short run leaking 0.29 MB per cycle, noisy",
          cycles([42.4, 46.2] + [46.5 + 0.29 * i + e for i, e in enumerate([0, 0.2, -0.1, 0.3, -0.2, 0.1])]), True),
