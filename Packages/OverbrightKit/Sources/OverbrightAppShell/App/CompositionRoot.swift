@@ -58,7 +58,10 @@ enum CompositionRoot {
     static let strategyCacheFileName = "strategy-cache.json"
 
     /// How many records the simulated fakes keep (their whole history would grow with every write of a long run).
-    static let qaRecordLimit = 256
+    /// Nothing reads more than the newest few: QA dumps, diagnostics and the soak read `writeCount` and
+    /// `openWindowCount`, which are never trimmed. 256 kept 256–512 full tables, a 3.8–7.7 MB saw-tooth in every QA
+    /// footprint and in the soak's growth fit (energy work, H3).
+    static let qaRecordLimit = 16
 
     /// The Debug-only switches a build refuses to start with: none in a Debug build; in a Release build every
     /// `--qa-…` and `-OverbrightQA…` switch present (the app logs them and exits with `EX_USAGE` before anything

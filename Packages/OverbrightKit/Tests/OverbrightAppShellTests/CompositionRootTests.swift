@@ -166,6 +166,24 @@ import Testing
         #endif
     }
 
+    /// The simulated fakes keep only their newest records, so a QA run or a soak measures no history of the fakes'
+    /// own (256 records kept 256–512 full tables, a 3.8–7.7 MB saw-tooth): the write history stays within twice
+    /// `qaRecordLimit` while the counter that QA dumps, diagnostics and the soak read keeps counting.
+    @Test func simulatedFakesKeepOnlyTheirNewestRecords() throws {
+        #expect(CompositionRoot.qaRecordLimit == 16)
+        let ports = TestShell.ports(context: TestShell.context())
+        let gamma = try #require(ports.gamma as? FakeGammaPort)
+        let triggers = try #require(ports.triggers as? FakeTriggerFactory)
+        #expect(gamma.recordLimit == CompositionRoot.qaRecordLimit)
+        #expect(triggers.recordLimit == CompositionRoot.qaRecordLimit)
+        let display = try #require(ports.readDisplays().first).ref.id
+        let base = try #require(gamma.base(of: display))
+        for _ in 0..<100 { try gamma.write(base, to: display) }
+        #expect(gamma.writeCount == 100)                                          // never trimmed
+        #expect(gamma.writes.count >= CompositionRoot.qaRecordLimit)
+        #expect(gamma.writes.count <= 2 * CompositionRoot.qaRecordLimit)
+    }
+
     /// Every fixture of §3.9 wires and reads back its own displays.
     @Test func everyFixtureWires() {
         for fixture in DisplayFixture.allCases {
