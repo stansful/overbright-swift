@@ -7,7 +7,7 @@ no analytics.
 
 > **Status: 0.1.0 — first complete build; brightness boost not yet verified on hardware, see
 > [docs/HARDWARE-TEST.md](docs/HARDWARE-TEST.md).** Everything listed below is built and tested against simulated
-> displays: as of 2026-10-17 the package has 1,813 automated tests in 16 test targets, all passing (`make test`;
+> displays: as of 2026-10-17 the package has 1,826 automated tests in 16 test targets, all passing (`make test`;
 > `grep -rho '@Test\b' Packages/OverbrightKit/Tests | wc -l` gives today's number). No boost has run on a real
 > display yet. Two steps remain before the first release: the owner's session on real displays, which checks that
 > extra brightness works there and tunes the engine's limits and timings, and the release itself (signing, the
