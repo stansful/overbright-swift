@@ -32338,6 +32338,215 @@
         }
       }
     },
+    "Overbright can’t tell how much brighter this display can get, so it adds no extra brightness." : {
+      "comment" : "Verdict: Overbright does not know the display’s peak or its normal maximum brightness, so it adds none; followed by “You can still dim it below the minimum.”",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا يستطيع Overbright معرفة مدى ما يمكن أن تزداد به إضاءة هذه الشاشة، لذا لا يضيف أي إضاءة إضافية."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’Overbright no pot saber quanta més brillantor pot donar aquesta pantalla, així que no hi afegeix brillantor extra."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright nedokáže zjistit, o kolik jasněji může tento monitor svítit, a proto nepřidává extra jas."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright kan ikke se, hvor meget lysere denne skærm kan blive, så den tilføjer ingen ekstra lysstyrke."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright kann nicht erkennen, wie viel heller dieses Display werden kann, und fügt deshalb keine Zusatzhelligkeit hinzu."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Το Overbright δεν μπορεί να ξέρει πόσο πιο φωτεινή μπορεί να γίνει αυτή η οθόνη, γι’ αυτό δεν προσθέτει επιπλέον φωτεινότητα."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright no puede saber cuánto más brillo puede dar esta pantalla, así que no añade brillo extra."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright ei pysty selvittämään, kuinka paljon kirkkaammaksi tämä näyttö voi tulla, joten se ei anna lisäkirkkautta."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright ne peut pas déterminer de combien cet écran peut gagner en luminosité, il n’ajoute donc aucune luminosité supplémentaire."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "אין ל־Overbright דרך לדעת בכמה הצג הזה יכול להיות בהיר יותר, ולכן הוא לא מוסיף בהירות נוספת."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright यह पता नहीं लगा सकता कि यह डिस्प्ले कितना और ब्राइट हो सकता है, इसलिए यह कोई अतिरिक्त ब्राइटनेस नहीं जोड़ता।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright ne može utvrditi koliko svjetliji ovaj zaslon može biti pa ne dodaje dodatnu svjetlinu."
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Az Overbright nem tudja megállapítani, mennyivel lehet fényesebb ez a kijelző, ezért nem ad hozzá extra fényerőt."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright tidak dapat mengetahui seberapa jauh layar ini bisa lebih terang, jadi tidak menambahkan kecerahan ekstra."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright non riesce a stabilire quanto può diventare più luminoso questo schermo, quindi non aggiunge luminosità extra."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbrightはこのディスプレイをどこまで明るくできるかを判断できないため、追加の輝度を加えません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright가 이 디스플레이를 얼마나 더 밝게 할 수 있는지 알 수 없으므로 추가 밝기를 더하지 않습니다."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright tidak dapat mengetahui sejauh mana paparan ini boleh menjadi lebih cerah, jadi ia tidak menambah kecerahan tambahan."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright kan ikke vite hvor mye lysere denne skjermen kan bli, så den gir ingen ekstra lysstyrke."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright kan niet bepalen hoeveel helderder dit beeldscherm kan worden en voegt daarom geen extra helderheid toe."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright nie może ustalić, o ile jaśniejszy może być ten wyświetlacz, więc nie dodaje dodatkowej jasności."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Overbright não consegue saber quanto mais brilho esta tela pode ter, então não adiciona brilho extra."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Overbright não consegue saber quanto mais brilho este monitor pode ter, por isso não acrescenta brilho extra."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright nu poate afla cu cât poate deveni mai luminos acest afișaj, așa că nu adaugă luminozitate suplimentară."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright не может узнать, насколько ярче может стать этот дисплей, поэтому не добавляет дополнительной яркости."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright nedokáže zistiť, o koľko jasnejší môže byť tento displej, a preto nepridáva extra jas."
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright ne more ugotoviti, za koliko je lahko ta zaslon svetlejši, zato ne doda dodatne svetlosti."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright kan inte avgöra hur mycket ljusare den här skärmen kan bli, så den ger ingen extra ljusstyrka."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright ไม่สามารถทราบได้ว่าจอภาพนี้จะสว่างขึ้นได้อีกเท่าใด จึงไม่เพิ่มความสว่างเพิ่มเติม"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright bu ekranın ne kadar daha parlak olabileceğini bilemediği için ek parlaklık eklemez."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright не може дізнатися, наскільки яскравішим може стати цей дисплей, тому не додає додаткової яскравості."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright không thể biết màn hình này có thể sáng thêm bao nhiêu, nên không thêm độ sáng bổ sung."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright无法判断此显示器还能变亮多少，因此不会增加额外亮度。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overbright無法判斷此顯示器還能變亮多少，因此不會增加額外亮度。"
+          }
+        }
+      }
+    },
     "Overbright is paused until %@." : {
       "comment" : "Panel: banner while the user paused Overbright; the argument is a time of day",
       "localizations" : {
@@ -41739,6 +41948,215 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "準備中⋯"
+          }
+        }
+      }
+    },
+    "Range unknown" : {
+      "comment" : "Verdict badge: Overbright cannot tell how much extra brightness the display has",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الهامش غير معروف"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marge desconegut"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rezerva neznámá"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ukendt reserve"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reserve unbekannt"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Άγνωστο περιθώριο"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Margen desconocido"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vara tuntematon"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marge inconnue"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "טווח לא ידוע"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "रेंज अज्ञात"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rezerva nepoznata"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ismeretlen tartalék"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rentang tidak diketahui"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Margine sconosciuto"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "余力が不明"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "여유 밝기 알 수 없음"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Julat tidak diketahui"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ukjent reserve"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bereik onbekend"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nieznany zapas"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Margem desconhecida"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Margem desconhecida"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rezervă necunoscută"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Запас неизвестен"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rezerva neznáma"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rezerva neznana"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Okänd reserv"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ไม่ทราบช่วง"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay bilinmiyor"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Запас невідомий"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Không rõ dải sáng"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "余量未知"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "餘裕不明"
           }
         }
       }

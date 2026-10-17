@@ -84,6 +84,8 @@ import Testing
         #expect(!DisplayVerdict.turnOnHDR.allowsBoost && DisplayVerdict.turnOnHDR.allowsDim)
         #expect(!DisplayVerdict.mirrored.allowsBoost && DisplayVerdict.mirrored.allowsDim)
         #expect(!DisplayVerdict.lcdClass.allowsBoost && DisplayVerdict.lcdClass.allowsDim)
+        // No backed top: no boost, dimming kept (C-PLATFORM-3; `.checking` there took dimming away).
+        #expect(!DisplayVerdict.panelFactsUnknown.allowsBoost && DisplayVerdict.panelFactsUnknown.allowsDim)
         for noDim: DisplayVerdict in [.virtualDisplay, .noGammaTable, .referencePreset, .checking] {
             #expect(!noDim.allowsDim && !noDim.allowsBoost)
         }

@@ -44,6 +44,10 @@ import Testing
         let rows: [Row] = [
             (.noGainAtFullBrightness(peakGain: 1.05), "Little gain",
              "At full brightness this display gains less than 10%. Raising the display brightness gives the same result.", nil),
+            // No backed top: no gain claimed, the dim half kept (C-PLATFORM-3).
+            (.panelFactsUnknown, "Range unknown",
+             "Overbright can’t tell how much brighter this display can get, so it adds no extra brightness. You can still dim it below the minimum.",
+             nil),
             (.presetLimits(presetPeakNits: 600, panelPeakNits: 1600), "Limited by preset",
              "The current preset stops at about 600 nits. Choose a preset with a higher peak, such as 1,600 nits, in Displays settings.",
              .openSystemSettings),
@@ -88,7 +92,7 @@ import Testing
     /// Every verdict has words, and no verdict quotes a number it did not get (the potential is never an input).
     @Test func everyVerdictHasWords() {
         let all: [DisplayVerdict] = [.checking, .supported(safeGain: 1.5, peakGain: 2), .noGainAtFullBrightness(peakGain: 1.05),
-                                     .presetLimits(presetPeakNits: 600, panelPeakNits: 1600), .turnOnHDR, .switchPreset,
+                                     .panelFactsUnknown, .presetLimits(presetPeakNits: 600, panelPeakNits: 1600), .turnOnHDR, .switchPreset,
                                      .referencePreset, .lcdClass, .mirrored, .virtualDisplay, .noGammaTable, .notHDR]
         for verdict in all {
             let text = VerdictText.make(verdict, advisories: [], lastGrant: nil)
