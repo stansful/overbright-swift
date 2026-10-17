@@ -113,13 +113,18 @@ extension DisplayController {
         guard let baseline else { return false }
         let reading = gain > 1 + TableWriter.neutralTolerance ? takeReading() : nil
         do {
-            let outcome = try deps.writer.write(writeRequest(gain, baseline: baseline), to: ref, reading: reading,
-                                                epoch: epochStamp)
+            let wasScaled = isScaledOrDimmed
+            let outcome = try deps.writer.write(writeRequest(gain, baseline: baseline, reading: reading), to: ref,
+                                                reading: reading, epoch: epochStamp)
             appliedGain = outcome.appliedGain
             appliedFactor = outcome.factor
             appliedLimit = outcome.limit
             lastWrite = (baseline, outcome.factor)
-            if let reading { flicker.noteHeadroom(reading.current) }
+            if let reading {
+                flicker.noteHeadroom(reading.current)
+                noteGrant(reading.current)
+            }
+            if isScaledOrDimmed != wasScaled { notify() }               // the boost marker follows the first step
             return true
         } catch GammaError.writeRefused {
             if epochStamp != deps.ledger.hangEpoch {
@@ -139,8 +144,9 @@ extension DisplayController {
         guard let overlay else { return false }
         var applied = gain
         if gain > 1 + TableWriter.neutralTolerance {
-            let request = writeRequest(gain, baseline: .identity(count: 2))
-            applied = (try? deps.writer.allowedGain(for: request, on: ref, reading: takeReading()).appliedGain) ?? 1
+            let reading = takeReading()
+            let request = writeRequest(gain, baseline: .identity(count: 2), reading: reading)
+            applied = (try? deps.writer.allowedGain(for: request, on: ref, reading: reading).appliedGain) ?? 1
         }
         // Exactly 1 at Standard: `tableFactor(1)` is 0.999…, which would end the overlay's EDR request.
         let factor = applied >= 1 - TableWriter.neutralTolerance && applied <= 1 + TableWriter.neutralTolerance
@@ -151,8 +157,10 @@ extension DisplayController {
             deps.journal.record("overlay.failed", display: key, time: deps.time, category: .trigger)
             return false
         }
+        let wasScaled = isScaledOrDimmed
         appliedGain = applied
         appliedFactor = factor
+        if isScaledOrDimmed != wasScaled { notify() }
         return true
     }
 
@@ -160,8 +168,8 @@ extension DisplayController {
     func allowedGain(for gain: Double) -> Double? {
         guard let baseline = baseline ?? (mechanism == .overlay ? .identity(count: 2) : nil) else { return nil }
         let reading = takeReading()
-        return try? deps.writer.allowedGain(for: writeRequest(gain, baseline: baseline), on: ref, reading: reading)
-            .appliedGain
+        return try? deps.writer.allowedGain(for: writeRequest(gain, baseline: baseline, reading: reading), on: ref,
+                                            reading: reading).appliedGain
     }
 
     // MARK: Raises and lowerings while boosted
@@ -210,6 +218,7 @@ extension DisplayController {
         guard phase == .boosted, let reading = takeReading() else { return }
         let headroom = reading.current
         flicker.noteHeadroom(headroom)
+        noteGrant(headroom)
         if appliedGain > 1, appliedGain > FactorMath.lowerThreshold * headroom { lowerForSafety() }
         guard phase == .boosted, let gain = targetGain else { return }
         if armedPreHeld, !heldSourceCheck(headroom) {

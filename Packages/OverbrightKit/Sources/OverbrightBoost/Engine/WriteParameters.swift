@@ -11,6 +11,9 @@ nonisolated struct WriteParameters: Hashable, Sendable {
     var isOLED = false
     /// A trusted SDR white (skips the live Safe bound).
     var sdrWhite: SDRWhiteEstimate?
+    /// The headroom a colorimeter `sdrWhite` was measured with: every write checks its own reading against it again
+    /// (`SDRWhiteSource.holds`), so SDR white rising between two reductions never lifts the Safe cap.
+    var colorimeterHeadroom: Double?
     /// "Add extra brightness only near full brightness" (the taper).
     var taper = true
     /// Reduce Motion: ramps take 160 ms.

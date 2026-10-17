@@ -61,6 +61,9 @@ import OverbrightPolicy
     // MARK: Tables
 
     var baseline: GammaTable?
+    /// The profile base `baseline` was captured or adopted against (§4.8): a re-base replaces a baseline only when the
+    /// profile base moved away from it, so a foreign baseline survives every reconfiguration that changed nothing.
+    var expectedBase: GammaTable?
     var appliedGain = 1.0
     var appliedFactor = 1.0
     var appliedLimit: LimitReason?
@@ -78,10 +81,26 @@ import OverbrightPolicy
     /// short): resuming restarts it, reaching idle or failed judges it at once (§4.8).
     var pendingRebase: ReapplyCause?
     /// The self-test or a calibration drives this display (`DisplayControllerDriving`): decisions are stored, not
-    /// applied, until it is handed back. A driven session starts from a freshly captured baseline.
+    /// applied, until it is handed back. A driven session starts from a freshly captured baseline and stamps the hang
+    /// epoch it writes under (a hang restore refuses its later writes until a new session starts, §4.6).
     var isDriven = false {
-        didSet { if isDriven, !oldValue { refreshBaseline() } }
+        didSet {
+            if isDriven, !oldValue {
+                epochStamp = deps.ledger.hangEpoch
+                refreshBaseline()
+            } else if !isDriven {
+                calibratesOverlay = false
+            }
+        }
     }
+    /// The driven session is a calibration of the Compatibility-mode overlay (set by `beginCalibration`): it arms and
+    /// scales the overlay, never the table or a trigger.
+    var calibratesOverlay = false
+    /// The headroom request of the overlay a calibration armed.
+    var drivenOverlayRequest = 1.0
+    /// A driven display lost its window (occluded, or moved to another screen): the engine ends the calibration or the
+    /// self-test on this display.
+    var onDrivenWindowLost: ((CalibrationAbortReason) -> Void)?
 
     // MARK: Trigger, overlay and the gate
 
@@ -142,6 +161,18 @@ import OverbrightPolicy
         default: true
         }
     }
+    /// Whether Signals' boost-only sources must run for this display (§7.1, DESIGN.md §17): it is scaled or dimmed, or it
+    /// prepares, ramps or holds a boost or a dim. A suspended display whose baseline is written needs none until it
+    /// resumes (a lock, display sleep or fast user switch can last all night; the resume reads the power source again),
+    /// and neither does a display the self-test or a calibration drives (the master is held off).
+    var needsBoostSources: Bool {
+        guard !isDriven else { return false }
+        if isScaledOrDimmed { return true }
+        switch phase {
+        case .arming, .gating, .ramping, .boosted, .dimmed, .disarming: return true
+        case .idle, .failed, .suspended: return false
+        }
+    }
     /// Arming or gating: preparing.
     var isPreparing: Bool {
         switch phase {
@@ -152,6 +183,11 @@ import OverbrightPolicy
     /// Number of tasks alive (zero while idle, §4.5 invariant 4).
     var activeTaskCount: Int {
         [armSlot, rampSlot, driftSlot, burstSlot, lingerSlot, checkSlot, rebaseSlot].filter(\.isRunning).count
+    }
+    /// The live tasks by name, prefixed with the display ("<key>.ramp"), for diagnostics and tests.
+    var activeTaskNames: [String] {
+        [("arm", armSlot), ("ramp", rampSlot), ("drift", driftSlot), ("burst", burstSlot), ("linger", lingerSlot),
+         ("check", checkSlot), ("rebase", rebaseSlot)].filter { $0.1.isRunning }.map { "\(key.rawValue).\($0.0)" }
     }
     /// The boost the current target asks for (nil when the target is not a boost).
     var targetGain: Double? {
@@ -164,6 +200,17 @@ import OverbrightPolicy
         DisplayStatus(key: key, name: facts.name, phase: phase, decision: decision, appliedGain: appliedGain,
                       appliedFactor: appliedFactor, mechanism: mechanism,
                       strategy: trigger != nil ? currentRung?.strategy : nil, lastReading: lastReading,
-                      sdrWhite: parameters.sdrWhite, failedTries: failedTries)
+                      sdrWhite: sdrWhite(at: lastReading), failedTries: failedTries, lastGrant: lastGrant)
+    }
+
+    /// The largest light gain macOS's grants allowed here (0.97 × the highest headroom seen while boosting), if any.
+    var lastGrant: Double? {
+        deps.cache.record(for: key, osBuild: deps.machine.osBuild)?.highestGrantedHeadroom
+            .map { FactorMath.headroomMargin * $0 }
+    }
+
+    /// Learns the grant of a reading taken while this display boosts (DESIGN.md §12.1's "macOS allowed up to …").
+    func noteGrant(_ headroom: Double) {
+        deps.cache.learnGrantedHeadroom(headroom, for: key, osBuild: deps.machine.osBuild)
     }
 }

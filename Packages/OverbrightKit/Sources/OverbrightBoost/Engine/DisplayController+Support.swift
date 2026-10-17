@@ -183,11 +183,20 @@ extension DisplayController {
     /// Tells the engine to publish (and, with `needsReduction`, to re-reduce).
     func notify(needsReduction: Bool = false) { onChange?(needsReduction) }
 
-    /// The request the writer needs for `gain`.
-    func writeRequest(_ gain: Double, baseline: GammaTable) -> TableWriter.Request {
+    /// The request the writer needs for `gain` with `reading` (the one the write itself is checked against).
+    func writeRequest(_ gain: Double, baseline: GammaTable, reading: HeadroomReading?) -> TableWriter.Request {
         TableWriter.Request(gain: gain, domain: domain, baseline: baseline, facts: facts, capMode: parameters.capMode,
-                            isOLED: parameters.isOLED, sdrWhite: parameters.sdrWhite, taper: parameters.taper,
+                            isOLED: parameters.isOLED, sdrWhite: sdrWhite(at: reading), taper: parameters.taper,
                             fullBrightnessHeadroom: fullBrightnessHeadroom)
+    }
+
+    /// The trusted SDR white for a write with `reading`: a colorimeter value only while the reading still shows the SDR
+    /// white it was measured at (§5.5, §5.6's outdoor row); otherwise none, so the live worst-case Safe bound applies.
+    func sdrWhite(at reading: HeadroomReading?) -> SDRWhiteEstimate? {
+        guard let estimate = parameters.sdrWhite, estimate.source == .colorimeter else { return parameters.sdrWhite }
+        guard let measuredAt = parameters.colorimeterHeadroom,
+              SDRWhiteSource.holds(measuredAt: measuredAt, reading: reading) else { return nil }
+        return estimate
     }
 
     /// The taper's reference (§5.4): the lowest ready headroom of this display and OS build, never above the seed

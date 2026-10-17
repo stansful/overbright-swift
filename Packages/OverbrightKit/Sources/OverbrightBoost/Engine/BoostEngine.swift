@@ -36,7 +36,9 @@ import OverbrightPolicy
     @ObservationIgnored public let writer: TableWriter
     /// The learned rungs and the lowest ready headroom (§4.7); in memory until `useStrategyCache(at:)`.
     @ObservationIgnored public let strategyCache = StrategyCache()
-    @ObservationIgnored let watchdog: HangWatchdog
+    /// Runs while the safety ledger holds a display (`start()` arms it from the ledger, D7). Tests may replace it before
+    /// `start()` with one that pings a queue they can stall.
+    @ObservationIgnored var watchdog: HangWatchdog
     /// Tests switch the hang watchdog off and simulate it (the WP5 body runs a real timer).
     @ObservationIgnored var watchdogEnabled = true
     /// `--off` wins over "Launch and turn on" (§3.8); tests replace it.
@@ -74,8 +76,9 @@ import OverbrightPolicy
     @ObservationIgnored var instrumentHold = false
     /// The running calibration (kept until its `onEnd`); the master stays off meanwhile.
     @ObservationIgnored var calibrationSession: CalibrationController?
+    /// The running self-test (a driven display whose trigger is lost stops there).
+    @ObservationIgnored var selfTestRunner: SelfTestRunner?
     @ObservationIgnored var boostSourcesActive = false
-    @ObservationIgnored var watchdogActive = false
 
     /// The engine over explicit dependencies: what the composition root uses, because the services hub needs the
     /// engine before it exists. Constructing it does no I/O; `start()` does.
@@ -128,8 +131,16 @@ import OverbrightPolicy
     /// wins); runs the first reduction and becomes ready. The launch check has already run (the shell's order, §7.4).
     public func start() async {
         guard !isStarted else { return }
-        if let strategyCacheFile { await strategyCache.attach(file: JSONDocumentFile(url: strategyCacheFile)) }
+        if let strategyCacheFile {
+            await strategyCache.attach(file: JSONDocumentFile(url: strategyCacheFile), osBuild: machine.osBuild)
+        }
         isStarted = true
+        if watchdogEnabled {
+            // The watchdog guards exactly what it can restore: from the write that marks the first display to the
+            // write that empties the ledger, whichever path wrote (D7, §4.6). Phases lag behind ramp steps.
+            // Weak: the watchdog holds the ledger, which holds this observer.
+            ledger.observeOccupancy { [weak watchdog = self.watchdog] occupied in watchdog?.setActive(occupied) }
+        }
         syncControllers(reconfigured: false)
         lastFocus = signals.snapshot.focus
         observers.append(signals.addEventObserver { [weak self] event in self?.handle(event) })
@@ -148,6 +159,7 @@ import OverbrightPolicy
     /// trigger; then nothing runs.
     public func stop() async {
         guard isStarted else { return }
+        calibrationSession?.abort(.cancelled)                            // its display at Standard, `onEnd` run
         turnOff()
         let kind: RampPlanner.Kind = signals.snapshot.reduceMotion ? .reduceMotion : .standard
         let all = Array(controllers.values)
@@ -158,6 +170,7 @@ import OverbrightPolicy
 
     /// Synchronous fallback from `applicationWillTerminate`: no ramp, baselines written at once.
     public func stopNow() {
+        calibrationSession?.abort(.cancelled)
         turnOff()
         for controller in controllers.values { controller.stopNow() }
         ledger.withLock { state in
@@ -182,6 +195,13 @@ import OverbrightPolicy
     var activeTaskCount: Int {
         [pauseSlot, autoOffSlot, lowLevelSlot, scheduleSlot, preparingSlot].filter(\.isRunning).count
             + controllers.values.map(\.activeTaskCount).reduce(0, +)
+    }
+
+    /// The live tasks by name ("pause", "<display>.drift"), for a test that reports one left running.
+    var activeTaskNames: [String] {
+        let engine = [("pause", pauseSlot), ("autoOff", autoOffSlot), ("lowLevel", lowLevelSlot),
+                      ("schedule", scheduleSlot), ("preparing", preparingSlot)].filter { $0.1.isRunning }.map(\.0)
+        return engine + controllers.values.sorted { $0.key < $1.key }.flatMap(\.activeTaskNames)
     }
 
     /// Republishes `status` (only when it changed).
@@ -223,33 +243,36 @@ import OverbrightPolicy
         if needsReduction { scheduleReduce() }
     }
 
-    /// The boost-only signal sources, the hang watchdog and the boost marker follow the displays' state.
+    /// The boost-only signal sources and the boost marker follow the displays' state, and a fired hang watchdog is
+    /// recovered from (the watchdog itself follows the safety ledger, `start()`). Controllers call it through
+    /// `controllerChanged` whenever a write takes a display off or back to its baseline, so the marker never lags behind
+    /// a ramp.
     func updateAggregates() {
         let all = Array(controllers.values)
-        let active = isStarted && all.contains(where: \.isActive)
+        let active = isStarted && all.contains(where: \.needsBoostSources)
         if active != boostSourcesActive {
             boostSourcesActive = active
             signals.setBoostActive(active)
         }
-        let scaled = all.filter(\.isScaledOrDimmed)
-        let anyScaled = !scaled.isEmpty
-        if anyScaled != watchdogActive {
-            watchdogActive = anyScaled
-            if watchdogEnabled { watchdog.setActive(anyScaled) }
-        }
-        updateMarker(scaled)
+        updateMarker(all)
         if watchdogEnabled, watchdog.consumeFiredFlag() {
             journal.record("hang.fired", display: nil, time: time)
-            for controller in all where controller.isScaledOrDimmed && controller.epochStamp != ledger.hangEpoch {
+            // A calibration ends first: its display returns to Standard and the session's `onEnd` runs, so its sweep never
+            // writes again on the restored display (the writer refuses the stale epoch anyway).
+            calibrationSession?.abort(.writeRefused)
+            for controller in all
+            where !controller.isDriven && controller.isScaledOrDimmed && controller.epochStamp != ledger.hangEpoch {
                 controller.recoverFromHang()
             }
         }
     }
 
-    /// The boost marker (D7): present while any display is scaled or dimmed, with the displays and the largest factor.
-    func updateMarker(_ scaled: [DisplayController]) {
+    /// The boost marker (D7): present while any display is scaled or dimmed (or recorded in the safety ledger, from its
+    /// first scaled write), with the displays and the largest factor.
+    func updateMarker(_ all: [DisplayController]) {
         let current = settings[EngineRecords.boostMarker]
-        let keys = scaled.map(\.key).sorted()
+        let scaled = all.filter(\.isScaledOrDimmed)
+        let keys = Set(scaled.map(\.key)).union(ledger.markedDisplays).sorted()
         guard !keys.isEmpty else {
             if current != nil { settings[EngineRecords.boostMarker] = nil }
             return

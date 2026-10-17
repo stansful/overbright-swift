@@ -53,7 +53,7 @@ extension BoostEngine {
         if focus != lastFocus {
             lastFocus = focus
             if case .on = focus {
-                turnOn(source: .focusFilter)
+                if isMasterOn { refreshPowerBeforeABoost() } else { turnOn(source: .focusFilter) }
                 reduceNow(ControlRequest(source: .focusFilter, kind: .turnOn, display: nil, wantsBoost: true))
                 return
             }
@@ -82,8 +82,8 @@ extension BoostEngine {
                        alwaysContinueEntryIDs: settings[AdvancedSettings.alwaysContinue])
     }
 
-    /// The reducer's input now: settings, the snapshot, every online display with its preferences, feedback (trip and
-    /// the latest reading) and trusted SDR white.
+    /// The reducer's input now: settings, the snapshot, every online display with its preferences, feedback (trip, the
+    /// latest reading and the taper reference the writer uses) and trusted SDR white.
     func policyInput() -> PolicyInput {
         let now = time.wallClock
         let calendar = Calendar.current
@@ -96,7 +96,8 @@ extension BoostEngine {
             let reading = controller?.feedbackReading()
             let mechanism = lastDecision?.displays[key]?.mechanism ?? .table
             return DisplayPolicyInput(facts: facts, preferences: preferences,
-                                      feedback: EngineFeedback(trip: controller?.trip, lastReading: reading),
+                                      feedback: EngineFeedback(trip: controller?.trip, lastReading: reading,
+                                                               fullBrightnessHeadroom: controller?.fullBrightnessHeadroom),
                                       sdrWhite: SDRWhiteSource.estimate(facts: facts, preferences: preferences,
                                                                         mechanism: mechanism, machine: machine,
                                                                         reading: reading))
@@ -109,10 +110,12 @@ extension BoostEngine {
     /// What a controller needs besides its decision.
     func parameters(for facts: DisplayFacts, decision: DisplayDecision, snapshot: SystemSnapshot) -> WriteParameters {
         let preferences = settings[DisplaySettings.perDisplay][facts.ref.key] ?? DisplayPreferences()
+        let sdrWhite = SDRWhiteSource.estimate(facts: facts, preferences: preferences, mechanism: decision.mechanism,
+                                               machine: machine, reading: controllers[facts.ref.key]?.lastReading)
         return WriteParameters(capMode: preferences.capMode, isOLED: Self.isOLED(facts, preferences),
-                               sdrWhite: SDRWhiteSource.estimate(facts: facts, preferences: preferences,
-                                                                 mechanism: decision.mechanism, machine: machine,
-                                                                 reading: controllers[facts.ref.key]?.lastReading),
+                               sdrWhite: sdrWhite,
+                               colorimeterHeadroom: sdrWhite?.source == .colorimeter
+                                   ? preferences.calibration?.headroomAtTest : nil,
                                taper: settings[DisplaySettings.boostOnlyNearFullBrightness],
                                reduceMotion: snapshot.reduceMotion, triggerOverride: preferences.triggerOverride,
                                isHDRSuppressed: snapshot.isHDRSuppressed, isSessionActive: snapshot.isSessionActive)

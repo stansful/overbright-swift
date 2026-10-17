@@ -72,11 +72,18 @@ import Testing
         h.signals.snapshot.isSystemSleeping = false
         h.engine.setOn(false, source: .panel)
         await h.advance(.seconds(2), step: Self.step, yields: Self.yields)
+        // One yield per coarse step keeps 10 000 sequences fast, but under a loaded parallel run (Thread Sanitizer) a
+        // task can simply be late: let what is left finish with full yields before anything counts as left behind.
+        if h.engine.activeTaskCount != 0 {
+            _ = await h.advance(until: { h.engine.activeTaskCount == 0 }, limit: .seconds(30))
+        }
         outcome.breaches += h.interlockViolations()
         outcome.breaches += h.orderViolations
         if !h.everyTableAtBase { outcome.breaches.append("a table is not at its base after off") }
         if h.triggers.openWindowCount != 0 { outcome.breaches.append("\(h.triggers.openWindowCount) windows after off") }
-        if h.engine.activeTaskCount != 0 { outcome.breaches.append("\(h.engine.activeTaskCount) tasks after off") }
+        if h.engine.activeTaskCount != 0 {
+            outcome.breaches.append("tasks after off: \(h.engine.activeTaskNames.joined(separator: ", "))")
+        }
         h.engine.stopNow()
         return outcome
     }

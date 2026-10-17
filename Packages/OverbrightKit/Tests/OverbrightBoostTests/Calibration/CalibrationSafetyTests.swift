@@ -20,11 +20,16 @@ import Testing
         #expect(abs((c.controller.headroom ?? 0) - h) < 0.01)
     }
 
+    /// The pattern the window draws (`CalibrationController.pattern`, public for the calibration window) is DESIGN.md
+    /// §9's, and the predictions are about its merge patch, the third one, next to white (C-BOOST-21).
     @Test func theWindowDrawsFourPatchesOnBlack() {
-        #expect(CalibrationMath.patches == [0.85, 0.90, 0.95, 1.00])
-        #expect(CalibrationMath.surround == 0)
-        #expect(CalibrationMath.patches.contains(CalibrationMath.mergePatch))
-        #expect(CalibrationMath.encodedMergeFactor(headroom: h) == FactorMath.encodeSRGB(h) / CalibrationMath.mergePatch)
+        let pattern = CalibrationController.pattern
+        #expect(pattern.patches == [0.85, 0.90, 0.95, 1.00] && pattern.surround == 0)
+        #expect(pattern.patches.firstIndex(of: pattern.mergePatch) == pattern.patches.count - 2)
+        #expect(pattern.patches.last == 1 && pattern.patches == pattern.patches.sorted())
+        #expect(CalibrationMath.mergePatch == pattern.mergePatch)
+        #expect(abs(CalibrationMath.encodedMergeFactor(headroom: h) - 1.613) < 0.001)   // §5.6: 1.61 at H 2.667
+        #expect(abs(CalibrationMath.linearMergeFactor(headroom: h) - 2.997) < 0.001)    // and 3.00
     }
 
     @Test func theSweepStepsTwoHundredthsEveryFourHundredMilliseconds() async {

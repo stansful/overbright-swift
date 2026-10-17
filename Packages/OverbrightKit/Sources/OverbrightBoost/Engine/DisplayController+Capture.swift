@@ -28,6 +28,7 @@ extension DisplayController {
         switch BaselineRules.capture(read, expectedBase: expected, previous: baseline) {
         case .accept(let foreign):
             baseline = read
+            expectedBase = expected
             if foreign { deps.journal.record("baseline.foreign", display: key, time: deps.time) }
             return true
         case .reject(let tableClass):

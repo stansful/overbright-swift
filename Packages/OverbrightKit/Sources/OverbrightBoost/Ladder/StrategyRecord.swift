@@ -11,9 +11,14 @@ public nonisolated struct StrategyRecord: Hashable, Codable, Sendable {
     public var failures: Int
     /// The lowest headroom at which a gate became ready (the taper's full-brightness reference, §5.4).
     public var lowestReadyHeadroom: Double?
+    /// The highest headroom macOS granted while the display boosted (DESIGN.md §12.1's "macOS allowed up to …"; WP14).
+    /// Optional, so a file written before it decodes unchanged.
+    public var highestGrantedHeadroom: Double?
 
     /// A record.
-    public init(rung: Int? = nil, failures: Int = 0, lowestReadyHeadroom: Double? = nil) {
+    public init(rung: Int? = nil, failures: Int = 0, lowestReadyHeadroom: Double? = nil,
+                highestGrantedHeadroom: Double? = nil) {
         self.rung = rung; self.failures = failures; self.lowestReadyHeadroom = lowestReadyHeadroom
+        self.highestGrantedHeadroom = highestGrantedHeadroom
     }
 }

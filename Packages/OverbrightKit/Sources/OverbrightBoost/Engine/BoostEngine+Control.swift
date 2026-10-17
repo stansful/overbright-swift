@@ -15,8 +15,20 @@ extension BoostEngine {
     /// On reads the power source synchronously first (so the reducer never sees a stale battery percentage); off
     /// disarms every display (ramp, baseline, triggers removed); stored levels stay.
     public func setOn(_ on: Bool, source: ControlSource) {
-        if on { turnOn(source: source) } else { turnOff() }
+        if on {
+            if isMasterOn { refreshPowerBeforeABoost() } else { turnOn(source: source) }
+        } else {
+            turnOff()
+        }
         reduceNow(ControlRequest(source: source, kind: on ? .turnOn : .turnOff, display: nil, wantsBoost: on))
+    }
+
+    /// A request for the boost half while the master is already on: when no display keeps the boost-only sources
+    /// running, the battery percentage is as old as the last boost, so it is read synchronously before reducing (§7.1,
+    /// D9; one read). Turning on reads it itself (`turnOn`).
+    func refreshPowerBeforeABoost() {
+        guard !boostSourcesActive else { return }
+        signals.refreshPowerNow()
     }
 
     /// Turns the master on or off.
@@ -209,9 +221,13 @@ extension BoostEngine {
             pauseSlot.cancel()
             armedPauseDeadline = nil
         }
-        turnOn(source: source)
-        checkLowLevel(priorStored: priorStored, priorLight: priorLight, source: source)
         let wantsBoost = keys.contains { storedLevel(of: $0).isBoost }
+        if isMasterOn {
+            if wantsBoost { refreshPowerBeforeABoost() }
+        } else {
+            turnOn(source: source)
+        }
+        checkLowLevel(priorStored: priorStored, priorLight: priorLight, source: source)
         reduceNow(ControlRequest(source: source, kind: .level, display: display, wantsBoost: wantsBoost))
     }
 

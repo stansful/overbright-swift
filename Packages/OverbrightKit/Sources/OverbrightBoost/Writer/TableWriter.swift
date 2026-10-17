@@ -10,8 +10,9 @@ import OverbrightCore
 import OverbrightPolicy
 
 /// Writes tables on three paths: `write(_:to:reading:epoch:)` (main: `GainCeiling.liveCap`, a reading of the same
-/// display at most 150 ms old, the current hang epoch), `writeCalibrationFactor(_:to:reading:maxFactor:)`, and the
-/// nonisolated `writeBaselines(fromLedger:)` of the hang watchdog and the signal queue. Lint test
+/// display at most 150 ms old, the current hang epoch), `writeCalibrationFactor(_:of:to:reading:maxFactor:epoch:)`
+/// (the session's bound, a fresh reading, the hang epoch), and the nonisolated `writeBaselines(fromLedger:)` of the hang
+/// watchdog and the signal queue. Lint test
 /// `onlyTableWriterAndRescueWrite` keeps every other caller away from `GammaPort.write`.
 public nonisolated final class TableWriter: Sendable {
     /// What one scaled or dimmed write asks for: the light gain and the inputs of `GainCeiling.liveCap`.
@@ -133,33 +134,41 @@ public nonisolated final class TableWriter: Sendable {
 
     // MARK: Calibration and the safety queues
 
-    /// Calibration: writes `factor` × the display's ledger baseline, refusing anything above `maxFactor` or the live
-    /// interlock (`factor ≤ 0.97 × H` of a fresh reading of the same display). That bound reads the factor as linear
-    /// light, the least conservative reading (an encoded factor gives `F^γ ≥ F` of light): the calibration needs it for
-    /// its linear-confirmation frame at `F = 0.97 × H` (§5.2), and `maxFactor` bounds every other step of the sweep.
-    /// The caller records the baseline in the ledger first (`SafetyLedger.markScaled`). A factor of 1 writes the
-    /// baseline and forgets the display.
-    public func writeCalibrationFactor(_ factor: Double, to display: DisplayRef, reading: HeadroomReading,
+    /// Calibration: writes `factor` × `baseline`, refusing a factor above `maxFactor` or the calibration ceiling of the
+    /// reading (or above 1 without extra range), a reading that is not a fresh one of the same display, and a stale hang
+    /// epoch. The sweep is meant to pass `0.97 × H`: it looks for where the 0.95 patch clips (at 1.15 × the linear
+    /// prediction it reaches about 1.29 × H; an encoded table clips far below, and the display clips the light at H
+    /// either way), so the boost interlock's `0.97 × H` does not apply here (§5.2). `maxFactor` is the session's bound for the step, set from a fresh reading
+    /// (the sweep's cap, the comparison's ×1.3, the confirmation frame's `0.97 × H`); the ceiling bounds any session by
+    /// the reading itself (`CalibrationMath.writeCeiling`). The display is recorded in the ledger before the scaled
+    /// write and the epoch is checked in the same critical section (§4.5 invariants 1(b) and 9, §4.6), so a step queued
+    /// behind a hang never re-scales a restored display. A factor of 1 writes the baseline and forgets the display (an
+    /// un-scale is always allowed).
+    public func writeCalibrationFactor(_ factor: Double, of baseline: GammaTable, to display: DisplayRef,
+                                       reading: HeadroomReading, maxFactor: Double, epoch: UInt64) throws {
+        try checkCalibrationFactor(factor, on: display, reading: reading, maxFactor: maxFactor)
+        if abs(factor - 1) < Self.neutralTolerance {
+            try writeBaseline(baseline, to: display)
+            return
+        }
+        try writeScaled(baseline, factor: factor, to: display, epoch: epoch)
+    }
+
+    /// The checks of a calibration factor without a write (the Compatibility-mode overlay calibrates with the same
+    /// bound): finite and positive, at most `maxFactor`, a reading of `display` at most 150 ms old, and above 1 only
+    /// with extra range granted (`minimumBoostHeadroom`) and at most the calibration ceiling of that reading's headroom.
+    public func checkCalibrationFactor(_ factor: Double, on display: DisplayRef, reading: HeadroomReading,
                                        maxFactor: Double) throws {
         guard factor.isFinite, factor > 0, factor <= maxFactor + Self.neutralTolerance else {
             refuse("interlock.refusedCalibration", display: display, values: ["factor": factor, "maxFactor": maxFactor])
             throw GammaError.writeRefused
         }
         try checkReading(reading, for: display)
-        if factor > 1, factor > FactorMath.headroomMargin * reading.current + Self.neutralTolerance {
+        let ceiling = CalibrationMath.writeCeiling(headroom: reading.current)
+        if factor > 1 + Self.neutralTolerance,
+           factor > ceiling + Self.neutralTolerance || reading.current < Self.minimumBoostHeadroom {
             refuse("interlock.refusedCalibration", display: display,
-                   values: ["factor": factor, "headroom": reading.current])
-            throw GammaError.writeRefused
-        }
-        let refused: Bool = try ledger.withLock { state in
-            guard let entry = state.entries[display.key] else { return true }
-            let isNeutral = abs(factor - 1) < Self.neutralTolerance
-            try gamma.write(isNeutral ? entry.baseline : entry.baseline.scaled(by: factor), to: display.id)
-            if isNeutral { state.entries[display.key] = nil }
-            return false
-        }
-        if refused {
-            refuse("interlock.refusedNoBaseline", display: display, values: ["factor": factor])
+                   values: ["factor": factor, "headroom": reading.current, "ceiling": ceiling])
             throw GammaError.writeRefused
         }
     }

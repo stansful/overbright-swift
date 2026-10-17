@@ -132,14 +132,49 @@ import Testing
         defer { try? FileManager.default.removeItem(at: url.deletingLastPathComponent()) }
         let file = JSONDocumentFile<[String: StrategyRecord]>(url: url)
         let cache = StrategyCache()
-        await cache.attach(file: file)
+        await cache.attach(file: file, osBuild: "b")
         cache.recordWin(rung: 3, for: display, osBuild: "b")
         cache.learnReadyHeadroom(2.6, for: display, osBuild: "b")
         let saved = await eventually { (try? file.load()).map { if case .loaded(let v) = $0 { v.count == 1 } else { false } } ?? false }
         #expect(saved)
         let reopened = StrategyCache()
-        await reopened.attach(file: JSONDocumentFile(url: url))
+        await reopened.attach(file: JSONDocumentFile(url: url), osBuild: "b")
         #expect(reopened.record(for: display, osBuild: "b") == StrategyRecord(rung: 3, failures: 0, lowestReadyHeadroom: 2.6))
+    }
+
+    /// Only the running build's records are read, so records of earlier macOS builds are dropped when the file is
+    /// attached and the pruned map is written back once (C-BOOST-15: the file no longer grows with every update).
+    @Test func attachingDropsRecordsOfOtherBuilds() async throws {
+        let url = FileManager.default.temporaryDirectory
+            .appending(path: "overbright-ladder-\(UUID().uuidString)/strategy-cache.json")
+        defer { try? FileManager.default.removeItem(at: url.deletingLastPathComponent()) }
+        let other = DisplayKey(rawValue: "0B21E7F1-0000-4000-8000-0000000000AA")
+        let stored = [StrategyCache.key(display, osBuild: "25A1"): StrategyRecord(rung: 2),
+                      StrategyCache.key(other, osBuild: "25A1"): StrategyRecord(rung: 4),
+                      StrategyCache.key(display, osBuild: "26B2"): StrategyRecord(rung: 1, lowestReadyHeadroom: 2.5)]
+        try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+        try JSONEncoder().encode(stored).write(to: url)
+        let file = JSONDocumentFile<[String: StrategyRecord]>(url: url)
+        let cache = StrategyCache()
+        await cache.attach(file: file, osBuild: "26B2")
+        let current = StrategyCache.key(display, osBuild: "26B2")
+        #expect(cache.records == [current: StrategyRecord(rung: 1, lowestReadyHeadroom: 2.5)])
+        let pruned = await eventually {
+            (try? file.load()).map { if case .loaded(let v) = $0 { v.count == 1 } else { false } } ?? false
+        }
+        #expect(pruned)
+        #expect(StrategyCache.osBuild(ofKey: current) == "26B2")
+    }
+
+    /// The highest grant seen is kept, and small rises (read-back noise) are not stored (DESIGN.md §12.1; C-BOOST-25).
+    @Test func highestGrantedHeadroomIsKept() {
+        let cache = StrategyCache()
+        cache.learnGrantedHeadroom(2.4, for: display, osBuild: "b")
+        cache.learnGrantedHeadroom(2.667, for: display, osBuild: "b")
+        cache.learnGrantedHeadroom(1.6, for: display, osBuild: "b")
+        cache.learnGrantedHeadroom(2.672, for: display, osBuild: "b")               // below the resolution
+        cache.learnGrantedHeadroom(0.9, for: display, osBuild: "b")                 // not a grant
+        #expect(cache.record(for: display, osBuild: "b")?.highestGrantedHeadroom == 2.667)
     }
 
     // MARK: In the engine

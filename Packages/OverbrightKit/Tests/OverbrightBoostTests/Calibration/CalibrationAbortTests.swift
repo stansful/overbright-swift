@@ -37,9 +37,47 @@ import Testing
         c.controller.cancel()
         #expect(c.controller.currentFactor == 1)                       // before any time passes
         await expectEnded(c, .cancelled)
-        // What was measured can still be recorded: the sweep ran, nothing was marked.
-        #expect(try #require(c.controller.finish(brighter: true)).outcome == .inconclusive)
+        // An interrupted sweep records nothing (§11.1 #35): an earlier record stays.
+        #expect(c.controller.finish(brighter: true) == nil)
         #expect(c.endings == 1)
+    }
+
+    /// An abort mid-sweep never replaces a valid earlier record (§11.1 #35, C-BOOST-19): `finish` returns nil, which the
+    /// calibration window does not store. Every early end of the sweep counts: Esc, a lock, occlusion, a headroom drop.
+    @Test(arguments: [CalibrationAbortReason.cancelled, .shielded, .occluded, .headroomDropped, .writeRefused])
+    func anInterruptedSweepKeepsTheEarlierRecord(_ reason: CalibrationAbortReason) async throws {
+        let earlier = CalibrationRecord(outcome: .encoded, mechanism: .table, mergeFactor: 1.6, estimatedExponent: 2.4,
+                                        measuredSDRWhiteNits: nil, headroomAtTest: 2.667, potentialAtTest: 16,
+                                        osBuild: DisplayFixture.ownerMachine.osBuild, measuredAt: Date())
+        var preferences = DisplayPreferences()
+        preferences.calibration = earlier
+        let c = await sweeping()
+        c.controller.setMeasuredSDRWhite(nits: 600)
+        c.controller.abort(reason)
+        if let record = c.controller.finish(brighter: true) { preferences.calibration = record }   // the window's store
+        #expect(preferences.calibration == earlier)
+    }
+
+    /// An abort after the sweep ended with a mark keeps what was measured: the mark decides, unconfirmed linear stays
+    /// inconclusive.
+    @Test func anAbortAfterTheMarkStillRecordsIt() async throws {
+        let c = CalibrationRig()
+        #expect(await c.ready())
+        #expect(await c.sweep(to: 1.6))
+        c.controller.markMerged()
+        c.controller.handle(.locked)
+        #expect(c.controller.state == .aborted(.shielded))
+        #expect(try #require(c.controller.finish(brighter: true)).outcome == .encoded)
+
+        let d = CalibrationRig()
+        #expect(await d.ready())
+        #expect(await d.sweep(to: 3.0, continuingPastThePause: true))
+        d.controller.markMerged()
+        d.controller.showLinearConfirmation()
+        await d.advance(.seconds(2))
+        d.controller.answerLinearConfirmation(distinguishable: true)
+        d.controller.cancel()
+        #expect(try #require(d.controller.finish(brighter: true)).outcome == .linear)
     }
 
     @Test(arguments: [SystemEvent.locked, .screensaverStarted, .willSleep, .screensDidSleep, .sessionResigned])

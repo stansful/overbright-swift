@@ -85,6 +85,32 @@ import Testing
         #expect(h.signals.boostActiveCalls.last == false)
     }
 
+    /// A lock, display sleep or fast user switch can last all night: once the shield wrote the baseline, nothing is
+    /// scaled, dimmed or preparing, so the boost-only sources stop (§7.1, DESIGN.md §17); the resume starts them again
+    /// (C-BOOST-6).
+    @Test(arguments: [SystemEvent.locked, .screensDidSleep, .sessionResigned])
+    func boostOnlySourcesStopWhileShielded(_ event: SystemEvent) async throws {
+        let h = EngineHarness()
+        await h.start()
+        #expect(await h.boost())
+        #expect(h.signals.boostActiveCalls.last == true)
+        switch event {
+        case .locked: h.signals.snapshot.isScreenLocked = true
+        case .sessionResigned: h.signals.snapshot.isSessionActive = false
+        default: h.signals.snapshot.areDisplaysAsleep = true
+        }
+        h.signals.emit(event)
+        await h.advance(.seconds(60), step: .milliseconds(100))
+        #expect(h.phase()?.isSuspended == true && h.everyTableAtBase && h.triggers.openWindowCount == 0)
+        #expect(h.signals.boostActiveCalls.last == false && h.engine.activeTaskCount == 0)
+        h.signals.snapshot.isScreenLocked = false
+        h.signals.snapshot.isSessionActive = true
+        h.signals.snapshot.areDisplaysAsleep = false
+        h.signals.emit(event == .locked ? .unlocked : event == .sessionResigned ? .sessionBecameActive : .screensDidWake)
+        #expect(await h.boost())
+        #expect(h.signals.boostActiveCalls.last == true)
+    }
+
     /// Signals' schedule boundary (§7.1) re-reduces once, with nothing else to do.
     @Test func aScheduleBoundaryReReduces() async throws {
         let h = EngineHarness()
@@ -160,7 +186,8 @@ import Testing
         #expect(h.everyTableAtBase && h.liveTriggers().isEmpty)
     }
 
-    /// The calibration seam writes only through the writer, bounded by its max factor and the live headroom.
+    /// The calibration seam writes only through the writer, bounded by its max factor and the calibration ceiling of a
+    /// fresh reading; it passes `0.97 × H` (the sweep must, C-BOOST-5).
     @Test func calibrationFactorsGoThroughTheWriter() async throws {
         let h = EngineHarness()
         await h.start()
@@ -171,7 +198,9 @@ import Testing
         await h.advance(.seconds(2))
         try controller.writeCalibrationFactor(1.2, maxFactor: 2)
         #expect(abs((h.liveFactor() ?? 0) - 1.2) < 1e-6)
-        #expect(throws: GammaError.writeRefused) { try controller.writeCalibrationFactor(2.6, maxFactor: 3) }
+        try controller.writeCalibrationFactor(2.6, maxFactor: 3)                        // past 0.97 × 2.667
+        #expect(abs((h.liveFactor() ?? 0) - 2.6) < 1e-5)
+        #expect(throws: GammaError.writeRefused) { try controller.writeCalibrationFactor(3.7, maxFactor: 4) }
         controller.returnToStandard()
         #expect(h.everyTableAtBase && h.engine.ledger.entries().isEmpty && h.liveTriggers().isEmpty)
     }

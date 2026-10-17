@@ -91,6 +91,10 @@ extension DisplayController {
                 rampSlot.cancel()
                 phase = .boosted
                 adjustBoost(gain, requested: true)
+                // The disarm cancelled the drift watch. A rate-limited disarm that wrote no step yet leaves the applied
+                // gain where the boost wants it, so no ramp starts and none would end in `settled()`: settle here, or
+                // the display stays boosted with no drift check and no headroom check.
+                if !rampSlot.isRunning { settled() }
             } else {
                 beginArm()
             }

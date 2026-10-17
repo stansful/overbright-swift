@@ -196,6 +196,16 @@ private struct Document: Codable, Equatable, Sendable {
     await #expect(throws: CancellationError.self) { try await cancelled.value }
 }
 
+/// 10 % tolerance lets short sleeps coalesce, but never more than 1 s: a one-shot "Pause for 1 Hour" sleep would
+/// otherwise be allowed to end 6 min late (libdispatch caps the leeway of repeating timers only; C-BOOST-11).
+@Test func systemTimeSourceToleranceIsTenPercentAtMostOneSecond() {
+    #expect(SystemTimeSource.tolerance(for: .milliseconds(100)) == .milliseconds(10))
+    #expect(SystemTimeSource.tolerance(for: .seconds(2)) == .milliseconds(200))
+    #expect(SystemTimeSource.tolerance(for: .seconds(10)) == .seconds(1))
+    #expect(SystemTimeSource.tolerance(for: .seconds(3_600)) == SystemTimeSource.maximumTolerance)
+    #expect(SystemTimeSource.maximumTolerance == .seconds(1))
+}
+
 @Test func theJournalKeepsTheLastEventsInOrder() async {
     let journal = RingBufferJournal(capacity: 3)
     for i in 0..<5 { journal.record(JournalEvent(seconds: Double(i), category: "engine", display: nil, code: "e\(i)")) }

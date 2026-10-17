@@ -397,18 +397,29 @@ import Testing
         #expect(h.orderViolations.isEmpty)
     }
 
-    /// A new boost target while disarming: the disarm stops where it is and the same trigger boosts again.
-    @Test func boostDuringDisarmResumes() async throws {
+    /// A new boost target while disarming: the disarm stops where it is and the same trigger boosts again, watched by the
+    /// drift check. Also when the toggle comes within the rate limiter's 500 ms after the raise, before the disarm
+    /// wrote a step: no ramp is needed then, and the display still settles (C-BOOST-2).
+    @Test(arguments: [false, true])
+    func boostDuringDisarmResumes(withinTheRateLimit: Bool) async throws {
         let h = await boostedHarness()
-        await h.advance(.seconds(1))
+        if !withinTheRateLimit { await h.advance(.seconds(1)) }
+        let writes = h.writes().count
         h.engine.setOn(false, source: .panel)
-        await h.advance(.milliseconds(100))
+        await h.advance(.milliseconds(withinTheRateLimit ? 30 : 100))
         #expect(h.phase() == .disarming)
+        #expect((h.writes().count == writes) == withinTheRateLimit)       // the limiter still holds the first step
         h.engine.setOn(true, source: .panel)
         await h.advance(.milliseconds(900))
         #expect(h.phase() == .boosted)
         #expect(h.triggers.made.count == 1 && h.liveTriggers().count == 1)
         #expect(abs((h.displayStatus()?.appliedGain ?? 0) - brightRoomGain) < 1e-9)
+        #expect(h.controller()?.driftSlot.isRunning == true)
+        let factor = try #require(h.liveFactor())
+        h.gamma.resetToBase(h.id(h.builtIn))                                // another writer's death reset it
+        await h.advance(.seconds(3))
+        #expect(h.codes.contains("watchdog.reset"))
+        #expect(abs((h.liveFactor() ?? 0) - factor) < 1e-6)                 // repaired
     }
 
     /// Compatibility mode dims with the overlay alone (a factor below 1, no EDR request) and removes it at Standard.

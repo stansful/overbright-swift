@@ -2,6 +2,7 @@
 // boost-only rule (dimming passes), step 7's caps (§5.4) and the conflict continuation rules of §7.2.
 import Foundation
 import OverbrightCore
+import OverbrightTestSupport
 import Testing
 @testable import OverbrightPolicy
 
@@ -329,6 +330,48 @@ import Testing
         #expect(decision(1600.0 / 300, level: brightRoom)?.reasons == [.nearFullBrightnessOnly])
         #expect(decision(1600.0 / 300, level: brightRoom, taper: false)?.reasons == [])
         #expect(decide([T.display(level: brightRoom, reading: .some(nil))]).builtIn?.target == .neutral)  // checking
+    }
+
+    /// The taper's reference is the engine's (the feedback's learned lowest ready H), not the seed: at H 2.2 on the
+    /// M4 Max the seed 2.667 gives full gain while the writer, with a learned 1.6, fades the boost (C-BOOST-7).
+    @Test func theTaperReferenceComesFromTheFeedback() {
+        func reasons(_ h: Double, reference: Double?, capMode: CapMode = .safe) -> [LimitReason]? {
+            var display = T.display(level: brightRoom, capMode: capMode, reading: T.reading(T.builtIn, current: h))
+            display.feedback.fullBrightnessHeadroom = reference
+            return decide([display]).builtIn?.reasons
+        }
+        #expect(reasons(2.2, reference: nil) == [])                                         // the seed
+        #expect(reasons(2.2, reference: 1.6) == [.nearFullBrightnessOnly])                  // the writer's reference
+        #expect(reasons(1.7, reference: 1.6, capMode: .peak) == [])                         // ≤ 1.15 × H_full
+    }
+
+    /// Property: for any reading, reference, level, cap mode and taper setting, the reducer reports a live term
+    /// exactly when `GainCeiling.liveCap` with the same reference (the call `TableWriter` makes) binds it, so the chip
+    /// always explains what the writer applies (C-BOOST-7).
+    @Test func theLiveReasonIsTheWritersLiveCap() {
+        var random = SeededGenerator(seed: 0x0B21_E7F7)
+        var checked = 0
+        for _ in 0..<2_000 {
+            let h = Double.random(in: 1.0...6.0, using: &random)
+            let reference: Double? = Bool.random(using: &random) ? nil : Double.random(in: 1.1...3.2, using: &random)
+            let capMode: CapMode = Bool.random(using: &random) ? .safe : .peak
+            let taper = Bool.random(using: &random)
+            let level = LevelPosition(Double.random(in: 0.05...1, using: &random))
+            var display = T.display(level: level, capMode: capMode, reading: T.reading(T.builtIn, current: h))
+            display.feedback.fullBrightnessHeadroom = reference
+            let settings = PolicySettings(boostOnlyNearFullBrightness: taper)
+            guard let decision = decide([display], settings: settings).builtIn, case .boost(let gain) = decision.target,
+                  let reading = display.feedback.lastReading else { continue }
+            let cap = GainCeiling.liveCap(
+                staticGain: gain, reading: reading, facts: display.facts, capMode: capMode, isOLED: false, sdrWhite: nil,
+                taper: taper, fullBrightnessHeadroom: reference ?? GainCeiling.fullBrightnessHeadroomSeed(facts: display.facts))
+            for live in [LimitReason.nearFullBrightnessOnly, .headroom] {
+                #expect(decision.reasons.contains(live) == (cap.reason == live),
+                        "H \(h), reference \(String(describing: reference)), \(capMode), taper \(taper)")
+            }
+            checked += 1
+        }
+        #expect(checked > 500)
     }
 
     /// Step 3 and the no-op rule: linked levels, the Focus level, and gains below ×1.005.

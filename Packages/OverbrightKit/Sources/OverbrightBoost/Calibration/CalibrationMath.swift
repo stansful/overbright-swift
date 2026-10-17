@@ -15,12 +15,8 @@ import OverbrightPolicy
 nonisolated enum CalibrationMath {
     // MARK: The pattern
 
-    /// The four patches, as code values in the screen's colour space (DESIGN.md §9: 85, 90, 95 and 100 % grey).
-    static let patches: [Double] = [0.85, 0.90, 0.95, 1.00]
-    /// The surround: black, so an over-bright moment lights only the small patches.
-    static let surround = 0.0
-    /// The patch whose merge with white the user marks (Space).
-    static let mergePatch = 0.95
+    /// The patch whose merge with white the user marks (Space), from the pattern the window draws.
+    static let mergePatch = CalibrationPattern.standard.mergePatch
 
     // MARK: Steps
 
@@ -57,6 +53,10 @@ nonisolated enum CalibrationMath {
     static func pauseFactor(headroom h: Double) -> Double { pauseMultiple * encodedMergeFactor(headroom: h) }
     /// The sweep never goes past this.
     static func sweepCap(headroom h: Double) -> Double { capMultiple * linearMergeFactor(headroom: h) }
+    /// `TableWriter`'s ceiling for any calibration factor with a reading of headroom `h`: the sweep's cap, widened by
+    /// the 5 % the grant may fall before the session stops (`headroomDropLimit`), so every step of a running session
+    /// fits and nothing beyond it ever does (about 1.36 × H).
+    static func writeCeiling(headroom h: Double) -> Double { sweepCap(headroom: h) / headroomDropLimit }
     /// Step 3's frame: the linear-domain Peak factor.
     static func linearConfirmationFactor(headroom h: Double) -> Double { FactorMath.headroomMargin * h }
     /// Step 1's boosted factor: ×1.3 light (at most 0.97 × H) in the encoded domain.

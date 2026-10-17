@@ -72,6 +72,32 @@ import Testing
         #expect(h.engine.status.lastChange?.kind == .level)
     }
 
+    /// The master is on but every display sits at Standard, so no boost-only source keeps the battery percentage fresh:
+    /// a request for the boost half reads it synchronously before reducing and is blocked at once, instead of arming
+    /// and pausing a moment later (§7.1, D9; C-BOOST-12).
+    @Test(arguments: [true, false])
+    func aBoostRequestWhileOnReadsAStalePercentageFirst(stepping: Bool) async throws {
+        let h = EngineHarness(decide: GuardingReducer().decide)
+        h.signals.snapshot.power = onBattery(60)
+        h.signals.powerOnRefresh = onBattery(60)
+        await h.start()
+        h.engine.setLevel(.standard, for: nil, source: .panel)
+        await h.advance(.seconds(1))
+        #expect(h.engine.status.isOn && h.phase() == .idle && h.signals.boostActiveCalls.isEmpty)
+        h.signals.powerOnRefresh = onBattery(15)                          // drained meanwhile; nothing read it
+        let reads = h.signals.refreshPowerNowCount
+        if stepping {
+            h.engine.step(.brighter, source: .shortcut)
+        } else {
+            h.engine.setExtraBrightness(.preset(.brightRoom), for: nil, source: .intent)
+        }
+        #expect(h.signals.refreshPowerNowCount == reads + 1)
+        let change = try #require(h.engine.status.lastChange)
+        #expect(change.kind == .blocked(.battery(percent: 15, threshold: 20)))
+        await h.advance(.seconds(1))
+        #expect(h.phase() == .idle && h.triggers.made.isEmpty)
+    }
+
     /// The battery guard stops a visible boost and later lets it come back: stopped, then resumed.
     @Test func automationsStopAndResume() async throws {
         let h = EngineHarness(decide: GuardingReducer().decide)

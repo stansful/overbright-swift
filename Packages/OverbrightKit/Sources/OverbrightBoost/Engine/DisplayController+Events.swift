@@ -113,9 +113,14 @@ extension DisplayController {
 
     // MARK: Windows
 
-    /// The trigger or overlay became hidden (the lock shield) or visible again.
+    /// The trigger or overlay became hidden (the lock shield) or visible again. While driven, hidden ends the session on
+    /// this display and visible changes nothing (the session re-arms if it goes on).
     func windowOcclusionChanged(_ occluded: Bool, isCurrentWindow: Bool) {
         guard isCurrentWindow else { return }
+        if isDriven {
+            if occluded { drivenWindowLost(.occluded) }
+            return
+        }
         if occluded {
             switch phase {
             case .arming, .gating, .ramping, .boosted:
@@ -138,6 +143,7 @@ extension DisplayController {
     func windowMoved(to displayID: CGDirectDisplayID?, isCurrentWindow: Bool) {
         guard isCurrentWindow, displayID != ref.id else { return }
         deps.journal.record("trigger.movedScreen", display: key, time: deps.time, category: .trigger)
+        if isDriven { return drivenWindowLost(.displayGone) }
         switch phase {
         case .suspended:
             removeWindows(force: true)
