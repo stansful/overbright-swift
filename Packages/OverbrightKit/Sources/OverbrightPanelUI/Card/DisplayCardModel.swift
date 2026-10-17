@@ -75,6 +75,8 @@ public struct DisplayCardModel: Hashable {
     public var readout: ReadoutValues
     /// The verdict's advisories.
     public var advisories: [Advisory]
+    /// The light of "Dimmed" (Dim All and the menus' Dimmed row; the slider's Dimmed action).
+    public var lastDimLight: Double
 
     /// The derived state of `status`'s card.
     /// - Parameters:
@@ -86,9 +88,12 @@ public struct DisplayCardModel: Hashable {
     ///   - preferences: its stored preferences.
     ///   - linkLevels / linkedLevel: "Same level on all displays".
     ///   - taper: "Add extra brightness only near full brightness".
+    ///   - lastDimLight: the light of "Dimmed".
     public init(status: DisplayStatus, isMasterOn: Bool, isPaused: Bool, banner: Banner?, facts: DisplayFacts?,
-                preferences: DisplayPreferences, linkLevels: Bool, linkedLevel: LevelPosition, taper: Bool) {
+                preferences: DisplayPreferences, linkLevels: Bool, linkedLevel: LevelPosition, taper: Bool,
+                lastDimLight: Double = DisplaySettings.lastDimLight.defaultValue) {
         key = status.key
+        self.lastDimLight = lastDimLight
         name = status.name
         isLinked = linkLevels
         level = linkLevels ? linkedLevel : preferences.level

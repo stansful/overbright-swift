@@ -4,7 +4,9 @@
 // detent it turns extra brightness on, an OLED asks first and the thumb waits at Standard), §5.6, §5.7 (Space and Return
 // open the chip's popover), §5.12 (⌃↩ opens the context menu); ARCHITECTURE.md §4.9.
 // Seam written by WP0a (ARCHITECTURE.md §10.0): `init(status:isMasterOn:services:)` is fixed (Welcome uses it); the
-// panel uses the internal initializer that adds its title, focus binding and commands.
+// panel uses the internal initializer that adds its title, focus binding and commands, and hands it the model it built
+// for the pass with the guard's words: such a card reads nothing observable itself and is `Equatable` on what it
+// shows, so the panel's redraw skips a card whose model did not change (DESIGN.md §17: redraw on change only).
 import OverbrightCore
 import OverbrightDesign
 import OverbrightPolicy
@@ -18,6 +20,8 @@ public struct DisplayCardView: View {
     private let title: String?
     private let focus: FocusState<PanelFocus?>.Binding?
     private let commands: PanelCommands
+    /// The panel's model and guard words for this pass (nil: the card derives both from `status` in its body).
+    private let given: Given?
     /// The level while the thumb moves (the engine stores the level; this keeps the thumb under the finger).
     @State private var dragLevel: LevelPosition?
     /// A move into the boost half that waits for the OLED notice (asked once, when the move ends).
@@ -37,15 +41,32 @@ public struct DisplayCardView: View {
     init(status: DisplayStatus, isMasterOn: Bool, services: OverbrightServices, title: String?,
          focus: FocusState<PanelFocus?>.Binding?, commands: PanelCommands) {
         self.status = status; self.isMasterOn = isMasterOn; self.services = services; self.title = title
-        self.focus = focus; self.commands = commands
+        self.focus = focus; self.commands = commands; given = nil
     }
 
-    /// The card's derived state (observes the settings it reads).
-    var model: DisplayCardModel { DisplayCardModel(status: status, isMasterOn: isMasterOn, services: services) }
+    /// The panel's card of `model`, built once for the pass with the guard's words `guardText`
+    /// (`guardText(for:status:isMasterOn:boost:)`).
+    init(model: DisplayCardModel, guardText: String?, status: DisplayStatus, isMasterOn: Bool,
+         services: OverbrightServices, title: String?, focus: FocusState<PanelFocus?>.Binding?,
+         commands: PanelCommands) {
+        self.status = status; self.isMasterOn = isMasterOn; self.services = services; self.title = title
+        self.focus = focus; self.commands = commands; given = Given(model: model, guardText: guardText)
+    }
+
+    /// What the panel hands a card for one pass.
+    private struct Given: Equatable {
+        let model: DisplayCardModel
+        let guardText: String?
+    }
+
+    /// The card's derived state: the panel's, or derived from the services (observes the settings it reads).
+    var model: DisplayCardModel {
+        given?.model ?? DisplayCardModel(status: status, isMasterOn: isMasterOn, services: services)
+    }
 
     public var body: some View {
         let model = model
-        let shownTitle = title ?? status.name
+        let shownTitle = title ?? model.name
         VStack(alignment: .leading, spacing: Space.s) {
             titleRow(shownTitle, linked: model.isLinked)
             sliderRow(model, name: shownTitle)
@@ -57,7 +78,7 @@ public struct DisplayCardView: View {
         .contextMenu { contextMenu(model) }
         .onKeyPress(.return, phases: .down) { press in
             guard press.modifiers == .control else { return .ignored }
-            menus.present(menuAnchor, CardMenu.menuItems(for: model, lastDimLight: lastDimLight, contextMenu: true,
+            menus.present(menuAnchor, CardMenu.menuItems(for: model, lastDimLight: model.lastDimLight, contextMenu: true,
                                                          commands: commands))
             return .handled
         }
@@ -80,7 +101,7 @@ public struct DisplayCardView: View {
                 .font(.headline)
                 .lineLimit(2)
                 .truncationMode(.tail)
-                .help(status.name)
+                .help(model.name)
                 .accessibilityAddTraits(.isHeader)
         }
     }
@@ -98,7 +119,7 @@ public struct DisplayCardView: View {
                 .spokenValue { spokenValue(at: $0, model) }
                 .extraRange(extraRange(model))
                 .dimHalfReason(dimHalfReason(model))
-                .dimmedLevel(LevelMapping.position(forDimLight: lastDimLight))
+                .dimmedLevel(LevelMapping.position(forDimLight: model.lastDimLight))
                 .focusBinding(focus, equals: .slider(model.key))     // the slider's own element: one Tab stop, its keys
                 // The card's context-menu items and chip actions on the element VoiceOver lands on (§5.5): outside the
                 // control they attach to its one adjustable element.
@@ -173,7 +194,7 @@ public struct DisplayCardView: View {
 
     @ViewBuilder
     private func contextMenu(_ model: DisplayCardModel) -> some View {
-        ForEach(Array(CardMenu.items(for: model, lastDimLight: lastDimLight, contextMenu: true).enumerated()),
+        ForEach(Array(CardMenu.items(for: model, lastDimLight: model.lastDimLight, contextMenu: true).enumerated()),
                 id: \.offset) { _, item in
             if item == .separator {
                 Divider()
@@ -190,7 +211,7 @@ public struct DisplayCardView: View {
 
     @ViewBuilder
     private func accessibilityActions(_ model: DisplayCardModel) -> some View {
-        ForEach(Array(CardMenu.items(for: model, lastDimLight: lastDimLight, contextMenu: true).enumerated()),
+        ForEach(Array(CardMenu.items(for: model, lastDimLight: model.lastDimLight, contextMenu: true).enumerated()),
                 id: \.offset) { _, item in
             if let title = CardMenu.title(of: item, card: model), item != .noExtraBrightness {
                 Button { CardMenu.perform(item, card: model, commands: commands) } label: { Text(verbatim: title) }
@@ -202,8 +223,6 @@ public struct DisplayCardView: View {
     }
 
     // MARK: Level
-
-    private var lastDimLight: Double { services.settings[DisplaySettings.lastDimLight] }
 
     /// The thumb: under the finger while it moves, else the level the display shows (`displayedLevel`, so a display
     /// whose boost half is off or unavailable sits at Standard, as its readout says).
@@ -253,14 +272,22 @@ public struct DisplayCardView: View {
         return VerdictText.make(verdict, advisories: model.advisories, lastGrant: nil).sentence
     }
 
-    /// The guard that holds the boost half, in the HUD's words ("Paused: Low Power Mode"), for the value tag.
+    /// The guard that holds the boost half, in the HUD's words ("Paused: Low Power Mode"), for the value tag: the
+    /// panel's for this pass, else read now.
     private func guardText(_ model: DisplayCardModel) -> String? {
+        if let given { return given.guardText }
+        return Self.guardText(for: model, status: status, isMasterOn: isMasterOn, boost: services.boost.status)
+    }
+
+    /// The guard that holds the boost half of `status`'s card `model`, in the HUD's words over the engine's `boost`.
+    static func guardText(for model: DisplayCardModel, status: DisplayStatus, isMasterOn: Bool,
+                          boost: BoostStatus) -> String? {
         guard model.boostHalf == .inactive, isMasterOn, let reasons = status.decision?.reasons,
               let reason = reasons.first(where: { $0 != .masterOff && ($0.blocksBoostOnly || $0.isGlobal) }) else {
             return nil
         }
         let change = LevelChange(sequence: 0, kind: .blocked(reason), source: .panel, display: status.key)
-        return HUDText.make(change, status: services.boost.status)?.reason
+        return HUDText.make(change, status: boost)?.reason
     }
 
     private func boostHalfState(_ model: DisplayCardModel) -> BoostHalfState {
@@ -273,6 +300,16 @@ public struct DisplayCardView: View {
         case .unavailable(.safeLimitReached): .unavailable(reason: PanelText.safeLimitReached)
         case .unavailable(.littleGain): .unavailable(reason: PanelText.littleGain)
         }
+    }
+}
+
+extension DisplayCardView: Equatable {
+    /// A panel card draws the same as another when the panel gave both the same model, guard words, title and master
+    /// switch; the services, commands and focus binding are the panel's own for its life. A card that derives its
+    /// model in its body never compares equal, so it always redraws.
+    public static func == (lhs: DisplayCardView, rhs: DisplayCardView) -> Bool {
+        guard let left = lhs.given, let right = rhs.given else { return false }
+        return left == right && lhs.title == rhs.title && lhs.isMasterOn == rhs.isMasterOn
     }
 }
 

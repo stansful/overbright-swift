@@ -5,7 +5,10 @@
 // no display can boost), §12.3 (banners name the display), §2.0 rule 3 (the shell's hosting view applies
 // `.overbrightThemeRoot` once). The master switch draws its "on" state in the accent colour although the panel is not
 // key when clicked open (§5.1, `PanelSwitchStyle`). The window, its glass and its placement are the shell's
-// (`PanelController`).
+// (`PanelController`). Redraw on change only (§17): each pass reads the settings once and builds each card's model
+// once; cards, header and footer are `Equatable` on what they draw, so a status change redraws only what it changed,
+// and the card list scrolls in a `ScrollView` whose ideal height is the list's (a `ViewThatFits` built a measuring copy
+// of every card on every redraw).
 import OverbrightCore
 import OverbrightDesign
 import SwiftUI
@@ -53,6 +56,7 @@ public struct PanelView: View {
         VStack(spacing: 0) {
             PanelHeader(status: status, fillLightOn: services.fillLight.isOn, symbol: symbol, commands: commands,
                         focus: $focus)
+                .equatable()
             Divider()
             VStack(spacing: PanelLayout.cardGap) {
                 if let banner = status.banner { bannerView(banner, status: status) }
@@ -107,6 +111,7 @@ public struct PanelView: View {
 
     @ViewBuilder
     private func cardList(_ content: PanelContent, status: BoostStatus, titles: [DisplayKey: String]) -> some View {
+        let inputs = DisplayCardModel.Inputs(services: services, status: status)
         let list = VStack(spacing: PanelLayout.cardGap) {
             if content.showsFillLightCard { FillLightCard(services: services, focus: $focus) }
             if content.showsNothingCapable {
@@ -116,8 +121,13 @@ public struct PanelView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             ForEach(content.cards, id: \.key) { display in
-                DisplayCardView(status: display, isMasterOn: status.isOn, services: services, title: titles[display.key],
+                let model = DisplayCardModel(status: display, isMasterOn: status.isOn, services: services, inputs: inputs)
+                DisplayCardView(model: model,
+                                guardText: DisplayCardView.guardText(for: model, status: display, isMasterOn: status.isOn,
+                                                                     boost: status),
+                                status: display, isMasterOn: status.isOn, services: services, title: titles[display.key],
                                 focus: $focus, commands: commands)
+                    .equatable()
                     .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { cardHeights[display.key] = $0 }
             }
             if !content.nonCapable.isEmpty {
@@ -134,10 +144,12 @@ public struct PanelView: View {
                 .frame(maxHeight: PanelLayout.scrollingListHeight(cardHeights: heights))
                 .layoutPriority(-1)
         } else {
-            ViewThatFits(in: .vertical) {
-                list
-                ScrollView { list }
-            }
+            // The list's own height while it fits (a scroll view's ideal height is its content's), scrolling once the
+            // panel's height cap binds. Its bottom is inset by the focus ring's outset inside and out, so the scroll
+            // view clips no ring of the last row ("Why?"), and nothing bounces while everything fits.
+            ScrollView { list.padding(.bottom, Radius.focusRingOutset) }
+                .padding(.bottom, -Radius.focusRingOutset)
+                .scrollBounceBehavior(.basedOnSize)
         }
     }
 
@@ -155,6 +167,7 @@ public struct PanelView: View {
                                              autoOffAt: status.autoOffAt, now: services.time.wallClock,
                                              editApps: { commands.openSettings(SettingsLinks.pausedApps) }),
                     focus: $focus)
+            .equatable()
     }
 
     // MARK: Keyboard
