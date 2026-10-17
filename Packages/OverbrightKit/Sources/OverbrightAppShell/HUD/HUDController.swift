@@ -10,6 +10,10 @@
 // a top that moves changes Max's value), in place, with no new announcement or showing and the same timer (WP14
 // OBS-QA-HUD-TEXT). Its timers are one `TimeSource.sleep` per showing (no repeating timer, DESIGN.md §17), and the wait
 // for a ready display and the following observe the engine's status instead of polling it, only while the HUD shows.
+// The window keeps one hosting view and container, made on its first showing and again only when the material
+// changes: every redraw and every later showing hands it a new root (no new view, no frame unless it moved, no fade
+// while it shows). Hidden, the window keeps that view, as it always kept its last one: releasing it after each fade
+// cost a new view, container and first render per showing for no measurable footprint (energy U2).
 import AppKit
 import OverbrightCore
 import OverbrightDesign
@@ -39,6 +43,10 @@ final class HUDController {
     /// Follows the status while the HUD shows (nil while hidden or while "Preparing…" waits for the display).
     private var following: ObservationToken?
     private var window: HUDWindow?
+    /// The window's hosting view, kept across showings (nil before the first).
+    private var hosting: NSHostingView<HUDRoot>?
+    /// The material of the hosting view's container (a change of the accessibility options makes a new one).
+    private var hostingMaterial: PanelContainer.Material?
     private var hideTask: Task<Void, Never>?
 
     /// Tests turn windows off: the controller then decides and records, but orders nothing in (and asks no screen
@@ -54,6 +62,8 @@ final class HUDController {
     private(set) var visibleDisplay: DisplayKey?
     /// Number of showings (a new change while visible updates it and counts again).
     private(set) var showCount = 0
+    /// Hosting views made so far: one for the window, and another only when the container's material changes.
+    private(set) var hostingViewsMade = 0
 
     /// A controller for the app's services.
     convenience init(services: OverbrightServices) {
@@ -225,18 +235,15 @@ final class HUDController {
 
     // MARK: Window
 
+    /// Draws `drawing` on the display `placed`: redrawn in place while the HUD shows, faded in (`hudIn`) when it is
+    /// hidden or fading out.
     private func present(_ drawing: Drawing, placed: DisplayKey?) {
         guard presentsWindows,
               let frame = HUDPlacement.currentFrame(size: HUDPlacement.size, display: placed, services: services) else {
             return
         }
-        let root = HUDView(text: drawing.text, level: drawing.level, isBoosting: drawing.isBoosting).overbrightThemeRoot()
-        let window = self.window ?? HUDWindow(frame: frame, interactive: false)
-        self.window = window
-        let hosting = NSHostingView(rootView: root)
-        window.contentView = PanelContainer.make(around: hosting, material: PanelContainer.currentMaterial,
-                                                 cornerRadius: Radius.hud, effect: .hudWindow)
-        window.setFrame(frame, display: true)
+        let window = preparedWindow(drawing, frame: frame)
+        guard !window.isVisible || window.alphaValue < 1 else { return }  // shown: the new root is all it needs
         if !window.isVisible { window.alphaValue = 0 }
         window.orderFrontRegardless()
         NSAnimationContext.runAnimationGroup { context in
@@ -244,6 +251,28 @@ final class HUDController {
             context.timingFunction = CAMediaTimingFunction(name: .easeOut)
             window.animator().alphaValue = 1
         }
+    }
+
+    /// The HUD window drawing `drawing` at `frame`, not ordered in: the window's hosting view gets the new root (a
+    /// hosting view and its container are made only when the window has none or the material changed), and the frame
+    /// is set only when it changed. `present` fades it in; tests call this alone.
+    func preparedWindow(_ drawing: Drawing, frame: CGRect,
+                        material: PanelContainer.Material = PanelContainer.currentMaterial) -> HUDWindow {
+        let window = self.window ?? HUDWindow(frame: frame, interactive: false)
+        self.window = window
+        let root = HUDRoot(drawing: drawing)
+        if let hosting, hostingMaterial == material {
+            hosting.rootView = root
+        } else {
+            let hosting = NSHostingView(rootView: root)
+            self.hosting = hosting
+            hostingMaterial = material
+            hostingViewsMade += 1
+            window.contentView = PanelContainer.make(around: hosting, material: material, cornerRadius: Radius.hud,
+                                                     effect: .hudWindow)
+        }
+        if window.frame != frame { window.setFrame(frame, display: true) }
+        return window
     }
 
     /// Extra light is on screen on `display`: the bar's boost fill is warm only then (DESIGN.md §2.1).

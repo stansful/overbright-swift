@@ -130,6 +130,17 @@ struct HUDLevelBar: View {
     }
 }
 
+/// The HUD window's root: `HUDView` of a drawing under the theme root. One type for every drawing, so a showing keeps
+/// one hosting view and redraws only hand it a new root (`HUDController`).
+struct HUDRoot: View {
+    /// What the HUD draws.
+    let drawing: HUDController.Drawing
+
+    var body: some View {
+        HUDView(text: drawing.text, level: drawing.level, isBoosting: drawing.isBoosting).overbrightThemeRoot()
+    }
+}
+
 #Preview("HUD · boosting, two displays") {
     HUDView(text: HUDText(symbol: .sunMaxFill, displayName: "Built-in Liquid Retina XDR Display",
                           value: "Bright room · ≈ ×1.29", reason: nil, announcement: "Bright room, about 1.29 times"),
