@@ -2982,7 +2982,7 @@ export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
 make help                         # every target
 make check                        # every target alone, zero warnings (JOBS=4; TEST=1 adds swift test)
 make test [FILTER=<Suite>]        # swift test --scratch-path .build-test [--filter]
-make tsan FILTER=HangWatchdogTests  # swift test --sanitize=thread --filter (CI runs it)
+make tsan FILTER='HangWatchdog|OffMain|GammaWriteGate|BoostColorTests|StatusSymbolTests'  # swift test --sanitize=thread --filter (CI runs this filter)
 make lint                         # copy denylist and rules + no .metal files + the self-tests of check-lproj.py and soak_judge.py
 make strings                      # sync catalogs from .stringsdata
 make l10n-pending                 # mark new English keys pending in every shipped language
@@ -3022,7 +3022,7 @@ The pipeline is Cranny's, unchanged in shape:
 
 ### 8.9 CI, release, signing
 
-`ci.yml` (Cranny's, minus the Metal step). **xcode-27 job:** lint-copy → validate → `JOBS=3 TEST=1 check-modules` → `make tsan FILTER=HangWatchdogTests` → `CHECK=1 name-probe` → `CHECK=1 sync-strings` → build (`CONTROLS=1` compile-check of the extension, then the default build) → smoke (incl. the intents metadata) → dist → upload. **macos-26 job (Xcode 26, Swift 6.2):** the package only (`swift build` and `swift test` of `OverbrightKit`; the app's intent declarations need Xcode 27). CI runners are VMs with virtual displays: no test may need a real display, and smoke passes with `displays: []`. UI snapshots are rendered locally only, on 27 (the opt-in `OVERBRIGHT_SNAPSHOT_DIR` suites never run in CI; the macos-26 job runs plain `swift build` and `swift test`); macOS 14/15 are compile-checked (deployment target 14) plus an availability review in WP14. `release.yml`: tag ⇔ `VERSION`, optional Developer ID import, `validate.py --shipped --release` (fails on pending keys), build and smoke with `OVERBRIGHT_GITHUB_REPOSITORY` = `github.repository` (the update check's repository, §8.6), dist, `gh release create`. Ad-hoc builds need Gatekeeper's "Open Anyway" or `xattr -dr com.apple.quarantine` (README); notarized builds do not.
+`ci.yml` (Cranny's, minus the Metal step). **xcode-27 job:** lint-copy → validate → `JOBS=3 TEST=1 check-modules` → `make tsan FILTER='HangWatchdog|OffMain|GammaWriteGate|BoostColorTests|StatusSymbolTests'` (the hang watchdog, the gamma write gate and the off-main tests of §9.2 rule 9: every `<Source>OffMainTests` suite, the warm colour's provider and the status item's drawing handler; as built in WP14, all green locally with `SignalStopTests` too, which join the filter when C-BOOST-14 makes their timeouts robust under the sanitizer) → `CHECK=1 name-probe` → `CHECK=1 sync-strings` → build (`CONTROLS=1` compile-check of the extension, then the default build) → smoke (incl. the intents metadata) → dist → upload. **macos-26 job (Xcode 26, Swift 6.2):** the package only (`swift build` and `swift test` of `OverbrightKit`; the app's intent declarations need Xcode 27). CI runners are VMs with virtual displays: no test may need a real display, and smoke passes with `displays: []`. UI snapshots are rendered locally only, on 27 (the opt-in `OVERBRIGHT_SNAPSHOT_DIR` suites never run in CI; the macos-26 job runs plain `swift build` and `swift test`); macOS 14/15 are compile-checked (deployment target 14) plus an availability review in WP14. `release.yml`: tag ⇔ `VERSION`, optional Developer ID import, `validate.py --shipped --release` (fails on pending keys), build and smoke with `OVERBRIGHT_GITHUB_REPOSITORY` = `github.repository` (the update check's repository, §8.6), dist, `gh release create`. Ad-hoc builds need Gatekeeper's "Open Anyway" or `xattr -dr com.apple.quarantine` (README); notarized builds do not.
 
 ---
 
@@ -3054,7 +3054,7 @@ Opt-in suites: `OVERBRIGHT_SNAPSHOT_DIR` (snapshots), `OVERBRIGHT_INTEGRATION` (
 6. No private API (the register in README stays empty). IORegistry property reads are public IOKit calls; their keys are undocumented, so every IORegistry input is optional and has a fallback.
 7. No third-party code, no new targets, no edits outside your package's folders (§10.0).
 8. User data (display names, app names, paths) never enters the journal or `.public` logs.
-9. Every system callback that can arrive off the main thread is declared nonisolated (§8.1 rule 2) and has an off-main test.
+9. Every system callback that can arrive off the main thread is declared nonisolated (§8.1 rule 2) and has an off-main test; CI runs those tests under the Thread Sanitizer (§8.9 names the filter; a new off-main suite outside `<Source>OffMainTests` is added to it).
 
 ### 9.3 Definition of done (every work package)
 
@@ -3515,6 +3515,10 @@ Every finding of the v0.1 design review and where it is addressed. "Refined" mea
 ---
 
 ## Changelog
+
+### 2026-10-17 — WP14 review fixes (C-RELEASE: build, CI, project, docs)
+
+Build and release: both targets' Debug configurations link once (`ENABLE_DEBUG_DYLIB = NO`, so the App Intents metadata is always extracted) and both targets treat warnings as errors (§8.6, `ProjectLintTests`); `build.sh` fails without the intents metadata, rebuilds the resource bundles when a String Catalog changed, and with `smoke.sh` runs `check-lproj.py` (every translated table compiled into its bundle, no stale `.lproj`); smoke reads `designString.ru`; the update check's repository is the build setting `OVERBRIGHT_GITHUB_REPOSITORY`, which `release.yml` sets (§8.6, §8.9); `dist.sh` uses `diskutil image create from` (§8.7). Gates: the clean-room scan reads every repository file (D3); the QA matrix opens Welcome and requires `gammaWrites` 0 (§10.14); the soak judge is `soak_judge.py` with recurrence, shared-sample and per-cycle growth rules (§10.15); the width classifier constrains only a chip's own label (§8.8); `make lint` runs the scripts' self-tests; CI's Thread Sanitizer step covers the off-main suites and the gamma write gate (§8.9). Icon: refined per DESIGN.md §14 (`AppIconLintTests`). Docs: Status rows, §1.3, §2.2, §8.8 and §8.9 as built, DESIGN.md synced (Status, §2.0, §2.3, §2.4, §8, §12.5, §14, Appendix B), WP12's Welcome deviations confirmed (§10.14), the hardware checklist's handed-off questions (§11.2, HARDWARE-TEST), README's status, CONTRIBUTING and TRANSLATING corrected.
 
 ### 2026-10-16 — WP13 as built (integration)
 

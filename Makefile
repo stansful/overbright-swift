@@ -36,7 +36,7 @@ test:            ## swift test for OverbrightKit (FILTER=<Suite or Target> narro
 	@. scripts/lib.sh && ensure_xcode && cd "$$PACKAGE_DIR" && \
 	  swift test "$${SWIFTPM_FLAGS[@]}" --scratch-path .build-test $(if $(FILTER),--filter '$(FILTER)')
 
-tsan:            ## swift test under the Thread Sanitizer (FILTER=HangWatchdogTests; CI runs it)
+tsan:            ## swift test under the Thread Sanitizer (CI: FILTER='HangWatchdog|OffMain|GammaWriteGate|BoostColorTests|StatusSymbolTests')
 	@. scripts/lib.sh && ensure_xcode && cd "$$PACKAGE_DIR" && \
 	  swift test "$${SWIFTPM_FLAGS[@]}" --sanitize=thread --scratch-path .build-tsan $(if $(FILTER),--filter '$(FILTER)')
 
