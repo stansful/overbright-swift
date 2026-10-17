@@ -2,7 +2,9 @@
 // entry (`TableWriter` marks the display before the write, §4.5 invariant 9, and the table may have taken it), so every
 // landing treats "the ledger holds this display" as "the table may be off its baseline" and writes the baseline, which
 // empties the entry. Otherwise the hang watchdog and the boost marker, which follow the ledger (D7, §4.6), would stay on
-// while nothing is scaled and the master is off (§7.1, DESIGN.md §17; WP14 C-BOOST-1 regression). The watchdog is real,
+// while nothing is scaled and the master is off (§7.1, DESIGN.md §17; WP14 C-BOOST-1 regression). While WindowServer
+// refuses that baseline too, the trigger stays with the table the failed write may have left (§4.5 invariant 2) until
+// the at-rest retry writes it. The watchdog is real,
 // as in `EngineWatchdogTests`, but pings a queue nobody stalls with a timeout no run reaches, so it never fires; whether
 // it runs follows the ledger synchronously (its occupancy observer runs inside the ledger lock). The engine runs on the
 // manual clock. Only the fakes are written.
@@ -137,6 +139,70 @@ import Testing
         try markAsIfAScaledWriteThrew(h, factor: 1.2)
         h.engine.returnToStandard(source: .shortcut)
         #expect(h.phase() == .idle)
+        expectNothingRuns(h)
+        h.engine.stopNow()
+    }
+
+    // MARK: A refused baseline while the ledger marks the display
+
+    /// The disarm with nothing applied, when WindowServer refuses its baseline too: the scaled table that the failed
+    /// write may have left keeps the trigger's EDR request (§4.5 invariant 2, as `keepsWindowsAfterFailedLanding` does
+    /// for our own last write), and the at-rest retry of the reduction the disarm asks for removes it after the
+    /// baseline.
+    @Test func aRefusedDisarmBaselineKeepsTheTriggerOfAMarkedDisplayUntilTheRetry() async throws {
+        let h = harness()
+        await h.start()
+        h.engine.setOn(true, source: .panel)
+        #expect(await h.advance(until: { isGating(h) }, step: .milliseconds(5)))
+        let windows = h.triggers.openWindowCount
+        #expect(windows > 0)
+        try markAsIfAScaledWriteThrew(h, factor: 1.2)
+        h.gamma.failNextWrite(with: Self.failure)
+        h.engine.setOn(false, source: .panel)                             // the reduction disarms at once
+        #expect(h.phase() == .idle)
+        #expect(h.codes.contains("baseline.writeFailed") && h.codes.contains("order.windowsKept"))
+        #expect(h.triggers.openWindowCount == windows)                   // ×1.2 is still on screen
+        #expect(h.engine.ledger.isMarked(h.builtIn))
+        #expect(h.orderViolations == [])
+        await h.settle()                                                  // the reduction the disarm asked for
+        #expect(h.codes.contains("baseline.retried"))
+        expectNothingRuns(h)
+        h.engine.stopNow()
+    }
+
+    /// Back to Standard does the same: the trigger waits for the landing its reduction retries at rest.
+    @Test func aRefusedBackToStandardBaselineKeepsTheTriggerOfAMarkedDisplayUntilTheRetry() async throws {
+        let h = harness()
+        await h.start()
+        h.engine.setOn(true, source: .panel)
+        #expect(await h.advance(until: { isGating(h) }, step: .milliseconds(5)))
+        try markAsIfAScaledWriteThrew(h, factor: 1.2)
+        h.gamma.failNextWrite(with: Self.failure)
+        h.engine.returnToStandard(source: .shortcut)
+        #expect(h.phase() == .idle)
+        expectNothingRuns(h)                                              // no removal while ×1.2 was on screen
+        let kept = try #require(h.codes.firstIndex(of: "order.windowsKept"))
+        let retried = try #require(h.codes.firstIndex(of: "baseline.retried"))
+        #expect(kept < retried)
+        h.engine.stopNow()
+    }
+
+    /// A marked display whose table reads back as the baseline (WindowServer did not take the failed write) has
+    /// nothing on screen that needs the EDR request: the trigger goes with the disarm, and the retry empties the entry.
+    @Test func aRefusedBaselineLetsTheTriggerGoWhenTheTableIsAtItsBaseline() async throws {
+        let h = harness()
+        await h.start()
+        h.engine.setOn(true, source: .panel)
+        #expect(await h.advance(until: { isGating(h) }, step: .milliseconds(5)))
+        let controller = try #require(h.controller())
+        h.engine.ledger.markScaled(controller.ref, baseline: try #require(controller.baseline))
+        h.gamma.failNextWrite(with: Self.failure)
+        h.engine.setOn(false, source: .panel)
+        #expect(h.codes.contains("baseline.writeFailed") && !h.codes.contains("order.windowsKept"))
+        #expect(h.triggers.openWindowCount == 0)
+        #expect(h.engine.ledger.isMarked(h.builtIn))
+        await h.settle()
+        #expect(h.codes.contains("baseline.retried"))
         expectNothingRuns(h)
         h.engine.stopNow()
     }

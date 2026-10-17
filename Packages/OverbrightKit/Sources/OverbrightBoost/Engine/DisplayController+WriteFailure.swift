@@ -67,6 +67,37 @@ extension DisplayController {
         settled()
     }
 
+    /// The landing of a display with nothing applied (a disarm or Back to Standard while arming, gating or at rest):
+    /// the baseline when the table may be off it, then the windows. While WindowServer refuses that baseline and the
+    /// ledger still marks the display, the windows stay (`keepsWindowsWhileMarked`, §4.5 invariants 2 and 9) and the
+    /// at-rest retry of the next reduction removes them once the baseline is written. False when the baseline write
+    /// failed (the caller makes sure a reduction follows).
+    @discardableResult
+    func landUnscaled() -> Bool {
+        if writeBaselineNow() {
+            removeWindows()
+            return true
+        }
+        if keepsWindowsWhileMarked {
+            deps.journal.record("order.windowsKept", display: key, time: deps.time, category: .gamma)
+        } else {
+            removeWindows()
+        }
+        return false
+    }
+
+    /// `keepsWindowsAfterFailedLanding` for a display the ledger marks while our latest write is not above the
+    /// baseline: a scaled write that threw keeps its mark but never became `lastWrite`, and WindowServer may
+    /// nevertheless have taken it, so a table above the baseline may be on screen that still needs the trigger's EDR
+    /// request. The windows go only once the table reads back as the baseline (WindowServer did not take that write,
+    /// or replaced it); a table that cannot be read keeps them.
+    var keepsWindowsWhileMarked: Bool {
+        guard trigger != nil, mechanism == .table, deps.ledger.isMarked(key) else { return false }
+        guard let baseline = baseline ?? deps.ledger.entry(for: key)?.baseline,
+              let read = try? deps.gamma.read(ref.id) else { return true }
+        return !read.matches(baseline, tolerance: Self.sameTableTolerance)
+    }
+
     /// A display at rest (idle or failed) whose last landing failed is still scaled or dimmed, or whose table may be
     /// off its baseline (a scaled write that threw left its ledger entry, `tableMayBeOffBaseline`): every reduction
     /// writes its baseline again (the master off must end at the baseline, §4.5 invariant 4), then orders out the
