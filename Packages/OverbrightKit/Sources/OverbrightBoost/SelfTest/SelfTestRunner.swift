@@ -6,7 +6,9 @@
 // `secondsPerStrategy`, remove the rung, judge it (`HeadroomTrace`), and go on: through every rung ("Test every
 // method"), or until the first that holds. It measures triggers only: it never asks for a table factor, so it never
 // writes a scaled table. Cancelling the task that awaits `run` is Stop: everything returns to Standard at once and the
-// report holds what was measured. Every async step is guarded by its own generation counter (§4.6).
+// report holds what was measured. A display whose trigger the engine reports lost (`stop(_:)`: occluded, or moved to
+// another screen, §4.7) ends there with what it measured; the others go on. Every async step is guarded by its own
+// generation counter (§4.6).
 import Foundation
 import OverbrightCore
 import os
@@ -24,6 +26,11 @@ public final class SelfTestRunner {
     private let machine: MachineIdentity
     private var generation: UInt64 = 0
     private var isRunning = false
+    /// Displays whose trigger was lost mid-run (occluded, or moved to another screen): their measurement ends there.
+    private var stoppedDisplays: Set<DisplayKey> = []
+
+    /// A display that ends early, with what was measured so far.
+    private struct DisplayStopped: Error {}
 
     /// A runner over one driver per display.
     public init(drivers: [any DisplayControllerDriving], time: any TimeSource, journal: any DiagnosticsJournal,
@@ -37,6 +44,7 @@ public final class SelfTestRunner {
         let startedAt = time.wallClock
         guard !isRunning else { return report(startedAt: startedAt, displays: [:], since: .infinity) }
         isRunning = true
+        stoppedDisplays = []
         generation &+= 1
         let runGeneration = generation
         let since = time.now.sinceOrigin.timeInterval
@@ -66,6 +74,13 @@ public final class SelfTestRunner {
         return results.first { $0.verdict == .held }
     }
 
+    /// The driven display lost its trigger (the engine calls it, §4.7): the rung in progress ends at its next sample and
+    /// the display is not measured further; the other displays go on.
+    func stop(_ display: DisplayKey) {
+        guard isRunning else { return }
+        stoppedDisplays.insert(display)
+    }
+
     // MARK: One display
 
     private func measure(_ driver: any DisplayControllerDriving, options: SelfTestOptions,
@@ -90,6 +105,9 @@ public final class SelfTestRunner {
                 results.append(result)
                 record("selftest.\(result.verdict.rawValue)", display: key, values: values(of: result, rung: index))
                 if !options.everyStrategy, result.verdict == .held || result.verdict == .invalidBaseline { break }
+            } catch is DisplayStopped {
+                record("selftest.displayStopped", display: key)
+                return (results, false)                             // this display only: its trigger was lost
             } catch {
                 return (results, true)                              // Stop (cancelled) or superseded
             }
@@ -101,8 +119,9 @@ public final class SelfTestRunner {
     private func measure(_ rung: MeasurementRung, on driver: any DisplayControllerDriving, seconds: Int,
                          generation runGeneration: UInt64) async throws -> SelfTestStrategyResult {
         var reads: [Double] = [], potential = 0.0
+        let key = driver.display.key
         for index in 0..<EngineTiming.baselineReads {
-            if index > 0 { try await sleep(EngineTiming.baselineReadInterval, generation: runGeneration) }
+            if index > 0 { try await sleep(EngineTiming.baselineReadInterval, generation: runGeneration, display: key) }
             if let reading = driver.readHeadroom() { reads.append(reading.current); potential = reading.potential }
         }
         guard !reads.isEmpty else { return Self.skipped(rung, baseline: 0) }
@@ -120,7 +139,7 @@ public final class SelfTestRunner {
                                       event: "present")]
         let duration = Duration.seconds(max(seconds, 1))
         while time.now - start < duration {                         // a throw leaves it to the caller's Standard
-            try await sleep(EngineTiming.gatePollInterval, generation: runGeneration)
+            try await sleep(EngineTiming.gatePollInterval, generation: runGeneration, display: key)
             let t = (time.now - start).timeInterval
             guard let reading = driver.readHeadroom() else {
                 samples.append(SelfTestSample(seconds: t, current: 0, potential: 0, appliedFactor: 1, event: "noReading"))
@@ -137,15 +156,16 @@ public final class SelfTestRunner {
         samples.append(SelfTestSample(seconds: (time.now - start).timeInterval,
                                       current: trace.points.last?.headroom ?? 0, potential: potential,
                                       appliedFactor: 1, event: "removed"))
-        try await sleep(Self.settleAfterRung, generation: runGeneration)
+        try await sleep(Self.settleAfterRung, generation: runGeneration, display: key)
         return result(rung, trace: trace, samples: samples)
     }
 
     // MARK: Helpers
 
-    private func sleep(_ duration: Duration, generation runGeneration: UInt64) async throws {
+    private func sleep(_ duration: Duration, generation runGeneration: UInt64, display: DisplayKey) async throws {
         try await time.sleep(for: duration)
         guard runGeneration == generation else { throw CancellationError() }
+        if stoppedDisplays.contains(display) { throw DisplayStopped() }
     }
 
     private func result(_ rung: MeasurementRung, trace: HeadroomTrace, samples: [SelfTestSample])

@@ -120,23 +120,60 @@ import Testing
         #expect(gamma.table(of: 1) == base)
     }
 
-    @Test func calibrationFactorsAreBoundedByMaxAndHeadroom() throws {
+    /// The calibration path (§5.2): bounded by the session's `maxFactor` and the reading's calibration ceiling, never by
+    /// the boost interlock's `0.97 × H`, which the sweep must pass to find where white clips (C-BOOST-5).
+    @Test func calibrationFactorsAreBoundedByMaxAndTheCeiling() throws {
         let (writer, gamma, ledger, time, _) = make()
         let now = reading(2.667, at: time.now)
-        #expect(throws: GammaError.writeRefused) {                                     // no baseline recorded yet
-            try writer.writeCalibrationFactor(1.2, to: facts.ref, reading: now, maxFactor: 2)
-        }
-        ledger.markScaled(facts.ref, baseline: base)
-        try writer.writeCalibrationFactor(1.2, to: facts.ref, reading: now, maxFactor: 2)
+        try writer.writeCalibrationFactor(1.2, of: base, to: facts.ref, reading: now, maxFactor: 2, epoch: 0)
         #expect(gamma.table(of: 1)?.matches(base.scaled(by: 1.2), tolerance: 1e-7) == true)
+        #expect(ledger.entries().map(\.baseline) == [base])                         // marked with the write
         #expect(throws: GammaError.writeRefused) {
-            try writer.writeCalibrationFactor(2.1, to: facts.ref, reading: now, maxFactor: 2)
+            try writer.writeCalibrationFactor(2.1, of: base, to: facts.ref, reading: now, maxFactor: 2, epoch: 0)
         }
-        #expect(throws: GammaError.writeRefused) {                                     // above 0.97 × H
-            try writer.writeCalibrationFactor(2.6, to: facts.ref, reading: now, maxFactor: 3)
+        let past = FactorMath.headroomMargin * 2.667 + 0.05                            // above 0.97 × H
+        try writer.writeCalibrationFactor(past, of: base, to: facts.ref, reading: now, maxFactor: 3, epoch: 0)
+        #expect(gamma.table(of: 1)?.matches(base.scaled(by: past), tolerance: 1e-6) == true)
+        let ceiling = CalibrationMath.writeCeiling(headroom: 2.667)
+        #expect(ceiling > CalibrationMath.sweepCap(headroom: 2.667))
+        #expect(throws: GammaError.writeRefused) {                                     // no session goes past it
+            try writer.writeCalibrationFactor(ceiling + 0.02, of: base, to: facts.ref, reading: now, maxFactor: 5,
+                                              epoch: 0)
         }
-        try writer.writeCalibrationFactor(1, to: facts.ref, reading: now, maxFactor: 2)
+        try writer.writeCalibrationFactor(1, of: base, to: facts.ref, reading: now, maxFactor: 2, epoch: 0)
         #expect(gamma.table(of: 1) == base && !ledger.isMarked(facts.ref.key))
+    }
+
+    /// A calibration factor needs a fresh reading of the same display and the current hang epoch, checked under the
+    /// ledger lock like every scaled write: a sweep step queued behind a hang never re-scales a restored display
+    /// (§4.5 invariant 1(b), §4.6; C-BOOST-8). Its un-scale is never refused.
+    @Test func calibrationFactorsRespectTheReadingAndTheHangEpoch() async throws {
+        let (writer, gamma, ledger, time, journal) = make()
+        #expect(throws: GammaError.writeRefused) {                                     // another display's reading
+            try writer.writeCalibrationFactor(1.2, of: base, to: facts.ref,
+                                              reading: reading(2.667, display: 9, at: time.now), maxFactor: 2, epoch: 0)
+        }
+        let old = reading(2.667, at: time.now)
+        await time.advance(by: .milliseconds(151))
+        #expect(throws: GammaError.writeRefused) {                                     // older than 150 ms
+            try writer.writeCalibrationFactor(1.2, of: base, to: facts.ref, reading: old, maxFactor: 2, epoch: 0)
+        }
+        try writer.writeCalibrationFactor(1.2, of: base, to: facts.ref, reading: reading(2.667, at: time.now),
+                                          maxFactor: 2, epoch: 0)
+        let restored = EmergencyRestore.run(writer: writer, ledger: ledger)             // the hang watchdog fired
+        #expect(restored.displays == 1 && gamma.table(of: 1) == base)
+        let writes = gamma.writeCount
+        #expect(throws: GammaError.writeRefused) {
+            try writer.writeCalibrationFactor(1.24, of: base, to: facts.ref, reading: reading(2.667, at: time.now),
+                                              maxFactor: 2, epoch: 0)
+        }
+        #expect(gamma.writeCount == writes && gamma.table(of: 1) == base && !ledger.isMarked(facts.ref.key))
+        #expect(journal.snapshot().map(\.code).contains("interlock.refusedStaleEpoch"))
+        try writer.writeCalibrationFactor(1, of: base, to: facts.ref, reading: reading(2.667, at: time.now),
+                                          maxFactor: 2, epoch: 0)
+        try writer.writeCalibrationFactor(1.24, of: base, to: facts.ref, reading: reading(2.667, at: time.now),
+                                          maxFactor: 2, epoch: restored.epoch)         // a new session's stamp
+        #expect(gamma.table(of: 1)?.matches(base.scaled(by: 1.24), tolerance: 1e-6) == true)
     }
 
     @Test func watchdogPathWritesEveryLedgerBaseline() throws {

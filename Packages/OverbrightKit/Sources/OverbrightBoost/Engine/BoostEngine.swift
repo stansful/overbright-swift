@@ -159,6 +159,7 @@ import OverbrightPolicy
     /// trigger; then nothing runs.
     public func stop() async {
         guard isStarted else { return }
+        calibrationSession?.abort(.cancelled)                            // its display at Standard, `onEnd` run
         turnOff()
         let kind: RampPlanner.Kind = signals.snapshot.reduceMotion ? .reduceMotion : .standard
         let all = Array(controllers.values)
@@ -169,6 +170,7 @@ import OverbrightPolicy
 
     /// Synchronous fallback from `applicationWillTerminate`: no ramp, baselines written at once.
     public func stopNow() {
+        calibrationSession?.abort(.cancelled)
         turnOff()
         for controller in controllers.values { controller.stopNow() }
         ledger.withLock { state in

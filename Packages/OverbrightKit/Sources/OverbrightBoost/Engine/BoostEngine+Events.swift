@@ -95,7 +95,18 @@ extension BoostEngine {
                 ownEDRSurfaces: ownEDRSurfaces, machine: machine))
         controller.isOffConsole = !signals.snapshot.isSessionActive
         controller.onChange = { [weak self] needsReduction in self?.controllerChanged(needsReduction: needsReduction) }
+        controller.onDrivenWindowLost = { [weak self, weak controller] reason in
+            guard let self, let controller else { return }
+            self.drivenWindowLost(on: controller.key, reason)
+        }
         return controller
+    }
+
+    /// A driven display lost its trigger or overlay (§4.7): the calibration of that display ends with `reason` (the
+    /// display is at Standard and `onEnd` runs), and the self-test stops measuring it.
+    func drivenWindowLost(on key: DisplayKey, _ reason: CalibrationAbortReason) {
+        if let session = calibrationSession, session.display == key { session.abort(reason) }
+        selfTestRunner?.stop(key)
     }
 
     // MARK: Deadlines (one sleep each, only while on)

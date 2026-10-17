@@ -19,6 +19,7 @@ public protocol DisplayControllerDriving: AnyObject {
     /// Back to Standard at once: baseline written, trigger removed.
     func returnToStandard()
     /// Calibration only: writes `factor` × the baseline through `TableWriter.writeCalibrationFactor`, which refuses
-    /// anything above `maxFactor` or the live interlock.
+    /// anything above `maxFactor` or the reading's calibration ceiling, a stale reading and a stale hang epoch (WP14:
+    /// not the boost interlock's `0.97 × H`, which the sweep must pass; §5.2).
     func writeCalibrationFactor(_ factor: Double, maxFactor: Double) throws
 }

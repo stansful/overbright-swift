@@ -25,7 +25,7 @@ import Testing
     }
 
     /// The writer's fixed signatures (WP4 owns the bodies, `TableWriterTests`): without a reading of the display a
-    /// boost is refused and nothing reaches the port; a calibration factor needs a ledger baseline first.
+    /// boost is refused and nothing reaches the port; a calibration factor needs the current hang epoch.
     @Test func theWriterRefusesWithoutAReading() throws {
         let gamma = FakeGammaPort(fixture: fixture)
         let time = ManualTimeSource()
@@ -40,7 +40,8 @@ import Testing
             _ = try writer.write(request, to: facts.ref, reading: nil, epoch: ledger.hangEpoch)
         }
         #expect(throws: GammaError.writeRefused) {
-            try writer.writeCalibrationFactor(1.1, to: facts.ref, reading: reading, maxFactor: 1.2)
+            try writer.writeCalibrationFactor(1.1, of: .identity(count: 1024), to: facts.ref, reading: reading,
+                                              maxFactor: 1.2, epoch: ledger.hangEpoch &+ 1)
         }
         #expect(ledger.withLock { writer.writeBaselines(fromLedger: $0) } == 0)
         #expect(gamma.writeCount == 0 && gamma.writes.isEmpty)

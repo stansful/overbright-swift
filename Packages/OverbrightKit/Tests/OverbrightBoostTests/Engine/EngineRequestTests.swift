@@ -186,7 +186,8 @@ import Testing
         #expect(h.everyTableAtBase && h.liveTriggers().isEmpty)
     }
 
-    /// The calibration seam writes only through the writer, bounded by its max factor and the live headroom.
+    /// The calibration seam writes only through the writer, bounded by its max factor and the calibration ceiling of a
+    /// fresh reading; it passes `0.97 × H` (the sweep must, C-BOOST-5).
     @Test func calibrationFactorsGoThroughTheWriter() async throws {
         let h = EngineHarness()
         await h.start()
@@ -197,7 +198,9 @@ import Testing
         await h.advance(.seconds(2))
         try controller.writeCalibrationFactor(1.2, maxFactor: 2)
         #expect(abs((h.liveFactor() ?? 0) - 1.2) < 1e-6)
-        #expect(throws: GammaError.writeRefused) { try controller.writeCalibrationFactor(2.6, maxFactor: 3) }
+        try controller.writeCalibrationFactor(2.6, maxFactor: 3)                        // past 0.97 × 2.667
+        #expect(abs((h.liveFactor() ?? 0) - 2.6) < 1e-5)
+        #expect(throws: GammaError.writeRefused) { try controller.writeCalibrationFactor(3.7, maxFactor: 4) }
         controller.returnToStandard()
         #expect(h.everyTableAtBase && h.engine.ledger.entries().isEmpty && h.liveTriggers().isEmpty)
     }

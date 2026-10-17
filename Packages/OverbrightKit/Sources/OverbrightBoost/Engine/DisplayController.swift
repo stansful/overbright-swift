@@ -81,10 +81,26 @@ import OverbrightPolicy
     /// short): resuming restarts it, reaching idle or failed judges it at once (§4.8).
     var pendingRebase: ReapplyCause?
     /// The self-test or a calibration drives this display (`DisplayControllerDriving`): decisions are stored, not
-    /// applied, until it is handed back. A driven session starts from a freshly captured baseline.
+    /// applied, until it is handed back. A driven session starts from a freshly captured baseline and stamps the hang
+    /// epoch it writes under (a hang restore refuses its later writes until a new session starts, §4.6).
     var isDriven = false {
-        didSet { if isDriven, !oldValue { refreshBaseline() } }
+        didSet {
+            if isDriven, !oldValue {
+                epochStamp = deps.ledger.hangEpoch
+                refreshBaseline()
+            } else if !isDriven {
+                calibratesOverlay = false
+            }
+        }
     }
+    /// The driven session is a calibration of the Compatibility-mode overlay (set by `beginCalibration`): it arms and
+    /// scales the overlay, never the table or a trigger.
+    var calibratesOverlay = false
+    /// The headroom request of the overlay a calibration armed.
+    var drivenOverlayRequest = 1.0
+    /// A driven display lost its window (occluded, or moved to another screen): the engine ends the calibration or the
+    /// self-test on this display.
+    var onDrivenWindowLost: ((CalibrationAbortReason) -> Void)?
 
     // MARK: Trigger, overlay and the gate
 

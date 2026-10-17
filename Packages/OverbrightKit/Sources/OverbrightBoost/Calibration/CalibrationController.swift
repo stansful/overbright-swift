@@ -6,10 +6,13 @@
 // Step 2 raises the table factor from 1.00 in 0.02 steps every 0.4 s on the black-surround pattern, pauses at 1.15 × the
 // encoded prediction until "Keep Going", and ends at Space (the merge), at 1.15 × the linear prediction, or early. Step 3,
 // only after a merge near the linear prediction, shows the patches for 2 s at 0.97 × H. Every factor goes through the
-// driver (`TableWriter.writeCalibrationFactor`, which refuses anything above `maxFactor` or the live interlock). The
-// display returns to Standard at once on Esc, a lock, occlusion, a headroom drop, the 60 s limit or a refused write.
-// `finish(brighter:)` applies the decision rule (`CalibrationMath`) and returns the record, keyed by OS build, mechanism
-// and potential. Every async step carries the session's generation (§4.6).
+// driver (`TableWriter.writeCalibrationFactor`, which refuses anything above `maxFactor` or the reading's calibration
+// ceiling, a stale reading and a stale hang epoch; in Compatibility mode the overlay's factor under the same checks).
+// The display returns to Standard at once on Esc, a lock, occlusion, a headroom drop, the 60 s limit or a refused write
+// (a hang restore refuses every later write). `finish(brighter:)` applies the decision rule (`CalibrationMath`) and
+// returns the record, keyed by OS build, mechanism and potential; after an abort it records nothing unless the sweep had
+// ended with a mark or the confirmation was answered (§11.1 #35: an earlier record stays). Every async step carries the
+// session's generation (§4.6). The three steps live in `CalibrationController+Steps.swift`.
 import Foundation
 import Observation
 import OverbrightCore
@@ -24,45 +27,45 @@ private let log = Log.logger(.engine)
     /// The display under test.
     public let display: DisplayKey
     /// The table factor shown now.
-    public private(set) var currentFactor: Double = 1
+    public internal(set) var currentFactor: Double = 1
     /// The latest headroom of the display.
     public private(set) var headroom: Double?
     /// True while the sweep waits at 1.15 × the encoded prediction for "Keep Going".
-    public private(set) var isSweepPausedAtLimit = false
+    public internal(set) var isSweepPausedAtLimit = false
     /// The step the session is in.
-    public private(set) var state: CalibrationState = .preparing
+    public internal(set) var state: CalibrationState = .preparing
     /// The mechanism measured (the engine sets `.overlay` on a Compatibility-mode display before `begin()`); a record
     /// never carries over to the other mechanism.
     public var mechanism: Mechanism = .table
     /// Called once when the session ends (finished or aborted), so the engine can release the master.
     @ObservationIgnored public var onEnd: (() -> Void)?
 
-    private let driver: any DisplayControllerDriving
-    private let writer: TableWriter
-    private let time: any TimeSource
-    private let machine: MachineIdentity
+    let driver: any DisplayControllerDriving
+    let writer: TableWriter
+    let time: any TimeSource
+    let machine: MachineIdentity
 
-    @ObservationIgnored private var generation: UInt64 = 0
-    @ObservationIgnored private var began = false
-    @ObservationIgnored private var ended = false
-    @ObservationIgnored private var work: Task<Void, Never>?
-    @ObservationIgnored private var pendingComparison: Bool?
-    @ObservationIgnored private var pendingSweep = false
-    @ObservationIgnored private var lastFlip: MonotonicInstant?
-    @ObservationIgnored private var flipTask: Task<Void, Never>?
+    @ObservationIgnored var generation: UInt64 = 0
+    @ObservationIgnored var began = false
+    @ObservationIgnored var ended = false
+    @ObservationIgnored var work: Task<Void, Never>?
+    @ObservationIgnored var pendingComparison: Bool?
+    @ObservationIgnored var pendingSweep = false
+    @ObservationIgnored var lastFlip: MonotonicInstant?
+    @ObservationIgnored var flipTask: Task<Void, Never>?
     /// H when the grant became stable; the reference of the drop check until the sweep starts.
-    @ObservationIgnored private var readyHeadroom: Double?
-    @ObservationIgnored private var potential: Double?
+    @ObservationIgnored var readyHeadroom: Double?
+    @ObservationIgnored var potential: Double?
     /// H at the sweep's start: the predictions and the record use it.
-    @ObservationIgnored private var sweepHeadroom: Double?
-    @ObservationIgnored private var sweepStart: MonotonicInstant?
-    @ObservationIgnored private var pauseAcknowledged = false
-    @ObservationIgnored private var mergeFactor: Double?
-    @ObservationIgnored private var sweepRan = false
-    @ObservationIgnored private var confirmationShown = false
-    @ObservationIgnored private var linearConfirmed: Bool?
-    @ObservationIgnored private var measuredSDRWhite: Double?
-    @ObservationIgnored private var record: CalibrationRecord?
+    @ObservationIgnored var sweepHeadroom: Double?
+    @ObservationIgnored var sweepStart: MonotonicInstant?
+    @ObservationIgnored var pauseAcknowledged = false
+    @ObservationIgnored var mergeFactor: Double?
+    @ObservationIgnored var sweepRan = false
+    @ObservationIgnored var confirmationShown = false
+    @ObservationIgnored var linearConfirmed: Bool?
+    @ObservationIgnored var measuredSDRWhite: Double?
+    @ObservationIgnored var record: CalibrationRecord?
 
     /// A session for `display`, driven through `driver`.
     public init(display: DisplayKey, driver: any DisplayControllerDriving, writer: TableWriter, time: any TimeSource,
@@ -95,8 +98,11 @@ private let log = Log.logger(.engine)
             }
         }
         guard !reads.isEmpty, let potential, potential > 1.01 else { return abort(.noExtraRange) }
-        let rungs = MeasurementLadder.rungs(everyStrategy: false, machine: machine, headroomTag: potential)
-        for (index, rung) in rungs.enumerated() where rung.isAvailable {
+        var rungs = MeasurementLadder.rungs(everyStrategy: false, machine: machine, headroomTag: potential)
+            .filter(\.isAvailable)
+        // Compatibility mode: the overlay is the one EDR request; the rung only carries the headroom tag it asks for.
+        if mechanism == .overlay { rungs = Array(rungs.prefix(1)) }
+        for (index, rung) in rungs.enumerated() {
             let armed = await driver.arm(rung: rung.request)
             guard g == generation, !ended else { return }
             guard armed else { continue }
@@ -125,7 +131,7 @@ private let log = Log.logger(.engine)
         abort(.noExtraRange)
     }
 
-    private func resumePending() {
+    func resumePending() {
         if pendingSweep {
             pendingSweep = false
             startSweep()
@@ -133,181 +139,6 @@ private let log = Log.logger(.engine)
             pendingComparison = nil
             showComparison(boosted: boosted)
         }
-    }
-
-    // MARK: Step 1
-
-    /// "Did it get brighter?": Standard or ×1.3 light, at most one flip per 1.5 s (a faster request waits, and the
-    /// latest one wins).
-    public func showComparison(boosted: Bool) {
-        guard !ended else { return }
-        switch state {
-        case .preparing:
-            pendingComparison = boosted
-            begin()
-            return
-        case .ready: break
-        default: return
-        }
-        pendingComparison = boosted
-        flipTask?.cancel()
-        let wait = lastFlip.map { CalibrationMath.comparisonMinimumInterval - (time.now - $0) } ?? .zero
-        guard wait > .zero else { return applyComparison() }
-        let g = generation
-        flipTask = Task { [weak self] in
-            guard let self, await self.sleep(wait, generation: g) else { return }
-            self.applyComparison()
-        }
-    }
-
-    private func applyComparison() {
-        guard let boosted = pendingComparison, case .ready = state else { return }
-        pendingComparison = nil
-        let target: Double
-        if boosted {
-            guard let reading = freshReading(reference: readyHeadroom) else { return }
-            target = CalibrationMath.comparisonFactor(headroom: reading.current)
-        } else {
-            target = 1
-        }
-        guard target != currentFactor else { return }
-        guard write(target, maxFactor: max(target, 1)) else { return }
-        lastFlip = time.now
-        journal("calibration.comparison", values: ["factor": target])
-        if boosted { watchWhileAboveStandard() }
-    }
-
-    /// While step 1 shows the boosted factor, the grant is checked at the sweep's cadence.
-    private func watchWhileAboveStandard() {
-        let g = generation
-        work?.cancel()
-        work = Task { [weak self] in
-            guard let self else { return }
-            while self.currentFactor > 1 {
-                guard await self.sleep(CalibrationMath.sweepInterval, generation: g), case .ready = self.state,
-                      self.currentFactor > 1, self.freshReading(reference: self.readyHeadroom) != nil else { return }
-            }
-        }
-    }
-
-    // MARK: Step 2
-
-    /// 1.00 → the cap in 0.02 steps every 400 ms on the black surround, pausing at 1.15 × the encoded prediction.
-    public func startSweep() {
-        guard !ended else { return }
-        switch state {
-        case .preparing:
-            pendingSweep = true
-            begin()
-            return
-        case .ready: break
-        default: return
-        }
-        flipTask?.cancel()
-        pendingComparison = nil
-        guard let reading = freshReading(reference: readyHeadroom) else { return }
-        let h = reading.current
-        sweepHeadroom = h
-        sweepStart = time.now
-        sweepRan = true
-        pauseAcknowledged = false
-        mergeFactor = nil
-        let pauseAt = CalibrationMath.pauseFactor(headroom: h), cap = CalibrationMath.sweepCap(headroom: h)
-        guard write(1, maxFactor: cap) else { return }
-        state = .sweeping
-        journal("calibration.sweep", values: ["headroom": h, "pause": pauseAt, "cap": cap])
-        generation &+= 1
-        let g = generation
-        work?.cancel()
-        work = Task { [weak self] in await self?.sweep(pauseAt: pauseAt, cap: cap, generation: g) }
-    }
-
-    private func sweep(pauseAt: Double, cap: Double, generation g: UInt64) async {
-        var step = 0
-        while true {
-            guard await sleep(CalibrationMath.sweepInterval, generation: g), case .sweeping = state else { return }
-            if let start = sweepStart, time.now - start >= CalibrationMath.sweepTimeLimit { return abort(.timeLimit) }
-            guard freshReading(reference: sweepHeadroom) != nil else { return }
-            if isSweepPausedAtLimit { continue }
-            let next = 1 + Double(step + 1) * CalibrationMath.sweepStep
-            if !pauseAcknowledged, next > pauseAt {
-                isSweepPausedAtLimit = true
-                journal("calibration.paused", values: ["factor": currentFactor])
-                continue
-            }
-            guard next <= cap else { return endSweep(merge: nil) }       // the end of the sweep: nothing marked
-            step += 1
-            guard write(next, maxFactor: cap) else { return }
-        }
-    }
-
-    /// Past the pause at 1.15 × the encoded prediction.
-    public func continueSweep() {
-        guard case .sweeping = state, isSweepPausedAtLimit else { return }
-        pauseAcknowledged = true
-        isSweepPausedAtLimit = false
-        journal("calibration.continued")
-    }
-
-    /// Space: the 0.95 patch merged with white at the factor shown now.
-    public func markMerged() {
-        guard case .sweeping = state else { return }
-        endSweep(merge: currentFactor)
-    }
-
-    private func endSweep(merge: Double?) {
-        generation &+= 1
-        work?.cancel()
-        isSweepPausedAtLimit = false
-        mergeFactor = merge
-        guard write(1, maxFactor: 1) else { return }
-        let reading = CalibrationMath.reading(of: merge, headroom: sweepHeadroom ?? 1)
-        state = .swept(mergeFactor: merge, needsConfirmation: reading == .linearCandidate)
-        journal("calibration.swept", values: ["merge": merge ?? 0])
-    }
-
-    // MARK: Step 3
-
-    /// Shows the patches for 2 s at the linear-domain Peak factor (0.97 × H), only after a merge near the linear
-    /// prediction; only a "distinguishable" answer after it can record `.linear`.
-    public func showLinearConfirmation() {
-        guard case .swept(let merge, true) = state else { return }
-        guard let reading = freshReading(reference: sweepHeadroom) else { return }
-        let factor = CalibrationMath.linearConfirmationFactor(headroom: reading.current)
-        guard write(factor, maxFactor: factor) else { return }
-        state = .confirming
-        confirmationShown = true
-        journal("calibration.confirmation", values: ["factor": factor])
-        generation &+= 1
-        let g = generation
-        work?.cancel()
-        let end = time.now + CalibrationMath.confirmationDuration
-        work = Task { [weak self] in
-            guard let self else { return }
-            while self.time.now < end {
-                let left = end - self.time.now
-                guard await self.sleep(min(left, CalibrationMath.sweepInterval), generation: g),
-                      self.freshReading(reference: self.sweepHeadroom) != nil else { return }
-            }
-            guard g == self.generation, self.write(1, maxFactor: factor) else { return }
-            self.state = .swept(mergeFactor: merge, needsConfirmation: true)
-        }
-    }
-
-    /// The answer to step 3. Ignored unless the frame was shown; ends the frame at once when it is still up.
-    public func answerLinearConfirmation(distinguishable: Bool) {
-        guard confirmationShown else {
-            journal("calibration.answerWithoutFrame")
-            return
-        }
-        if case .confirming = state {
-            generation &+= 1
-            work?.cancel()
-            guard write(1, maxFactor: 1) else { return }
-            state = .swept(mergeFactor: mergeFactor, needsConfirmation: true)
-        }
-        linearConfirmed = distinguishable
-        journal("calibration.answered", values: ["distinguishable": distinguishable ? 1 : 0])
     }
 
     // MARK: Results
@@ -320,12 +151,19 @@ private let log = Log.logger(.engine)
     }
 
     /// Ends the session (Standard at once) and returns the record: `.notBrighter` when the screen did not get brighter,
-    /// else the decision rule; nil when nothing was measured. A second call returns the same record.
+    /// else the decision rule; nil when nothing was measured. After an abort (Esc mid-sweep, a lock, occlusion, a
+    /// headroom drop, a refused write) it is nil too unless the sweep had ended with a mark or the confirmation was
+    /// answered, so an interrupted run never replaces an earlier record with `.inconclusive` (§11.1 #35). A second
+    /// call returns the same record.
     public func finish(brighter: Bool?) -> CalibrationRecord? {
         if case .finished = state { return record }
+        let aborted = if case .aborted = state { true } else { false }
         end()
         state = .finished
-        guard brighter != nil || sweepRan || measuredSDRWhite != nil else {
+        let measured = aborted
+            ? brighter == false || mergeFactor != nil || linearConfirmed != nil
+            : brighter != nil || sweepRan || measuredSDRWhite != nil
+        guard measured else {
             notifyEnd()
             return nil
         }
@@ -379,7 +217,7 @@ private let log = Log.logger(.engine)
     // MARK: Helpers
 
     /// Stops every task and returns the display to Standard, once.
-    private func end() {
+    func end() {
         guard !ended else { return }
         ended = true
         generation &+= 1
@@ -393,14 +231,14 @@ private let log = Log.logger(.engine)
     }
 
     /// Calls `onEnd` once, after the final state is set.
-    private func notifyEnd() {
+    func notifyEnd() {
         let callback = onEnd
         onEnd = nil
         callback?()
     }
 
     /// One factor through the driver; a refusal ends the session.
-    private func write(_ factor: Double, maxFactor: Double) -> Bool {
+    func write(_ factor: Double, maxFactor: Double) -> Bool {
         do {
             try driver.writeCalibrationFactor(factor, maxFactor: maxFactor)
             currentFactor = factor
@@ -412,7 +250,7 @@ private let log = Log.logger(.engine)
     }
 
     /// A fresh reading that has not fallen below 95 % of `reference`; otherwise the session ends and nil is returned.
-    private func freshReading(reference: Double?) -> HeadroomReading? {
+    func freshReading(reference: Double?) -> HeadroomReading? {
         guard let reading = driver.readHeadroom() else {
             abort(.displayGone)
             return nil
@@ -426,12 +264,12 @@ private let log = Log.logger(.engine)
     }
 
     /// Sleeps; false when the sleep was cancelled or the session moved on (a newer generation).
-    private func sleep(_ duration: Duration, generation g: UInt64) async -> Bool {
+    func sleep(_ duration: Duration, generation g: UInt64) async -> Bool {
         do { try await time.sleep(for: duration) } catch { return false }
         return g == generation && !ended
     }
 
-    private func journal(_ code: String, values: [String: Double] = [:]) {
+    func journal(_ code: String, values: [String: Double] = [:]) {
         writer.journal.record(JournalEvent(seconds: time.now.sinceOrigin.timeInterval,
                                            category: LogCategory.engine.rawValue, display: display.rawValue,
                                            code: code, values: values))
