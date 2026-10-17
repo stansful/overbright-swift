@@ -7,6 +7,7 @@ import Foundation
 import OverbrightBoost
 import OverbrightCore
 import OverbrightIntents
+import OverbrightSignals
 import Testing
 @testable import OverbrightAppShell
 
@@ -164,6 +165,65 @@ import Testing
         #else
         #expect(!CompositionRoot.isDebugBuild && !CompositionRoot.refusedSwitches(qa).isEmpty)
         #endif
+    }
+
+    /// The simulated fakes keep only their newest records, so a QA run or a soak measures no history of the fakes'
+    /// own (256 records kept 256–512 full tables, a 3.8–7.7 MB saw-tooth): the write history stays within twice
+    /// `qaRecordLimit` while the counter that QA dumps, diagnostics and the soak read keeps counting.
+    @Test func simulatedFakesKeepOnlyTheirNewestRecords() throws {
+        #expect(CompositionRoot.qaRecordLimit == 16)
+        let ports = TestShell.ports(context: TestShell.context())
+        let gamma = try #require(ports.gamma as? FakeGammaPort)
+        let triggers = try #require(ports.triggers as? FakeTriggerFactory)
+        #expect(gamma.recordLimit == CompositionRoot.qaRecordLimit)
+        #expect(triggers.recordLimit == CompositionRoot.qaRecordLimit)
+        let display = try #require(ports.readDisplays().first).ref.id
+        let base = try #require(gamma.base(of: display))
+        for _ in 0..<100 { try gamma.write(base, to: display) }
+        #expect(gamma.writeCount == 100)                                          // never trimmed
+        #expect(gamma.writes.count >= CompositionRoot.qaRecordLimit)
+        #expect(gamma.writes.count <= 2 * CompositionRoot.qaRecordLimit)
+    }
+
+    /// `--qa-live-signals` wires the real Signals only in a Debug build and only together with `--qa-simulate`; a
+    /// Release build refuses the switch before anything starts (its `--qa-` prefix), as it refuses `--qa-simulate`.
+    @Test func liveSignalsNeedBothSwitchesAndADebugBuild() {
+        func wires(_ arguments: [String], debugBuild: Bool = true) -> Bool {
+            CompositionRoot.wiresLiveSignals(LaunchArguments(["Overbright"] + arguments), debugBuild: debugBuild)
+        }
+        #expect(wires(["--qa-simulate", "builtin-xdr-lid-open", "--qa-live-signals"]))
+        #expect(wires(["--qa-live-signals", "--qa-simulate"]))
+        #expect(!wires(["--qa-simulate", "builtin-xdr-lid-open"]))
+        #expect(!wires(["--qa-live-signals"]))                                 // never the real displays with it
+        #expect(!wires(["--qa-simulate", "builtin-xdr-lid-open", "--qa-live-signals"], debugBuild: false))
+        let live = LaunchArguments(["Overbright", "--qa-simulate", "builtin-xdr-lid-open", "--qa-live-signals"])
+        #expect(CompositionRoot.refusedSwitches(live, debugBuild: false) == ["--qa-simulate", "--qa-live-signals"])
+        #expect(CompositionRoot.refusedSwitches(live, debugBuild: true).isEmpty)
+    }
+
+    /// The live-signals wiring swaps only Signals and the conflict probe for the real ones (constructed, never
+    /// started: constructing them reads nothing). Every display port, Fill Light and the fixture stay simulated, so
+    /// the D27 exemption still follows the wiring and the scenario runner still runs (without the fake signals).
+    @Test func liveSignalsSwapOnlySignalsAndConflicts() throws {
+        let context = TestShell.context()
+        let simulated = TestShell.ports(context: context)
+        let live = CompositionRoot.withLiveSignals(simulated, context: context)
+        #expect(live.signals is SignalsMonitor && live.conflicts is RunningAppsConflictProbe)
+        #expect(live.services.signals is SignalsMonitor)
+        #expect(live.gamma is FakeGammaPort && live.headroom is ScriptedHeadroom)
+        #expect(live.displays is FakeDisplayDirectory && live.triggers is FakeTriggerFactory)
+        let sameFillLight = (live.fillLight as AnyObject) === (simulated.fillLight as AnyObject)
+        #expect(sameFillLight)                                                  // still on the fake signals
+        #expect(live.services.displays == nil && live.services.triggers == nil)
+        #expect(live.fixture == .builtinXDRLidOpen && live.loginItems is InMemoryLoginItem)
+        #expect(!live.controlOutlet.isControlInstalled)
+        let qa = LaunchArguments(["Overbright", "--qa-simulate", "builtin-xdr-lid-open", "--qa-live-signals"])
+        #expect(CompositionRoot.skipsSingleInstanceCheck(qa, ports: live))
+        let shell = CompositionRoot.makeShell(context, ports: live)
+        let rig = try #require(ScenarioRunner.Rig(shell: shell))
+        #expect(rig.signals == nil && rig.conflicts == nil && rig.hasLiveSignals)
+        #expect(shell.lifecycle.contains { $0 is SignalsMonitor } && shell.lifecycle.last is BoostEngine)
+        #expect(CompositionRoot.ports(fixture: .builtinXDRLidOpen, context: context).signals is FakeSystemSignals)
     }
 
     /// Every fixture of §3.9 wires and reads back its own displays.

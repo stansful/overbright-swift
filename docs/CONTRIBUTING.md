@@ -85,7 +85,9 @@ make -C <repo> build                               # universal Release → build
 make -C <repo> smoke                               # --diagnostics only: gammaWrites == 0, triggerWindows == 0, …
 SIMULATE=1 make -C <repo> smoke                    # agents: never launches on the real ports (Debug: --qa-simulate)
 make -C <repo> qa-matrix                           # after `make debug`: every fixture's scenario, Welcome writes nothing
-make -C <repo> soak                                # after `make debug`: 30 minutes under --qa-simulate (MINUTES ≥ 17); no own wake-up in the last off phase
+make -C <repo> soak                                # after `make debug`: 30 minutes under --qa-simulate (MINUTES ≥ 17); no own periodic wake-up while off
+make -C <repo> perf RUNS=ui                        # after `make debug`: energy phases under --qa-simulate → build/logs/perf/<variant>/perf.md
+make -C <repo> perf-compare A=<dir> B=<dir>        # two perf folders side by side: own CPU, own wake-ups, footprint, §17 verdicts
 make -C <repo> run                                 # Debug build, simulated displays, a dev settings suite
 make -C <repo> dist                                # zip + dmg + sha256 (+ notarization when signing)
 make -C <repo> distclean                           # also every .build-* scratch dir
@@ -145,6 +147,7 @@ No hook posts input or asks for a permission. Launch arguments (`LaunchArguments
 | `--qa-simulate [fixture]` | Core fakes for every display port over a fixture of ARCHITECTURE.md §3.9 (`builtin-xdr-lid-open`, `mpg322ux-hdr-on`, `lcd-only`, `hardware-mirror`, …); a missing or unknown name falls back to `builtin-xdr-lid-open`, never to the real ports. |
 | `--qa-defaults-suite <name>` | Keeps every setting the run writes in that suite (`Launch/QAHooks+Defaults.swift`); the app's own domain or a global one is refused and the run keeps its settings in memory. The Settings window's frame is not autosaved then. |
 | `--qa-state <name>` | Drives the panel with a named status of PanelUI's `ScriptedStatuses` (every chip, banner, phase and HUD of DESIGN.md §5.13); the state's settings go into the run's suite (in memory without one), and its Fill Light and "Why?" row show too. A scripted status is ready at once, so its surfaces wait only for the services to start (Help shows once the shortcuts are registered). |
+| `--qa-live-signals` | With `--qa-simulate` only: the real, read-only Signals (running apps, window list, power, session) over the simulated displays, for `make perf RUNS=signals`; every display port and Fill Light stay fakes, and the script's signal steps (lock, sleep, events, conflicts) are skipped. |
 | `--qa-panel`, `--qa-menu`, `--qa-hud <level>` | Opens the panel (it stays open on clicks elsewhere, and every close is logged with its cause), the status menu (its rows go to `qa-trace.txt`; it closes by itself after 3 s), the HUD (under `--qa-simulate` at that level; on the real displays only its generic change, never a level). Like every surface hook, they wait for the launch work (every service started and the status ready, at most 10 s). |
 | `--qa-settings <pane[#row]>` | Opens Settings at a pane (`general`, `displays`, `automations`, `shortcuts`, `fillLight`, `advanced`, `about`), scrolled to and highlighting a row. |
 | `--qa-welcome <step>` | Opens Welcome at `hello`, `displays`, `defaults`, `findIt` or `done`; takes no focus and records nothing. |
@@ -181,6 +184,71 @@ Skipped unless their variable is set; never run in CI:
 | `OVERBRIGHT_INTEGRATION=1` | Tests that show windows on screen (never with EDR content). |
 | `OVERBRIGHT_HARDWARE=1` | The owner's hardware session only (docs/HARDWARE-TEST.md 1.13): read-only real display ports (`RealDisplayReadTests`: capacity, read, profile base, the IORegistry walk) and the off-screen Metal clear (`MetalClearPassTests`). |
 
+## Measuring energy
+
+`scripts/perf.sh` (`make perf`, ARCHITECTURE.md §8.7) measures a Debug build under `--qa-simulate` against
+DESIGN.md §17, phase by phase. Each run launches the app once with a scripted scenario and a unique
+`--qa-defaults-suite`, which it deletes afterwards; beside it runs the soak's control app
+(`scripts/soak-control.swift`), a menu bar app that subscribes to what Overbright subscribes to at rest. Every number
+is the app's minus the control's:
+
+- **CPU** is CPU time (`proc_pid_rusage` user + system) over a clean window, as % of one core. The Mac may be busy
+  with other work: never judge by `top`'s instantaneous %.
+- **Wake-ups** are interrupt wake-ups (`ri_interrupt_wkups`) per second. `top`'s IDLEW counts only platform idle
+  exits and reads 0 for every process on a loaded Mac, so it judges nothing.
+- **Memory** is the `footprint` total (what Activity Monitor's Memory column shows), never RSS. Any in-process Metal
+  work makes the GPU driver charge ≈ 237 MB of graphics footprint until 1–3 s after the last frame.
+- `sample` (hot stacks and a busy-sample split by subsystem), `footprint` and `vmmap --summary` run after each window.
+- **Counted phases** (`events`, `panelcycle`) do a known number of things and report the own CPU per thing. The app
+  runs the next step right after a `dump`, and perf.sh notices a dump 0–0.25 s later (it polls the status file), so
+  each reading's dump is followed by a 1 s rest: the reading at the start and the one after the counted work both fall
+  where the app is idle, and the tail that `sample` watches starts only after that rest. A 5 s rest before each
+  counted phase lets perf.sh finish reading the previous one's footprint first. perf.md prints how late each reading
+  came (marks.tsv keeps it) and flags one 0.75 s or more after its dump.
+- **The lock state** is read with every reading and every 5 s between them (lock.tsv), with the load average. A
+  window in which the Mac was locked or unlocked partway is reported as "lock changed (locked→unlocked)", is not
+  judged, and `perf-compare` marks it not comparable: an unlock redraws the screen inside the window. Run it again.
+- **Apps launched, quit and activated** on the Mac are counted per window (apps.tsv, counts only: no app is named).
+- **Off's verdict** uses the soak's wake-up rule (at most 0.05 own interrupt wake-ups/s; whether they beat
+  periodically is judged by `make soak` and the `timeline` run, not in one 60 s window) and a footprint under 40 MB
+  (DESIGN.md §17's literal wake-up figure is 0/s).
+
+| Run | What it measures |
+|---|---|
+| `launch` | launch to ready, with a `sample` of the first 10 s |
+| `base` | off, boosted, the panel open (steady and while the level moves at 10 Hz), a ramp storm and the HUD with the panel closed, dimmed, back to off (≈ 21 min) |
+| `ruleoff`, `two` | boosted with the full-screen-video rule off; two boosting displays (`russian-names`) |
+| `ui` | off, one panel open and close, the ramp storm and the HUD, back to off (≈ 7 min) |
+| `events` | 1,500 screen-parameters events 10 ms apart while off and while boosted, then bursts of 120 at 8 ms every 5 s with the panel closed and open: CPU per event |
+| `panelcycle` | the panel opened and closed 10 times while off: CPU per open and the footprint after |
+| `timeline` | interrupt wake-ups every second for 300 s while two displays are boosted: seconds with two wake-ups, gaps |
+| `signals` | off, boosted and dimmed (60 s windows) with `--qa-live-signals`: the real Signals' cost on this Mac. Its numbers depend on the apps running, launching and quitting (the apps column) and on the lock state: a running conflict-catalogue app or a locked screen keeps the engine from boosting (the engine line names the reason, and a boosted phase is then not judged). The app's own dump names a running app by its catalogue entry only (`StatusSummary.byEntry`), so no file of the run carries an app's name or bundle ID |
+
+```zsh
+make -C <repo> debug
+cp -R <repo>/build/Overbright.app <repo>/build/Overbright-base.app   # or build the base in its own worktree
+make -C <repo> perf RUNS="ui events" APP=build/Overbright-base.app VARIANT=base
+make -C <repo> perf RUNS="ui events"                                  # your build → build/logs/perf/Overbright/
+make -C <repo> perf-compare A=build/logs/perf/base B=build/logs/perf/Overbright
+<repo>/scripts/perf.sh summarize <repo>/build/logs/perf/Overbright    # the tables again (perf.md, perf.csv)
+```
+
+**Protocol.** Measure the base and your branch alternately in one session (base, branch, base, branch), every steady
+phase at least twice, and report the repeat pair, never a single window; `signals` above all, whose cost follows what
+the rest of the Mac does: compare its windows only with the base run next to them, and with similar app counts.
+Discard a window whose lock state changed, and one in which the system log shows a click on the status item or the
+panel (`/usr/bin/log show --last 30m --predicate 'subsystem == "app.overbright.Overbright"'`: "panel closes:
+outsideClick", AppKit `trackMouse`), and run it again. `PHASE`, `MEASURE`, `SETTLE` and `SAMPLE` change the windows
+(`SAMPLE=0` skips `sample`). A run that stops partway (an error, Ctrl-C) asks the app to quit with SIGTERM (its quit
+flow), stops its readers and deletes its suite.
+
+**The app's own domain.** perf.sh and the soak export `app.overbright.Overbright` before and after (read-only)
+and fail when a QA run changed it (ARCHITECTURE.md §8.5); they never delete a key there.
+
+**Safety.** perf.sh refuses a Release build, runs only the simulated ports (D24), never posts input and never attaches
+a debugger: `sample`, `footprint` and `vmmap` read the process. Do not attach `lldb -p` or `xctrace --attach` to a QA
+run either: lldb asks for a password on screen and makes `footprint` and `sample` hang.
+
 ## Engineering rules (summary of ARCHITECTURE.md §8–§9)
 
 **Concurrency.** Core, Policy and Channel are nonisolated; every other target is `MainActor` by default. Every entry
@@ -189,7 +257,8 @@ point the system may call off the main thread is explicitly nonisolated (a `noni
 APIs trap at runtime. Leave the main actor with `@concurrent` functions. No repeating timers (a stored `Task` with
 `TimeSource.sleep`), no `DispatchQueue.main.sync`, no semaphores on main, no Combine.
 
-**Energy.** Zero work while off (the soak fails on any idle wake-up of Overbright's own in its last off phase);
+**Energy.** Zero work while off (the soak fails on a periodic wake-up of Overbright's own while off, and on more
+than 0.05 own interrupt wake-ups/s in its last off phase);
 boost-only sources run only while a display is scaled or dimmed, and all but the schedule boundary also stop while
 the screen is locked, asleep or off the console.
 

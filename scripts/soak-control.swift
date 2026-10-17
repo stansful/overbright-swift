@@ -5,7 +5,8 @@
 // selected-input-source notification, so a keyboard layout switch wakes both). It quits when the process it follows
 // exits (a dispatch source on that process, no timer), or at once without one. Original code, MIT; no dependency.
 //
-//   scripts/soak.sh builds it (xcrun swiftc → build/SoakControl.app, LSUIElement) and opens it with --follow <pid>
+//   scripts/soak.sh and scripts/perf.sh build it (scripts/lib.sh build_perf_tools: xcrun swiftc →
+//   build/logs/perf/tools/PerfControl.app, LSUIElement) and open it with --follow <pid>
 import AppKit
 import Carbon
 
