@@ -4,6 +4,7 @@
 import Foundation
 import OverbrightBoost
 import OverbrightCore
+import OverbrightDesign
 import Testing
 @testable import OverbrightAppShell
 
@@ -63,6 +64,19 @@ import Testing
         let deviation = try #require(display["maxDeviationFromBase"] as? Double)
         #expect(abs(deviation - 0.5) < 0.001)
         #expect(report["gammaWrites"] as? Int == 0)                       // a foreign write is not ours
+    }
+
+    /// `designString.ru` (smoke's catalog wiring check) opens the language's `.lproj` folder in Design's bundle by its
+    /// path, as `CopyLanguage.named` does: Russian answers in Russian, and an empty name, a path or a language the
+    /// bundle lacks answer that there is no such localization, never whichever one the bundle lists first.
+    @Test func theDesignStringOpensTheLanguageFolderByItsPath() {
+        let design = CopyLanguage.app.bundle
+        let russian = DiagnosticsReport.designString(language: "ru", in: design)
+        #expect(russian != "Overbright is reading this display." && !russian.hasPrefix("("), "\(russian)")
+        for code in ["", "../ru", "tlh"] {
+            #expect(DiagnosticsReport.designString(language: code, in: design) == "(no \(code) localization)")
+        }
+        #expect(DiagnosticsReport.designString(language: "ru", in: nil) == "(no bundle)")
     }
 
     /// The report of a running app over the simulated ports has every key of §8.4: the strategy cache (the engine's

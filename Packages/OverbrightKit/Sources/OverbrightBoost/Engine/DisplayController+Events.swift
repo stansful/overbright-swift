@@ -174,7 +174,8 @@ extension DisplayController {
 
     /// Back to Standard: ramp to 1 in 120 ms, baseline, windows removed. A step without a fresh reading lands on the
     /// baseline at once, so it never depends on one. With nothing applied, a table that may be off its baseline
-    /// (`tableMayBeOffBaseline`) gets the baseline before the windows go.
+    /// (`tableMayBeOffBaseline`) gets the baseline before the windows go; while WindowServer refuses it and the ledger
+    /// marks the display, the trigger waits for the at-rest retry of the reduction that follows (`landUnscaled`).
     func rampBackToStandard() {
         generation += 1
         armSlot.cancel(); burstSlot.cancel(); driftSlot.cancel(); checkSlot.cancel()
@@ -187,8 +188,7 @@ extension DisplayController {
         }
         guard isScaledOrDimmed else {
             rampSlot.cancel()
-            writeBaselineNow()                                            // a refusal is retried at rest
-            removeWindows()
+            landUnscaled()                                                // a refusal is retried at rest
             phase = .idle
             settled()
             return
