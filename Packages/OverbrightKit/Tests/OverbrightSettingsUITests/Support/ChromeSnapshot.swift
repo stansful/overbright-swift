@@ -1,7 +1,7 @@
 // OverbrightSettingsUITests/Support/ChromeSnapshot.swift — renders chrome for the snapshot suites (ARCHITECTURE.md §9.1,
 // UI row): in-process `NSHostingView.cacheDisplay` in a borderless window that is never ordered in, in Light, Dark and
 // Increase Contrast. Every render is checked for ink; PNGs are written only with `OVERBRIGHT_SNAPSHOT_DIR=<dir>` (into
-// `<dir>/SettingsUI/`).
+// `<dir>/SettingsUI/`). `layOut` lays a view out the same way without drawing it, for tests that read the rendered rows.
 import AppKit
 import OverbrightCore
 import OverbrightDesign
@@ -29,11 +29,18 @@ enum ChromeAppearance: String, CaseIterable, Sendable {
 @MainActor enum ChromeSnapshot {
     /// `view` on the window background, at `size` (or its fitting size), in `appearance`.
     static func render(_ view: some View, _ appearance: ChromeAppearance, size: CGSize? = nil) throws -> NSBitmapImageRep {
-        let root = view.background(Color(nsColor: .windowBackgroundColor)).overbrightThemeRoot(appearance.theme)
-        let host = NSHostingView(rootView: root)
-        host.appearance = appearance.nsAppearance
-        host.frame = CGRect(origin: .zero, size: size ?? host.fittingSize)
-        return try cache(host)
+        let host = hosting(view, appearance, size: size)
+        return try inWindow(host) {
+            let rep = try #require(host.bitmapImageRepForCachingDisplay(in: host.bounds))
+            host.cacheDisplay(in: host.bounds, to: rep)
+            return rep
+        }
+    }
+
+    /// `view` laid out as `render` lays it out, but never drawn: every view body in `size` runs (what a test that
+    /// reads the rendered rows needs) at a fraction of the cost of drawing it.
+    static func layOut(_ view: some View, _ appearance: ChromeAppearance = .light, size: CGSize) {
+        inWindow(hosting(view, appearance, size: size)) {}
     }
 
     /// An alert with `title`, `message` and `buttons` (first = default), laid out as AppKit draws it, never shown.
@@ -74,15 +81,22 @@ enum ChromeAppearance: String, CaseIterable, Sendable {
         return canvas
     }
 
-    /// Draws `host` in a borderless window that is never ordered in.
-    private static func cache(_ host: NSView) throws -> NSBitmapImageRep {
+    /// `view` on the window background, at `size` (or its fitting size), in `appearance`, not yet in a window.
+    private static func hosting(_ view: some View, _ appearance: ChromeAppearance, size: CGSize?) -> NSView {
+        let root = view.background(Color(nsColor: .windowBackgroundColor)).overbrightThemeRoot(appearance.theme)
+        let host = NSHostingView(rootView: root)
+        host.appearance = appearance.nsAppearance
+        host.frame = CGRect(origin: .zero, size: size ?? host.fittingSize)
+        return host
+    }
+
+    /// Lays `host` out in a borderless window that is never ordered in, then runs `body` (which may draw it).
+    private static func inWindow<T>(_ host: NSView, _ body: () throws -> T) rethrows -> T {
         let window = NSWindow(contentRect: host.frame, styleMask: [.borderless], backing: .buffered, defer: true)
         window.contentView = host
+        defer { window.contentView = nil }
         host.layoutSubtreeIfNeeded()
-        let rep = try #require(host.bitmapImageRepForCachingDisplay(in: host.bounds))
-        host.cacheDisplay(in: host.bounds, to: rep)
-        window.contentView = nil
-        return rep
+        return try body()
     }
 
     /// The share of sampled pixels that differ from the top-left one (the background).

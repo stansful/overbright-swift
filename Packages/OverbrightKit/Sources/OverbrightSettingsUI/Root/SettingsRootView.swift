@@ -74,7 +74,8 @@ public struct SettingsRootView: View {
         .overbrightThemeRoot()
     }
 
-    /// The index for a query: rebuilt only when the displays or the app names it lists change.
+    /// The index for a query: rebuilt when the displays or the app names it lists change (the signature), and when a
+    /// setting or app state the rows read changes (`SearchIndexCache` observes building the rows).
     private func searchIndex(_ panes: [SettingsPane]) -> SettingsSearchIndex {
         let services = session.services
         let signature = [String(services.displays.generation), String(AppIdentityResolver.shared.revision),

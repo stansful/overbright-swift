@@ -51,14 +51,16 @@ import Testing
     }
 
     /// Looks up every app the panes name (the paused apps, the other apps) and waits for the answers: the rows of a
-    /// pending lookup are blank (no name, no icon), which is not what a person sees a moment later.
+    /// pending lookup are blank (no name, no icon), which is not what a person sees a moment later. Waits for these
+    /// apps, not for the resolver to fall idle: `isLookingUp` is process-wide, and any test that renders Automations
+    /// sets it again (the paused-apps list refreshes on appear), while an app once answered never reads pending again.
     static func resolveApps(_ services: OverbrightServices) async -> [String] {
         let resolver = AppIdentityResolver.shared
         let ids = services.settings[AutomationSettings.pausedApps].map(\.bundleID)
             + services.signals.snapshot.conflicts.compactMap(\.bundleID)
-        for id in ids { _ = resolver.identity(of: id) }
-        _ = await eventually { !resolver.isLookingUp }
-        return ids.filter { resolver.identity(of: $0).isPending }
+        func pending() -> [String] { ids.filter { resolver.identity(of: $0).isPending } }   // the first call looks up
+        _ = await eventually { pending().isEmpty }
+        return pending()
     }
 
     @Test(arguments: ChromeAppearance.allCases)

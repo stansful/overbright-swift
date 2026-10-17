@@ -54,9 +54,12 @@ import Testing
 
     /// The views, not only the lists: each value row, changed, renders in its pane with Reset to Default, and the reset
     /// that row carries returns it to its default. A row view that dropped `.settingRow(value)`, or reset another key,
-    /// fails here even though `everyValueRowResets` (the lists) passes.
-    @Test func everyRenderedValueRowCarriesItsReset() throws {
+    /// fails here even though `everyValueRowResets` (the lists) passes. Each pane is laid out, not drawn (the rows'
+    /// bodies run either way), and the test yields between rows: one long stretch on the main actor would keep the
+    /// tests that wait on it (the snapshots' app lookups land there) from seeing anything land.
+    @Test func everyRenderedValueRowCarriesItsReset() async {
         for id in PaneValues.values(PaneValues.richServices()).map(\.info.id) {
+            await Task.yield()
             let services = PaneValues.richServices()
             if PaneValues.values(services).first(where: { $0.info.id == id })?.isDefault() == true {
                 PaneValues.change(id, in: services)                               // else the rich setup changed it
@@ -70,7 +73,7 @@ import Testing
                 .environment(SettingsNavigator(target: value.info.pane.rawValue))
                 .environment(ResetAllController(services: services))
                 .environment(\.settingRowAudit, audit)
-            _ = try ChromeSnapshot.render(pane, .light, size: Self.tallPane)
+            ChromeSnapshot.layOut(pane, size: Self.tallPane)
             guard let reset = audit.resets[id] else {
                 Issue.record("\(id) is shown without Reset to Default")
                 continue
