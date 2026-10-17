@@ -102,3 +102,110 @@ unregister_app() {
     "$lsregister" -u "$app" >/dev/null 2>&1 || true
   done
 }
+
+# The read-only measurement tools of scripts/perf.sh and scripts/soak.sh (ARCHITECTURE.md §8.7, energy work H2), built
+# from source into $1 when missing or when their source changed (no binary in the repository); sets PIDSTAT, SESSION
+# and CONTROL. Nothing here attaches to a process:
+# - pidstat <pid…>: proc_pid_rusage (RUSAGE_INFO_V4) and proc_pidinfo of each process, one line each:
+#   <pid> <epoch_ms> <cpu_ns> <pkg_idle_wkups> <interrupt_wkups> <phys_footprint_B> <resident_B> <threads>
+#   <billed_energy_nJ> <instructions> <cycles> (`<pid> <epoch_ms> NA` for a process that is gone); no argument: epoch ms;
+# - sessionstate: "locked=<0|1> onConsole=<0|1>" from CGSessionCopyCurrentDictionary;
+# - PerfControl.app: scripts/soak-control.swift, the control app run beside Overbright (`--follow <pid>`).
+build_perf_tools() {
+  local dir="$1"
+  mkdir -p "$dir"
+  PIDSTAT="$dir/pidstat"; SESSION="$dir/sessionstate"; CONTROL="$dir/PerfControl.app"
+  _source_into "$dir/pidstat.c" <<'C'
+// pidstat: read-only counters of processes (proc_pid_rusage, proc_pidinfo); never attaches. No arguments: epoch ms.
+//   <pid> <epoch_ms> <cpu_ns> <pkg_idle_wkups> <interrupt_wkups> <phys_footprint_B> <resident_B> <threads>
+//   <billed_energy_nJ> <instructions> <cycles>
+#include <libproc.h>
+#include <mach/mach_time.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/resource.h>
+#include <sys/time.h>
+int main(int argc, char **argv) {
+    mach_timebase_info_data_t tb; mach_timebase_info(&tb);
+    struct timeval tv; gettimeofday(&tv, NULL);
+    long long ms = (long long)tv.tv_sec * 1000 + tv.tv_usec / 1000;
+    if (argc == 1) { printf("%lld\n", ms); return 0; }
+    int status = 0;
+    for (int i = 1; i < argc; i++) {
+        int pid = atoi(argv[i]);
+        struct rusage_info_v4 ru;
+        if (proc_pid_rusage(pid, RUSAGE_INFO_V4, (rusage_info_t *)&ru) != 0) { printf("%d %lld NA\n", pid, ms); status = 1; continue; }
+        struct proc_taskinfo ti; int threads = -1;
+        if (proc_pidinfo(pid, PROC_PIDTASKINFO, 0, &ti, sizeof ti) == (int)sizeof ti) threads = ti.pti_threadnum;
+        unsigned long long cpu = (ru.ri_user_time + ru.ri_system_time) * tb.numer / tb.denom;   // ticks → ns
+        printf("%d %lld %llu %llu %llu %llu %llu %d %llu %llu %llu\n", pid, ms, cpu,
+               (unsigned long long)ru.ri_pkg_idle_wkups, (unsigned long long)ru.ri_interrupt_wkups,
+               (unsigned long long)ru.ri_phys_footprint, (unsigned long long)ru.ri_resident_size, threads,
+               (unsigned long long)ru.ri_billed_energy, (unsigned long long)ru.ri_instructions,
+               (unsigned long long)ru.ri_cycles);
+    }
+    return status;
+}
+C
+  if [[ ! -x "$PIDSTAT" || "$dir/pidstat.c" -nt "$PIDSTAT" ]]; then
+    xcrun clang -O2 -Wall -o "$PIDSTAT" "$dir/pidstat.c" || die "pidstat did not build"
+  fi
+  _source_into "$dir/sessionstate.swift" <<'SWIFT'
+// sessionstate: "locked=<0|1> onConsole=<0|1>" from CGSessionCopyCurrentDictionary (read-only).
+import CoreGraphics
+let d = (CGSessionCopyCurrentDictionary() as? [String: Any]) ?? [:]
+let locked = (d["CGSSessionScreenIsLocked"] as? Bool) ?? false
+let console = (d[kCGSessionOnConsoleKey as String] as? Bool) ?? false
+print("locked=\(locked ? 1 : 0) onConsole=\(console ? 1 : 0)")
+SWIFT
+  if [[ ! -x "$SESSION" || "$dir/sessionstate.swift" -nt "$SESSION" ]]; then
+    xcrun swiftc -O -o "$SESSION" "$dir/sessionstate.swift" || die "sessionstate did not build"
+  fi
+  _source_into "$dir/soak-control.swift" < "$ROOT/scripts/soak-control.swift"
+  if [[ ! -x "$CONTROL/Contents/MacOS/PerfControl" || "$dir/soak-control.swift" -nt "$CONTROL/Contents/MacOS/PerfControl" ]]; then
+    rm -rf "$CONTROL"; mkdir -p "$CONTROL/Contents/MacOS"
+    xcrun swiftc -swift-version 6 -O -o "$CONTROL/Contents/MacOS/PerfControl" "$dir/soak-control.swift" \
+      || die "the control did not build"
+    cat > "$CONTROL/Contents/Info.plist" <<'PLIST'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleExecutable</key><string>PerfControl</string>
+  <key>CFBundleIdentifier</key><string>app.overbright.perf-control</string>
+  <key>CFBundleName</key><string>PerfControl</string>
+  <key>CFBundlePackageType</key><string>APPL</string>
+  <key>LSUIElement</key><true/>
+</dict>
+</plist>
+PLIST
+    codesign -s - --force "$CONTROL" >/dev/null 2>&1 || die "the control could not be signed"
+  fi
+}
+
+# Writes standard input to $1 only when it differs from what is there, so a tool is rebuilt when its source changed.
+_source_into() {
+  local tmp
+  tmp="$(mktemp)"
+  cat > "$tmp"
+  if cmp -s "$tmp" "$1"; then rm -f "$tmp"; else mv "$tmp" "$1"; fi
+}
+
+# ARCHITECTURE.md §8.5: nothing a QA run does writes the app's own preferences domain. perf.sh and soak.sh export it
+# before and after (read-only: `defaults export`; a domain that does not exist exports as an empty dictionary) and fail
+# when it changed. They never delete or rewrite it: a key a run left there stays until its owner removes it.
+APP_DOMAIN="app.overbright.Overbright"
+app_domain_export() {   # <file>
+  defaults export "$APP_DOMAIN" - > "$1" 2>/dev/null || : > "$1"
+}
+# 0 when the domain still reads as in <file>; otherwise prints what changed during <label> and returns 1.
+app_domain_unchanged() {   # <file> <label>
+  local now
+  now="$(mktemp)"
+  app_domain_export "$now"
+  if cmp -s "$1" "$now"; then rm -f "$now"; return 0; fi
+  warn "the app's own preferences domain $APP_DOMAIN changed during $2 (ARCHITECTURE.md §8.5; another QA run on this Mac may have written it; nothing was deleted):"
+  diff "$1" "$now" >&2 || true
+  rm -f "$now"
+  return 1
+}

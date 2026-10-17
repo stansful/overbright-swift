@@ -23,7 +23,7 @@ smoke:           ## Run build/Overbright.app --diagnostics: bundles + translatio
 qa-matrix:       ## Debug app under --qa-simulate: every fixture's scenario, symbol/banner/chips checked; Welcome writes nothing (after make debug)
 	@scripts/qa-matrix.sh
 
-soak:            ## Debug app under --qa-simulate for MINUTES (30, at least 17): footprint growth per cycle; no own idle wake-up in the final off phase, none beating periodically after launch (after make debug)
+soak:            ## Debug app under --qa-simulate for MINUTES (30, at least 17): footprint growth per cycle and after the panel; own interrupt wake-ups neither periodic nor above 0.05/s while off; the app's domain unchanged (after make debug)
 	@scripts/soak.sh
 
 perf:            ## Energy phases of a Debug app under --qa-simulate -> build/logs/perf/<variant>/ (RUNS="ui events", APP=, VARIANT=; after make debug)

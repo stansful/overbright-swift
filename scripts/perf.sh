@@ -42,26 +42,18 @@
 #   scripts/perf.sh summarize build/logs/perf/Overbright   # tables + hot stacks again (perf.md in that folder)
 #   scripts/perf.sh compare <dirA> <dirB>                  # per phase: own CPU, own wake-ups, footprint, busy split
 #
+# The app's own preferences domain must read the same after each run as before (ARCHITECTURE.md §8.5; lib.sh
+# `app_domain_unchanged`, read-only): a run that changed it is reported at once and fails perf.sh at the end.
+#
 # Env: APP (a Debug build: it must carry get-task-allow), VARIANT (label), OUT, PHASE (s per steady phase, 90),
 # MEASURE (60), SETTLE (5), SAMPLE (10; 0 = no sample and no sampled tails), EVENTS (1500), PANEL_CYCLES (10),
 # TIMELINE (300). Fakes only: no real display is touched (D24); nothing attaches a debugger. Never synthesizes input.
 # Run each command on its own (CONTRIBUTING: `a && b` chains can abort silently).
 set -euo pipefail
 
-HERE="$(cd "$(dirname "$0")" && pwd)"
-if [[ -f "$HERE/lib.sh" ]]; then
-  # shellcheck source=/dev/null
-  source "$HERE/lib.sh"
-  ensure_xcode
-else
-  ROOT="${ROOT:?set ROOT to an Overbright checkout (scripts/perf.sh finds it by itself)}"
-  BUILD_DIR="$ROOT/build"
-  APP_NAME="Overbright"
-  log()  { printf '\033[1;34m==>\033[0m %s\n' "$*" >&2; }
-  warn() { printf '\033[1;33mwarning:\033[0m %s\n' "$*" >&2; }
-  die()  { printf '\033[1;31merror:\033[0m %s\n' "$*" >&2; exit 1; }
-  export DEVELOPER_DIR="${DEVELOPER_DIR:-/Applications/Xcode.app/Contents/Developer}"
-fi
+# shellcheck source=/dev/null
+source "$(dirname "$0")/lib.sh"
+ensure_xcode
 
 APP="${APP:-$BUILD_DIR/$APP_NAME.app}"
 VARIANT="${VARIANT:-$(basename "$APP" .app)}"
@@ -523,76 +515,8 @@ codesign -d --entitlements - --xml "$APP" 2>/dev/null | grep -q "com.apple.secur
   || die "$APP is a Release build, which refuses --qa-simulate; use a Debug build"
 (( PHASE >= SETTLE + MEASURE + SAMPLE + 8 )) || die "PHASE ($PHASE) must cover SETTLE + MEASURE + SAMPLE + 8 s"
 
-# Tools: built from source into $TOOLS (no binary in the repository).
-mkdir -p "$TOOLS"
-PIDSTAT="$TOOLS/pidstat"
-SESSION="$TOOLS/sessionstate"
-CONTROL="$TOOLS/PerfControl.app"
-if [[ ! -x "$PIDSTAT" ]]; then
-  cat > "$TOOLS/pidstat.c" <<'C'
-// pidstat: read-only counters of processes (proc_pid_rusage, proc_pidinfo); never attaches. No arguments: epoch ms.
-//   <pid> <epoch_ms> <cpu_ns> <pkg_idle_wkups> <interrupt_wkups> <phys_footprint_B> <resident_B> <threads>
-//   <billed_energy_nJ> <instructions> <cycles>
-#include <libproc.h>
-#include <mach/mach_time.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/resource.h>
-#include <sys/time.h>
-int main(int argc, char **argv) {
-    mach_timebase_info_data_t tb; mach_timebase_info(&tb);
-    struct timeval tv; gettimeofday(&tv, NULL);
-    long long ms = (long long)tv.tv_sec * 1000 + tv.tv_usec / 1000;
-    if (argc == 1) { printf("%lld\n", ms); return 0; }
-    int status = 0;
-    for (int i = 1; i < argc; i++) {
-        int pid = atoi(argv[i]);
-        struct rusage_info_v4 ru;
-        if (proc_pid_rusage(pid, RUSAGE_INFO_V4, (rusage_info_t *)&ru) != 0) { printf("%d %lld NA\n", pid, ms); status = 1; continue; }
-        struct proc_taskinfo ti; int threads = -1;
-        if (proc_pidinfo(pid, PROC_PIDTASKINFO, 0, &ti, sizeof ti) == (int)sizeof ti) threads = ti.pti_threadnum;
-        unsigned long long cpu = (ru.ri_user_time + ru.ri_system_time) * tb.numer / tb.denom;   // ticks → ns
-        printf("%d %lld %llu %llu %llu %llu %llu %d %llu %llu %llu\n", pid, ms, cpu,
-               (unsigned long long)ru.ri_pkg_idle_wkups, (unsigned long long)ru.ri_interrupt_wkups,
-               (unsigned long long)ru.ri_phys_footprint, (unsigned long long)ru.ri_resident_size, threads,
-               (unsigned long long)ru.ri_billed_energy, (unsigned long long)ru.ri_instructions,
-               (unsigned long long)ru.ri_cycles);
-    }
-    return status;
-}
-C
-  xcrun clang -O2 -Wall -o "$PIDSTAT" "$TOOLS/pidstat.c" || die "pidstat did not build"
-fi
-if [[ ! -x "$SESSION" ]]; then
-  cat > "$TOOLS/sessionstate.swift" <<'SWIFT'
-// sessionstate: "locked=<0|1> onConsole=<0|1>" from CGSessionCopyCurrentDictionary (read-only).
-import CoreGraphics
-let d = (CGSessionCopyCurrentDictionary() as? [String: Any]) ?? [:]
-let locked = (d["CGSSessionScreenIsLocked"] as? Bool) ?? false
-let console = (d[kCGSessionOnConsoleKey as String] as? Bool) ?? false
-print("locked=\(locked ? 1 : 0) onConsole=\(console ? 1 : 0)")
-SWIFT
-  xcrun swiftc -O -o "$SESSION" "$TOOLS/sessionstate.swift" || die "sessionstate did not build"
-fi
-if [[ ! -x "$CONTROL/Contents/MacOS/PerfControl" ]]; then
-  rm -rf "$CONTROL"; mkdir -p "$CONTROL/Contents/MacOS"
-  xcrun swiftc -swift-version 6 -O -o "$CONTROL/Contents/MacOS/PerfControl" "$ROOT/scripts/soak-control.swift" \
-    || die "the control did not build"
-  cat > "$CONTROL/Contents/Info.plist" <<'PLIST'
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-  <key>CFBundleExecutable</key><string>PerfControl</string>
-  <key>CFBundleIdentifier</key><string>app.overbright.perf-control</string>
-  <key>CFBundleName</key><string>PerfControl</string>
-  <key>CFBundlePackageType</key><string>APPL</string>
-  <key>LSUIElement</key><true/>
-</dict>
-</plist>
-PLIST
-  codesign -s - --force "$CONTROL" >/dev/null 2>&1 || die "the control could not be signed"
-fi
+# Tools: built from source into $TOOLS (lib.sh `build_perf_tools`; no binary in the repository).
+build_perf_tools "$TOOLS"
 
 now_ms() { "$PIDSTAT"; }
 
@@ -719,6 +643,7 @@ run_one() {
   script="$(script_for "$run")"; fixture="$(fixture_for "$run")"; extra="$(extra_args_for "$run")"
   status_file="$RUN_OUT/status.jsonl"
   printf '%s\n' "$script" > "$RUN_OUT/script.txt"
+  app_domain_export "$RUN_OUT/app-domain-before.plist"
   log "perf $VARIANT/$run: $fixture; output in $RUN_OUT"
   printf 'open\t%s\n' "$(now_ms)" > "$RUN_OUT/marks.tsv"
   # shellcheck disable=SC2086
@@ -784,6 +709,7 @@ run_one() {
   kill "$control_pid" 2>/dev/null || true
   defaults delete "$suite" >/dev/null 2>&1 || true
   rm -f "$HOME/Library/Preferences/$suite.plist" "$RUN_OUT"/.done-* "$RUN_OUT/.timeline-end"
+  app_domain_unchanged "$RUN_OUT/app-domain-before.plist" "perf run $run" || domain_changed="$domain_changed $run"
   # Every phase must have run in the simulated wiring: no real table write, no window ordered in (D24).
   if grep -q '"gammaWrites"' "$status_file"; then
     log "  phases: $(grep -c -E '"label":"(start|begin)\.' "$status_file") measured; the fakes' counters: $(tail -1 "$status_file" | sed -E 's/.*("gammaWrites":[0-9]+).*("triggerWindows":[0-9]+).*/\1 \2/')"
@@ -797,6 +723,8 @@ KNOWN_RUNS="launch base ruleoff two ui events panelcycle timeline"
 for run in "${runs[@]}"; do                                        # an unknown run fails before anything starts
   [[ " $KNOWN_RUNS " == *" $run "* ]] || die "unknown run $run ($KNOWN_RUNS)"
 done
+domain_changed=""
 for run in "${runs[@]}"; do run_one "$run"; done
 report summarize "$OUT" > /dev/null
 log "perf $VARIANT done: $OUT/perf.md"
+[[ -z "$domain_changed" ]] || die "the app's own preferences domain changed during:$domain_changed (ARCHITECTURE.md §8.5)"

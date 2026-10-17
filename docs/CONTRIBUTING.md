@@ -85,7 +85,7 @@ make -C <repo> build                               # universal Release → build
 make -C <repo> smoke                               # --diagnostics only: gammaWrites == 0, triggerWindows == 0, …
 SIMULATE=1 make -C <repo> smoke                    # agents: never launches on the real ports (Debug: --qa-simulate)
 make -C <repo> qa-matrix                           # after `make debug`: every fixture's scenario, Welcome writes nothing
-make -C <repo> soak                                # after `make debug`: 30 minutes under --qa-simulate (MINUTES ≥ 17); no own wake-up in the last off phase
+make -C <repo> soak                                # after `make debug`: 30 minutes under --qa-simulate (MINUTES ≥ 17); no own periodic wake-up while off
 make -C <repo> perf RUNS=ui                        # after `make debug`: energy phases under --qa-simulate → build/logs/perf/<variant>/perf.md
 make -C <repo> perf-compare A=<dir> B=<dir>        # two perf folders side by side: own CPU, own wake-ups, footprint, §17 verdicts
 make -C <repo> run                                 # Debug build, simulated displays, a dev settings suite
@@ -225,6 +225,9 @@ or the panel inside it (`/usr/bin/log show --last 30m --predicate 'subsystem == 
 closes: outsideClick", AppKit `trackMouse`), and run it again. `PHASE`, `MEASURE`, `SETTLE` and `SAMPLE` change the
 windows (`SAMPLE=0` skips `sample`).
 
+**The app's own domain.** perf.sh and the soak export `app.overbright.Overbright` before and after (read-only)
+and fail when a QA run changed it (ARCHITECTURE.md §8.5); they never delete a key there.
+
 **Safety.** perf.sh refuses a Release build, runs only the simulated ports (D24), never posts input and never attaches
 a debugger: `sample`, `footprint` and `vmmap` read the process. Do not attach `lldb -p` or `xctrace --attach` to a QA
 run either: lldb asks for a password on screen and makes `footprint` and `sample` hang.
@@ -237,7 +240,8 @@ point the system may call off the main thread is explicitly nonisolated (a `noni
 APIs trap at runtime. Leave the main actor with `@concurrent` functions. No repeating timers (a stored `Task` with
 `TimeSource.sleep`), no `DispatchQueue.main.sync`, no semaphores on main, no Combine.
 
-**Energy.** Zero work while off (the soak fails on any idle wake-up of Overbright's own in its last off phase);
+**Energy.** Zero work while off (the soak fails on a periodic wake-up of Overbright's own while off, and on more
+than 0.05 own interrupt wake-ups/s in its last off phase);
 boost-only sources run only while a display is scaled or dimmed, and all but the schedule boundary also stop while
 the screen is locked, asleep or off the console.
 
