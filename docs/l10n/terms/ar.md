@@ -106,3 +106,4 @@ Register and style, following macOS 27 Arabic:
 | Off / On (values) | إيقاف / تشغيل; VoiceOver states متوقف / مشغّل |  |
 | OK (button) | موافق | Apple’s macOS OK (AppKit, loginwindow); «حسنًا» is iOS |
 | sleep (the Mac’s) | الإسبات | Apple’s Sleep (loginwindow «إسبات»); never «السكون» |
+| Space (the space bar in key caps) | مسافة | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is مفتاح المسافة |

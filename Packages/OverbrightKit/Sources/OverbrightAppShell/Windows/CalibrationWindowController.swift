@@ -9,11 +9,18 @@
 // the session at once and closes the window; covering the window ends the session too (occlusion), as do the engine's
 // own reasons (lock, headroom drop, the minute's limit). While the window is on screen it is one of Overbright's own
 // EDR surfaces (`OwnEDRSurfaces`), so the engine never mistakes it for idle headroom. One calibration at a time: asking
-// for another display while one runs brings the running one forward. A display without an `NSScreen` of its own (a
-// simulated one under `--qa-simulate`) gets an ordinary titled window on the main screen instead.
+// for another display while one runs brings the running one forward.
+//
+// Where the window goes is decided from the services, never guessed from the screen list (WP14): simulated displays
+// (`--qa-simulate`, whose directory is Core's `FakeDisplayDirectory`) carry fixture IDs 1–6 that can equal a real
+// screen's number, so they always get an ordinary titled window on the main screen and are never matched to an
+// `NSScreen`. A real display without an `NSScreen` of its own (a mirror member, one that just went away) begins no
+// session: the titled window shows "This display can't be calibrated right now", so nothing brightens a display whose
+// patches would be on another screen.
 import AppKit
 import OverbrightBoost
 import OverbrightCore
+import OverbrightDesign
 import OverbrightSettingsUI
 import os
 import SwiftUI
@@ -22,7 +29,21 @@ private let log = Log.logger(.app)
 
 /// Owns the calibration window.
 final class CalibrationWindowController: NSObject, NSWindowDelegate {
+    /// Where the window of one display goes.
+    enum Placement: Equatable {
+        /// A simulated display: an ordinary titled window on the main screen, with a session.
+        case simulated
+        /// A real display: borderless over its screen, with a session.
+        case screen(NSScreen)
+        /// A real display without a screen of its own: a titled window that says so, no session.
+        case noScreen
+    }
+
     private let services: OverbrightServices
+    /// The displays are simulated (`--qa-simulate`, previews, tests): never matched to a real screen.
+    private let isSimulated: Bool
+    /// The `NSScreen` of a real display (tests replace it).
+    private let screenLookup: @MainActor (DisplayFacts) -> NSScreen?
     /// Only while a calibration runs.
     private(set) var window: CalibrationWindow?
     /// The steps of the running calibration.
@@ -33,12 +54,16 @@ final class CalibrationWindowController: NSObject, NSWindowDelegate {
 
     /// The window's level: just below the screen saver, above every app and the menu bar.
     static let level = NSWindow.Level(rawValue: NSWindow.Level.screenSaver.rawValue - 1)
-    /// The window of a display without its own screen (simulated).
+    /// The titled window of a simulated display, or of a display without its own screen.
     static let fallbackSize = CGSize(width: 960, height: 640)
 
-    /// A controller for the app's services.
-    init(services: OverbrightServices) {
+    /// A controller for the app's services. Whether the displays are simulated is read from them (a `FakeDisplayDirectory`
+    /// is what `--qa-simulate` wires) unless `isSimulated` says so; `screen` finds a real display's `NSScreen`.
+    init(services: OverbrightServices, isSimulated: Bool? = nil,
+         screen: @escaping @MainActor (DisplayFacts) -> NSScreen? = CalibrationWindowController.screen(for:)) {
         self.services = services
+        self.isSimulated = isSimulated ?? (services.displays is FakeDisplayDirectory)
+        screenLookup = screen
         super.init()
     }
 
@@ -53,8 +78,16 @@ final class CalibrationWindowController: NSObject, NSWindowDelegate {
         let window = preparedWindow(for: display)
         NSApp.activate()
         window.makeKeyAndOrderFront(nil)
-        surface = services.ownEDRSurfaces.hold(display)
+        if model?.session != nil { surface = services.ownEDRSurfaces.hold(display) }
         log.info("calibration window shown (session \(self.model?.session != nil, privacy: .public))")
+    }
+
+    /// Where the window of `facts`' display goes (nil facts: the display is not online, like a real one without a
+    /// screen). A simulated display is never looked up among the real screens.
+    func placement(for facts: DisplayFacts?) -> Placement {
+        if isSimulated { return .simulated }
+        guard let facts, let screen = screenLookup(facts) else { return .noScreen }
+        return .screen(screen)
     }
 
     /// The window for `display`, with its model and session, not yet ordered in. `show(display:)` brings it forward;
@@ -62,16 +95,23 @@ final class CalibrationWindowController: NSObject, NSWindowDelegate {
     func preparedWindow(for display: DisplayKey) -> CalibrationWindow {
         let facts = services.displays.facts(for: display)
         let name = facts?.name ?? ""
-        let model = CalibrationModel(display: display, name: name, services: services)
+        let placement = placement(for: facts)
+        let model: CalibrationModel
+        if placement == .noScreen {
+            model = CalibrationModel(display: display, name: name, services: services) { nil }   // "can't be calibrated"
+            log.info("calibration not started: the display has no screen of its own")
+        } else {
+            model = CalibrationModel(display: display, name: name, services: services)
+        }
         model.onClose = { [weak self] in self?.window?.close() }
-        let screen = facts.flatMap(Self.screen(for:))
+        let screen: NSScreen? = if case .screen(let screen) = placement { screen } else { nil }
         let window = CalibrationWindow(contentRect: CGRect(origin: .zero, size: screen?.frame.size ?? Self.fallbackSize),
                                        styleMask: screen == nil ? [.titled, .closable] : [.borderless],
                                        backing: .buffered, defer: true)
         window.isReleasedWhenClosed = false
         window.backgroundColor = .black
         window.isOpaque = true
-        window.title = String(localized: "Calibrate \(name)", table: "Calibration", bundle: .module,
+        window.title = String(localized: "Calibrate \(name.overbrightIsolated)", table: "Calibration", bundle: .module,
                               comment: "Calibration: window title (VoiceOver and the Window menu); the argument is the display’s name")
         window.contentView = NSHostingView(rootView: CalibrationView(model: model))
         window.onCancel = { [weak model] in model?.cancel() }
@@ -94,7 +134,7 @@ final class CalibrationWindowController: NSObject, NSWindowDelegate {
         return window
     }
 
-    /// The `NSScreen` of `facts`' display, nil when it has none (a mirror member, a simulated display).
+    /// The `NSScreen` of a real display, nil when it has none (a mirror member).
     static func screen(for facts: DisplayFacts) -> NSScreen? {
         NSScreen.screens.first { screen in
             (screen.deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as? NSNumber)?.uint32Value == facts.ref.id

@@ -116,3 +116,4 @@ Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its
 | Undo | Geri al |  |
 | Check for Updates | Güncellemeleri Denetle | update check = güncelleme denetimi |
 | Step X of Y (VoiceOver) | Adım %1$lld / %2$lld | a spaced slash, as Apple’s VoiceOver (Sayfa %1$d / %2$d); “3/5” is read as a fraction |
+| Space (the space bar in key caps) | Boşluk | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is Boşluk çubuğu |

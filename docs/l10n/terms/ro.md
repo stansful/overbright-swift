@@ -115,6 +115,7 @@ Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its
 | Symbol | Simbol |  |
 | Login Items | Lansare la login | Apple's pane name ("Deschideți „Lansare la login”…") |
 | Launch / Open at login | Deschidere la login | Apple "Deschideți la login" |
-| Esc / Return / Space / Delete / Command / Option | Esc / Retur / Spațiu / Delete / Comandă / Opțiune | Apple key names; key caps stay symbols |
+| Esc / Return / Space / Delete / Command / Option | Esc / Retur / bara de spațiu / Delete / Comandă / Opțiune | Apple key names in running text (AppKit’s “Space bar” is “Bara de spațiu”); key caps stay symbols, and the space bar’s key cap is AppKit’s “Space” (row below) |
 | Undo | Infirmați (button) · anula (running text) | Apple's Edit-menu word ("Infirmați %@") on the Reset All banner; sentences say "Puteți anula acțiunea…", as Apple ro ("pentru a anula modificările") |
 | This action cannot be undone. | Această acțiune este ireversibilă. | Apple ro |
+| Space (the space bar in key caps) | Space | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is Bara de spațiu |

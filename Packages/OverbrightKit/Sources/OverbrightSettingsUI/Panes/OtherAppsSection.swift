@@ -24,6 +24,13 @@ struct OtherAppsSection: View {
         app.severity == .gammaWriter || app.severity == .conditional
     }
 
+    /// The VoiceOver label of an app's Always continue switch: the switch's words with the app's name (bidi-isolated),
+    /// so a list of switches does not read "Always continue" again and again with nothing to tell them apart.
+    static func alwaysContinueLabel(_ app: ConflictingApp) -> String {
+        String(localized: "Always continue next to \(app.displayName.overbrightIsolated)", bundle: .module,
+               comment: "VoiceOver: label of the Always continue switch of one app in Settings ▸ Advanced ▸ Other apps; the argument is the app’s name")
+    }
+
     var body: some View {
         let apps = Self.apps(services.signals.snapshot.conflicts)
         Section {
@@ -75,6 +82,7 @@ private struct OtherAppRow: View {
                 }
                 .toggleStyle(.switch)
                 .controlSize(.small)
+                .accessibilityLabel(Text(verbatim: OtherAppsSection.alwaysContinueLabel(app)))
             }
         }
         .padding(.leading, Space.xl)

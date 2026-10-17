@@ -6,6 +6,7 @@ import Foundation
 import OverbrightCore
 import OverbrightDesign
 import OverbrightPolicy
+import SwiftUI
 import Testing
 @testable import OverbrightSettingsUI
 
@@ -50,6 +51,49 @@ import Testing
             #expect(value.isDefault(), "\(id) not back at its default after Reset to Default")
         }
     }
+
+    /// The views, not only the lists: each value row, changed, renders in its pane with Reset to Default, and the reset
+    /// that row carries returns it to its default. A row view that dropped `.settingRow(value)`, or reset another key,
+    /// fails here even though `everyValueRowResets` (the lists) passes. Each pane is laid out, not drawn (the rows'
+    /// bodies run either way), and the test yields between rows: one long stretch on the main actor would keep the
+    /// tests that wait on it (the snapshots' app lookups land there) from seeing anything land.
+    @Test func everyRenderedValueRowCarriesItsReset() async {
+        for id in PaneValues.values(PaneValues.richServices()).map(\.info.id) {
+            await Task.yield()
+            let services = PaneValues.richServices()
+            if PaneValues.values(services).first(where: { $0.info.id == id })?.isDefault() == true {
+                PaneValues.change(id, in: services)                               // else the rich setup changed it
+            }
+            guard let value = PaneValues.values(services).first(where: { $0.info.id == id }) else {
+                Issue.record("\(id) disappeared after its change")
+                continue
+            }
+            let audit = SettingRowAudit()
+            let pane = SettingsPaneCatalog.view(for: value.info.pane, services: services)
+                .environment(SettingsNavigator(target: value.info.pane.rawValue))
+                .environment(ResetAllController(services: services))
+                .environment(\.settingRowAudit, audit)
+            ChromeSnapshot.layOut(pane, size: Self.tallPane)
+            guard let reset = audit.resets[id] else {
+                Issue.record("\(id) is shown without Reset to Default")
+                continue
+            }
+            #expect(!value.isDefault(), "\(id) did not change")
+            reset()
+            #expect(value.isDefault(), "\(id): the row's own Reset to Default left it changed")
+        }
+    }
+
+    /// Fill Light's miniature never measures a real display for a simulated one: fixture IDs 1–6 are real displays'
+    /// numbers on many Macs (WP14).
+    @Test func theFillLightPreviewNeverMeasuresARealDisplayForASimulatedOne() throws {
+        let builtIn = try #require(DisplayFixture.builtinXDRLidOpen.displays.first?.facts)
+        #expect(FillLightPane.width(of: builtIn, simulated: true) == FillLightPane.fallbackDisplayWidth)
+        #expect(FillLightPane.width(of: nil, simulated: false) == FillLightPane.fallbackDisplayWidth)
+    }
+
+    /// Tall enough that a pane renders every row (the rich setup's Displays pane is the longest).
+    private static let tallPane = CGSize(width: PaneSnapshotTests.paneSize.width, height: 4000)
 
     // MARK: Which rows show
 

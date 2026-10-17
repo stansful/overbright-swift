@@ -111,3 +111,4 @@ Reviewed by an independent review pass; the rows above include its changes.
 | Login Items | 登录项 | Apple |
 | Undo | 撤销 | Apple |
 | Try again / Retry | 重试 | Apple |
+| Space (the space bar in key caps) | 空格键 | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is 空格键 |

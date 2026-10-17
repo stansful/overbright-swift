@@ -109,3 +109,4 @@ Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its
 | Remove (app from a list) | Hapus … dari daftar | never a bare "Hapus app" |
 | App not installed | App tidak terinstal |  |
 | Symbol | Simbol |  |
+| Space (the space bar in key caps) | Spasi | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is Bar spasi |

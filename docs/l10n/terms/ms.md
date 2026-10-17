@@ -116,3 +116,4 @@ Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its
 | Check for Updates | Semak Kemas Kini | Apple |
 | Login Items | Item Log Masuk | Apple |
 | Launch at login / Open at login | Buka semasa log masuk |  |
+| Space (the space bar in key caps) | Space | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is Bar Space |

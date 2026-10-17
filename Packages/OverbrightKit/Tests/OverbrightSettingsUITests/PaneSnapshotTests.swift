@@ -1,7 +1,8 @@
 // OverbrightSettingsUITests/PaneSnapshotTests.swift — every pane, the calibration window's steps and the self-test
 // sheet rendered in Light, Dark and Increase Contrast (ARCHITECTURE.md §9.1 UI row, §10.13 "snapshots of every pane"):
 // in-process, never ordered in, each checked for ink; PNGs land in `$OVERBRIGHT_SNAPSHOT_DIR/SettingsUI/` when set.
-// The panes show the built-in display and the OLED external as a running engine classifies them, with the schedule on.
+// The panes show the built-in display and the OLED external as a running engine classifies them, with the schedule on,
+// and the apps they list are looked up first, so the Automations snapshot shows names and icons, not pending rows.
 import AppKit
 import OverbrightCore
 import OverbrightDesign
@@ -15,9 +16,8 @@ import Testing
     static let paneSize = CGSize(width: SettingsMetrics.windowSize.width - SettingsMetrics.sidebarWidth.ideal, height: 1300)
 
     /// Every pane with the environment the Settings window gives it.
-    static func panes() -> [(String, AnyView)] {
-        let services = PaneValues.richServices()
-        return SettingsPaneID.allCases.map { pane in
+    static func panes(_ services: OverbrightServices = PaneValues.richServices()) -> [(String, AnyView)] {
+        SettingsPaneID.allCases.map { pane in
             let view = SettingsPaneCatalog.view(for: pane, services: services)
                 .environment(SettingsNavigator(target: pane.rawValue))
                 .environment(ResetAllController(services: services))
@@ -39,22 +39,74 @@ import Testing
         let paused = model { model, session in
             model.start(); model.answerBrighter(true); model.startSweep(); session.isSweepPausedAtLimit = true
         }
+        let colorimeter = model { model, _ in model.showsColorimeter = true; model.colorimeterNits = 9000 }
         let results = model { model, session in
             session.record = FakeCalibrationSession.record(.encoded)
             model.start(); model.answerBrighter(false); model.keepColorTable()
         }
-        return [("calibration-checklist", checklist), ("calibration-comparison", comparison),
+        return [("calibration-checklist", checklist), ("calibration-colorimeter-range", colorimeter),
+                ("calibration-comparison", comparison),
                 ("calibration-sweep-paused", paused), ("calibration-results", results)]
             .map { ($0.0, AnyView(CalibrationView(model: $0.1))) }
     }
 
+    /// Looks up every app the panes name (the paused apps, the other apps) and waits for the answers: the rows of a
+    /// pending lookup are blank (no name, no icon), which is not what a person sees a moment later. Waits for these
+    /// apps, not for the resolver to fall idle: `isLookingUp` is process-wide, and any test that renders Automations
+    /// sets it again (the paused-apps list refreshes on appear), while an app once answered never reads pending again.
+    static func resolveApps(_ services: OverbrightServices) async -> [String] {
+        let resolver = AppIdentityResolver.shared
+        let ids = services.settings[AutomationSettings.pausedApps].map(\.bundleID)
+            + services.signals.snapshot.conflicts.compactMap(\.bundleID)
+        func pending() -> [String] { ids.filter { resolver.identity(of: $0).isPending } }   // the first call looks up
+        _ = await eventually { pending().isEmpty }
+        return pending()
+    }
+
     @Test(arguments: ChromeAppearance.allCases)
-    func everyPaneRenders(_ appearance: ChromeAppearance) throws {
-        for (name, view) in Self.panes() {
+    func everyPaneRenders(_ appearance: ChromeAppearance) async throws {
+        let services = PaneValues.richServices()
+        let pending = await Self.resolveApps(services)
+        #expect(pending.isEmpty, "apps still looked up when the panes render: \(pending)")
+        for (name, view) in Self.panes(services) {
             let rep = try ChromeSnapshot.render(view, appearance, size: Self.paneSize)
             #expect(ChromeSnapshot.inkFraction(rep) > 0.01, "\(name) \(appearance.rawValue): nothing drawn")
             try ChromeSnapshot.write(rep, name, appearance)
         }
+    }
+
+    /// Fill Light's three sliders share one track (DESIGN.md §7.2, §7.7): the same width at the same place, with Cool
+    /// and Warm under the warmth track rather than beside it (where they made it about 60 pt shorter). Read from the
+    /// rendered pane through the tracks' layout bounds.
+    @Test func fillLightSlidersShareOneTrack() throws {
+        final class Frames { var byTitle: [String: CGRect] = [:] }
+        let frames = Frames()
+        let services = OverbrightServices.preview()
+        let pane = SettingsPaneCatalog.view(for: .fillLight, services: services)
+            .environment(SettingsNavigator(target: "fillLight"))
+            .environment(ResetAllController(services: services))
+            .overlayPreferenceValue(SliderTrackBounds.self) { anchors in
+                GeometryReader { proxy in
+                    let _ = frames.byTitle = anchors.mapValues { proxy[$0] }
+                    Color.clear
+                }
+            }
+        _ = try ChromeSnapshot.render(pane, .light, size: Self.paneSize)
+        let tracks = [FillLightRows.width, FillLightRows.warmth, FillLightRows.brightness].compactMap { frames.byTitle[$0.title] }
+        try #require(tracks.count == 3, "tracks found: \(frames.byTitle.keys.sorted())")
+        #expect(Set(tracks.map { $0.width.rounded() }).count == 1, "track widths \(tracks.map(\.width))")
+        #expect(Set(tracks.map { $0.minX.rounded() }).count == 1, "track starts \(tracks.map(\.minX))")
+        #expect(tracks.allSatisfy { $0.width >= SettingsMetrics.sliderWidth.min })
+    }
+
+    /// The sliders settle on whole steps in the binding (they draw no tick marks); the default comes back exactly.
+    @Test func slidersSettleOnWholeSteps() {
+        #expect(SliderRow.snapped(49.9, step: FillLightPane.widthStep, in: FillLightPane.widthRange) == 48)
+        #expect(SliderRow.snapped(200, step: FillLightPane.widthStep, in: FillLightPane.widthRange) == 120)
+        #expect(SliderRow.snapped(0.79, step: FillLightPane.brightnessStep, in: FillLightPane.brightnessRange)
+                == FillLightSettings.brightness.defaultValue)                          // 0.8 exactly: no changed dot
+        #expect(SliderRow.snapped(0.01, step: FillLightPane.brightnessStep, in: FillLightPane.brightnessRange) == 0.2)
+        #expect(FillLightWarmthRow.snapped(0.401) == FillLightSettings.warmth.defaultValue)
     }
 
     @Test(arguments: ChromeAppearance.allCases)

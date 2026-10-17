@@ -19,7 +19,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mezerník"
+            "value" : "mezerník"
           }
         },
         "da" : {
@@ -91,7 +91,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Spazio"
+            "value" : "Barra spaziatrice"
           }
         },
         "ja" : {
@@ -103,7 +103,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "스페이스 바"
+            "value" : "스페이스"
           }
         },
         "ms" : {
@@ -145,7 +145,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Spațiu"
+            "value" : "Space"
           }
         },
         "ru" : {

@@ -103,3 +103,4 @@ needed, adjectives in common gender (“Overbright är öppen”).
 | App not installed | Appen är inte installerad |  |
 | Preview | Förhandsvisning |  |
 | Done | Klar | Apple’s “Klar” button |
+| Space (the space bar in key caps) | Mellanslag | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is Mellanslag |

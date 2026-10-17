@@ -117,3 +117,4 @@ System Settings and Shortcuts loctables):
 | Login Items | Автозапуск | Apple |
 | pre-release | тестова версія | “Включно з тестовими версіями”; “попередня версія” means *previous* |
 | When Overbright quits | До завершення роботи Overbright | Apple: “до завершення її роботи” |
+| Space (the space bar in key caps) | Пробіл | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is Пробіл |

@@ -32,7 +32,7 @@ Where Apple has a word for a concept, Overbright uses it; Overbright's own conce
 - Gender: **Overbright** masculine ("Overbright è aperto / aggiornato"); **app** feminine, invariable ("l’app", "le app");
   **macOS** masculine ("macOS non ha aggiunto").
 - Plurals: one / many / other; many (millions) always has the same wording as other.
-- Key names as Apple Italian: Opzione, Comando, A capo, Spazio, Esc, Elimina.
+- Key names as Apple Italian: Opzione, Comando, A capo, barra spaziatrice, Esc, Elimina (the space bar’s key cap is AppKit’s “Barra spaziatrice” too, see the table).
 
 ## Apple names (`apple-terms.py it` on macOS 27.0.1 — never paraphrased)
 
@@ -121,3 +121,4 @@ Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its
 | Cancel · Undo | Annulla · Annulla | Apple Italian uses one word for both |
 | Launch / Open at login | Apri al login | Apple's Dock menu wording; pane "Elementi login" |
 | Check for updates | Verifica aggiornamenti |  |
+| Space (the space bar in key caps) | Barra spaziatrice | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is Barra spaziatrice |

@@ -5453,6 +5453,215 @@
         }
       }
     },
+    "Always continue next to %@" : {
+      "comment" : "VoiceOver: label of the Always continue switch of one app in Settings ▸ Advanced ▸ Other apps; the argument is the app’s name",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المتابعة دائمًا إلى جانب \"%@\""
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continua sempre al costat de %@"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vždy pokračovat souběžně s aplikací %@"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fortsæt altid sammen med %@"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Immer fortfahren neben „%@“"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Να συνεχίζει πάντα παράλληλα με «%@»"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuar siempre junto a “%@”"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jatka aina sovelluksen %@ rinnalla"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toujours continuer en même temps que « %@ »"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "תמיד להמשיך לצד ״%@״"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“%@” के साथ हमेशा जारी रखें"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uvijek nastavi uz “%@”"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Folytatás mindig a(z) %@ mellett"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selalu lanjutkan bersama %@"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continua sempre insieme a “%@”"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“%@”と同時に常に続ける"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "‘%@’와(과) 함께 항상 계속"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sentiasa teruskan bersama %@"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fortsett alltid sammen med %@"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ga altijd door naast %@"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zawsze kontynuuj razem z aplikacją %@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sempre continuar junto com “%@”"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuar sempre ao mesmo tempo que %@"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuare întotdeauna alături de „%@”"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Всегда продолжать одновременно с «%@»"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vždy pokračovať súčasne s apkou %@"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vedno nadaljuj hkrati z aplikacijo %@"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fortsätt alltid samtidigt med %@"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ดำเนินการต่อเสมอพร้อมกับ “%@”"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ uygulamasıyla birlikte her zaman sürdür"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Завжди продовжувати одночасно з «%@»"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Luôn tiếp tục cùng lúc với %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "与“%@”同时运行时始终继续"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "與「%@」同時運作時永遠繼續"
+          }
+        }
+      }
+    },
     "Another app already uses this shortcut." : {
       "comment" : "Settings ▸ Shortcuts: the shortcut could not be registered",
       "localizations" : {
@@ -32086,7 +32295,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Overbright aumenta la luminosità extra a piccoli passi ogni %@. Osserva i due quadrati a destra. Premi Spazio non appena non riesci più a distinguerli."
+            "value" : "Overbright aumenta la luminosità extra a piccoli passi ogni %@. Osserva i due quadrati a destra. Premi la barra spaziatrice non appena non riesci più a distinguerli."
           }
         },
         "ja" : {
@@ -32140,7 +32349,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Overbright crește luminozitatea suplimentară în pași mici la fiecare %@. Urmăriți cele două pătrate din dreapta. Apăsați Spațiu imediat ce nu le mai puteți distinge."
+            "value" : "Overbright crește luminozitatea suplimentară în pași mici la fiecare %@. Urmăriți cele două pătrate din dreapta. Apăsați bara de spațiu imediat ce nu le mai puteți distinge."
           }
         },
         "ru" : {
@@ -43091,7 +43300,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mezerník"
+            "value" : "mezerník"
           }
         },
         "da" : {
@@ -43163,7 +43372,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Spazio"
+            "value" : "Barra spaziatrice"
           }
         },
         "ja" : {
@@ -43175,7 +43384,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "스페이스 바"
+            "value" : "스페이스"
           }
         },
         "ms" : {
@@ -43217,7 +43426,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Spațiu"
+            "value" : "Space"
           }
         },
         "ru" : {
@@ -51847,6 +52056,221 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "要在「%@」上使用「峰值」嗎？"
+          }
+        }
+      }
+    },
+    "Use a value from %@ to %@." : {
+      "comment" : "Calibration: under the SDR white field when its value is outside the range Overbright accepts; the arguments are numbers of nits such as 20 and 4,000 (the unit follows the field)",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "استخدم قيمة من %1$@ إلى %2$@."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fes servir un valor entre %1$@ i %2$@."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zadejte hodnotu od %1$@ do %2$@."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brug en værdi fra %1$@ til %2$@."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nutze einen Wert von %1$@ bis %2$@."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Χρησιμοποιήστε μια τιμή από %1$@ έως %2$@."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Use a value from %1$@ to %2$@."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usa un valor de %1$@ a %2$@."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Käytä arvoa väliltä %1$@–%2$@."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilisez une valeur comprise entre %1$@ et %2$@."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "יש להשתמש בערך בין %1$@ ל־%2$@."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ से %2$@ तक का मान इस्तेमाल करें।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upotrijebite vrijednost od %1$@ do %2$@."
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adjon meg egy %1$@ és %2$@ közötti értéket."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gunakan nilai dari %1$@ hingga %2$@."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usa un valore compreso tra %1$@ e %2$@."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@〜%2$@の値を使用してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@~%2$@ 사이의 값을 사용하십시오."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gunakan nilai dari %1$@ hingga %2$@."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bruk en verdi fra %1$@ til %2$@."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gebruik een waarde van %1$@ tot %2$@."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Użyj wartości od %1$@ do %2$@."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use um valor de %1$@ a %2$@."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use um valor entre %1$@ e %2$@."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Folosiți o valoare între %1$@ și %2$@."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Введите значение от %1$@ до %2$@."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zadajte hodnotu od %1$@ do %2$@."
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uporabite vrednost od %1$@ do %2$@."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Använd ett värde från %1$@ till %2$@."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ใช้ค่าตั้งแต่ %1$@ ถึง %2$@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ ile %2$@ arasında bir değer kullanın."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Введіть значення від %1$@ до %2$@."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hãy dùng giá trị từ %1$@ đến %2$@."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请使用%1$@到%2$@之间的值。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請使用%1$@到%2$@之間的值。"
           }
         }
       }

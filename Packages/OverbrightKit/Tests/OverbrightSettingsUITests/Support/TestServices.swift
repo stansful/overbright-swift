@@ -7,11 +7,12 @@ import OverbrightPolicy
 
 /// Hubs and statuses for tests.
 @MainActor enum TestServices {
-    /// Every fake of `fixture`, with `boost` as the engine.
-    static func make(fixture: DisplayFixture = .builtinXDRLidOpen, boost: any BoostControl) -> OverbrightServices {
+    /// Every fake of `fixture`, with `boost` as the engine (and `announcer`, which says nothing by default).
+    static func make(fixture: DisplayFixture = .builtinXDRLidOpen, boost: any BoostControl,
+                     announcer: Announcer = Announcer(post: { _ in }, now: { 0 })) -> OverbrightServices {
         let services = OverbrightServices(
             settings: SettingsStore(defaults: InMemoryDefaults()), paths: .temporary(), machine: fixture.machine,
-            time: ManualTimeSource(), journal: RingBufferJournal(), announcer: Announcer(post: { _ in }, now: { 0 }),
+            time: ManualTimeSource(), journal: RingBufferJournal(), announcer: announcer,
             ownEDRSurfaces: OwnEDRSurfaces(), displays: FakeDisplayDirectory(fixture: fixture),
             signals: FakeSystemSignals(), boost: boost, fillLight: PreviewFillLightControl(),
             shortcuts: PreviewShortcutCenter(), updates: PreviewUpdateChecking())

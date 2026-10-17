@@ -115,3 +115,4 @@ Register and style, following macOS 27 in Hindi (checked against the system's ow
 | Allow… / Grant… | अनुमति दें… |  |
 | On / Off · Never · Automatic | चालू / बंद · कभी नहीं · ऑटोमैटिक |  |
 | Preview | प्रीव्यू |  |
+| Space (the space bar in key caps) | स्पेस | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is स्पेस बार |

@@ -108,3 +108,4 @@ Register and typography (as macOS writes Vietnamese):
 | Launch at login / Open at login | Mở khi đăng nhập | Apple's term |
 | Login Items | Mục đăng nhập | glossary |
 | update / check for updates | bản cập nhật / kiểm tra bản cập nhật |  |
+| Space (the space bar in key caps) | Dấu cách | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is Thanh dấu cách |

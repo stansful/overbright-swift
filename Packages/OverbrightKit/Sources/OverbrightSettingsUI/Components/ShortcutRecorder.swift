@@ -2,7 +2,9 @@
 // binding (or "Record Shortcut"), recording state and a clear button. Click to record; Esc cancels; Delete clears; one
 // recorder at a time (`ShortcutRecording`). Recording uses a local key monitor of this window only: no Accessibility
 // permission. While it listens, every Overbright hot key pauses (`ShortcutCenter.setRecording`), so a combination that
-// is already bound records instead of running. Ported from Cranny's ShortcutRecorder (the owner's MIT code).
+// is already bound records instead of running. VoiceOver hears what the button shows: its value is "Type Shortcut"
+// while it listens, and a key without Command, Control or Option is answered by the visible hint and the same words
+// announced, never by a sound (DESIGN.md §13.3). Ported from Cranny's ShortcutRecorder (the owner's MIT code).
 import AppKit
 import Foundation
 import OverbrightCore
@@ -17,6 +19,8 @@ struct ShortcutRecorder: View {
     let keys: String?
     /// Recording started (true) or ended (false), however it ended: keys, a click elsewhere, the window closing.
     var listening: (Bool) -> Void = { _ in }
+    /// Says a hint to VoiceOver (the app's `Announcer`, as feedback to the user's own key press).
+    var announce: @MainActor (String) -> Void = { _ in }
     /// A recorded combination (nil = cleared).
     let record: (KeyCombo?) -> Void
     @State private var isRecording = false
@@ -39,7 +43,7 @@ struct ShortcutRecorder: View {
             .help(Text(verbatim: hint ?? Self.tooltip))
             .accessibilityLabel(Text("Shortcut for \(title)", bundle: .module,
                                      comment: "VoiceOver: label of a shortcut recorder in Settings; the argument is the shortcut’s name"))
-            .accessibilityValue(Text(verbatim: keys ?? Self.offTitle))
+            .accessibilityValue(Text(verbatim: Self.spokenValue(isRecording: isRecording, hint: hint, keys: keys)))
             .accessibilityHint(Text("Press to record new keys.", bundle: .module,
                                     comment: "VoiceOver: hint of a shortcut recorder in Settings"))
             Button {
@@ -58,12 +62,27 @@ struct ShortcutRecorder: View {
     }
 
     private var label: String {
-        if isRecording {
-            return hint ?? String(localized: "Type Shortcut", bundle: .module,
-                                  comment: "Settings ▸ Shortcuts: the recorder button while it waits for keys (title case)")
-        }
+        if isRecording { return hint ?? Self.typeShortcut }
         return keys ?? String(localized: "Record Shortcut", bundle: .module,
                               comment: "Settings ▸ Shortcuts: the recorder button without a shortcut (title case)")
+    }
+
+    /// "Type Shortcut": the button while it waits for keys.
+    static var typeShortcut: String {
+        String(localized: "Type Shortcut", bundle: .module,
+               comment: "Settings ▸ Shortcuts: the recorder button while it waits for keys (title case)")
+    }
+
+    /// "Add Command, Control or Option": the button after a key without one of them.
+    static var needsModifierHint: String {
+        String(localized: "Add Command, Control or Option", bundle: .module,
+               comment: "Settings ▸ Shortcuts: recorder hint after a key without modifiers (the key names as macOS writes them)")
+    }
+
+    /// VoiceOver's value: what the button shows while it listens ("Type Shortcut" or the hint), else the key caps or
+    /// "Off".
+    static func spokenValue(isRecording: Bool, hint: String?, keys: String?) -> String {
+        isRecording ? hint ?? typeShortcut : keys ?? offTitle
     }
 
     /// "Off": VoiceOver's value of a recorder without a shortcut.
@@ -101,9 +120,8 @@ struct ShortcutRecorder: View {
         case .clear: stop(); record(nil)
         case .combo(let combo): stop(); record(combo)
         case .needsModifier:
-            hint = String(localized: "Add Command, Control or Option", bundle: .module,
-                          comment: "Settings ▸ Shortcuts: recorder hint after a key without modifiers (the key names as macOS writes them)")
-            NSSound.beep()
+            hint = Self.needsModifierHint                                      // shown, and said: no sound (§13.3)
+            announce(Self.needsModifierHint)
         }
         return true
     }

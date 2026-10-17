@@ -1,9 +1,11 @@
 // OverbrightSettingsUITests/PausedAppsEditorTests.swift — Automations ▸ Pause for these apps (DESIGN.md §7.5;
 // ARCHITECTURE.md §3.4, §6.5): adding (once, case-insensitively, with the suggested mode), removing, changing an app's
-// mode, the suggestions (not listed yet, installed only), and Reset to Default restoring the twelve apps and the switch.
+// mode, the suggestions (not listed yet, installed only), Reset to Default restoring the twelve apps and the switch,
+// and the VoiceOver names of the app rows (WP14).
 // Synthetic bundle IDs only, besides the default list's (ARCHITECTURE.md D3).
 import Foundation
 import OverbrightCore
+import OverbrightDesign
 import Testing
 @testable import OverbrightSettingsUI
 
@@ -58,6 +60,26 @@ import Testing
         value.reset()
         #expect(settings[AutomationSettings.pausedApps] == defaults && settings[AutomationSettings.pauseForListedApps])
         #expect(value.isDefault())
+    }
+
+    /// VoiceOver names every row's mode pop-up (never "While in front, pop-up button" alone), and the names inside
+    /// "Remove ‹App›" and "Always continue next to ‹App›" are bidi-isolated (ARCHITECTURE.md §8.8).
+    @Test func everyAppRowIsNamedForVoiceOverWithItsNameIsolated() {
+        let pending = AppIdentity(bundleID: "com.example.player")
+        let gone = AppIdentity(bundleID: "com.example.gone", presence: .notInstalled)
+        let named = AppIdentity(bundleID: "com.example.player", presence: .installed, name: "נגן")
+        #expect(PausedAppsEditor.spokenName(pending) == "com.example.player")
+        #expect(PausedAppsEditor.spokenName(gone) == PausedAppsEditor.notInstalled && !PausedAppsEditor.notInstalled.isEmpty)
+        #expect(PausedAppsEditor.spokenName(named) == "נגן")
+        #expect(PausedAppsEditor.removeLabel(named).contains(BidiIsolation.isolate("נגן")))
+        #expect(PausedAppsEditor.removeLabel(gone) == PausedAppsEditor.removeLabel(pending))     // "Remove app"
+        let colors = ConflictingApp(entryID: "S2-example", severity: .gammaWriter, bundleID: nil, processID: 7,
+                                    displayName: "Colors")
+        let tint = ConflictingApp(entryID: "S3-example", severity: .conditional, bundleID: nil, processID: 8,
+                                  displayName: "מסנן")
+        #expect(OtherAppsSection.alwaysContinueLabel(colors).contains(BidiIsolation.isolate("Colors")))
+        #expect(OtherAppsSection.alwaysContinueLabel(tint).contains(BidiIsolation.isolate("מסנן")))
+        #expect(OtherAppsSection.alwaysContinueLabel(colors) != OtherAppsSection.alwaysContinueLabel(tint))
     }
 
     /// Turning the list's switch off keeps every rule (DESIGN.md §5.9).

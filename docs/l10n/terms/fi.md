@@ -107,3 +107,4 @@ on alle 20 %.”) — never an imperative addressed to the user. Progress “X o
 | setup (welcome) | käyttöönotto |  |
 | Launch / Open at login | Avaa sisäänkirjauduttaessa | as the Dock’s “Open at Login” |
 | Login Items (System Settings) | Kirjautumiskohteet | apple-terms |
+| Space (the space bar in key caps) | Väli | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is Välilyönti |

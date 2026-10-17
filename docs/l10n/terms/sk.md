@@ -109,3 +109,4 @@ Register and typography, as macOS 27 writes Slovak (checked in the system's own 
 | Login Items | Položky a rozšírenia spúšťané pri prihlásení | Apple's pane name in General |
 | launch at login | otvárať po prihlásení | Apple: "Otvoriť po prihlásení" |
 | Check for updates · Last checked · Not checked yet | Vyhľadať aktualizácie · Posledná kontrola: %@ · Kontrola ešte neprebehla | "Posledná kontrola" is Apple's own status line |
+| Space (the space bar in key caps) | Medzerník | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is Medzerník |

@@ -79,6 +79,31 @@ import Testing
         #expect(second.calls.first == "setMeasuredSDRWhite(512.0)")
     }
 
+    /// The engine ignores a colorimeter value outside 20–4,000 nits; the field says so and Start waits, instead of
+    /// the value being dropped without a word.
+    @Test func anImplausibleColorimeterValueIsShownAndHoldsStart() {
+        let services = OverbrightServices.preview()
+        let session = FakeCalibrationSession()
+        let (model, _) = model(services, sessions: [session])
+        model.colorimeterNits = 9000
+        #expect(model.canStart && !model.colorimeterValueIsImplausible)              // the disclosure is closed
+        model.showsColorimeter = true
+        #expect(model.colorimeterValueIsImplausible && !model.canStart)
+        model.start()
+        #expect(model.step == .checklist && session.calls.isEmpty)
+        for nits in [19.9, 4000.5, -1, .nan, .infinity] {
+            model.colorimeterNits = nits
+            #expect(model.colorimeterValueIsImplausible, "\(nits)")
+        }
+        for nits in [20, 160, 4000] as [Double] {
+            model.colorimeterNits = nits
+            #expect(!model.colorimeterValueIsImplausible && model.canStart, "\(nits)")
+        }
+        model.colorimeterNits = nil                                               // an empty field: no reading
+        #expect(model.canStart)
+        #expect(CalibrationCopy.sdrWhiteRange(locale: Locale(identifier: "en_US")) == "Use a value from 20 to 4,000.")
+    }
+
     // MARK: Step 1
 
     @Test func theComparisonWaitsForTheSessionThenFlipsThreeTimesAtMostEveryHalfSecondAndASecond() async throws {
@@ -105,6 +130,31 @@ import Testing
         model.showAgain()
         await time.advance(by: .milliseconds(100))
         #expect(model.isFlipping && model.flips == 1)
+    }
+
+    /// DESIGN.md §15: the flips are slow and announced. Each change is said as it is shown (feedback to the user's own
+    /// check, never rate-limited), so the question after it can be answered without seeing the label.
+    @Test func eachFlipIsAnnouncedAsItIsShown() async throws {
+        var said: [String] = []
+        let services = TestServices.make(boost: PreviewBoostControl(fixture: .builtinXDRLidOpen),
+                                         announcer: Announcer(post: { said.append($0) }, now: { 0 }))
+        let time = try time(services)
+        let session = FakeCalibrationSession(state: .preparing)
+        let (model, _) = model(services, sessions: [session])
+        model.start()
+        await time.advance(by: .seconds(1))
+        #expect(said.isEmpty)                                                      // nothing shown, nothing said
+        session.state = .ready
+        await time.advance(by: .milliseconds(100))
+        #expect(said == [CalibrationCopy.brighter] && model.showsBrighter)
+        await time.advance(by: .milliseconds(1400))
+        #expect(said.count == 1)                                                   // at most one per 1.5 s
+        await time.advance(by: .seconds(10))
+        let pair = [CalibrationCopy.brighter, CalibrationCopy.standard]
+        #expect(said == pair + pair + pair && model.flips == ComparisonSequence.flipsPerSequence)
+        model.answerBrighter(true)
+        await time.advance(by: .seconds(10))
+        #expect(said.count == 6)                                                   // the answer ends the sequence
     }
 
     @Test func yesLeadsToTheSweepAndReturnsTheDisplayToStandard() async throws {

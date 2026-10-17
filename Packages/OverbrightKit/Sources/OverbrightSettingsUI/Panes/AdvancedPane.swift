@@ -106,8 +106,13 @@ struct AdvancedPane: SettingsPaneView {
 
     /// The panel's Run Self-Test… opens Advanced at the self-test row: the sheet opens with it.
     private func openSelfTestIfAsked() {
-        guard let navigator, navigator.highlightedRow == Self.selfTestRowID, navigator.isHighlightFresh else { return }
-        showsSelfTest = true
+        if Self.opensSelfTest(navigator) { showsSelfTest = true }
+    }
+
+    /// A fresh deep link to the self-test row opens the sheet; a search hit only shows the row (WP14).
+    static func opensSelfTest(_ navigator: SettingsNavigator?) -> Bool {
+        guard let navigator else { return false }
+        return navigator.highlightedRow == selfTestRowID && navigator.highlightIsDeepLink && navigator.isHighlightFresh
     }
 }
 

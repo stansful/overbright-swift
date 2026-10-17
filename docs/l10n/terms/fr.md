@@ -109,3 +109,4 @@ many (millions; same wording as other), other.
 | Launch / Open at login | Ouvrir avec la session | Apple’s "Open at Login" (Dock menu, Ouverture et extensions) |
 | Esc / Return / Space / Delete / Command | Échap / Retour / Espace / Supprimer / Commande | Apple FR key names in prose; key caps stay symbols |
 | Paused / Done states | En pause / Terminé |  |
+| Space (the space bar in key caps) | Espace | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is Barre d’espace |

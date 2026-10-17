@@ -106,3 +106,4 @@ as Apple writes it.
 | Remove (from a list) · Delete | Verwijder uit … · Verwijder | "Verwijder %@ uit lijst" |
 | App not installed | App niet geïnstalleerd |  |
 | Symbol | Symbool |  |
+| Space (the space bar in key caps) | Spatie | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is Spatiebalk |

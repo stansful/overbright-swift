@@ -111,3 +111,4 @@ Register and style follow Korean macOS 27 (checked in the system's own loctables
 | Remove (from a list) | 제거 | “목록에서 제거”; 삭제 only for deleting data |
 | App not installed | 설치되지 않은 앱 |  |
 | Welcome (window) | Overbright 시작하기 | Apple: “Mac 시작하기” |
+| Space (the space bar in key caps) | 스페이스 | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is 스페이스 바 |

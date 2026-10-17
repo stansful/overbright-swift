@@ -119,3 +119,4 @@ Fit (WP15): the footer’s default row (Battery, Auto-pause, Timer) must fit its
 | Reset to Default · Changed from the default | Ponastavi na privzeto · Spremenjeno glede na privzeto | Apple “Ponastavi na privzeto” |
 | Never (a timeout) | Nikoli |  |
 | Off / On / Automatic / None | Izklopljeno / Vklopljeno / Samodejno / Brez | Apple |
+| Space (the space bar in key caps) | Preslednica | as AppKit writes it in menu key equivalents (FunctionKeyNames.loctable “Space”), so Settings and Welcome show the same key caps as the menu; AppKit’s name for the physical key is Preslednica |
