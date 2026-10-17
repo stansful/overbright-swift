@@ -2,11 +2,13 @@
 // DESIGN.md §4.3's order and exact English (title case), the banner's sentence and action first, Show Panel first in
 // toggle mode, live key equivalents (the current binding, nothing when cleared or in conflict), one submenu per display
 // that can boost or dim ("All Displays" while linked), the pause line and Resume, Update Available only when configured;
-// the AppKit menu matches the rows, and its items act through the engine with source `.menu`.
+// the first line names an app in full; the AppKit menu matches the rows, and its items act through the engine with
+// source `.menu`.
 import AppKit
 import Foundation
 import Observation
 import OverbrightCore
+import OverbrightDesign
 import OverbrightPanelUI
 import Testing
 @testable import OverbrightAppShell
@@ -86,6 +88,24 @@ import Testing
         let colorApp = ConflictingApp(entryID: "c", severity: .gammaWriter, bundleID: nil, processID: 2, displayName: "C")
         boost.status.banner = .attributedDrift(colorApp, display: builtIn)
         #expect(StatusMenuModel.make(services: services).rows[1] == .bannerAction(.continueAnyway(colorApp)))
+    }
+
+    /// The first line names an app in full, however long: the panel middle-truncates the name and keeps it whole for
+    /// its help tag and VoiceOver, but a menu row has no help tag, and the menu sizes itself to its row (C-DESIGN-1).
+    @Test func theStatusLineNamesALongAppInFull() throws {
+        let services = try services("boosting")
+        let boost = try #require(services.boost as? PreviewBoostControl)
+        let name = "Display Brightness Controller Professional Edition for Studio Workflows"
+        let app = ConflictingApp(entryID: "long", severity: .booster, bundleID: nil, processID: 3, displayName: name)
+        boost.status.banner = .conflict(app)
+        let banner = BannerModel.make(.conflict(app), displayNames: [:], in: .app)
+        #expect(!banner.sentence.contains(name))                               // the panel's sentence truncates it
+        let model = StatusMenuModel.make(services: services)
+        #expect(model.rows.first == .status(banner.accessibilityLabel))
+        #expect(model.dump()[0] == banner.accessibilityLabel + " (disabled)" && model.dump()[0].contains(name))
+        let menu = StatusMenuRender.menu(model, services: services) {}
+        #expect(menu.items.first?.title.contains(name) == true)
+        #expect(menu.items.first?.isEnabled == false)
     }
 
     @Test func toggleModeStartsWithShowPanel() throws {

@@ -6,8 +6,8 @@
 // change is handled once (by `sequence`); General ▸ Show level changes on screen turns the window off but VoiceOver
 // still hears the change, also while the Keep-this-level prompt holds the place; never two: one HUD updated in place.
 // A level change shows the level the display is set to as both the value and the bar, even while the engine's status
-// still lags behind; a change to every display is shown about the display under the pointer. Driven by
-// `ManualTimeSource`; no window is ordered in.
+// still lags behind, and while it shows it follows the status; a change to every display is shown about the display
+// under the pointer. Driven by `ManualTimeSource`; no window is ordered in.
 import CoreGraphics
 import Foundation
 import OverbrightCore
@@ -186,6 +186,62 @@ import Testing
                                                     isEstimate: card.readout.isEstimate, dimPercent: 50))
         #expect(text.value == expected.text && text.symbol == .sunMin && text.reason == nil)
         #expect(HUDContent.level(of: key, status: status, services: services) == dim)
+    }
+
+    /// While it shows, the HUD follows the status, not the moment of the change (OBS-QA-HUD-TEXT): the bar warms once
+    /// the boost reaches the screen, and Max's value moves with the display's top; in place, with no second
+    /// announcement or showing, and gone 1.5 s after the change as before.
+    @Test func theVisibleHUDFollowsTheStatus() async throws {
+        let scripted = try #require(ScriptedStatuses.services(named: "standard"))
+        let time = ManualTimeSource()
+        let posted = Box()
+        let services = OverbrightServices(
+            settings: scripted.settings, paths: .temporary(), machine: scripted.machine, time: time,
+            journal: RingBufferJournal(), announcer: Announcer(post: { posted.lines.append($0) }, now: { 0 }),
+            ownEDRSurfaces: OwnEDRSurfaces(), displays: scripted.displays, signals: scripted.signals,
+            boost: scripted.boost, fillLight: scripted.fillLight, shortcuts: scripted.shortcuts,
+            updates: scripted.updates)
+        let boost = try #require(services.boost as? PreviewBoostControl)
+        let key = DisplayFixture.Keys.builtIn
+        func change(_ edit: (inout DisplayPreferences) -> Void) {
+            var all = services.settings[DisplaySettings.perDisplay]
+            var preferences = all[key] ?? DisplayPreferences()
+            edit(&preferences)
+            all[key] = preferences
+            services.settings[DisplaySettings.perDisplay] = all
+        }
+        func top() throws -> Double {
+            DisplayCardModel(status: try #require(boost.status.displays.first { $0.key == key }), isMasterOn: true,
+                             services: services).top
+        }
+        let max = LevelPosition(1)
+        change { $0.level = max; $0.capMode = .safe }                       // a shortcut set Max; Standard on screen
+        let hud = HUDController(services: services, slot: HUDSlot()) { change, status, display in
+            HUDContent.text(for: change, status: status, on: display, services: services)
+        }
+        hud.presentsWindows = false
+        let shortcut = LevelChange(sequence: 1, kind: .level, source: .shortcut, display: key)
+        hud.handle(shortcut)
+        let first = try #require(hud.drawn)
+        #expect(first.level == max && !first.isBoosting)                    // the target, not yet on screen
+        var reached = boost.status
+        reached.displays = reached.displays.map { display in
+            var display = display
+            if display.key == key { display.phase = .boosted; display.appliedGain = 1.29 }
+            return display
+        }
+        boost.status = reached
+        #expect(await eventually { hud.drawn?.isBoosting == true }, "the bar stays cold over a boost on screen")
+        let safeTop = try top()
+        change { $0.capMode = .peak }
+        try #require(try top() > safeTop)                                   // Max is now a higher gain
+        let expected = try #require(HUDContent.text(for: shortcut, status: boost.status, on: key, services: services))
+        #expect(expected.value != first.text.value)
+        #expect(await eventually { hud.visible?.value == expected.value }, "the value stays at the old top")
+        #expect(posted.lines.count == 1 && hud.showCount == 1)               // updated in place
+        #expect(await eventually { time.sleeperCount == 1 })
+        await time.advance(by: .milliseconds(1600))
+        #expect(await eventually { hud.visible == nil })
     }
 
     /// A turn-on's "Preparing…" stays until the display is ready, then shows the level reached for 1.5 s (C-PANEL-5).

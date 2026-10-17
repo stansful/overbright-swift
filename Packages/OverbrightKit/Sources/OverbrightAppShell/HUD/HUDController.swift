@@ -5,8 +5,11 @@
 // shared with the Keep-this-level prompt (`HUDSlot`). VoiceOver hears every qualifying change even when the window does
 // not show (the setting is off, or the prompt holds the place). A change to every display shows on the display under
 // the pointer. "Preparing…" stays up until the display is ready (at most 3 s), then the level reached shows for 1.5 s.
-// Its timers are one `TimeSource.sleep` per showing (no repeating timer, DESIGN.md §17), and the wait for a ready
-// display observes the engine's status instead of polling it.
+// While it shows, the HUD follows the engine's status, not the moment of the change: its words, its bar and the bar's
+// warmth are re-read whenever what they show changes (a boost that reaches the screen after the shortcut warms the bar,
+// a top that moves changes Max's value), in place, with no new announcement or showing and the same timer (WP14
+// OBS-QA-HUD-TEXT). Its timers are one `TimeSource.sleep` per showing (no repeating timer, DESIGN.md §17), and the wait
+// for a ready display and the following observe the engine's status instead of polling it, only while the HUD shows.
 import AppKit
 import OverbrightCore
 import OverbrightDesign
@@ -18,11 +21,23 @@ private let log = Log.logger(.panel)
 /// Shows the HUD for level changes from shortcuts, intents, Focus and Back to Standard, "Preparing…" and automation
 /// stops.
 final class HUDController {
+    /// What the HUD draws: its words, the level its bar shows and whether the bar's boost fill is warm.
+    struct Drawing: Equatable {
+        /// The words.
+        var text: HUDText
+        /// The level the bar shows (for a reason, the window shows the line instead of the bar).
+        var level: LevelPosition
+        /// Extra light is on screen on the display (DESIGN.md §2.1: the bar's boost fill is warm only then).
+        var isBoosting: Bool
+    }
+
     private let services: OverbrightServices
     private let slot: HUDSlot
     private let makeText: (LevelChange, BoostStatus, DisplayKey?) -> HUDText?
     private var observation: ObservationToken?
     private var readyObservation: ObservationToken?
+    /// Follows the status while the HUD shows (nil while hidden or while "Preparing…" waits for the display).
+    private var following: ObservationToken?
     private var window: HUDWindow?
     private var hideTask: Task<Void, Never>?
 
@@ -31,8 +46,10 @@ final class HUDController {
     var presentsWindows = true
     /// The sequence of the last change handled.
     private(set) var lastShown: UInt64?
-    /// What the HUD shows now (nil while hidden).
-    private(set) var visible: HUDText?
+    /// What the HUD draws now (nil while hidden).
+    private(set) var drawn: Drawing?
+    /// What the HUD says now (nil while hidden).
+    var visible: HUDText? { drawn?.text }
     /// The display the visible HUD is about.
     private(set) var visibleDisplay: DisplayKey?
     /// Number of showings (a new change while visible updates it and counts again).
@@ -85,15 +102,19 @@ final class HUDController {
         lastShown = change.sequence
         let pointer = presentsWindows && change.display == nil ? HUDPlacement.currentPointerDisplay(services: services) : nil
         let display = HUDContent.shownDisplay(for: change, underPointer: pointer, status: status)
-        guard let text = makeText(change, status, display) else { return }
-        services.announcer.announce(text.announcement, kind: presentation.announcement)
+        guard let drawing = drawing(of: change, status: status, about: display) else { return }
+        services.announcer.announce(drawing.text.announcement, kind: presentation.announcement)
         readyObservation?.cancel()
         readyObservation = nil
+        following?.cancel()
+        following = nil
         guard presentation.showsWindow, slot.claim(.hud, onEvicted: { [weak self] in self?.hide() }) else { return }
-        show(text, about: display, placed: change.display ?? pointer)
+        let placed = change.display ?? pointer
+        show(drawing, about: display, placed: placed)
         if case .preparing = change.kind, HUDPolicy.isPreparing(status, display: change.display) {
-            waitUntilReady(change, about: display, placed: change.display ?? pointer)
+            waitUntilReady(change, about: display, placed: placed)
         } else {
+            follow(change, about: display, placed: placed)
             hide(after: presentation.duration)
         }
     }
@@ -104,7 +125,9 @@ final class HUDController {
         hideTask = nil
         readyObservation?.cancel()
         readyObservation = nil
-        visible = nil
+        following?.cancel()
+        following = nil
+        drawn = nil
         visibleDisplay = nil
         slot.leave(.hud)
         guard let window, window.isVisible else { return }
@@ -127,11 +150,33 @@ final class HUDController {
 
     // MARK: Showing
 
-    private func show(_ text: HUDText, about display: DisplayKey?, placed: DisplayKey?) {
-        visible = text
+    private func show(_ drawing: Drawing, about display: DisplayKey?, placed: DisplayKey?) {
+        drawn = drawing
         visibleDisplay = display
         showCount += 1
-        present(text, about: display, placed: placed)
+        present(drawing, placed: placed)
+    }
+
+    /// What `change` draws about `display` over `status`: the words, the bar's level and its warmth.
+    private func drawing(of change: LevelChange, status: BoostStatus, about display: DisplayKey?) -> Drawing? {
+        makeText(change, status, display).map { text in
+            Drawing(text: text, level: HUDContent.level(of: display, status: status, services: services),
+                    isBoosting: Self.isBoosting(display, status: status))
+        }
+    }
+
+    /// Keeps the visible HUD of `change` on the status now (the engine's status and the settings its words read):
+    /// redrawn in place whenever what it draws changes, until it hides or a newer change takes over.
+    private func follow(_ change: LevelChange, about display: DisplayKey?, placed: DisplayKey?) {
+        following?.cancel()
+        let boost = services.boost
+        following = OverbrightCore.observe({ [weak self] in
+            self?.drawing(of: change, status: boost.status, about: display)
+        }) { [weak self] drawing in
+            guard let self, let drawing, drawn != nil, lastShown == change.sequence, drawing != drawn else { return }
+            drawn = drawing
+            present(drawing, placed: placed)
+        }
     }
 
     private func hide(after duration: Duration) {
@@ -165,29 +210,27 @@ final class HUDController {
         readyObservation?.cancel()
         readyObservation = nil
         hideTask?.cancel()
-        guard visible != nil, lastShown == change.sequence else { return }  // closed, or a newer change took over
+        guard drawn != nil, lastShown == change.sequence else { return }  // closed, or a newer change took over
         let status = services.boost.status
         let reached = LevelChange(sequence: change.sequence, kind: .level, source: change.source, display: change.display)
-        guard let text = makeText(reached, status, display) else {
+        guard let drawing = drawing(of: reached, status: status, about: display) else {
             hide()
             return
         }
-        services.announcer.announce(text.announcement, kind: .feedback)
-        show(text, about: display, placed: placed)
+        services.announcer.announce(drawing.text.announcement, kind: .feedback)
+        show(drawing, about: display, placed: placed)
+        follow(reached, about: display, placed: placed)
         hide(after: HUDPolicy.levelDuration)
     }
 
     // MARK: Window
 
-    private func present(_ text: HUDText, about display: DisplayKey?, placed: DisplayKey?) {
+    private func present(_ drawing: Drawing, placed: DisplayKey?) {
         guard presentsWindows,
               let frame = HUDPlacement.currentFrame(size: HUDPlacement.size, display: placed, services: services) else {
             return
         }
-        let status = services.boost.status
-        let level = HUDContent.level(of: display, status: status, services: services)
-        let isBoosting = Self.isBoosting(display, status: status)
-        let root = HUDView(text: text, level: level, isBoosting: isBoosting).overbrightThemeRoot()
+        let root = HUDView(text: drawing.text, level: drawing.level, isBoosting: drawing.isBoosting).overbrightThemeRoot()
         let window = self.window ?? HUDWindow(frame: frame, interactive: false)
         self.window = window
         let hosting = NSHostingView(rootView: root)

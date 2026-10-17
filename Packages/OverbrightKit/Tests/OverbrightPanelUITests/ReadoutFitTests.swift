@@ -121,7 +121,7 @@ import Testing
     /// Every readout fits its line, or drops the preset name and then fits (the card's fallback).
     @Test(arguments: ShippedLanguages.codes)
     func readoutsFitOneLineInEveryLanguage(_ code: String) throws {
-        let language = ShippedLanguages.design(code)
+        let language = try #require(ShippedLanguages.design(code), "\(code): no Design table")
         let builder = ScriptedStatuses.names.compactMap(ScriptedStatuses.services(named:)).flatMap { services in
             services.boost.status.displays.map { display in
                 DisplayCardModel(status: display, isMasterOn: services.boost.status.isOn, services: services).readout
@@ -141,8 +141,8 @@ import Testing
     }
 
     @Test(arguments: ShippedLanguages.codes)
-    func valueTagsFitTheTrackInEveryLanguage(_ code: String) {
-        let tags = Self.valueTags(in: ShippedLanguages.design(code))
+    func valueTagsFitTheTrackInEveryLanguage(_ code: String) throws {
+        let tags = Self.valueTags(in: try #require(ShippedLanguages.design(code), "\(code): no Design table"))
         #expect(tags.count == 15, "\(code)")
         let failures = tags.compactMap { text -> String? in
             let width = FitMeasure.textWidth(text, Self.valueTagFont)

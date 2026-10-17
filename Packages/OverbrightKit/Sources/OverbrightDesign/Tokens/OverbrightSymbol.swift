@@ -99,6 +99,8 @@ public nonisolated enum OverbrightSymbol: String, CaseIterable, Sendable {
     case arrowClockwise = "arrow.clockwise"
     /// Quit.
     case power = "power"
+    /// Add (a list's + menu).
+    case plus = "plus"
     // Fill Light
     /// Fill Light.
     case personCropRectangle = "person.crop.rectangle"

@@ -117,7 +117,7 @@ import Testing
     /// the button under the chip.
     @Test(arguments: ShippedLanguages.codes)
     func theChipAndTurnOnStayInsideTheCardInEveryLanguage(_ code: String) throws {
-        let language = ShippedLanguages.design(code)
+        let language = try #require(ShippedLanguages.design(code), "\(code): no Design table")
         let chip = try #require(ChipModel.make(reason: .boostNotEnabled, phase: .idle, failedTries: 0,
                                                context: ChipContext(language: language)))
         let title = try #require(PanelWords(code), "\(code): no PanelUI table").turnOn
@@ -138,8 +138,8 @@ import Testing
     }
 
     @Test(arguments: ShippedLanguages.codes)
-    func everyChipFitsItsLineInEveryLanguage(_ code: String) {
-        let texts = Self.chips(in: ShippedLanguages.design(code))
+    func everyChipFitsItsLineInEveryLanguage(_ code: String) throws {
+        let texts = Self.chips(in: try #require(ShippedLanguages.design(code), "\(code): no Design table"))
         #expect(texts.count >= 25, "\(code): \(texts.count) chips")
         var failures: [String] = []
         for text in texts {

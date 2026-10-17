@@ -1,9 +1,10 @@
 // OverbrightPanelUI/Panel/PanelFooter.swift — the footer's guard chips in one 304-pt row, inset like the cards so it
-// lines up with their edges; when the row would not fit
-// (a long translation, or the widest settings), every chip drops to glyph + value, and as a last resort to its glyph
-// (the setting stays in its menu and VoiceOver value). Space or Return on a focused chip opens its menu (DESIGN.md
-// §5.12): the same rows as an AppKit menu at the chip, since a SwiftUI menu cannot be opened from code. DESIGN.md §5.9,
-// §16 ("Length").
+// lines up with their edges; when the row would not fit (a long translation, a running timer, or the widest settings),
+// the chips drop to glyph + value one at a time, the timer first, then Auto-pause, the battery last, since its "20 %"
+// alone reads as a battery level (WP14: a countdown in Russian dropped every chip at once), and as a last resort to
+// their glyphs (the setting stays in its menu and VoiceOver value). Space or Return on a focused chip opens its menu
+// (DESIGN.md §5.12): the same rows as an AppKit menu at the chip, since a SwiftUI menu cannot be opened from code.
+// DESIGN.md §5.9, §16 ("Length").
 import OverbrightCore
 import OverbrightDesign
 import SwiftUI
@@ -19,9 +20,15 @@ struct PanelFooter: View {
     @Environment(\.panelMenuPresenter) private var menus
     @State private var anchors = FooterAnchors()
 
+    /// The chips that drop to glyph + value first, in order: the battery's words go last, since "20 %" alone reads as
+    /// a battery level.
+    static let compactingOrder: [FooterChip.Kind] = [.timer, .autoPause, .battery]
+
     var body: some View {
         ViewThatFits(in: .horizontal) {
             row(.full)
+            row(compacting: Set(Self.compactingOrder.prefix(1)))
+            row(compacting: Set(Self.compactingOrder.prefix(2)))
             row(.compact)
             row(.glyphs)
         }
@@ -29,12 +36,18 @@ struct PanelFooter: View {
         .frame(height: PanelLayout.barHeight)
     }
 
-    /// The row in `style`.
-    func row(_ style: Style) -> some View {
+    /// The row with every chip in `style`.
+    func row(_ style: Style) -> some View { row { _ in style } }
+
+    /// The row with the chips of `kinds` as glyph + value and the others in full.
+    func row(compacting kinds: Set<FooterChip.Kind>) -> some View { row { kinds.contains($0) ? .compact : .full } }
+
+    /// The row with each chip in the style `style(kind)` gives it.
+    private func row(_ style: @escaping (FooterChip.Kind) -> Style) -> some View {
         HStack(spacing: PanelLayout.footerChipGap) {
             ForEach(chips, id: \.kind) { chip in
                 let anchor = anchors.reference(for: chip.kind)
-                GuardChip(Self.model(of: chip, style), menu: chip.menu)
+                GuardChip(Self.model(of: chip, style(chip.kind)), menu: chip.menu)
                     .frame(minWidth: HitTarget.footerChipWidth)
                     .background { MenuAnchor(reference: anchor) }
                     .panelFocus(focus, Self.focus(for: chip.kind), cornerRadius: HitTarget.minimum.height / 2) {
