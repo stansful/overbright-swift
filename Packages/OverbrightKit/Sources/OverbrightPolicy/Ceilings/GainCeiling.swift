@@ -60,15 +60,10 @@ public nonisolated enum GainCeiling {
               nits > 0 else { return nil }
         return nits
     }
-    /// Whether the panel peak and the SDR maximum are both known, so the slider tops are numbers Overbright can back.
-    /// Without them the verdict claims nothing (`EligibilityClassifier` answers `.checking`, never "little gain").
-    public static func hasBackedTop(facts: DisplayFacts) -> Bool {
-        (facts.panelPeakNits ?? 0) > 0 && sdrMaxNits(facts: facts) != nil
-    }
     /// The gain at the top of the boost half for this display and cap mode, at full SDR brightness (§5.3 table):
     /// Peak `0.97 · peak / sdrMax`; Safe `min(capNits / sdrMax, Peak)`, on OLED `min(1.3, Peak)`. A top below 1.05
     /// disables the boost half for that cap mode and is answered as 1, as is a class that never boosts or a display
-    /// whose panel peak or SDR maximum is unknown (`hasBackedTop`; no number we cannot back, DESIGN.md principle 2).
+    /// whose panel peak or SDR maximum is unknown (no number we cannot back, DESIGN.md principle 2).
     public static func sliderTop(facts: DisplayFacts, capMode: CapMode, isOLED: Bool) -> Double {
         guard boostClasses.contains(facts.panelClass), let peak = facts.panelPeakNits, peak > 0,
               let sdrMax = sdrMaxNits(facts: facts) else { return 1 }
