@@ -11,12 +11,20 @@
 #     of the app and of the control; own = app − control, per second;
 #   - the kernel's billed energy delta (ri_billed_energy, nJ → mW), instructions;
 #   - threads at both ends;
-# then, after the window: `sample <pid> SAMPLE` (hot stacks), `footprint <pid>` and `vmmap --summary <pid>`.
+# then, after the window: `sample <pid> SAMPLE` (hot stacks), `footprint <pid>` and `vmmap --summary <pid>`. The
+# §17 verdict judges Off's wake-ups by the soak's rule (at most 0.05 own interrupt wake-ups/s; their rhythm is the
+# soak's and the timeline run's to judge) and its footprint as under 40 MB, as scripts/soak_judge.py does.
 # Counted phases (`dump begin.<phase>` … `dump clean.<phase>` … `dump finish.<phase>`) do a known number of things
-# (events, panel opens): the clean part is measured from its first step to its last, and the work per thing is
-# reported (CPU per event, per open); a short tail of the same work after `clean` is what `sample` watches, and the
-# footprint is read 3 s after the last step. The lock state (CGSessionCopyCurrentDictionary) and the load average
-# are recorded with every reading.
+# (events, panel opens) between two 1 s rests, and both CPU readings (at `begin` and at `clean`) fall in those rests:
+# perf.sh notices a dump 0–0.25 s after the app writes it (it polls the status file; each lag is kept in marks.tsv and
+# a reading 0.75 s or more late is flagged; a 5 s rest before `begin` lets it finish the step before), so the window
+# holds the clean part and nothing else, and the work per thing is reported (CPU per event, per open). A tail of the
+# same work, which `sample` watches, starts only after a third 1 s rest that follows the clean reading; the footprint
+# is read 3 s after the tail's last step.
+# With every reading go the lock state (CGSessionCopyCurrentDictionary, also polled every 5 s into lock.tsv: a window
+# whose lock state changed, e.g. the Mac unlocked partway, is reported as "lock changed", not judged and not
+# compared), the load average and the apps the Mac launched, quit and activated in the window (NSWorkspace, counts
+# only: no name is recorded; apps.tsv).
 #
 # Runs (default: launch, base, ruleoff, two, in this order; the others on request):
 #   launch     launch to ready, with a `sample` over the first SAMPLE s (its timing is perturbed; every other run's
@@ -39,7 +47,8 @@
 #              over the simulated displays (ARCHITECTURE.md §8.5), Fill Light's camera rule off, so its cost on this
 #              Mac (the running-list churn, the watch, the boost-only sources) shows; a locked screen or a running
 #              conflict-catalogue app keeps the engine from boosting: the engine line names it (by catalogue entry
-#              only) and such a boosted phase is not judged
+#              only, as the app's own dump does) and such a boosted phase is not judged. Its cost follows the apps
+#              launched and quit on the Mac (the apps column), so run it alternately with its base
 #
 #   make debug; make perf                              # → build/logs/perf/<variant>/
 #   make perf RUNS="ui events" APP=build/Overbright-opt.app VARIANT=opt
@@ -53,7 +62,8 @@
 # Env: APP (a Debug build: it must carry get-task-allow), VARIANT (label), OUT, PHASE (s per steady phase, 90),
 # MEASURE (60), SETTLE (5), SAMPLE (10; 0 = no sample and no sampled tails), EVENTS (1500), PANEL_CYCLES (10),
 # TIMELINE (300). Fakes only: no real display is touched (D24); nothing attaches a debugger. Never synthesizes input.
-# Run each command on its own (CONTRIBUTING: `a && b` chains can abort silently).
+# A run that stops partway (an error, Ctrl-C) asks the app to quit (SIGTERM, its quit flow), stops its readers and
+# deletes its suite. Run each command on its own (CONTRIBUTING: `a && b` chains can abort silently).
 set -euo pipefail
 
 # shellcheck source=/dev/null
@@ -84,9 +94,14 @@ IDLE = {"mach_msg2_trap", "mach_msg_trap", "mach_msg_overwrite_trap", "__workq_k
         "__semwait_signal", "kevent_id", "kevent64", "kevent", "__select", "__ulock_wait", "__ulock_wait2",
         "semaphore_wait_trap", "semaphore_timedwait_trap", "__sigsuspend", "poll", "__wait4", "read", "__read_nocancel",
         "__recvfrom", "swtch_pri", "thread_suspend", "__pthread_kill", "__open", "start_wqthread", "thread_start"}
-BUDGET = {  # DESIGN.md §17
-    "off": ("Off", 0.0, None, 40.0), "boosted": ("Boosted steady", 1.5, 0.1, None),
+BUDGET = {  # DESIGN.md §17; Off's wake-ups as the soak judges them (OFF_NOTE)
+    "off": ("Off", 0.05, None, 40.0), "boosted": ("Boosted steady", 1.5, 0.1, None),
     "panel": ("Panel open", None, 2.0, None)}
+OFF_NOTE = ("Off's wake-up limit is the soak's rule (scripts/soak_judge.py, ARCHITECTURE.md §10.15): own interrupt "
+            "wake-ups at most 0.05/s, since the system hands every process a few irregular ones; whether they beat "
+            "periodically is judged by `make soak` and the `timeline` run, not in one window. DESIGN.md §17's literal "
+            "figure is 0/s. Its footprint must be under 40 MB.")
+LATE_MS = 750       # a counted reading this late after its dump may fall outside the 1 s rest
 # Busy samples by what their stack contains; the first class that matches wins.
 SPLIT = [("conflicts", r"ConflictMatcher|RunningAppsConflictProbe"),
          ("engine", r"BoostEngine|DisplayController|TableWriter|FakeGammaPort|DriftCheck|RampPlanner|GainCeiling|"
@@ -244,6 +259,41 @@ def runs_of(out):
     runs = [d for d in glob.glob(os.path.join(out, "*")) if os.path.isfile(os.path.join(d, "stats.tsv"))]
     return sorted(runs, key=lambda d: (ORDER.get(os.path.basename(d), 99), os.path.basename(d)))
 
+def read_marks(run):
+    """marks.tsv: {label: (when perf.sh noticed it, ms; how long after the status file was written, ms or None)}."""
+    marks = {}
+    path = os.path.join(run, "marks.tsv")
+    if os.path.exists(path):
+        for line in open(path):
+            p = line.rstrip("\n").split("\t")
+            if len(p) >= 2 and p[0] not in marks:
+                marks[p[0]] = (int(p[1]), int(p[2]) if len(p) >= 3 and p[2].lstrip("-").isdigit() else None)
+    return marks
+
+def read_events(run, name):
+    """lock.tsv (`<ms>\t<lock state>`, every 5 s) or apps.tsv (`<ms> <launch|quit|activate>`): [(ms, value)];
+    None when the run has no such file (a run from before they were recorded)."""
+    path = os.path.join(run, name)
+    if not os.path.exists(path):
+        return None
+    rows = []
+    for line in open(path):
+        p = line.split(None, 1)
+        if len(p) == 2 and p[0].isdigit():
+            rows.append((int(p[0]), p[1].strip()))
+    return rows
+
+def lock_over(states):
+    """The lock over a window from the states read in it, in order: "locked", "unlocked", or "lock changed (…)"."""
+    seq = []
+    for state in states:
+        word = "locked" if "locked=1" in state else "unlocked" if "locked=0" in state else "?"
+        if not seq or seq[-1] != word:
+            seq.append(word)
+    if len(seq) == 1:
+        return seq[0], False
+    return "lock changed (" + "→".join(seq) + ")", True
+
 def read_units(run):
     units = {}
     path = os.path.join(run, "units.tsv")
@@ -264,13 +314,12 @@ def timeline_of(run):
     if len(rows) < 2:
         return None
     t0 = int(rows[0][1])
-    seconds, own_times, locks = [], [], set()
+    seconds, own_times = [], []
     for prev, r in zip(rows, rows[1:]):
         da, dc = int(r[4]) - int(prev[4]), int(r[15]) - int(prev[15])
         seconds.append(((int(r[1]) - t0) / 1000, da, dc, int(r[2]) - int(prev[2]), r[22] if len(r) > 22 else "?"))
         if da > dc:
             own_times.append((int(r[1]) - t0) / 1000)
-        locks.add(r[22] if len(r) > 22 else "?")
     dur = (int(rows[-1][1]) - t0) / 1000
     app = int(rows[-1][4]) - int(rows[0][4])
     ctl = int(rows[-1][15]) - int(rows[0][15])
@@ -285,11 +334,12 @@ def timeline_of(run):
                 two=sum(1 for _, da, _, _, _ in seconds if da >= 2),
                 own_seconds=len(own_times), cpu_ms=cpu_ms, ctl_cpu_ms=ctl_cpu_ms,
                 own_pct=max(cpu_ms - ctl_cpu_ms, 0) / 1000 / dur * 100, gaps=gaps,
-                locked="locked" if any("locked=1" in l for l in locks) else "unlocked")
+                locked=lock_over([r[22] if len(r) > 22 else "?" for r in rows])[0])
 
 def reason_text(reason):
-    """A dump's reason, with a conflict named by its catalogue entry and severity only: under --qa-live-signals the
-    real probe reports a running app, whose name and bundle ID stay out of the report (ARCHITECTURE.md §9.2 rule 8)."""
+    """A dump's reason, with a conflict named by its catalogue entry and severity only. The app writes it so
+    (`StatusSummary.text`); dumps from before H4's fix round wrote the whole app, whose name and bundle ID under
+    --qa-live-signals (a running app) stay out of the report (ARCHITECTURE.md §9.2 rule 8)."""
     m = re.match(r'conflict\(.*entryID: "([^"]*)".*severity: [\w.]*?(\w+),', reason)
     return f"conflict({m.group(1)}, {m.group(2)})" if m else reason
 
@@ -316,6 +366,9 @@ def collect(run):
     """Every measured phase of one run, in the order the scenario ran them."""
     stats = read_stats(os.path.join(run, "stats.tsv"))
     units = read_units(run)
+    marks = read_marks(run)
+    polls = read_events(run, "lock.tsv") or []
+    apps = read_events(run, "apps.tsv")
     phases, rows = [], {}
     for (ph, tag) in stats:
         if tag == "A" and ph not in phases:
@@ -333,18 +386,22 @@ def collect(run):
         cw = (b["ctl"]["intr"] - a["ctl"]["intr"]) / dt if a["ctl"] and b["ctl"] else None
         fp, cats = footprint_mb(os.path.join(run, f"footprint-{ph}.txt"))
         hot, busy, total, incl, split = parse_sample(os.path.join(run, f"sample-{ph}.txt"))
+        t0, t1 = a["app"]["ms"], b["app"]["ms"]
+        lock, changed = lock_over([a["lock"]] + [st for t, st in polls if t0 < t < t1] + [b["lock"]])
+        churn = None if apps is None else tuple(sum(1 for t, kind in apps if t0 <= t <= t1 and kind == k)
+                                                for k in ("launch", "quit", "activate"))
         row = dict(dt=dt, cpu=cpu, ccpu=ccpu, pct=cpu / 1000 / dt * 100,
                    own_pct=max(cpu - (ccpu or 0), 0) / 1000 / dt * 100, aw=aw, cw=cw,
                    own=max(aw - cw, 0) if cw is not None else None,
                    mw=(b["app"]["energy"] - a["app"]["energy"]) / 1e9 / dt * 1000,
                    fp=fp, cats=cats, vm=vmmap_mb(os.path.join(run, f"vmmap-{ph}.txt")),
-                   th=f"{a['app']['th']}→{b['app']['th']}",
-                   lock="locked" if "locked=1" in a["lock"] + b["lock"] else "unlocked",
+                   th=f"{a['app']['th']}→{b['app']['th']}", lock=lock, lock_changed=changed, churn=churn,
                    load=(a["load"] + b["load"]) / 2, busy=busy, total=total, split=split, hot=hot, incl=incl,
-                   units=None, unit=None, per_unit=None)
+                   units=None, unit=None, per_unit=None, lags=None)
         if ph in units:
             count, unit = units[ph]
-            row.update(units=count, unit=unit, per_unit=max(cpu - (ccpu or 0), 0) / count if count else None)
+            row.update(units=count, unit=unit, per_unit=max(cpu - (ccpu or 0), 0) / count if count else None,
+                       lags=(marks.get(f"begin.{ph}", (0, None))[1], marks.get(f"clean.{ph}", (0, None))[1]))
         bud = budget_of(ph)
         row["verdict"], row["ok"] = "—", None
         if bud:
@@ -358,6 +415,8 @@ def collect(run):
                 bits.append(f"<{mem:g} MB"); ok &= fp < mem
             row["verdict"] = f"{label}: {', '.join(bits)} → {'pass' if ok else '**MISS**'}"
             row["ok"] = ok
+        if changed:
+            row["verdict"], row["ok"] = "not judged: the lock state changed in the window", None
         rows[ph] = row
     states = engine_at_starts(run)
     for ph, row in rows.items():                            # a real conflict or lock kept the engine from boosting
@@ -368,16 +427,12 @@ def collect(run):
 def summarize(out):
     report = [f"# perf: {os.path.basename(os.path.normpath(out))}\n"]
     csv = ["run,phase,seconds,cpu_ms,ctl_cpu_ms,cpu_pct,app_wk_s,ctl_wk_s,own_wk_s,energy_mW,footprint_MB,vmmap_MB,"
-           "threads,lock,load,units,unit,own_cpu_ms_per_unit"]
+           "threads,lock,load,units,unit,own_cpu_ms_per_unit,apps_launched,apps_quit,apps_activated"]
+    judged_off = False
     for run in runs_of(out):
         name = os.path.basename(run)
         phases, rows, stats = collect(run)
-        marks = {}
-        if os.path.exists(os.path.join(run, "marks.tsv")):
-            for line in open(os.path.join(run, "marks.tsv")):
-                p = line.rstrip("\n").split("\t")
-                if len(p) >= 2:
-                    marks.setdefault(p[0], int(p[1]))
+        marks = {label: when for label, (when, _) in read_marks(run).items()}
         report.append(f"## {name}\n")
         if "open" in marks and "ready" in marks:
             r = stats.get(("launch", "R"), {}).get("app")
@@ -387,18 +442,29 @@ def summarize(out):
                           f"footprint {fnum(fp, 1)} MB (vmmap {fnum(vmmap_mb(os.path.join(run, 'vmmap-ready.txt')), 1)} MB); "
                           f"lock {stats.get(('launch', 'R'), {}).get('lock', '?')}\n")
         if phases:
-            report.append("| Phase | s | CPU ms | ctl CPU ms | CPU % (own) | wk/s app | wk/s ctl | **own wk/s** | billed mW | footprint MB | vmmap MB | threads | lock | load | per unit, own CPU ms | §17 budget |")
-            report.append("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|")
+            report.append("| Phase | s | CPU ms | ctl CPU ms | CPU % (own) | wk/s app | wk/s ctl | **own wk/s** | billed mW | footprint MB | vmmap MB | threads | lock | apps launched/quit/activated | load | per unit, own CPU ms | §17 budget |")
+            report.append("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|")
         for ph in phases:
             r = rows[ph]
             per = f"{r['per_unit']:.3f} per {r['unit']} ({r['units']})" if r["per_unit"] is not None else "—"
+            late = [lag for lag in (r["lags"] or ()) if lag is not None and lag >= LATE_MS]
+            if late:
+                per += f" **a reading {max(late) / 1000:.2f} s after its dump: may include work outside the window**"
+            lock = f"**{r['lock']}**" if r["lock_changed"] else r["lock"]
+            churn = "/".join(map(str, r["churn"])) if r["churn"] is not None else "—"
+            judged_off |= ph.startswith("off") and r["ok"] is not None
             report.append(f"| {ph} | {r['dt']:.0f} | {r['cpu']:.1f} | {fnum(r['ccpu'], 1)} | {r['pct']:.3f} ({r['own_pct']:.3f}) | "
                           f"{r['aw']:.2f} | {fnum(r['cw'])} | **{fnum(r['own'])}** | {r['mw']:.2f} | {fnum(r['fp'], 1)} | "
-                          f"{fnum(r['vm'], 1)} | {r['th']} | {r['lock']} | {r['load']:.1f} | {per} | {r['verdict']} |")
+                          f"{fnum(r['vm'], 1)} | {r['th']} | {lock} | {churn} | {r['load']:.1f} | {per} | {r['verdict']} |")
+            c = r["churn"] or ("", "", "")
             csv.append(f"{name},{ph},{r['dt']:.1f},{r['cpu']:.2f},{fnum(r['ccpu'], 2)},{r['pct']:.4f},{r['aw']:.3f},"
                        f"{fnum(r['cw'], 3)},{fnum(r['own'], 3)},{r['mw']:.3f},{fnum(r['fp'], 1)},{fnum(r['vm'], 1)},"
                        f"{r['th']},{r['lock']},{r['load']:.1f},{r['units'] or ''},{r['unit'] or ''},"
-                       f"{fnum(r['per_unit'], 4) if r['per_unit'] is not None else ''}")
+                       f"{fnum(r['per_unit'], 4) if r['per_unit'] is not None else ''},{c[0]},{c[1]},{c[2]}")
+        lags = [(ph, rows[ph]["lags"]) for ph in phases if rows[ph]["lags"]]
+        if lags:
+            report.append("\nCounted readings, s after their dump (begin / clean; each in a 1 s rest): " + "; ".join(
+                f"{ph} " + " / ".join("?" if lag is None else f"{lag / 1000:.2f}" for lag in pair) for ph, pair in lags))
         states = engine_at_starts(run)
         if states and phases:
             report.append("\nEngine at each phase's start (the scenario's dump): " +
@@ -417,6 +483,9 @@ def summarize(out):
                 f.write("t_s,app_wk,ctl_wk,app_cpu_us,lock\n")
                 for t, da, dc, dcpu, lock in tl["seconds"]:
                     f.write(f"{t:.3f},{da},{dc},{dcpu / 1e3:.0f},{lock}\n")
+        if any(rows[ph]["lock_changed"] for ph in phases):
+            report.append("\nA window whose lock state changed (the Mac locked or unlocked partway) is not judged: "
+                          "the window server's redraw at an unlock lands in it. Run it again.")
         report.append("")
         report.append("Hot stacks (self samples outside idle waits, `sample` 1 ms × SAMPLE s; steady phases after the "
                       "window, counted phases over their tail):\n")
@@ -437,6 +506,8 @@ def summarize(out):
             report.append("\nLargest footprint categories (dirty):\n")
             report += fps
         report.append("")
+    if judged_off:
+        report.append(OFF_NOTE + "\n")
     open(os.path.join(out, "perf.md"), "w").write("\n".join(report) + "\n")
     open(os.path.join(out, "perf.csv"), "w").write("\n".join(csv) + "\n")
     print("\n".join(report))
@@ -462,8 +533,9 @@ def compare(dir_a, dir_b):
            f"A: `{dir_a}`  \nB: `{dir_b}`\n",
            "Own CPU % = (app − control) CPU time per window, of one core; own wk/s = interrupt wake-ups, app − control; "
            "footprint = `footprint` total after the window; per unit = own CPU ms per event or panel open (counted "
-           "phases); busy split = `sample` busy samples by stack. One window per phase and variant: read repeats, "
-           "never a single pair.\n"]
+           "phases); busy split = `sample` busy samples by stack; apps = apps the Mac launched/quit/activated in the "
+           "window. One window per phase and variant: read repeats, never a single pair. A window whose lock state "
+           "changed is not comparable (its deltas are left out).\n"]
     if not common:
         out.append("No run in common.")
     for run in common:
@@ -472,22 +544,36 @@ def compare(dir_a, dir_b):
         out.append(f"## {run}\n")
         phases = [p for p in pa if p in rb] + [p for p in pb if p in ra and p not in pa]
         if phases:
-            out.append("| Phase | own CPU % A → B | Δ | own wk/s A → B | Δ | footprint MB A → B | Δ | per unit A → B (own CPU ms) | busy split A | busy split B | lock A / B | §17 A → B |")
-            out.append("|---|---|---|---|---|---|---|---|---|---|---|---|")
+            out.append("| Phase | own CPU % A → B | Δ | own wk/s A → B | Δ | footprint MB A → B | Δ | per unit A → B (own CPU ms) | busy split A | busy split B | lock A / B | apps A / B | §17 A → B |")
+            out.append("|---|---|---|---|---|---|---|---|---|---|---|---|---|")
+        changed, differ = [], []
         for ph in phases:
             a, b = ra[ph], rb[ph]
             unit = a["unit"] or b["unit"]
-            per = (f"{fnum(a['per_unit'], 3)} → {fnum(b['per_unit'], 3)} per {unit} ({delta(a['per_unit'], b['per_unit'], 3, True)})"
+            nc = a["lock_changed"] or b["lock_changed"]
+            d = (lambda x, y, nd=3, rel=False: "not comparable") if nc else delta
+            per = (f"{fnum(a['per_unit'], 3)} → {fnum(b['per_unit'], 3)} per {unit} ({d(a['per_unit'], b['per_unit'], 3, True)})"
                    if unit else "—")
             verdict = "—"
             if a["ok"] is not None or b["ok"] is not None:
                 word = lambda ok: "—" if ok is None else ("pass" if ok else "**MISS**")
                 verdict = f"{word(a['ok'])} → {word(b['ok'])}"
-            out.append(f"| {ph} | {a['own_pct']:.3f} → {b['own_pct']:.3f} | {delta(a['own_pct'], b['own_pct'], 3, True)} | "
-                       f"{fnum(a['own'])} → {fnum(b['own'])} | {delta(a['own'], b['own'], 2)} | "
-                       f"{fnum(a['fp'], 1)} → {fnum(b['fp'], 1)} | {delta(a['fp'], b['fp'], 1)} | {per} | "
+            if nc:
+                changed.append(ph)
+            elif a["lock"] != b["lock"]:
+                differ.append(ph)
+            locks = f"{a['lock']} / {b['lock']}"
+            churn = " / ".join("—" if r["churn"] is None else "/".join(map(str, r["churn"])) for r in (a, b))
+            out.append(f"| {ph} | {a['own_pct']:.3f} → {b['own_pct']:.3f} | {d(a['own_pct'], b['own_pct'], 3, True)} | "
+                       f"{fnum(a['own'])} → {fnum(b['own'])} | {d(a['own'], b['own'], 2)} | "
+                       f"{fnum(a['fp'], 1)} → {fnum(b['fp'], 1)} | {d(a['fp'], b['fp'], 1)} | {per} | "
                        f"{split_text(a['split'], a['busy'])} | {split_text(b['split'], b['busy'])} | "
-                       f"{a['lock']} / {b['lock']} | {verdict} |")
+                       f"{'**' + locks + '**' if nc or ph in differ else locks} | {churn} | {verdict} |")
+        if changed:
+            out.append(f"\n**Not comparable** (the lock state changed in a window; run it again): {', '.join(changed)}")
+        if differ:
+            out.append(f"\nLocked in one variant and unlocked in the other (the window server draws only while unlocked; "
+                       f"read with care): {', '.join(differ)}")
         only = sorted((set(pa) ^ set(pb)) - set(phases))
         if only:
             out.append(f"\nPhases in one variant only: {', '.join(only)}")
@@ -563,16 +649,20 @@ repeat() {
   while (( i < $1 )); do body="$body $2"; i=$(( i + 1 )); done
   printf '%s' "$body"
 }
-# A counted phase: `begin.<name>`, the clean part (`$3` steps doing `$2` things of kind `$4`) between two 1 s rests
-# (so both readings fall where the app is idle, whatever the 0.25 s polling of the status file), `clean.<name>`, the
-# tail `$5` that `sample` watches for `$6` s (no tail with SAMPLE=0), 3 s of rest, `finish.<name>` (footprint).
-# Records the count in units.tsv, which `summarize` divides by.
+# A counted phase: 5 s of rest, `begin.<name>`, 1 s of rest, the clean part (`$3` steps doing `$2` things of kind
+# `$4`), 1 s of rest, `clean.<name>`, 1 s of rest, the tail `$5` that `sample` watches for `$6` s (no tail with
+# SAMPLE=0), 3 s of rest, `finish.<name>` (footprint). The app runs the step after a `dump` at once, and perf.sh
+# notices the dump 0–0.25 s later (it polls the status file), so a rest follows each reading's dump: both readings
+# fall where the app is idle, and the reading at `clean` counts no tail work. The first rest lets perf.sh finish what
+# the step before asked of it (a previous counted phase's `footprint` and `vmmap`, 1 s or more) before `begin`, whose
+# reading was 1.05 s late without it. Records the count in units.tsv, which `summarize` divides by.
 counted() {
   local name="$1" count="$2" clean="$3" unit="$4" tail="$5" seconds="$6"
   (( SAMPLE > 0 )) || { tail=""; seconds=0; }
   (( seconds <= SAMPLE )) || seconds="$SAMPLE"
   printf '%s\t%s\t%s\t%s\n' "$name" "$count" "$unit" "$seconds" >> "$RUN_OUT/units.tsv"
-  printf 'dump begin.%s; wait 1;%s wait 1; dump clean.%s;%s wait 3; dump finish.%s' "$name" "$clean" "$name" "$tail" "$name"
+  printf 'wait 5; dump begin.%s; wait 1;%s wait 1; dump clean.%s; wait 1;%s wait 3; dump finish.%s' \
+    "$name" "$clean" "$name" "$tail" "$name"
 }
 screen_events() {   # <count> <gap s>
   repeat "$1" "event screen-parameters; wait $2;"
@@ -621,7 +711,39 @@ extra_args_for() {
   esac
 }
 
-pid=""; control_pid=""; RUN_OUT=""
+pid=""; control_pid=""; RUN_OUT=""; RUN_SUITE=""
+# What a run leaves behind when it stops partway (a `die`, Ctrl-C): its background jobs (top, sample, the phase,
+# timeline, lock and apps readers, and what a phase job started), the app, which is asked to quit with SIGTERM (its
+# quit flow, ARCHITECTURE.md §7.4; it is never killed), the control, and the run's unique suite. A normal run has
+# cleaned up already, so this finds nothing to do.
+cleanup_run() {
+  local job app ctl
+  for job in $(jobs -p); do
+    pkill -TERM -P "$job" 2>/dev/null || true
+    kill "$job" 2>/dev/null || true
+  done
+  if [[ -n "$RUN_SUITE" ]]; then
+    app="$(pgrep -f -- "--qa-defaults-suite $RUN_SUITE" | head -1 || true)"
+    if [[ -n "$app" ]]; then
+      warn "asking the app ($app) to quit"
+      kill -TERM "$app" 2>/dev/null || true
+      for _ in $(seq 1 30); do kill -0 "$app" 2>/dev/null || break; sleep 0.5; done
+      ! kill -0 "$app" 2>/dev/null || warn "the app ($app) is still running; its script ends with quit"
+    fi
+  fi
+  if [[ -n "$pid" ]]; then
+    ctl="$(pgrep -f -- "PerfControl --follow $pid" | head -1 || true)"
+    [[ -z "$ctl" ]] || kill "$ctl" 2>/dev/null || true
+  fi
+  if [[ -n "$RUN_SUITE" ]]; then
+    defaults delete "$RUN_SUITE" >/dev/null 2>&1 || true
+    rm -f "$HOME/Library/Preferences/$RUN_SUITE.plist"
+    RUN_SUITE=""
+  fi
+}
+trap cleanup_run EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
 stats() {   # <phase> <tag>
   local line lock load
   line="$("$PIDSTAT" "$pid" "$control_pid" 2>/dev/null | tr '\n' ' ' || true)"
@@ -644,6 +766,12 @@ phase_job() {   # <phase>: SETTLE, the clean window, then sample, footprint, vmm
   stats "$name" M
   touch "$RUN_OUT/.done-$name"
 }
+lock_job() {   # the lock state every 5 s while the app runs (lock.tsv), so a window that changed it is not judged
+  while kill -0 "$pid" 2>/dev/null; do
+    printf '%s\t%s\n' "$(now_ms)" "$("$SESSION" 2>/dev/null || echo "locked=?")" >> "$RUN_OUT/lock.tsv"
+    sleep 5
+  done
+}
 timeline_job() {   # one line per second (both processes' counters, then the lock) until the run marks the end
   while [[ ! -f "$RUN_OUT/.timeline-end" ]] && kill -0 "$pid" 2>/dev/null; do
     { "$PIDSTAT" "$pid" "$control_pid" 2>/dev/null | tr '\n' ' ' || true; "$SESSION" 2>/dev/null || echo "locked=?"; } \
@@ -655,15 +783,19 @@ timeline_job() {   # one line per second (both processes' counters, then the loc
 
 run_one() {
   local run="$1" suite script fixture extra status_file seen total label t job_pids="" sample_pid="" seconds
+  local written lag apps_pid
   RUN_OUT="$OUT/$run"
   rm -rf "${RUN_OUT:?}"; mkdir -p "$RUN_OUT"
   suite="app.overbright.Overbright.perf.$VARIANT.$run.$$"
+  RUN_SUITE="$suite"; pid=""; control_pid=""
   defaults delete "$suite" >/dev/null 2>&1 || true
   script="$(script_for "$run")"; fixture="$(fixture_for "$run")"; extra="$(extra_args_for "$run")"
   status_file="$RUN_OUT/status.jsonl"
   printf '%s\n' "$script" > "$RUN_OUT/script.txt"
   app_domain_export "$RUN_OUT/app-domain-before.plist"
   log "perf $VARIANT/$run: $fixture; output in $RUN_OUT"
+  "$APPCHURN" "$RUN_OUT/apps.tsv" &                                  # counts only: no app is named
+  apps_pid=$!
   printf 'open\t%s\n' "$(now_ms)" > "$RUN_OUT/marks.tsv"
   # shellcheck disable=SC2086
   /usr/bin/open -n -g "$APP" --args --qa-simulate "$fixture" --qa-defaults-suite "$suite" --qa-panel \
@@ -685,6 +817,7 @@ run_one() {
   done
   [[ -n "$control_pid" ]] || die "the control did not start"
   echo "$pid $control_pid" > "$RUN_OUT/pid.txt"
+  lock_job &
   stats launch P
   if [[ "$run" == launch ]] && (( SAMPLE > 0 )); then
     /usr/bin/sample "$pid" "$SAMPLE" -file "$RUN_OUT/sample-launch.txt" >/dev/null 2>&1 &
@@ -695,11 +828,14 @@ run_one() {
   while kill -0 "$pid" 2>/dev/null; do
     total=0
     [[ -f "$status_file" ]] && total="$(wc -l < "$status_file" | tr -d ' ')"
+    # When the status file was last written: a reading's lag after its dump (exact for the newest line of a poll).
+    if (( seen < ${total:-0} )); then written="$(/usr/bin/stat -f %Fm "$status_file" 2>/dev/null || echo 0)"; fi
     while (( seen < ${total:-0} )); do
       seen=$(( seen + 1 ))
       label="$(sed -n "${seen}p" "$status_file" | sed -E 's/.*"label":"([^"]*)".*/\1/')"
       t="$(now_ms)"
-      printf '%s\t%s\n' "$label" "$t" >> "$RUN_OUT/marks.tsv"
+      lag="$(awk -v t="$t" -v w="$written" 'BEGIN { if (w > 0) printf "%d", t - w * 1000; else printf "?" }')"
+      printf '%s\t%s\t%s\n' "$label" "$t" "$lag" >> "$RUN_OUT/marks.tsv"
       case "$label" in
         ready) stats launch R; memory ready ;;
         start.*) phase_job "${label#start.}" & job_pids="$job_pids $!" ;;
@@ -722,12 +858,15 @@ run_one() {
     sleep 0.25
   done
   for j in $job_pids; do wait "$j" 2>/dev/null || true; done
-  kill "$top_pid" 2>/dev/null || true
+  kill "$top_pid" "$apps_pid" 2>/dev/null || true
   wait "$top_pid" 2>/dev/null || true
+  wait "$apps_pid" 2>/dev/null || true
+  wait 2>/dev/null || true                                          # the lock reader ends with the app
   for _ in $(seq 1 20); do kill -0 "$control_pid" 2>/dev/null || break; sleep 0.5; done
   kill "$control_pid" 2>/dev/null || true
   defaults delete "$suite" >/dev/null 2>&1 || true
   rm -f "$HOME/Library/Preferences/$suite.plist" "$RUN_OUT"/.done-* "$RUN_OUT/.timeline-end"
+  RUN_SUITE=""; pid=""; control_pid=""
   app_domain_unchanged "$RUN_OUT/app-domain-before.plist" "perf run $run" || domain_changed="$domain_changed $run"
   # Every phase must have run in the simulated wiring: no real table write, no window ordered in (D24).
   if grep -q '"gammaWrites"' "$status_file"; then

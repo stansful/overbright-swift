@@ -199,7 +199,19 @@ is the app's minus the control's:
 - **Memory** is the `footprint` total (what Activity Monitor's Memory column shows), never RSS. Any in-process Metal
   work makes the GPU driver charge ≈ 237 MB of graphics footprint until 1–3 s after the last frame.
 - `sample` (hot stacks and a busy-sample split by subsystem), `footprint` and `vmmap --summary` run after each window.
-  The lock state and the load average are recorded with every reading.
+- **Counted phases** (`events`, `panelcycle`) do a known number of things and report the own CPU per thing. The app
+  runs the next step right after a `dump`, and perf.sh notices a dump 0–0.25 s later (it polls the status file), so
+  each reading's dump is followed by a 1 s rest: the reading at the start and the one after the counted work both fall
+  where the app is idle, and the tail that `sample` watches starts only after that rest. A 5 s rest before each
+  counted phase lets perf.sh finish reading the previous one's footprint first. perf.md prints how late each reading
+  came (marks.tsv keeps it) and flags one 0.75 s or more after its dump.
+- **The lock state** is read with every reading and every 5 s between them (lock.tsv), with the load average. A
+  window in which the Mac was locked or unlocked partway is reported as "lock changed (locked→unlocked)", is not
+  judged, and `perf-compare` marks it not comparable: an unlock redraws the screen inside the window. Run it again.
+- **Apps launched, quit and activated** on the Mac are counted per window (apps.tsv, counts only: no app is named).
+- **Off's verdict** uses the soak's wake-up rule (at most 0.05 own interrupt wake-ups/s; whether they beat
+  periodically is judged by `make soak` and the `timeline` run, not in one 60 s window) and a footprint under 40 MB
+  (DESIGN.md §17's literal wake-up figure is 0/s).
 
 | Run | What it measures |
 |---|---|
@@ -210,7 +222,7 @@ is the app's minus the control's:
 | `events` | 1,500 screen-parameters events 10 ms apart while off and while boosted, then bursts of 120 at 8 ms every 5 s with the panel closed and open: CPU per event |
 | `panelcycle` | the panel opened and closed 10 times while off: CPU per open and the footprint after |
 | `timeline` | interrupt wake-ups every second for 300 s while two displays are boosted: seconds with two wake-ups, gaps |
-| `signals` | off, boosted and dimmed (60 s windows) with `--qa-live-signals`: the real Signals' cost on this Mac. Its numbers depend on the apps running and on the lock state: a running conflict-catalogue app or a locked screen keeps the engine from boosting (the engine line names the reason, by catalogue entry only, and a boosted phase is then not judged) |
+| `signals` | off, boosted and dimmed (60 s windows) with `--qa-live-signals`: the real Signals' cost on this Mac. Its numbers depend on the apps running, launching and quitting (the apps column) and on the lock state: a running conflict-catalogue app or a locked screen keeps the engine from boosting (the engine line names the reason, and a boosted phase is then not judged). The app's own dump names a running app by its catalogue entry only (`StatusSummary.byEntry`), so no file of the run carries an app's name or bundle ID |
 
 ```zsh
 make -C <repo> debug
@@ -221,11 +233,14 @@ make -C <repo> perf-compare A=build/logs/perf/base B=build/logs/perf/Overbright
 <repo>/scripts/perf.sh summarize <repo>/build/logs/perf/Overbright    # the tables again (perf.md, perf.csv)
 ```
 
-**Protocol.** Measure the base and your branch alternately in one session, every steady phase at least twice, and
-report the repeat pair, never a single window. Discard a window when the system log shows a click on the status item
-or the panel inside it (`/usr/bin/log show --last 30m --predicate 'subsystem == "app.overbright.Overbright"'`: "panel
-closes: outsideClick", AppKit `trackMouse`), and run it again. `PHASE`, `MEASURE`, `SETTLE` and `SAMPLE` change the
-windows (`SAMPLE=0` skips `sample`).
+**Protocol.** Measure the base and your branch alternately in one session (base, branch, base, branch), every steady
+phase at least twice, and report the repeat pair, never a single window; `signals` above all, whose cost follows what
+the rest of the Mac does: compare its windows only with the base run next to them, and with similar app counts.
+Discard a window whose lock state changed, and one in which the system log shows a click on the status item or the
+panel (`/usr/bin/log show --last 30m --predicate 'subsystem == "app.overbright.Overbright"'`: "panel closes:
+outsideClick", AppKit `trackMouse`), and run it again. `PHASE`, `MEASURE`, `SETTLE` and `SAMPLE` change the windows
+(`SAMPLE=0` skips `sample`). A run that stops partway (an error, Ctrl-C) asks the app to quit with SIGTERM (its quit
+flow), stops its readers and deletes its suite.
 
 **The app's own domain.** perf.sh and the soak export `app.overbright.Overbright` before and after (read-only)
 and fail when a QA run changed it (ARCHITECTURE.md §8.5); they never delete a key there.

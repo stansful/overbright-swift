@@ -110,11 +110,13 @@ unregister_app() {
 #   <pid> <epoch_ms> <cpu_ns> <pkg_idle_wkups> <interrupt_wkups> <phys_footprint_B> <resident_B> <threads>
 #   <billed_energy_nJ> <instructions> <cycles> (`<pid> <epoch_ms> NA` for a process that is gone); no argument: epoch ms;
 # - sessionstate: "locked=<0|1> onConsole=<0|1>" from CGSessionCopyCurrentDictionary;
+# - appchurn <file>: one line `<epoch_ms> <launch|quit|activate>` per app that starts, quits or is activated on this
+#   Mac (what Signals' running-list observer sees), until it is terminated (counts only: no name or bundle ID);
 # - PerfControl.app: scripts/soak-control.swift, the control app run beside Overbright (`--follow <pid>`).
 build_perf_tools() {
   local dir="$1"
   mkdir -p "$dir"
-  PIDSTAT="$dir/pidstat"; SESSION="$dir/sessionstate"; CONTROL="$dir/PerfControl.app"
+  PIDSTAT="$dir/pidstat"; SESSION="$dir/sessionstate"; APPCHURN="$dir/appchurn"; CONTROL="$dir/PerfControl.app"
   _source_into "$dir/pidstat.c" <<'C'
 // pidstat: read-only counters of processes (proc_pid_rusage, proc_pidinfo); never attaches. No arguments: epoch ms.
 //   <pid> <epoch_ms> <cpu_ns> <pkg_idle_wkups> <interrupt_wkups> <phys_footprint_B> <resident_B> <threads>
@@ -160,6 +162,32 @@ print("locked=\(locked ? 1 : 0) onConsole=\(console ? 1 : 0)")
 SWIFT
   if [[ ! -x "$SESSION" || "$dir/sessionstate.swift" -nt "$SESSION" ]]; then
     xcrun swiftc -O -o "$SESSION" "$dir/sessionstate.swift" || die "sessionstate did not build"
+  fi
+  _source_into "$dir/appchurn.swift" <<'SWIFT'
+// appchurn <file>: appends `<epoch_ms> <launch|quit|activate>` for every app that starts or quits on this Mac (KVO on
+// NSWorkspace.runningApplications, which agents and background apps change too, as Signals observes it) and every
+// activation (NSWorkspace's notification), until it is terminated. Counts only: no name or bundle ID. Read-only.
+import AppKit
+let path = CommandLine.arguments.count > 1 ? CommandLine.arguments[1] : "/dev/stdout"
+if !FileManager.default.fileExists(atPath: path) { FileManager.default.createFile(atPath: path, contents: nil) }
+guard let out = FileHandle(forWritingAtPath: path) else { exit(1) }
+out.seekToEndOfFile()
+func note(_ kind: String, _ count: Int = 1) {
+    let ms = Int64(Date().timeIntervalSince1970 * 1000)
+    for _ in 0..<count { out.write(Data("\(ms) \(kind)\n".utf8)) }
+}
+let running = NSWorkspace.shared.observe(\.runningApplications, options: [.old, .new]) { _, change in
+    let old = Set((change.oldValue ?? []).map(\.processIdentifier))
+    let new = Set((change.newValue ?? []).map(\.processIdentifier))
+    note("launch", new.subtracting(old).count)
+    note("quit", old.subtracting(new).count)
+}
+NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didActivateApplicationNotification,
+                                                  object: nil, queue: .main) { _ in note("activate") }
+RunLoop.main.run()
+SWIFT
+  if [[ ! -x "$APPCHURN" || "$dir/appchurn.swift" -nt "$APPCHURN" ]]; then
+    xcrun swiftc -O -o "$APPCHURN" "$dir/appchurn.swift" || die "appchurn did not build"
   fi
   _source_into "$dir/soak-control.swift" < "$ROOT/scripts/soak-control.swift"
   if [[ ! -x "$CONTROL/Contents/MacOS/PerfControl" || "$dir/soak-control.swift" -nt "$CONTROL/Contents/MacOS/PerfControl" ]]; then
