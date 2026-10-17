@@ -58,9 +58,12 @@ public nonisolated enum OverflowItem: Hashable, Sendable {
     }
 }
 
-/// The header row.
+/// The header row. It keeps only what it draws from the engine's status (the symbol, the master switch, whether every
+/// display is dimmed), so a status change that moves none of them leaves it alone (`Equatable`).
 struct PanelHeader: View {
-    let status: BoostStatus
+    let symbolState: StatusSymbolState
+    let isOn: Bool
+    let isEveryDisplayDimmed: Bool
     let fillLightOn: Bool
     let symbol: (StatusSymbolState) -> Image
     let commands: PanelCommands
@@ -68,9 +71,21 @@ struct PanelHeader: View {
     @Environment(\.panelMenuPresenter) private var menus
     @State private var overflowAnchor = MenuAnchorReference()
 
+    /// The header for `status`.
+    init(status: BoostStatus, fillLightOn: Bool, symbol: @escaping (StatusSymbolState) -> Image, commands: PanelCommands,
+         focus: FocusState<PanelFocus?>.Binding) {
+        symbolState = status.symbol
+        isOn = status.isOn
+        isEveryDisplayDimmed = DimState.isEveryDisplayDimmed(status)
+        self.fillLightOn = fillLightOn
+        self.symbol = symbol
+        self.commands = commands
+        self.focus = focus
+    }
+
     var body: some View {
         HStack(spacing: Space.s) {
-            symbol(status.symbol)
+            symbol(symbolState)
                 .renderingMode(.template)
                 .resizable()
                 .frame(width: PanelLayout.headerSymbol, height: PanelLayout.headerSymbol)
@@ -79,14 +94,14 @@ struct PanelHeader: View {
                 .font(.headline)
                 .accessibilityAddTraits(.isHeader)
             Spacer(minLength: Space.m)
-            Toggle(isOn: Binding(get: { status.isOn },
+            Toggle(isOn: Binding(get: { isOn },
                                  set: { commands.services.boost.setOn($0, source: .panel) })) {
                 Text(verbatim: "Overbright")
             }
             .toggleStyle(PanelSwitchStyle())                       // accent while on, in a panel that is not key
             .accessibilityLabel(Text(verbatim: "Overbright"))
             .panelFocus(focus, .masterSwitch, cornerRadius: HitTarget.minimum.height / 2) {
-                commands.services.boost.setOn(!status.isOn, source: .panel)
+                commands.services.boost.setOn(!isOn, source: .panel)
             }
             overflowMenu
         }
@@ -95,7 +110,7 @@ struct PanelHeader: View {
     }
 
     private var overflowItems: [OverflowItem] {
-        OverflowItem.items(isDimmed: DimState.isEveryDisplayDimmed(status), fillLightOn: fillLightOn)
+        OverflowItem.items(isDimmed: isEveryDisplayDimmed, fillLightOn: fillLightOn)
     }
 
     private var overflowMenu: some View {
@@ -149,6 +164,15 @@ struct PanelHeader: View {
         case .help: commands.showHelp(nil)
         case .quit: commands.quit()
         }
+    }
+}
+
+extension PanelHeader: Equatable {
+    /// Two headers draw the same when the symbol, the switch, the dimmed state and Fill Light agree; the symbol
+    /// drawing, the commands and the focus binding are the panel's own for its life.
+    static func == (lhs: PanelHeader, rhs: PanelHeader) -> Bool {
+        lhs.symbolState == rhs.symbolState && lhs.isOn == rhs.isOn
+            && lhs.isEveryDisplayDimmed == rhs.isEveryDisplayDimmed && lhs.fillLightOn == rhs.fillLightOn
     }
 }
 

@@ -79,6 +79,37 @@ struct PanelFooter: View {
     }
 }
 
+extension PanelFooter: Equatable {
+    /// Two footers draw the same when their chips show the same and offer the same rows: the rows' actions follow from
+    /// the settings their titles and checkmarks show, and the focus binding is the panel's own for its life. So a
+    /// status change that moves no chip leaves the footer alone.
+    static func == (lhs: PanelFooter, rhs: PanelFooter) -> Bool {
+        lhs.chips.count == rhs.chips.count && zip(lhs.chips, rhs.chips).allSatisfy { $0.drawsLike($1) }
+    }
+}
+
+extension FooterChip {
+    /// The chip shows and offers what `other` does (kind, both models, the menu's rows by title and checkmark).
+    func drawsLike(_ other: FooterChip) -> Bool {
+        kind == other.kind && model == other.model && compact == other.compact
+            && Self.sameRows(menu, other.menu)
+    }
+
+    /// Two menus with the same rows, separators and submenus, by title and checkmark.
+    static func sameRows(_ lhs: [GuardChipMenuItem], _ rhs: [GuardChipMenuItem]) -> Bool {
+        lhs.count == rhs.count && zip(lhs, rhs).allSatisfy { pair in
+            switch pair {
+            case let (.item(leftTitle, leftChecked, _), .item(rightTitle, rightChecked, _)):
+                leftTitle == rightTitle && leftChecked == rightChecked
+            case let (.submenu(leftTitle, leftItems), .submenu(rightTitle, rightItems)):
+                leftTitle == rightTitle && sameRows(leftItems, rightItems)
+            case (.separator, .separator): true
+            default: false
+            }
+        }
+    }
+}
+
 /// The AppKit anchors the footer chips' keyboard menus open at, one per chip.
 @MainActor final class FooterAnchors {
     private var references: [FooterChip.Kind: MenuAnchorReference] = [:]
