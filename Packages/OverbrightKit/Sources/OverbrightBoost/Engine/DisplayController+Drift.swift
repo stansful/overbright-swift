@@ -15,15 +15,34 @@ extension DisplayController {
     /// What started a drift check.
     enum DriftTrigger: Hashable, Sendable { case periodic, appTerminated }
 
-    /// The 2 s check while boosted or dimmed (the only periodic work of a steady display, §4.2).
+    /// The 2 s check while boosted or dimmed (the only periodic work of a steady display, §4.2), on the shared 2 s grid
+    /// (D29): each tick sleeps until the next multiple of `watchdogInterval` on the engine's time source, at most 2 s
+    /// away, so the checks of every display, the hang watchdog's pings and Signals' watch share one wake-up instead of
+    /// drifting apart from when each ramp ended. No interval grows; the first tick after a ramp can only come sooner.
     func startDriftWatch() {
         let stamp = generation
         driftSlot.run { [weak self] in
             while true {
-                guard let self, await self.sleep(EngineTiming.watchdogInterval, stamp) else { return }
+                guard let self else { return }
+                let delay = Self.gridDelay(from: self.deps.time.now, every: EngineTiming.watchdogInterval)
+                guard await self.sleep(delay, stamp) else { return }
                 await self.driftTick(stamp, trigger: .periodic)
             }
         }
+    }
+
+    /// The time from `now` to the next multiple of `period` since the time source's origin, strictly after `now`: in
+    /// (0, `period`] (the grid rule of D29; Core's `TimeSource` grid helper computes the same point). Nanoseconds are
+    /// floored before the remainder, so the sleep never ends before the grid point and a tick never runs twice on one.
+    nonisolated static func gridDelay(from now: MonotonicInstant, every period: Duration) -> Duration {
+        func nanoseconds(_ duration: Duration) -> Int64 {
+            let (seconds, attoseconds) = duration.components
+            return seconds * 1_000_000_000 + attoseconds / 1_000_000_000
+        }
+        let step = nanoseconds(period)
+        guard step > 0 else { return period }
+        let remainder = ((nanoseconds(now.sinceOrigin) % step) + step) % step
+        return .nanoseconds(step - remainder)
     }
 
     /// Any app terminated: WindowServer resets every display when a table writer dies, so check after 50 ms; the
