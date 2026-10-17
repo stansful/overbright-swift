@@ -2,7 +2,9 @@
 // the safety ledger, so a stall in the middle of a ramp from neutral (the first boost, a reapply after a reset) is
 // restored (ARCHITECTURE.md §4.6, §7.4; D7: "a hung but living process"). The watchdog is real (short intervals) and
 // pings a queue the test stalls; the engine runs on the manual clock, so the ramp stands still while the queue is
-// stalled. `make tsan FILTER=EngineWatchdogTests` runs it under Thread Sanitizer.
+// stalled. The 1 s timeout is far above how late an idle serial queue answers on a loaded machine, so only the test's
+// stall makes it fire, and the test waits for that restore with a scheduling margin only a real failure reaches (§9.1).
+// `make tsan FILTER=EngineWatchdogTests` runs it under Thread Sanitizer.
 import Dispatch
 import Foundation
 import OverbrightCore
@@ -10,11 +12,11 @@ import Testing
 @testable import OverbrightBoost
 
 @MainActor @Suite(.serialized) struct EngineWatchdogTests {
-    /// An engine whose watchdog pings `queue` every 50 ms and restores after 250 ms without an answer.
+    /// An engine whose watchdog pings `queue` every 50 ms and restores after 1 s without an answer.
     private func harness(pinging queue: DispatchQueue) -> EngineHarness {
         let h = EngineHarness()
         h.engine.watchdog = HangWatchdog(writer: h.engine.writer, ledger: h.engine.ledger, journal: h.journal,
-                                         pingInterval: .milliseconds(50), timeout: .milliseconds(250), pinged: queue)
+                                         pingInterval: .milliseconds(50), timeout: .seconds(1), pinged: queue)
         h.engine.watchdogEnabled = true
         return h
     }
@@ -28,7 +30,7 @@ import Testing
     private func stallUntilRestored(_ queue: DispatchQueue, _ watchdog: HangWatchdog) async -> Bool {
         let stall = Stall()
         queue.async { stall.begin() }
-        let fired = await waitUntil(.seconds(10)) { watchdog.fireCount == 1 }
+        let fired = await waitUntil(.seconds(120)) { watchdog.fireCount == 1 }
         stall.release()
         return fired
     }

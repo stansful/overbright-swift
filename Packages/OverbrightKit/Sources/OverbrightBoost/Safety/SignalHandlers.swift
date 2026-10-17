@@ -26,22 +26,33 @@ public nonisolated final class SignalHandlers: Sendable {
         var handling = false
     }
 
+    /// How the signal queue waits for the main-actor stop: true when `done` was signalled within `timeout`.
+    typealias StopWait = @Sendable (_ done: DispatchSemaphore, _ timeout: Duration) -> Bool
+
     private let writer: TableWriter
     private let stop: @MainActor @Sendable () async -> Void
     private let timeout: Duration
+    private let wait: StopWait
     private let terminate: @Sendable (Int32) -> Void
     private let queue = DispatchQueue(label: "app.overbright.Overbright.signals", qos: .userInitiated)
     private let state = LockedState(State())
 
     /// Handlers that write through `writer` and then ask for `stop` (the engine's ramped stop).
     public convenience init(writer: TableWriter, stop: @escaping @MainActor @Sendable () async -> Void) {
-        self.init(writer: writer, stop: stop, timeout: EngineTiming.signalStopTimeout) { code in exit(code) }
+        self.init(writer: writer, stop: stop, timeout: EngineTiming.signalStopTimeout, terminate: { code in exit(code) })
     }
 
-    /// The designated initializer: tests replace `exit` and may shorten the wait.
+    /// The designated initializer: tests replace `exit`, and the wait, so that what they check never depends on how
+    /// soon a loaded main actor runs the stop (§9.1).
     init(writer: TableWriter, stop: @escaping @MainActor @Sendable () async -> Void, timeout: Duration,
-         terminate: @escaping @Sendable (Int32) -> Void) {
-        self.writer = writer; self.stop = stop; self.timeout = timeout; self.terminate = terminate
+         wait: @escaping StopWait = SignalHandlers.waitAtMost, terminate: @escaping @Sendable (Int32) -> Void) {
+        self.writer = writer; self.stop = stop; self.timeout = timeout; self.wait = wait; self.terminate = terminate
+    }
+
+    /// The shipped wait: blocks the signal queue (never the main thread) until `done` is signalled or `timeout` passed.
+    static let waitAtMost: StopWait = { done, timeout in
+        let nanoseconds = Int(clamping: Int64(max(timeout.timeInterval, 0) * 1_000_000_000))
+        return done.wait(timeout: .now() + .nanoseconds(nanoseconds)) == .success
     }
 
     deinit {
@@ -98,8 +109,7 @@ public nonisolated final class SignalHandlers: Sendable {
             await stop()
             done.signal()
         }
-        let nanoseconds = Int(clamping: Int64(max(timeout.timeInterval, 0) * 1_000_000_000))
-        if done.wait(timeout: .now() + .nanoseconds(nanoseconds)) == .timedOut {
+        if !wait(done, timeout) {
             record("signal.stopTimedOut")
             log.error("signal \(number, privacy: .public): the main-actor stop did not finish in time")
         }
