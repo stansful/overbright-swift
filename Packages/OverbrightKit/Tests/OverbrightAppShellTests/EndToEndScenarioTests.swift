@@ -285,5 +285,54 @@ import Testing
         let runner = ScenarioRunner(rig: rig, wait: { _ in }, panel: { panel.append($0) })
         await runner.run([.panel(true), .wait(seconds: 1), .panel(false)])
         #expect(panel == [true, false])
+        #expect(!rig.hasLiveSignals)
+    }
+
+    // MARK: What a dump names
+
+    /// A reason names a conflicting app by its catalogue entry and severity only. Under `--qa-live-signals` the real
+    /// probe reports apps that run on this Mac, so the dump names them by entry in the banner and the chips too, and
+    /// drops a listed app's bundle ID (ARCHITECTURE.md §9.2 rule 8); the simulated runs keep their synthetic names, so
+    /// the copy check still sees the banner as the panel shows it.
+    @Test func aDumpNamesARunningAppByItsCatalogueEntry() async throws {
+        let time = ManualTimeSource()
+        let context = TestShell.context(fixture: .builtinXDRLidOpen, time: time)
+        let shell = TestShell.shell(.builtinXDRLidOpen, context: context)
+        await CompositionRoot.runLaunchWork(shell)
+        let rig = try #require(ScenarioRunner.Rig(shell: shell))
+        let signals = try #require(rig.signals), conflicts = try #require(rig.conflicts)
+        rig.services.boost.setOn(true, source: .shortcut)
+        await Self.advance(time, by: .seconds(8))
+        let app = ConflictingApp(entryID: "booster-01", severity: .booster, bundleID: "com.example.running.booster",
+                                 processID: 77_123, displayName: "Running Booster")
+        signals.appLaunched(app, probe: conflicts)
+        await Self.advance(time, by: .seconds(1))
+        func summary(byEntry: Bool) -> StatusSummary {
+            StatusSummary.of(rig.services, gamma: rig.gamma, triggers: rig.triggers, label: "conflict",
+                             namingAppsByEntry: byEntry)
+        }
+        let named = summary(byEntry: false), live = summary(byEntry: true)
+        shell.runner.stopNow()
+        #expect(named.banner?.contains("Running Booster") == true)
+        #expect(live.banner == named.banner?.replacingOccurrences(of: "Running Booster", with: "booster-01"))
+        for dump in [named, live] {
+            #expect(dump.displays.first?.reasons.first == "conflict(booster-01, booster)")
+            #expect(!dump.jsonLine.contains("com.example.running.booster") && !dump.jsonLine.contains("77123"))
+        }
+        #expect(!live.jsonLine.contains("Running Booster"))
+        // Every other place an app can appear: a drift trip (its reason, banner and phase), a listed app.
+        var status = rig.services.boost.status
+        status.banner = .attributedDrift(app, display: status.displays[0].key)
+        status.displays[0].phase = .failed(.attributedDrift(app))
+        status.displays[0].decision?.reasons = [.tripped(.attributedDrift(app)),
+                                                .pausedApp(bundleID: "com.example.listed")]
+        let shown = StatusSummary.byEntry(status)
+        let entry = ConflictingApp(entryID: "booster-01", severity: .booster, bundleID: nil, processID: 0,
+                                   displayName: "booster-01")
+        #expect(shown.banner == .attributedDrift(entry, display: status.displays[0].key))
+        #expect(shown.displays[0].phase == .failed(.attributedDrift(entry)))
+        #expect(StatusSummary.text(shown.displays[0].phase) == "failed(attributedDrift(booster-01, booster))")
+        #expect(shown.displays[0].decision?.reasons.map(StatusSummary.text)
+                == ["tripped(attributedDrift(booster-01, booster))", "pausedApp(bundleID: \"listed-app\")"])
     }
 }

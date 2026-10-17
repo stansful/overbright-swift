@@ -3,7 +3,8 @@
 // ARCHITECTURE.md §8.5 (`--qa-script`), §10.15 (the QA matrix and `EndToEndScenarioTests` share it). It refuses to run
 // over real display ports: `Rig(shell:)` is nil unless the wiring is the simulated one and the table and trigger ports
 // it reads are Core fakes. Under `--qa-live-signals` (the real, read-only Signals over the simulated displays) the
-// steps that the fake signals deliver are skipped and logged; the engine, panel and wait steps run.
+// steps that the fake signals deliver are skipped and logged; the engine, panel and wait steps run, and each `dump`
+// names a running app by its catalogue entry only (`StatusSummary.byEntry`).
 #if DEBUG
 import Foundation
 import OverbrightCore
@@ -33,6 +34,9 @@ final class ScenarioRunner {
             conflicts = shell.ports.conflicts as? FakeConflictProbe
             self.gamma = gamma; self.triggers = triggers
         }
+
+        /// The real Signals report this Mac (`--qa-live-signals`): dumps name apps by catalogue entry only.
+        var hasLiveSignals: Bool { signals == nil || conflicts == nil }
     }
 
     private let rig: Rig
@@ -66,7 +70,8 @@ final class ScenarioRunner {
             case .wait(let seconds):
                 await wait(.milliseconds(Int64((max(seconds, 0) * 1000).rounded())))
             case .dump(let label):
-                let summary = StatusSummary.of(rig.services, gamma: rig.gamma, triggers: rig.triggers, label: label)
+                let summary = StatusSummary.of(rig.services, gamma: rig.gamma, triggers: rig.triggers, label: label,
+                                               namingAppsByEntry: rig.hasLiveSignals)
                 summaries.append(summary)
                 record(summary)
             default:

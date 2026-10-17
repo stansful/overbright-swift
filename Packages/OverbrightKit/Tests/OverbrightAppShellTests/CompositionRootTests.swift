@@ -221,7 +221,7 @@ import Testing
         #expect(CompositionRoot.skipsSingleInstanceCheck(qa, ports: live))
         let shell = CompositionRoot.makeShell(context, ports: live)
         let rig = try #require(ScenarioRunner.Rig(shell: shell))
-        #expect(rig.signals == nil && rig.conflicts == nil)
+        #expect(rig.signals == nil && rig.conflicts == nil && rig.hasLiveSignals)
         #expect(shell.lifecycle.contains { $0 is SignalsMonitor } && shell.lifecycle.last is BoostEngine)
         #expect(CompositionRoot.ports(fixture: .builtinXDRLidOpen, context: context).signals is FakeSystemSignals)
     }
