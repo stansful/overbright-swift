@@ -82,8 +82,8 @@ import Testing
         await h.start()
         #expect(await h.boost())
         h.gamma.resetToBase(1)
-        await h.advance(.milliseconds(2_100))
-        #expect(h.codes.contains("watchdog.reset"))
+        // The next drift tick is at most 2 s away (on the 2 s grid, D29).
+        #expect(await h.advance(until: { h.codes.contains("watchdog.reset") }, limit: .milliseconds(2_100)))
         let before = h.writes().count
         await h.advance(.milliseconds(700))
         #expect(h.writes().count - before >= EngineTiming.minimumRampSteps)
@@ -139,7 +139,9 @@ import Testing
         let h = EngineHarness()
         await h.start()
         #expect(await h.boost())
-        await h.advance(.milliseconds(1_000))                             // the drift tick is 1 s away
+        // The drift tick is 1 s away (ticks land on the 2 s grid, D29).
+        let toTick = DisplayController.gridDelay(from: h.time.now, every: EngineTiming.watchdogInterval)
+        await h.advance(toTick > .seconds(1) ? toTick - .seconds(1) : toTick + .seconds(1))
         h.gamma.changeBase(Self.otherBase, for: 1)
         h.controller()?.lastBaseEventAt = h.time.now                     // the event, as Signals would deliver it
         await h.advance(.milliseconds(1_500))

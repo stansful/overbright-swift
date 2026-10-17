@@ -36,7 +36,9 @@ import Testing
         #expect(h.settings[EngineRecords.boostMarker] == nil, "the boost marker is set", sourceLocation: sourceLocation)
         #expect(h.everyTableAtBase, sourceLocation: sourceLocation)
         #expect(h.triggers.openWindowCount == 0, sourceLocation: sourceLocation)
-        #expect(h.engine.activeTaskNames == [], sourceLocation: sourceLocation)
+        // A trailing status publish (≤ 250 ms, DESIGN.md §17) touches no display; `offMeansNoTasksNoWindows` checks it
+        // has fired once the interval passed.
+        #expect(h.engine.activeTaskNames.filter { $0 != "minorPublish" } == [], sourceLocation: sourceLocation)
         #expect(h.orderViolations == [], sourceLocation: sourceLocation)
     }
 

@@ -2,6 +2,7 @@
 // reset, namespaces, Undo of Reset All, nested keyed values, per-key observation; plus the defaults of ARCHITECTURE.md
 // §3.8 ("Defaults at a glance").
 import Foundation
+import os
 import Testing
 @testable import OverbrightCore
 
@@ -162,5 +163,89 @@ import Testing
                    EngineRecords.boostMarker.id, EngineRecords.focusDirective.id]
         #expect(Set(ids).count == ids.count)
         #expect(!ids.contains("revision"))                                                       // the upgrade key
+    }
+
+    /// Keys of different value types never share a box, and a key read with another value type than its box gets a new
+    /// box that loads what is stored, while the first type's box keeps working.
+    @Test func keysOfDifferentValueTypesNeverShareABox() {
+        let defaults = InMemoryDefaults()
+        let store = SettingsStore(defaults: defaults)
+        let count = SettingKey<Int>(.advanced, "boxProbeCount", default: 1)
+        let flag = SettingKey<Bool>(.advanced, "boxProbeFlag", default: false)
+        let words = SettingKey<String>(.advanced, "boxProbeWords", default: "none")
+        store[count] = 5
+        store[flag] = true
+        store[words] = "some"
+        #expect(store[count] == 5 && store[flag] && store[words] == "some")
+        store[count] = 6
+        #expect(store[count] == 6 && store[flag] && store[words] == "some")
+
+        // One id, two value types: the second type's box starts from what is stored (undecodable as a String: the
+        // default), the first type then gets a box of its own again, loaded from defaults.
+        let sameIDAsText = SettingKey<String>(.advanced, "boxProbeCount", default: "text")
+        #expect(store[sameIDAsText] == "text")
+        #expect(store[count] == 6)
+        store[count] = 7
+        #expect(SettingsStore(defaults: defaults)[count] == 7)
+    }
+
+    /// The hand-written observation of a box (its key path made once) keeps per-key granularity: a write invalidates
+    /// only readers of that key; writing the value it already holds invalidates nobody, as with `@Observable`.
+    @Test func aBoxObservesOnlyItsKey() async {
+        let store = SettingsStore(defaults: InMemoryDefaults())
+        var fired = 0
+        let token = observe({ store[GeneralSettings.showsHUD] }, onChange: { _ in fired += 1 })
+        store[GeneralSettings.haptics] = !store[GeneralSettings.haptics]
+        for _ in 0..<10 { await Task.yield() }
+        #expect(fired == 0)
+        store[GeneralSettings.showsHUD] = !store[GeneralSettings.showsHUD]
+        for _ in 0..<10 { await Task.yield() }
+        #expect(fired == 1)
+        token.cancel()
+
+        let box = SettingBox(3)
+        let changes = OSAllocatedUnfairLock(initialState: 0)
+        withObservationTracking { _ = box.value } onChange: { changes.withLock { $0 += 1 } }
+        box.value = 3
+        #expect(changes.withLock { $0 } == 0)
+        box.value = 4
+        #expect(changes.withLock { $0 } == 1 && box.value == 4)
+    }
+
+    /// `setDeferringWrite`: every reader sees the value at once; `defaults` gets it only at `writeDeferred()` (once,
+    /// with the value as it is then); a plain write settles what was owed; a reset drops it.
+    @Test func deferredWritesReachDefaultsOnlyWhenWritten() {
+        let defaults = InMemoryDefaults()
+        let store = SettingsStore(defaults: defaults)
+        let key = "overbright.displays.linkedLevel"
+        for step in [0.3, 0.4, 0.5] {
+            store.setDeferringWrite(DisplaySettings.linkedLevel, LevelPosition(step))
+            #expect(store[DisplaySettings.linkedLevel] == LevelPosition(step))
+        }
+        #expect(defaults.data(forKey: key) == nil && store.hasDeferredWrites)
+        store.writeDeferred()
+        #expect(SettingsStore(defaults: defaults)[DisplaySettings.linkedLevel] == LevelPosition(0.5))
+        #expect(!store.hasDeferredWrites)
+
+        store.setDeferringWrite(DisplaySettings.linkedLevel, LevelPosition(0.6))
+        store[DisplaySettings.linkedLevel] = LevelPosition(0.7)                                // a plain write
+        #expect(!store.hasDeferredWrites)
+        #expect(SettingsStore(defaults: defaults)[DisplaySettings.linkedLevel] == LevelPosition(0.7))
+
+        store.setDeferringWrite(DisplaySettings.linkedLevel, LevelPosition(0.8))
+        store.reset(namespace: .displays)
+        #expect(!store.hasDeferredWrites && defaults.data(forKey: key) == nil)
+        #expect(store[DisplaySettings.linkedLevel] == DisplaySettings.linkedLevel.defaultValue)
+    }
+
+    /// A deferred value still notifies its key's observers at once.
+    @Test func aDeferredWriteObservesAtOnce() async {
+        let store = SettingsStore(defaults: InMemoryDefaults())
+        var seen: [LevelPosition] = []
+        let token = observe({ store[DisplaySettings.linkedLevel] }, onChange: { seen.append($0) })
+        store.setDeferringWrite(DisplaySettings.linkedLevel, LevelPosition(0.45))
+        for _ in 0..<10 { await Task.yield() }
+        #expect(seen == [LevelPosition(0.45)])
+        token.cancel()
     }
 }
