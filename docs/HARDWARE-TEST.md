@@ -69,6 +69,7 @@ Nothing here boosts: keep Overbright running but off (master switch off in the p
 | 1.10 | **H-N2**: MSI with HDR on; move its SDR brightness slider in Displays settings (if macOS offers one) to two positions | the same two captures, `1.10-<position>` | whether the frame-average SDR white still matches WindowServer's `sdr:` |
 | 1.11 | **H-E2** (WP2, virtual displays; if an iPad or an AirPlay receiver is at hand): connect it as a **Sidecar** display, then as an **AirPlay** display (extended, then mirrored) | `obdiag …/1.11-sidecar.json`, `…/1.11-airplay.json` and `system_profiler SPDisplaysDataType -json > …/1.11-<kind>-profiler.json` | the display reads `virtual` true, panel class `virtualDisplay`, no card in the panel (it sits under "Why?"); WP16 reads its vendor (WP2 expects macOS's placeholder `'unkn'`, `0x756e6b6e`) and gamma capacity from the files |
 | 1.12 | **H-E3** (WP2, hot-plug): type `obdiag ~/Overbright-HW/1.12-early.json` without pressing Return; plug the MSI (HDR on) in and press Return at once; 3 s later run `obdiag …/1.12-late.json`; repeat once | the two files per try | whether the MSI's `panelPeakNits`, `panelFrameAverageNits` and `supportsPQ` (its `DisplayAttributes`) are already there in the early file; Overbright reads them 0.5 s after the last reconfiguration and again at 2 s, so a late arrival must show up by the 2 s pass (the panel's verdict and readout then match 1.6 without a replug) |
+| 1.13 | (WP2, WP3; the hardware-gated test suites, read-only) both displays connected, the MSI with HDR on; in a Terminal at your clone, one command at a time: `OVERBRIGHT_HARDWARE=1 make -C <your clone of Overbright> test FILTER=RealDisplayReadTests`, then the same with `FILTER=MetalClearPassTests` | the two outputs, `> ~/Overbright-HW/1.13-<suite>.txt 2>&1` | both pass: on Apple silicon the IORegistry walk finds the framebuffer services, the built-in's panel while the built-in is online, and every online external paired with its `DisplayAttributes` and not virtual (WP14, C-PLATFORM-6); the off-screen Metal clear reads 1.6 back as ≈ 1.5996. Neither writes a table or opens a window |
 
 ---
 
@@ -302,6 +303,7 @@ Cases: Overbright **off**; on with the winning trigger at Bright room; on with *
 | H-N1, H-N2 | (from the logs) does `BrightnessMilliNits` track SDR white with boost on; does the MSI's frame average follow its HDR SDR slider | | 1.x |
 | H-E2 | Sidecar and AirPlay: virtual, no card, vendor and capacity | | 1.11 |
 | H-E3 | hot-plug: the MSI's `DisplayAttributes` present at once, or only after the 0.5 s / 2 s passes? | | 1.12 |
+| hardware suites | `RealDisplayReadTests` and `MetalClearPassTests` pass with `OVERBRIGHT_HARDWARE=1` | | 1.13 |
 | H-X2 | baseline writes from the watchdog's and the signal queue's threads: no fault, no crash, `matchesBase` | | 5.8 |
 | H-FS2 | "Displays have separate Spaces" off: which displays pause for full screen | | 7.10 |
 | suggestions | the paused-app suggestions' bundle IDs on this Mac | | 7.11 |
