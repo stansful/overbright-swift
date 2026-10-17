@@ -29,17 +29,36 @@ enum HUDPlacement {
         return main ?? screens.first?.visibleFrame
     }
 
-    /// The frame for a window of `size` about `display` now (AppKit's screens and pointer).
+    /// The frame for a window of `size` about `display` now (AppKit's screens and pointer); nil for "every display"
+    /// places it on the screen under the pointer.
     @MainActor
     static func currentFrame(size: CGSize, display: DisplayKey?, services: OverbrightServices) -> CGRect? {
         let id = display.flatMap { services.displays.facts(for: $0)?.ref.id }
-        let screens = NSScreen.screens.map { screen in
+        guard let visible = visibleFrame(for: id, pointer: NSEvent.mouseLocation, screens: currentScreens,
+                                         main: NSScreen.main?.visibleFrame) else { return nil }
+        return frame(size: size, visibleFrame: visible)
+    }
+
+    /// The display under `pointer`: the facts whose CoreGraphics ID is the screen's that contains the pointer.
+    static func display(at pointer: CGPoint, screens: [(id: CGDirectDisplayID?, frame: CGRect, visibleFrame: CGRect)],
+                        displays: [DisplayFacts]) -> DisplayKey? {
+        guard let id = screens.first(where: { $0.frame.contains(pointer) })?.id else { return nil }
+        return displays.first { $0.ref.id == id }?.ref.key
+    }
+
+    /// The display under the pointer now (a change to every display is shown about it, DESIGN.md §6).
+    @MainActor
+    static func currentPointerDisplay(services: OverbrightServices) -> DisplayKey? {
+        display(at: NSEvent.mouseLocation, screens: currentScreens, displays: services.displays.displays)
+    }
+
+    /// AppKit's screens with their CoreGraphics IDs.
+    @MainActor
+    private static var currentScreens: [(id: CGDirectDisplayID?, frame: CGRect, visibleFrame: CGRect)] {
+        NSScreen.screens.map { screen in
             (id: (screen.deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as? NSNumber)
                 .map { CGDirectDisplayID($0.uint32Value) },
              frame: screen.frame, visibleFrame: screen.visibleFrame)
         }
-        guard let visible = visibleFrame(for: id, pointer: NSEvent.mouseLocation, screens: screens,
-                                         main: NSScreen.main?.visibleFrame) else { return nil }
-        return frame(size: size, visibleFrame: visible)
     }
 }

@@ -20,8 +20,8 @@ import Testing
                           "Paused: outside set hours", "Off: timer ended", "Extra brightness is back"]
 
     /// DESIGN.md §2.2 `hudValue` and `hudLabel`.
-    static let valueFont = Font.system(size: 15, weight: .semibold, design: .rounded).monospacedDigit()
-    static let labelFont = Font.system(size: 11)
+    static let valueFont = OverbrightFont.hudValue.font
+    static let labelFont = OverbrightFont.hudLabel.font
 
     /// The pseudo-long locale (+40 %), as in PanelUI's fit tests.
     static func lengthen(_ text: String) -> String {
@@ -107,8 +107,11 @@ import Testing
     /// The Keep-this-level prompt (DESIGN.md §6, 280 pt wide): its title, its countdown and its two buttons each fit
     /// between the prompt's insets, in the shell's words and in Design's.
     @Test(arguments: languages)
-    func theKeepLevelPromptFitsInEveryLanguage(_ code: String) {
-        let bundle = Bundle.module.path(forResource: code, ofType: "lproj").flatMap(Bundle.init(path:)) ?? .module
+    func theKeepLevelPromptFitsInEveryLanguage(_ code: String) throws {
+        // The language's own table, required: falling back to `.module` would measure English (C-PANEL-33).
+        let folder = Bundle.module.resourceURL?.appendingPathComponent("\(code).lproj", isDirectory: true)
+        let bundle = try #require(folder.flatMap { FileManager.default.fileExists(atPath: $0.path) ? Bundle(url: $0) : nil },
+                                  "\(code): no \(code).lproj in the shell's resources")
         let (locale, language) = (Locale(identifier: code), CopyLanguage.named(code) ?? .english())
         let titles = [String(localized: "Keep this level?", table: "StatusMenu", bundle: bundle, locale: locale),
                       ConfirmationText.keepLevelTitle(in: language)]
@@ -181,18 +184,52 @@ import Testing
         #expect(!HUDController.isBoosting(key, status: try #require(ScriptedStatuses.status(named: "hud-off"))))
     }
 
-    @Test func theBarFollowsTheLevelAndIsStandardWhileOff() {
-        let settings = SettingsStore(defaults: InMemoryDefaults())
+    /// The bar draws the level the display is set to — the panel's thumb — and Standard while off (C-PANEL-1).
+    @Test func theBarFollowsTheLevelAndIsStandardWhileOff() throws {
+        let services = try #require(ScriptedStatuses.services(named: "boosting"))
         let key = DisplayFixture.Keys.builtIn
-        var preferences = DisplayPreferences()
+        var all = services.settings[DisplaySettings.perDisplay]
+        var preferences = all[key] ?? DisplayPreferences()
         preferences.level = LevelPosition(-0.66)
-        settings[DisplaySettings.perDisplay] = [key: preferences]
-        let on = BoostStatus(isOn: true, isReady: true, pausedUntil: nil, autoOffAt: nil, displays: [], banner: nil,
-                             symbol: .dimming)
-        #expect(HUDController.level(of: key, status: on, settings: settings) == LevelPosition(-0.66))
-        #expect(HUDController.level(of: key, status: .initial, settings: settings) == .standard)
-        settings[DisplaySettings.linkLevels] = true
-        settings[DisplaySettings.linkedLevel] = LevelPosition(0.75)
-        #expect(HUDController.level(of: key, status: on, settings: settings) == LevelPosition(0.75))
+        all[key] = preferences
+        services.settings[DisplaySettings.perDisplay] = all
+        let on = services.boost.status
+        #expect(HUDContent.level(of: key, status: on, services: services) == LevelPosition(-0.66))
+        var off = on
+        off.isOn = false
+        #expect(HUDContent.level(of: key, status: off, services: services) == .standard)
+        services.settings[DisplaySettings.linkLevels] = true
+        services.settings[DisplaySettings.linkedLevel] = LevelPosition(0.75)
+        #expect(HUDContent.level(of: key, status: on, services: services) == LevelPosition(0.75))
+    }
+
+    /// A display whose extra brightness is off, or whose boost half is unavailable, draws Standard however high its
+    /// stored level is, as the panel's thumb and readout do (C-PANEL-1).
+    @Test func theBarOfASwitchedOffDisplayIsStandard() throws {
+        let services = try #require(ScriptedStatuses.services(named: "extra-brightness-off"))
+        let msi = DisplayFixture.Keys.mpg322ux
+        let status = services.boost.status
+        #expect(services.settings[DisplaySettings.perDisplay][msi]?.level.isBoost == true)
+        #expect(HUDContent.level(of: msi, status: status, services: services) == .standard)
+        let change = LevelChange(sequence: 1, kind: .level, source: .shortcut, display: msi)
+        let text = try #require(HUDContent.text(for: change, status: status, on: msi, services: services))
+        #expect(text.value == ValueText.make(ReadoutValues(state: .standard, appliedGain: 1, requestedGain: nil, nits: nil,
+                                                           preset: nil, isEstimate: true, dimPercent: nil)).text)
+    }
+
+    /// With two displays the name has its own line above the value and the bar, as wide as the HUD's text (C-PANEL-11).
+    @Test func theNameHasItsOwnLineAboveTheValue() {
+        let name = "Built-in Liquid Retina XDR Display"
+        let full = NSHostingView(rootView: Text(verbatim: name).font(Self.labelFont).fixedSize()).fittingSize.width
+        #expect(full <= HUDView.textWidth)                                  // shown whole, not "Built…splay"
+        let text = HUDText(symbol: .sunMaxFill, displayName: name, value: "Sunlight · ≈ ×2.04", reason: nil,
+                           announcement: "")
+        let size = NSHostingView(rootView: HUDView(text: text, level: LevelPosition(0.75), isBoosting: true)
+            .overbrightThemeRoot()).fittingSize
+        #expect(size == HUDPlacement.size)
+        let alone = HUDText(symbol: .sunMaxFill, displayName: nil, value: "Sunlight · ≈ ×2.04", reason: nil,
+                            announcement: "")
+        #expect(NSHostingView(rootView: HUDView(text: alone, level: LevelPosition(0.75), isBoosting: true)
+            .overbrightThemeRoot()).fittingSize == HUDPlacement.size)
     }
 }
