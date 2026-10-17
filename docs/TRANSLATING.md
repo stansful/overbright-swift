@@ -2,10 +2,11 @@
 
 Overbright ships in 35 languages from day one: English, the source, and every UI language macOS 27 ships (the list is
 in `scripts/l10n/languages.json` and in the README). Russian is the owner's review language and the pivot for the
-others. While the app is being built, new English text arrives faster than translations: such keys are marked
-*pending* (English text, state `needs_review`) in every language and translated before a release. If something in
-your language is wrong, stiff, too long or not what macOS says, a correction is very welcome: an issue that quotes the
-text is enough, a pull request is better.
+others. Every language is complete: as of 2026-10-17 `validate.py --shipped --release` finds no key pending in any
+of them. New English text that lands before its translations is marked *pending* (English text, state
+`needs_review`) in every language and translated before a release. If something in your language is wrong, stiff,
+too long or not what macOS says, a correction is very welcome: an issue that quotes the text is enough, a pull
+request is better.
 
 This guide covers fixing or reviewing a language, adding strings in code (the policy that keeps CI green), and adding
 a language. The file format and every check in detail: [`scripts/l10n/README.md`](../scripts/l10n/README.md). Rules
@@ -113,9 +114,11 @@ These hold in every language. `validate.py` checks the mechanical ones; the rest
   natural wording. Tooltips and help tags, VoiceOver labels, Settings search keywords and menus (including a footer
   chip's menu items and a chip's popover and buttons) are never constrained.
 - **Measured-width tests** render the constrained strings of every language and fail when one does not fit:
-  `ChipFitTests`, `ReadoutFitTests`, `FooterFitTests`, `HUDFitTests` (PanelUI) and `SettingsSegmentFitTests`
-  (Settings). A failure names the language and the measured width. Shorten the wording; changing a layout to make
-  room is a code change with its own review.
+  `ChipFitTests`, `ReadoutFitTests`, `FooterFitTests` (PanelUI), `HUDFitTests` (the shell's HUD),
+  `BannerFitTests` (Design: a banner shows its whole sentence, never cut, in at most six lines),
+  `WelcomeStepFitTests` and `WelcomeFooterFitTests` (Welcome) and `SettingsSegmentFitTests` (Settings). A failure
+  names the language and the measured width. Shorten the wording; changing a layout to make room is a code change
+  with its own review.
 - **Right to left.** Arabic and Hebrew get a mirrored panel, cards, slider and Settings from the system; the menu bar
   symbol does not mirror, and names inside sentences are isolated by the code. Translate naturally; do not add
   direction marks yourself.

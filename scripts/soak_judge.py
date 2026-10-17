@@ -7,23 +7,28 @@ phys_footprint in whole MB and `vmmap --summary`'s "Physical footprint" in tenth
 
 Idle wake-ups while off, per 10 s top sample: a wake-up the control app (scripts/soak-control.swift) has in the same
 sample is the system's, handed to every menu bar app that follows the keyboard layout (shared); the rest are
-Overbright's own. In both off phases, own wake-ups must not beat periodically. A run of 3 or more of them in a row (4
-in the first phase, which follows the launch) spanning 30 s or more is scored by how evenly it beats: with median gap
-m and gaps straying at most d from it, (L - 2) * ln((2d + one sample) / m), so each wake-up after the first two
-that lands in a narrow window around where the beat puts it counts. The run is a timer only when as many wake-ups at
-random samples of the same phase beat as evenly less than 2 % of the time (CHANCE; 2 000 seeded random placements,
-so a run is judged the same way twice). A few wake-ups at random times line up now and then: a fixed tolerance (gaps
-within 25 % of their median) called 3, 4 and 5 random ones in the final phase periodic 31, 55 and 73 % of the time,
-which brought back the flaky soak WP13 saw on a Mac in use. The self-test refuses at most 3 % of 1 000 seeded draws
-of 3, 4 or 5 random ones (5 % with 3 shared samples beside them), while timers every 120 s, 100 s or 65 ± 8 s are
-still caught; the price is that a slow timer showing only 3 or 4 times in the phase passes unless it beats nearly
-exactly (one every 125 s, sampled as gaps of 130 and 120 s, passes). Shared samples are counted, not dropped: when
-the samples the app woke in beat that way and the control's do not, a timer of Overbright's own is hiding behind the
-control's wake-ups. In the final off phase own wake-ups must also stay at one a minute or fewer. A beat at the
-sampling interval itself (every sample) is activity, not a timer the chance test can see; the final phase's rate rule
-refuses it. The literal "0 idle wake-ups while off" is the owner's quiet-machine run (HARDWARE-TEST §13).
+Overbright's own. In the final off phase, after the cycles, Overbright may have none of its own: one fails the run
+(DESIGN.md §17: off is 0 wake-ups/s, no periodic timers or tasks), so a slow timer, a task the cycles left behind and
+a beat at the sampling interval itself fail however irregularly they show. The first off phase follows the launch,
+whose one-shot work may wake the app a few times; there own wake-ups must only not beat periodically. A run of 4 or
+more of them in a row (3 for the final phase's shared samples, below) spanning 30 s or more is scored by how evenly
+it beats: with median gap m and gaps straying at most d from it, (L - 2) * ln((2d + one sample) / m), so each
+wake-up after the first two that lands in a narrow window around where the beat puts it counts. The run is a timer
+only when as many wake-ups at random samples of the same phase beat as evenly less than 2 % of the time (CHANCE;
+2 000 seeded random placements, so a run is judged the same way twice). A few wake-ups at random times line up now
+and then: a fixed tolerance (gaps within 25 % of their median) called 3, 4 and 5 random ones periodic 31, 55 and
+73 % of the time, which brought back the flaky soak WP13 saw on a Mac in use. Shared samples are counted, not
+dropped: in either phase, when the samples the app woke in beat that way and the control's do not, a timer of
+Overbright's own is hiding behind the control's wake-ups. The self-test refuses at most 3 % of 1 000 seeded draws of
+4, 5 or 6 own wake-ups at random samples of the first phase (with or without 2 shared ones) and at most 5 % of draws
+in which the app shares 3, 4 or 5 of the control's random samples in the final phase, while timers every 20 s after
+launch and every 60 s behind the control's samples are caught. Until WP14's last round the final phase allowed one
+own wake-up a minute that did not beat periodically, which let a slow timer showing only 3 or 4 times pass. The
+literal "0 idle wake-ups while off" on a quiet machine is the owner's run (HARDWARE-TEST §13).
 
-Footprint: the first cycles fill caches that then stay, so growth is judged from cycle 3 on. The least-squares slope
+Footprint: the first cycles fill caches that then stay, so growth is judged from cycle 3 on. The footprint before
+the cycles and after cycles 1 and 2 is reported, not judged (WP13's 30-minute run: 31 MB off before the cycles, 42
+after cycle 1, 46 after cycle 2, 47 after cycle 3), so growth that stops by cycle 3 passes. The least-squares slope
 of the footprint after cycles 3…N is a leak when it exceeds LEAK_KB per cycle even at its lower 2-standard-error
 bound (a short run's slope is noisy: the 17-minute run's settling read 129 ± 142 KB per cycle, ± 2 standard errors
 as printed, so its lower bound is -13; a real 0.29 MB per cycle leak reads 288 ± 102, at least 186, even in a short
@@ -129,8 +134,9 @@ def judge_off(name, rows, span, strict):
             problems.append(f"{name}: Overbright's wake-ups beat periodically once the samples the control also woke in "
                             f"count (at {', '.join(f'+{int(t)}' for t in mine[0])} s, random times {share(mine[1])}); "
                             f"the control's do not")
-    if strict and own_total > span / 60:
-        problems.append(f"{name}: {own_total} wake-ups of Overbright's own in {span} s, more than one a minute")
+    if strict and own:
+        problems.append(f"{name}: {own_total} idle wake-up{'s' if own_total > 1 else ''} of Overbright's own in "
+                        f"{span} s (at {when} s); none is allowed once the cycles are over")
     return report, problems
 
 
@@ -237,7 +243,8 @@ def judge(out, leak_mb, leak_kb, app, control):
     lines, found = judge_footprint(marks, cycles, leak_mb, leak_kb)
     print("\n".join(lines))
     problems += found
-    print("\n".join(problems) or "soak OK: no growth once settled; while off, no periodic wake-ups of Overbright's own")
+    print("\n".join(problems) or "soak OK: no growth once settled; no wake-up of Overbright's own in the final off "
+                                     "phase and none periodic after launch")
     return 1 if problems else 0
 
 
@@ -247,34 +254,48 @@ def self_test():
         rows = [(float(at), (counts or {}).get(at, 0) + (1 if at in times else 0), 1 if at in control else 0)
                 for at in range(SAMPLE, span + 1, SAMPLE)]
         return judge_off("final off" if strict else "first off", rows, span, strict)[1]
-    def refused(k, shared=0, draws=1000):
-        """The share of `draws` seeded placements of k own wake-ups at random samples of a 360 s final phase (plus
-        `shared` samples the control woke in too) that the judge refuses: the allowed rate, no timer."""
-        draw = random.Random(1000 * k + shared)
-        slots = list(range(SAMPLE, 361, SAMPLE))
+    def refused_after_launch(k, shared=0, draws=1000):
+        """The share of `draws` seeded placements of k own wake-ups at random samples of a 95 s first phase (plus
+        `shared` samples the control woke in too) that the judge refuses: launch work, no timer."""
+        draw = random.Random(100 * k + shared + 7)
+        slots = list(range(SAMPLE, 91, SAMPLE))
         picks = [draw.sample(slots, k + shared) for _ in range(draws)]
-        return sum(bool(off(pick, control=pick[k:])) for pick in picks) / draws
+        return sum(bool(off(pick, control=pick[k:], span=95, strict=False)) for pick in picks) / draws
+    def refused_behind_control(k, extra=3, draws=1000):
+        """The share of `draws` seeded placements of k + `extra` control wake-ups at random samples of a 360 s final
+        phase, the app waking in the first k of them only, that the judge refuses: no own wake-up, no hidden timer."""
+        draw = random.Random(1000 * k + extra)
+        slots = list(range(SAMPLE, 361, SAMPLE))
+        picks = [draw.sample(slots, k + extra) for _ in range(draws)]
+        return sum(bool(off(pick[:k], control=pick)) for pick in picks) / draws
     def cycles(values, end=None):
         marks = {f"cycle{i}-end": {"mb": mb} for i, mb in enumerate(values, 1)}
         marks["final-off-end"] = {"mb": values[-1] if end is None else end}
         return judge_footprint(marks, len(values), 5, 100)[1]
     cases = [
         ("final off: none", off([]), False),
-        ("final off: two at random", off([40, 250]), False),
-        ("final off: three at uneven gaps", off([20, 50, 300]), False),
-        ("final off: five at irregular gaps (WP13's review run had 5)", off([30, 100, 150, 260, 330]), False),
+        ("final off: one of Overbright's own", off([250]), True),
+        ("final off: two at random", off([40, 250]), True),
+        ("final off: three at uneven gaps", off([20, 50, 300]), True),
+        ("final off: five at irregular gaps (WP13's review run had 5)", off([30, 100, 150, 260, 330]), True),
+        ("final off: a slow timer showing three times (every 125 s)", off([60, 190, 310]), True),
+        ("final off: only wake-ups the control shares", off([40, 250], control=[40, 250]), False),
+        ("final off: one more than the control in a shared sample", off([40], control=[40], counts={40: 1}), True),
         ("final off: every 120 s", off([10, 130, 250]), True),
         ("final off: every 100 s", off([60, 160, 260]), True),
         ("final off: every 65 s with 8 s of jitter", off([10, 70, 140, 200, 270, 330]), True),
         ("final off: every 60 s", off([10, 70, 130, 190, 250, 310]), True),
         ("final off: every 60 s, starting 100 s in", off([100, 160, 220, 280, 340]), True),
         ("final off: every sample", off(list(range(10, 361, 10))), True),
-        ("final off: a burst after off", off([10, 20, 30]), False),
-        ("final off: seven at random (more than one a minute)", off([10, 40, 100, 110, 200, 230, 330]), True),
+        ("final off: a burst after off", off([10, 20, 30]), True),
+        ("final off: seven at random", off([10, 40, 100, 110, 200, 230, 330]), True),
         ("final off: every 60 s, half of them in the control's samples",
          off([10, 70, 130, 190, 250, 310], control=[70, 200, 250]), True),
         ("final off: the control's own rhythm, shared", off([70, 130, 190, 250], control=[70, 130, 190, 250]), False),
+        ("final off: every 60 s, all behind the control's irregular wake-ups",
+         off([10, 70, 130, 190, 250, 310], control=[10, 20, 50, 70, 100, 130, 190, 220, 250, 290, 310]), True),
         ("first off: three after launch at even gaps", off([20, 50, 80], span=95, strict=False), False),
+        ("first off: five after launch at irregular gaps", off([10, 20, 50, 60, 90], span=95, strict=False), False),
         ("first off: every 20 s", off([10, 30, 50, 70, 90], span=95, strict=False), True),
         ("footprint: WP13's 30-minute run", cycles([42.3, 46.5, 47.3, 47.5, 47.6, 47.4, 47.5, 47.7, 47.7, 47.7, 48.1, 48.0,
                                                     47.9, 48.1, 48.1, 47.9, 47.8, 48.1, 48.3, 48.2], end=48.0), False),
@@ -289,9 +310,12 @@ def self_test():
         ("footprint: a jump while off", cycles([31, 42, 46, 46, 46, 46, 46, 46, 46], end=53), True),
         ("footprint: too few cycles", cycles([31, 42, 46, 46, 46]), True),
     ]
-    # Random own wake-ups at the allowed rate: a fixed 25 % tolerance refused 31, 55 and 73 % of 3, 4 and 5 of them.
-    rates = [(f"{k} own at random times", refused(k), 0.03) for k in (3, 4, 5)]
-    rates += [(f"{k} own and 3 shared at random times", refused(k, shared=3), 0.05) for k in (3, 4, 5)]
+    # Random wake-ups that no timer causes: a fixed 25 % tolerance refused 31, 55 and 73 % of 3, 4 and 5 of them.
+    rates = [(f"first off: {k} own at random times", refused_after_launch(k), 0.03) for k in (4, 5, 6)]
+    rates += [(f"first off: {k} own and 2 shared at random times", refused_after_launch(k, shared=2), 0.03)
+              for k in (4, 5, 6)]
+    rates += [(f"final off: {k} of the control's {k + 3} random samples shared", refused_behind_control(k), 0.05)
+              for k in (3, 4, 5)]
     failures = [f"{label}: {'expected a problem' if refuse else 'expected none'}, got {found}"
                 for label, found, refuse in cases if bool(found) != refuse]
     failures += [f"{label}: {rate:.1%} of 1000 seeded draws refused, at most {limit:.0%}"

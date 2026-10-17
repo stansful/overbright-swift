@@ -7,11 +7,13 @@
 # samples both every 10 s (IDLEW is cumulative); `footprint` and `vmmap` run after every cycle and at the off phases.
 # scripts/soak_judge.py then judges the run (its header has the rules): a wake-up in the same 10 s sample as one of the
 # control's is the system's (a keyboard layout switch, the window server, which hand them to every such app) and is
-# counted as shared; Overbright's own must not beat periodically in either off phase (3 or more in a row, 4 right
-# after launch, that beat more evenly than random times do 98 % of the time), shared ones must not hide a rhythm of
-# Overbright's own, and in the final off phase own wake-ups stay at one a minute or fewer. The footprint's least-squares growth over cycles 3…N, at its lower
-# 2-standard-error bound, stays within LEAK_KB per cycle (100), and the end within LEAK_MB (5) of cycle 3; a run must
-# have 5 cycles after cycle 3, so MINUTES is at least 17. The literal "0 idle wake-ups while off" is the owner's quiet-machine run (HARDWARE-TEST §13). Fakes only:
+# counted as shared. In the final off phase Overbright may have no idle wake-up of its own: one fails the run. After
+# launch its own must not beat periodically (4 or more in a row that beat more evenly than random times do 98 % of the
+# time), and in either phase shared ones must not hide a rhythm of Overbright's own. The footprint's least-squares
+# growth over cycles 3…N, at its lower 2-standard-error bound, stays within LEAK_KB per cycle (100), and the end within
+# LEAK_MB (5) of cycle 3; the footprint before the cycles and after cycles 1 and 2 (caches filling) is reported, not
+# judged. A run must have 5 cycles after cycle 3, so MINUTES is at least 17. The literal "0 idle wake-ups while off"
+# on a quiet machine is the owner's run (HARDWARE-TEST §13). Fakes only:
 # no real display is touched (D24). `footprint` and `vmmap` read the process; nothing attaches a debugger.
 #
 #   make debug; make soak                  # 30 minutes → build/logs/soak/

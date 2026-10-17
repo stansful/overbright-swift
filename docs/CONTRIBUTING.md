@@ -85,7 +85,7 @@ make -C <repo> build                               # universal Release → build
 make -C <repo> smoke                               # --diagnostics only: gammaWrites == 0, triggerWindows == 0, …
 SIMULATE=1 make -C <repo> smoke                    # agents: never launches on the real ports (Debug: --qa-simulate)
 make -C <repo> qa-matrix                           # after `make debug`: every fixture's scenario, Welcome writes nothing
-make -C <repo> soak                                # after `make debug`: 30 minutes under --qa-simulate (MINUTES ≥ 17)
+make -C <repo> soak                                # after `make debug`: 30 minutes under --qa-simulate (MINUTES ≥ 17); no own wake-up in the last off phase
 make -C <repo> run                                 # Debug build, simulated displays, a dev settings suite
 make -C <repo> dist                                # zip + dmg + sha256 (+ notarization when signing)
 make -C <repo> distclean                           # also every .build-* scratch dir
@@ -144,11 +144,11 @@ No hook posts input or asks for a permission. Launch arguments (`LaunchArguments
 |---|---|
 | `--qa-simulate [fixture]` | Core fakes for every display port over a fixture of ARCHITECTURE.md §3.9 (`builtin-xdr-lid-open`, `mpg322ux-hdr-on`, `lcd-only`, `hardware-mirror`, …); a missing or unknown name falls back to `builtin-xdr-lid-open`, never to the real ports. |
 | `--qa-defaults-suite <name>` | Keeps every setting the run writes in that suite (`Launch/QAHooks+Defaults.swift`); the app's own domain or a global one is refused and the run keeps its settings in memory. The Settings window's frame is not autosaved then. |
-| `--qa-state <name>` | Drives the panel with a named status of PanelUI's `ScriptedStatuses` (every chip, banner, phase and HUD of DESIGN.md §5.13); the state's settings go into the run's suite (in memory without one), and its Fill Light and "Why?" row show too. |
-| `--qa-panel`, `--qa-menu`, `--qa-hud <level>` | Opens the panel, the status menu (its rows go to `qa-trace.txt`), the HUD (under `--qa-simulate` at that level; on the real displays only its generic change, never a level). |
+| `--qa-state <name>` | Drives the panel with a named status of PanelUI's `ScriptedStatuses` (every chip, banner, phase and HUD of DESIGN.md §5.13); the state's settings go into the run's suite (in memory without one), and its Fill Light and "Why?" row show too. A scripted status is ready at once, so its surfaces do not wait for the services to start (Help may show before the shortcuts are registered): check what needs a started service without `--qa-state`. |
+| `--qa-panel`, `--qa-menu`, `--qa-hud <level>` | Opens the panel (it stays open on clicks elsewhere, and every close is logged with its cause), the status menu (its rows go to `qa-trace.txt`), the HUD (under `--qa-simulate` at that level; on the real displays only its generic change, never a level). Like every surface hook, they wait for the launch work (at most 10 s). |
 | `--qa-settings <pane[#row]>` | Opens Settings at a pane (`general`, `displays`, `automations`, `shortcuts`, `fillLight`, `advanced`, `about`), scrolled to and highlighting a row. |
 | `--qa-welcome <step>` | Opens Welcome at `hello`, `displays`, `defaults`, `findIt` or `done`; takes no focus and records nothing. |
-| `--qa-calibration <display>`, `--qa-help <anchor>` | Opens the calibration window or Help at an anchor. |
+| `--qa-calibration <display>`, `--qa-help <anchor>` | Opens the calibration window (a simulated display always gets the titled window) or Help at an anchor, after the launch work, so there is an engine to ask and a registered shortcut to show. |
 | `--qa-snapshot <dir>` [`--qa-snapshot-at <s>`] | Renders every visible window in-process into `<dir>` (works while the display sleeps; menus cannot be rendered): each window's SwiftUI root, opaque, in the window's appearance; timed from the end of the launch work (3 s; 2 s with `--qa-hud`, 1 s for a HUD state). Settings' sidebar and toolbar are not faithful there in either appearance (the selected row a black bar without its label, no search field, no pane title): judge them in `SettingsChromeSnapshotTests` or on screen. |
 | `--qa-exit-after <s>`, `--qa-update-check` | Quits after that many seconds; runs the update check at once. |
 | `--qa-hang-main <delay>,<duration>` | Blocks the main thread (hang-watchdog test H-X1, the owner's session only). |
@@ -179,7 +179,7 @@ Skipped unless their variable is set; never run in CI:
 |---|---|
 | `OVERBRIGHT_SNAPSHOT_DIR=<dir>` | Snapshot suites write PNGs for review into `<dir>/<Target>/`. |
 | `OVERBRIGHT_INTEGRATION=1` | Tests that show windows on screen (never with EDR content). |
-| `OVERBRIGHT_HARDWARE=1` | The owner's hardware session only: read-only real display ports (capacity, read, profile base). |
+| `OVERBRIGHT_HARDWARE=1` | The owner's hardware session only (docs/HARDWARE-TEST.md 1.13): read-only real display ports (`RealDisplayReadTests`: capacity, read, profile base, the IORegistry walk) and the off-screen Metal clear (`MetalClearPassTests`). |
 
 ## Engineering rules (summary of ARCHITECTURE.md §8–§9)
 
@@ -189,7 +189,9 @@ point the system may call off the main thread is explicitly nonisolated (a `noni
 APIs trap at runtime. Leave the main actor with `@concurrent` functions. No repeating timers (a stored `Task` with
 `TimeSource.sleep`), no `DispatchQueue.main.sync`, no semaphores on main, no Combine.
 
-**Energy.** Zero work while off; boost-only sources run only while a display is scaled or dimmed.
+**Energy.** Zero work while off (the soak fails on any idle wake-up of Overbright's own in its last off phase);
+boost-only sources run only while a display is scaled or dimmed, and all but the schedule boundary also stop while
+the screen is locked, asleep or off the console.
 
 **Errors and logging.** `Log.logger(<category>)`; codes and numbers `.public`, display names, app names and paths
 `.private`; no `print`. No `fatalError`, `try!`, `as!` or force unwraps in `Sources/`.

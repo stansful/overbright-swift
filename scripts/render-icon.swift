@@ -126,9 +126,10 @@ screen.strokePath()
 screen.restoreGState()
 write(screen, "screen.png")
 
-// 2. Bloom: a solid white core (radius 0.035 of the body), then a warm white that falls to nothing by 0.6 of the
-//    radius (0.22 of the body). No grey or half-transparent middle stop: plus-lighter over the graphite turns those
-//    into a muddy haze.
+// 2. Bloom, over a radius of 0.34 of the body: a solid white core to 0.10 of the radius (0.034 of the body), then a
+//    warm white at 80 % (0.22 of the radius), 30 % (0.40) and 7 % (0.62, about 0.21 of the body), and nothing by 0.8
+//    of the radius (0.27 of the body). It thins out fast instead of holding a wide half-transparent haze: plus-lighter
+//    over the graphite turns a wide one into a muddy grey-brown.
 let bloom = makeContext()
 radial(bloom, center: bloomCenter, radius: 0.34 * body,
        colors: [rgb(0xFFFFFF), rgb(0xFFFFFF), rgb(0xFFF6E8, 0.8), rgb(0xFFEBD0, 0.3), rgb(0xFFE7C2, 0.07),
