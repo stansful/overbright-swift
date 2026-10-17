@@ -2,9 +2,10 @@
 // Seeded by WP0a with the fixed initializers (§10.0); body by WP4: master state, the policy loop over the injected
 // reducer, one `DisplayController` per display, synchronous shield delivery, pause and auto-off, the HUD's
 // `lastChange`, the low-level confirmation, and the self-test, calibration and rescue entry points through WP5's seams.
-// This file holds the state, the initializers, the lifecycle and status publication; requests live in
+// This file holds the state, the initializers and the lifecycle; requests live in
 // `BoostEngine+Control.swift`, the low-level confirmation in `+LowLevel`, the policy loop and HUD changes in `+Policy`,
-// events and deadlines in `+Events`, the instruments in `+Instruments`. MainActor.
+// events and deadlines in `+Events`, the instruments in `+Instruments`, status publication in `+Publication`.
+// MainActor.
 import CoreGraphics
 import Foundation
 import Observation
@@ -13,8 +14,8 @@ import OverbrightPolicy
 
 /// The per-display boost engine (`services.boost`) and the last service to start, first to stop (D7, D23).
 @Observable public final class BoostEngine: BoostControl, ServiceLifecycle {
-    /// What the UI, the menu, intents and diagnostics read.
-    public private(set) var status: BoostStatus = .initial
+    /// What the UI, the menu, intents and diagnostics read (set only by `BoostEngine+Publication.swift`).
+    public internal(set) var status: BoostStatus = .initial
 
     @ObservationIgnored let settings: SettingsStore
     @ObservationIgnored let machine: MachineIdentity
@@ -74,6 +75,8 @@ import OverbrightPolicy
     @ObservationIgnored let preparingSlot = TaskSlot()
     /// The coalesced re-reduction of screen-parameters notifications (`scheduleScreenParametersReduce`).
     @ObservationIgnored let screenParametersSlot = TaskSlot()
+    /// The trailing publish of minor-only status changes (`BoostEngine+Publication.swift`).
+    @ObservationIgnored let minorPublishSlot = TaskSlot()
     @ObservationIgnored var observers: [ObservationToken] = []
     @ObservationIgnored var instrumentHold = false
     /// The running calibration (kept until its `onEnd`); the master stays off meanwhile.
@@ -194,14 +197,14 @@ import OverbrightPolicy
         reducePending = false
         screenParametersSlot.cancel()
         updateAggregates()
-        publish()
+        publishNow()
     }
 
     // MARK: Status
 
     /// Tasks alive in the engine and its controllers (zero while off and not dimmed, §4.5 invariant 4).
     var activeTaskCount: Int {
-        [pauseSlot, autoOffSlot, lowLevelSlot, scheduleSlot, preparingSlot, screenParametersSlot]
+        [pauseSlot, autoOffSlot, lowLevelSlot, scheduleSlot, preparingSlot, screenParametersSlot, minorPublishSlot]
             .filter(\.isRunning).count + controllers.values.map(\.activeTaskCount).reduce(0, +)
     }
 
@@ -209,24 +212,9 @@ import OverbrightPolicy
     var activeTaskNames: [String] {
         let engine = [("pause", pauseSlot), ("autoOff", autoOffSlot), ("lowLevel", lowLevelSlot),
                       ("schedule", scheduleSlot), ("preparing", preparingSlot),
-                      ("screenParameters", screenParametersSlot)].filter { $0.1.isRunning }.map(\.0)
+                      ("screenParameters", screenParametersSlot), ("minorPublish", minorPublishSlot)]
+            .filter { $0.1.isRunning }.map(\.0)
         return engine + controllers.values.sorted { $0.key < $1.key }.flatMap(\.activeTaskNames)
-    }
-
-    /// Republishes `status` (only when it changed).
-    func publish() {
-        guard !isApplying else { return }
-        let now = time.wallClock
-        let pausedUntil = settings[AutomationSettings.pausedUntil].flatMap { $0 > now ? $0 : nil }
-        let statuses = displays.displays.compactMap { controllers[$0.ref.key]?.status() }
-        let next = BoostStatus(isOn: isMasterOn, isReady: isReady, pausedUntil: pausedUntil, autoOffAt: autoOffAt,
-                               displays: statuses, banner: lastDecision?.banner, symbol: symbol(),
-                               lastChange: lastChange, pendingLowLevel: pendingLowLevel)
-        guard next != status else { return }
-        status = next
-        #if DEBUG
-        publishCount += 1
-        #endif
     }
 
     /// The reducer's symbol, with `preparing` while a display that should boost is arming or gating and none is

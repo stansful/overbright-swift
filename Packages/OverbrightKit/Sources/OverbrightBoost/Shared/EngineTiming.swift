@@ -139,4 +139,8 @@ public nonisolated enum EngineTiming {
     public static let pausedAppResumeSettle: Duration = .seconds(1)
     /// An icon, shortcut or intent turn-on not ready this long after the request shows "Preparing…".
     public static let preparingDelay: Duration = .milliseconds(500)
+    /// A status change of minor fields only (readings, which place the allowed-now marker, and the applied gain while a
+    /// ramp runs) is published at most this often, on the trailing edge (DESIGN.md §17: the marker ≤ 4 Hz); any other
+    /// change publishes at once. The engine never reads its status, so no decision or safety write waits for it.
+    public static let minorPublishInterval: Duration = .milliseconds(250)
 }

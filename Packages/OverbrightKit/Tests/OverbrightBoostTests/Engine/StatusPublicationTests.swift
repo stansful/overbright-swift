@@ -54,9 +54,12 @@ import Testing
         published = h.engine.publishCount
         h.signals.emit(.screenParametersChanged)
         await h.advance(EngineTiming.screenParametersReduceInterval)
+        let readAt = h.time.now
+        // A reading alone is a minor change: published on the trailing edge (E3), once.
+        await h.advance(EngineTiming.minorPublishInterval)
         #expect(h.engine.publishCount == published + 1)
         #expect(h.displayStatus()?.lastReading?.current == idle + 0.25)
-        #expect(h.displayStatus()?.lastReading?.time == h.time.now)
+        #expect(h.displayStatus()?.lastReading?.time == readAt)
     }
 
     /// Boosted: the drift ticks and headroom checks take fresh readings the interlock uses; nothing is republished
