@@ -129,10 +129,7 @@ extension DisplayController {
         pendingRebase = nil
         if let adopted { adopt(adopted, expected: expected, cause: cause) }
         if !keptOurs {
-            // What is on screen now is WindowServer's table, not our scaling, and no write of ours (a later table
-            // equal to our old write is another writer's, never our stale one).
-            resetApplied()
-            lastWrite = nil
+            forgetOwnWrite()
         } else if isScaledOrDimmed, !phase.isSuspended {
             // WindowServer kept our table over the old curve: the same light on the new base is one write (the level
             // does not change, only the curve under it).
@@ -154,10 +151,11 @@ extension DisplayController {
     /// new profile base is adopted and written once, on the console only (D27); this also lands a failed landing. A
     /// foreign baseline over an unchanged profile stays (`profileChanged`). WindowServer's table is adopted as it is
     /// when it matches the new base; any table that is not ours means no write of ours is on screen any more
-    /// (`lastWrite` is forgotten, so another writer restoring our old table is never taken for our stale write). A write
-    /// that cannot happen now keeps the event pending for the next reduction (`retryLandingAtRest`), and no capture
-    /// takes our old table meanwhile (`isOwnStaleWrite`). Without this, "off" would leave the old curve after a
-    /// profile, preset or HDR change, and the next arm or calibration would multiply it (§4.8).
+    /// (`forgetOwnWrite`: another writer restoring our old table is never taken for our stale write, and the ledger
+    /// entry a failed landing left goes with it). A write that cannot happen now keeps the event pending for the next
+    /// reduction (`retryLandingAtRest`), and no capture takes our old table meanwhile (`isOwnStaleWrite`). Without
+    /// this, "off" would leave the old curve after a profile, preset or HDR change, and the next arm or calibration
+    /// would multiply it (§4.8).
     func settlePendingRebase() {
         guard let cause = pendingRebase else { return }
         pendingRebase = nil
@@ -177,9 +175,21 @@ extension DisplayController {
                case .accept = BaselineRules.capture(read, expectedBase: expected, previous: old) {
                 adopt(read, expected: expected, cause: cause)
             }
-            resetApplied()                                                // WindowServer's table replaced ours
-            lastWrite = nil
+            forgetOwnWrite()
         }
+    }
+
+    /// WindowServer's table replaced ours: what is on screen is not our scaling and no write of ours (a later table
+    /// equal to our old write is another writer's, never our stale one). The display leaves the safety ledger in the
+    /// same step: no baseline write follows to empty its entry (`writeBaselineNow` has nothing to restore), and a
+    /// stale entry would keep the hang watchdog pinging and the boost marker set while nothing is scaled (D7, DESIGN.md
+    /// §17). A boost or dim that reapplies marks it again with its first scaled write, under the ledger lock.
+    func forgetOwnWrite() {
+        let changed = isScaledOrDimmed || deps.ledger.isMarked(key)
+        resetApplied()
+        lastWrite = nil
+        deps.ledger.unmark(key)
+        if changed { notify() }                                           // the marker and boost sources follow
     }
 
     /// `table` becomes the baseline, and the ledger's baseline in the same step (the hang watchdog never restores the

@@ -184,6 +184,45 @@ import Testing
         #expect(!h.codes.contains("baseline.keptOverOwnWrite"))
     }
 
+    /// A landing WindowServer refused (a trip's, or a shield's baseline write), then WindowServer's new base replaces
+    /// our scaled table: nothing of ours is on screen any more, so the display leaves the safety ledger at once. The
+    /// hang watchdog (real, as in `EngineWatchdogTests`, on a queue that always answers) stops pinging and the boost
+    /// marker goes, at rest and after "off" (DESIGN.md §17; C-BOOST-18 with C-BOOST-1). Without that, no baseline
+    /// write would ever follow to empty the entry.
+    @Test(arguments: [false, true])
+    func windowServersNewBaseOverAFailedLandingEmptiesTheLedger(shielded: Bool) async throws {
+        let h = EngineHarness()
+        h.engine.watchdog = HangWatchdog(writer: h.engine.writer, ledger: h.engine.ledger, journal: h.journal,
+                                         pingInterval: .milliseconds(50), timeout: .seconds(60),
+                                         pinged: DispatchQueue(label: "app.overbright.tests.rebase-at-rest.watchdog"))
+        h.engine.watchdogEnabled = true
+        await h.start()
+        #expect(await h.boost())
+        #expect(h.engine.watchdog.isActive && h.settings[EngineRecords.boostMarker] != nil)
+        h.gamma.failNextWrite(with: .coreGraphics(code: 1000))
+        if shielded {
+            h.signals.snapshot.isScreenLocked = true
+            h.signals.emit(.locked)
+            #expect(h.phase() == .suspended(.shielded))
+        } else {
+            h.controller()?.fail(.repairBudgetExceeded)
+            #expect(h.phase() == .failed(.repairBudgetExceeded))
+        }
+        #expect((h.liveFactor() ?? 1) > 1 && h.engine.ledger.isMarked(h.builtIn))     // the landing failed
+        h.gamma.changeBase(newBase, for: 1)                                           // WindowServer's new table
+        h.signals.emit(.colorProfileChanged)
+        await h.advance(.seconds(2))
+        #expect(h.table() == newBase && h.controller()?.baseline == newBase)
+        #expect(h.engine.ledger.entries().isEmpty && h.settings[EngineRecords.boostMarker] == nil)
+        #expect(!h.engine.watchdog.isActive)
+        h.engine.setOn(false, source: .panel)
+        h.engine.reduceNow()
+        await h.advance(.seconds(1))
+        #expect(h.table() == newBase && h.engine.ledger.entries().isEmpty)
+        #expect(h.settings[EngineRecords.boostMarker] == nil && !h.engine.watchdog.isActive)
+        h.engine.stopNow()
+    }
+
     /// A calibration's fresh baseline never captures our old write either; the next reduction writes the new base.
     @Test func aDrivenSessionNeverCapturesOurOldWrite() async throws {
         let h = EngineHarness()
