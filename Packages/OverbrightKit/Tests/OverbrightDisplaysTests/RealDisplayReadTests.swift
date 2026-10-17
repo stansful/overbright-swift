@@ -51,6 +51,31 @@ struct RealDisplayReadTests {
             if let maxNits = external.maxNits { #expect(maxNits > 0) }
             #expect(external.vendorID != nil || external.productID != nil)
         }
+        #expect(registry.attributedExternalCount >= registry.externals.count)
+        #if arch(arm64)
+        // A walk that silently found nothing would pass every check above: on Apple silicon it must find the
+        // framebuffer services, and the built-in's panel whenever the built-in is online (lid open).
+        #expect(registry.hasFramebufferServices, "the IOKit walk found no IOMobileFramebufferShim")
+        if CoreGraphicsDisplayReader.onlineIDs().contains(where: { CGDisplayIsBuiltin($0) != 0 }) {
+            #expect(registry.builtIn != nil, "the built-in is online, but its backlight keys were not read")
+        }
+        #endif
+    }
+
+    /// Every real external display is paired with its IORegistry attributes and is not taken for a virtual one
+    /// (the "no framebuffer service" rule must never catch a real monitor, C-PLATFORM-4). Apple silicon only: an
+    /// Intel Mac has no `IOMobileFramebufferShim`.
+    @Test func everyOnlineExternalIsPairedWithItsAttributes() {
+        #if arch(arm64)
+        let registry = IORegistryReader.read()
+        let raw = CoreGraphicsDisplayReader.onlineDisplays(gamma: CoreGraphicsGamma())
+        let facts = DisplayFactsBuilder.facts(from: raw, registry: registry)
+        for display in raw where !display.isBuiltIn && display.vendor != DisplayFactsBuilder.placeholderVendor {
+            let match = registry.external(vendor: display.vendor, product: display.model, serial: display.serial)
+            #expect(match != nil, "no DisplayAttributes describe \(display.key)")
+            #expect(facts.first { $0.ref.key == display.key }?.panelClass != .virtualDisplay, "\(display.key)")
+        }
+        #endif
     }
 
     @Test func headroomReadingsBelongToTheirDisplay() {

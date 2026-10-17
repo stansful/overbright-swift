@@ -45,11 +45,20 @@ public nonisolated enum GainCeiling {
         default: return nil
         }
     }
-    /// The highest SDR white the user can pick without ambient boost (`sdrMax`, §5.1): the IORegistry value, and on
-    /// an external without one its frame-average luminance (the HDR-mode SDR white). Nil when neither is known.
+    /// The highest SDR white the user can pick without ambient boost (`sdrMax`, §5.1): the facts' value (the
+    /// built-in's IORegistry value, an Apple XDR external's product value), and on another external without one its
+    /// HDR-mode SDR white (`frameAverageSDRWhite`). Nil when neither is known.
     public static func sdrMaxNits(facts: DisplayFacts) -> Double? {
-        let value = facts.sdrMaxNits ?? (facts.isBuiltIn ? nil : facts.panelFrameAverageNits)
+        let value = facts.sdrMaxNits ?? frameAverageSDRWhite(facts: facts)
         return value.flatMap { $0 > 0 ? $0 : nil }
+    }
+    /// An external's frame-average luminance as its HDR-mode SDR white (§5.1, §5.5; it matched WindowServer's SDR
+    /// white on the measured OLED). Never on a built-in, and never on an Apple XDR external, where `MaxFrameAverage`
+    /// is the full-screen sustained HDR level (1000 nits on the Pro Display XDR), not an SDR white.
+    public static func frameAverageSDRWhite(facts: DisplayFacts) -> Double? {
+        guard !facts.isBuiltIn, facts.panelClass != .appleXDRExternal, let nits = facts.panelFrameAverageNits,
+              nits > 0 else { return nil }
+        return nits
     }
     /// The gain at the top of the boost half for this display and cap mode, at full SDR brightness (§5.3 table):
     /// Peak `0.97 · peak / sdrMax`; Safe `min(capNits / sdrMax, Peak)`, on OLED `min(1.3, Peak)`. A top below 1.05

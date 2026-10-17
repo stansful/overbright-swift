@@ -40,6 +40,31 @@ enum RawDisplayFixtures {
                                                         productName: "Projector", maxNits: 300, frameAverageNits: 300,
                                                         minNits: 0.3, supportsPQ: false, supportsHLG: false)
 
+    /// A Pro Display XDR (P3-1600 preset) as CoreGraphics reports it: Apple's vendor and one of the model's product
+    /// IDs in macOS's display overrides. The serial is illustrative.
+    static let proDisplay = RawDisplay(id: 3, key: DisplayFixture.Keys.proDisplayXDR, isBuiltIn: false,
+                                       gammaCapacity: 1024, tableReadable: true, vendor: 0x610, model: 0xAE2F,
+                                       serial: 0x0001_0203, mirrorsDisplay: kCGNullDirectDisplay,
+                                       screen: RawDisplay.Screen(name: "Pro Display XDR", potential: 16, hasNotch: false))
+
+    /// The Pro Display XDR's framebuffer attributes as the spec suggests them: 1600 nits peak, and a frame average
+    /// of 1000 nits, the full-screen sustained HDR level (not its 500-nit SDR maximum). No SDR value exists there.
+    static let proDisplayAttributes = ExternalPanelFacts(vendorID: 0x610, productID: 0xAE2F, serialNumber: 0x0001_0203,
+                                                         productName: "Pro Display XDR", maxNits: 1600,
+                                                         frameAverageNits: 1000, supportsPQ: true, supportsHLG: true)
+
+    /// A Studio Display XDR (P3-2000 preset; potential 20 as in Core's fixture, inferred).
+    static let studioDisplay = RawDisplay(id: 4, key: DisplayFixture.Keys.studioDisplayXDR, isBuiltIn: false,
+                                          gammaCapacity: 1024, tableReadable: true, vendor: 0x610, model: 0xAE42,
+                                          serial: 0x0004_0506, mirrorsDisplay: kCGNullDirectDisplay,
+                                          screen: RawDisplay.Screen(name: "Studio Display XDR", potential: 20,
+                                                                    hasNotch: false))
+
+    /// The Studio Display XDR's attributes: 2000 nits peak; its full-screen level is not published, so no frame average.
+    static let studioDisplayAttributes = ExternalPanelFacts(vendorID: 0x610, productID: 0xAE42, serialNumber: 0x0004_0506,
+                                                            productName: "Studio Display XDR", maxNits: 2000,
+                                                            supportsPQ: true, supportsHLG: true)
+
     /// The owner's built-in panel facts, parsed from the saved IORegistry values.
     static var ownerBuiltInPanel: BuiltInPanelFacts? {
         BuiltInPanelFacts.parse(backlight: OwnerIORegistry.builtInBacklight,

@@ -57,10 +57,13 @@ import Testing
     @Test func builtInFactsNeedAKnownKey() throws {
         #expect(BuiltInPanelFacts.parse(backlight: nil, displayParameters: nil) == nil)
         #expect(BuiltInPanelFacts.parse(backlight: ["name": Data("backlight".utf8)], displayParameters: [:]) == nil)
-        // An LCD built-in without EDRPotentialHeadroom: the backlight's calibrated maximum gives the peak.
+        // Without EDRPotentialHeadroom the backlight's maximum is kept for diagnostics but never taken as the panel
+        // peak (undocumented; a value below the true peak would loosen Safe, C-PLATFORM-5).
         let lcd = try #require(BuiltInPanelFacts.parse(
             backlight: nil, displayParameters: ["BrightnessMilliNits": ["max": NSNumber(value: 500_000)]]))
-        #expect(lcd.potentialHeadroom == nil && lcd.panelPeakNits == 500)
+        #expect(lcd.potentialHeadroom == nil && lcd.backlightMaxMilliNits == 500_000 && lcd.panelPeakNits == nil)
+        let owner = try #require(RawDisplayFixtures.ownerBuiltInPanel)
+        #expect(owner.panelPeakNits == 1600 && owner.backlightMaxMilliNits == 1_599_999)        // not 1599.999
         // Zero or garbage values are dropped, not reported as a 0-nit panel.
         let zero = BuiltInPanelFacts.parse(backlight: ["EDRPotentialHeadroom": Data([0, 0, 0, 0])], displayParameters: nil)
         #expect(zero == nil)

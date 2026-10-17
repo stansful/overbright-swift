@@ -13,6 +13,8 @@ public nonisolated struct BuiltInPanelFacts: Hashable, Sendable {
     /// ambient boost (600 on the M4 Max).
     public var sdrMaxNits: Double?
     /// `AppleARMBacklight` ▸ `IODisplayParameters` ▸ `BrightnessMilliNits.max` (≈ 1 600 000 on the M4 Max).
+    /// Diagnostics only: nothing documents what it measures (§5.5 trusts `BrightnessMilliNits` only after H-N1), so
+    /// it never stands in for the panel peak.
     public var backlightMaxMilliNits: Double?
     /// `BrightnessMilliNits.value` at the time of the read; diagnostics only (`backlightMilliNits`, H-N1).
     public var backlightMilliNits: Double?
@@ -24,11 +26,12 @@ public nonisolated struct BuiltInPanelFacts: Hashable, Sendable {
         self.backlightMaxMilliNits = backlightMaxMilliNits; self.backlightMilliNits = backlightMilliNits
     }
 
-    /// The panel's maximum luminance: `EDRPotentialHeadroom × 100` (§3.2), else the backlight's calibrated maximum.
+    /// The panel's maximum luminance: `EDRPotentialHeadroom × 100` (§3.2), nil without it (the facts builder then
+    /// falls back to NSScreen's potential, D8). Never the backlight's `BrightnessMilliNits.max`: a value below the
+    /// true peak would loosen the Safe bound.
     public var panelPeakNits: Double? {
-        if let potentialHeadroom, potentialHeadroom > 0 { return potentialHeadroom * 100 }
-        if let backlightMaxMilliNits, backlightMaxMilliNits > 0 { return backlightMaxMilliNits / 1000 }
-        return nil
+        guard let potentialHeadroom, potentialHeadroom > 0 else { return nil }
+        return potentialHeadroom * 100
     }
 
     /// The facts in `backlight` (the device-tree node's properties) and `displayParameters` (`AppleARMBacklight`'s

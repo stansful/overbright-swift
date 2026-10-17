@@ -15,16 +15,17 @@ nonisolated enum IORegistryReader {
     static func read() -> IORegistryFacts {
         var hasFramebuffers = false
         var externals: [ExternalPanelFacts] = []
+        var attributed = 0
         forEachService(IOServiceMatching("IOMobileFramebufferShim")) { service in
             hasFramebuffers = true
             guard IORegistryValue.bool(property(service, "external")) == true,
-                  let attributes = IORegistryValue.dictionary(property(service, "DisplayAttributes")),
-                  let facts = ExternalPanelFacts.parse(displayAttributes: attributes) else { return true }
-            externals.append(facts)
+                  let attributes = IORegistryValue.dictionary(property(service, "DisplayAttributes")) else { return true }
+            attributed += 1
+            if let facts = ExternalPanelFacts.parse(displayAttributes: attributes) { externals.append(facts) }
             return true
         }
-        return IORegistryFacts(builtIn: builtInPanel(), externals: externals, hasFramebufferServices: hasFramebuffers,
-                               isClamshellClosed: clamshellClosed())
+        return IORegistryFacts(builtIn: builtInPanel(), externals: externals, attributedExternals: attributed,
+                               hasFramebufferServices: hasFramebuffers, isClamshellClosed: clamshellClosed())
     }
 
     // MARK: Entries

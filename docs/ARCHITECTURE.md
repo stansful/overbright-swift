@@ -401,13 +401,16 @@ public nonisolated struct DisplayFacts: Hashable, Sendable {
     public var productID: UInt32?
     /// IORegistry `SupportsPQEOTF` (externals); nil when unknown.
     public var supportsPQ: Bool?
-    /// Panel maximum luminance in nits (built-in: `EDRPotentialHeadroom` × 100; external: DisplayAttributes Luminance Max).
+    /// Panel maximum luminance in nits (built-in: `EDRPotentialHeadroom` × 100; external: DisplayAttributes Luminance Max,
+    /// else an Apple XDR product's; without either, potential × 100 on a display with extra range, D8).
     public var panelPeakNits: Double?
-    /// External: DisplayAttributes Luminance MaxFrameAverage (the HDR-mode SDR white on the measured OLED).
+    /// External: DisplayAttributes Luminance MaxFrameAverage (the HDR-mode SDR white on the measured OLED; on an
+    /// Apple XDR external the full-screen sustained HDR level, never an SDR white).
     public var panelFrameAverageNits: Double?
     /// External: DisplayAttributes Luminance Min.
     public var panelMinNits: Double?
-    /// Highest SDR white the user can select without ambient boost (built-in `user-accessible-max-nits`).
+    /// Highest SDR white the user can select without ambient boost (built-in `user-accessible-max-nits`; Apple XDR
+    /// external: the product's, 500 or 1000 nits).
     public var sdrMaxNits: Double?
     /// `NSScreen.safeAreaInsets.top > 0`.
     public var hasNotch: Bool
@@ -848,7 +851,8 @@ public nonisolated struct PausedAppRule: Hashable, Codable, Sendable {
     }
 }
 
-/// "Only allow extra brightness during set hours". Minutes since local midnight; `end < start` spans midnight.
+/// "Only allow extra brightness during set hours". Minutes since local midnight; `end < start` spans midnight, and
+/// `end == start` is the whole day (as built in WP14: the Settings pickers pass through equal ends).
 public nonisolated struct ScheduleWindow: Hashable, Codable, Sendable {
     public var startMinute: Int
     public var endMinute: Int
@@ -856,7 +860,8 @@ public nonisolated struct ScheduleWindow: Hashable, Codable, Sendable {
         self.startMinute = min(max(startMinute, 0), 1439); self.endMinute = min(max(endMinute, 0), 1439)
     }
     public func contains(minuteOfDay m: Int) -> Bool {
-        startMinute <= endMinute ? (m >= startMinute && m < endMinute) : (m >= startMinute || m < endMinute)
+        if startMinute == endMinute { return true }
+        return startMinute < endMinute ? (m >= startMinute && m < endMinute) : (m >= startMinute || m < endMinute)
     }
 }
 
@@ -2516,9 +2521,9 @@ Generations cannot protect against a **hang**: only the main actor bumps them, a
 | `G` | Light gain: multiple of the current SDR white. 1 = Standard. | policy |
 | `F` | Table factor: every baseline entry is multiplied by `F` | `F = tableFactor(G, domain)` |
 | `L` | Dim light factor (< 1) | policy |
-| `panelPeak` | Panel maximum luminance (built-in `EDRPotentialHeadroom` × 100; external DisplayAttributes Max) | IORegistry |
+| `panelPeak` | Panel maximum luminance (built-in `EDRPotentialHeadroom` × 100; external DisplayAttributes Max) | IORegistry; an Apple XDR external without attributes: the product (`AppleXDRProducts`); without either, potential × 100 when the potential is above 2 (D8's verified rule; the backlight's `BrightnessMilliNits` maximum is never used) |
 | `capNits` | The Safe level in nits: 1000 on Apple XDR panels, `min(1000, 0.6 × panelPeak)` on other HDR externals; none on OLED (Safe is ×1.3 there) | `GainCeiling.capNits` |
-| `sdrMax` | Highest SDR white the user can pick without ambient boost (600 nits on M3–M5 MacBook Pro built-ins indoors, 500 on M1/M2 and Pro Display XDR, 1000 on Studio Display XDR, the frame-average luminance on an HDR external) | IORegistry where available, §5.5 |
+| `sdrMax` | Highest SDR white the user can pick without ambient boost (600 nits on M3–M5 MacBook Pro built-ins indoors, 500 on M1/M2 and Pro Display XDR, 1000 on Studio Display XDR, the frame-average luminance on another HDR external) | built-in: IORegistry; Apple XDR external: the product (`AppleXDRProducts`, keyed by vendor 0x610 and product ID), never its frame average, which is the full-screen sustained HDR level there; other externals: the frame average, §5.5 |
 | `sdrNow` | Actual SDR white right now | **no public API**; trusted estimates only (§5.5); always `≤ panelPeak ÷ H`, because the grant never exceeds the panel peak |
 
 ### 5.2 Transfer domains
@@ -2554,7 +2559,7 @@ The overlay (Compatibility mode) uses the same rule with its own record: whether
 | OLED external | `min(1.3, 0.97 · peak / sdrMax)` | `0.97 · peak / sdrMax` |
 | Other HDR external | `min(min(1000, 0.6 · peak) / sdrMax, 0.97 · peak / sdrMax)` (0.6 × peak ≈ the full-screen sustained level DisplayHDR tiers require) | `0.97 · peak / sdrMax` |
 
-A `top` below 1.05 disables the boost half for that cap mode; the card says why ("Safe limit reached: choose Peak for more" or "Little gain at full brightness").
+A `top` below 1.05 disables the boost half for that cap mode; the card says why ("Safe limit reached: choose Peak for more" or "Little gain at full brightness"). A display of a boosting class whose panel peak or SDR maximum no source gives (every fallback of §5.1 exhausted) has a top of 1 and the verdict `noGainAtFullBrightness(peakGain: 1)`: the boost half is off and the dim half stays (`EligibilityTests.anUnbackedTopStillDims`: an HDR external on an Intel Mac, one without MaxFrameAverage, the built-in without `user-accessible-max-nits`, an Apple XDR external `AppleXDRProducts` does not list). No number backs its "Little gain" sentence there. **Open (C-PLATFORM-3, needs the contract lane, §10.0):** a `DisplayVerdict` case that allows dimming but not boost and claims no gain, with its own DESIGN.md §12.1 sentence. `.checking` is not that case: `allowsDim` is false for it, so answering it (tried in WP14 and reverted) took dimming away from these displays.
 
 **Presets per class** (gain at full brightness):
 
@@ -2610,7 +2615,7 @@ No public API reports the SDR white level in nits. The engine keeps an `SDRWhite
 | Source | When | Trust |
 |---|---|---|
 | `colorimeter` | The user typed a colorimeter reading in the calibration sheet (`CalibrationRecord.measuredSDRWhiteNits`) | exact while the record is valid (§5.2) |
-| `hdrFrameAverage` | External in HDR mode: IORegistry `DisplayAttributes` MaxFrameAverage | Matched WindowServer's own SDR value on the MSI (265.05 nits) [VERIFIED]; whether the HDR-mode SDR brightness slider changes it is H-N2 |
+| `hdrFrameAverage` | External in HDR mode, except an Apple XDR external (its MaxFrameAverage is the full-screen sustained HDR level, 1000 nits on the Pro Display XDR): IORegistry `DisplayAttributes` MaxFrameAverage (`GainCeiling.frameAverageSDRWhite`) | Matched WindowServer's own SDR value on the MSI (265.05 nits) [VERIFIED]; whether the HDR-mode SDR brightness slider changes it is H-N2 |
 | `panelReported` | Built-in: IORegistry `AppleARMBacklight` `BrightnessMilliNits` | Only if H-N1 shows it tracks SDR white while EDR is active; otherwise never used |
 
 Consequences:
@@ -3154,6 +3159,7 @@ The cases that were foreseeable are already in the v0.2 contracts (not reserved,
 - **Delivers:** `SystemDisplayDirectory` (online list, `DisplayKey.of`, built-in first; the reconfiguration callback as a `nonisolated static` C function: begin flag → `displayConfigurationBegan`, **remove flag → `displayRemoved(id)` at once**, after phase debounced 0.5 s + 2 s; clamshell handling; hardware-mirror detection), `SystemHeadroomPort` (fresh NSScreen per read, stamped with its display ID; nil for mirror members), `CoreGraphicsGamma` (the **only** file with the CG setters and the global restore; write counter; thread-safe for the watchdog and signal queues; `profileBase(of:count:)` from the ColorSync profile's `vcgt`, table and formula types, identity when absent), `IORegistryFacts` (built-in `EDRPotentialHeadroom`, `user-accessible-max-nits`; externals `DisplayAttributes` Luminance Max / MaxFrameAverage / Min (16.16 fixed point), `SupportsPQEOTF`, vendor/product; virtual-display detection: capacity 0, failed read, placeholder vendor `0x756e6b6e`, no framebuffer service), `PanelClass` derivation, the read-only `DisplayMonitor` behind `--monitor` (table class against the profile base).
 - **Acceptance:** fixtures from the owner's IORegistry (MSI: 465.49 / 265.05 / 0.0003 nits, PQ yes, HLG no; built-in: potential 16, SDR max 600) and an ICC fixture with a `vcgt` parse exactly; no code compares names; real ports run only with `OVERBRIGHT_HARDWARE=1` and only read; `--monitor` never writes (a fake-port test and a lint test).
 - **Tests:** `IORegistryParsingTests`, `ProfileBaseTests`, `VirtualAndMirrorTests`, `DisplayKeyTests`, `ReconfigurationFlagsTests` (manual time; remove flag immediate; begin flag), `ReconfigurationCallbackOffMainTests`, `GammaPortContractTests` (write and restore cases only against `FakeGammaPort`; a read-only real-port variant), opt-in `RealDisplayReadTests`.
+- **As built (WP14 review fixes):** a panel peak falls back to potential × 100 (D8) when neither the IORegistry nor the product gives one and the potential is above 2; the built-in's `BrightnessMilliNits.max` is no longer a peak (undocumented; parsed for diagnostics only). The IORegistry has no SDR white for Apple's XDR externals (their `MaxFrameAverage` is the full-screen sustained HDR level), so `AppleXDRProducts` gives it by vendor 0x610 and product ID: 500 nits for the Pro Display XDR (0xAE21–0xAE23, 0xAE2D–0xAE2F), 1000 for the Studio Display XDR (0xAE42–0xAE43), the IDs macOS's own display overrides list; the same entry gives the panel peak (1600 / 2000) when the attributes carry none. Policy never takes an Apple XDR external's frame average as its SDR white (`GainCeiling.frameAverageSDRWhite`, also used by Boost's `SDRWhiteSource`: `SDRWhiteSourceTests`), and an Apple XDR external is never OLED by its black level. Core's Apple XDR fixtures carry exactly what the builder makes of them (`PanelClassTests.theAppleXDRExternalsEqualCoresFixtures`). The "no framebuffer service" rule applies only on the walk's positive evidence: framebuffer services exist, at least one external's attributes parse, and fewer external framebuffers carry `DisplayAttributes` than there are external displays the CoreGraphics rules leave standing (`IORegistryFacts.attributedExternalCount`); a renamed key or attributes that arrive late leave a monitor real (`VirtualAndMirrorTests.aMissingFramebufferNeedsTheWalksEvidence`). With `OVERBRIGHT_HARDWARE=1` on Apple silicon, `RealDisplayReadTests` require the framebuffer services, the built-in's panel while the built-in is online, and every online non-placeholder external paired with its attributes and not virtual.
 
 ### 10.5 WP3 — Triggers · `OverbrightTriggers`
 
@@ -3162,6 +3168,7 @@ The cases that were foreseeable are already in the v0.2 contracts (not reserved,
 - **Delivers:** `WindowRecipes` + `TriggerHost` (layer hosting, occlusion reporting, **screen-change reporting**, re-placement), `TriggerGeometry` (corners, notch with global/local auxiliary areas), `TaggedColor`, T1 `TaggedLayerTrigger` (tag ≥ 1.01; legacy 14–25 path compiled behind a flag, off), T2/T3 `MetalClearTrigger` (per-display device from `CGDirectDisplayCopyCurrentMetalDevice`, `rgba16Float`, extended linear sRGB, 2 drawables, `allowsNextDrawableTimeout`, first-present retry, keep-alive as a stored `Task`, device released on remove), T4 `HLGStillTrigger` + `HLGStillAsset` (runtime generation, verification, atomic move), T4-alt `HLGSampleBufferTrigger`, `CompatibilityOverlay` (tagged colour on 26+, Metal 4 × 4 on 14+, `multiplyBlendMode`, request-then-boost, factor 1 at configuration begin), `SystemTriggerFactory` with `openWindowCount`.
 - **Acceptance:** builds at the macOS 14 floor for both architectures with zero warnings; no `.metal` file; no library, function or pipeline API referenced (a test greps the module's symbols); nothing orders a window in during tests; `NSColor` component initialisers absent.
 - **Tests:** `TriggerGeometryTests`, `TaggedColorTests` (26+: tag round trip, 1.01 clamp, components > 1 survive, the 8-bit wrap regression), `HLGStillAssetTests` (ProRes always, HEVC when available, cache reuse, corrupt file replaced; temp dir only), `WindowRecipeTests` (configured but never shown; screen-change callback wiring), opt-in `MetalClearPassTests`.
+- **As built (WP14 review fixes):** `TriggerModuleLintTests` checks `.public` log interpolations against an allowlist (a `LoggedError` summary, inline or bound to a name in the same file, a raw value, an asset file name, an ID, a count) instead of matching error shapes on one line, so a description bound to a name first is caught; the lint has its own positive and negative cases. `HLGStillTriggerTests` no longer ties the manual clock to real time: it waits (up to 30 s) for AVFoundation to load the item, then advances one poll interval.
 
 ### 10.6 WP4 — Boost engine · `OverbrightBoost` (`Engine/`, `Ladder/`, `Writer/`)
 
@@ -3194,6 +3201,7 @@ The cases that were foreseeable are already in the v0.2 contracts (not reserved,
 - **Delivers:** `FillLightController` (implements `FillLightControl`), the frame window per display (§7.6 recipe; holds `OwnEDRSurfaces` while the frame requests EDR headroom, as built), EDR colour with headroom (tagged `CALayer` 26+, clear-only `CAMetalLayer` 14–25, SDR fallback; tag min(2 ÷ 0.97, potential), at least 1.01), `ColorTemperature` (pure CCT → linear sRGB, 3 000–6 500 K), camera rule (acts on Signals' debounced `isCameraInUse`, which is on after 1 s and off 3 s after the camera stops, with no delay of its own; manual off wins until the camera stops), live updates from settings, capture exclusion.
 - **Acceptance:** zero work while off; never ordered in during tests; the CCT function matches reference values within 1 %; the window ignores mouse events and is excluded from the full-screen detector.
 - **Tests:** `ColorTemperatureTests`, `FillLightRuleTests` (camera on/off/manual), `FrameGeometryTests` (width, rounded inner corners, notch), `OwnSurfaceRegistrationTests`.
+- **As built (WP14 review fixes):** `FillLightLayers` takes the Metal path's present as a closure (`MetalPresent`, the real one wraps `MetalFrameContent.present`), so `FrameWindowTests.theMetalPathPresentsADrawableOnlyWhenAsked` shows, with no device and no window, that `apply` and `showColor` with `presentsDrawable` false never ask for a drawable (whose `nextDrawable()` can block the main thread for 1 s).
 
 ### 10.10 WP8 — Intents, Focus filter, channel, dormant Controls · `OverbrightIntents` + `OverbrightChannel` + `App/Intents/` + `Shared/` + `Controls/`
 

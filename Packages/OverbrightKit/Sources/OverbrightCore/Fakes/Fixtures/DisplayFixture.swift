@@ -13,9 +13,10 @@ public nonisolated enum DisplayFixture: String, CaseIterable, Sendable {
     case mpg322uxHDROn = "mpg322ux-hdr-on"
     /// The MSI with macOS HDR off: potential 1.0 ("Turn on HDR", measured).
     case mpg322uxHDROff = "mpg322ux-hdr-off"
-    /// Pro Display XDR: 1600 nits peak, SDR 500, grant 3.2 (spec).
+    /// Pro Display XDR (product 0xAE2F): 1600 nits peak, frame average 1000, SDR 500, grant 3.2 (spec).
     case proDisplayXDR = "pro-display-xdr"
-    /// Studio Display XDR: 2000 nits peak, SDR 1000, grant 2.0 (spec; potential 20 is inferred, maybe capped at 16).
+    /// Studio Display XDR (product 0xAE42): 2000 nits peak, SDR 1000, grant 2.0 (spec; potential 20 is inferred,
+    /// maybe capped at 16).
     case studioDisplayXDR = "studio-display-xdr"
     /// A MacBook Air-class LCD built-in: potential 2 (inferred).
     case lcdOnly = "lcd-only"
@@ -103,17 +104,22 @@ public nonisolated enum DisplayFixture: String, CaseIterable, Sendable {
             profileBase: .identity(count: 1024))
     }
 
+    // The Apple XDR externals carry what the live `DisplayFactsBuilder` makes of them (OverbrightDisplaysTests checks
+    // it): the product ID macOS lists for the model, the IORegistry peak and frame average, and the SDR maximum of
+    // the product (the frame average is the full-screen sustained HDR level there, never the SDR white).
+
     private static let proDisplay = FixtureDisplay(
         facts: DisplayFacts(ref: DisplayRef(key: Keys.proDisplayXDR, id: 3), name: "Pro Display XDR", isBuiltIn: false,
-                            gammaCapacity: 1024, vendorID: 0x610, supportsPQ: true, panelPeakNits: 1600, sdrMaxNits: 500,
-                            panelClass: .appleXDRExternal),
+                            gammaCapacity: 1024, vendorID: 0x610, productID: 0xAE2F, supportsPQ: true,
+                            panelPeakNits: 1600, panelFrameAverageNits: 1000 /* full-screen sustained, spec */,
+                            sdrMaxNits: 500, panelClass: .appleXDRExternal),
         headroom: HeadroomScript(potential: 16, grant: 3.2),
         profileBase: .identity(count: 1024))
 
     private static let studioDisplay = FixtureDisplay(
         facts: DisplayFacts(ref: DisplayRef(key: Keys.studioDisplayXDR, id: 4), name: "Studio Display XDR", isBuiltIn: false,
-                            gammaCapacity: 1024, vendorID: 0x610, supportsPQ: true, panelPeakNits: 2000, sdrMaxNits: 1000,
-                            panelClass: .appleXDRExternal),
+                            gammaCapacity: 1024, vendorID: 0x610, productID: 0xAE42, supportsPQ: true,
+                            panelPeakNits: 2000, sdrMaxNits: 1000, panelClass: .appleXDRExternal),
         headroom: HeadroomScript(potential: 20, grant: 2),
         profileBase: .identity(count: 1024))
 

@@ -86,9 +86,58 @@ import Testing
         #expect(verdict(none, potential: 4) == .noGainAtFullBrightness(peakGain: 1))
         #expect(verdict(external(.hdrExternal, pq: true, peak: 400, frameAverage: 350), potential: 4)
                 == .supported(safeGain: nil, peakGain: 0.97 * 400 / 350))                          // ×1.109
-        // Unknown panel facts never become a claim: the boost half is answered as ×1.
+        // Unknown panel facts never become a number: the boost half is answered as ×1, and the verdict keeps the dim
+        // half (`.checking` would hold it, C-PLATFORM-3; a case that claims no gain needs the contract lane).
         let unknown = external(.hdrExternal, pq: true, peak: nil, frameAverage: nil)
+        #expect(GainCeiling.sliderTop(facts: unknown.facts, capMode: .peak, isOLED: false) == 1)
         #expect(verdict(unknown, potential: 6) == .noGainAtFullBrightness(peakGain: 1))
+        for display in Self.unbackedTops(builtIn: builtIn) {
+            let unbacked = verdict(display, potential: display.headroom.potential)
+            #expect(unbacked == .noGainAtFullBrightness(peakGain: 1) && unbacked.allowsDim, "\(display.facts.name)")
+        }
+        #expect(verdict(external(.oledExternal, pq: true, peak: nil, frameAverage: 265), potential: 4.65)
+                == .noGainAtFullBrightness(peakGain: 1))
+        // A class that never boosts keeps its own verdict, and known facts keep theirs.
+        #expect(verdict(external(.sdrExternal, pq: false, peak: nil, frameAverage: nil), potential: 1) == .notHDR)
+        #expect(gains(verdict(DisplayFixture.proDisplayXDR.displays[0])) != nil)
+    }
+
+    /// Displays of a boosting class whose panel peak or SDR maximum no source gives (every fallback of §5.1 spent):
+    /// an HDR external on an Intel Mac (no `IOMobileFramebufferShim`: the peak is potential × 100, no frame average),
+    /// an Apple-silicon HDR external whose EDID has no MaxFrameAverage, the built-in without
+    /// `user-accessible-max-nits`, and an Apple XDR external whose product ID `AppleXDRProducts` does not list.
+    static func unbackedTops(builtIn: FixtureDisplay) -> [FixtureDisplay] {
+        func external(_ name: String, pq: Bool?, peak: Double, potential: Double) -> FixtureDisplay {
+            FixtureDisplay(facts: DisplayFacts(ref: DisplayRef(key: DisplayKey(rawValue: name), id: 9), name: name,
+                                               isBuiltIn: false, gammaCapacity: 1024, supportsPQ: pq,
+                                               panelPeakNits: peak, panelClass: .hdrExternal),
+                           headroom: HeadroomScript(potential: potential, grant: 1.5), profileBase: .identity(count: 1024))
+        }
+        var noSDRMax = builtIn
+        noSDRMax.facts.sdrMaxNits = nil                                                            // key missing
+        var unlistedXDR = DisplayFixture.proDisplayXDR.displays[0]
+        unlistedXDR.facts.productID = 0xAE99
+        unlistedXDR.facts.sdrMaxNits = nil                         // what the builder gives an unlisted product
+        return [external("Intel HDR external", pq: nil, peak: 465.49, potential: 4.6549),
+                external("HDR external without frame average", pq: true, peak: 600, potential: 6),
+                noSDRMax, unlistedXDR]
+    }
+
+    /// The reducer keeps the dim half of a display without a backed top and stops only its boost half, with the
+    /// verdict as the reason (§6.1 row 2; C-PLATFORM-3: `.checking` there took dimming away).
+    @Test func anUnbackedTopStillDims() throws {
+        for display in Self.unbackedTops(builtIn: PolicyTestInputs.builtIn) {
+            let name = display.facts.name
+            let key = display.facts.ref.key
+            let dim = try #require(BoostPolicy.reduce(PolicyTestInputs.input(
+                [PolicyTestInputs.display(display, level: LevelPosition(-0.5))])).displays[key], "\(name)")
+            #expect(abs((dim.dimLight ?? 0) - LevelMapping.dimLight(for: LevelPosition(-0.5))) < 1e-12, "\(name)")
+            #expect(dim.reasons.isEmpty && dim.eligibility.verdict.allowsDim, "\(name)")
+            let boost = try #require(BoostPolicy.reduce(PolicyTestInputs.input(
+                [PolicyTestInputs.display(display, boostEnabled: true)])).displays[key], "\(name)")
+            #expect(boost.target == .neutral, "\(name)")
+            #expect(boost.reasons.first == .notSupported(.noGainAtFullBrightness(peakGain: 1)), "\(name)")
+        }
     }
 
     /// OLED by IORegistry minimum luminance or the user's override, never by name (D8); defaults per class.
@@ -101,6 +150,13 @@ import Testing
         #expect(!EligibilityClassifier.isOLED(external(.hdrExternal, pq: true, minNits: 0.05).facts, override: .automatic))
         #expect(!EligibilityClassifier.isOLED(PolicyTestInputs.builtIn.facts, override: .automatic))
         #expect(EligibilityClassifier.isOLED(external(.hdrExternal, pq: true).facts, override: .oled))
+        // An Apple XDR external's mini-LED black level can read ≤ 0.005 nits: still not an OLED (D8, XDR first).
+        var xdrBlack = DisplayFixture.proDisplayXDR.displays[0].facts
+        xdrBlack.panelMinNits = 0.0005
+        #expect(!EligibilityClassifier.isOLED(xdrBlack, override: .automatic))
+        #expect(EligibilityClassifier.isOLED(xdrBlack, override: .oled))
+        #expect(classify(FixtureDisplay(facts: xdrBlack, headroom: DisplayFixture.proDisplayXDR.displays[0].headroom,
+                                        profileBase: .identity(count: 1024))).defaultBoostEnabled)
 
         // Built-in XDR and Apple XDR externals are on by default; other HDR and OLED externals are opt-in.
         #expect(classify(PolicyTestInputs.builtIn).defaultBoostEnabled)

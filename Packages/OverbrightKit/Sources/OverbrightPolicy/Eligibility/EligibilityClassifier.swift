@@ -1,6 +1,7 @@
 // OverbrightPolicy/Eligibility/EligibilityClassifier.swift — what a display can do (D8). ARCHITECTURE.md §3.10, §5.2,
 // §5.3, §6.1 steps 1 and 4, §7.5; DESIGN.md §12.1. Locale-independent: names are never compared, and every IORegistry
-// input is optional (a missing panel peak or SDR maximum gives a top of 1, never a guess).
+// input is optional (a panel peak or SDR maximum that no fallback supplies gives a top of 1, never a guess, and the
+// display keeps its dim half).
 import OverbrightCore
 
 /// D8 classifier: tolerant comparisons, no name strings in logic, IORegistry inputs optional. `preferences` carries
@@ -55,14 +56,18 @@ public nonisolated enum EligibilityClassifier {
     }
 
     /// The display is treated as OLED: the user's override, else an `oledExternal` class or an external whose
-    /// IORegistry minimum luminance is self-emissive (≤ 0.005 nits). Never decided by name.
+    /// IORegistry minimum luminance is self-emissive (≤ 0.005 nits), except an Apple XDR external, whose mini-LED
+    /// black level can read that low too (the panel classifier checks XDR first for the same reason). Never decided
+    /// by name.
     public static func isOLED(_ facts: DisplayFacts, override: OLEDOverride) -> Bool {
         switch override {
         case .oled: return true
         case .notOLED: return false
         case .automatic:
             if facts.panelClass == .oledExternal { return true }
-            guard !facts.isBuiltIn, let minimum = facts.panelMinNits else { return false }
+            guard !facts.isBuiltIn, facts.panelClass != .appleXDRExternal, let minimum = facts.panelMinNits else {
+                return false
+            }
             return minimum <= oledMinimumNits
         }
     }
@@ -98,6 +103,10 @@ public nonisolated enum EligibilityClassifier {
         if let panelPeak = facts.panelPeakNits, presetPeak < presetLimitShare * panelPeak {
             return .presetLimits(presetPeakNits: presetPeak, panelPeakNits: panelPeak)
         }
+        // A panel peak or SDR maximum that no fallback gives (§5.1, §9.2 rule 6) makes the top 1: the verdict is
+        // `noGainAtFullBrightness(peakGain: 1)`, so the boost half is off and the dim half stays, although no number
+        // backs "little gain" there. A case that keeps dimming and claims no gain needs the contract lane; `.checking`
+        // would hold dimming (§5.3, C-PLATFORM-3, open).
         let peakTop = GainCeiling.sliderTop(facts: facts, capMode: .peak, isOLED: isOLED)
         if peakTop < minimumPeakGain { return .noGainAtFullBrightness(peakGain: peakTop) }
         let safeTop = GainCeiling.sliderTop(facts: facts, capMode: .safe, isOLED: isOLED)
