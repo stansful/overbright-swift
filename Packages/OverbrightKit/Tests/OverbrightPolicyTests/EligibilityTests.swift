@@ -51,7 +51,8 @@ import Testing
     }
 
     /// D8 order: virtual, no table, mirror, no reading or a transient potential, reference, potential ≤ 1, ≤ 2, the
-    /// preset below 90 % of the panel peak, little gain, supported. ε = 0.01 on every headroom comparison.
+    /// preset below 90 % of the panel peak, panel facts unknown, little gain, supported. ε = 0.01 on every headroom
+    /// comparison.
     @Test func theD8Order() {
         let builtIn = PolicyTestInputs.builtIn
         func verdict(_ display: FixtureDisplay = builtIn, potential: Double = 16, reference: Double = 0) -> DisplayVerdict {
@@ -86,17 +87,22 @@ import Testing
         #expect(verdict(none, potential: 4) == .noGainAtFullBrightness(peakGain: 1))
         #expect(verdict(external(.hdrExternal, pq: true, peak: 400, frameAverage: 350), potential: 4)
                 == .supported(safeGain: nil, peakGain: 0.97 * 400 / 350))                          // ×1.109
-        // Unknown panel facts never become a number: the boost half is answered as ×1, and the verdict keeps the dim
-        // half (`.checking` would hold it, C-PLATFORM-3; a case that claims no gain needs the contract lane).
+        // Unknown panel facts never become a number: the boost half is answered as ×1, and the verdict claims no
+        // gain ("little gain" would quote a number nothing measured) and keeps the dim half (`.checking` would hold
+        // it), C-PLATFORM-3.
         let unknown = external(.hdrExternal, pq: true, peak: nil, frameAverage: nil)
         #expect(GainCeiling.sliderTop(facts: unknown.facts, capMode: .peak, isOLED: false) == 1)
-        #expect(verdict(unknown, potential: 6) == .noGainAtFullBrightness(peakGain: 1))
+        #expect(verdict(unknown, potential: 6) == .panelFactsUnknown)
         for display in Self.unbackedTops(builtIn: builtIn) {
             let unbacked = verdict(display, potential: display.headroom.potential)
-            #expect(unbacked == .noGainAtFullBrightness(peakGain: 1) && unbacked.allowsDim, "\(display.facts.name)")
+            #expect(unbacked == .panelFactsUnknown && unbacked.allowsDim && !unbacked.allowsBoost, "\(display.facts.name)")
         }
         #expect(verdict(external(.oledExternal, pq: true, peak: nil, frameAverage: 265), potential: 4.65)
-                == .noGainAtFullBrightness(peakGain: 1))
+                == .panelFactsUnknown)
+        // A known peak still meets the preset rule first; the facts' gap decides only after it.
+        #expect(verdict(external(.hdrExternal, pq: true, peak: 1000, frameAverage: nil), potential: 6)
+                == .presetLimits(presetPeakNits: 600, panelPeakNits: 1000))
+        #expect(verdict(external(.hdrExternal, pq: true, peak: 600, frameAverage: nil), potential: 6) == .panelFactsUnknown)
         // A class that never boosts keeps its own verdict, and known facts keep theirs.
         #expect(verdict(external(.sdrExternal, pq: false, peak: nil, frameAverage: nil), potential: 1) == .notHDR)
         #expect(gains(verdict(DisplayFixture.proDisplayXDR.displays[0])) != nil)
@@ -124,7 +130,8 @@ import Testing
     }
 
     /// The reducer keeps the dim half of a display without a backed top and stops only its boost half, with the
-    /// verdict as the reason (§6.1 row 2; C-PLATFORM-3: `.checking` there took dimming away).
+    /// verdict as the reason (§6.1 row 2; C-PLATFORM-3: `.checking` there took dimming away, and
+    /// `noGainAtFullBrightness(peakGain: 1)` claimed a gain nothing measured).
     @Test func anUnbackedTopStillDims() throws {
         for display in Self.unbackedTops(builtIn: PolicyTestInputs.builtIn) {
             let name = display.facts.name
@@ -136,7 +143,7 @@ import Testing
             let boost = try #require(BoostPolicy.reduce(PolicyTestInputs.input(
                 [PolicyTestInputs.display(display, boostEnabled: true)])).displays[key], "\(name)")
             #expect(boost.target == .neutral, "\(name)")
-            #expect(boost.reasons.first == .notSupported(.noGainAtFullBrightness(peakGain: 1)), "\(name)")
+            #expect(boost.reasons.first == .notSupported(.panelFactsUnknown), "\(name)")
         }
     }
 

@@ -193,6 +193,22 @@ import Testing
         #expect(harness.monitor.snapshot.fullScreenDisplays == [DisplayFixture.Keys.mpg322ux])
     }
 
+    @Test func aFrontmostAppFullScreenOnANotchedSecondaryBuiltInIsPublished() async {
+        // Spaces span the displays and the MSI is the main one: the built-in has no menu bar of its own, so the
+        // tracker hands that to the detector and the frontmost app's window below the notch band counts (C-SIGNALS-5).
+        let harness = SignalsHarness()
+        let platform = harness.platform
+        platform.screenList = [F.msiAlone, F.builtInSecondary]
+        platform.windows = WindowListSnapshot(windows: [F.menuBar(on: F.msiAlone), F.window(F.notes, -1728, 355, 1728, 1085)],
+                                              windowServerPID: F.windowServer)
+        platform.frontmost = RunningAppInfo(bundleID: "com.example.notes", processID: F.notes)
+        platform.running = [RunningAppInfo(bundleID: "com.example.notes", processID: F.notes)]
+        platform.separateSpaces = false
+        await harness.start()
+        await harness.advance(.seconds(1))
+        #expect(harness.monitor.snapshot.fullScreenDisplays == [DisplayFixture.Keys.builtIn])
+    }
+
     @Test func theFocusDirectiveIsPersistedAndPublished() async {
         let harness = SignalsHarness()
         await harness.start()

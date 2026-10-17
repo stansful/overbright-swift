@@ -8,6 +8,9 @@ public nonisolated enum DisplayVerdict: Hashable, Codable, Sendable {
     case supported(safeGain: Double?, peakGain: Double)
     /// Even Peak adds < 10 % at full brightness.
     case noGainAtFullBrightness(peakGain: Double)
+    /// A boosting class whose panel peak or SDR maximum no source gives: no top can be backed, so no boost and no
+    /// gain claimed; dimming works (ARCHITECTURE.md §5.3, C-PLATFORM-3).
+    case panelFactsUnknown
     /// The preset's peak is well below the panel's: another preset would allow more.
     case presetLimits(presetPeakNits: Double, panelPeakNits: Double)
     /// External with PQ support, HDR off in macOS.

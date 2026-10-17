@@ -65,7 +65,7 @@ public nonisolated enum GainCeiling {
     /// disables the boost half for that cap mode and is answered as 1, as is a class that never boosts or a display
     /// whose panel peak or SDR maximum is unknown (no number we cannot back, DESIGN.md principle 2).
     public static func sliderTop(facts: DisplayFacts, capMode: CapMode, isOLED: Bool) -> Double {
-        guard boostClasses.contains(facts.panelClass), let peak = facts.panelPeakNits, peak > 0,
+        guard boostClasses.contains(facts.panelClass), let peak = knownPanelPeakNits(facts: facts),
               let sdrMax = sdrMaxNits(facts: facts) else { return 1 }
         let peakTop = FactorMath.headroomMargin * peak / sdrMax
         let top: Double
@@ -82,6 +82,16 @@ public nonisolated enum GainCeiling {
             }
         }
         return top >= minimumUsefulTop ? top : 1
+    }
+    /// A boosting class whose top no source can back: its panel peak or its SDR maximum is unknown after every
+    /// fallback of §5.1. `EligibilityClassifier` answers `.panelFactsUnknown` for it (C-PLATFORM-3).
+    static func lacksPanelFacts(_ facts: DisplayFacts) -> Bool {
+        boostClasses.contains(facts.panelClass)
+            && (knownPanelPeakNits(facts: facts) == nil || sdrMaxNits(facts: facts) == nil)
+    }
+    /// The panel peak when it is known and positive.
+    static func knownPanelPeakNits(facts: DisplayFacts) -> Double? {
+        facts.panelPeakNits.flatMap { $0 > 0 ? $0 : nil }
     }
     /// Seed of the full-brightness headroom (`panelPeak ÷ sdrMax`); Boost replaces it with the lowest ready H seen.
     public static func fullBrightnessHeadroomSeed(facts: DisplayFacts) -> Double? {

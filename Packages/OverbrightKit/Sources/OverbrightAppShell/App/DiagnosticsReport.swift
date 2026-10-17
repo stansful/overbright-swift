@@ -213,6 +213,7 @@ enum DiagnosticsReport {
         case .checking: "checking"
         case .supported: "supported"
         case .noGainAtFullBrightness: "noGainAtFullBrightness"
+        case .panelFactsUnknown: "panelFactsUnknown"
         case .presetLimits: "presetLimits"
         case .turnOnHDR: "turnOnHDR"
         case .switchPreset: "switchPreset"

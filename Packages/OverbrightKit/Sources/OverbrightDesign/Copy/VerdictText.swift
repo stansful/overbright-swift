@@ -59,6 +59,13 @@ public nonisolated struct VerdictText: Hashable, Sendable {
             return text(String(localized: "Little gain", bundle: b, locale: l, comment: "Verdict badge: Peak adds less than 10 % at full brightness"),
                         String(localized: "At full brightness this display gains less than \(tenPercent). Raising the display brightness gives the same result.",
                                bundle: b, locale: l, comment: "Verdict: a display that gains little; the argument is a percentage such as 10%"))
+        case .panelFactsUnknown:
+            let sentence = String(localized: "Overbright can’t tell how much brighter this display can get, so it adds no extra brightness.",
+                                  bundle: b, locale: l,
+                                  comment: "Verdict: Overbright does not know the display’s peak or its normal maximum brightness, so it adds none; followed by “You can still dim it below the minimum.”")
+            return text(String(localized: "Range unknown", bundle: b, locale: l,
+                               comment: "Verdict badge: Overbright cannot tell how much extra brightness the display has"),
+                        CopyFormat.sentences(sentence, stillDims, in: language))
         case let .presetLimits(presetPeak, panelPeak):
             let stops = Int(presetPeak.rounded()), example = Int(panelPeak.rounded())
             let first = String(localized: "The current preset stops at about \(stops) nits.", bundle: b, locale: l,

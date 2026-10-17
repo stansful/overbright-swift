@@ -18,7 +18,7 @@ import Testing
     static let englishChips = [
         "Preparing…", "No extra range", "Extra brightness off", "Limited by macOS", "Below full brightness", "Safe limit",
         "OLED limit", "Limited by heat", "Paused: video", "Paused: full screen", "Paused: game", "Paused: idle", "Stopped",
-        "Colors changed", "HDR is off", "Limited by preset", "No HDR in this preset", "Little gain", "Mirrored",
+        "Colors changed", "HDR is off", "Limited by preset", "No HDR in this preset", "Little gain", "Range unknown", "Mirrored",
         "Not supported", "Reference mode", "Checking…", "Paused: QuickTime Player", "Display Tuner may interfere",
         "Stopped: Display Tuner",
     ]
@@ -29,7 +29,8 @@ import Testing
                                       .thermalSerious, .fullScreenVideo, .fullScreenApp, .game, .oledIdle,
                                       .boostNotEnabled, .pausedApp(bundleID: "com.example.player"),
                                       .tripped(.oscillation), .tripped(.foreignTableAtLaunch),
-                                      .notSupported(.turnOnHDR), .notSupported(.switchPreset), .notSupported(.lcdClass)]
+                                      .notSupported(.turnOnHDR), .notSupported(.switchPreset), .notSupported(.lcdClass),
+                                      .notSupported(.panelFactsUnknown)]
         let phases: [EnginePhase] = [.arming(rung: 1), .gating(rung: 2), .failed(.headroomNeverArrived)]
         let fromReasons = reasons.compactMap { ChipModel.make(reason: $0, phase: .boosted, failedTries: 0)?.text }
         let fromPhases = phases.flatMap { phase in
@@ -95,7 +96,7 @@ import Testing
                                       .tripped(.attributedDrift(colorApp)), .tripped(.foreignTableAtLaunch)]
         let phases: [EnginePhase] = [.arming(rung: 1), .failed(.headroomNeverArrived)]
         let verdicts: [DisplayVerdict] = [.checking, .turnOnHDR, .switchPreset, .referencePreset, .lcdClass, .mirrored,
-                                          .virtualDisplay, .noGammaTable, .notHDR]
+                                          .virtualDisplay, .noGammaTable, .notHDR, .panelFactsUnknown]
         let fromReasons = reasons.compactMap {
             ChipModel.make(reason: $0, phase: .boosted, failedTries: 0, context: context)?.text
         }

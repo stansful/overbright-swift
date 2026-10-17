@@ -1,13 +1,13 @@
 // OverbrightSignals/FullScreen/FullScreenTracker.swift — runs the full-screen check and publishes its outcome.
 // ARCHITECTURE.md §6.5, §7.1 ("Full screen", "Playing video"), §7.3, §10.8.
-// A check is requested by events (Space change, app activation and termination, screen parameters, wake) and, while
-// boosted, by the 2 s re-check; requests are debounced 0.6 s (Space animations produce transient window lists). One
-// check reads the window list off the main actor, then on the main actor the screens (and whether they have separate
-// Spaces), running apps, the frontmost app and the display-sleep assertions, applies the sticky menu-bar absence and
-// `FullScreenDetector.evaluate`, and publishes full-screen displays, full-screen-video displays and the frontmost app
-// (its displays, `isPlaying`, `isGame`) in ONE outcome, so the snapshot never shows a half-updated front. When a sticky
-// absence masks a present menu bar, one more check runs as the mask expires. Nothing is pending while no request is.
-// The WindowServer's PID, once a snapshot found it, is kept for the session and handed to every later read
+// A check is requested by events (Space change, app activation, a regular app's termination, screen parameters, wake)
+// and, while boosted, by the 2 s re-check; requests are debounced 0.6 s (Space animations produce transient window
+// lists). One check reads the window list off the main actor, then on the main actor the screens (and whether they have
+// separate Spaces), running apps, the frontmost app and the display-sleep assertions, applies the sticky menu-bar
+// absence and `FullScreenDetector.evaluate`, and publishes full-screen displays, full-screen-video displays and the
+// frontmost app (its displays, `isPlaying`, `isGame`) in ONE outcome, so the snapshot never shows a half-updated front.
+// When a sticky absence masks a present menu bar, one more check runs as the mask expires. Nothing is pending while no
+// request is. The WindowServer's PID, once a snapshot found it, is kept for the session and handed to every later read
 // (`WindowListSnapshot`: no lookup per check).
 // Thread: main.
 import Foundation
@@ -100,12 +100,13 @@ final class FullScreenTracker {
         let context = FullScreenDetector.Context(frontmostPID: front?.processID, ignoredPIDs: ignored,
                                                  regularPIDs: Set(apps.filter(\.isRegular).map(\.processID)),
                                                  displaySleepHolders: holders ?? [])
+        let separateSpaces = platform.screensHaveSeparateSpaces()
         let observed = FullScreenDetector.observedMenuBar(windows: list.windows, displays: screens,
                                                           windowServerPID: list.windowServerPID,
-                                                          separateSpaces: platform.screensHaveSeparateSpaces())
+                                                          separateSpaces: separateSpaces)
         let effective = menuBar.update(observed: observed, at: time.now)
         let result = FullScreenDetector.evaluate(windows: list.windows, displays: screens, context: context,
-                                                 menuBarPresent: effective.present)
+                                                 menuBarPresent: effective.present, separateSpaces: separateSpaces)
         let frontmost = front.map { app in
             FrontmostApp(bundleID: app.bundleID, processID: app.processID, displays: result.frontmostDisplays,
                          isPlaying: holders.map { $0.contains(app.processID) }, isGame: isGame(app))

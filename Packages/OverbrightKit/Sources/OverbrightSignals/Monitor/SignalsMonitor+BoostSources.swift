@@ -9,9 +9,10 @@
 //   starting or stopping without a Space change). While the boost is inactive only events re-check (Space, app,
 //   screen, wake), so a pause that made every display neutral and whose player then stops without any such event
 //   lasts until the next one: keeping the watch then would mean a 2 s timer with the master off (§17). The watch is
-//   Signals' own timer, not a ride on the engine's drift check (WP14 decision, §7.1 "Playing video"): the drift check
-//   runs per display inside Boost, the full-screen state is one system-wide read here, and the two 2 s sleeps carry
-//   the time source's 10 % tolerance, so the system may coalesce them;
+//   Signals' own timer, not a ride on the engine's drift check (ARCHITECTURE.md D28, WP14): the drift check runs per
+//   display inside Boost with its own phase, the full-screen state is one system-wide read here, and riding would
+//   need a `SystemSignals` requirement; the two 2 s sleeps' 10 % tolerance coalesces them only when their phases lie
+//   within 0.2 s, so the watch costs one wake-up every 2 s while it runs;
 // - schedule boundary: one sleep towards the next boundary (`ScheduleTimer`), only while a schedule is set.
 // While shielded (locked, screensaver, displays or system asleep, off the console) the first three stop, the OLED idle
 // poll too: nobody sees the screen, and the engine holds every display neutral. An idle pause keeps its flag until the
@@ -22,8 +23,8 @@ import Foundation
 import OverbrightCore
 
 extension SignalsMonitor {
-    /// The full-screen and playback re-check interval while boosted (the drift check's cadence, its own timer,
-    /// DESIGN.md §17).
+    /// The full-screen and playback re-check interval while boosted (the drift check's cadence, its own timer:
+    /// ARCHITECTURE.md D28, DESIGN.md §17).
     static let watchInterval: Duration = .seconds(2)
 
     /// Starts or stops each boost-only source to match the state. While the screen cannot be seen

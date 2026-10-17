@@ -165,6 +165,7 @@ Overbright on, both displays boosting; monitor running (`monitor-7.jsonl`).
 | 7.9 (H-B1) | "Add extra brightness only near full brightness" on (default). Built-in at Max (Safe); set system brightness to 100 %, about 75 %, 50 %, 25 %, using the brightness keys; then turn the option off and repeat | with the option on: full boost at 100 %, partly at 75 %, none at 50 % and below, and every brightness-key step looks like a normal step (no bigger jumps); with it off: the multiplier applies at every level. Note any step that looks uneven |
 | 7.10 (H-FS2) | (WP6) System Settings ▸ Desktop & Dock: turn **Displays have separate Spaces** off (log out and back in), then repeat 7.1 and 7.3; afterwards turn it back on | as built (C-SIGNALS-5): only the main display (the one at the global origin) has a menu bar then, so on the other display only a frontmost window that covers it exactly counts as full screen. Expected: a full-screen video on the MSI pauses the MSI only; a zoomed window on the MSI pauses nothing; the built-in behaves as in 7.1–7.3. Note any display that pauses (or not) otherwise |
 | 7.11 | (WP11) Settings ▸ Automations ▸ Pause for these apps ▸ add from the suggestions: for each of Prime Video, Infuse, GeForce NOW and Moonlight that is installed, run `osascript -e 'id of app "<its name>"'` | the suggestion lists the installed ones by their Finder names; their IDs are `com.amazon.aiv.AIVApp`, `com.firecore.infuse.enterprise`, `com.nvidia.gfnpc.mall` and `com.moonlight-stream.Moonlight` (unverified publishers' IDs; note any that differ) |
+| 7.12 (H-FS2) | (WP6, C-SIGNALS-5) **Displays have separate Spaces** off as in 7.10, "Pause for every full-screen app" on; make the MSI the main display (System Settings ▸ Displays ▸ Arrange: drag the menu bar onto the MSI). On the built-in: (a) an app full screen, frontmost; (b) the same, then click on the MSI if macOS lets you; (c) a zoomed (not full-screen) window, frontmost. Capture `obdiag ~/Overbright-HW/7.12-<case>.json` for each (look at `signals.fullScreenDisplays`). Afterwards put the menu bar back on the built-in, then turn the setting back on | as built: the built-in has no menu bar of its own then, so a frontmost window counts as full screen when it covers the display exactly or below the notch band. (a) the built-in pauses (chip "Paused: full screen"), the MSI does not; (b) note whether the built-in resumes (expected: a background window is no evidence there); (c) note where the zoomed window's top edge sits: at the display's top edge it is not paused; below the notch band it pauses while frontmost (the known limit of §7.3, which this step measures) |
 
 ---
 
@@ -236,9 +237,9 @@ footprint -p $(obpid) > ~/Overbright-HW/13-<case>-footprint.txt
 sudo powermetrics -i 1000 -n 30 --samplers cpu_power,gpu_power,tasks --show-process-energy > ~/Overbright-HW/13-<case>-power.txt
 ```
 
-Cases: Overbright **off**; on with the winning trigger at Bright room; on with *Metal layer* forced; Compatibility mode; Fill Light on. Optional: 30 minutes on battery at Bright room vs Standard (battery % before and after).
+Cases: Overbright **off**; on with the winning trigger at Bright room; on with *Metal layer* forced; Compatibility mode; Fill Light on; both displays at Bright room, once with "Pause for full-screen video" on (the default) and once with it and every other full-screen and "while playing" rule off (ARCHITECTURE.md D28: Signals' 2 s full-screen watch is its own timer). Optional: 30 minutes on battery at Bright room vs Standard (battery % before and after).
 
-**Expected:** off = 0 idle wake-ups; on = ≤ 1.5 wake-ups/s and < 0.1 % CPU with no GPU work after the first frame (DESIGN.md §17).
+**Expected:** off = 0 idle wake-ups; on = ≤ 1.5 wake-ups/s and < 0.1 % CPU with no GPU work after the first frame (DESIGN.md §17). Both displays with the full-screen rule on: about 2.0 wake-ups/s by D28's count (two drift checks, the hang ping, the watch), about 1.5 with the rules off; note both, since they decide whether WP16 moves the watch onto one engine tick.
 
 ---
 
@@ -303,7 +304,7 @@ Cases: Overbright **off**; on with the winning trigger at Bright room; on with *
 | H-E2 | Sidecar and AirPlay: virtual, no card, vendor and capacity | | 1.11 |
 | H-E3 | hot-plug: the MSI's `DisplayAttributes` present at once, or only after the 0.5 s / 2 s passes? | | 1.12 |
 | H-X2 | baseline writes from the watchdog's and the signal queue's threads: no fault, no crash, `matchesBase` | | 5.8 |
-| H-FS2 | "Displays have separate Spaces" off: which displays pause for full screen | | 7.10 |
+| H-FS2 | "Displays have separate Spaces" off: which displays pause for full screen; the built-in as a secondary display: full-screen app detected? zoomed window below the notch band? | | 7.10, 7.12 |
 | suggestions | the paused-app suggestions' bundle IDs on this Mac | | 7.11 |
 | H-F2–F5 | Fill Light: grant for the 2.07 request (policy A or B), no tone-mapping during the ramp, the auto-hidden menu bar band, no presents while idle | | 11.5–11.8 |
 | H-CC-1 (language) | the control's title and labels in English, then French | | 12.5 |

@@ -111,6 +111,29 @@ import Testing
                                                                     domain: .encoded)) < 1e-4)
     }
 
+    /// Background-only processes (XPC services) quit every few seconds, and Signals posts each termination
+    /// (C-SIGNALS-1). With nothing scaled or dimmed one costs nothing: no re-reduction, no task. While boosted, the
+    /// 50 ms check still runs for a process without a bundle ID, because any table writer's death resets every display.
+    @Test func anUnrelatedTerminationCostsNothingUnlessADisplayIsScaled() async throws {
+        let h = EngineHarness()
+        await h.start()
+        let reductions = h.inputs.count
+        h.signals.emit(.appTerminated(bundleID: nil, processID: 4_242))
+        await h.advance(.milliseconds(100))
+        #expect(h.inputs.count == reductions)
+        #expect(h.engine.activeTaskCount == 0)
+        #expect(await h.boost())
+        await h.advance(.milliseconds(500))
+        let boosted = h.inputs.count
+        h.signals.emit(.appTerminated(bundleID: nil, processID: 4_243))
+        await h.advance(.milliseconds(60))
+        #expect(h.inputs.count == boosted)                                // the table is fine: nothing to decide
+        h.gamma.simulateOtherWriterDeath()
+        h.signals.emit(.appTerminated(bundleID: nil, processID: 4_244))
+        await h.advance(.milliseconds(60))
+        #expect(h.codes.contains("watchdog.reset"))
+    }
+
     /// A base change the drift check sees right after a ColorSync event is adopted after two identical reads.
     @Test func explainedAdoptionAdoptsTheNewBase() async throws {
         let h = EngineHarness()
