@@ -64,14 +64,23 @@ extension DisplayController {
             return
         }
         if mechanism == .table, isScaledOrDimmed, let baseline, let read = try? deps.gamma.read(ref.id) {
-            let profile = deps.gamma.profileBase(of: ref.id, count: baseline.count)
-            switch DriftCheck.evaluate(read: read, baseline: baseline, factor: appliedFactor, profileBase: profile) {
+            // E″ (a ColorSync profile copy, `vcgt` parse and resample: half the tick on the real port) is computed only
+            // when the verdict consults it, and the same fresh value goes to the adoption rules (§4.8 step 1).
+            var profile: GammaTable?
+            let verdict = DriftCheck.evaluate(read: read, baseline: baseline, factor: appliedFactor, profileBase: {
+                let base = deps.gamma.profileBase(of: ref.id, count: baseline.count)
+                profile = base
+                return base
+            })
+            switch verdict {
             case .fine, .indistinguishable:
                 break
             case .reset:
                 await handleReset(stamp, cause: trigger == .appTerminated ? .appTerminated : .reset)
                 return
             case .adoptionCandidate:
+                // A candidate is only ever found against a computed E″.
+                guard let profile else { break }
                 await handleAdoptionCandidate(read: read, profile: profile, stamp)
                 return
             case .foreign:

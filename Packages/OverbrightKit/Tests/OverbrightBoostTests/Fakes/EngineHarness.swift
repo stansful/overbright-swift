@@ -28,9 +28,10 @@ import OverbrightTestSupport
     private(set) var inputs: [PolicyInput] = []
 
     /// The engine over `fixture` with the reference reducer (`tops` per display; the M4 Max Safe top otherwise), or
-    /// with `decide` when given.
+    /// with `decide` when given. `wrapGamma` puts a decorator (`CountingGammaPort`) between the engine and `gamma`.
     init(fixture: DisplayFixture = .builtinXDRLidOpen, reducer: ReferenceReducer = ReferenceReducer(),
-         machine: MachineIdentity? = nil, decide: ((PolicyInput) -> PolicyDecision)? = nil) {
+         machine: MachineIdentity? = nil, decide: ((PolicyInput) -> PolicyDecision)? = nil,
+         wrapGamma: (FakeGammaPort, ManualTimeSource) -> any GammaPort = { gamma, _ in gamma }) {
         self.fixture = fixture
         directory = FakeDisplayDirectory(fixture: fixture)
         gamma = FakeGammaPort(fixture: fixture, time: time)
@@ -41,7 +42,8 @@ import OverbrightTestSupport
         let decision = decide ?? { reducer.decide($0) }
         weak var weakSelf: EngineHarness?
         engine = BoostEngine(settings: settings, machine: machine ?? fixture.machine, time: time, journal: journal,
-                             ownEDRSurfaces: surfaces, displays: directory, signals: signals, gamma: gamma,
+                             ownEDRSurfaces: surfaces, displays: directory, signals: signals,
+                             gamma: wrapGamma(gamma, time),
                              headroom: headroom, triggers: checkedTriggers, conflicts: conflicts,
                              reduce: { input in
                                  MainActor.assumeIsolated { weakSelf?.inputs.append(input) }

@@ -41,6 +41,14 @@ nonisolated enum DriftCheck {
     ///   - profileBase: E″, considered only when it differs from the baseline by at least the separation.
     static func evaluate(read: GammaTable, baseline: GammaTable, factor: Double, profileBase: GammaTable?,
                          tolerance: Double = EngineTiming.driftTolerance) -> Verdict {
+        evaluate(read: read, baseline: baseline, factor: factor, profileBase: { profileBase }, tolerance: tolerance)
+    }
+
+    /// The same, with E″ computed only when the verdict needs it: after `.indistinguishable`, `.fine` and `.reset` have
+    /// failed (the evaluation order of §4.8 step 2), so a steady tick costs no ColorSync profile copy, `vcgt` parse or
+    /// resample. `profileBase` is called at most once, and its result is still fresh whenever it is consulted.
+    static func evaluate(read: GammaTable, baseline: GammaTable, factor: Double, profileBase: () -> GammaTable?,
+                         tolerance: Double = EngineTiming.driftTolerance) -> Verdict {
         guard read.count == baseline.count, let index = sampleIndex(baseline: baseline, factor: factor),
               let b = baseline.entries(at: index), let r = read.entries(at: index) else { return .indistinguishable }
         let w = b.map { $0 * factor }
@@ -49,7 +57,7 @@ nonisolated enum DriftCheck {
         guard distance(w, b) >= separation else { return .indistinguishable }
         if distance(r, w) <= tolerance { return .fine }
         if distance(r, b) <= tolerance { return .reset }
-        if let profileBase, profileBase.count == read.count, let e = profileBase.entries(at: index),
+        if let profileBase = profileBase(), profileBase.count == read.count, let e = profileBase.entries(at: index),
            distance(e, b) >= separation, distance(e, w) >= separation, distance(r, e) <= tolerance,
            read.matches(profileBase, tolerance: tolerance) {
             return .adoptionCandidate
