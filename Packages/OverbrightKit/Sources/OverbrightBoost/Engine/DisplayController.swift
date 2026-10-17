@@ -142,6 +142,18 @@ import OverbrightPolicy
         default: true
         }
     }
+    /// Whether Signals' boost-only sources must run for this display (§7.1, DESIGN.md §17): it is scaled or dimmed, or it
+    /// prepares, ramps or holds a boost or a dim. A suspended display whose baseline is written needs none until it
+    /// resumes (a lock, display sleep or fast user switch can last all night; the resume reads the power source again),
+    /// and neither does a display the self-test or a calibration drives (the master is held off).
+    var needsBoostSources: Bool {
+        guard !isDriven else { return false }
+        if isScaledOrDimmed { return true }
+        switch phase {
+        case .arming, .gating, .ramping, .boosted, .dimmed, .disarming: return true
+        case .idle, .failed, .suspended: return false
+        }
+    }
     /// Arming or gating: preparing.
     var isPreparing: Bool {
         switch phase {
@@ -152,6 +164,11 @@ import OverbrightPolicy
     /// Number of tasks alive (zero while idle, §4.5 invariant 4).
     var activeTaskCount: Int {
         [armSlot, rampSlot, driftSlot, burstSlot, lingerSlot, checkSlot, rebaseSlot].filter(\.isRunning).count
+    }
+    /// The live tasks by name, prefixed with the display ("<key>.ramp"), for diagnostics and tests.
+    var activeTaskNames: [String] {
+        [("arm", armSlot), ("ramp", rampSlot), ("drift", driftSlot), ("burst", burstSlot), ("linger", lingerSlot),
+         ("check", checkSlot), ("rebase", rebaseSlot)].filter { $0.1.isRunning }.map { "\(key.rawValue).\($0.0)" }
     }
     /// The boost the current target asks for (nil when the target is not a boost).
     var targetGain: Double? {
@@ -164,6 +181,17 @@ import OverbrightPolicy
         DisplayStatus(key: key, name: facts.name, phase: phase, decision: decision, appliedGain: appliedGain,
                       appliedFactor: appliedFactor, mechanism: mechanism,
                       strategy: trigger != nil ? currentRung?.strategy : nil, lastReading: lastReading,
-                      sdrWhite: parameters.sdrWhite, failedTries: failedTries)
+                      sdrWhite: sdrWhite(at: lastReading), failedTries: failedTries, lastGrant: lastGrant)
+    }
+
+    /// The largest light gain macOS's grants allowed here (0.97 × the highest headroom seen while boosting), if any.
+    var lastGrant: Double? {
+        deps.cache.record(for: key, osBuild: deps.machine.osBuild)?.highestGrantedHeadroom
+            .map { FactorMath.headroomMargin * $0 }
+    }
+
+    /// Learns the grant of a reading taken while this display boosts (DESIGN.md §12.1's "macOS allowed up to …").
+    func noteGrant(_ headroom: Double) {
+        deps.cache.learnGrantedHeadroom(headroom, for: key, osBuild: deps.machine.osBuild)
     }
 }

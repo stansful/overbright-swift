@@ -17,7 +17,7 @@ import OverbrightCore
     private var revision = 0
     private var saving: Task<Void, Never>?
 
-    /// An empty cache, in memory until `attach(file:)`.
+    /// An empty cache, in memory until `attach(file:osBuild:)`.
     public init() {}
 
     /// The key of `display` on `osBuild`.
@@ -29,11 +29,21 @@ import OverbrightCore
     }
 
     /// Keeps the cache in `file` from now on, after reading what is there (a missing or corrupt file is an empty cache).
-    public func attach(file: JSONDocumentFile<[String: StrategyRecord]>) async {
+    /// Only records of `osBuild` (`kern.osversion` now) are kept: a record is read only for the running build, so every
+    /// macOS update would otherwise leave one dead record per display behind for good. When some were dropped, the
+    /// pruned map is written back once.
+    public func attach(file: JSONDocumentFile<[String: StrategyRecord]>, osBuild: String) async {
         self.file = file
-        if case .loaded(let stored)? = try? await file.loadInBackground() {
-            records.merge(stored) { current, _ in current }
-        }
+        guard case .loaded(let stored)? = try? await file.loadInBackground() else { return }
+        let current = stored.filter { Self.osBuild(ofKey: $0.key) == osBuild }
+        records.merge(current) { current, _ in current }
+        if current.count < stored.count { save() }
+    }
+
+    /// The OS build part of a key ("<display UUID>|<OS build>"); nil for a key without one.
+    nonisolated static func osBuild(ofKey key: String) -> String? {
+        guard let separator = key.lastIndex(of: "|") else { return nil }
+        return String(key[key.index(after: separator)...])
     }
 
     // MARK: Learning
@@ -69,6 +79,18 @@ import OverbrightCore
             record.lowestReadyHeadroom = min(record.lowestReadyHeadroom ?? headroom, headroom)
         }
     }
+
+    /// Headroom granted while boosting: keeps the highest one (DESIGN.md §12.1). Rises of less than
+    /// `grantResolution` are not stored, so read-back noise never rewrites the file.
+    public func learnGrantedHeadroom(_ headroom: Double, for display: DisplayKey, osBuild: String) {
+        guard headroom.isFinite, headroom > 1 else { return }
+        if let highest = record(for: display, osBuild: osBuild)?.highestGrantedHeadroom,
+           headroom < highest + Self.grantResolution { return }
+        update(display, osBuild) { $0.highestGrantedHeadroom = headroom }
+    }
+
+    /// The smallest rise of the highest grant that is stored.
+    public static let grantResolution = 0.01
 
     /// Advanced ▸ "Forget learned methods": every record goes.
     public func forget() {

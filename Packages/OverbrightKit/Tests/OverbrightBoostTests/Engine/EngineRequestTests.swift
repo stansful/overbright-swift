@@ -85,6 +85,32 @@ import Testing
         #expect(h.signals.boostActiveCalls.last == false)
     }
 
+    /// A lock, display sleep or fast user switch can last all night: once the shield wrote the baseline, nothing is
+    /// scaled, dimmed or preparing, so the boost-only sources stop (§7.1, DESIGN.md §17); the resume starts them again
+    /// (C-BOOST-6).
+    @Test(arguments: [SystemEvent.locked, .screensDidSleep, .sessionResigned])
+    func boostOnlySourcesStopWhileShielded(_ event: SystemEvent) async throws {
+        let h = EngineHarness()
+        await h.start()
+        #expect(await h.boost())
+        #expect(h.signals.boostActiveCalls.last == true)
+        switch event {
+        case .locked: h.signals.snapshot.isScreenLocked = true
+        case .sessionResigned: h.signals.snapshot.isSessionActive = false
+        default: h.signals.snapshot.areDisplaysAsleep = true
+        }
+        h.signals.emit(event)
+        await h.advance(.seconds(60), step: .milliseconds(100))
+        #expect(h.phase()?.isSuspended == true && h.everyTableAtBase && h.triggers.openWindowCount == 0)
+        #expect(h.signals.boostActiveCalls.last == false && h.engine.activeTaskCount == 0)
+        h.signals.snapshot.isScreenLocked = false
+        h.signals.snapshot.isSessionActive = true
+        h.signals.snapshot.areDisplaysAsleep = false
+        h.signals.emit(event == .locked ? .unlocked : event == .sessionResigned ? .sessionBecameActive : .screensDidWake)
+        #expect(await h.boost())
+        #expect(h.signals.boostActiveCalls.last == true)
+    }
+
     /// Signals' schedule boundary (§7.1) re-reduces once, with nothing else to do.
     @Test func aScheduleBoundaryReReduces() async throws {
         let h = EngineHarness()

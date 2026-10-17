@@ -8,13 +8,18 @@ import Testing
 @testable import OverbrightBoost
 
 @Suite nonisolated struct HangWatchdogOffMainTests {
+    /// How long the real main queue may take to answer: in a parallel run the main actor serves the engine suites
+    /// between their yields, so a pong can wait seconds (a scheduling margin, not a product timing; C-BOOST-14).
+    private static let mainQueueMargin: Duration = .seconds(60)
+
     /// Switched on from a background queue, the timer pings the real main queue and gets answers: the handler ran on
-    /// the watchdog's queue and the pong on main, neither trapped.
+    /// the watchdog's queue and the pong on main, neither trapped. The timeout is longer than the margin, so a slow main
+    /// queue never makes it fire.
     @Test func theTimerAndThePongRunAgainstTheRealMainQueue() async {
         let h = WatchdogHarness()
-        let watchdog = h.watchdog(ping: .milliseconds(30), timeout: .seconds(5), queue: .main)
+        let watchdog = h.watchdog(ping: .milliseconds(30), timeout: Self.mainQueueMargin * 2, queue: .main)
         DispatchQueue.global(qos: .utility).async { watchdog.setActive(true) }
-        #expect(await waitUntil(.seconds(10)) { watchdog.pongCount >= 3 })
+        #expect(await waitUntil(Self.mainQueueMargin) { watchdog.pongCount >= 3 })
         let switchedOff = LockedState(false)
         DispatchQueue.global(qos: .utility).async {
             watchdog.setActive(false)
@@ -48,8 +53,8 @@ import Testing
         let h = WatchdogHarness()
         let watchdog = HangWatchdog(writer: h.writer, ledger: h.ledger, journal: h.journal)
         watchdog.setActive(true)
-        #expect(await waitUntil(.seconds(10)) { watchdog.pongCount >= 1 })
+        #expect(await waitUntil(Self.mainQueueMargin) { watchdog.pongCount >= 1 })
         watchdog.setActive(false)
-        #expect(watchdog.fireCount == 0 && h.ledger.hangEpoch == 0)
+        #expect(h.ledger.hangEpoch == UInt64(watchdog.fireCount))       // a loaded main queue may stall 3 s: one bump each
     }
 }

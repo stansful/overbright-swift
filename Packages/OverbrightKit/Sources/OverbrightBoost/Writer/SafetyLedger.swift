@@ -33,17 +33,36 @@ public nonisolated final class SafetyLedger: @unchecked Sendable {
 
     private let lock = NSLock()
     private var state = State()
+    private var occupancyObserver: (@Sendable (Bool) -> Void)?
 
     /// An empty ledger.
     public init() {}
 
     /// Runs `body` with the state while holding the ledger lock. `TableWriter` holds it across each write, and the
     /// hang watchdog across its epoch bump and baseline writes, so writes land in lock order (§4.6). Never call another
-    /// ledger method inside `body` (the lock is not recursive).
+    /// ledger method inside `body` (the lock is not recursive). When `body` takes the ledger from empty to occupied or
+    /// back, the occupancy observer runs before the lock is released.
     public func withLock<T>(_ body: (inout State) throws -> T) rethrows -> T {
         lock.lock()
-        defer { lock.unlock() }
+        let wasOccupied = !state.entries.isEmpty
+        defer {
+            let isOccupied = !state.entries.isEmpty
+            if isOccupied != wasOccupied { occupancyObserver?(isOccupied) }
+            lock.unlock()
+        }
         return try body(&state)
+    }
+
+    /// Calls `observer` whenever the ledger goes from empty to occupied (`true`) or back (`false`), and once now with
+    /// the current occupancy; nil stops it. The engine arms its hang watchdog with it (D7): whatever path marks a display
+    /// (a ramp step, a dim, a calibration factor), the watchdog runs from that write on, and the restore that empties
+    /// the ledger switches it off. It runs on the thread of the change, **inside the ledger lock**, so occupancy and the
+    /// observer's reaction never interleave with another change; it must never use the ledger.
+    public func observeOccupancy(_ observer: (@Sendable (Bool) -> Void)?) {
+        lock.lock()
+        defer { lock.unlock() }
+        occupancyObserver = observer
+        observer?(!state.entries.isEmpty)
     }
 
     /// The current hang epoch.
@@ -66,4 +85,7 @@ public nonisolated final class SafetyLedger: @unchecked Sendable {
 
     /// Whether `display` is recorded as scaled or dimmed.
     public func isMarked(_ display: DisplayKey) -> Bool { withLock { $0.entries[display] != nil } }
+
+    /// The displays recorded as scaled or dimmed.
+    public var markedDisplays: Set<DisplayKey> { withLock { Set($0.entries.keys) } }
 }

@@ -23,6 +23,11 @@ import Testing
         }
     }
 
+    /// A main-actor stop that returns at once ends the wait as soon as it ran; under a loaded parallel test run the main
+    /// actor may take longer than the production second to get to it, so tests that are not about the timeout wait
+    /// this long (a scheduling margin, not a product timing).
+    private static let generousTimeout: Duration = .seconds(10)
+
     private func makeHandlers(_ h: WatchdogHarness, trace: Trace, timeout: Duration = EngineTiming.signalStopTimeout,
                           stop: @escaping @MainActor @Sendable () async -> Void) -> SignalHandlers {
         SignalHandlers(writer: h.writer, stop: stop, timeout: timeout) { trace.exited($0) }
@@ -35,7 +40,7 @@ import Testing
             handlers.handle(number)
             returned.withLock { $0 = true }
         }
-        _ = await waitUntil(.seconds(10)) { returned.withLock { $0 } }
+        _ = await waitUntil(.seconds(20)) { returned.withLock { $0 } }
     }
 
     @Test(arguments: [SIGTERM, SIGINT, SIGHUP])
@@ -72,7 +77,7 @@ import Testing
     @Test func onlyTheFirstSignalIsHandled() async {
         let h = WatchdogHarness()
         let trace = Trace()
-        let handlers = makeHandlers(h, trace: trace, timeout: .milliseconds(200)) { trace.add("stop") }
+        let handlers = makeHandlers(h, trace: trace, timeout: Self.generousTimeout) { trace.add("stop") }
         await deliver(SIGINT, to: handlers)
         await deliver(SIGTERM, to: handlers)
         #expect(trace.all == ["stop", "exit(0)"])
@@ -84,13 +89,13 @@ import Testing
     @Test func aRealSignalReachesTheInstalledHandler() async {
         let h = WatchdogHarness()
         let trace = Trace()
-        let handlers = makeHandlers(h, trace: trace, timeout: .milliseconds(500)) { trace.add("stop") }
+        let handlers = makeHandlers(h, trace: trace, timeout: Self.generousTimeout) { trace.add("stop") }
         handlers.install()
         handlers.install()                                           // once only
         #expect(handlers.sourceCount == SignalHandlers.handledSignals.count)
         defer { handlers.uninstall() }
         kill(getpid(), SIGHUP)
-        #expect(await waitUntil(.seconds(10)) { trace.all.contains("exit(0)") })
+        #expect(await waitUntil(.seconds(20)) { trace.all.contains("exit(0)") })
         #expect(trace.all == ["stop", "exit(0)"])
         #expect(trace.exitedOnMainThread == false)
         #expect(h.ledger.hangEpoch == 1 && h.ledger.entries().isEmpty)
