@@ -168,11 +168,15 @@ import OverbrightPolicy
     /// Whether Signals' boost-only sources must run for this display (§7.1, D30, DESIGN.md §17): it arms or gates, or it
     /// ramps toward, holds or disarms from a boost (a boost target, or a table or overlay above its baseline, whatever
     /// the phase). Every guard those sources feed applies to the boost half only (D10: dimming always works), so a
-    /// dimmed-only display needs none; dim → boost goes through arming, which counts, so the synchronous power read of
-    /// `setBoostActive(true)` still precedes any boost write. A suspended display whose baseline is written needs none
-    /// until it resumes (a lock, display sleep or fast user switch can last all night; the resume reads the power source
-    /// again), and neither does a display the self-test or a calibration drives (the master is held off). The drift
-    /// check and the hang watchdog do not depend on this: they follow the phase and the safety ledger.
+    /// dimmed-only display needs none. Dim → boost does not always arm (an overlay partway through a dim ramp adjusts
+    /// that ramp, a disarm whose window is still up goes back to boosted), yet the power source is still read before
+    /// any boost write: a level request reads it before reducing while no display keeps the sources running
+    /// (`refreshPowerBeforeABoost`), the same reduction ends with `updateAggregates` and the synchronous read of
+    /// `setBoostActive(true)`, and every ramp sleeps before its first step (`runRamp`; `BoostSourcesTests`). A
+    /// suspended display whose baseline is written needs none until it resumes (a lock, display sleep or fast user
+    /// switch can last all night; the resume reads the power source again), and neither does a display the self-test
+    /// or a calibration drives (the master is held off). The drift check and the hang watchdog do not depend on this:
+    /// they follow the phase and the safety ledger.
     var needsBoostSources: Bool {
         guard !isDriven else { return false }
         if appliedFactor > 1 + TableWriter.neutralTolerance { return true }

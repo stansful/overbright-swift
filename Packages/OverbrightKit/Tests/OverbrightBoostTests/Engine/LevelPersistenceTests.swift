@@ -1,14 +1,15 @@
 // OverbrightBoostTests/Engine/LevelPersistenceTests.swift — level persistence is coalesced during drags (ARCHITECTURE.md
 // §4.9): every step is stored at once for every reader (the reducer, the UI, the low-level rule, Signals), but the
 // `defaults` write (a JSON encode of every display's preferences and a cfprefsd message) happens once,
-// `levelPersistDelay` after the last step, and at once on stop, stopNow and every turn-off; and a step costs one
-// reduction, not two (the observed settings change it made is the one it reduced with). Counted with
+// `levelPersistDelay` after the last step, and at once on stop, stopNow (after its baselines) and every turn-off; and a
+// step costs one reduction, not two (the observed settings change it made is the one it reduced with). Counted with
 // `CountingDefaults` and the reducer's inputs.
 import Foundation
 import OverbrightCore
 import OverbrightPolicy
 import OverbrightTestSupport
 import Testing
+import os
 @testable import OverbrightBoost
 
 @MainActor @Suite struct LevelPersistenceTests {
@@ -75,6 +76,29 @@ import Testing
         h.engine.stopNow()
         #expect(stored(defaults, h.builtIn) == Self.positions[3])
         #expect(h.engine.activeTaskCount == 0)
+    }
+
+    /// Quit's `stopNow()` writes every baseline before the levels it owes: the settings write never delays the restore.
+    @Test func stopNowRestoresBeforeItWritesTheLevels() async throws {
+        let (h, defaults) = harness()
+        await h.start(on: true)
+        #expect(await h.boost())
+        h.engine.setLevel(Self.positions[3], for: h.builtIn, source: .panel)
+        await h.advance(.milliseconds(100))
+        let base = try #require(h.base())
+        #expect(h.table()?.matches(base, tolerance: 1e-6) == false)       // scaled when the quit comes
+        let gamma = h.gamma, display = h.id(h.builtIn), levelsKey = Self.perDisplayKey
+        let tablesAtWrite = OSAllocatedUnfairLock<[GammaTable?]>(initialState: [])
+        defaults.observeWrites { key in
+            guard key == levelsKey else { return }
+            let table = gamma.table(of: display)
+            tablesAtWrite.withLock { $0.append(table) }
+        }
+        h.engine.stopNow()
+        let tables = tablesAtWrite.withLock { $0 }
+        #expect(tables.count == 1)
+        #expect(tables.allSatisfy { $0?.matches(base, tolerance: 1e-6) == true })
+        #expect(stored(defaults, h.builtIn) == Self.positions[3])
     }
 
     /// The ramped stop, a turn-off and Back to Standard write what is owed at once.

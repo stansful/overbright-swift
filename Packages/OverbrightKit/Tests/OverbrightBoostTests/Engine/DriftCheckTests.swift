@@ -140,7 +140,7 @@ import Testing
         await h.start()
         #expect(await h.boost())
         // The drift tick is 1 s away (ticks land on the 2 s grid, D29).
-        let toTick = DisplayController.gridDelay(from: h.time.now, every: EngineTiming.watchdogInterval)
+        let toTick = h.time.nextGridPoint(every: EngineTiming.watchdogInterval) - h.time.now
         await h.advance(toTick > .seconds(1) ? toTick - .seconds(1) : toTick + .seconds(1))
         h.gamma.changeBase(Self.otherBase, for: 1)
         h.controller()?.lastBaseEventAt = h.time.now                     // the event, as Signals would deliver it

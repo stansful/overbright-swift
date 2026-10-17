@@ -186,10 +186,11 @@ import OverbrightPolicy
         finishStop()
     }
 
-    /// Synchronous fallback from `applicationWillTerminate`: no ramp, baselines written at once.
+    /// Synchronous fallback from `applicationWillTerminate`: no ramp, baselines written at once. The levels still owed
+    /// reach UserDefaults only after them (`finishStop`), so no settings write delays the restore.
     public func stopNow() {
         calibrationSession?.abort(.cancelled)
-        turnOff()
+        turnOff(persisting: false)
         for controller in controllers.values { controller.stopNow() }
         ledger.withLock { state in
             writer.writeBaselines(fromLedger: state)
