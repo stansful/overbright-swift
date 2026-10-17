@@ -4,7 +4,8 @@
 // successful move relaunches and quits before anything else of the launch can run; a failed relaunch puts the bundle
 // back (and the older copy back from the Trash), says so and carries on; a bundle that cannot go back stays in
 // Applications, and the alert says so. A move or copy that fails after the older copy went to the Trash brings it
-// back. Esc answers "Not Now". The real quit is checked in a child process (an exit test).
+// back. Esc answers "Not Now". The real quit is checked in a child process (an exit test), except under the Thread
+// Sanitizer, whose runtime the child cannot load.
 import AppKit
 import Darwin
 import Foundation
@@ -13,6 +14,13 @@ import Testing
 @testable import OverbrightAppShell
 
 private let home = URL(filePath: "/Users/me", directoryHint: .isDirectory)
+
+/// Whether this process runs under the Thread Sanitizer (`make tsan`). Its runtime takes itself out of
+/// `DYLD_INSERT_LIBRARIES` when it starts, so an exit test's child loads it too late and aborts before the body runs.
+nonisolated private enum SanitizerProbe {
+    /// `RTLD_DEFAULT` (`(void *)-2` in <dlfcn.h>, a macro Swift does not import): every image loaded in this process.
+    static let isThreadSanitizerLoaded = dlsym(UnsafeMutableRawPointer(bitPattern: -2), "__tsan_init") != nil
+}
 
 /// A scripted user and system: the answers given, and what the mover did, in order.
 @MainActor private final class Script {
@@ -336,7 +344,9 @@ private struct LaunchRefused: Error {}
     /// The app's own quit after a relaunch ends the process at once with success: whatever the launch would do after
     /// `offerIfNeeded()` never runs (here: a failing exit). Run in a child process, in a temporary folder named after
     /// this process, which removes it afterwards.
-    @Test func theRealQuitEndsTheProcessBeforeTheLaunchGoesOn() async {
+    @Test(.disabled(if: SanitizerProbe.isThreadSanitizerLoaded,
+                    "an exit test's child cannot load the Thread Sanitizer"))
+    func theRealQuitEndsTheProcessBeforeTheLaunchGoesOn() async {
         defer { try? FileManager.default.removeItem(at: sandboxRoot("exit-\(getpid())")) }
         await #expect(processExitsWith: .success) {
             await MainActor.run {
