@@ -46,10 +46,12 @@ after cycle 1, 46 after cycle 2, 47 after cycle 3), so growth that stops by cycl
 of the footprint after cycles 3…N is a leak when it exceeds LEAK_KB per cycle even at its lower 2-standard-error
 bound (a short run's slope is noisy: WP14's settling run, its first 17-minute one, read 129 ± 142 KB per cycle, ± 2
 standard errors as printed, so its lower bound is -13; a real 0.29 MB per cycle leak reads 288 ± 102, at least 186,
-even in a short run); the residual standard deviation of that fit is printed (the QA fakes' write history made it
-saw-tooth by megabytes until H3); and the footprint at the end must be within LEAK_MB of the one after cycle 3. A run
+even in a short run); the residual standard deviation of that fit is printed, as measured: 66 KB on main before the
+energy work, 190 and 204 KB with H3's 16-record fakes, which lowered the footprint after cycles 3-8 (40.9-41.2 MB to
+33.5-34.5 MB) but not this scatter; and the footprint at the end must be within LEAK_MB of the one after cycle 3. A run
 needs at least 5 cycles after cycle 3 to be judged at all. Before the cycles, after the launch and one panel open and
-close, the footprint at the end of the first off phase must be at most PANEL_MB (40, DESIGN.md §17's Off budget).
+close, the footprint at the end of the first off phase must be under PANEL_MB (40, DESIGN.md §17's Off budget: 40.0
+fails, as perf.sh judges it).
 
     soak_judge.py <out> <leak_mb> <leak_kb_per_cycle> <app pid> <control pid>
     soak_judge.py --minimum-cycles        # the fewest cycles a run needs (scripts/soak.sh refuses shorter runs)
@@ -65,7 +67,7 @@ import sys
 
 SAMPLE = 10                 # the sampling interval, s
 OWN_RATE = 0.05             # own wake-ups per second the final off phase may have at most
-PANEL_MB = 40.0             # the footprint after the launch and one panel open and close (DESIGN.md §17's Off)
+PANEL_MB = 40.0             # the footprint after the launch and one panel open and close must be under it (§17's Off)
 SETTLED_CYCLE = 3           # the footprint baseline
 JUDGED_CYCLES = 5           # cycles after the baseline a run needs
 MIN_SPAN = 3 * SAMPLE       # a burst of wake-ups in neighbouring samples is not a timer
@@ -194,9 +196,9 @@ def judge_footprint(marks, cycles, leak_mb, leak_kb):
     if panel is None:
         problems.append("no footprint at the end of the first off phase (after the launch and one panel open and close)")
     else:
-        lines.append(f"after the launch and one panel open and close: {panel:.1f} MB (at most {PANEL_MB:g})")
-        if panel > PANEL_MB + 1e-9:
-            problems.append(f"the footprint after the launch and one panel open and close is {panel:.1f} MB (at most "
+        lines.append(f"after the launch and one panel open and close: {panel:.1f} MB (under {PANEL_MB:g})")
+        if panel >= PANEL_MB:
+            problems.append(f"the footprint after the launch and one panel open and close is {panel:.1f} MB (under "
                             f"{PANEL_MB:g}, DESIGN.md §17's Off)")
     if cycles >= minimum_cycles():
         if len(points) < cycles - SETTLED_CYCLE + 1:
@@ -401,6 +403,8 @@ def self_test():
          cycles([42.3, 46.5, 47.3, 47.5, 47.6, 47.4, 47.5, 47.7], panel=39.6), False),
         ("footprint: 41 MB after the launch and one panel open and close",
          cycles([42.3, 46.5, 47.3, 47.5, 47.6, 47.4, 47.5, 47.7], panel=41.0), True),
+        ("footprint: exactly 40.0 MB after the launch and one panel open and close (§17: under 40)",
+         cycles([42.3, 46.5, 47.3, 47.5, 47.6, 47.4, 47.5, 47.7], panel=40.0), True),
     ]
     # Random wake-ups that no timer causes: a fixed 25 % tolerance refused 31, 55 and 73 % of 3, 4 and 5 of them.
     rates = [(f"first off: {k} own at random times", refused_after_launch(k), 0.03) for k in (4, 5, 6)]

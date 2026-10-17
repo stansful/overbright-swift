@@ -12,13 +12,14 @@
 # them to every such app) and is counted as shared. In the final off phase Overbright's own may neither beat
 # periodically nor exceed 0.05/s; after launch they must not beat periodically (4 or more in a row that beat more
 # evenly than random times do 98 % of the time); in every phase, own wake-ups in every sample fail, and shared ones
-# must not hide a rhythm of Overbright's own. The footprint after the launch and one panel open and close stays at or
-# under 40 MB; its least-squares growth over cycles 3…N, at its lower 2-standard-error bound, stays within LEAK_KB
-# per cycle (100), and the end within LEAK_MB (5) of cycle 3; the footprint before the cycles and after cycles 1 and
-# 2 (caches filling) is reported, not judged. A run must have 5 cycles after cycle 3, so MINUTES is at least 17. The
-# app's own preferences domain must read the same after the run as before (§8.5; `defaults export`, read-only). The
-# literal "0 idle wake-ups while off" on a quiet machine is the owner's run (HARDWARE-TEST §13). Fakes only: no real
-# display is touched (D24). `pidstat`, `footprint` and `vmmap` read the process; nothing attaches a debugger.
+# must not hide a rhythm of Overbright's own. The footprint after the launch and one panel open and close stays under
+# 40 MB (40.0 fails); its least-squares growth over cycles 3…N, at its lower 2-standard-error bound, stays within
+# LEAK_KB per cycle (100), and the end within LEAK_MB (5) of cycle 3; the footprint before the cycles and after cycles
+# 1 and 2 (caches filling) is reported, not judged. A run must have 5 cycles after cycle 3, so MINUTES is at least
+# 17. The app's own preferences domain must read the same after the run as before (§8.5; `defaults export`,
+# read-only). The literal "0 idle wake-ups while off" on a quiet machine is the owner's run (HARDWARE-TEST §13).
+# Fakes only: no real display is touched (D24). `pidstat`, `footprint` and `vmmap` read the process; nothing attaches
+# a debugger.
 #
 #   make debug; make soak                  # 30 minutes → build/logs/soak/
 #   MINUTES=17 scripts/soak.sh             # the shortest run that is judged
