@@ -1,6 +1,6 @@
 // OverbrightBoost/Safety/HangWatchdog.swift — restores the displays when the main thread stalls while scaled.
-// ARCHITECTURE.md §4.6, §7.4, §8.1 rules 2 and 4; D7. Thread: its own utility queue (a `DispatchSourceTimer`, the one
-// sanctioned repeating timer), never the main actor; it touches displays only through
+// ARCHITECTURE.md §4.6, §7.4, §8.1 rules 2 and 4; D7, D29. Thread: its own utility queue (a `DispatchSourceTimer`, the
+// one sanctioned repeating timer), never the main actor; it touches displays only through
 // `TableWriter.writeBaselines(fromLedger:)` under the ledger lock (`EmergencyRestore`), and never calls
 // `DispatchQueue.main.sync`. Owned by WP5 (seeded by WP0a with the §10.0 signatures).
 //
@@ -11,7 +11,16 @@
 // hang epoch, writes every ledger baseline and forgets the entries, then raises the fired flag and journals
 // `hang.fired`. It fires once per stall; the next pong re-arms it. A stall is therefore caught 3–5 s after it starts
 // (3 s when it starts while a ping waits for its answer, almost 5 s when it starts just after an answer). The timer
-// wakes only at ping times and at one timeout deadline, never in between.
+// wakes only at ping times (the grid points below) and at one timeout deadline, never in between.
+//
+// Pings go out on the shared 2 s grid of the engine's time source (ARCHITECTURE.md D29; `TimeSource.nextGridPoint`):
+// the first one when the ledger fills, every later one at the next multiple of `hangPing` since the time source's
+// origin, at most `hangPing` away, so the ping and its main-queue pong share the wake-up of the drift check and of
+// Signals' watch, which wait for the same points. While a ping waits for its answer the timer wakes at the earlier of
+// its timeout deadline and the next grid point, so a new ping always follows an answer within `hangPing` (an answer
+// that comes after a short first wait would otherwise let the next ping slip to the deadline, and a stall right after
+// it would take up to 6 s to catch). The deadline itself (ping + `hangTimeout`), the 50 ms leeway and the
+// once-per-stall rule are unchanged.
 import Dispatch
 import Foundation
 import OverbrightCore
@@ -42,6 +51,8 @@ public nonisolated final class HangWatchdog: Sendable {
         var lastFiredAt: UInt64?
         /// Uptime (ns) the ping whose timeout fired the last restore was sent at.
         var firedPingSentAt: UInt64?
+        /// The delay (ns) the timer was last scheduled with.
+        var lastDelay: UInt64?
     }
 
     /// What one tick does.
@@ -133,6 +144,8 @@ public nonisolated final class HangWatchdog: Sendable {
     var lastTimedOutPingSentAt: UInt64? { state.withLock { $0.firedPingSentAt } }
     /// Pings sent since the watchdog was made.
     var pingCount: Int { state.withLock { $0.pings } }
+    /// The delay (ns) of the timer's last schedule after a tick.
+    var lastScheduledDelay: UInt64? { state.withLock { $0.lastDelay } }
 
     /// Returns once every timer handler queued before the call has run: after `setActive(false)` no tick, and no
     /// restore, is left in flight (a cancelled timer calls its handler no more).
@@ -148,10 +161,14 @@ public nonisolated final class HangWatchdog: Sendable {
     func tick(generation: UInt64) {
         let now = DispatchTime.now().uptimeNanoseconds
         let interval = Self.nanoseconds(pingInterval), timeout = Self.nanoseconds(timeout)
+        // Read before the deadline's `.now()`, so the timer never fires ahead of the grid point (uptime and the time
+        // source's continuous clock advance together while the Mac is awake).
+        let toGrid = Self.nextPingDelay(sinceOrigin: writer.time.now.sinceOrigin, interval: pingInterval)
         let step: Step = state.withLock { s in
             guard s.generation == generation, let timer = s.timer else { return .idle }
-            let (step, next) = Self.step(&s, at: now, interval: interval, timeout: timeout)
+            let (step, next) = Self.gridStep(&s, at: now, toGrid: toGrid, interval: interval, timeout: timeout)
             timer.schedule(deadline: .now() + .nanoseconds(Int(clamping: next)), leeway: Self.leeway)
+            s.lastDelay = next
             return step
         }
         switch step {
@@ -170,7 +187,8 @@ public nonisolated final class HangWatchdog: Sendable {
     /// One tick at uptime `now` (ns) on the state alone: send a ping when none is out; once the ping that is out has
     /// waited `timeout`, fire, once per stall; otherwise nothing. Returns the step and the delay (ns) to the next tick:
     /// `interval` after a ping or a timeout, else the rest of the ping's timeout, so the timer wakes only at ping times
-    /// and at one deadline. Pure, so `HangWatchdogTests` checks the 3–5 s window on explicit times.
+    /// and at one deadline (`gridStep` moves the ping times onto the grid). Pure, so `HangWatchdogTests` checks the
+    /// 3–5 s window on explicit times.
     static func step(_ s: inout State, at now: UInt64, interval: UInt64,
                      timeout: UInt64) -> (step: Step, next: UInt64) {
         guard let sent = s.pingSentAt else {
@@ -185,6 +203,25 @@ public nonisolated final class HangWatchdog: Sendable {
         s.firedForStall = true
         s.firedPingSentAt = sent
         return (.fire, interval)
+    }
+
+    /// One tick as the timer runs it: `step`, with the delay to the next tick moved onto the grid. While a ping is out
+    /// and has not fired, the next tick comes at the earlier of `step`'s delay and `toGrid` (the delay to the next grid
+    /// point, at most `interval`): a ping's next tick lands on the grid, and a ping answered after a grid point is
+    /// followed by the next one within `interval` of its answer. After a restore `step`'s delay stands. Pure, so
+    /// `HangWatchdogTests` checks the 3–5 s window on explicit times and grid phases.
+    static func gridStep(_ s: inout State, at now: UInt64, toGrid: UInt64, interval: UInt64,
+                         timeout: UInt64) -> (step: Step, next: UInt64) {
+        let (step, next) = Self.step(&s, at: now, interval: interval, timeout: timeout)
+        guard s.pingSentAt != nil, !s.firedForStall else { return (step, next) }
+        return (step, min(next, toGrid))
+    }
+
+    /// The delay (ns, rounded up) from `sinceOrigin` on the writer's time source to the next point of its `interval`
+    /// grid: in (0, interval] (`MonotonicInstant.nextGridPoint`). Pure.
+    static func nextPingDelay(sinceOrigin: Duration, interval: Duration) -> UInt64 {
+        let now = MonotonicInstant(sinceOrigin: sinceOrigin)
+        return nanosecondsRoundedUp(MonotonicInstant.nextGridPoint(after: now, every: interval) - now)
     }
 
     /// Ping `id` was answered, on the state alone: true when the answer ends a stall the watchdog fired for (the next
@@ -216,5 +253,16 @@ public nonisolated final class HangWatchdog: Sendable {
 
     static func nanoseconds(_ duration: Duration) -> UInt64 {
         UInt64(max(duration.timeInterval, 0) * 1_000_000_000)
+    }
+
+    /// Whole nanoseconds, a fraction rounded up (a positive delay never becomes zero); 0 for a delay that is not
+    /// positive, `UInt64.max` beyond its range.
+    static func nanosecondsRoundedUp(_ duration: Duration) -> UInt64 {
+        guard duration > .zero else { return 0 }
+        let (seconds, attoseconds) = duration.components
+        let (whole, fraction) = attoseconds.quotientAndRemainder(dividingBy: 1_000_000_000)
+        let (scaled, overflow) = UInt64(seconds).multipliedReportingOverflow(by: 1_000_000_000)
+        guard !overflow else { return .max }
+        return scaled + UInt64(whole) + (fraction > 0 ? 1 : 0)
     }
 }
