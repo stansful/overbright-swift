@@ -1,6 +1,7 @@
 // OverbrightPanelUI/Panel/NonCapableRow.swift — displays that can neither be brightened nor dimmed, collapsed into one
 // line ("1 display can't be adjusted · Why?") that expands in place into a row per display: name, verdict sentence,
-// its fix and "Learn more". DESIGN.md §5.10, §12.1 (the verdict words are Design's), §3.1 (`expand`).
+// its fix and "Learn more". DESIGN.md §5.10, §12.1 (the verdict words are Design's), §3.1 (`expand`). The line keeps
+// its leading place whether collapsed or expanded; each row is one of the panel's cards (`panelCard`).
 import OverbrightCore
 import OverbrightDesign
 import SwiftUI
@@ -25,12 +26,14 @@ struct NonCapableRow: View {
                     .buttonStyle(OverbrightLinkButtonStyle())
                     .panelFocus(focus, .why, activate: toggle)
             }
+            .padding(.horizontal, Space.xs)
+            .frame(maxWidth: .infinity, alignment: .leading)
             if isExpanded {
                 ForEach(displays, id: \.key) { display in row(display) }
                     .transition(.opacity)
             }
         }
-        .padding(.horizontal, Space.xs)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private func toggle() {
@@ -62,10 +65,19 @@ struct NonCapableRow: View {
                     .panelFocus(focus, .learnMore(display.key)) { commands.showHelp(HelpEntry.Anchor.noExtraRange) }
             }
         }
-        .padding(Space.m)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(nsColor: .quaternarySystemFill), in: RoundedRectangle(cornerRadius: Radius.card,
-                                                                                style: .continuous))
+        .panelCard()
         .accessibilityElement(children: .contain)
     }
+}
+
+#Preview("Why? · expanded") {
+    @Previewable @State var isExpanded = true
+    @Previewable @FocusState var focus: PanelFocus?
+    let services = ScriptedStatuses.services(named: "why-expanded") ?? OverbrightServices.preview()
+    let status = services.boost.status
+    NonCapableRow(displays: status.displays.filter(PanelContent.isNonCapable), titles: CardTitles.titles(for: status.displays),
+                  isExpanded: $isExpanded, commands: PanelCommands(services: services, source: .panel), focus: $focus)
+        .padding(PanelLayout.outerPadding)
+        .frame(width: PanelLayout.width)
+        .overbrightThemeRoot()
 }

@@ -3,7 +3,10 @@
 // and the pseudo-long locale (+40 %), and every chip in every language Overbright ships (WP15, `ShippedLanguages`). The
 // English texts are DESIGN.md §12.2's; every chip Design's builder makes for a
 // reason or phase is measured too (they become the catalog's words once WP9's copy lands). App names inside a chip are
-// middle-truncated to fit, so the panel's layout keeps even a very long one inside the line.
+// middle-truncated to fit, so the panel's layout keeps even a very long one inside the line. The chip of a display
+// whose extra brightness is off shares its line with "Turn on" only when both fit 280 pt, else "Turn on" drops under
+// it (C-PANEL-4): measured together in every language.
+import AppKit
 import OverbrightCore
 import OverbrightDesign
 import SwiftUI
@@ -107,6 +110,30 @@ import Testing
     @Test func everyShippedLanguageIsMeasured() throws {
         #expect(ShippedLanguages.codes == (try ShippedLanguages.listed()))
         #expect(ShippedLanguages.codes.count == 35)
+    }
+
+    /// "Extra brightness off" and "Turn on" stay inside the card in every language: on one line when both fit, else
+    /// the button under the chip.
+    @Test(arguments: ShippedLanguages.codes)
+    func theChipAndTurnOnStayInsideTheCardInEveryLanguage(_ code: String) throws {
+        let language = ShippedLanguages.design(code)
+        let chip = try #require(ChipModel.make(reason: .boostNotEnabled, phase: .idle, failedTries: 0,
+                                               context: ChipContext(language: language)))
+        let title = PanelWords(code).turnOn
+        func button() -> some View {
+            Button {} label: { Text(verbatim: title) }.buttonStyle(OverbrightLinkButtonStyle())
+        }
+        let chipWidth = FitMeasure.idealWidth(StatusChip(chip, actions: []))
+        let buttonWidth = FitMeasure.idealWidth(button())
+        #expect(chipWidth <= PanelLayout.cardInnerWidth && buttonWidth <= PanelLayout.cardInnerWidth, "\(code)")
+        let line = CardChipLine { StatusChip(chip, actions: []) } turnOn: { button() }
+        let size = NSHostingView(rootView: line.fixedSize()).fittingSize
+        #expect(size.width == PanelLayout.cardInnerWidth, "\(code): \(size.width) pt")
+        let oneLine = chipWidth + Space.s + buttonWidth <= PanelLayout.cardInnerWidth
+        let lineHeight = max(StatusChip.height, FitMeasure.idealHeight(button()))
+        #expect(oneLine ? size.height <= lineHeight + 1 : size.height > lineHeight + Space.xxs,
+                "\(code): «\(chip.text)» \(chipWidth) pt + «\(title)» \(buttonWidth) pt, \(size.height) pt high")
+        if code == "en" { #expect(oneLine) }
     }
 
     @Test(arguments: ShippedLanguages.codes)

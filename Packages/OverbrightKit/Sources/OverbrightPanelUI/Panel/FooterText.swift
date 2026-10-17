@@ -48,11 +48,6 @@ enum FooterText {
     }
     static var on: String { String(localized: "On", bundle: .module, comment: "VoiceOver: a footer chip’s rule is on") }
     static var off: String { String(localized: "Off", bundle: .module, comment: "Panel ▸ Footer chip: a rule is off") }
-    /// "Battery limit, Below 20 %".
-    static func labeled(_ name: String, _ value: String) -> String {
-        String(localized: "\(name), \(value)", bundle: .module,
-               comment: "VoiceOver: a footer chip’s name, then its state")
-    }
 
     // MARK: Menus (title case)
 

@@ -28,21 +28,23 @@ public nonisolated enum CardMenuItem: Hashable, Sendable {
 /// The quick-level rows of a display and what each does.
 public enum CardMenu {
     /// The rows for `card`. `lastDimLight` is the dim level of Dim All and the menus; `contextMenu` adds the card's
-    /// own rows (Calibrate…, Settings for This Display…, Try Again).
+    /// own rows (Calibrate…, Settings for This Display…, Try Again). The checkmark follows the level the display shows
+    /// (`displayedLevel`): a display whose extra brightness is off checks Standard, whatever level it stores.
     public static func items(for card: DisplayCardModel, lastDimLight: Double, contextMenu: Bool) -> [CardMenuItem] {
         var items: [CardMenuItem] = []
-        let atStandard = abs(card.level.value) <= 0.02
+        let shown = card.displayedLevel
+        let atStandard = abs(shown.value) <= 0.02
         if card.canBoost {
             items.append(.level(.standard, isChecked: atStandard))
             for preset in card.presets {
-                items.append(.level(preset, isChecked: card.boostEnabled && LevelMapping.preset(at: card.level) == preset))
+                items.append(.level(preset, isChecked: shown.isBoost && LevelMapping.preset(at: shown) == preset))
             }
         } else {
             if card.dimEnabled { items.append(.level(.standard, isChecked: atStandard)) }
             items.append(.noExtraBrightness)
         }
         if card.dimEnabled {
-            let current = card.level.isDim ? LevelMapping.dimLight(for: card.level) : nil
+            let current = shown.isDim ? LevelMapping.dimLight(for: shown) : nil
             let isChecked = current.map { abs($0 - lastDimLight) <= 0.005 } ?? false
             items += [.separator, .dimmed(light: lastDimLight, isChecked: isChecked)]
         }

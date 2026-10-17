@@ -11,6 +11,11 @@ import SwiftUI
         NSHostingView(rootView: view.fixedSize()).fittingSize.width
     }
 
+    /// The height `view` asks for when unconstrained (its ideal height).
+    static func idealHeight(_ view: some View) -> CGFloat {
+        NSHostingView(rootView: view.fixedSize()).fittingSize.height
+    }
+
     /// The width `view` takes when offered `width` (what a layout with that budget draws).
     static func width(_ view: some View, offered width: CGFloat) -> CGFloat {
         let host = NSHostingView(rootView: view.frame(maxWidth: width, alignment: .leading).fixedSize(horizontal: false,

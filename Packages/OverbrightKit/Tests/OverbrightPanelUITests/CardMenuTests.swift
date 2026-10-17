@@ -126,6 +126,11 @@ import Testing
         #expect(BannerAction.primary(for: .thermalCritical) == nil)
         #expect(BannerAction.primary(for: .battery(percent: 10, threshold: 20)) == .changePowerRules)
         #expect(BannerAction.primary(for: .flickerStop(display: builtIn)) == .tryAgain(builtIn))
+        // A stop caused by a booster offers Compatibility mode, never Continue anyway; a color app's offers it (§7.2).
+        let s1 = ConflictingApp(entryID: "b", severity: .booster, bundleID: nil, processID: 1, displayName: "B")
+        let s2 = ConflictingApp(entryID: "c", severity: .gammaWriter, bundleID: nil, processID: 2, displayName: "C")
+        #expect(BannerAction.primary(for: .attributedDrift(s1, display: builtIn)) == .useCompatibilityMode(s1))
+        #expect(BannerAction.primary(for: .attributedDrift(s2, display: builtIn)) == .continueAnyway(s2))
         BannerAction.openFocusSettings.perform(commands, status: services.boost.status)
         #expect(opened == [SettingsLinks.systemFocus].compactMap { $0 })
         BannerAction.resume.perform(commands, status: services.boost.status)

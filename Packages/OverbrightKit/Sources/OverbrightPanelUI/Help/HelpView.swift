@@ -1,7 +1,9 @@
 // OverbrightPanelUI/Help/HelpView.swift — the local Help window's content. DESIGN.md §12.6, §2.0 rule 3 (the host
 // applies `.overbrightThemeRoot` once), §15 (VoiceOver: each answer is a heading plus its text).
 // Seam written by WP0a (ARCHITECTURE.md §10.0): `init(anchor:)` is fixed (the shell's Help window hosts it); WP10 adds
-// `init(anchor:backToStandardKeys:)` so answer 3 can show the live shortcut, and scrolls to the anchor.
+// `init(anchor:backToStandardKeys:)` (fixed key caps, for tests and previews) and `init(anchor:shortcuts:)`, which
+// observes the shortcut center as Welcome step 4 does: answer 3 shows the live Back to Standard shortcut, follows a
+// rebind or a clear while the window is open, and appears once the shortcuts register after the window opened.
 import OverbrightCore
 import OverbrightDesign
 import SwiftUI
@@ -9,16 +11,30 @@ import SwiftUI
 /// Every Help entry, scrolled to `anchor` ("no-extra-range", "control-center", …) when given.
 public struct HelpView: View {
     private let anchor: String?
-    private let backToStandardKeys: String?
+    private let fixedKeys: String?
+    private let shortcuts: (any ShortcutCenter)?
 
     /// Help, optionally at `anchor` (answer 3 without a shortcut).
     public init(anchor: String?) { self.init(anchor: anchor, backToStandardKeys: nil) }
 
-    /// Help at `anchor`; `backToStandardKeys` is the live key caps of Back to Standard (`ShortcutCenter.displayString`).
+    /// Help at `anchor`; `backToStandardKeys` is the key caps of Back to Standard (`ShortcutCenter.displayString`),
+    /// read once.
     public init(anchor: String?, backToStandardKeys: String?) {
         self.anchor = anchor
-        self.backToStandardKeys = backToStandardKeys
+        fixedKeys = backToStandardKeys
+        shortcuts = nil
     }
+
+    /// Help at `anchor`, with answer 3 naming Back to Standard's live key caps from `shortcuts` (observed: a rebind,
+    /// a clear or a late registration updates the open window).
+    public init(anchor: String?, shortcuts: any ShortcutCenter) {
+        self.anchor = anchor
+        fixedKeys = nil
+        self.shortcuts = shortcuts
+    }
+
+    /// The key caps answer 3 names now (nil: the variant without a shortcut).
+    var backToStandardKeys: String? { shortcuts.map { $0.displayString(.standard) } ?? fixedKeys }
 
     /// The answers, in order.
     var entries: [HelpEntry] { HelpEntry.all(backToStandardKeys: backToStandardKeys) }
@@ -85,6 +101,11 @@ private struct HelpEntryView: View {
 
 #Preview("Help") {
     HelpView(anchor: nil, backToStandardKeys: "⌃⌥⌘0")
+        .overbrightThemeRoot()
+}
+
+#Preview("Help · the live shortcut") {
+    HelpView(anchor: HelpEntry.Anchor.backToStandard, shortcuts: PreviewShortcutCenter())
         .overbrightThemeRoot()
 }
 

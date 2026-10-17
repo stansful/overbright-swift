@@ -1,7 +1,8 @@
 // OverbrightPanelUI/Card/DisplayCardView.swift — one display's card in the panel (and in Welcome). DESIGN.md §5.4
-// (title, slider row, readout, caption, chip line, context menu, VoiceOver actions, the switched-off boost half),
-// §5.5 (moving the thumb turns Overbright on; past the detent it turns extra brightness on, an OLED asks first and the
-// thumb waits at Standard), §5.6, §5.7, §5.12 (⌃↩ opens the context menu); ARCHITECTURE.md §4.9.
+// (title, slider row, readout, caption, chip line, context menu, VoiceOver actions on the card and on its slider, the
+// switched-off boost half), §5.5 (the thumb shows the level the display has; moving it turns Overbright on; past the
+// detent it turns extra brightness on, an OLED asks first and the thumb waits at Standard), §5.6, §5.7 (Space and Return
+// open the chip's popover), §5.12 (⌃↩ opens the context menu); ARCHITECTURE.md §4.9.
 // Seam written by WP0a (ARCHITECTURE.md §10.0): `init(status:isMasterOn:services:)` is fixed (Welcome uses it); the
 // panel uses the internal initializer that adds its title, focus binding and commands.
 import OverbrightCore
@@ -17,12 +18,14 @@ public struct DisplayCardView: View {
     private let title: String?
     private let focus: FocusState<PanelFocus?>.Binding?
     private let commands: PanelCommands
-    @Environment(\.overbright) private var theme
     /// The level while the thumb moves (the engine stores the level; this keeps the thumb under the finger).
     @State private var dragLevel: LevelPosition?
-    /// A boost level that waits for the OLED notice, asked once when the drag ends.
-    @State private var pendingBoost: LevelPosition?
+    /// A move into the boost half that waits for the OLED notice (asked once, when the move ends).
+    @State private var oledGate = OLEDBoostGate()
+    /// The chip's popover is open (the keyboard opens it too).
+    @State private var isChipPopoverShown = false
     @State private var menuAnchor = MenuAnchorReference()
+    @Environment(\.panelMenuPresenter) private var menus
 
     /// A card for `status`; `services` gives the engine, settings and app control behind its actions.
     public init(status: DisplayStatus, isMasterOn: Bool, services: OverbrightServices) {
@@ -49,17 +52,13 @@ public struct DisplayCardView: View {
             readoutRow(model)
             chipLine(model)
         }
-        .padding(PanelLayout.cardPadding)
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .panelCard()
         .background(alignment: .topLeading) { MenuAnchor(reference: menuAnchor).frame(width: 1, height: 1) }
-        .background(cardFill, in: RoundedRectangle(cornerRadius: Radius.card, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: Radius.card, style: .continuous)
-            .strokeBorder(cardStroke, lineWidth: StrokeWidth.regular))
         .contextMenu { contextMenu(model) }
         .onKeyPress(.return, phases: .down) { press in
             guard press.modifiers == .control else { return .ignored }
-            menuAnchor.popUp(CardMenu.menuItems(for: model, lastDimLight: lastDimLight, contextMenu: true,
-                                                commands: commands))
+            menus.present(menuAnchor, CardMenu.menuItems(for: model, lastDimLight: lastDimLight, contextMenu: true,
+                                                         commands: commands))
             return .handled
         }
         .accessibilityElement(children: .contain)
@@ -86,12 +85,11 @@ public struct DisplayCardView: View {
         }
     }
 
+    /// `sun.min`, the slider and `sun.max.fill` in exactly the card's inner width: 14 + 6 + 240 + 6 + 14 = 280 pt
+    /// (DESIGN.md §5.4; the glyphs draw 16 and 17 pt wide at 14 pt, so each sits in a 14 × 14 frame).
     private func sliderRow(_ model: DisplayCardModel, name: String) -> some View {
         HStack(spacing: Space.s) {
-            Image(symbol: .sunMin)
-                .font(.system(size: PanelLayout.sliderGlyph))
-                .foregroundStyle(.secondary)
-                .accessibilityHidden(true)
+            sliderGlyph(.sunMin)
             BoostSlider(level: levelBinding(model), top: model.top, allowedNow: model.allowedNow,
                         presets: model.presets, dimEnabled: model.dimEnabled, boostHalf: boostHalfState(model),
                         accessibilityName: name,
@@ -102,12 +100,21 @@ public struct DisplayCardView: View {
                 .dimHalfReason(dimHalfReason(model))
                 .dimmedLevel(LevelMapping.position(forDimLight: lastDimLight))
                 .focusBinding(focus, equals: .slider(model.key))     // the slider's own element: one Tab stop, its keys
+                // The card's context-menu items and chip actions on the element VoiceOver lands on (§5.5): outside the
+                // control they attach to its one adjustable element.
+                .accessibilityActions { accessibilityActions(model) }
                 .frame(width: PanelLayout.trackWidth)
-            Image(symbol: .sunMaxFill)
-                .font(.system(size: PanelLayout.sliderGlyph))
-                .foregroundStyle(.secondary)
-                .accessibilityHidden(true)
+            sliderGlyph(.sunMaxFill)
         }
+        .frame(width: PanelLayout.cardInnerWidth, alignment: .leading)
+    }
+
+    private func sliderGlyph(_ symbol: OverbrightSymbol) -> some View {
+        Image(symbol: symbol)
+            .font(.system(size: GlyphSize.sliderEnd))
+            .foregroundStyle(.secondary)
+            .frame(width: PanelLayout.sliderGlyph, height: PanelLayout.sliderGlyph)
+            .accessibilityHidden(true)
     }
 
     @ViewBuilder
@@ -141,14 +148,17 @@ public struct DisplayCardView: View {
         let chip = CardChip.model(for: model, isMasterOn: isMasterOn)
         let offersTurnOn = isMasterOn && model.chipReason == .boostNotEnabled
         if chip != nil || offersTurnOn {
-            HStack(spacing: Space.s) {
+            CardChipLine {
                 if let chip {
-                    StatusChip(chip, actions: CardChip.actions(for: model, isMasterOn: isMasterOn, commands: commands))
+                    StatusChip(chip, actions: CardChip.actions(for: model, isMasterOn: isMasterOn, commands: commands),
+                               isPresented: $isChipPopoverShown)
                         .lineLimit(1)
                         .truncationMode(.middle)
-                        .frame(maxWidth: PanelLayout.cardInnerWidth, alignment: .leading)
-                        .panelFocus(focus, .chip(model.key), cornerRadius: HitTarget.minimum.height / 2)
+                        .panelFocus(focus, .chip(model.key), cornerRadius: HitTarget.minimum.height / 2) {
+                            isChipPopoverShown = true
+                        }
                 }
+            } turnOn: {
                 if offersTurnOn {
                     Button { commands.perform(.turnOnExtraBrightness, on: model) } label: {
                         Text(verbatim: CardAction.turnOnExtraBrightness.title)
@@ -195,29 +205,29 @@ public struct DisplayCardView: View {
 
     private var lastDimLight: Double { services.settings[DisplaySettings.lastDimLight] }
 
+    /// The thumb: under the finger while it moves, else the level the display shows (`displayedLevel`, so a display
+    /// whose boost half is off or unavailable sits at Standard, as its readout says).
     private func levelBinding(_ model: DisplayCardModel) -> Binding<LevelPosition> {
-        Binding(get: { dragLevel ?? model.level }, set: { newValue in
-            var level = newValue
-            if level.isBoost, !model.boostEnabled, model.canBoost {
-                if model.isOLED, !commands.preferences(of: model.key).oledNoticeAcknowledged {
-                    pendingBoost = level                       // the thumb waits at Standard until the notice
-                    level = .standard
-                } else {
-                    commands.setExtraBrightness(true, for: model.key, name: model.name, isOLED: model.isOLED)
-                }
+        Binding(get: { dragLevel ?? model.displayedLevel }, set: { newValue in
+            let turnsOn = newValue.isBoost && !model.boostEnabled && model.canBoost
+            let waits = turnsOn && model.isOLED && !commands.preferences(of: model.key).oledNoticeAcknowledged
+            let level = oledGate.move(to: newValue, waitsForNotice: waits)   // the thumb waits at Standard
+            if turnsOn, !waits {
+                commands.setExtraBrightness(true, for: model.key, name: model.name, isOLED: model.isOLED)
             }
             dragLevel = level
             services.boost.setLevel(level, for: model.isLinked ? nil : model.key, source: .panel)
         })
     }
 
+    /// The end of a move. A move that ended in the boost half of an OLED display whose notice is unanswered asks now
+    /// and, on Turn On, sets the level it was released at; one released at Standard or below asks nothing.
     private func commit(_ level: LevelPosition, _ model: DisplayCardModel) {
         dragLevel = nil
         let target: DisplayKey? = model.isLinked ? nil : model.key
-        if let pending = pendingBoost {
-            pendingBoost = nil
+        if let released = oledGate.release() {
             guard commands.setExtraBrightness(true, for: model.key, name: model.name, isOLED: model.isOLED) else { return }
-            services.boost.setLevel(pending, for: target, source: .panel)
+            services.boost.setLevel(released, for: target, source: .panel)
             return
         }
         services.boost.setLevel(level, for: target, source: .panel)
@@ -263,16 +273,6 @@ public struct DisplayCardView: View {
         case .unavailable(.safeLimitReached): .unavailable(reason: PanelText.safeLimitReached)
         case .unavailable(.littleGain): .unavailable(reason: PanelText.littleGain)
         }
-    }
-
-    // MARK: Colours (system colours of DESIGN.md §2.1's `card` and `cardStroke`)
-
-    private var cardFill: Color {
-        theme.palette == .highContrast ? Color(nsColor: .controlBackgroundColor) : Color(nsColor: .quaternarySystemFill)
-    }
-
-    private var cardStroke: Color {
-        theme.palette == .highContrast ? Color(nsColor: .separatorColor) : Color(nsColor: .separatorColor).opacity(0.5)
     }
 }
 

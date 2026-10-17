@@ -1,11 +1,14 @@
 // OverbrightPanelUITests/PanelLayoutTests.swift — the panel's sections and layout: which displays get a card and
-// which collapse into "Why?" (DESIGN.md §5.10), the empty state, the one-time tip, the battery chip (§5.3, §5.9,
-// §5.11), names told apart (§5.4), the 320-pt width and the scrolling list from four displays on (§5.1, §5.11), and the
-// gallery of §5.13 complete. Views are measured in hosting views without a window: nothing is ordered in.
+// which collapse into "Why?" (DESIGN.md §5.10; expanded from the start when nothing can boost, §5.11), the empty state,
+// the one-time tip, the battery chip (§5.3, §5.9, §5.11), names told apart (§5.4), the 320-pt width, one card system
+// (every card 304 pt, the slider row exactly the 280-pt inner width, §5.4), the scrolling list from four displays on
+// (three whole cards and a peek, shrinking under the height cap, §5.1, §5.11), and the gallery of §5.13 complete. Views
+// are measured in hosting views without a window: nothing is ordered in.
 import AppKit
 import OverbrightCore
 import OverbrightDesign
 import OverbrightPolicy
+import OverbrightTestSupport
 import SwiftUI
 import Testing
 @testable import OverbrightPanelUI
@@ -122,28 +125,95 @@ import Testing
         }
     }
 
-    @Test func fourDisplaysScrollWhileTwoDoNot() throws {
-        func height(_ view: some View) -> CGFloat { NSHostingView(rootView: view.overbrightThemeRoot()).fittingSize.height }
-        func cardHeights(_ services: OverbrightServices) -> [CGFloat] {
-            services.boost.status.displays.map { display in
-                height(DisplayCardView(status: display, isMasterOn: true, services: services).frame(width: PanelLayout.cardWidth))
+    private func height(_ view: some View) -> CGFloat {
+        NSHostingView(rootView: view.overbrightThemeRoot()).fittingSize.height
+    }
+
+    private func cardHeights(_ services: OverbrightServices) -> [CGFloat] {
+        services.boost.status.displays.map { display in
+            height(DisplayCardView(status: display, isMasterOn: true, services: services))
+        }
+    }
+
+    /// The panel without its cards: header, dividers, padding, footer (measured on the two-display panel).
+    private func chrome() throws -> CGFloat {
+        let two = try #require(ScriptedStatuses.services(named: "boosting"))
+        return height(PanelView(services: two)) - cardHeights(two).reduce(0, +) - PanelLayout.cardGap
+    }
+
+    /// Four displays: the list shows three whole cards, its gaps and a 24-pt peek of the fourth, never a card cut
+    /// through its slider (C-PANEL-13); the view settles on the measured cards.
+    @Test func fourDisplaysScrollOnACardBoundaryWithAPeek() async throws {
+        let four = try #require(ScriptedStatuses.services(named: "four-displays"))
+        let fourCards = cardHeights(four)
+        let chrome = try chrome()
+        let expected = chrome + PanelLayout.scrollingListHeight(cardHeights: Array(fourCards.prefix(3)))
+        let host = NSHostingView(rootView: PanelView(services: four).overbrightThemeRoot())
+        #expect(await eventually {
+            host.layoutSubtreeIfNeeded()
+            return abs(host.fittingSize.height - expected) <= 2
+        }, "four: \(host.fittingSize.height) pt, expected \(expected) pt, cards \(fourCards)")
+        let three = fourCards.prefix(3).reduce(0, +) + 3 * PanelLayout.cardGap
+        #expect(PanelLayout.scrollingListHeight(cardHeights: Array(fourCards.prefix(3))) == three + PanelLayout.scrollPeek)
+        #expect(PanelLayout.scrollPeek < fourCards[3] / 2)                 // a peek, not most of the fourth card
+        #expect(host.fittingSize.height < chrome + fourCards.reduce(0, +) + 3 * PanelLayout.cardGap)
+    }
+
+    /// When the 70 % height cap binds, the card list gives way and the header and the footer keep their place
+    /// (C-PANEL-14).
+    @Test func theCardListShrinksUnderTheHeightCap() throws {
+        let four = try #require(ScriptedStatuses.services(named: "four-displays"))
+        let cap = try chrome() + 150
+        let controller = NSHostingController(rootView: PanelView(services: four).overbrightThemeRoot())
+        let fitted = controller.sizeThatFits(in: CGSize(width: PanelLayout.width, height: cap))
+        #expect(fitted.height <= cap + 1, "\(fitted.height) pt under a \(cap)-pt cap")
+    }
+
+    /// One card system (C-PANEL-2): display cards, the calibration tip, the Fill Light card and the "Why?" rows are all
+    /// 304 pt wide, and the slider row is exactly the 280-pt inner width.
+    @Test func everyCardIs304PointsWide() throws {
+        for name in ["boosting", "extra-brightness-off", "nothing-capable", "four-displays", "long-russian-name"] {
+            let services = try #require(ScriptedStatuses.services(named: name))
+            for display in services.boost.status.displays where !PanelContent.isNonCapable(display) {
+                let width = FitMeasure.idealWidth(DisplayCardView(status: display, isMasterOn: true, services: services))
+                #expect(width == PanelLayout.cardWidth, "\(name): \(display.name) \(width) pt")
             }
         }
-        let two = try #require(ScriptedStatuses.services(named: "boosting"))
-        let four = try #require(ScriptedStatuses.services(named: "four-displays"))
-        let twoCards = cardHeights(two)
-        let chrome = height(PanelView(services: two)) - twoCards.reduce(0, +) - PanelLayout.cardGap
-        let fourCards = cardHeights(four)
-        let unscrolled = chrome + fourCards.reduce(0, +) + 3 * PanelLayout.cardGap
-        let fourHeight = height(PanelView(services: four))
-        // The list of four is the fixed scrolling height, shorter than four stacked cards.
-        #expect(abs(fourHeight - (chrome + PanelLayout.scrollingListHeight)) <= 2,
-                "four: \(fourHeight) pt, chrome \(chrome) pt, cards \(fourCards)")
-        #expect(fourHeight < unscrolled)
-        // The fixed height shows three cards, never all four (DESIGN.md §5.11).
-        let three = fourCards.prefix(3).reduce(0, +) + 2 * PanelLayout.cardGap
-        #expect(three <= PanelLayout.scrollingListHeight && PanelLayout.scrollingListHeight < unscrolled - chrome,
-                "cards \(fourCards)")
+        let fill = try #require(ScriptedStatuses.services(named: "fill-light-card"))
+        #expect(FitMeasure.idealWidth(FillLightCard(services: fill)) == PanelLayout.cardWidth)
+        let tipServices = try #require(ScriptedStatuses.services(named: "calibration-tip"))
+        let commands = PanelCommands(services: tipServices, source: .panel)
+        let tip = TipHost(commands: commands)
+        #expect(FitMeasure.idealWidth(tip) == PanelLayout.cardWidth)
+        let why = try #require(ScriptedStatuses.services(named: "why-expanded"))
+        let row = WhyHost(services: why)
+        #expect(FitMeasure.width(row, offered: PanelLayout.cardWidth) == PanelLayout.cardWidth)
+        #expect(2 * PanelLayout.sliderGlyph + 2 * Space.s + PanelLayout.trackWidth == PanelLayout.cardInnerWidth)
+        #expect(PanelLayout.cardWidth == PanelLayout.width - 2 * PanelLayout.outerPadding)
+    }
+
+    /// Banners name the display a stop happened on, by its card title (DESIGN.md §12.3, C-PANEL-9).
+    @Test func bannersNameTheDisplay() throws {
+        let status = try #require(ScriptedStatuses.status(named: "flicker-stop"))
+        let builtIn = DisplayFixture.Keys.builtIn
+        let name = try #require(CardTitles.titles(for: status.displays)[builtIn])
+        let booster = ConflictingApp(entryID: "b", severity: .booster, bundleID: nil, processID: 1, displayName: "B")
+        for banner in [Banner.flickerStop(display: builtIn), .unattributedDrift(display: builtIn),
+                       .attributedDrift(booster, display: builtIn)] {
+            #expect(PanelView.bannerModel(banner, status: status).sentence.contains(name), "\(banner)")
+        }
+    }
+
+    /// The "Why?" rows start expanded when no display can boost (DESIGN.md §5.11), collapsed otherwise (C-PANEL-12).
+    @Test func theWhyRowsStartExpandedWhenNothingCanBoost() throws {
+        let nothing = try #require(ScriptedStatuses.services(named: "nothing-capable"))
+        let view = PanelView(services: nothing)
+        #expect(view.content.showsNothingCapable)
+        #expect(!view.focusOrder(view.content, status: nothing.boost.status).whyRows.isEmpty)
+        let some = try #require(ScriptedStatuses.services(named: "why-expanded"))
+        let collapsed = PanelView(services: some)
+        #expect(!collapsed.content.showsNothingCapable)
+        #expect(collapsed.focusOrder(collapsed.content, status: some.boost.status).whyRows.isEmpty)
     }
 
     @Test func theCardAndHelpBuildFromTheSeams() throws {
@@ -154,5 +224,30 @@ import Testing
         #expect(card.width == PanelLayout.cardWidth && card.height > 40)
         let help = NSHostingView(rootView: HelpView(anchor: "no-extra-range").overbrightThemeRoot()).fittingSize
         #expect(help.width >= 480)
+    }
+}
+
+/// The calibration tip with its own focus state (the panel's is private).
+private struct TipHost: View {
+    let commands: PanelCommands
+    @FocusState private var focus: PanelFocus?
+
+    var body: some View {
+        CalibrationTipCard(display: DisplayFixture.Keys.builtIn, title: "Built-in Display", commands: commands,
+                           focus: $focus)
+    }
+}
+
+/// The expanded "Why?" row of a gallery state with its own state.
+private struct WhyHost: View {
+    let services: OverbrightServices
+    @State private var isExpanded = true
+    @FocusState private var focus: PanelFocus?
+
+    var body: some View {
+        let status = services.boost.status
+        NonCapableRow(displays: status.displays.filter(PanelContent.isNonCapable),
+                      titles: CardTitles.titles(for: status.displays), isExpanded: $isExpanded,
+                      commands: PanelCommands(services: services, source: .panel), focus: $focus)
     }
 }

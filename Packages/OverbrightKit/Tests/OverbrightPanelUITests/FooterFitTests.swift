@@ -1,9 +1,10 @@
-// OverbrightPanelUITests/FooterFitTests.swift — the footer's three guard chips fit one 292-pt row (DESIGN.md §5.9,
+// OverbrightPanelUITests/FooterFitTests.swift — the footer’s three guard chips fit one 304-pt row (DESIGN.md §5.9,
 // §16; ARCHITECTURE.md §8.8 width rule `chip`), and when a long translation would not fit, every chip drops to glyph +
-// value and the row still fits. Measured with the chip component and the footer row the panel draws, for the widest
-// settings (pause below a level, every rule off, a running 1 h 30 min timer), in English and the pseudo-long locale,
-// and in every language Overbright ships (WP15), where the default row must show its words in full.
-// Also: what each chip says for its settings, and that its menu edits exactly that setting.
+// value and the row still fits. Measured on the footer row the panel draws (its glyphs as wide as they draw:
+// `battery.25percent` is 21 pt at 12 pt, not 12), for the widest settings (pause below a level, every rule off, a running
+// 1 h 30 min timer), in English and the pseudo-long locale, and in every language Overbright ships (WP15), where the
+// default row must show its words in full. Also: what each chip says for its settings, what VoiceOver hears (the
+// chip's name as the label, its state as the value, in every row style), and that its menu edits exactly that setting.
 import Foundation
 import OverbrightCore
 import OverbrightDesign
@@ -36,16 +37,9 @@ import Testing
         }
     }
 
-    /// DESIGN.md §2.2 `chip`: 11 pt medium.
-    static let chipFont = Font.caption.weight(.medium)
-
-    /// The row's width by the chip geometry of DESIGN.md §5.7 (glyph, gap and padding around the measured text).
+    /// The width of the row the footer draws in `style` (measured, glyphs included).
     private func rowWidth(_ chips: [FooterChip], _ style: PanelFooter.Style) -> CGFloat {
-        let widths = chips.map { chip -> CGFloat in
-            let text = PanelFooter.model(of: chip, style).text
-            return text.isEmpty ? PanelLayout.chipChrome - 4 : FitMeasure.textWidth(text, Self.chipFont) + PanelLayout.chipChrome
-        }
-        return widths.reduce(0, +) + CGFloat(max(chips.count - 1, 0)) * PanelLayout.footerChipGap
+        FitMeasure.idealWidth(PanelFooter(chips: chips, focus: nil).row(style))
     }
 
     /// The default settings: "Below 20%", "Auto-pause", "No timer".
@@ -57,6 +51,20 @@ import Testing
     @Test func theDefaultRowFitsInFullInEnglish() {
         let width = rowWidth(defaultChips(), .full)
         #expect(width > 0 && width <= PanelLayout.footerWidth, "the default footer row is \(width) pt")
+        // "20 %" alone would read as a battery level: the default row never drops to glyph + value in English.
+        let footer = PanelFooter(chips: defaultChips(), focus: nil)
+        let drawn = FitMeasure.width(footer, offered: PanelLayout.footerWidth)
+        #expect(abs(drawn - width) < 1, "drawn \(drawn) pt, the full row \(width) pt")
+    }
+
+    /// Design's row budget counts the glyphs as they draw, and agrees with the rendered row (C-PANEL-3).
+    @Test func theRowBudgetMeasuresTheGlyphs() {
+        #expect(GuardChip.glyphWidth(.battery25Percent) > GlyphSize.chip + 4)      // 21 pt, not 12
+        for chips in [defaultChips(), widestChips()] {
+            let budget = GuardChip.rowWidth(of: chips.map(\.model), compact: false)
+            let drawn = rowWidth(chips, .full)
+            #expect(abs(budget - drawn) <= 2, "budget \(budget) pt, drawn \(drawn) pt")
+        }
     }
 
     @Test func everyRowFitsInFullOrAsGlyphAndValue() {
@@ -152,6 +160,28 @@ import Testing
         let running = try #require(texts(autoOffAt: now.addingTimeInterval(23 * 60))[.timer])
         #expect(Set([noTimer, set, running]).count == 3)
         #expect(running.contains("23"))
+    }
+
+    /// VoiceOver hears each chip's name, then its state, once: "Battery limit, Below 20 %", "Auto-pause, On",
+    /// "Timer, No timer"; the same in the compact and glyph-only rows (C-PANEL-17).
+    @Test func voiceOverHearsTheNameThenTheState() throws {
+        let settings = SettingsStore(defaults: InMemoryDefaults())
+        settings[AutomationSettings.autoOffMinutes] = 30
+        let chips = FooterChips.chips(settings: settings, hasBattery: true, autoOffAt: nil, now: now, editApps: {})
+        let names = chips.map(\.model.accessibilityLabel)
+        #expect(names == [FooterText.batteryLimit, FooterText.autoPause, FooterText.timerLabel])
+        let battery = try #require(chips.first)
+        #expect(battery.model.accessibilityValue == battery.model.text)            // "Below 20 %", not twice
+        #expect(chips[1].model.accessibilityValue == FooterText.on)
+        #expect(chips[2].model.accessibilityValue == chips[2].model.text)          // "Off after 30 min", in full
+        for chip in chips {
+            for style in PanelFooter.Style.allCases {
+                let model = PanelFooter.model(of: chip, style)
+                #expect(model.accessibilityLabel == chip.model.accessibilityLabel, "\(chip.kind) \(style)")
+                #expect(model.accessibilityValue == chip.model.accessibilityValue, "\(chip.kind) \(style)")
+                #expect(model.accessibilityValue.map { !$0.isEmpty && $0 != model.accessibilityLabel } == true)
+            }
+        }
     }
 
     @Test func theMenusEditTheAutomationSettings() throws {

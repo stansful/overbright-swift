@@ -1,7 +1,7 @@
 // OverbrightPanelUI/Card/DisplayCardModel.swift — everything one display card shows, derived without a view from the
 // engine's status, the display's facts and its preferences. DESIGN.md §5.4–§5.7, §5.10, §5.11; ARCHITECTURE.md §5.3,
-// §5.4, §6.2. The card, the status menu and the tests share it, so the slider's top, the shown presets, the marker and
-// the chip are decided once.
+// §5.4, §6.2. The card, the status menu, the HUD and the tests share it, so the slider's top, the shown presets, the
+// level the display shows, the marker and the chip are decided once.
 import OverbrightCore
 import OverbrightPolicy
 
@@ -33,8 +33,13 @@ public struct DisplayCardModel: Hashable {
     public var key: DisplayKey
     /// `DisplayStatus.name`, for VoiceOver and the OLED notice (the card's title comes from `CardTitles`).
     public var name: String
-    /// The stored level (the linked level while "Same level on all displays" is on).
+    /// The stored level (the linked level while "Same level on all displays" is on): what the next turn-on restores.
     public var level: LevelPosition
+    /// The level the display shows now: the stored level kept inside the halves that work, and Standard for a boost
+    /// level while the boost half is switched off or unavailable (DESIGN.md §5.4, §5.5). The thumb, the value tag,
+    /// VoiceOver's value, the HUD bar and the menus' checkmarks use it, so none of them claims a level the readout
+    /// denies.
+    public var displayedLevel: LevelPosition
     /// "Same level on all displays" is on.
     public var isLinked: Bool
     /// The display's cap mode.
@@ -47,7 +52,8 @@ public struct DisplayCardModel: Hashable {
     public var top: Double
     /// The Peak top at full brightness (the "can reach" figure of the marker's help tag).
     public var peakTop: Double
-    /// Where macOS lets the thumb stop now; nil when there is no reading (off, never armed).
+    /// Where the thumb stops now: macOS's live limit, or the decision's own cap when one binds (heat, Safe, near full
+    /// brightness), in steps of ×0.01; nil when there is no reading (off, never armed).
     public var allowedNow: Double?
     /// The presets shown on this display.
     public var presets: [LevelPreset]
@@ -114,6 +120,7 @@ public struct DisplayCardModel: Hashable {
         } else {
             boostHalf = .active
         }
+        displayedLevel = Self.displayed(level, boostHalf: boostHalf, dimEnabled: dimEnabled)
         allowedNow = Self.allowedNow(status: status, isMasterOn: isMasterOn, facts: facts, top: top,
                                      capMode: capMode, isOLED: isOLED, taper: taper)
         chipReason = CardChip.reason(decision: status.decision, key: status.key, banner: banner, isMasterOn: isMasterOn)
@@ -186,7 +193,23 @@ public struct DisplayCardModel: Hashable {
         return true
     }
 
-    /// The allowed-now marker: the live cap of the top gain from the engine's last reading, while boosting.
+    /// The level the display shows for the stored `level`: a boost level reads as Standard while the boost half is
+    /// switched off or unavailable, a dim level as Standard while the dim half is off.
+    static func displayed(_ level: LevelPosition, boostHalf: BoostHalf, dimEnabled: Bool) -> LevelPosition {
+        if level.isBoost {
+            switch boostHalf {
+            case .switchedOff, .unavailable: return .standard
+            case .active, .inactive: return level
+            }
+        }
+        if level.isDim, !dimEnabled { return .standard }
+        return level
+    }
+
+    /// The allowed-now marker, while boosting with a reading: the live cap of the top gain from the engine's last
+    /// reading, lowered to the decision's own cap when a limiting reason binds (DESIGN.md §0 #16, §5.6): the static
+    /// cap the reducer chose (heat, Safe with a trusted SDR white) and, once steadily boosted below the request, the
+    /// gain on screen (macOS's limit, near full brightness only) — the figures the readout states.
     static func allowedNow(status: DisplayStatus, isMasterOn: Bool, facts: DisplayFacts?, top: Double, capMode: CapMode,
                            isOLED: Bool, taper: Bool) -> Double? {
         guard isMasterOn, let reading = status.lastReading, let facts, top >= minimumTop else { return nil }
@@ -197,6 +220,34 @@ public struct DisplayCardModel: Hashable {
         let cap = GainCeiling.liveCap(staticGain: top, reading: reading, facts: facts, capMode: capMode, isOLED: isOLED,
                                       sdrWhite: status.sdrWhite, taper: taper,
                                       fullBrightnessHeadroom: GainCeiling.fullBrightnessHeadroomSeed(facts: facts))
-        return min(cap.gain, top)
+        var allowed = min(cap.gain, top)
+        if let decision = status.decision, decision.reasons.contains(where: isCap) {
+            if case let .boost(gain) = decision.target, gain < decision.requestedGain - Readout.limitedMargin {
+                allowed = min(allowed, gain)
+            }
+            if status.phase == .boosted, status.appliedGain > 1,
+               status.appliedGain < decision.requestedGain * (1 - Readout.limitedMargin) {
+                allowed = min(allowed, status.appliedGain)
+            }
+        }
+        return quantized(allowed, top: top)
+    }
+
+    /// A reason that caps the gain below the request (the readout then says "asked ×…").
+    static func isCap(_ reason: LimitReason) -> Bool {
+        switch reason {
+        case .headroom, .thermalSerious, .nearFullBrightnessOnly, .safeLimit, .oledLimit: true
+        default: false
+        }
+    }
+
+    /// The marker's steps per ×1: ×0.01, the precision its help tag states. A reading that moves by less leaves the
+    /// marker where it is, so it moves only when the stated figure changes, not with every headroom poll (DESIGN.md
+    /// §17).
+    static let markerStepsPerUnit = 100.0
+
+    /// `gain` rounded to the marker's step, never above `top`.
+    static func quantized(_ gain: Double, top: Double) -> Double {
+        min((gain * markerStepsPerUnit).rounded() / markerStepsPerUnit, top)
     }
 }

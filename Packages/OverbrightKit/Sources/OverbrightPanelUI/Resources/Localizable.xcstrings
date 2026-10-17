@@ -425,221 +425,6 @@
         }
       }
     },
-    "%@, %@" : {
-      "comment" : "VoiceOver: a footer chip’s name, then its state",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@، %2$@"
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "da" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "hu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@、%2$@"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "ms" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@，%2$@"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@，%2$@"
-          }
-        }
-      }
-    },
     "%lld displays can’t be adjusted" : {
       "comment" : "Panel: collapsed row of displays that can neither be brightened nor dimmed",
       "localizations" : {
@@ -2387,7 +2172,7 @@
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "หยุดพักอัตโนมัติ"
+            "value" : "พักอัตโนมัติ"
           }
         },
         "tr" : {
@@ -3181,7 +2966,7 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Abaixo de %@"
+            "value" : "Menos de %@"
           }
         },
         "pt-PT" : {
@@ -3467,211 +3252,211 @@
         }
       }
     },
-    "Bright content that stays in one place for a long time, like the menu bar, can wear OLED panels unevenly. Overbright keeps extra brightness lower on OLED displays and pauses it after 5 minutes without input." : {
-      "comment" : "Panel: text of the OLED notice alert",
+    "Bright content that stays in one place for a long time, like the menu bar, can wear OLED panels unevenly. Overbright keeps extra brightness lower on OLED displays and pauses it after %@ without input." : {
+      "comment" : "Panel: text of the OLED notice alert; the argument is a duration such as 5 minutes",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "قد يؤدي المحتوى الساطع الذي يبقى في مكان واحد لوقت طويل، مثل شريط القوائم، إلى تآكل لوحات OLED بشكل غير متساوٍ. لذا يُبقي Overbright الإضاءة الإضافية أخفض على شاشات OLED ويوقفها مؤقتًا بعد خمس دقائق بلا أي إدخال."
+            "value" : "قد يؤدي المحتوى الساطع الذي يبقى في مكان واحد لوقت طويل، مثل شريط القوائم، إلى تآكل لوحات OLED بشكل غير متساوٍ. لذا يُبقي Overbright الإضاءة الإضافية أخفض على شاشات OLED ويوقفها مؤقتًا بعد %@ بلا أي إدخال."
           }
         },
         "ca" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "El contingut brillant que es queda molt de temps al mateix lloc, com la barra de menús, pot desgastar els panells OLED de manera desigual. L’Overbright manté la brillantor extra més baixa a les pantalles OLED i la posa en pausa després de 5 minuts sense activitat."
+            "value" : "El contingut brillant que es queda molt de temps al mateix lloc, com la barra de menús, pot desgastar els panells OLED de manera desigual. L’Overbright manté la brillantor extra més baixa a les pantalles OLED i la posa en pausa si no hi ha activitat durant %@."
           }
         },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Jasný obsah, který zůstává dlouho na jednom místě, například řádek nabídek, může panely OLED opotřebovávat nerovnoměrně. Overbright proto na monitorech OLED drží extra jas nižší a po 5 minutách bez vstupu ho pozastaví."
+            "value" : "Jasný obsah, který zůstává dlouho na jednom místě, například řádek nabídek, může panely OLED opotřebovávat nerovnoměrně. Overbright proto na monitorech OLED drží extra jas nižší a po nečinnosti (%@ bez vstupu) ho pozastaví."
           }
         },
         "da" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lyst indhold, der står samme sted i lang tid, f.eks. menulinjen, kan slide OLED-paneler ujævnt. Overbright holder ekstra lysstyrke lavere på OLED-skærme og sætter den på pause efter 5 minutter uden aktivitet."
+            "value" : "Lyst indhold, der står samme sted i lang tid, f.eks. menulinjen, kan slide OLED-paneler ujævnt. Overbright holder ekstra lysstyrke lavere på OLED-skærme og sætter den på pause efter %@ uden aktivitet."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Helle Inhalte, die lange an derselben Stelle bleiben, etwa die Menüleiste, können OLED-Panels ungleichmäßig altern lassen. Overbright hält die Zusatzhelligkeit auf OLED-Displays niedriger und pausiert sie nach 5 Minuten ohne Eingabe."
+            "value" : "Helle Inhalte, die lange an derselben Stelle bleiben, etwa die Menüleiste, können OLED-Panels ungleichmäßig altern lassen. Overbright hält die Zusatzhelligkeit auf OLED-Displays niedriger und pausiert sie nach %@ ohne Eingabe."
           }
         },
         "el" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Το φωτεινό περιεχόμενο που μένει για πολύ στο ίδιο σημείο, όπως η γραμμή μενού, μπορεί να φθείρει άνισα τις οθόνες OLED. Το Overbright κρατά την επιπλέον φωτεινότητα χαμηλότερη στις οθόνες OLED και τη θέτει σε παύση μετά από πέντε λεπτά χωρίς δραστηριότητα."
+            "value" : "Το φωτεινό περιεχόμενο που μένει για πολύ στο ίδιο σημείο, όπως η γραμμή μενού, μπορεί να φθείρει άνισα τις οθόνες OLED. Το Overbright κρατά την επιπλέον φωτεινότητα χαμηλότερη στις οθόνες OLED και τη θέτει σε παύση μετά από %@ χωρίς δραστηριότητα."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "El contenido brillante que permanece mucho tiempo en el mismo lugar, como la barra de menús, puede desgastar los paneles OLED de forma desigual. Overbright mantiene más bajo el brillo extra en las pantallas OLED y lo pausa tras 5 minutos sin actividad."
+            "value" : "El contenido brillante que permanece mucho tiempo en el mismo lugar, como la barra de menús, puede desgastar los paneles OLED de forma desigual. Overbright mantiene más bajo el brillo extra en las pantallas OLED y lo pausa tras %@ sin actividad."
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pitkään samassa kohdassa pysyvä kirkas sisältö, kuten valikkorivi, voi kuluttaa OLED-paneeleja epätasaisesti. Overbright pitää lisäkirkkauden matalampana OLED-näytöillä ja laittaa sen tauolle, kun Macia ei ole käytetty 5 minuuttiin."
+            "value" : "Pitkään samassa kohdassa pysyvä kirkas sisältö, kuten valikkorivi, voi kuluttaa OLED-paneeleja epätasaisesti. Overbright pitää lisäkirkkauden matalampana OLED-näytöillä ja laittaa sen tauolle, kun Macia ei ole käytetty %@."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Les contenus lumineux qui restent longtemps au même endroit, comme la barre des menus, peuvent user les dalles OLED de manière inégale. Overbright limite la luminosité supplémentaire sur les écrans OLED et la met en pause après 5 minutes sans activité."
+            "value" : "Les contenus lumineux qui restent longtemps au même endroit, comme la barre des menus, peuvent user les dalles OLED de manière inégale. Overbright limite la luminosité supplémentaire sur les écrans OLED et la met en pause après %@ sans activité."
           }
         },
         "he" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "תוכן בהיר שנשאר זמן רב באותו מקום, כמו שורת התפריטים, עלול לגרום לבלאי לא אחיד במסכי OLED. לכן בצגי OLED, Overbright שומר על בהירות נוספת נמוכה יותר ומשהה אותה אחרי 5 דקות ללא קלט."
+            "value" : "תוכן בהיר שנשאר זמן רב באותו מקום, כמו שורת התפריטים, עלול לגרום לבלאי לא אחיד במסכי OLED. לכן בצגי OLED, Overbright שומר על בהירות נוספת נמוכה יותר ומשהה אותה אחרי %@ ללא קלט."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "मेन्यू बार जैसी ब्राइट सामग्री, जो लंबे समय तक एक ही जगह रहती है, OLED पैनल को असमान रूप से घिस सकती है। OLED डिस्प्ले पर Overbright अतिरिक्त ब्राइटनेस कम रखता है और 5 मिनट तक कोई इनपुट न मिलने पर उसे पॉज़ कर देता है।"
+            "value" : "मेन्यू बार जैसी ब्राइट सामग्री, जो लंबे समय तक एक ही जगह रहती है, OLED पैनल को असमान रूप से घिस सकती है। OLED डिस्प्ले पर Overbright अतिरिक्त ब्राइटनेस कम रखता है और %@ तक कोई इनपुट न मिलने पर उसे पॉज़ कर देता है।"
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Svijetli sadržaj koji dugo ostaje na istom mjestu, poput trake s izbornicima, može neravnomjerno trošiti OLED panele. Overbright na OLED zaslonima drži dodatnu svjetlinu nižom i pauzira je nakon 5 minuta bez unosa."
+            "value" : "Svijetli sadržaj koji dugo ostaje na istom mjestu, poput trake s izbornicima, može neravnomjerno trošiti OLED panele. Overbright na OLED zaslonima drži dodatnu svjetlinu nižom i pauzira je nakon %@ bez unosa."
           }
         },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A huzamosan egy helyen maradó világos tartalom, például a menüsor, egyenetlenül koptathatja az OLED-paneleket. Az Overbright OLED-kijelzőkön alacsonyabban tartja az extra fényerőt, és 5 perc tétlenség után szünetelteti."
+            "value" : "A huzamosan egy helyen maradó világos tartalom, például a menüsor, egyenetlenül koptathatja az OLED-paneleket. Az Overbright OLED-kijelzőkön alacsonyabban tartja az extra fényerőt, és %@ tétlenség után szünetelteti."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Konten terang yang lama berada di satu tempat, seperti bar menu, dapat membuat panel OLED aus tidak merata. Overbright menjaga kecerahan ekstra tetap lebih rendah di layar OLED dan menjedanya setelah 5 menit tanpa input."
+            "value" : "Konten terang yang lama berada di satu tempat, seperti bar menu, dapat membuat panel OLED aus tidak merata. Overbright menjaga kecerahan ekstra tetap lebih rendah di layar OLED dan menjedanya setelah %@ tanpa input."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "I contenuti luminosi che restano a lungo nello stesso punto, come la barra dei menu, possono usurare i pannelli OLED in modo non uniforme. Overbright mantiene più bassa la luminosità extra sugli schermi OLED e la mette in pausa dopo 5 minuti di inattività."
+            "value" : "I contenuti luminosi che restano a lungo nello stesso punto, come la barra dei menu, possono usurare i pannelli OLED in modo non uniforme. Overbright mantiene più bassa la luminosità extra sugli schermi OLED e la mette in pausa dopo %@ di inattività."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "メニューバーのように長時間同じ場所に表示される明るいコンテンツは、OLEDパネルを不均一に劣化させることがあります。OLEDディスプレイでは、Overbrightは追加の輝度を低めに抑え、5分間操作がないと一時停止します。"
+            "value" : "メニューバーのように長時間同じ場所に表示される明るいコンテンツは、OLEDパネルを不均一に劣化させることがあります。OLEDディスプレイでは、Overbrightは追加の輝度を低めに抑え、%@操作がないと一時停止します。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "메뉴 막대처럼 오랫동안 같은 위치에 표시되는 밝은 콘텐츠는 OLED 패널을 고르지 않게 마모시킬 수 있습니다. OLED 디스플레이에서 Overbright는 추가 밝기를 낮게 유지하고 5분 동안 입력이 없으면 일시 정지합니다."
+            "value" : "메뉴 막대처럼 오랫동안 같은 위치에 표시되는 밝은 콘텐츠는 OLED 패널을 고르지 않게 마모시킬 수 있습니다. OLED 디스플레이에서 Overbright는 추가 밝기를 낮게 유지하고 %@ 동안 입력이 없으면 일시 정지합니다."
           }
         },
         "ms" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kandungan cerah yang kekal di satu tempat untuk masa yang lama, seperti bar menu, boleh menyebabkan panel OLED haus secara tidak sekata. Overbright mengekalkan kecerahan tambahan lebih rendah pada paparan OLED dan menjedanya selepas 5 minit tanpa input."
+            "value" : "Kandungan cerah yang kekal di satu tempat untuk masa yang lama, seperti bar menu, boleh menyebabkan panel OLED haus secara tidak sekata. Overbright mengekalkan kecerahan tambahan lebih rendah pada paparan OLED dan menjedanya selepas %@ tanpa input."
           }
         },
         "nb" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lyst innhold som blir stående på samme sted lenge, som menylinjen, kan slite OLED-paneler ujevnt. Overbright holder ekstra lysstyrke lavere på OLED-skjermer og setter den på pause etter 5 minutter uten aktivitet."
+            "value" : "Lyst innhold som blir stående på samme sted lenge, som menylinjen, kan slite OLED-paneler ujevnt. Overbright holder ekstra lysstyrke lavere på OLED-skjermer og setter den på pause etter %@ uten aktivitet."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Heldere inhoud die lang op één plek blijft, zoals de menubalk, kan OLED-panelen ongelijkmatig laten slijten. Overbright houdt extra helderheid lager op OLED-beeldschermen en pauzeert die na 5 minuten zonder invoer."
+            "value" : "Heldere inhoud die lang op één plek blijft, zoals de menubalk, kan OLED-panelen ongelijkmatig laten slijten. Overbright houdt extra helderheid lager op OLED-beeldschermen en pauzeert die na %@ zonder invoer."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Jasne elementy, które długo pozostają w jednym miejscu, np. pasek menu, mogą nierównomiernie zużywać panele OLED. Overbright utrzymuje niższą dodatkową jasność na wyświetlaczach OLED i wstrzymuje ją po 5 minutach bezczynności."
+            "value" : "Jasne elementy, które długo pozostają w jednym miejscu, np. pasek menu, mogą nierównomiernie zużywać panele OLED. Overbright utrzymuje niższą dodatkową jasność na wyświetlaczach OLED i wstrzymuje ją po okresie bezczynności (%@)."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Conteúdos claros que ficam muito tempo no mesmo lugar, como a barra de menus, podem desgastar os painéis OLED de forma desigual. O Overbright mantém o brilho extra mais baixo em telas OLED e o pausa após 5 minutos sem atividade."
+            "value" : "Conteúdos claros que ficam muito tempo no mesmo lugar, como a barra de menus, podem desgastar os painéis OLED de forma desigual. O Overbright mantém o brilho extra mais baixo em telas OLED e o pausa após %@ sem atividade."
           }
         },
         "pt-PT" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Conteúdos brilhantes que ficam muito tempo no mesmo sítio, como a barra de menus, podem desgastar os painéis OLED de forma irregular. O Overbright mantém o brilho extra mais baixo nos monitores OLED e coloca‑o em pausa após 5 minutos sem atividade."
+            "value" : "Conteúdos brilhantes que ficam muito tempo no mesmo sítio, como a barra de menus, podem desgastar os painéis OLED de forma irregular. O Overbright mantém o brilho extra mais baixo nos monitores OLED e coloca‑o em pausa após %@ sem atividade."
           }
         },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Conținutul luminos care rămâne mult timp în același loc, precum bara de meniu, poate uza neuniform panourile OLED. Pe afișajele OLED, Overbright menține luminozitatea suplimentară mai redusă și o pune pe pauză după 5 minute fără activitate."
+            "value" : "Conținutul luminos care rămâne mult timp în același loc, precum bara de meniu, poate uza neuniform panourile OLED. Pe afișajele OLED, Overbright menține luminozitatea suplimentară mai redusă și o pune pe pauză după %@ fără activitate."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Яркие элементы, которые долго остаются на одном месте (например, строка меню), могут неравномерно изнашивать OLED-панели. На OLED-дисплеях Overbright ограничивает дополнительную яркость и приостанавливает её после 5 минут без ввода."
+            "value" : "Яркие элементы, которые долго остаются на одном месте (например, строка меню), могут неравномерно изнашивать OLED-панели. На OLED-дисплеях Overbright ограничивает дополнительную яркость и приостанавливает её после простоя (%@ без ввода)."
           }
         },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Jasný obsah, ktorý zostáva dlho na jednom mieste, napríklad lišta, môže panely OLED opotrebúvať nerovnomerne. Overbright preto na displejoch OLED drží extra jas nižší a po 5 minútach bez vstupu ho pozastaví."
+            "value" : "Jasný obsah, ktorý zostáva dlho na jednom mieste, napríklad lišta, môže panely OLED opotrebúvať nerovnomerne. Overbright preto na displejoch OLED drží extra jas nižší a po nečinnosti (%@ bez vstupu) ho pozastaví."
           }
         },
         "sl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Svetla vsebina, ki dolgo ostane na istem mestu, na primer menijska vrstica, lahko neenakomerno obrablja zaslone OLED. Overbright zato na zaslonih OLED ohranja dodatno svetlost nižjo in jo po 5 minutah brez vnosa začasno ustavi."
+            "value" : "Svetla vsebina, ki dolgo ostane na istem mestu, na primer menijska vrstica, lahko neenakomerno obrablja zaslone OLED. Overbright zato na zaslonih OLED ohranja dodatno svetlost nižjo in jo po nedejavnosti (%@ brez vnosa) začasno ustavi."
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ljust innehåll som stannar på samma plats länge, som menyraden, kan slita ojämnt på OLED-paneler. Overbright håller den extra ljusstyrkan lägre på OLED-skärmar och pausar den efter 5 minuter utan aktivitet."
+            "value" : "Ljust innehåll som stannar på samma plats länge, som menyraden, kan slita ojämnt på OLED-paneler. Overbright håller den extra ljusstyrkan lägre på OLED-skärmar och pausar den efter %@ utan aktivitet."
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "เนื้อหาที่สว่างซึ่งอยู่ที่เดิมเป็นเวลานาน เช่น แถบเมนู อาจทำให้แผงจอ OLED เสื่อมไม่เท่ากัน Overbright จึงจำกัดความสว่างเพิ่มเติมให้ต่ำลงบนจอภาพ OLED และหยุดพักเมื่อไม่มีการป้อนข้อมูลนาน 5 นาที"
+            "value" : "เนื้อหาที่สว่างซึ่งอยู่ที่เดิมเป็นเวลานาน เช่น แถบเมนู อาจทำให้แผงจอ OLED เสื่อมไม่เท่ากัน Overbright จึงจำกัดความสว่างเพิ่มเติมให้ต่ำลงบนจอภาพ OLED และหยุดพักเมื่อไม่มีการป้อนข้อมูลนาน %@"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Menü çubuğu gibi uzun süre aynı yerde kalan parlak içerik, OLED panellerin eşit olmayan biçimde yıpranmasına yol açabilir. Overbright, OLED ekranlarda ek parlaklığı daha düşük tutar ve beş dakika giriş olmadığında duraklatır."
+            "value" : "Menü çubuğu gibi uzun süre aynı yerde kalan parlak içerik, OLED panellerin eşit olmayan biçimde yıpranmasına yol açabilir. Overbright, OLED ekranlarda ek parlaklığı daha düşük tutar ve %@ boyunca giriş olmadığında duraklatır."
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Яскраві елементи, які довго залишаються на одному місці (наприклад, смуга меню), можуть нерівномірно зношувати OLED-панелі. На OLED-дисплеях Overbright обмежує додаткову яскравість і призупиняє її після 5 хвилин без введення."
+            "value" : "Яскраві елементи, які довго залишаються на одному місці (наприклад, смуга меню), можуть нерівномірно зношувати OLED-панелі. На OLED-дисплеях Overbright обмежує додаткову яскравість і призупиняє її після %@ без введення."
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nội dung sáng nằm yên một chỗ trong thời gian dài, như thanh menu, có thể làm tấm nền OLED hao mòn không đều. Overbright giữ độ sáng bổ sung thấp hơn trên màn hình OLED và tạm dừng sau 5 phút không có thao tác."
+            "value" : "Nội dung sáng nằm yên một chỗ trong thời gian dài, như thanh menu, có thể làm tấm nền OLED hao mòn không đều. Overbright giữ độ sáng bổ sung thấp hơn trên màn hình OLED và tạm dừng sau %@ không có thao tác."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "长时间停留在同一位置的明亮内容（如菜单栏）可能会导致OLED面板老化不均匀。在OLED显示器上，Overbright会将额外亮度保持在较低水平，并在5分钟无输入后暂停。"
+            "value" : "长时间停留在同一位置的明亮内容（如菜单栏）可能会导致OLED面板老化不均匀。在OLED显示器上，Overbright会将额外亮度保持在较低水平，并在%@无输入后暂停。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "長時間停留在同一位置的明亮內容（例如選單列）可能會使OLED面板損耗不均。Overbright會在OLED顯示器上將額外亮度維持在較低程度，並在5分鐘無操作後暫停。"
+            "value" : "長時間停留在同一位置的明亮內容（例如選單列）可能會使OLED面板損耗不均。Overbright會在OLED顯示器上將額外亮度維持在較低程度，並在%@無操作後暫停。"
           }
         }
       }
@@ -6389,6 +6174,215 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "仍要繼續"
+          }
+        }
+      }
+    },
+    "Cool" : {
+      "comment" : "Panel: Fill Light card, the cool end of the Warmth slider",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بارد"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Freda"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Studené"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kold"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kühl"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ψυχρό"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Frío"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Viileä"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Froid"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "קר"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ठंडा"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hladno"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hideg"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dingin"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Freddo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "寒色"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "차가움"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sejuk"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kald"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Koel"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zimne"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Frio"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fria"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rece"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Холодный"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Studené"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hladno"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kall"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เย็น"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soğuk"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Холодний"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lạnh"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "较冷"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "冷色"
           }
         }
       }
@@ -10418,7 +10412,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sans minuteur"
+            "value" : "Sans limite"
           }
         },
         "he" : {
@@ -10454,7 +10448,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nessun timer"
+            "value" : "Senza timer"
           }
         },
         "ja" : {
@@ -10478,7 +10472,7 @@
         "nb" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ingen tidtaker"
+            "value" : "Uten tidtaker"
           }
         },
         "nl" : {
@@ -10502,7 +10496,7 @@
         "pt-PT" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sem limite"
+            "value" : "Ilimitado"
           }
         },
         "ro" : {
@@ -10550,13 +10544,13 @@
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Без таймера"
+            "value" : "Без ліміту"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Không hẹn giờ"
+            "value" : "Tắt hẹn giờ"
           }
         },
         "zh-Hans" : {
@@ -18511,6 +18505,215 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "要在此OLED顯示器上使用額外亮度嗎？"
+          }
+        }
+      }
+    },
+    "Warm" : {
+      "comment" : "Panel: Fill Light card, the warm end of the Warmth slider",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "دافئ"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Càlida"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teplé"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varm"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Warm"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Θερμό"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cálido"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lämmin"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chaud"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "חם"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "गर्म"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toplo"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meleg"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hangat"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Caldo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暖色"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "따뜻함"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hangat"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varm"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Warm"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ciepłe"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quente"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quente"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cald"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Тёплый"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teplé"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toplo"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varm"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "อุ่น"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sıcak"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Теплий"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ấm"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "较暖"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暖色"
           }
         }
       }

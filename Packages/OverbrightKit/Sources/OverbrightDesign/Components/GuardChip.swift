@@ -1,7 +1,10 @@
 // OverbrightDesign/Components/GuardChip.swift — a footer chip with its menu. DESIGN.md §5.9, §12.7.
 // Seam written by WP0a (ARCHITECTURE.md §10.0): the initializer is fixed. A menu button 24 pt high showing its setting
-// (glyph + text on a neutral tint). The three chips fit 292 pt together in every language; when they would not, the
-// footer sets `\.overbrightCompactGuardChips` and each drops to glyph + `compactText` (`GuardChip.rowWidth` measures).
+// (glyph + text on a neutral tint, 6 pt of padding each side). The three chips fit 304 pt together (the panel's card
+// width) in every language; when they would not, the footer sets `\.overbrightCompactGuardChips` and each drops to
+// glyph + `compactText`
+// (`GuardChip.rowWidth` measures the text AND the glyph: `battery.25percent` is 21 pt wide at 12 pt, not 12).
+import AppKit
 import OverbrightCore
 import SwiftUI
 
@@ -10,10 +13,12 @@ public struct GuardChip: View {
     /// The chip's height.
     public static let height: CGFloat = 24
 
-    /// The footer row's width.
-    public static let rowWidth: CGFloat = 292
+    /// The footer row's width (the panel's cards' width; the row lines up with their edges).
+    public static let rowWidth: CGFloat = 304
     /// The gap between footer chips.
     public static let spacing: CGFloat = Space.s
+    /// The padding each side of a chip's glyph and text.
+    public static let horizontalPadding: CGFloat = Space.s
 
     private let model: GuardChipModel
     private let menu: [GuardChipMenuItem]
@@ -25,14 +30,23 @@ public struct GuardChip: View {
         self.model = model; self.menu = menu
     }
 
-    /// The width a row of `models` takes, full or compact (measured with the chip font).
+    /// The width a row of `models` takes, full or compact (the glyph and the text measured in the chip's fonts).
     public static func rowWidth(of models: [GuardChipModel], compact: Bool) -> CGFloat {
         let chips = models.map { model -> CGFloat in
             let text = compact ? model.compactText : model.text
-            let label = 12 + (text.map { Space.xs + OverbrightFont.chip.width(of: $0) } ?? 0)
-            return max(label + 2 * Space.m, HitTarget.footerChipWidth)
+            let words = text.flatMap { $0.isEmpty ? nil : $0 }
+            let label = glyphWidth(model.symbol) + (words.map { Space.xs + OverbrightFont.chip.width(of: $0) } ?? 0)
+            return max(label + 2 * horizontalPadding, HitTarget.footerChipWidth)
         }
         return chips.reduce(0, +) + CGFloat(max(models.count - 1, 0)) * spacing
+    }
+
+    /// The width `symbol` draws at the chip's glyph size (`GlyphSize.chip`); the point size when it cannot be read.
+    public static func glyphWidth(_ symbol: OverbrightSymbol) -> CGFloat {
+        let configuration = NSImage.SymbolConfiguration(pointSize: GlyphSize.chip, weight: .regular)
+        guard let image = NSImage(systemSymbolName: symbol.rawValue, accessibilityDescription: nil)?
+            .withSymbolConfiguration(configuration) else { return GlyphSize.chip }
+        return ceil(image.size.width)
     }
 
     /// Whether a row of `models` needs the compact chips to fit `rowWidth`.
@@ -54,9 +68,9 @@ public struct GuardChip: View {
         } label: {
             HStack(spacing: Space.xs) {
                 Image(symbol: model.symbol).font(.system(size: GlyphSize.chip)).foregroundStyle(.secondary)
-                if let text { Text(verbatim: text).font(OverbrightFont.chip.font).lineLimit(1) }
+                if let text, !text.isEmpty { Text(verbatim: text).font(OverbrightFont.chip.font).lineLimit(1) }
             }
-            .padding(.horizontal, Space.m)
+            .padding(.horizontal, Self.horizontalPadding)
             .frame(minWidth: HitTarget.footerChipWidth, minHeight: Self.height)
             .background(SemanticColor.neutral.tint, in: Capsule(style: .continuous))
             .contentShape(Capsule(style: .continuous))
@@ -71,7 +85,7 @@ public struct GuardChip: View {
 }
 
 public extension EnvironmentValues {
-    /// The footer's chips show glyph + value (the full row would not fit 292 pt in this language).
+    /// The footer's chips show glyph + value (the full row would not fit 304 pt in this language).
     @Entry var overbrightCompactGuardChips: Bool = false
 }
 

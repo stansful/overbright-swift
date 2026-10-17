@@ -167,7 +167,7 @@ import Testing
         distinct(rows.map { $0.0.localizedResult(in: english) }, "rescue results")
     }
 
-    /// The three English footer chips fit the 292-pt footer row in their default settings, and their compact forms
+    /// The three English footer chips fit the 304-pt footer row in their default settings, and their compact forms
     /// (glyph + value) fit with the longest settings (DESIGN.md §5.9).
     @Test func theFooterRowFits() {
         let defaults = [GuardChipModel.battery(.belowThreshold, threshold: 20, in: english),

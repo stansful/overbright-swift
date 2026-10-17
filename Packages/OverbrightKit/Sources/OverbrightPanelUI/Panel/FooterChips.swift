@@ -1,7 +1,8 @@
 // OverbrightPanelUI/Panel/FooterChips.swift — the footer's three guard chips: what each shows (its SETTING, never a
 // live value, except the timer counting down) and its menu, which edits the Automations keys directly. DESIGN.md §5.9
-// (labels, menus, the 292-pt row and the glyph + value fallback), §12.5 (numbers through FormatStyle), §12.7
-// (VoiceOver: "Battery limit", "Auto-pause", "Timer" with their state); ARCHITECTURE.md §3.8 (the keys and ranges).
+// (labels, menus, the 304-pt row and the glyph + value fallback), §12.5 (numbers through FormatStyle), §12.7
+// (VoiceOver: the label is the chip's name, "Battery limit", "Auto-pause", "Timer", and the value its state, "Below
+// 20 %", "On", "No timer", in every row style); ARCHITECTURE.md §3.8 (the keys and ranges).
 import Foundation
 import OverbrightCore
 import OverbrightDesign
@@ -26,6 +27,23 @@ public struct FooterChip {
     public let compact: GuardChipModel
     /// The chip's menu.
     public let menu: [GuardChipMenuItem]
+
+    /// A chip from its full and compact models.
+    public init(kind: Kind, model: GuardChipModel, compact: GuardChipModel, menu: [GuardChipMenuItem]) {
+        self.kind = kind; self.model = model; self.compact = compact; self.menu = menu
+    }
+
+    /// A chip named `name` (VoiceOver's label) whose state is `state` (VoiceOver's value), showing `text`, or
+    /// `compactText` beside the glyph when the row does not fit.
+    init(kind: Kind, name: String, state: String, symbol: OverbrightSymbol, text: String, compactText: String,
+         menu: [GuardChipMenuItem]) {
+        self.init(kind: kind,
+                  model: GuardChipModel(symbol: symbol, text: text, accessibilityLabel: name, compactText: compactText,
+                                        accessibilityValue: state),
+                  compact: GuardChipModel(symbol: symbol, text: compactText, accessibilityLabel: name, compactText: nil,
+                                          accessibilityValue: state),
+                  menu: menu)
+    }
 }
 
 /// Builds the footer chips from the settings.
@@ -80,12 +98,8 @@ public enum FooterChips {
                 }
             }),
         ]
-        return FooterChip(kind: .battery,
-                          model: GuardChipModel(symbol: symbol, text: text,
-                                                accessibilityLabel: FooterText.labeled(FooterText.batteryLimit, text)),
-                          compact: GuardChipModel(symbol: symbol, text: rule == .belowThreshold ? percent : "",
-                                                  accessibilityLabel: FooterText.labeled(FooterText.batteryLimit, text)),
-                          menu: menu)
+        return FooterChip(kind: .battery, name: FooterText.batteryLimit, state: text, symbol: symbol, text: text,
+                          compactText: rule == .belowThreshold ? percent : "", menu: menu)
     }
 
     // MARK: Auto-pause
@@ -109,14 +123,8 @@ public enum FooterChips {
             .separator,
             .item(title: FooterText.editApps, isChecked: false, perform: editApps),
         ]
-        return FooterChip(kind: .autoPause,
-                          model: GuardChipModel(symbol: .playRectangleFill, text: text,
-                                                accessibilityLabel: FooterText.labeled(FooterText.autoPause,
-                                                                                       isOn ? FooterText.on : FooterText.off)),
-                          compact: GuardChipModel(symbol: .playRectangleFill, text: isOn ? "" : FooterText.off,
-                                                  accessibilityLabel: FooterText.labeled(FooterText.autoPause,
-                                                                                         isOn ? FooterText.on : FooterText.off)),
-                          menu: menu)
+        return FooterChip(kind: .autoPause, name: FooterText.autoPause, state: isOn ? FooterText.on : FooterText.off,
+                          symbol: .playRectangleFill, text: text, compactText: isOn ? "" : FooterText.off, menu: menu)
     }
 
     // MARK: Timer
@@ -147,10 +155,7 @@ public enum FooterChips {
                 }
             }),
         ]
-        let label = FooterText.labeled(FooterText.timerLabel, text)
-        return FooterChip(kind: .timer,
-                          model: GuardChipModel(symbol: .timer, text: text, accessibilityLabel: label),
-                          compact: GuardChipModel(symbol: .timer, text: value, accessibilityLabel: label),
-                          menu: menu)
+        return FooterChip(kind: .timer, name: FooterText.timerLabel, state: text, symbol: .timer, text: text,
+                          compactText: value, menu: menu)
     }
 }

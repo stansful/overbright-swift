@@ -62,6 +62,12 @@ enum PanelText {
     static var turnOff: String {
         String(localized: "Turn off", bundle: .module, comment: "Panel: Fill Light card, button that turns Fill Light off")
     }
+    static var cool: String {
+        String(localized: "Cool", bundle: .module, comment: "Panel: Fill Light card, the cool end of the Warmth slider")
+    }
+    static var warm: String {
+        String(localized: "Warm", bundle: .module, comment: "Panel: Fill Light card, the warm end of the Warmth slider")
+    }
 
     // MARK: Card
 

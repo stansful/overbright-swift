@@ -14,8 +14,9 @@ struct WelcomeDisplayActions {
     let services: OverbrightServices
     /// Where the switches' choices wait for Done.
     let choices: WelcomeChoices
-    /// Asks the OLED question for the named display; true = Turn On.
-    var confirmOLED: @MainActor (String) -> Bool = OLEDNotice.confirm
+    /// Asks the OLED question for the named display; true = Turn On (nil: the panel's notice, naming the configured
+    /// idle pause).
+    var confirmOLED: (@MainActor (String) -> Bool)?
     /// Opens a System Settings pane.
     var openURL: @MainActor (URL) -> Void = { NSWorkspace.shared.open($0) }
 
@@ -26,7 +27,8 @@ struct WelcomeDisplayActions {
     func setExtraBrightness(_ enabled: Bool, for row: WelcomeDisplayRow) -> Bool {
         let stored = services.settings[DisplaySettings.perDisplay][row.key]?.oledNoticeAcknowledged ?? false
         let asks = enabled && row.isOLED && !stored && !choices.acceptedOLEDNotices.contains(row.key)
-        if asks, !confirmOLED(row.name) { return false }
+        let confirm = confirmOLED ?? OLEDNotice.confirmer(services.settings)
+        if asks, !confirm(row.name) { return false }
         choices.setExtraBrightness(enabled, for: row, acceptedOLEDNotice: asks)
         return true
     }

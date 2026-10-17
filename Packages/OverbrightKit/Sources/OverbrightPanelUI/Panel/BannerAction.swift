@@ -1,6 +1,7 @@
 // OverbrightPanelUI/Panel/BannerAction.swift — what the banner's button does (and the status menu's second line, in
 // title case there). DESIGN.md §12.3 (one action per banner), §4.3, §16 (System Settings is "Open System Settings");
-// ARCHITECTURE.md §6.3, §7.2 (an S1 booster: Compatibility mode, which writes no table, instead of Continue Anyway).
+// ARCHITECTURE.md §6.3, §7.2 (an S1 booster, whether it runs or changed a display's colors: Compatibility mode, which
+// writes no table, instead of Continue Anyway, so two tables never compound).
 import OverbrightCore
 
 /// The primary action of a banner.
@@ -29,7 +30,7 @@ public nonisolated enum BannerAction: Hashable, Sendable {
         case .conflict(let app): app.severity == .booster ? .useCompatibilityMode(app) : .continueAnyway(app)
         case .foreignTableAtLaunch: .openDisplaySettings
         case .flickerStop(let display), .unattributedDrift(let display): .tryAgain(display)
-        case .attributedDrift(let app, _): .continueAnyway(app)
+        case .attributedDrift(let app, _): app.severity == .booster ? .useCompatibilityMode(app) : .continueAnyway(app)
         case .focusOff: .openFocusSettings
         case .thermalCritical: nil
         case .lowPowerMode, .battery, .onBattery: .changePowerRules
