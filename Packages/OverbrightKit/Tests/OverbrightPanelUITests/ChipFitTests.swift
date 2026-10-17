@@ -110,13 +110,18 @@ import Testing
     @Test func everyShippedLanguageIsMeasured() throws {
         #expect(ShippedLanguages.codes == (try ShippedLanguages.listed()))
         #expect(ShippedLanguages.codes.count == 35)
+        for code in ShippedLanguages.codes {
+            #expect(ShippedLanguages.design(code)?.bundle.bundleURL.lastPathComponent == "\(code).lproj", "\(code)")
+            #expect(ShippedLanguages.panel(code)?.bundleURL.lastPathComponent == "\(code).lproj", "\(code)")
+        }
+        #expect(ShippedLanguages.design("tlh") == nil && ShippedLanguages.panel("tlh") == nil)   // never English instead
     }
 
     /// "Extra brightness off" and "Turn on" stay inside the card in every language: on one line when both fit, else
     /// the button under the chip.
     @Test(arguments: ShippedLanguages.codes)
     func theChipAndTurnOnStayInsideTheCardInEveryLanguage(_ code: String) throws {
-        let language = ShippedLanguages.design(code)
+        let language = try #require(ShippedLanguages.design(code), "\(code): no Design table")
         let chip = try #require(ChipModel.make(reason: .boostNotEnabled, phase: .idle, failedTries: 0,
                                                context: ChipContext(language: language)))
         let title = try #require(PanelWords(code), "\(code): no PanelUI table").turnOn
@@ -137,8 +142,9 @@ import Testing
     }
 
     @Test(arguments: ShippedLanguages.codes)
-    func everyChipFitsItsLineInEveryLanguage(_ code: String) {
-        let texts = Self.chips(in: ShippedLanguages.design(code))
+    func everyChipFitsItsLineInEveryLanguage(_ code: String) throws {
+        let language = try #require(ShippedLanguages.design(code), "\(code): no Design table")
+        let texts = Self.chips(in: language)
         #expect(texts.count >= 25, "\(code): \(texts.count) chips")
         var failures: [String] = []
         for text in texts {

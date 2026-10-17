@@ -11,9 +11,11 @@ nonisolated enum ShippedLanguages {
     /// Every language Overbright ships ("ar" … "zh-Hant", English included), as its catalogs name it.
     static let codes: [String] = CopyLanguage.available
 
-    /// Design's words and number formats in `code`.
-    static func design(_ code: String) -> CopyLanguage {
-        CopyLanguage.named(code) ?? .english()
+    /// Design's words and number formats in `code`, from its `.lproj` folder (`CopyLanguage.named` opens it by path);
+    /// nil when the folder is missing, so a fit test requires it instead of measuring English in its place
+    /// (C-PANEL-33).
+    static func design(_ code: String) -> CopyLanguage? {
+        CopyLanguage.named(code)
     }
 
     /// PanelUI's own table in `code`: the `.lproj` folder inside the module's resources, built from its URL (a

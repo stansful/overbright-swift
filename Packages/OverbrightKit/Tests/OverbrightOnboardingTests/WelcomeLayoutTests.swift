@@ -194,7 +194,8 @@ import Testing
         let width = WelcomeStepFitTests.width - 2 * Space.m                     // the row's padding
         var stacked: Set<String> = []
         for code in ["en"] + CopyLanguage.available.filter({ $0 != "en" }) {
-            let language = code == "en" ? CopyLanguage.english() : (CopyLanguage.named(code) ?? .english())
+            let language = try code == "en" ? CopyLanguage.english()
+                : #require(CopyLanguage.named(code), "\(code): no Design table")
             let title = DisplaysStep.Copy.localized(in: code == "en" ? englishBundle : onboardingBundle(code))
                 .useExtraBrightness
             for row in WelcomeDisplayRow.rows(in: services, language: language) where row.canBoost {

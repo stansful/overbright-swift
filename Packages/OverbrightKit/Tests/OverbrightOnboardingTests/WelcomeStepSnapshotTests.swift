@@ -132,7 +132,7 @@ import Testing
     @Test(arguments: ChromeAppearance.allCases)
     func stepTwoInRussian(_ appearance: ChromeAppearance) throws {
         var copy = DisplaysStep.Copy.localized(in: onboardingBundle("ru"))
-        copy.verdictLanguage = CopyLanguage.named("ru") ?? .english()
+        copy.verdictLanguage = try #require(CopyLanguage.named("ru"))
         let session = Self.session(WelcomePreview.threeDisplays, .displays)
         let page = DisplaysStep(session: session, copy: copy).environment(\.isStaticSnapshot, true)
         let rep = try ChromeSnapshot.render(page, appearance,

@@ -47,8 +47,8 @@ import Testing
     /// WP15: Safe / Peak and Regular / Fine stay segments in every language Overbright ships (Design's catalog), and
     /// Peak is never the preset's word Max.
     @Test(arguments: CopyLanguage.available)
-    func theSegmentsFitInEveryLanguage(_ code: String) {
-        let language = CopyLanguage.named(code) ?? .english()
+    func theSegmentsFitInEveryLanguage(_ code: String) throws {
+        let language = try #require(CopyLanguage.named(code), "\(code): no Design table")   // never English instead
         let ceilings = CapMode.allCases.map { $0.localizedName(in: language) }
         #expect(!ceilings.contains(LevelPreset.max.localizedName(in: language)), "\(code): \(ceilings)")
         for labels in [ceilings, StepSize.allCases.map { $0.localizedName(in: language) }] {

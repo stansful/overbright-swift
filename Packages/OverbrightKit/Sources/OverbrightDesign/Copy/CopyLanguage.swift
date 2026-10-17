@@ -23,12 +23,26 @@ public nonisolated struct CopyLanguage: Sendable {
     }
 
     /// The catalog's `code` localization ("en", "ru") with that language's locale, nil when Design's bundle has no
-    /// such localization.
+    /// such localization (an empty code or a path included).
     public static func named(_ code: String, timeZone: TimeZone = .gmt) -> CopyLanguage? {
-        guard let path = Bundle.module.path(forResource: code, ofType: "lproj"), let bundle = Bundle(path: path) else {
+        guard let resources = Bundle.module.resourceURL, let bundle = localization(code, in: resources) else {
             return nil
         }
         return CopyLanguage(bundle: bundle, locale: Locale(identifier: code), timeZone: timeZone)
+    }
+
+    /// The `<code>.lproj` folder under `resources` as a bundle, or nil when there is no such folder. Found by its path,
+    /// not through `Bundle.path(forResource:ofType:)`, which can return nil under parallel load although the folder is
+    /// on disk, and answers an empty name with whichever localization it lists first (WP14 C-PANEL-33; Onboarding's
+    /// tables, C-ONBOARD-3).
+    static func localization(_ code: String, in resources: URL) -> Bundle? {
+        guard !code.isEmpty, !code.contains("/") else { return nil }
+        let folder = resources.appendingPathComponent("\(code).lproj", isDirectory: true)
+        var isDirectory: ObjCBool = false
+        guard FileManager.default.fileExists(atPath: folder.path, isDirectory: &isDirectory), isDirectory.boolValue else {
+            return nil
+        }
+        return Bundle(url: folder)
     }
 
     /// The development language (English) with an English locale, so tests and fit checks read English whatever the

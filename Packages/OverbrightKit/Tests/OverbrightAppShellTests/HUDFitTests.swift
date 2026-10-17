@@ -92,8 +92,9 @@ import Testing
     }
 
     @Test(arguments: languages)
-    func valuesAndReasonsFitInEveryLanguage(_ code: String) {
-        let language = CopyLanguage.named(code) ?? .english()
+    func valuesAndReasonsFitInEveryLanguage(_ code: String) throws {
+        // Design's table of the language, required: falling back to English would measure English (C-PANEL-33).
+        let language = try #require(CopyLanguage.named(code), "\(code): no Design table")
         let (values, reasons) = Self.texts(in: language)
         #expect(values.count >= 9 && reasons.count >= 11, "\(code)")
         var failures: [String] = []
@@ -114,7 +115,8 @@ import Testing
         let folder = Bundle.module.resourceURL?.appendingPathComponent("\(code).lproj", isDirectory: true)
         let bundle = try #require(folder.flatMap { FileManager.default.fileExists(atPath: $0.path) ? Bundle(url: $0) : nil },
                                   "\(code): no \(code).lproj in the shell's resources")
-        let (locale, language) = (Locale(identifier: code), CopyLanguage.named(code) ?? .english())
+        let locale = Locale(identifier: code)
+        let language = try #require(CopyLanguage.named(code), "\(code): no Design table")
         let titles = [String(localized: "Keep this level?", table: "StatusMenu", bundle: bundle, locale: locale),
                       ConfirmationText.keepLevelTitle(in: language)]
         let countdowns = [String(localized: "Going back in \(10) s", table: "StatusMenu", bundle: bundle,

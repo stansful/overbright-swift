@@ -60,8 +60,11 @@ import Testing
     /// The dialog's sentences join as the language writes two sentences: a space in English and Russian, none in
     /// Japanese and Chinese, whose sentences end in "。" (a literal space showed and was spoken there).
     @Test func theSentencesJoinAsTheLanguageWritesThem() async throws {
+        // The language's table from its `.lproj` folder by path: `Bundle.path(forResource:ofType:)` can return nil
+        // under parallel load although the folder is on disk (WP14).
         func language(_ code: String) throws -> Bundle {
-            try #require(Bundle.module.path(forResource: code, ofType: "lproj").flatMap(Bundle.init(path:)), "\(code)")
+            let folder = try #require(Bundle.module.resourceURL).appendingPathComponent("\(code).lproj", isDirectory: true)
+            return try #require(FileManager.default.fileExists(atPath: folder.path) ? Bundle(url: folder) : nil, "\(code)")
         }
         #expect(IntentRouter.joined([]) == "" && IntentRouter.joined(["One."]) == "One.")
         #expect(IntentRouter.joined(["One.", "Two.", "Three."]) == "One. Two. Three.")         // the development language
