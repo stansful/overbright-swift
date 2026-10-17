@@ -24,12 +24,18 @@ public nonisolated struct DisplayStatus: Hashable, Sendable {
     public var sdrWhite: SDRWhiteEstimate?
     /// `failed(headroomNeverArrived)` episodes in this session (the chip changes after two, DESIGN.md §12.2).
     public var failedTries: Int
+    /// The largest light gain macOS's grants allowed on this display while Overbright boosted it on this OS build
+    /// (`0.97 × H` of the highest headroom seen, kept in the strategy cache), nil until one was seen: `VerdictText`'s
+    /// `lastGrant` (DESIGN.md §12.1, "macOS allowed up to ×1.55 on this display last time", 0.97 × 1.6). Added in WP14
+    /// through the contract lane.
+    public var lastGrant: Double?
     /// A display's status.
     public init(key: DisplayKey, name: String, phase: EnginePhase, decision: DisplayDecision?, appliedGain: Double,
                 appliedFactor: Double, mechanism: Mechanism, strategy: TriggerStrategy?, lastReading: HeadroomReading?,
-                sdrWhite: SDRWhiteEstimate?, failedTries: Int = 0) {
+                sdrWhite: SDRWhiteEstimate?, failedTries: Int = 0, lastGrant: Double? = nil) {
         self.key = key; self.name = name; self.phase = phase; self.decision = decision; self.appliedGain = appliedGain
         self.appliedFactor = appliedFactor; self.mechanism = mechanism; self.strategy = strategy
         self.lastReading = lastReading; self.sdrWhite = sdrWhite; self.failedTries = failedTries
+        self.lastGrant = lastGrant
     }
 }

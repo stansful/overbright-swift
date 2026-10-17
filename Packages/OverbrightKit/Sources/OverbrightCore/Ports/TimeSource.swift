@@ -11,6 +11,6 @@ public protocol TimeSource: Sendable {
     var now: MonotonicInstant { get }
     /// The wall clock now (deadlines the user sees: pause, auto-off, schedule).
     var wallClock: Date { get }
-    /// Real: Task.sleep with 10 % tolerance. Manual: suspends until `advance(by:)` passes the deadline.
+    /// Real: Task.sleep with 10 % tolerance (at most 1 s). Manual: suspends until `advance(by:)` passes the deadline.
     func sleep(for duration: Duration) async throws
 }

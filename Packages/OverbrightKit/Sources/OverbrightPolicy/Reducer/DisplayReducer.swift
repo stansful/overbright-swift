@@ -178,10 +178,13 @@ nonisolated struct DisplayReducer: Sendable {
         }
         var live: [LimitReason] = []
         if let reading = display.feedback.lastReading {
+            // The taper's reference is the one the engine writes with (the learned lowest ready H), so the chip says
+            // "Below full brightness" exactly when the writer fades the boost; the seed only without feedback.
+            let reference = display.feedback.fullBrightnessHeadroom ?? GainCeiling.fullBrightnessHeadroomSeed(facts: facts)
             let cap = GainCeiling.liveCap(staticGain: gain, reading: reading, facts: facts, capMode: capMode,
                                           isOLED: isOLED, sdrWhite: display.sdrWhite,
                                           taper: input.settings.boostOnlyNearFullBrightness,
-                                          fullBrightnessHeadroom: GainCeiling.fullBrightnessHeadroomSeed(facts: facts))
+                                          fullBrightnessHeadroom: reference)
             switch cap.reason {
             case .safeLimit?: safeBinds = true
             case let reason?: live.append(reason)
