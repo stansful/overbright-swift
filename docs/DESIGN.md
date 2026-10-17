@@ -90,7 +90,9 @@ Each principle has a test that a build passes or fails.
 | `dimFill` | `secondaryLabelColor` over the track | same | `labelColor` | slider fill left of the detent |
 | **`boostWarm`** | **#B35F00** | **#FFB020** | **#8F4A00** (light) / **#FFC65C** (dark) | slider fill right of the detent while extra light is on screen, the HUD bar, focus of the boost zone. **Never text, never a background behind text, never a status, never while off or paused.** |
 | `inactiveHatch` | 45° hatch, 1-pt `secondaryLabelColor` lines every 3 pt, over the track | same | `labelColor` lines | the boost-side fill while Overbright is off or paused (nothing is brighter), the part of the boost half macOS does not allow now, and a boost half that is turned off for the display |
-| `allowedMarker` | `labelColor`, 2 × 10 pt | same | same | where the thumb will stop now (§5.5) |
+| `allowedMarker` | `labelColor`, 2 × 24 pt, drawn over the thumb in a 1-pt `panelBackground` halo | same | same | where the thumb will stop now (§5.5) |
+| `thumb` | white | white | white | the slider thumb and the Welcome card's divider handle (§2.4) |
+| `thumbRing` | none (clear) | none (clear) | `labelColor`, 1 pt | the white thumb's edge on the opaque white card (§15) |
 | `neutral` | `secondaryLabelColor` glyph on a 15 % `systemGray` tint | same | `labelColor` glyph | neutral chips and banners |
 | `info` / `warning` / `danger` / `success` | `systemBlue` / `systemOrange` / `systemRed` / `systemGreen` | same | the system's accessible variants | chip and banner glyphs and tints; always paired with text |
 
@@ -103,6 +105,8 @@ Each principle has a test that a build passes or fails.
 | `dimFill`, `tick`, `inactiveHatch` lines, `detentMark` (secondary over the track) | 3.72 · 5.10 | 4.07 · 6.22 |
 | `allowedMarker` (label over the track) | 11.74 · 16.10 | 7.18 · 10.96 |
 | `neutral` glyph on its tint | 3.86 (glyph vs tint); text in `labelColor` 13.39 | 4.65; text 8.63 |
+
+As built (WP14): the allowed-now marker is also drawn over the white thumb, where it reads in its own ink in Light and by its dark `panelBackground` halo in Dark (near-white ink on a white thumb); under Increase Contrast the thumb's `thumbRing` stands at least 3:1 off both the white thumb and the opaque card in Light, and the white thumb stands 3:1 off the dark card by itself. `BoostSliderDrawingTests` read both from rendered pixels. The readout is text on the card in `labelColor` in every state, "Off" included (§5.6), and `ContrastAuditTests` render the "Off" readout to check it reaches 4.5:1 in every palette and appearance.
 
 The v0.1 tokens that failed are gone: `headroomAvailable` (`tertiaryLabelColor`, 1.88:1 on the light card) and the 1-px `quaternaryLabelColor` outline (1.25:1). System orange (#FF9500, 2.0:1 on light backgrounds) fails 3:1 in Light mode, which is why the boost zone has its own token. Text never uses `boostWarm`; chip and banner text uses `labelColor` on a 15 % tint of the semantic colour, so text contrast is the system's own, and the coloured glyph is redundant with the words. Text is never faded by lowering a view's opacity (secondary text at 60 % opacity falls to 2.1:1).
 
@@ -140,7 +144,7 @@ The live readout never uses `.contentTransition(.numericText)` (it grows CoreGra
   | `keycap` | 4 | 4 |
   | `focusRingOutset` | 3 | 3 |
 
-- **Strokes** (`StrokeWidth`): hairline = 1 device pixel; regular 1; focus ring 2; slider track 4 (6 while dragging); detent tick 1.5 × 8 pt; preset ticks 1 × 5 pt; allowed marker 2 × 10 pt.
+- **Strokes** (`StrokeWidth`): hairline = 1 device pixel; regular 1; focus ring 2; slider track 4 (6 while dragging); detent tick 1.5 × 8 pt; preset ticks 1 × 5 pt; allowed marker 2 × 24 pt (`allowedMarker`: taller than the 20-pt thumb and drawn over it, so it shows where the thumb rests on it) in a 1-pt halo of the panel background (`allowedMarkerHalo`, `panelBackground`).
 - **Hit targets** (`HitTarget`): ≥ 28 × 24 pt for every panel control (the 20-pt slider thumb takes a 28-pt hit area inside the control; footer chips at least 28 pt wide); widening happens inside the button style, never with an outer frame (Cranny gotcha).
 - **Glyph sizes** (`GlyphSize`, as built in WP9; SF Symbols beside text, `.font(.system(size: GlyphSize.chip))`, never a literal): `chip` 12 (status and footer chips, and the spinner that stands in for a chip's glyph) · `banner` 14 · `sliderEnd` 14 (`sun.min` / `sun.max.fill` at the ends of a card's slider row, drawn by the card) · `hud` 20 (the HUD's leading glyph).
 - **Elevation:** the system's window shadow for the panel and the HUD; cards have none (a hairline only). The few shadows Overbright draws itself are `OverbrightShadow` tokens (as built in WP9; `.overbrightShadow(_:)`, never a literal): `thumb`, the slider thumb and the Welcome card's divider handle (black 30 %, blur 1, 0.5 pt down, the system slider thumb's) · `valueTag`, the value tag's lift off the track (black 15 %, blur 2, 1 pt down).
@@ -342,7 +346,7 @@ Quit Overbright                           ⌘Q
 
 - `card` fill, `cardStroke` hairline, `Radius.card`, padding 12, 8 pt between cards. Every display that can boost **or dim** gets a full card.
 - **Title:** display name (`cardTitle`, up to two lines). With linked levels a `link` glyph precedes the name of every card ("Same level on all displays"). Two displays with the same name get " (1)", " (2)" in UUID order, as macOS does.
-- **Slider row** (§5.5) with `sun.min` at the dim end and `sun.max.fill` at the boost end (14 pt, `secondaryLabelColor`), 6 pt gaps: a 240-pt track whose boost half is 120 pt.
+- **Slider row** (§5.5) with `sun.min` at the dim end and `sun.max.fill` at the boost end (14 pt, `secondaryLabelColor`), 6 pt gaps: a 240-pt track whose boost half is 120 pt (the thumb's centre travels 220 pt of it, §5.5).
 - **Readout** (§5.6). In Compatibility mode a `caption` line "Compatibility mode" sits under it, with the method's footnote (§7.4) as its help tag.
 - **Chip line** (§5.7): only when a per-display reason applies.
 - **Context menu** (right-click, ⌃-click, or ⌃↩ while the card's slider has keyboard focus): the shown presets · Dimmed · 25% · separator · Calibrate… · Settings for This Display… (Overbright's Settings ▸ Displays at this display) · Don't Use on This Display / Use Extra Brightness on This Display · Try Again (only when failed). Every item is also a **VoiceOver custom action** on the card, and the items that fix a limit (Try again, Continue anyway, Turn on, Choose Peak…) are also actions in the chip's popover, so nothing depends on right-click.
@@ -352,17 +356,17 @@ Quit Overbright                           ⌘Q
 
 | Aspect | Specification |
 |---|---|
-| Track | 240 pt, 4 pt high (6 pt while dragging), `track` colour, capsule ends |
+| Track | 240 pt, 4 pt high (6 pt while dragging), `track` colour, capsule ends. The thumb's centre travels the track inset by its radius at both ends, as a system slider's does: 220 pt, from 10 pt in at the dim end through Standard at the centre to 10 pt in at Max, so the thumb never overhangs the track into the 6-pt gap before the end glyphs. Ticks, fills, the detent, the marker, the value tag and drags follow the same travel |
 | Detent | a 1.5 × 8 pt `detentMark` at the centre: **Standard** |
 | Fills | drawn over the track. Left of the detent: `dimFill` from the detent to the thumb. Right of the detent: `boostWarm` from the detent to the thumb **while extra light is on screen**; while Overbright is off or paused, the same span is drawn with `inactiveHatch` (nothing is brighter, so nothing is warm) |
-| Allowed now | while boosting with a reading: a 2 × 10 pt `allowedMarker` where macOS's current limit puts the thumb's stop, and `inactiveHatch` beyond it to the end of the boost half. Hidden when there is no reading (off, never armed) |
+| Allowed now | while boosting with a reading: a 2 × 24 pt `allowedMarker` where macOS's current limit puts the thumb's stop, drawn over the thumb in a 1-pt `panelBackground` halo (the thumb often rests just past it while macOS limits the display, so a marker under the thumb would be hidden), and `inactiveHatch` beyond it to the end of the boost half. Hidden when there is no reading (off, never armed) |
 | Ticks | 1 × 5 pt `tick` marks at the **shown** presets (Indoor 25 %, Bright room 50 %, Sunlight 75 %, Max 100 % of the boost half; a preset below ×1.1 or within 0.1 stop of the next shown one is hidden, ARCHITECTURE.md §5.3); none on the dim half |
-| Thumb | 20 pt white circle with the system shadow (glass while dragged on macOS 26+); 28 pt hit area |
+| Thumb | 20 pt white circle (`thumb`) with the system shadow (glass while dragged on macOS 26+), a 1-pt `thumbRing` under Increase Contrast; 28 pt hit area; its centre on the inset travel of the Track row |
 | Snapping | within ±3 % of the detent or a shown tick, a slow drag settles there (`detentSnap`) with an `.alignment` haptic at the detent and `.levelChange` at a preset; a fast drag passes through |
 | Value tag | while dragging or hovering the thumb: a capsule 6 pt above it (`valueTag`) with the canonical value text: "Bright room · ×1.29" at a preset, "Standard" at the detent, "×1.42" between presets, "Dimmed · 25%" on the dim half; "≈" before the multiplier while not calibrated; "· small gain on this display" when Max is at most ×1.3; while a guard pauses the display, the reason ("Paused: Low Power Mode") |
 | Disabled boost half | when boosting is not possible (verdict, or the Safe top below ×1.05): the right half draws with `inactiveHatch`, the thumb stops at the detent, and hovering the half shows the reason as a help tag |
 | Disabled dim half | displays without a transfer table (virtual) or in a reference preset: the left half is disabled the same way |
-| Keyboard (focused) | ← / → by **1/12 stop** of light (≈ 6 %) · ⌥← / ⌥→ to the previous/next named stop (Standard, the shown presets; on the dim half 50 %, 25 %, 10 %, 5 %, 2 % of Standard light) · Home = Standard · End = Max · scrolling adjusts by 1/12 stop per notch · ⌃↩ opens the card's context menu. A key step never crosses Standard: the next press continues past it |
+| Keyboard (focused) | ← / → by **1/12 stop** of light (≈ 6 %) · ⌥← / ⌥→ to the previous/next named stop (Standard, the shown presets; on the dim half 50 %, 25 %, 10 %, 5 %, 2 % of Standard light) · Home = Standard · End = Max · scrolling adjusts by 1/12 stop per notch, following the hand (§15) · ⌃↩ opens the card's context menu. A key step never crosses Standard: the next press continues past it |
 | VoiceOver | one adjustable element: label "Level, ‹display name›"; value in canonical units: "Bright room, 1.29 times" / "Standard" / "Dimmed, 25 percent" / "1.42 times"; uncalibrated: "Bright room, about 1.29 times, not calibrated"; increment and decrement move between named stops; custom actions "Standard", "Max", "Dimmed", and the card's context-menu items; custom content "Extra range": "macOS allows 1.55 times now. This display can reach 2.6 times at most." |
 | Right to left | the whole control mirrors like a system slider (dim on the right, boost on the left, glyphs swap) |
 | Master off | moving the slider turns Overbright on (direct manipulation is intent); the readout then updates |
@@ -377,7 +381,7 @@ Per-step light changes are the same on every display, because steps are in stops
 
 | State | Readout |
 |---|---|
-| Off | "Off" (`tertiaryLabelColor`) |
+| Off | "Off" (`labelColor`, as every state: the word says the state, and text is never faded; `tertiaryLabelColor` read 2.5:1 on the dark card) |
 | Standard | "Standard" |
 | Boosting at a preset, calibrated, SDR white trusted | "Bright room · ×1.29 · ≈ 775 nits" |
 | Boosting at a preset, calibrated | "Bright room · ×1.29" |
@@ -389,7 +393,7 @@ Per-step light changes are the same on every display, because steps are in stops
 
 The multiplier is a light gain, formatted with one or two decimals by `FormatStyle` (locale decimal separator); nits are rounded to the nearest 5 and always prefixed "≈". The readout's help tag adds: "For the most light, turn your display brightness all the way up first; Overbright adds to it." and, while not calibrated, "Not calibrated: this is an estimate." with **Calibrate…** in the card's context menu and as a VoiceOver action.
 
-**Allowed-now marker** (part of `BoostSlider`, §5.5): shows where the thumb will stop now. Its help tag and VoiceOver custom content: "macOS allows ×1.55 now. This display can reach ×2.6 at most." (the second figure is the Peak ceiling at full brightness). It shows at a glance why the thumb cannot go further, and how much further the display could go.
+**Allowed-now marker** (part of `BoostSlider`, §5.5): shows where the thumb will stop now, drawn over the thumb so it shows even where the thumb rests on it. Its help tag and VoiceOver custom content: "macOS allows ×1.55 now. This display can reach ×2.6 at most." (the second figure is the Peak ceiling at full brightness). It shows at a glance why the thumb cannot go further, and how much further the display could go.
 
 ### 5.7 Status chips
 
