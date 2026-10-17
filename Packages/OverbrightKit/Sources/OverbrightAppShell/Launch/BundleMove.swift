@@ -5,8 +5,11 @@
 // `perform` keeps where the Trash put it. A bundle on a read-only volume (a disk image) or a translocated copy is copied
 // instead of moved; anything else is moved (the running process keeps its open files). The quarantine flag is removed
 // from the moved copy only, because the user chose to move it there: a quarantined copy in Applications would be
-// translocated again. When the relaunch from the new place fails, `putBack` undoes the move, so the running process
-// carries on from a bundle that exists, and brings the older copy back from the Trash once its place is free again.
+// translocated again. When the move or the copy itself fails, `perform` brings the older copy back from the Trash
+// before it throws (a partial copy left in its place goes to the Trash first), so the failure alert's "Drag it to the
+// Applications folder" is true: Applications holds what it held. When the relaunch from the new place fails, `putBack`
+// undoes the move, so the running process carries on from a bundle that exists, and brings the older copy back from
+// the Trash once its place is free again.
 import Darwin
 import Foundation
 
@@ -33,6 +36,8 @@ enum BundleMove {
 
     /// Moves (or, with `copyOnly` or when moving fails, copies) `bundle` into `folder`; returns the new location and
     /// where an older copy there went. That older copy goes through `trash` first (the Trash; tests use a folder).
+    /// When the move and the copy fail, the older copy comes back from the Trash (`restoreOlderCopy`), then the error
+    /// is thrown.
     static func perform(_ bundle: URL, into folder: URL, copyOnly: Bool, fileManager: FileManager = .default,
                         trash: Trash = moveToTrash) throws -> Placement {
         let destination = folder.appending(path: bundle.lastPathComponent, directoryHint: .isDirectory)
@@ -41,17 +46,34 @@ enum BundleMove {
         if fileManager.fileExists(atPath: destination.path(percentEncoded: false)) {
             trashed = try trash(destination)
         }
-        if copyOnly {
-            try fileManager.copyItem(at: bundle, to: destination)
-        } else {
-            do {
-                try fileManager.moveItem(at: bundle, to: destination)
-            } catch {
-                try fileManager.copyItem(at: bundle, to: destination)               // read-only source (disk image)
+        do {
+            if copyOnly {
+                try fileManager.copyItem(at: bundle, to: destination)
+            } else {
+                do {
+                    try fileManager.moveItem(at: bundle, to: destination)
+                } catch {
+                    try fileManager.copyItem(at: bundle, to: destination)           // read-only source (disk image)
+                }
             }
+        } catch {
+            if let trashed { restoreOlderCopy(trashed, to: destination, fileManager: fileManager, trash: trash) }
+            throw error
         }
         removeQuarantine(under: destination, fileManager: fileManager)
         return Placement(moved: destination, trashedOlderCopy: trashed)
+    }
+
+    /// After a failed move or copy: the older copy goes from `trashed` back to `destination`. Whatever the failure left
+    /// there (a partial copy of the new bundle: the place was free before) goes through `trash` first, never deleted;
+    /// when it cannot go, the older copy stays in the Trash. Returns whether the older copy is back.
+    @discardableResult
+    static func restoreOlderCopy(_ trashed: URL, to destination: URL, fileManager: FileManager = .default,
+                                 trash: Trash = moveToTrash) -> Bool {
+        let place = destination.path(percentEncoded: false)
+        if fileManager.fileExists(atPath: place) { _ = try? trash(destination) }
+        guard !fileManager.fileExists(atPath: place) else { return false }
+        return (try? fileManager.moveItem(at: trashed, to: destination)) != nil
     }
 
     /// Undoes `perform` after a failed relaunch: a bundle that was moved goes back to `original`; a copy (the original
@@ -63,14 +85,15 @@ enum BundleMove {
         let moved = placement.moved
         guard moved.standardizedFileURL != original.standardizedFileURL else { return Undo(originalExists: true) }
         let originalExists: Bool
-        let placeIsFree: Bool
         if fileManager.fileExists(atPath: original.path(percentEncoded: false)) {
             originalExists = true                                              // a copy: the original never left
-            placeIsFree = (try? trash(moved)) != nil
+            _ = try? trash(moved)
         } else {
-            placeIsFree = (try? fileManager.moveItem(at: moved, to: original)) != nil
+            try? fileManager.moveItem(at: moved, to: original)
             originalExists = fileManager.fileExists(atPath: original.path(percentEncoded: false))
         }
+        // Free when the new bundle has left (the Trash may not say where it put it: a nil URL is still a success).
+        let placeIsFree = !fileManager.fileExists(atPath: moved.path(percentEncoded: false))
         guard let older = placement.trashedOlderCopy, placeIsFree else { return Undo(originalExists: originalExists) }
         let restored = (try? fileManager.moveItem(at: older, to: moved)) != nil
         return Undo(originalExists: originalExists, olderCopyRestored: restored)

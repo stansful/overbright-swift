@@ -3,7 +3,8 @@
 // version, the move itself in a temporary folder (no real app is moved, no alert is shown, nothing is relaunched). A
 // successful move relaunches and quits before anything else of the launch can run; a failed relaunch puts the bundle
 // back (and the older copy back from the Trash), says so and carries on; a bundle that cannot go back stays in
-// Applications, and the alert says so. Esc answers "Not Now". The real quit is checked in a child process (an exit test).
+// Applications, and the alert says so. A move or copy that fails after the older copy went to the Trash brings it
+// back. Esc answers "Not Now". The real quit is checked in a child process (an exit test).
 import AppKit
 import Darwin
 import Foundation
@@ -95,6 +96,10 @@ private func hasQuarantine(_ url: URL) -> Bool {
 }
 
 private func exists(_ url: URL) -> Bool { FileManager.default.fileExists(atPath: url.path(percentEncoded: false)) }
+
+private func setMode(_ mode: Int, of url: URL) throws {
+    try FileManager.default.setAttributes([.posixPermissions: mode], ofItemAtPath: url.path(percentEncoded: false))
+}
 
 private struct LaunchRefused: Error {}
 
@@ -212,6 +217,61 @@ private struct LaunchRefused: Error {}
         let undo = BundleMove.putBack(placement, to: bundle, trash: sandboxTrash)
         #expect(undo == BundleMove.Undo(originalExists: true, olderCopyRestored: true))
         #expect(exists(older.appending(path: "Contents/older")) && exists(bundle))
+    }
+
+    /// The Trash may not say where it put the copy (a nil URL): the copy is still gone, so the older copy comes back.
+    @Test func undoingACopyRestoresTheOlderCopyWhenTheTrashSaysNothing() throws {
+        let (bundle, applications) = try sandbox()
+        defer { try? FileManager.default.removeItem(at: applications.deletingLastPathComponent()) }
+        let older = try olderCopy(in: applications)
+        let placement = try BundleMove.perform(bundle, into: applications, copyOnly: true, trash: sandboxTrash)
+        let undo = BundleMove.putBack(placement, to: bundle, trash: { url in _ = try sandboxTrash(url); return nil })
+        #expect(undo == BundleMove.Undo(originalExists: true, olderCopyRestored: true))
+        #expect(exists(older.appending(path: "Contents/older")))                 // back in Applications
+        #expect(!exists(older.appending(path: "Contents/Info.plist")))
+    }
+
+    /// The copy itself fails after the older copy went to the Trash (the source cannot be read): the older copy comes
+    /// back to Applications before the error is thrown, and whatever the failed copy left goes to the Trash.
+    @Test func aFailedCopyBringsTheOlderCopyBack() throws {
+        let (bundle, applications) = try sandbox()
+        let info = bundle.appending(path: "Contents/Info.plist")
+        defer {
+            try? setMode(0o644, of: info)
+            try? FileManager.default.removeItem(at: applications.deletingLastPathComponent())
+        }
+        let older = try olderCopy(in: applications)
+        try setMode(0o000, of: info)
+        #expect(throws: (any Error).self) {
+            try BundleMove.perform(bundle, into: applications, copyOnly: true, trash: sandboxTrash)
+        }
+        #expect(exists(older.appending(path: "Contents/older")))                 // back in Applications
+        #expect(!exists(older.appending(path: "Contents/Info.plist")))           // not a partial new copy
+        #expect(exists(info))                                                     // the source stays
+    }
+
+    /// "Move" when the bundle can be neither moved (its folder is read-only) nor copied (it cannot be read): the
+    /// failure alert, no relaunch, and the older copy the move had put in the Trash is back in Applications.
+    @Test func aFailedMoveBringsTheOlderCopyBackAndSaysSo() throws {
+        let (bundle, applications) = try sandbox()
+        let downloads = bundle.deletingLastPathComponent()
+        let info = bundle.appending(path: "Contents/Info.plist")
+        defer {
+            try? setMode(0o755, of: downloads)
+            try? setMode(0o644, of: info)
+            try? FileManager.default.removeItem(at: applications.deletingLastPathComponent())
+        }
+        let older = try olderCopy(in: applications)
+        try setMode(0o000, of: info)
+        try setMode(0o555, of: downloads)
+        let settings = SettingsStore(defaults: InMemoryDefaults())
+        let script = Script()
+        script.answer = .move
+        script.mover(settings: settings, bundle: bundle, applications: applications).offerIfNeeded()
+        #expect(script.events == [.asked, .failureShown])
+        #expect(exists(older.appending(path: "Contents/older")))                 // back in Applications
+        #expect(!exists(older.appending(path: "Contents/Info.plist")))
+        #expect(exists(info))
     }
 
     /// The bundle cannot go back (its folder became read-only): this copy cannot run from a path that is gone, so it

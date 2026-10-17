@@ -146,7 +146,7 @@ No hook posts input or asks for a permission. Launch arguments (`LaunchArguments
 | `--qa-settings <pane[#row]>` | Opens Settings at a pane (`general`, `displays`, `automations`, `shortcuts`, `fillLight`, `advanced`, `about`), scrolled to and highlighting a row. |
 | `--qa-welcome <step>` | Opens Welcome at `hello`, `displays`, `defaults`, `findIt` or `done`; takes no focus and records nothing. |
 | `--qa-calibration <display>`, `--qa-help <anchor>` | Opens the calibration window or Help at an anchor. |
-| `--qa-snapshot <dir>` [`--qa-snapshot-at <s>`] | Renders every visible window in-process into `<dir>` (works while the display sleeps; menus cannot be rendered): each window's SwiftUI root, opaque, in the window's appearance; timed from the end of the launch work (3 s; 2 s with `--qa-hud`, 1 s for a HUD state). |
+| `--qa-snapshot <dir>` [`--qa-snapshot-at <s>`] | Renders every visible window in-process into `<dir>` (works while the display sleeps; menus cannot be rendered): each window's SwiftUI root, opaque, in the window's appearance; timed from the end of the launch work (3 s; 2 s with `--qa-hud`, 1 s for a HUD state). Settings' sidebar and toolbar are not faithful there in either appearance (the selected row a black bar without its label, no search field, no pane title): judge them in `SettingsChromeSnapshotTests` or on screen. |
 | `--qa-exit-after <s>`, `--qa-update-check` | Quits after that many seconds; runs the update check at once. |
 | `--qa-hang-main <delay>,<duration>` | Blocks the main thread (hang-watchdog test H-X1, the owner's session only). |
 

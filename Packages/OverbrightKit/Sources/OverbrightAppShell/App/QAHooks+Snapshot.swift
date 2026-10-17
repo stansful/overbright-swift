@@ -7,9 +7,14 @@
 // on a dark card, separators bright, template symbols in the other appearance's colour, and Settings' sidebar blank.
 // So a window that hosts SwiftUI is drawn the way the snapshot suites draw a view (`PanelSnapshotTests`): its SwiftUI
 // root again, in an opaque host over `windowBackgroundColor`, in the window's appearance made non-vibrant, never
-// ordered in. Only a window without a SwiftUI host is drawn from its own views. One limit stays: a material SwiftUI
-// itself puts inside the root (Settings' sidebar column) still draws its vibrant labels dark in Dark (the sidebar's
-// rows are drawn, the selected one black); judge that sidebar in Light, on screen, or in `SettingsChromeSnapshotTests`.
+// ordered in. Only a window without a SwiftUI host is drawn from its own views.
+//
+// One limit stays, the Settings window's sidebar and toolbar, in Light and Dark alike: the selected sidebar row draws
+// as a black bar without its label, the other labels draw dark in Dark, and the sidebar's search field and the pane's
+// title are missing (AppKit bridges them into the real window; the borderless host that re-draws the root has neither).
+// None of that is a product bug; the pane's content is faithful. `-OverbrightQASnapshot <file.png>` (the window's own
+// views) draws the search field and the title but leaves the sidebar's rows blank, so judge the sidebar in
+// `SettingsChromeSnapshotTests` or on screen.
 //
 // The pinned appearance goes on `NSApp`, so the panel, the HUD, Welcome, Help, the calibration window and Settings all
 // follow it (it used to pin Settings alone).
