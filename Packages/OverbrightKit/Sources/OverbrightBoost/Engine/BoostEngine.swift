@@ -2,9 +2,10 @@
 // Seeded by WP0a with the fixed initializers (§10.0); body by WP4: master state, the policy loop over the injected
 // reducer, one `DisplayController` per display, synchronous shield delivery, pause and auto-off, the HUD's
 // `lastChange`, the low-level confirmation, and the self-test, calibration and rescue entry points through WP5's seams.
-// This file holds the state, the initializers, the lifecycle and status publication; requests live in
+// This file holds the state, the initializers and the lifecycle; requests live in
 // `BoostEngine+Control.swift`, the low-level confirmation in `+LowLevel`, the policy loop and HUD changes in `+Policy`,
-// events and deadlines in `+Events`, the instruments in `+Instruments`. MainActor.
+// events and deadlines in `+Events`, the instruments in `+Instruments`, status publication in `+Publication`.
+// MainActor.
 import CoreGraphics
 import Foundation
 import Observation
@@ -13,8 +14,8 @@ import OverbrightPolicy
 
 /// The per-display boost engine (`services.boost`) and the last service to start, first to stop (D7, D23).
 @Observable public final class BoostEngine: BoostControl, ServiceLifecycle {
-    /// What the UI, the menu, intents and diagnostics read.
-    public private(set) var status: BoostStatus = .initial
+    /// What the UI, the menu, intents and diagnostics read (set only by `BoostEngine+Publication.swift`).
+    public internal(set) var status: BoostStatus = .initial
 
     @ObservationIgnored let settings: SettingsStore
     @ObservationIgnored let machine: MachineIdentity
@@ -72,6 +73,16 @@ import OverbrightPolicy
     @ObservationIgnored let lowLevelSlot = TaskSlot()
     @ObservationIgnored let scheduleSlot = TaskSlot()
     @ObservationIgnored let preparingSlot = TaskSlot()
+    /// The coalesced re-reduction of screen-parameters notifications (`scheduleScreenParametersReduce`).
+    @ObservationIgnored let screenParametersSlot = TaskSlot()
+    /// The trailing publish of minor-only status changes (`BoostEngine+Publication.swift`).
+    @ObservationIgnored let minorPublishSlot = TaskSlot()
+    /// The coalesced UserDefaults write of levels (`armLevelPersist`).
+    @ObservationIgnored let levelPersistSlot = TaskSlot()
+    /// When a level was last stored (`armLevelPersist` writes them `levelPersistDelay` later).
+    @ObservationIgnored var lastLevelChangeAt = MonotonicInstant(sinceOrigin: .zero)
+    /// The observed inputs the last reduction read: a change notification for exactly these needs no other reduction.
+    @ObservationIgnored var lastReducedInputs: ObservedInputs?
     @ObservationIgnored var observers: [ObservationToken] = []
     @ObservationIgnored var instrumentHold = false
     /// The running calibration (kept until its `onEnd`); the master stays off meanwhile.
@@ -79,6 +90,13 @@ import OverbrightPolicy
     /// The running self-test (a driven display whose trigger is lost stops there).
     @ObservationIgnored var selfTestRunner: SelfTestRunner?
     @ObservationIgnored var boostSourcesActive = false
+    #if DEBUG
+    /// Every time `status` actually changed (each one re-arms every observer and invalidates the panel); tests count
+    /// them (DESIGN.md §17).
+    @ObservationIgnored var publishCount = 0
+    /// Level-persist tasks started (one per pause in the steps, not one per step).
+    @ObservationIgnored var levelPersistTaskCount = 0
+    #endif
 
     /// The engine over explicit dependencies: what the composition root uses, because the services hub needs the
     /// engine before it exists. Constructing it does no I/O; `start()` does.
@@ -144,8 +162,8 @@ import OverbrightPolicy
         syncControllers(reconfigured: false)
         lastFocus = signals.snapshot.focus
         observers.append(signals.addEventObserver { [weak self] event in self?.handle(event) })
-        observers.append(observe({ [weak self] in self?.observedInputs() }, onChange: { [weak self] _ in
-            self?.inputsChanged()
+        observers.append(observe({ [weak self] in self?.observedInputs() }, onChange: { [weak self] inputs in
+            self?.inputsChanged(inputs)
         }))
         if settings[GeneralSettings.launchBehavior] == .launchAndEnable, !launchArguments.startsOff {
             turnOn(source: .launch)
@@ -185,51 +203,29 @@ import OverbrightPolicy
         observers = []
         isStarted = false
         reducePending = false
+        screenParametersSlot.cancel()
+        lastReducedInputs = nil
+        persistLevels()
         updateAggregates()
-        publish()
+        publishNow()
     }
 
     // MARK: Status
 
     /// Tasks alive in the engine and its controllers (zero while off and not dimmed, §4.5 invariant 4).
     var activeTaskCount: Int {
-        [pauseSlot, autoOffSlot, lowLevelSlot, scheduleSlot, preparingSlot].filter(\.isRunning).count
-            + controllers.values.map(\.activeTaskCount).reduce(0, +)
+        [pauseSlot, autoOffSlot, lowLevelSlot, scheduleSlot, preparingSlot, screenParametersSlot, minorPublishSlot,
+         levelPersistSlot].filter(\.isRunning).count + controllers.values.map(\.activeTaskCount).reduce(0, +)
     }
 
     /// The live tasks by name ("pause", "<display>.drift"), for a test that reports one left running.
     var activeTaskNames: [String] {
         let engine = [("pause", pauseSlot), ("autoOff", autoOffSlot), ("lowLevel", lowLevelSlot),
-                      ("schedule", scheduleSlot), ("preparing", preparingSlot)].filter { $0.1.isRunning }.map(\.0)
+                      ("schedule", scheduleSlot), ("preparing", preparingSlot),
+                      ("screenParameters", screenParametersSlot), ("minorPublish", minorPublishSlot),
+                      ("levelPersist", levelPersistSlot)]
+            .filter { $0.1.isRunning }.map(\.0)
         return engine + controllers.values.sorted { $0.key < $1.key }.flatMap(\.activeTaskNames)
-    }
-
-    /// Republishes `status` (only when it changed).
-    func publish() {
-        guard !isApplying else { return }
-        let now = time.wallClock
-        let pausedUntil = settings[AutomationSettings.pausedUntil].flatMap { $0 > now ? $0 : nil }
-        let statuses = displays.displays.compactMap { controllers[$0.ref.key]?.status() }
-        let next = BoostStatus(isOn: isMasterOn, isReady: isReady, pausedUntil: pausedUntil, autoOffAt: autoOffAt,
-                               displays: statuses, banner: lastDecision?.banner, symbol: symbol(),
-                               lastChange: lastChange, pendingLowLevel: pendingLowLevel)
-        if next != status { status = next }
-    }
-
-    /// The reducer's symbol, with `preparing` while a display that should boost is arming or gating and none is
-    /// boosted yet (§6.4: the reducer cannot see phases).
-    func symbol() -> StatusSymbolState {
-        guard isMasterOn else { return .off }
-        let symbol = lastDecision?.symbol ?? .on
-        guard symbol == .on || symbol == .preparing else { return symbol }
-        return isPreparingNow ? .preparing : .on
-    }
-
-    /// A display that should boost is arming or gating and none is ramping or boosted.
-    var isPreparingNow: Bool {
-        let boosting = controllers.values.filter { $0.targetGain != nil }
-        return boosting.contains(where: \.isPreparing)
-            && !boosting.contains { $0.phase == .boosted || $0.phase == .ramping }
     }
 
     /// A controller changed: aggregates, status, and a re-reduction when its feedback changed.

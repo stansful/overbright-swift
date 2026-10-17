@@ -45,10 +45,13 @@ extension BoostEngine {
                        directoryGeneration: displays.generation, ownSurfaces: ownEDRSurfaces.displays)
     }
 
-    /// The observed inputs changed: follow the directory and the Focus filter, then re-reduce.
-    func inputsChanged() {
+    /// The observed inputs changed: follow the directory and the Focus filter, then re-reduce, unless the last
+    /// reduction already read exactly `inputs` (a level step stores its level and reduces in one go, so the settings
+    /// change it made needs no second reduction).
+    func inputsChanged(_ inputs: ObservedInputs? = nil) {
         guard isStarted else { return }
-        if displays.generation != lastDirectoryGeneration { syncControllers(reconfigured: false) }
+        let synced = displays.generation != lastDirectoryGeneration
+        if synced { syncControllers(reconfigured: false) }
         let focus = signals.snapshot.focus
         if focus != lastFocus {
             lastFocus = focus
@@ -62,6 +65,7 @@ extension BoostEngine {
                 return
             }
         }
+        guard synced || inputs == nil || inputs != lastReducedInputs else { return }
         scheduleReduce()
     }
 
@@ -84,11 +88,14 @@ extension BoostEngine {
 
     /// The reducer's input now: settings, the snapshot, every online display with its preferences, feedback (trip, the
     /// latest reading and the taper reference the writer uses) and trusted SDR white.
-    func policyInput() -> PolicyInput {
+    func policyInput() -> PolicyInput { policyInput(observedInputs()) }
+
+    /// The reducer's input over `observed` (read once per reduction).
+    func policyInput(_ observed: ObservedInputs) -> PolicyInput {
         let now = time.wallClock
         let calendar = Calendar.current
         let minute = calendar.component(.hour, from: now) * 60 + calendar.component(.minute, from: now)
-        let perDisplay = settings[DisplaySettings.perDisplay]
+        let perDisplay = observed.perDisplay
         let inputs = displays.displays.map { facts -> DisplayPolicyInput in
             let key = facts.ref.key
             let preferences = perDisplay[key] ?? DisplayPreferences()
@@ -102,9 +109,9 @@ extension BoostEngine {
                                                                         mechanism: mechanism, machine: machine,
                                                                         reading: reading))
         }
-        return PolicyInput(isMasterOn: isMasterOn, pausedUntil: settings[AutomationSettings.pausedUntil], now: now,
-                           minuteOfDay: minute, machine: machine, settings: policySettings(), system: signals.snapshot,
-                           displays: inputs, continuedEntryIDs: Set(continued.keys))
+        return PolicyInput(isMasterOn: isMasterOn, pausedUntil: observed.pausedUntil, now: now, minuteOfDay: minute,
+                           machine: machine, settings: observed.settings, system: observed.snapshot, displays: inputs,
+                           continuedEntryIDs: Set(continued.keys))
     }
 
     /// What a controller needs besides its decision.
@@ -143,12 +150,16 @@ extension BoostEngine {
         }
     }
 
-    /// Reduces now and applies the decision to every controller (a pending coalesced reduction is subsumed).
+    /// Reduces now and applies the decision to every controller (a pending coalesced reduction, and a screen-parameters
+    /// reduction waiting for its interval, are subsumed).
     func reduceNow(_ request: ControlRequest? = nil) {
         guard isStarted else { return }
         reducePending = false
+        screenParametersSlot.cancel()
         refreshDeadlines()
-        let input = policyInput()
+        let observed = observedInputs()
+        lastReducedInputs = observed
+        let input = policyInput(observed)
         let decision = reduce(input)
         let previous = lastDecision
         lastDecision = decision

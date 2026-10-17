@@ -46,6 +46,7 @@ extension BoostEngine {
 
     /// Master off: every deadline goes (zero work while off); an unanswered "Keep this level?" reverts.
     func turnOff() {
+        persistLevels()
         if pendingLowLevel != nil { restoreLowLevel() }
         guard isMasterOn else { return }
         isMasterOn = false
@@ -185,8 +186,10 @@ extension BoostEngine {
         let keys = linked ? displays.displays.map(\.ref.key) : Array(levels.keys)
         let priorStored = Self.byKey(keys.map { ($0, storedLevel(of: $0)) })
         let priorLight = Self.byKey(keys.map { ($0, isMasterOn ? light(of: storedLevel(of: $0)) : 1) })
+        // Every reader (the reducer below, the UI, Signals) sees the new levels at once; UserDefaults gets them once
+        // the steps pause (`armLevelPersist`).
         if linked {
-            settings[DisplaySettings.linkedLevel] = display.flatMap { levels[$0] } ?? first.value
+            settings.setDeferringWrite(DisplaySettings.linkedLevel, display.flatMap { levels[$0] } ?? first.value)
         } else {
             var all = settings[DisplaySettings.perDisplay]
             for (key, level) in levels {
@@ -195,8 +198,9 @@ extension BoostEngine {
                 if source == .panel, display == key, level.isBoost { enableBoostIfOptIn(&preferences, key: key) }
                 all[key] = preferences
             }
-            settings[DisplaySettings.perDisplay] = all
+            settings.setDeferringWrite(DisplaySettings.perDisplay, all)
         }
+        armLevelPersist()
         if settings[AutomationSettings.pausedUntil] != nil {
             settings[AutomationSettings.pausedUntil] = nil
             pauseSlot.cancel()
@@ -210,6 +214,33 @@ extension BoostEngine {
         }
         checkLowLevel(priorStored: priorStored, priorLight: priorLight, source: source)
         reduceNow(ControlRequest(source: source, kind: .level, display: display, wantsBoost: wantsBoost))
+    }
+
+    /// Levels reach UserDefaults `levelPersistDelay` after the last change: a drag of ten steps a second encodes every
+    /// display's preferences and messages cfprefsd once, not ten times. Stop, quit and every turn-off write at once.
+    /// One task per pause, not one per step: it sleeps again for the rest of the delay while steps keep coming (a
+    /// cancelled sleep would wake the process once per step).
+    func armLevelPersist() {
+        lastLevelChangeAt = time.now
+        guard !levelPersistSlot.isRunning else { return }
+        #if DEBUG
+        levelPersistTaskCount += 1
+        #endif
+        levelPersistSlot.run { [weak self] in
+            while true {
+                guard let self else { return }
+                let left = self.lastLevelChangeAt + EngineTiming.levelPersistDelay - self.time.now
+                guard left > .zero else { break }
+                do { try await self.time.sleep(for: left) } catch { return }
+            }
+            self?.settings.writeDeferred()
+        }
+    }
+
+    /// Writes the levels still owed to UserDefaults now.
+    func persistLevels() {
+        levelPersistSlot.cancel()
+        settings.writeDeferred()
     }
 
     /// Moving the panel's thumb past the detent turns an opt-in display's extra brightness on; an OLED display needs

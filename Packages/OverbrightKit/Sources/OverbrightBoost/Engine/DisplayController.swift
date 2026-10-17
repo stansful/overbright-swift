@@ -117,6 +117,10 @@ import OverbrightPolicy
     var armedPreHeld = false
     var preHeldHeadroom: Double?
     var lastReading: HeadroomReading?
+    /// The reading `status()` publishes: `lastReading` once one of its values moved by `publishedReadingStep` or more
+    /// (or the display changed), else the copy published before, so a fresh timestamp alone never republishes the
+    /// status. Only the UI reads it; the reducer, the interlock and the writer use fresh readings (§4.5 invariant 1).
+    var publishedReading: HeadroomReading?
     var backoff: (kind: ResumeKind, step: Int)?
     var pendingResume: ResumeKind?
     var quarantineUntil: MonotonicInstant?
@@ -161,16 +165,21 @@ import OverbrightPolicy
         default: true
         }
     }
-    /// Whether Signals' boost-only sources must run for this display (§7.1, DESIGN.md §17): it is scaled or dimmed, or it
-    /// prepares, ramps or holds a boost or a dim. A suspended display whose baseline is written needs none until it
-    /// resumes (a lock, display sleep or fast user switch can last all night; the resume reads the power source again),
-    /// and neither does a display the self-test or a calibration drives (the master is held off).
+    /// Whether Signals' boost-only sources must run for this display (§7.1, D30, DESIGN.md §17): it arms or gates, or it
+    /// ramps toward, holds or disarms from a boost (a boost target, or a table or overlay above its baseline, whatever
+    /// the phase). Every guard those sources feed applies to the boost half only (D10: dimming always works), so a
+    /// dimmed-only display needs none; dim → boost goes through arming, which counts, so the synchronous power read of
+    /// `setBoostActive(true)` still precedes any boost write. A suspended display whose baseline is written needs none
+    /// until it resumes (a lock, display sleep or fast user switch can last all night; the resume reads the power source
+    /// again), and neither does a display the self-test or a calibration drives (the master is held off). The drift
+    /// check and the hang watchdog do not depend on this: they follow the phase and the safety ledger.
     var needsBoostSources: Bool {
         guard !isDriven else { return false }
-        if isScaledOrDimmed { return true }
+        if appliedFactor > 1 + TableWriter.neutralTolerance { return true }
         switch phase {
-        case .arming, .gating, .ramping, .boosted, .dimmed, .disarming: return true
-        case .idle, .failed, .suspended: return false
+        case .arming, .gating: return true
+        case .ramping, .boosted, .disarming: return targetGain != nil
+        case .idle, .failed, .suspended, .dimmed: return false
         }
     }
     /// Arming or gating: preparing.
@@ -195,12 +204,33 @@ import OverbrightPolicy
         return nil
     }
 
-    /// What the UI reads.
+    /// What the UI reads. Its reading is the stable copy (`stableReading()`); the SDR white still follows the fresh one.
     func status() -> DisplayStatus {
         DisplayStatus(key: key, name: facts.name, phase: phase, decision: decision, appliedGain: appliedGain,
                       appliedFactor: appliedFactor, mechanism: mechanism,
-                      strategy: trigger != nil ? currentRung?.strategy : nil, lastReading: lastReading,
+                      strategy: trigger != nil ? currentRung?.strategy : nil, lastReading: stableReading(),
                       sdrWhite: sdrWhite(at: lastReading), failedTries: failedTries, lastGrant: lastGrant)
+    }
+
+    /// A published reading is replaced once current, potential or reference moved by this much (far below what any
+    /// card, chip or marker shows; the HeadroomReading's own time never counts).
+    static let publishedReadingStep = 0.0005
+
+    /// `lastReading`, or the reading published before while it is of the same display and none of its values moved by
+    /// `publishedReadingStep`; remembers what it returns.
+    func stableReading() -> HeadroomReading? {
+        guard let reading = lastReading else {
+            publishedReading = nil
+            return nil
+        }
+        if let published = publishedReading, published.display == reading.display,
+           abs(published.current - reading.current) < Self.publishedReadingStep,
+           abs(published.potential - reading.potential) < Self.publishedReadingStep,
+           abs(published.reference - reading.reference) < Self.publishedReadingStep {
+            return published
+        }
+        publishedReading = reading
+        return reading
     }
 
     /// The largest light gain macOS's grants allowed here (0.97 × the highest headroom seen while boosting), if any.

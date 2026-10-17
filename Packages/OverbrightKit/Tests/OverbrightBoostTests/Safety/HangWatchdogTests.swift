@@ -3,14 +3,15 @@
 // `make tsan FILTER=HangWatchdogTests`). The stalled "main thread" is a queue the test blocks; the off-main entry points
 // against the real main queue are in `HangWatchdogOffMainTests`.
 //
-// The timing rules (the 3–5 s window, once per stall, never while answered) are checked on explicit uptimes through the
-// watchdog's pure tick (`HangWatchdog.step`, `.answer`), so no result depends on how a loaded machine schedules a timer
-// (§9.1, WP14). The tests with the real timer check what does not depend on it: a stall is restored from the watchdog's
+// The timing rules (the 3–5 s window, once per stall, never while answered, pings on the shared 2 s grid, D29) are
+// checked on explicit uptimes through the watchdog's pure tick (`HangWatchdog.gridStep`, `.step`, `.answer`), so no result
+// depends on how a loaded machine schedules a timer (§9.1, WP14). The tests with the real timer check what does not depend on it: a stall is restored from the watchdog's
 // queue, never sooner than `hangTimeout` after the unanswered ping was sent, and a write in flight lands first. They
 // wait for the timer with a scheduling margin only a real failure reaches, and for queues through blocks queued on them.
 import Dispatch
 import Foundation
 import OverbrightCore
+import OverbrightTestSupport
 import Testing
 @testable import OverbrightBoost
 
@@ -25,28 +26,37 @@ import Testing
 
     // MARK: The rules, on explicit times
 
-    /// The watchdog's tick and the pinged queue's answers on explicit uptimes (ns). The timer ticks when `step` says;
+    /// What a simulated run saw, in uptimes (ns).
+    private struct Run {
+        var fires: [UInt64] = []
+        var pings: [UInt64] = []
+    }
+
+    /// The watchdog's tick and the pinged queue's answers on explicit uptimes (ns). The timer ticks when `gridStep`
+    /// says, on the grid of a time source that reads `phase` at uptime 0 (only its place in a period matters, D29);
     /// each ping is answered `latency` after it was sent, unless the queue was stalled when it was sent (a stall is a
-    /// block queued ahead of the pong): then `latency` after the stall ends. Returns the uptimes of the restores.
-    private func restores(stalls: [Range<UInt64>], latency: UInt64 = 1_000_000, until end: UInt64,
-                          ping: UInt64 = ns(EngineTiming.hangPing),
-                          timeout: UInt64 = ns(EngineTiming.hangTimeout)) -> [UInt64] {
+    /// block queued ahead of the pong): then `latency` after the stall ends.
+    private func run(stalls: [Range<UInt64>], latency: UInt64 = 1_000_000, until end: UInt64, phase: UInt64 = 0,
+                     ping: Duration = EngineTiming.hangPing, timeout: Duration = EngineTiming.hangTimeout) -> Run {
         var s = HangWatchdog.State()
         var now: UInt64 = 0
         var answer: (id: UInt64, at: UInt64)?
-        var fires: [UInt64] = []
+        var seen = Run()
         while now <= end {
             if let pending = answer, pending.at <= now {
                 _ = HangWatchdog.answer(&s, ping: pending.id)
                 answer = nil
             }
-            let (step, next) = HangWatchdog.step(&s, at: now, interval: ping, timeout: timeout)
+            let toGrid = HangWatchdog.nextPingDelay(sinceOrigin: .nanoseconds(Int64(now + phase)), interval: ping)
+            let (step, next) = HangWatchdog.gridStep(&s, at: now, toGrid: toGrid, interval: Self.ns(ping),
+                                                     timeout: Self.ns(timeout))
             switch step {
             case .ping(let id):
                 let blocked = stalls.first { $0.contains(now) }
                 answer = (id, (blocked?.upperBound ?? now) + latency)
+                seen.pings.append(now)
             case .fire:
-                fires.append(now)
+                seen.fires.append(now)
             case .idle:
                 break
             }
@@ -56,17 +66,26 @@ import Testing
             }
             now += next
         }
-        return fires
+        return seen
     }
 
+    /// The uptimes of the restores of `run`.
+    private func restores(stalls: [Range<UInt64>], latency: UInt64 = 1_000_000, until end: UInt64,
+                          phase: UInt64 = 0) -> [UInt64] {
+        run(stalls: stalls, latency: latency, until: end, phase: phase).fires
+    }
+
+    /// Grid phases: on the grid at uptime 0, just after and just before a grid point, and two arbitrary ones.
+    private static let phases: [UInt64] = [0, 1, 1_999_999_999, 370_000_000, 123_456_789_123]
+
     /// A stall that starts anywhere in a ping period is restored at least `hangTimeout` and at most `hangPing +
-    /// hangTimeout` after it began, once; both ends of the 3–5 s window are reached.
-    @Test func aStallIsCaughtThreeToFiveSecondsAfterItBegins() {
+    /// hangTimeout` after it began, once, at every grid phase; both ends of the 3–5 s window are reached.
+    @Test(arguments: phases) func aStallIsCaughtThreeToFiveSecondsAfterItBegins(phase: UInt64) {
         let latency: UInt64 = 1_000_000
         var delays: [UInt64] = []
         for start in stride(from: 10 * Self.second, through: 12 * Self.second, by: 10_000_000) {
             let fires = restores(stalls: [start..<(start + 30 * Self.second)], latency: latency,
-                                 until: start + 25 * Self.second)
+                                 until: start + 25 * Self.second, phase: phase)
             guard fires.count == 1, let fired = fires.first, fired >= start else {
                 Issue.record("stall at \(start): restores \(fires)")
                 continue
@@ -80,19 +99,86 @@ import Testing
 
     /// Pings answered within the timeout never restore, however long the watchdog runs; a slow answer is late only
     /// once it waited the whole timeout.
-    @Test func anAnsweredPingNeverFires() {
-        #expect(restores(stalls: [], until: 600 * Self.second) == [])
+    @Test(arguments: phases) func anAnsweredPingNeverFires(phase: UInt64) {
+        #expect(restores(stalls: [], until: 600 * Self.second, phase: phase) == [])
         let timeout = Self.ns(EngineTiming.hangTimeout)
-        #expect(restores(stalls: [], latency: timeout - 1_000_000, until: 600 * Self.second) == [])
-        #expect(restores(stalls: [], latency: timeout + 1_000_000, until: timeout + Self.second) == [timeout])
+        #expect(restores(stalls: [], latency: timeout - 1_000_000, until: 600 * Self.second, phase: phase) == [])
+        #expect(restores(stalls: [], latency: timeout + 1_000_000, until: timeout + Self.second, phase: phase)
+                == [timeout])
     }
 
     /// One restore per stall however long it lasts; after the queue answered, the next stall restores again.
-    @Test func firesOncePerStallAndAgainAfterTheMainThreadAnswered() {
+    @Test(arguments: phases) func firesOncePerStallAndAgainAfterTheMainThreadAnswered(phase: UInt64) {
         let first = (10 * Self.second)..<(40 * Self.second), second = (50 * Self.second)..<(60 * Self.second)
-        let fires = restores(stalls: [first, second], until: 70 * Self.second)
+        let fires = restores(stalls: [first, second], until: 70 * Self.second, phase: phase)
         #expect(fires.count == 2, "\(fires)")
         #expect(fires.first.map(first.contains) == true && fires.last.map(second.contains) == true)
+    }
+
+    // MARK: The shared grid (D29)
+
+    /// For 10 000 seeded readings of the time source (up to 30 days since its origin) the wait to the next ping is in
+    /// (0, `hangPing`] and ends on a multiple of `hangPing` since the origin.
+    @Test func thePingDelayIsWithinOneIntervalForAnyOrigin() {
+        var generator = SeededGenerator(seed: 0x7069_6e67)
+        let interval = Self.ns(EngineTiming.hangPing)
+        for _ in 0..<10_000 {
+            let sinceOrigin = UInt64.random(in: 0...(30 * 86_400 * Self.second), using: &generator)
+            let delay = HangWatchdog.nextPingDelay(sinceOrigin: .nanoseconds(Int64(sinceOrigin)),
+                                                   interval: EngineTiming.hangPing)
+            #expect(delay > 0 && delay <= interval, "\(sinceOrigin) → \(delay)")
+            #expect((sinceOrigin + delay) % interval == 0, "\(sinceOrigin) → \(delay)")
+        }
+        #expect(HangWatchdog.nextPingDelay(sinceOrigin: .seconds(4), interval: EngineTiming.hangPing) == interval)
+        #expect(HangWatchdog.nextPingDelay(sinceOrigin: .seconds(4) + .nanoseconds(1), interval: EngineTiming.hangPing)
+                == interval - 1)
+        // A fraction of a nanosecond before a grid point still waits a whole nanosecond, never zero.
+        let almost = Duration(secondsComponent: 3, attosecondsComponent: 999_999_999_999_999_999)
+        #expect(HangWatchdog.nextPingDelay(sinceOrigin: almost, interval: EngineTiming.hangPing) == 1)
+    }
+
+    /// The first ping goes out when the watchdog starts; every later one lands on a grid point, `hangPing` apart, at
+    /// any phase, so it shares the wake-up of the other 2 s activities on the same time source. The second one comes
+    /// at the first grid point after the first answer (1 ms here): within `hangPing` of it.
+    @Test(arguments: phases) func pingsAfterTheFirstLandOnTheGrid(phase: UInt64) {
+        let interval = Self.ns(EngineTiming.hangPing), latency: UInt64 = 1_000_000
+        let pings = run(stalls: [], latency: latency, until: 120 * Self.second, phase: phase).pings
+        #expect(pings.first == 0 && pings.count >= 60)
+        #expect(pings.dropFirst().allSatisfy { ($0 + phase) % interval == 0 }, "\(pings.prefix(4))")
+        #expect(zip(pings.dropFirst(), pings.dropFirst(2)).allSatisfy { $1 - $0 == interval })
+        #expect(pings.count >= 2 && pings[1] >= latency && pings[1] - latency <= interval, "\(pings.prefix(2))")
+    }
+
+    /// The first ping goes out 1 ms before a grid point and is answered 5 ms later, after that point; the main thread
+    /// then stalls. The next ping follows within `hangPing` of the answer, so the stall is still caught within 5 s.
+    /// (Rescheduling only the pings onto the grid would leave the late answer to the timeout deadline: the next ping
+    /// would go out 3 s after the first, and this stall would take almost 6 s to catch.)
+    @Test func anAnswerAfterAShortFirstWaitStillCatchesTheNextStallWithinFiveSeconds() {
+        let latency: UInt64 = 5_000_000, stallStart: UInt64 = 6_000_000
+        let seen = run(stalls: [stallStart..<(60 * Self.second)], latency: latency, until: 30 * Self.second,
+                       phase: Self.ns(EngineTiming.hangPing) - 1_000_000)
+        #expect(seen.fires.count == 1, "\(seen.fires)")
+        let caught = (seen.fires.first ?? .max) - stallStart
+        #expect(caught >= Self.ns(EngineTiming.hangTimeout))
+        #expect(caught <= Self.ns(EngineTiming.hangPing + EngineTiming.hangTimeout), "\(caught)")
+        #expect(seen.pings.count >= 2 && seen.pings[1] - latency <= Self.ns(EngineTiming.hangPing))
+    }
+
+    /// Answered pings never wake the timer between grid points: per 2 s period one tick, the ping's.
+    @Test func aResponsiveQueueCostsOneTickPerPeriod() {
+        var s = HangWatchdog.State()
+        let interval = Self.ns(EngineTiming.hangPing), timeout = Self.ns(EngineTiming.hangTimeout)
+        var now: UInt64 = 0, ticks = 0
+        let phase: UInt64 = 370_000_000
+        while now <= 600 * Self.second {
+            ticks += 1
+            let toGrid = HangWatchdog.nextPingDelay(sinceOrigin: .nanoseconds(Int64(now + phase)),
+                                                   interval: EngineTiming.hangPing)
+            let (step, next) = HangWatchdog.gridStep(&s, at: now, toGrid: toGrid, interval: interval, timeout: timeout)
+            if case .ping(let id) = step { _ = HangWatchdog.answer(&s, ping: id) }    // answered before the next tick
+            now += next
+        }
+        #expect(ticks == 301, "\(ticks)")                                     // uptime 0, then 300 grid points
     }
 
     // MARK: The real timer
@@ -126,6 +212,21 @@ import Testing
         #expect(h.codes.contains("hang.fired"))
         #expect(watchdog.consumeFiredFlag())
         #expect(!watchdog.consumeFiredFlag())
+    }
+
+    /// The real timer waits for the writer's time-source grid (D29): with that clock 10 ms before a grid point, the
+    /// tick that pinged schedules the next tick 10 ms later, not a whole `hangPing` (the clock stands still, so every
+    /// tick until the switch-off asks for the same 10 ms).
+    @Test func theTimerSchedulesTheNextPingOnTheWritersGrid() async {
+        let h = WatchdogHarness()
+        await h.time.advance(by: .milliseconds(1_990))
+        let watchdog = h.watchdog(ping: EngineTiming.hangPing, timeout: .seconds(3_600))
+        watchdog.setActive(true)
+        #expect(await waitUntil(Self.timerMargin) { watchdog.pingCount >= 1 })
+        watchdog.setActive(false)
+        await watchdog.drainQueue()
+        #expect(watchdog.lastScheduledDelay == 10_000_000)
+        #expect(watchdog.fireCount == 0)
     }
 
     /// A responsive queue is pinged again and again and every answer is heard (the timeout is longer than any run, so

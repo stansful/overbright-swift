@@ -103,6 +103,10 @@ public nonisolated enum EngineTiming {
 
     /// A suspended display keeps its trigger this long.
     public static let triggerLinger: Duration = .seconds(10)
+    /// The re-reduction a screen-parameters notification asks for runs on the trailing edge of this interval, at most
+    /// once per interval (macOS posts one per frame while headroom moves, up to 122/s). Coalescing only: the headroom
+    /// check and its safety drop stay synchronous in the event handler (D5, §4.3), and any other reduction runs at once.
+    public static let screenParametersReduceInterval: Duration = .milliseconds(100)
     /// Reconfiguration after-phase debounce …
     public static let reconfigurationDebounce: Duration = .milliseconds(500)
     /// … and the confirming pass (display removal is immediate).
@@ -131,8 +135,15 @@ public nonisolated enum EngineTiming {
     public static let lowLevelThreshold = 0.10
     /// … reverting after this long without an answer.
     public static let lowLevelConfirmTimeout: Duration = .seconds(10)
+    /// Levels set by a drag, steps or presets reach UserDefaults this long after the last change (every reader sees
+    /// them at once), and at once on stop, quit and every turn-off. Settings only: no safety state waits for it.
+    public static let levelPersistDelay: Duration = .milliseconds(500)
     /// A paused app's display resumes this long after the app leaves.
     public static let pausedAppResumeSettle: Duration = .seconds(1)
     /// An icon, shortcut or intent turn-on not ready this long after the request shows "Preparing…".
     public static let preparingDelay: Duration = .milliseconds(500)
+    /// A status change of minor fields only (readings, which place the allowed-now marker, and the applied gain while a
+    /// ramp runs) is published at most this often, on the trailing edge (DESIGN.md §17: the marker ≤ 4 Hz); any other
+    /// change publishes at once. The engine never reads its status, so no decision or safety write waits for it.
+    public static let minorPublishInterval: Duration = .milliseconds(250)
 }
