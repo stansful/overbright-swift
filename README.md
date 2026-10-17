@@ -5,27 +5,37 @@ small menu bar app that lets a capable display go past its standard maximum, dis
 limit it runs into, and always brings the display back to a neutral picture. Free and open source (MIT), no account,
 no analytics.
 
-> **Status: 0.1.0, pre-release.** The brightness engine and the whole interface are built and tested against
-> simulated displays: extra brightness and dimming per display, the panel, menu, on-screen indicator, Help, Settings,
-> Welcome, Fill Light, shortcuts, Shortcuts actions and the Focus filter, in 35 languages. Two steps remain before
-> the first release: the owner's session on real displays, which tunes the engine's limits and timings
-> ([docs/HARDWARE-TEST.md](docs/HARDWARE-TEST.md)), and the release itself (signing, the final icon, notes). How it is
-> built is in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), how it looks and reads in [docs/DESIGN.md](docs/DESIGN.md).
+> **Status: 0.1.0 — first complete build; brightness boost not yet verified on hardware, see
+> [docs/HARDWARE-TEST.md](docs/HARDWARE-TEST.md).** Everything listed below is built and tested against simulated
+> displays: as of 2026-10-17 the package has 1,760 automated tests in 16 test targets, all passing (`make test`;
+> `grep -rho '@Test\b' Packages/OverbrightKit/Tests | wc -l` gives today's number). No boost has run on a real
+> display yet. Two steps remain before the first release: the owner's session on real displays, which checks that
+> extra brightness works there and tunes the engine's limits and timings, and the release itself (signing, the
+> icon's last review, notes). How it is built is in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), how it looks and
+> reads in [docs/DESIGN.md](docs/DESIGN.md).
 
 ## What it does
 
 - **Extra brightness** on displays that have extra range: the Liquid Retina XDR display of a MacBook Pro, Apple's
   XDR displays and HDR external displays with HDR turned on. macOS keeps that range for HDR video; Overbright lets
-  everyday content use it, so the screen stays readable in a bright room or in sunlight.
+  everyday content use it, so the screen stays readable in a bright room or in sunlight. It never scales past the
+  range macOS grants at that moment, and always lands back on the display's own color profile.
 - **Dim below minimum** on any display, HDR or not, with one slider per display: left of Standard dims, right of it
-  adds extra brightness.
+  adds extra brightness. **Dim All Displays** has its own shortcut, and very dark levels ask "Keep this level?".
 - **Honest about every limit.** Each display gets a verdict and a fix ("Turn on High Dynamic Range for this display
   in Displays settings"), the slider shows where it stops right now, and the reason when battery, heat, a full-screen
   video or another app holds it back.
-- **Safe by default.** It starts off, steps back on battery, in Low Power Mode and when the Mac gets warm, ramps
-  every change so nothing flickers, and has a Safe ceiling and a Peak one.
-- **Fill Light** for video calls, keyboard shortcuts, Shortcuts actions and a Focus filter, a small on-screen
-  indicator for level changes, and full keyboard and VoiceOver support, in 35 languages.
+- **Safe by default.** It starts off, has a Safe ceiling and a Peak one, ramps every change so nothing flickers,
+  and steps back on its own: on battery (below 20 % by default), in Low Power Mode, when the Mac gets warm, for
+  full-screen video and the video apps on its list, when an OLED display sits idle, next to another brightness or
+  color app (with **Compatibility mode** to run alongside a booster), and, if you choose, after a timer, outside set
+  hours, in games or in a Focus.
+- **Back to Standard** from anywhere (`⌃⌥⌘0`, the menu, the Dock menu, Shortcuts), and a check at every launch
+  that no display was left scaled.
+- **Fill Light** for video calls, on by hand or while a camera is in use; a small on-screen indicator for level
+  changes and automatic stops; a Welcome tour; Settings with search; a one-minute calibration and a self-test.
+- **Shortcuts actions** (turn on or off, set extra brightness, dim, pause, resume, get the state, Back to Standard)
+  and a Focus filter; keyboard shortcuts in your keyboard layout; full keyboard and VoiceOver support; 35 languages.
 
 Your display uses more power when it is brighter: that is what extra brightness is. Overbright's own work is close to
 nothing while it is off and small while it is on.
