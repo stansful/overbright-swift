@@ -41,8 +41,15 @@ extension BoostEngine {
         case .screenParametersChanged:
             for controller in all { controller.headroomEvent() }
         case .appTerminated(_, let processID):
+            // Any process's death may reset every table (§4.8), background-only ones included (a bundle-less tool, a
+            // helper), so every boosted or dimmed controller checks 50 ms later, and a trip attributed to that process
+            // clears; both report through `controllerChanged`. The re-reduction runs only when a continuation ended
+            // (the reducer reads `continued`; the conflicts reach it through the observed snapshot), so the XPC
+            // services that come and go every few seconds cost nothing while nothing is scaled (C-SIGNALS-1).
+            let endsContinuation = continued.values.contains(processID)
             continued = continued.filter { $0.value != processID }
             for controller in all { controller.appTerminated(processID: processID) }
+            guard endsContinuation else { return }
         case .hdrSuppressionBegan, .hdrSuppressionEnded, .thermalChanged, .powerChanged, .activeSpaceChanged,
              .appActivated, .appLaunched, .scheduleBoundary:
             break                                                         // the re-reduction below reads them

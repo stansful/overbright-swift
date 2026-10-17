@@ -12,8 +12,9 @@
 //   not list at all never count unless frontmost; our own PID and the Dock never count (our Compatibility overlay,
 //   Fill Light and calibration windows are full-screen windows of ours);
 // - the menu-bar window is matched by the WindowServer's PID, never by its owner name (names are localized); with
-//   "Displays have separate Spaces" off only the main display has one, so on the others only exact-and-frontmost
-//   counts;
+//   "Displays have separate Spaces" off only the main display has one, so on the others only the frontmost app's
+//   window counts, exact or (on a notched built-in that is not the main display) below the notch band, and no Split
+//   View (C-SIGNALS-5);
 // - full-screen video: the covering window's owner holds a display-sleep assertion (`PlaybackAssertions`);
 // - the displays that show the frontmost app's topmost layer-0 window (per-app rules pause only those, §6.5).
 // The locked screen's loginwindow windows sit at layers 2001/2004 and never count.
@@ -101,7 +102,8 @@ nonisolated enum FullScreenDetector {
     /// `windowServerPID` at the display's top-left corner with its width. Unknown PID (libproc could not tell, see
     /// `WindowListSnapshot`) → present everywhere (the conservative answer: only the exact-and-frontmost rule can then
     /// match). `separateSpaces` false ("Displays have separate Spaces" off): only the main display has a menu bar, so
-    /// every other display counts as present for the same reason (its missing menu bar says nothing).
+    /// every other display counts as present for the same reason (its missing menu bar says nothing; `evaluate` then
+    /// takes the frontmost app's window as the evidence, below a notch band as for an exact cover).
     static func observedMenuBar(windows: [Window], displays: [Display], windowServerPID: Int32?,
                                 separateSpaces: Bool = true) -> [DisplayKey: Bool] {
         var result: [DisplayKey: Bool] = [:]
@@ -134,24 +136,30 @@ nonisolated enum FullScreenDetector {
                          separateSpaces: Bool = true) -> Result {
         evaluate(windows: windows, displays: displays, context: context,
                  menuBarPresent: observedMenuBar(windows: windows, displays: displays, windowServerPID: windowServerPID,
-                                                 separateSpaces: separateSpaces))
+                                                 separateSpaces: separateSpaces),
+                 separateSpaces: separateSpaces)
     }
 
     /// Evaluates every display. `windows` is front to back (the window server's order); `menuBarPresent` is the
-    /// effective presence per display (missing = present).
+    /// effective presence per display (missing = present). `separateSpaces` false: a display other than the main one
+    /// has no menu bar of its own, so its (always present) menu bar says nothing and the frontmost app's window is the
+    /// only evidence, for an exact cover and, on a notched built-in, for one below the notch band alike (C-SIGNALS-5).
     static func evaluate(windows: [Window], displays: [Display], context: Context,
-                         menuBarPresent: [DisplayKey: Bool]) -> Result {
+                         menuBarPresent: [DisplayKey: Bool], separateSpaces: Bool = true) -> Result {
         let candidates = windows.filter { counts($0, context) }
         var fronts: [DisplayKey: Front] = [:]
         for display in displays {
             let present = menuBarPresent[display.key] ?? true
+            let hasOwnMenuBar = separateSpaces || isMain(display)
             var front = Front()
             for window in candidates {
+                let frontmost = window.ownerPID == context.frontmostPID
                 let covers: Bool
                 switch coverage(window.bounds, display) {
-                case .exact?: covers = window.ownerPID == context.frontmostPID || !present
+                case .exact?: covers = frontmost || !present
                 // A zoomed window on a notched display has the same frame: only a missing menu bar tells them apart.
-                case .belowBand?: covers = !present
+                // A display without a menu bar of its own has none to miss: frontmost is the evidence, as for .exact.
+                case .belowBand?: covers = !present || (!hasOwnMenuBar && frontmost)
                 case nil: covers = false
                 }
                 if covers { front = Front(isFullScreen: true, ownerPID: window.ownerPID); break }

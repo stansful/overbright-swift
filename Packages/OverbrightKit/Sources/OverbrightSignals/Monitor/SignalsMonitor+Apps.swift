@@ -4,7 +4,7 @@
 // and the KVO of `NSWorkspace.runningApplications` (every app, agent and accessory apps included: most boosters and
 // gamma writers run that way, `RunningAppsObserver`). Each report re-reads the conflicts first, so the snapshot is
 // current when the event arrives; then `appLaunched` and `appTerminated` are posted once per process, whichever source
-// came first (`AppEventFilter`), and a termination requests the full-screen re-check.
+// came first (`AppEventFilter`), and a regular app's termination requests the full-screen re-check.
 // Thread: main (both sources deliver on the main run loop).
 import Foundation
 import OverbrightCore
@@ -44,14 +44,19 @@ extension SignalsMonitor {
     }
 
     /// Launches and terminations from either source: the conflicts first, then each launch and termination posted once,
-    /// then the full-screen re-check after a termination.
+    /// then the full-screen re-check after a regular app's termination.
+    /// Every termination is posted, a background-only process's too (an XPC service, a bundle-less tool): any table
+    /// writer's death resets every display, so the engine's 50 ms drift check needs them, and it runs only while a
+    /// display is scaled or dimmed (§4.8). The re-check is for regular apps only: another app's window counts as full
+    /// screen only while that app is frontmost (`FullScreenDetector.counts`), and when a frontmost accessory app quits,
+    /// the next app's activation requests the re-check; a background-only process is never frontmost (C-SIGNALS-1).
     func appsChanged(_ change: RunningAppsChange) {
         refreshConflicts(launched: change.added, terminated: Set(change.removed.map(\.processID)))
         let launched = change.added.filter { appEvents.shouldPostLaunch($0.processID) }
         let terminated = change.removed.filter { appEvents.shouldPostTermination($0.processID) }
         for app in launched { post(.appLaunched(bundleID: app.bundleID)) }
         for app in terminated { post(.appTerminated(bundleID: app.bundleID, processID: app.processID)) }
-        if !terminated.isEmpty { fullScreen.request() }
+        if terminated.contains(where: \.isRegular) { fullScreen.request() }
     }
 
     /// Re-reads the running conflicts after a launch or termination and publishes them.

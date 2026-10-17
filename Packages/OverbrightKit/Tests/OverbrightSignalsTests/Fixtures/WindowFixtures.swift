@@ -35,6 +35,11 @@ enum WindowFixtures {
     /// The MSI alone at the origin (the lid-closed recording).
     static let msiAlone = FullScreenDetector.Display(key: DisplayFixture.Keys.mpg322ux,
                                                      bounds: CGRect(x: 0, y: 0, width: 2560, height: 1440), notchBand: 0)
+    /// The notched built-in as a secondary display: the MSI is the main display at the origin (`msiAlone`; Displays ▸
+    /// Arrange moved the menu bar to it) and the built-in lies to its left, bottoms aligned.
+    static let builtInSecondary = FullScreenDetector.Display(key: DisplayFixture.Keys.builtIn,
+                                                             bounds: CGRect(x: -1728, y: 323, width: 1728, height: 1117),
+                                                             notchBand: 32)
 
     static func window(_ pid: Int32, _ x: CGFloat, _ y: CGFloat, _ width: CGFloat, _ height: CGFloat,
                        layer: Int = 0, alpha: Double = 1) -> Window {

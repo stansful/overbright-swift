@@ -87,6 +87,33 @@ import Testing
         #expect(FullScreenDetector.isMain(F.builtIn) && FullScreenDetector.isMain(F.msiAlone) && !FullScreenDetector.isMain(F.msi))
     }
 
+    @Test func withSpacesAcrossDisplaysTheFrontmostAppCoversANotchedSecondaryBuiltInBelowTheBand() {
+        // "Displays have separate Spaces" off, the MSI the main display: the notched built-in has no menu bar of its
+        // own, so its native full-screen window (below the notch band) counts while its owner is frontmost, as an
+        // exact cover does there, whether or not the WindowServer was identified; never a background app's
+        // (C-SIGNALS-5).
+        let displays = [F.msiAlone, F.builtInSecondary]
+        let notes = F.window(F.notes, -1728, 355, 1728, 1085)
+        let typing = F.window(F.editor, 100, 100, 800, 600)
+        func fullScreen(_ windows: [F.Window], frontmost: Int32, separateSpaces: Bool = false,
+                        windowServerPID: Int32? = F.windowServer) -> Set<DisplayKey> {
+            FullScreenDetector.evaluate(windows: windows, displays: displays, context: F.context(frontmost: frontmost),
+                                        windowServerPID: windowServerPID, separateSpaces: separateSpaces).fullScreenDisplays
+        }
+        #expect(FullScreenDetector.isMain(F.msiAlone) && !FullScreenDetector.isMain(F.builtInSecondary))
+        #expect(FullScreenDetector.coverage(notes.bounds, F.builtInSecondary) == .belowBand)
+        let spanning = [F.menuBar(on: F.msiAlone), notes, typing]
+        #expect(fullScreen(spanning, frontmost: F.notes) == [builtInKey])
+        #expect(fullScreen(spanning, frontmost: F.editor).isEmpty)
+        #expect(fullScreen(spanning, frontmost: F.notes, windowServerPID: nil) == [builtInKey])
+        // With separate Spaces the built-in reads its own menu bar again: present (or unidentified), the window is a
+        // zoomed one.
+        let separate = [F.menuBar(on: F.msiAlone), F.menuBar(on: F.builtInSecondary), notes, typing]
+        #expect(fullScreen(separate, frontmost: F.notes, separateSpaces: true).isEmpty)
+        #expect(fullScreen([notes, typing], frontmost: F.notes, separateSpaces: true, windowServerPID: nil).isEmpty)
+        #expect(fullScreen([notes, typing], frontmost: F.editor, separateSpaces: true) == [builtInKey])  // its Space
+    }
+
     @Test func belowTheNotchBandCountsOnlyWithoutTheMenuBar() {
         let belowBand = F.window(F.notes, 0, 32, 1728, 1085)
         // A zoomed window has the same frame while the menu bar shows: not full screen.

@@ -128,7 +128,32 @@ nonisolated final class ScriptedRunningList: NSObject, @unchecked Sendable {
         #expect(seen.map(\.0) == [.appLaunched(bundleID: "com.example.booster"),
                                   .appTerminated(bundleID: "com.example.booster", processID: 201)])
         #expect(seen.map(\.1) == [["test-booster"], []])               // the snapshot first, then the event
-        #expect(harness.monitor.fullScreen.isPending)                  // a termination re-checks full screen
+        #expect(!harness.monitor.fullScreen.isPending)                 // not a regular app: no full-screen re-check
+        token.cancel()
+    }
+
+    /// Background-only processes (XPC services) come and go every few seconds and reach Signals only through the
+    /// running list (C-SIGNALS-1). Each termination is still posted (any table writer's death resets every display, so
+    /// the engine's drift check needs it), but only a regular app's termination re-checks full screen: another app's
+    /// window counts only while that app is frontmost, and a frontmost app that quits is followed by an activation.
+    @Test func onlyARegularAppsTerminationReChecksFullScreen() async {
+        let harness = SignalsHarness()
+        await harness.start()
+        await harness.advance(.seconds(1))                            // the launch full-screen check ran
+        #expect(!harness.monitor.fullScreen.isPending)
+        var seen: [SystemEvent] = []
+        let token = harness.monitor.addEventObserver { seen.append($0) }
+        let service = RunningAppInfo(bundleID: "com.example.helper.xpc", processID: 301, isRegular: false)
+        harness.platform.changeRunningList(added: [service])
+        harness.platform.changeRunningList(removed: [service])
+        #expect(seen == [.appLaunched(bundleID: "com.example.helper.xpc"),
+                         .appTerminated(bundleID: "com.example.helper.xpc", processID: 301)])
+        #expect(!harness.monitor.fullScreen.isPending)
+        harness.platform.changeRunningList(added: [editor])
+        #expect(!harness.monitor.fullScreen.isPending)                // a launch alone never re-checks
+        harness.platform.changeRunningList(removed: [editor])
+        #expect(seen.last == .appTerminated(bundleID: "com.example.editor", processID: 204))
+        #expect(harness.monitor.fullScreen.isPending)
         token.cancel()
     }
 
