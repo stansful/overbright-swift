@@ -4,8 +4,9 @@
 // pop-up, ← and → move a focused slider); ARCHITECTURE.md §3.8 (`FillLightSettings`). One grid: a label column in
 // `.callout`, the controls, and a value column as wide as the widest value, so both sliders start and end at the same x
 // whatever they show; the controls column (the pop-up, no wider than the sliders, and the sliders) takes the rest of the
-// 280-pt inner width, so the value column ends at the card's inner edge (C-PANEL-15). The light itself is WP7's; the
-// card edits its settings.
+// 280-pt inner width, so the value column ends at the card's inner edge (C-PANEL-15). The sliders are PanelUI's own
+// (`PanelSlider`, drawn in shapes): the system slider renders with Metal on every showing (DESIGN.md §17). The light
+// itself is WP7's; the card edits its settings.
 import Foundation
 import OverbrightCore
 import OverbrightDesign
@@ -129,10 +130,7 @@ public struct FillLightCard: View {
 
     private func slider(_ title: String, value: Binding<Double>, in range: ClosedRange<Double>, step: Double,
                         focusValue: PanelFocus, valueText: String) -> some View {
-        Slider(value: value, in: range)
-            .controlSize(.small)
-            .accessibilityLabel(Text(verbatim: title))
-            .accessibilityValue(Text(verbatim: valueText))
+        PanelSlider(value: value, range: range, step: step, label: title, valueText: valueText)
             .panelFocus(focus, focusValue) { towardEnd in
                 value.wrappedValue = Self.stepped(value.wrappedValue, in: range, by: step, towardEnd: towardEnd)
             }
