@@ -56,8 +56,9 @@ import Testing
                     break
                 }
                 if status.isOn, card.readout.state != .off {
-                    let bar = HUDController.level(of: display.key, status: status, settings: services.settings)
-                    #expect(bar == card.level, "\(label): the HUD's bar at \(bar.value), the thumb at \(card.level.value)")
+                    let bar = HUDContent.level(of: display.key, status: status, services: services)
+                    #expect(bar == card.displayedLevel,
+                            "\(label): the HUD's bar at \(bar.value), the thumb at \(card.displayedLevel.value)")
                 }
             }
         }
