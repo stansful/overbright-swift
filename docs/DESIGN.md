@@ -275,6 +275,7 @@ Quit Overbright                           ⌘Q
 ```
 
 - Key equivalents (`‹live›`) show the **live** global shortcut in the current keyboard layout, or nothing when the shortcut is cleared or failed to register (Cranny's `MenuKeyEquivalent`). As built (WP14): named keys (Space, Return, Tab, Delete, Esc, the arrows, F1–F12) come from the combo's key code, never from their localized caps ("Пробел", "Leertaste"); a character key comes from the caps of the current layout.
+- The status sentence names an app in full (`BannerModel.accessibilityLabel`): the panel middle-truncates a long app name (§5.8) and keeps it whole for its help tag and VoiceOver, but a menu row has no help tag, and the menu sizes itself to its longest row (WP14).
 - Preset items list only the presets shown on that display (§5.5); the dim item uses the last dim level (default "Dimmed · 25%", light relative to Standard).
 - **Don't Use on This Display** turns extra brightness off for that display and returns it to Standard (dims undone); the opposite item turns extra brightness on (an OLED shows its notice first, §12.4).
 - With no display that can boost, the presets are replaced by a disabled "No Extra Brightness on This Display"; a display that can only dim keeps Standard and Dimmed.
@@ -401,7 +402,7 @@ A chip appears **on its own line under the readout**, only when a **per-display*
 
 ### 5.8 Banners
 
-At most one banner, between the header and the first card, for **a reason that applies to all displays** (a user pause, a conflict, Focus, heat, Low Power, battery, the schedule) or an attention state (a stop to prevent flicker, colours changed by another app): `card` fill tinted 10 % with the semantic colour, a 14-pt glyph, the sentence (`banner`) and up to two text buttons (primary first). The sentence is never cut: the banner grows in height for a long translation while the card list below scrolls, and only an app name in it is middle-truncated (to 200 pt, as a chip does), with the full sentence in the help tag and VoiceOver. Banners reflect state, so they have no close button; they leave with `bannerOut` when the cause clears, and the next reason in precedence takes their place. The same sentence is the first line of the right-click menu (§4.3). Precedence and exact copy: §12.3.
+At most one banner, between the header and the first card, for **a reason that applies to all displays** (a user pause, a conflict, Focus, heat, Low Power, battery, the schedule) or an attention state (a stop to prevent flicker, colours changed by another app): `card` fill tinted 10 % with the semantic colour, a 14-pt glyph, the sentence (`banner`) and up to two text buttons (primary first). The sentence is never cut: the banner grows in height for a long translation while the card list below scrolls, and only an app name in it is middle-truncated (to 200 pt, as a chip does), with the full sentence in the help tag and VoiceOver. Banners reflect state, so they have no close button; they leave with `bannerOut` when the cause clears, and the next reason in precedence takes their place. The same sentence is the first line of the right-click menu (§4.3), there with the app name in full. Precedence and exact copy: §12.3.
 
 ### 5.9 Footer guard chips
 
@@ -808,7 +809,7 @@ Action destinations: "Choose Peak…" opens Settings ▸ Displays at the display
 | on battery | "Paused while on battery." | Change power rules… |
 | schedule | "Extra brightness is allowed from 08:00 to 20:00." | Change hours… |
 
-The same sentence is the first, disabled line of the right-click menu, and its primary action the second line in title case ("Resume", "Use Compatibility Mode", "Continue Anyway", "Open System Settings", "Try Again", "Change Power Rules…", "Change Hours…").
+The same sentence, with the app name in full, is the first, disabled line of the right-click menu, and its primary action the second line in title case ("Resume", "Use Compatibility Mode", "Continue Anyway", "Open System Settings", "Try Again", "Change Power Rules…", "Change Hours…").
 
 ### 12.4 Sheets and alerts (title-case buttons)
 

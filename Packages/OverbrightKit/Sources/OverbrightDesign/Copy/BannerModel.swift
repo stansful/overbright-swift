@@ -2,7 +2,8 @@
 // §6.3. Seam written by WP0a (ARCHITECTURE.md §10.0): the type and `make(_:)` are fixed; WP9 writes the copy and the
 // precedence-specific actions. The same sentence is the first, disabled line of the status menu, and its primary action
 // the second line in title case. The panel shows the whole sentence, however many lines it takes; an app name in it is
-// middle-truncated to `nameWidth`, and `accessibilityLabel` keeps the full sentence for the help tag and VoiceOver.
+// middle-truncated to `nameWidth`, and `accessibilityLabel` keeps the full sentence for the help tag, VoiceOver and
+// the status menu (a menu row has no help tag; WP14 C-DESIGN-1).
 import Foundation
 import OverbrightCore
 
@@ -14,7 +15,8 @@ public nonisolated struct BannerModel: Hashable, Sendable {
     public var color: SemanticColor
     /// The sentence ("Paused because Low Power Mode is on."), already localized, an app name in it middle-truncated.
     public var sentence: String
-    /// The sentence with every name in full: VoiceOver's label, and the help tag when it differs from `sentence`.
+    /// The sentence with every name in full: VoiceOver's label, the status menu's first line, and the help tag when it
+    /// differs from `sentence`.
     public var accessibilityLabel: String
     /// The primary action's title (sentence case), if any.
     public var primaryTitle: String?

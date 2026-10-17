@@ -2,7 +2,9 @@
 // fresh each time the menu opens. DESIGN.md §4.3 (rows, order and exact English, live key equivalents, per-display
 // quick levels with the shown presets, "All Displays ▸" while linked, the pause line + Resume, Update Available),
 // §4.2 (toggle mode puts Show Panel first), §12.3 (the banner's sentence, naming the display a stop happened on, and
-// its action as the first two lines).
+// its action as the first two lines). The first line names an app in full (`BannerModel.accessibilityLabel`): the
+// panel middle-truncates a long name and keeps the full one for its help tag and VoiceOver, but a menu row has no help
+// tag, and a menu grows as wide as its longest row anyway (WP14 C-DESIGN-1).
 // Menus cannot be rendered; `dump()` is what tests and `--qa-menu` read.
 import Foundation
 import OverbrightCore
@@ -11,7 +13,7 @@ import OverbrightPanelUI
 
 /// One row of the status menu.
 enum StatusMenuRow: Equatable {
-    /// The banner's sentence, disabled.
+    /// The banner's sentence with every name in full, disabled.
     case status(String)
     /// The banner's action.
     case bannerAction(BannerAction)
@@ -59,7 +61,7 @@ struct StatusMenuModel {
         var rows: [StatusMenuRow] = []
         let titles = CardTitles.titles(for: status.displays)
         if let banner = status.banner {
-            rows.append(.status(BannerModel.make(banner, displayNames: titles, in: .app).sentence))
+            rows.append(.status(BannerModel.make(banner, displayNames: titles, in: .app).accessibilityLabel))
             if let action = BannerAction.primary(for: banner) { rows.append(.bannerAction(action)) }
         }
         if settings[GeneralSettings.clickAction] == .toggle { rows.append(.showPanel) }
