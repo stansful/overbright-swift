@@ -1,11 +1,13 @@
 // OverbrightSettingsUITests/PausedAppsEditorTests.swift — Automations ▸ Pause for these apps (DESIGN.md §7.5;
 // ARCHITECTURE.md §3.4, §6.5): adding (once, case-insensitively, with the suggested mode), removing, changing an app's
 // mode, the suggestions (not listed yet, installed only), Reset to Default restoring the twelve apps and the switch,
-// and the VoiceOver names of the app rows (WP14).
+// the VoiceOver names of the app rows, and the add control as DESIGN.md's + menu (WP14).
 // Synthetic bundle IDs only, besides the default list's (ARCHITECTURE.md D3).
+import AppKit
 import Foundation
 import OverbrightCore
 import OverbrightDesign
+import SwiftUI
 import Testing
 @testable import OverbrightSettingsUI
 
@@ -80,6 +82,20 @@ import Testing
         #expect(OtherAppsSection.alwaysContinueLabel(colors).contains(BidiIsolation.isolate("Colors")))
         #expect(OtherAppsSection.alwaysContinueLabel(tint).contains(BidiIsolation.isolate("מסנן")))
         #expect(OtherAppsSection.alwaysContinueLabel(colors) != OtherAppsSection.alwaysContinueLabel(tint))
+    }
+
+    /// The add control is DESIGN.md §7.5's **+** menu: a glyph, as narrow in every language as in English (the words
+    /// "Add App" took about twice the room, more in a long translation), with "Add App" as its VoiceOver label and help
+    /// tag (C-SETTINGS-11).
+    @Test func theAddControlIsAPlusMenuNamedForVoiceOver() {
+        let menu = AddPausedAppMenu(rules: PausedAppDefaults.rules) { _ in }
+        let width = NSHostingView(rootView: menu).fittingSize.width
+        let words = NSHostingView(rootView: Menu { Button {} label: { Text(verbatim: "Choose…") } } label: {
+            Text(verbatim: AddPausedAppMenu.title)
+        }.fixedSize()).fittingSize.width
+        #expect(AddPausedAppMenu.symbol == .plus)
+        #expect(width + 20 < words, "the + menu is \(width) pt, the words \(words) pt")
+        #expect(AddPausedAppMenu.title == "Add App")
     }
 
     /// Turning the list's switch off keeps every rule (DESIGN.md §5.9).

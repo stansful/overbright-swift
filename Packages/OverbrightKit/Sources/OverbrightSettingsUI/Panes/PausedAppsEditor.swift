@@ -1,5 +1,6 @@
 // OverbrightSettingsUI/Panes/PausedAppsEditor.swift — Automations ▸ Pause for these apps (DESIGN.md §7.5; D10): the
-// list's switch (`automations.pauseForListedApps`; turning it off keeps every rule) with the Add App menu, then one row
+// list's switch (`automations.pauseForListedApps`; turning it off keeps every rule) with the + menu (VoiceOver and its
+// help tag: "Add App"; WP14 C-SETTINGS-11), then one row
 // per app with its icon, Finder's name, its mode (While in front · While playing (beta)) and a remove button. Ported
 // from Cranny's excluded-apps editor (the owner's MIT code): apps come from the running apps, an Open panel in
 // /Applications (the user's own choice, so it raises no prompt) or the suggestions; rows name their app with Core's
@@ -115,10 +116,20 @@ extension PausedAppsEditor {
     }
 }
 
-/// "Add App": the running apps, Choose…, and the suggested video apps that are installed.
-private struct AddPausedAppMenu: View {
+/// The + menu ("Add App" to VoiceOver and in its help tag): the running apps, Choose…, and the suggested video apps
+/// that are installed.
+struct AddPausedAppMenu: View {
     let rules: [PausedAppRule]
     let add: @MainActor ([String]) -> Void
+
+    /// The menu's glyph (DESIGN.md §7.5: a **+** menu, as wide in every language).
+    static let symbol = OverbrightSymbol.plus
+
+    /// "Add App": the menu's VoiceOver label and help tag.
+    static var title: String {
+        String(localized: "Add App", bundle: .module,
+               comment: "Settings ▸ Automations: VoiceOver label and help tag of the + menu that adds an app to the pause list (title case)")
+    }
 
     var body: some View {
         Menu {
@@ -147,8 +158,10 @@ private struct AddPausedAppMenu: View {
                 }
             }
         } label: {
-            Text("Add App", bundle: .module, comment: "Settings ▸ Automations: menu button that adds an app to the pause list (title case)")
+            Label { Text(verbatim: Self.title) } icon: { Image(symbol: Self.symbol) }
+                .labelStyle(.iconOnly)
         }
+        .help(Self.title)
         .fixedSize()
     }
 

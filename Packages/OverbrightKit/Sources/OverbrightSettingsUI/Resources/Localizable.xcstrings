@@ -2946,7 +2946,7 @@
       }
     },
     "Add App" : {
-      "comment" : "Settings ▸ Automations: menu button that adds an app to the pause list (title case)",
+      "comment" : "Settings ▸ Automations: VoiceOver label and help tag of the + menu that adds an app to the pause list (title case)",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
