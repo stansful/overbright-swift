@@ -7,9 +7,34 @@ import os
 
 /// One observable box per key, so a view reading `settings[DisplaySettings.linkLevels]` is invalidated
 /// only by that key (fine-grained Observation; no global "settings changed" storms).
-@MainActor @Observable final class SettingBox<Value: Codable & Sendable & Equatable> {
-    var value: Value
-    init(_ value: Value) { self.value = value }
+///
+/// Observable by hand rather than with `@Observable`: the macro's accessors evaluate the key path literal
+/// `\.value` on every access, and in a generic class that instantiates the key path again each time (its generic
+/// argument demangled): ≈ 750 ns per read, against ≈ 25 ns (≈ 75 ns while tracked) with the key path made once per
+/// box. Every view body and `observe` closure reads settings, so this was the settings getter's whole cost.
+@MainActor final class SettingBox<Value: Codable & Sendable & Equatable>: Observable {
+    private let registrar = ObservationRegistrar()
+    /// `\SettingBox<Value>.value`, made once.
+    private let valuePath: KeyPath<SettingBox<Value>, Value>
+    private var stored: Value
+
+    /// The value; reading it inside a tracking closure tracks this box only. An equal value notifies nobody (as the
+    /// macro's setter for an `Equatable` value).
+    var value: Value {
+        get {
+            registrar.access(self, keyPath: valuePath)
+            return stored
+        }
+        set {
+            guard newValue != stored else { return }
+            registrar.withMutation(of: self, keyPath: valuePath) { stored = newValue }
+        }
+    }
+
+    init(_ value: Value) {
+        stored = value
+        valuePath = \SettingBox<Value>.value
+    }
 }
 
 /// Typed, namespaced, observable settings (`services.settings`): reading a key inside a SwiftUI body or `observe`

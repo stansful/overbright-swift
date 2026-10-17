@@ -1906,6 +1906,8 @@ import os
 }
 ```
 
+As built (energy, E7): `SettingBox` is observable by hand, with its key path made once per box, instead of `@Observable`. The macro's accessors evaluate `\.value` on every access, and in a generic class that instantiates the key path each time (its generic argument demangled, `swift_getTypeByMangledName`): ≈ 750 ns per read against ≈ 25 ns, ≈ 75 ns while tracked (`-O` micro-benchmark, M4 Max). That, not the conditional cast `as? SettingBox<V>` (a typed lookup measured within 2 %), was the settings getter's cost in every view body (78 of 1 411 busy samples in the panel drag, R-runtime-baseline C6). Observation stays per key, and writing the value a box holds notifies nobody, as the macro's setter does for an `Equatable` value (`aBoxObservesOnlyItsKey`).
+
 **Defaults at a glance** (the Settings rows that edit them are in DESIGN.md §7):
 
 | Key | Default | Range / values | Read by |
