@@ -44,9 +44,12 @@ extension BoostEngine {
         armAutoOff()
     }
 
-    /// Master off: every deadline goes (zero work while off); an unanswered "Keep this level?" reverts.
-    func turnOff() {
-        persistLevels()
+    /// Master off: every deadline goes (zero work while off); an unanswered "Keep this level?" reverts. The levels
+    /// still owed reach UserDefaults first, unless `persisting` is false: quit's synchronous `stopNow()` writes the
+    /// baselines before that settings write (a JSON encode and a cfprefsd message) and the levels after them
+    /// (`finishStop`).
+    func turnOff(persisting: Bool = true) {
+        if persisting { persistLevels() }
         if pendingLowLevel != nil { restoreLowLevel() }
         guard isMasterOn else { return }
         isMasterOn = false
