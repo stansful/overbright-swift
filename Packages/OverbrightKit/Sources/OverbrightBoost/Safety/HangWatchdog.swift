@@ -10,17 +10,18 @@
 // `hangTimeout` (3 s) after it was sent means the main thread is stuck: under the ledger lock the watchdog bumps the
 // hang epoch, writes every ledger baseline and forgets the entries, then raises the fired flag and journals
 // `hang.fired`. It fires once per stall; the next pong re-arms it. A stall is therefore caught 3–5 s after it starts
-// (3 s when it starts while a ping waits for its answer, almost 5 s when it starts just after an answer). The timer
-// wakes only at ping times (the grid points below) and at one timeout deadline, never in between.
+// (3 s when it starts while a ping waits for its answer, almost 5 s when it starts just after an answer). After its
+// first ping the timer wakes only at grid points (a ping's, or an idle tick's while a ping is out) and at the ping's
+// timeout deadline; after a restore it ticks every `hangPing` until the main thread answers.
 //
 // Pings go out on the shared 2 s grid of the engine's time source (ARCHITECTURE.md D29; `TimeSource.nextGridPoint`):
 // the first one when the ledger fills, every later one at the next multiple of `hangPing` since the time source's
-// origin, at most `hangPing` away, so the ping and its main-queue pong share the wake-up of the drift check and of
-// Signals' watch, which wait for the same points. While a ping waits for its answer the timer wakes at the earlier of
-// its timeout deadline and the next grid point, so a new ping always follows an answer within `hangPing` (an answer
-// that comes after a short first wait would otherwise let the next ping slip to the deadline, and a stall right after
-// it would take up to 6 s to catch). The deadline itself (ping + `hangTimeout`), the 50 ms leeway and the
-// once-per-stall rule are unchanged.
+// origin, at most `hangPing` away, so the ping and its main-queue pong share the wake-up of the drift checks
+// (`DisplayController.gridDelay` ends on the same points: `SharedGridTests`) and of Signals' watch, which wait for them
+// too. While a ping waits for its answer the timer wakes at the earlier of its timeout deadline and the next grid
+// point, so a new ping always follows an answer within `hangPing` (an answer that comes after a short first wait would
+// otherwise let the next ping slip to the deadline, and a stall right after it would take up to 6 s to catch). The
+// deadline itself (ping + `hangTimeout`), the 50 ms leeway and the once-per-stall rule are unchanged.
 import Dispatch
 import Foundation
 import OverbrightCore
@@ -187,8 +188,8 @@ public nonisolated final class HangWatchdog: Sendable {
     /// One tick at uptime `now` (ns) on the state alone: send a ping when none is out; once the ping that is out has
     /// waited `timeout`, fire, once per stall; otherwise nothing. Returns the step and the delay (ns) to the next tick:
     /// `interval` after a ping or a timeout, else the rest of the ping's timeout, so the timer wakes only at ping times
-    /// and at one deadline (`gridStep` moves the ping times onto the grid). Pure, so `HangWatchdogTests` checks the
-    /// 3–5 s window on explicit times.
+    /// and at one deadline (`gridStep` moves the ping times onto the grid and adds a grid tick while a ping is out).
+    /// Pure, so `HangWatchdogTests` checks the 3–5 s window on explicit times.
     static func step(_ s: inout State, at now: UInt64, interval: UInt64,
                      timeout: UInt64) -> (step: Step, next: UInt64) {
         guard let sent = s.pingSentAt else {
