@@ -23,7 +23,7 @@ smoke:           ## Run build/Overbright.app --diagnostics: bundles + translatio
 qa-matrix:       ## Debug app under --qa-simulate: every fixture's scenario, symbol/banner/chips checked; Welcome writes nothing (after make debug)
 	@scripts/qa-matrix.sh
 
-soak:            ## Debug app under --qa-simulate for MINUTES (30, at least 17): footprint growth per cycle, no periodic own wake-ups while off (after make debug)
+soak:            ## Debug app under --qa-simulate for MINUTES (30, at least 17): footprint growth per cycle; no own idle wake-up in the final off phase, none beating periodically after launch (after make debug)
 	@scripts/soak.sh
 
 dist: build      ## zip + dmg + sha256 (+ notarization with SIGN_IDENTITY/TEAM_ID/NOTARY_PROFILE) -> dist/
