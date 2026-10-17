@@ -95,6 +95,33 @@ import Testing
         #expect(harness.platform.idleReads == reads + 3)                     // back to one deadline
     }
 
+    /// The input poll waits for the shared 2 s grid (D29), so it shares the wake-up of the other 2 s activities; the
+    /// deadline before it does not: it ends where the threshold does.
+    @MainActor @Test func theInputPollRunsOnTheGridAndTheDeadlineDoesNot() async {
+        let harness = SignalsHarness(fixture: .mpg322uxHDROn)
+        harness.settings[AutomationSettings.pauseForFullScreenVideo] = false     // no watch: the idle source sleeps alone
+        harness.settings[AutomationSettings.pauseForListedApps] = false
+        await harness.start()
+        await harness.advance(.milliseconds(700))
+        harness.platform.idleSeconds = 60
+        harness.monitor.setBoostActive(true)                                  // at 0.7 s: 240 s to the threshold
+        let reads = harness.platform.idleReads
+        harness.platform.idleSeconds = 300.05                                 // nobody touches the Mac meanwhile
+        await harness.advance(.seconds(1))                                    // the boost-on full-screen check ran
+        #expect(harness.time.sleeperCount == 1)
+        #expect(harness.time.nextDeadline == MonotonicInstant(sinceOrigin: .milliseconds(240_800)))
+        await harness.advance(.milliseconds(239_100))                         // 240.8 s
+        #expect(harness.platform.idleReads == reads + 1 && harness.monitor.snapshot.isIdleBeyondThreshold)
+        #expect(harness.time.nextDeadline == MonotonicInstant(sinceOrigin: .seconds(242)))
+        await harness.advance(.milliseconds(1_200))                           // the first poll, 1.2 s later
+        #expect(harness.platform.idleReads == reads + 2)
+        #expect(harness.time.nextDeadline == MonotonicInstant(sinceOrigin: .seconds(244)))
+        harness.platform.idleSeconds = 0.4                                    // the pointer moved
+        await harness.advance(.seconds(2))                                    // 244 s: back to one deadline
+        #expect(!harness.monitor.snapshot.isIdleBeyondThreshold)
+        #expect(harness.time.nextDeadline == MonotonicInstant(sinceOrigin: .milliseconds(543_700)))
+    }
+
     @MainActor @Test func videoHoldsTheDisplayAwake() async {
         let harness = SignalsHarness(fixture: .mpg322uxHDROn)
         await harness.start()

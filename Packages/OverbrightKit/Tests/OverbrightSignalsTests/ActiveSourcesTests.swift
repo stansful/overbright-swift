@@ -105,19 +105,23 @@ import Testing
         #expect(!harness.monitor.activeSources.contains(.fullScreenWatch))
     }
 
+    /// The watch re-checks every 2 s on the shared grid (D29; `WatchGridTests` pins the phase): boosting at 1 s, the
+    /// first tick comes at 2 s, then every 2 s, and none after the boost ends.
     @Test func theWatchRechecksEveryTwoSecondsWhileBoosting() async {
         let harness = SignalsHarness()
         await harness.start()
         await harness.advance(.seconds(1))
         let reads = harness.platform.windowReads
         harness.monitor.setBoostActive(true)
-        await harness.advance(.seconds(1))                                    // the boost-on request (0.6 s)
+        await harness.advance(.milliseconds(800))                             // the boost-on request (0.6 s)
         #expect(harness.platform.windowReads == reads + 1)
-        await harness.advance(.milliseconds(4500))                            // ticks 2 s and 4 s after boosting
-        #expect(harness.platform.windowReads == reads + 3)
+        await harness.advance(.milliseconds(200))                             // the first tick, at the grid point 2 s
+        #expect(harness.platform.windowReads == reads + 2)
+        await harness.advance(.milliseconds(4500))                            // ticks at 4 s and 6 s
+        #expect(harness.platform.windowReads == reads + 4)
         harness.monitor.setBoostActive(false)
         await harness.advance(.seconds(10))
-        #expect(harness.platform.windowReads == reads + 3)
+        #expect(harness.platform.windowReads == reads + 4)
     }
 
     @Test func theCameraRuleIsTheOnlySourceIndependentOfTheBoost() async {
