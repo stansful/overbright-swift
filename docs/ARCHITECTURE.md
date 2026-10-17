@@ -1344,6 +1344,12 @@ public protocol TimeSource: Sendable {
     /// Real: Task.sleep with 10 % tolerance (at most 1 s). Manual: suspends until `advance(by:)` passes the deadline.
     func sleep(for duration: Duration) async throws
 }
+extension TimeSource {   // energy pass (T1): an extension method, not a requirement, so no conformer changes
+    /// The next multiple of `period` since the origin strictly after `now`: always in (now, now + period]. Services that
+    /// share one time source (the composition root's `context.time`) and wait for it wake together. Pure form:
+    /// `MonotonicInstant.nextGridPoint(after:every:)`; a period that is not positive returns the instant itself.
+    public func nextGridPoint(every period: Duration) -> MonotonicInstant
+}
 
 // MARK: - Displays (implemented by OverbrightDisplays)
 
