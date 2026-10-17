@@ -1,10 +1,11 @@
 // OverbrightPanelUITests/FooterFitTests.swift — the footer’s three guard chips fit one 304-pt row (DESIGN.md §5.9,
-// §16; ARCHITECTURE.md §8.8 width rule `chip`), and when a long translation would not fit, every chip drops to glyph +
-// value and the row still fits. Measured on the footer row the panel draws (its glyphs as wide as they draw:
+// §16; ARCHITECTURE.md §8.8 width rule `chip`), and when a long translation would not fit, the chips drop to glyph +
+// value one at a time, the battery last, and the row still fits. Measured on the footer row the panel draws (its glyphs as wide as they draw:
 // `battery.25percent` is 21 pt at 12 pt, not 12), for the widest settings (pause below a level, every rule off, a running
 // 1 h 30 min timer), in English and the pseudo-long locale, and in every language Overbright ships (WP15), where the
 // default row must show its words in full. Also: what each chip says for its settings, what VoiceOver hears (the
 // chip's name as the label, its state as the value, in every row style), and that its menu edits exactly that setting.
+import AppKit
 import Foundation
 import OverbrightCore
 import OverbrightDesign
@@ -85,6 +86,65 @@ import Testing
             #expect(FitMeasure.width(footer, offered: PanelLayout.footerWidth) <= PanelLayout.footerWidth)
             #expect(FitMeasure.idealWidth(footer.row(.glyphs)) <= PanelLayout.footerWidth)
         }
+    }
+
+    /// A row that does not fit in full drops its chips to glyph + value one at a time, the timer first and the battery
+    /// last: in Russian a running timer ("Выкл. через 1 мин") dropped every chip, leaving "20 %" alone, which reads as a
+    /// battery level, though "Ниже 20 %" and "Автопауза" fit beside the timer's "1 мин" (WP14 visual QA).
+    @Test func theChipsDropToGlyphAndValueOneAtATimeTheBatteryLast() throws {
+        let words = try #require(PanelWords("ru"), "ru: no PanelUI table")
+        let (percent, minute) = (words.percent(20), words.duration(minutes: 1))
+        let chips = defaultChips().map { chip -> FooterChip in
+            let (text, compact): (String, String) = switch chip.kind {
+            case .battery: (words.below(percent), percent)
+            case .autoPause: (words.autoPause, "")
+            case .timer: (words.offIn(minute), minute)
+            }
+            return FooterChip(kind: chip.kind,
+                              model: GuardChipModel(symbol: chip.model.symbol, text: text, accessibilityLabel: text),
+                              compact: GuardChipModel(symbol: chip.compact.symbol, text: compact, accessibilityLabel: text),
+                              menu: chip.menu)
+        }
+        let footer = PanelFooter(chips: chips, focus: nil)
+        let full = rowWidth(chips, .full)
+        let timerDropped = FitMeasure.idealWidth(footer.row(compacting: [.timer]))
+        try #require(full > PanelLayout.footerWidth && timerDropped <= PanelLayout.footerWidth,
+                     "the full row \(full) pt, with the timer as glyph + value \(timerDropped) pt")
+        func chipWidth(_ model: GuardChipModel) -> CGFloat {
+            max(FitMeasure.idealWidth(GuardChip(model, menu: [])), HitTarget.footerChipWidth)
+        }
+        let drawn = try drawnChipWidths(footer)
+        let expected = [chipWidth(chips[0].model), chipWidth(chips[1].model), chipWidth(chips[2].compact)]
+        #expect(drawn.count == 3 && zip(drawn, expected).allSatisfy { abs($0 - $1) < 2 },
+                "drawn chips \(drawn) pt; «\(chips[0].model.text)», «\(chips[1].model.text)» and the timer's «\(minute)» are \(expected) pt")
+        #expect(PanelFooter.compactingOrder == [.timer, .autoPause, .battery])
+    }
+
+    /// The widths of the chips the footer draws in its 304 pt: the runs of chip fill along the row's middle, over
+    /// white, in Light (a borderless window that is never ordered in).
+    private func drawnChipWidths(_ footer: PanelFooter) throws -> [CGFloat] {
+        let host = NSHostingView(rootView: footer.background(Color.white).overbrightThemeRoot())
+        host.appearance = NSAppearance(named: .aqua)
+        host.frame = CGRect(x: 0, y: 0, width: PanelLayout.footerWidth, height: PanelLayout.barHeight)
+        let window = NSWindow(contentRect: host.frame, styleMask: [.borderless], backing: .buffered, defer: true)
+        window.contentView = host
+        host.layoutSubtreeIfNeeded()
+        let rep = try #require(host.bitmapImageRepForCachingDisplay(in: host.bounds))
+        host.cacheDisplay(in: host.bounds, to: rep)
+        window.contentView = nil
+        let scale = CGFloat(rep.pixelsWide) / host.bounds.width
+        let y = rep.pixelsHigh / 2
+        var widths: [CGFloat] = []
+        var start: Int?
+        for x in 0...rep.pixelsWide {
+            let isChip = x < rep.pixelsWide && (rep.colorAt(x: x, y: y).map { $0.brightnessComponent < 0.985 } ?? false)
+            if isChip, start == nil { start = x }
+            if !isChip, let first = start {
+                widths.append(CGFloat(x - first) / scale)
+                start = nil
+            }
+        }
+        return widths
     }
 
     // MARK: Every language (WP15)
