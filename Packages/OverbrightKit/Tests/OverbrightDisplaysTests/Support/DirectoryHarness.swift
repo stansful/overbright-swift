@@ -20,16 +20,35 @@ nonisolated final class LockedValue<Value: Sendable>: @unchecked Sendable {
     }
 }
 
-/// Scripted CoreGraphics/NSScreen reads.
+/// Scripted CoreGraphics/NSScreen reads, in the real reader's two steps: the online IDs with their NSScreen facts,
+/// then the CoreGraphics facts of those IDs (the step that reads every transfer table).
 final class RawSource {
-    /// What the next read returns.
+    /// What the displays look like now (the next reads see it).
     var displays: [RawDisplay]
-    /// Number of reads so far.
+    /// Online IDs that have no UUID (yet): listed online, left out by the CoreGraphics read like `DisplayKey.of` nil.
+    var withoutUUID: Set<CGDirectDisplayID> = []
+    /// Number of CoreGraphics reads (UUID, capacity, table read, vendor, model, serial, mirror per display) so far.
     private(set) var reads = 0
+    /// Number of online-ID and NSScreen reads so far.
+    private(set) var screenReads = 0
     init(_ displays: [RawDisplay]) { self.displays = displays }
-    func read() -> [RawDisplay] {
+
+    /// `CoreGraphicsDisplayReader.onlineScreens()`.
+    func readScreens() -> OnlineScreens {
+        screenReads += 1
+        let ids = displays.map(\.id) + withoutUUID.sorted().filter { id in !displays.contains { $0.id == id } }
+        let screens = displays.compactMap { raw in raw.screen.map { (raw.id, $0) } }
+        return OnlineScreens(ids: ids, screens: Dictionary(screens, uniquingKeysWith: { first, _ in first }))
+    }
+
+    /// `CoreGraphicsDisplayReader.displays(in:gamma:)`: the listed displays that have a UUID, with `online`'s screens.
+    func readDisplays(_ online: OnlineScreens) -> [RawDisplay] {
         reads += 1
-        return displays
+        return online.ids.compactMap { id in
+            guard !withoutUUID.contains(id), var raw = displays.first(where: { $0.id == id }) else { return nil }
+            raw.screen = online.screens[id]
+            return raw
+        }
     }
 }
 
@@ -52,7 +71,8 @@ final class DirectoryHarness {
         let box = LockedValue(registry)
         self.raw = raw
         self.registry = box
-        model = DisplayDirectoryModel(time: time, readRaw: { raw.read() }, readRegistry: { box.value })
+        model = DisplayDirectoryModel(time: time, readScreens: { raw.readScreens() },
+                                      readDisplays: { raw.readDisplays($0) }, readRegistry: { box.value })
         token = model.addEventObserver { [weak self] event in
             guard let self else { return }
             events.append(event)
