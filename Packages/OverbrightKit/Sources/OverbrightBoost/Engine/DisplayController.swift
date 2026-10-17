@@ -165,16 +165,21 @@ import OverbrightPolicy
         default: true
         }
     }
-    /// Whether Signals' boost-only sources must run for this display (§7.1, DESIGN.md §17): it is scaled or dimmed, or it
-    /// prepares, ramps or holds a boost or a dim. A suspended display whose baseline is written needs none until it
-    /// resumes (a lock, display sleep or fast user switch can last all night; the resume reads the power source again),
-    /// and neither does a display the self-test or a calibration drives (the master is held off).
+    /// Whether Signals' boost-only sources must run for this display (§7.1, D30, DESIGN.md §17): it arms or gates, or it
+    /// ramps toward, holds or disarms from a boost (a boost target, or a table or overlay above its baseline, whatever
+    /// the phase). Every guard those sources feed applies to the boost half only (D10: dimming always works), so a
+    /// dimmed-only display needs none; dim → boost goes through arming, which counts, so the synchronous power read of
+    /// `setBoostActive(true)` still precedes any boost write. A suspended display whose baseline is written needs none
+    /// until it resumes (a lock, display sleep or fast user switch can last all night; the resume reads the power source
+    /// again), and neither does a display the self-test or a calibration drives (the master is held off). The drift
+    /// check and the hang watchdog do not depend on this: they follow the phase and the safety ledger.
     var needsBoostSources: Bool {
         guard !isDriven else { return false }
-        if isScaledOrDimmed { return true }
+        if appliedFactor > 1 + TableWriter.neutralTolerance { return true }
         switch phase {
-        case .arming, .gating, .ramping, .boosted, .dimmed, .disarming: return true
-        case .idle, .failed, .suspended: return false
+        case .arming, .gating: return true
+        case .ramping, .boosted, .disarming: return targetGain != nil
+        case .idle, .failed, .suspended, .dimmed: return false
         }
     }
     /// Arming or gating: preparing.
