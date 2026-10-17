@@ -6,6 +6,7 @@ import AppKit
 import Foundation
 import OverbrightCore
 import ServiceManagement
+import OverbrightTestSupport
 import Testing
 @testable import OverbrightAppShell
 
@@ -120,8 +121,7 @@ private let translocated = URL(filePath: "/private/var/folders/xy/T/AppTransloca
         #expect(controller.state == .disabled)
         fake.status = .enabled                                                   // changed in System Settings meanwhile
         NotificationCenter.default.post(name: NSApplication.didBecomeActiveNotification, object: nil)
-        for _ in 0..<400 where controller.state != .enabled { try await Task.sleep(for: .milliseconds(25)) }
-        #expect(controller.state == .enabled)
+        #expect(await eventually { controller.state == .enabled })
     }
 
     /// The status is an XPC round trip, and only Settings and Welcome show it: neither the launch (`start()`) nor an
@@ -143,7 +143,7 @@ private let translocated = URL(filePath: "/private/var/folders/xy/T/AppTransloca
         }
         defer { NotificationCenter.default.removeObserver(probe) }
         NotificationCenter.default.post(name: NSApplication.didBecomeActiveNotification, object: sender)
-        for _ in 0..<400 where deliveries.count < 1 { try await Task.sleep(for: .milliseconds(25)) }
+        #expect(await eventually { deliveries.count >= 1 })
         #expect(deliveries.count == 1 && fake.statusReads == 0)                  // nothing showed it yet
 
         #expect(controller.state == .enabled && fake.statusReads == 1)           // the first reader asks
@@ -151,7 +151,7 @@ private let translocated = URL(filePath: "/private/var/folders/xy/T/AppTransloca
 
         fake.status = .notRegistered                                             // changed in System Settings
         NotificationCenter.default.post(name: NSApplication.didBecomeActiveNotification, object: sender)
-        for _ in 0..<400 where controller.state != .disabled { try await Task.sleep(for: .milliseconds(25)) }
+        #expect(await eventually { controller.state == .disabled })
         #expect(controller.state == .disabled && fake.statusReads >= 2)
     }
 }

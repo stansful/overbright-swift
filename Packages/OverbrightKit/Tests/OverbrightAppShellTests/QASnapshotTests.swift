@@ -11,6 +11,7 @@ import OverbrightCore
 import OverbrightDesign
 import OverbrightPanelUI
 import SwiftUI
+import OverbrightTestSupport
 import Testing
 @testable import OverbrightAppShell
 
@@ -148,11 +149,7 @@ import Testing
         try? await Task.sleep(for: .milliseconds(1_300))
         #expect(!exists(folder) && !levelWasSet(), "a surface showed before the launch work was done")
         boost.status.isReady = true
-        let deadline = ContinuousClock.now + .seconds(5)
-        while !(exists(folder) && levelWasSet()), ContinuousClock.now < deadline {
-            try? await Task.sleep(for: .milliseconds(20))
-        }
-        #expect(exists(folder) && levelWasSet())
+        #expect(await eventually { exists(folder) && levelWasSet() })
     }
 
     private func exists(_ url: URL) -> Bool { FileManager.default.fileExists(atPath: url.path(percentEncoded: false)) }

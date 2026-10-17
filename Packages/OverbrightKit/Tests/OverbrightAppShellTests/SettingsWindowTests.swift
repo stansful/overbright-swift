@@ -7,6 +7,7 @@
 import AppKit
 import Foundation
 import OverbrightCore
+import OverbrightTestSupport
 import Testing
 @testable import OverbrightAppShell
 @testable import OverbrightSettingsUI
@@ -39,7 +40,7 @@ import Testing
         }
         #expect(controller.window == nil && controller.session === session)
         #expect(!session.canUndoReset)                                            // the Undo offer ended with the window
-        for _ in 0..<150 where closedWindow != nil || closedHost != nil { try await Task.sleep(for: .milliseconds(20)) }
+        _ = await eventually { closedWindow == nil && closedHost == nil }        // AppKit lets go of it on a later turn
         #expect(closedWindow == nil, "the closed window is still alive")
         #expect(closedHost == nil, "the closed window's hosting controller is still alive")
 
@@ -50,17 +51,15 @@ import Testing
         #expect(reopened.frame == frame)                                          // where the closed one was
         let title = SettingsPane.pane(.advanced).title                            // in the test run's language
         reopened.contentView?.layoutSubtreeIfNeeded()
-        for _ in 0..<150 where reopened.title != title { try await Task.sleep(for: .milliseconds(20)) }
-        #expect(reopened.title == title)                                          // the new tree shows the pane
+        #expect(await eventually { reopened.title == title })                   // the new tree shows the pane
 
         // While it is open, showing Settings again navigates the same window.
         #expect(controller.preparedWindow(at: "displays") === reopened && session.currentPane == .displays)
 
         // Closed and opened without a pane: the pane shown last (remembered in the app's defaults, not a setting).
-        for _ in 0..<150 where defaults.defaults.string(forKey: SettingsWindowController.lastPaneKey) != "displays" {
-            try await Task.sleep(for: .milliseconds(20))
-        }
-        #expect(defaults.defaults.string(forKey: SettingsWindowController.lastPaneKey) == "displays")
+        #expect(await eventually {
+            defaults.defaults.string(forKey: SettingsWindowController.lastPaneKey) == "displays"
+        })
         reopened.close()
         let third = controller.preparedWindow(at: nil)
         #expect(third !== reopened && session.currentPane == .displays)
