@@ -112,6 +112,36 @@ import Testing
         #expect(h.everyTableAtBase)
     }
 
+    /// Off, the only tasks Boost may hold are one-shot trailing slots that end by themselves (as built, energy E2, E3,
+    /// E6): a screen-parameters notification's coalesced reduction (≤ 100 ms) and the publish of a reading it moved
+    /// (≤ 250 ms), and, while the self-test or a calibration holds the master off, the deferred level write (500 ms).
+    /// Once they fired nothing runs, and nothing comes back without a new event or request.
+    @Test func offHoldsOnlyOneShotTrailingSlots() async throws {
+        let h = EngineHarness()
+        await h.start()
+        await h.advance(.seconds(1))
+        #expect(h.engine.activeTaskCount == 0 && h.time.sleeperCount == 0)
+        let trailing: Set<String> = ["screenParameters", "minorPublish", "levelPersist"]
+        h.scripted.setOverride(2.6, for: h.builtIn)
+        h.signals.emit(.screenParametersChanged)
+        #expect(h.engine.activeTaskNames.contains("screenParameters"))
+        #expect(Set(h.engine.activeTaskNames).isSubset(of: trailing), "\(h.engine.activeTaskNames)")
+        await h.advance(EngineTiming.screenParametersReduceInterval + EngineTiming.minorPublishInterval)
+        #expect(h.engine.activeTaskNames == [] && h.time.sleeperCount == 0)
+        h.engine.holdForInstrument()
+        h.engine.setLevel(LevelPreset.sunlight.position, for: h.builtIn, source: .panel)
+        #expect(!h.engine.isMasterOn)                                     // turning on was refused
+        #expect(h.engine.activeTaskNames.contains("levelPersist"))
+        #expect(Set(h.engine.activeTaskNames).isSubset(of: trailing), "\(h.engine.activeTaskNames)")
+        await h.advance(EngineTiming.levelPersistDelay + EngineTiming.minorPublishInterval)
+        #expect(h.engine.activeTaskNames == [] && h.time.sleeperCount == 0)
+        let reads = h.scripted.readCount
+        await h.advance(.seconds(60), step: .milliseconds(500))
+        #expect(h.engine.activeTaskCount == 0 && h.time.sleeperCount == 0)
+        #expect(h.scripted.readCount == reads)
+        #expect(h.triggers.openWindowCount == 0 && h.everyTableAtBase)
+    }
+
     // MARK: 5 Baselines against the profile base
 
     /// A scaled residue (also when read-back clamps) is never captured; a per-channel calibration curve is, and is
