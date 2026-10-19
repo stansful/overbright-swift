@@ -116,6 +116,13 @@ At every launch Overbright first checks that no display was left scaled; it neve
 unless you chose "Open Overbright and turn it on". Very dark levels ask "Keep this level?" and go back on their own
 after 10 seconds.
 
+## Energy
+
+Brighter displays draw more power; that part is the point. Overbright's own work is kept small: while it is off it
+runs no timers, and while it boosts it wakes about once every 2 seconds whatever the number of displays (≈ 0.01–0.02 %
+of one core) and uses about 28–30 MB. These figures come from `make perf` against simulated displays (DESIGN.md §17);
+numbers on real displays come from the hardware session.
+
 ## Privacy
 
 - No analytics, no crash reporting, no account, no ads.

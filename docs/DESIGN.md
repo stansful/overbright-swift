@@ -1014,6 +1014,26 @@ Displays use more power when brighter: that is the product, and the README says 
 | Compatibility mode | a full-screen blend in WindowServer on every redraw | measured (H-S1) and stated in Settings |
 | Fill Light | one static layer; no redraw unless settings change | — |
 
+**Measured after the energy pass** (2026-10-19, main 6d3552f vs 9ef2587, `make perf` on the optimized measurement build under `--qa-simulate`, runs interleaved A/B on a loaded M4 Max; own = app minus the control app; full tables in the pass's comparison report). Real-display numbers come from the owner's hardware session (H-S1).
+
+| State | Before → after | Verdict |
+|---|---|---|
+| Off, simulated Signals | ≈ 0.00 ms/s CPU; 0.01–0.02 own wake-ups/s; 27.3–28.0 MB footprint | pass |
+| Off, real Signals (`--qa-live-signals`) | 1.6 → 0.14 ms/s CPU (−91 %); 0.06 → 0.02 wake-ups/s; 27.5 MB | pass |
+| Boosted steady, one display | 0.51–0.77 → 0.47–0.49 wake-ups/s; 0.013 % CPU; 31 → 27–28 MB | pass |
+| Boosted steady, two displays | 0.49–0.60 → 0.50–0.53 wake-ups/s; 0.018 % CPU; 34.5 → 28.5–28.9 MB | pass |
+| Ramp storm, panel closed | 5.5 % → 0.49 % CPU (−91 %); 40 → 29 MB | — |
+| Panel open (boosted / off) | ≤ 0.1 % CPU / 0.27 → 0.011 ms/s; 33–40 → 29–30 MB | pass |
+| Panel drag at 10 Hz | 14.7 % → 7.0 % CPU (−52 %); 43 → 52 wake-ups/s | **miss** (< 2 %) |
+| HUD, a press every 2 s / every 0.25 s | 6.2 % → 3.8 % / 16.2 % → 1.9 % CPU | — |
+| Fill Light card | peak 301 → 34 MB (no Metal on the default path) | pass |
+| Back to off | ≤ 0.01 wake-ups/s; 40 → 29 MB | pass (was a miss) |
+| After Settings, Help and Welcome have closed | 51–56 → 48–52 MB; a wake-up every 3.0 s remains (0.32/s) | **miss** (< 40 MB, ≤ 0.05/s) |
+| Screen-parameters event | 5.6 → 0.25 ms CPU each (−95 %) | — |
+| 17-minute soak | passed: 0 own wake-ups in the 373 s final off phase; 30 MB at the end | pass |
+
+Open misses: the panel drag (SwiftUI/AttributeGraph re-rendering; an unreviewed attempt waits on branch `energy/panel-drag`), and the memory plus a 3 s periodic wake-up left behind after the Settings, Help or Welcome windows close.
+
 ---
 
 ## 18. What's better than the incumbent
