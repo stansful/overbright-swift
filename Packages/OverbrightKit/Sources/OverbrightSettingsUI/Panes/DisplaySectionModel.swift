@@ -19,8 +19,6 @@ struct DisplaySectionModel {
     let preferences: DisplayPreferences
     /// The verdict, advisories and class defaults.
     let eligibility: EligibilityResult
-    /// The mechanism the display uses now (the reducer's, else the preference over the class default).
-    let mechanism: Mechanism
     /// The display counts as OLED (the override, else the IORegistry minimum luminance).
     let isOLED: Bool
     /// What Automatic detected (the Display type pop-up's "Automatic (OLED)").
@@ -72,7 +70,8 @@ struct DisplaySectionModel {
             eligibility = EligibilityResult(verdict: .checking, advisories: [], defaultBoostEnabled: false,
                                             defaultMechanism: .table)
         }
-        mechanism = status.decision?.mechanism
+        // The mechanism the display uses now (the reducer's, else the preference over the class default).
+        let mechanism = status.decision?.mechanism
             ?? EligibilityClassifier.effectiveMechanism(preferences.mechanism, defaultMechanism: eligibility.defaultMechanism)
         isLinked = linkLevels
         level = linkLevels ? linkedLevel : preferences.level
@@ -96,7 +95,7 @@ struct DisplaySectionModel {
     var verdict: DisplayVerdict { eligibility.verdict }
     /// The display can show extra brightness at all (the switch, the limit and calibration rows).
     var canBoost: Bool { verdict.allowsBoost }
-    /// The display can be dimmed (or would use the overlay): the level and method rows.
+    /// The display can be dimmed (or would use the overlay): the level row.
     var canAdjust: Bool { verdict.allowsBoost || verdict.allowsDim }
     /// The per-display switch: the preference, else the class default.
     var boostEnabled: Bool { preferences.boostEnabled ?? eligibility.defaultBoostEnabled }

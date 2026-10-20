@@ -84,7 +84,7 @@ U+2011 ("activați‑l", "într‑un"), never in search keywords. Numbers, dates
 | Back to Standard (the instant off) | Reveniți la Standard | not “panic”, not “reset brightness” |
 | Indoor · Bright room · Sunlight · Max (presets) | Interior · Cameră luminoasă · Lumină solară · Maxim | “Max” is a preset only |
 | Safe · Peak (ceilings) | Sigur · Vârf | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | Mod de compatibilitate · Tabel de culori | never “fallback” or “overlay” |
+| color table (in sentences: “macOS ignores color table changes”) | tabel de culori | never “gamma”; no “fallback” or “overlay” in copy |
 | Fill Light (the edge light for video calls) | Lumină pentru față | never “ring light” |
 | extra range (headroom, in user copy) | Rezervă de luminozitate | “headroom” only in Advanced and diagnostics |
 | Calibrate… · Run Self-Test… · Reset Display Colors… | Calibrați… · Rulați autotestul… · Resetați culorile afișajelor… |  |

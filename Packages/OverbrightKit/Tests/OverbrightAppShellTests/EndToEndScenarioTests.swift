@@ -85,8 +85,7 @@ import Testing
     }
 
     static let lowPower = "Paused because Low Power Mode is on."
-    static let booster = "Paused because \u{2068}QA booster\u{2069} also changes display brightness. Quit it, or use "
-        + "Compatibility mode, which works alongside it."
+    static let booster = "Paused because \u{2068}QA booster\u{2069} also changes display brightness. Quit it to continue."
     static let heat = "Paused because your Mac is hot. Overbright continues when it cools down."
     static let onLabels = ["on", "low-power", "resumed", "locked", "unlocked", "booster", "clear"]
 

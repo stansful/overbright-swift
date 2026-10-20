@@ -13,7 +13,7 @@ public nonisolated struct CalibrationRecord: Hashable, Codable, Sendable {
         case linear
         /// Late, missed or contradicting answers: the default domain stays.
         case inconclusive
-        /// The user said the screen did not get brighter (Compatibility mode is offered, §7.5).
+        /// The user said the screen did not get brighter (the color table stays; nothing else is offered, §7.5).
         case notBrighter
     }
     /// `.linear` only after the confirmation frame at the linear-domain Peak factor was answered "distinguishable".

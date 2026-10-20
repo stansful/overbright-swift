@@ -12,8 +12,6 @@ public nonisolated struct ChipContext: Sendable {
     public var appName: String?
     /// The display's Safe facts, for `LimitReason.safeLimit`.
     public var safeLimit: SafeLimitText?
-    /// The display has the `compatibilityModeAdvised` advisory: "No extra range" then offers Compatibility mode.
-    public var compatibilityAdvised: Bool
     /// The OLED idle pause of Settings ▸ Automations, in minutes.
     public var oledIdleMinutes: Int
     /// Where the words come from.
@@ -21,10 +19,9 @@ public nonisolated struct ChipContext: Sendable {
 
     /// A context.
     public init(allowedGain: Double? = nil, appName: String? = nil, safeLimit: SafeLimitText? = nil,
-                compatibilityAdvised: Bool = false, oledIdleMinutes: Int = 5, language: CopyLanguage = .app) {
+                oledIdleMinutes: Int = 5, language: CopyLanguage = .app) {
         self.allowedGain = allowedGain; self.appName = appName; self.safeLimit = safeLimit
-        self.compatibilityAdvised = compatibilityAdvised; self.oledIdleMinutes = oledIdleMinutes
-        self.language = language
+        self.oledIdleMinutes = oledIdleMinutes; self.language = language
     }
 
     /// The context of a display from its engine status and facts; `appName` resolves a bundle ID to Finder's name.
@@ -40,7 +37,6 @@ public nonisolated struct ChipContext: Sendable {
         var name: String?
         for case let .pausedApp(bundleID) in status.decision?.reasons ?? [] { name = appName(bundleID); break }
         return ChipContext(allowedGain: status.appliedGain, appName: name, safeLimit: safe,
-                           compatibilityAdvised: eligibility?.advisories.contains(.compatibilityModeAdvised) ?? false,
                            oledIdleMinutes: oledIdleMinutes, language: language)
     }
 }

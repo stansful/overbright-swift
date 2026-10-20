@@ -84,7 +84,7 @@ Register and typography (as macOS writes Vietnamese):
 | Back to Standard (the instant off) | Trở về Tiêu chuẩn | not “panic”, not “reset brightness” |
 | Indoor · Bright room · Sunlight · Max (presets) | Trong nhà · Phòng sáng · Ánh nắng · Tối đa | “Max” is a preset only |
 | Safe · Peak (ceilings) | An toàn · Đỉnh | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | Chế độ tương thích · Bảng màu | never “fallback” or “overlay” |
+| color table (in sentences: “macOS ignores color table changes”) | bảng màu | never “gamma”; no “fallback” or “overlay” in copy |
 | Fill Light (the edge light for video calls) | Đèn phụ | never “ring light” |
 | extra range (headroom, in user copy) | Dải sáng bổ sung | “headroom” only in Advanced and diagnostics |
 | Calibrate… · Run Self-Test… · Reset Display Colors… | Hiệu chỉnh… · Chạy tự kiểm tra… · Đặt lại màu màn hình… |  |

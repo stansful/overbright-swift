@@ -185,12 +185,10 @@ import Testing
         // macOS 25 or earlier: no auto-brightness advisory.
         let older = MachineIdentity(model: "Mac16,5", osBuild: "24A1", osMajor: 15, osMinor: 6, osPatch: 0)
         #expect(!classify(PolicyTestInputs.builtIn, machine: older).advisories.contains(.autoBrightnessInteracts))
-        // A compatibility model: while Compatibility mode is unavailable (§7.5) no advisory points at it and the table
-        // stays the default.
+        // A Mac that ignores color table changes (§7.5): the table stays the default, and a display that can neither
+        // boost nor dim gets no advisory there either.
         let neo = DisplayFixture.neoIgnoresWrites
-        let onNeo = classify(neo.displays[0], machine: neo.machine)
-        #expect(!onNeo.advisories.contains(.compatibilityModeAdvised) && onNeo.defaultMechanism == .table)
-        #expect(!classify(PolicyTestInputs.projector, machine: neo.machine).advisories.contains(.compatibilityModeAdvised))
+        #expect(classify(neo.displays[0], machine: neo.machine).defaultMechanism == .table)
         #expect(classify(DisplayFixture.sidecar.displays[1], machine: neo.machine).advisories.isEmpty)
         // Displays that cannot boost get no boost advisories.
         #expect(classify(DisplayFixture.mpg322uxHDROff.displays[0]).advisories.isEmpty)

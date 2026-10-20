@@ -15,7 +15,6 @@ import Testing
     @Test func everyCaseHasItsOwnName() {
         distinct(LevelPreset.allCases.map { $0.localizedName(in: english) }, "presets")
         distinct(CapMode.allCases.map { $0.localizedName(in: english) }, "cap modes")
-        distinct(MechanismPreference.allCases.map { $0.localizedName(in: english) }, "methods")
         distinct(TriggerStrategy.allCases.map { $0.localizedName(in: english) }, "trigger methods")
         distinct([TriggerPixel.black, .sdrWhite, .bright].map { $0.localizedName(in: english) }, "pixels")
         distinct([OLEDOverride.automatic, .oled, .notOLED].flatMap { [$0.localizedName(detectedOLED: true, in: english),
@@ -38,8 +37,6 @@ import Testing
     @Test func theWords() {
         #expect(LevelPreset.brightRoom.localizedName(in: english) == "Bright room")
         #expect(CapMode.allCases.map { $0.localizedName(in: english) } == ["Safe", "Peak"])
-        #expect(MechanismPreference.allCases.map { $0.localizedName(in: english) }
-                == ["Automatic", "Color table", "Compatibility mode"])
         #expect(TriggerStrategy.allCases.map { $0.localizedName(in: english) }
                 == ["Tagged layer", "Metal layer", "Metal layer, refreshed", "HDR frame", "HDR video still"])
         #expect(TriggerStrategy.taggedLayer.localizedName(pixel: .black, in: english) == "Tagged layer, black")

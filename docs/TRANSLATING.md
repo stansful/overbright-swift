@@ -53,8 +53,8 @@ keeps it.
 What to look at when you review a language:
 
 - **The terminology sheet first.** Overbright's own names (Standard, extra brightness, Dim below minimum, Dimmed,
-  Brighter, Less Bright, the presets Indoor · Bright room · Sunlight · Max, Safe · Peak, Compatibility mode, Fill
-  Light, Back to Standard, extra range) have one fixed translation each; the sheet lists them with the reasons. The
+  Brighter, Less Bright, the presets Indoor · Bright room · Sunlight · Max, Safe · Peak, Fill Light, Back to
+  Standard, extra range) have one fixed translation each; the sheet lists them with the reasons. The
   same word must never mean two things ("Max" is a preset, so the ceiling is "Peak"; "Dimmer" and "Dim" read alike in
   many languages, so the step down is "Less Bright").
 - **Apple's words.** People look for System Settings panes and the settings inside them by the name macOS shows them.

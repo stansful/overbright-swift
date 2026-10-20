@@ -2,8 +2,7 @@
 // running apps that also change display colors or brightness, live from `SystemSignals` (its catalogue matches;
 // diagnostics-only matches are left out), each with its icon, its own name (`NSRunningApplication.localizedName`, the
 // only way another app's name reaches the UI, D3), its kind, and for color apps and apps that may change brightness an
-// Always continue switch (`advanced.alwaysContinue`). Next to a brightness app it says why Overbright cannot run on the
-// color table and what to do. "None running." when empty.
+// Always continue switch (`advanced.alwaysContinue`). "None running." when empty.
 import OverbrightCore
 import OverbrightDesign
 import SwiftUI
@@ -45,13 +44,6 @@ struct OtherAppsSection: View {
             .settingRow(value)
             ForEach(apps, id: \.processID) { app in
                 OtherAppRow(app: app, settings: services.settings)
-            }
-            if MechanismPreference.overlayIsAvailable, apps.contains(where: { $0.severity == .booster }) {
-                Text("Overbright can’t run next to another brightness app on the color table. Use Compatibility mode on a display to run alongside it.",
-                     bundle: .module, comment: "Settings ▸ Advanced: note under a running brightness app")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
             }
         } header: {
             Text("Other apps", bundle: .module, comment: "Settings ▸ Advanced: section header")

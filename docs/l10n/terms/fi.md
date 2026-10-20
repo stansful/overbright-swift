@@ -84,7 +84,7 @@ on alle 20 %.”) — never an imperative addressed to the user. Progress “X o
 | Back to Standard (the instant off) | Takaisin vakiotasolle | not “panic”, not “reset brightness” |
 | Indoor · Bright room · Sunlight · Max (presets) | Sisätila · Valoisa huone · Auringonvalo · Maksimi | “Max” is a preset only |
 | Safe · Peak (ceilings) | Turvallinen · Huippu | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | Yhteensopivuustila · Väritaulukko | never “fallback” or “overlay” |
+| color table (in sentences: “macOS ignores color table changes”) | väritaulukko | never “gamma”; no “fallback” or “overlay” in copy |
 | Fill Light (the edge light for video calls) | Täytevalo | never “ring light” |
 | extra range (headroom, in user copy) | Kirkkausvara | “headroom” only in Advanced and diagnostics |
 | Calibrate… · Run Self-Test… · Reset Display Colors… | Kalibroi… · Suorita itsetesti… · Palauta näyttöjen värit… |  |

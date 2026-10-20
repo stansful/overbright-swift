@@ -69,8 +69,6 @@ public struct DisplayCardModel: Hashable {
     public var phase: EnginePhase
     /// Failed tries in this session (the No extra range chip changes after two).
     public var failedTries: Int
-    /// The display runs in Compatibility mode (the caption line under the readout).
-    public var isCompatibilityMode: Bool
     /// The readout's numbers (Policy's `Readout.values`).
     public var readout: ReadoutValues
     /// The verdict's advisories.
@@ -104,7 +102,6 @@ public struct DisplayCardModel: Hashable {
         advisories = eligibility?.advisories ?? []
         phase = status.phase
         failedTries = status.failedTries
-        isCompatibilityMode = (status.decision?.mechanism ?? status.mechanism) == .overlay
         readout = Readout.values(for: status, isMasterOn: isMasterOn)
 
         top = Self.top(verdict: verdict, facts: facts, capMode: capMode, isOLED: isOLED)

@@ -1,7 +1,7 @@
 // OverbrightPanelUI/Panel/PanelCommands.swift — what the panel's, the card's and the status menu's actions do, in one
 // place. ARCHITECTURE.md §3.6 (`BoostControl`, `AppControl`), §4.9, §7.2; DESIGN.md §4.3, §5.3–§5.10, §12.2–§12.4.
-// The engine owns levels, pauses and trips; preferences that the UI edits (the per-display switch, the method) are
-// written to the settings store; windows are opened through `AppControl`.
+// The engine owns levels, pauses and trips; preferences that the UI edits (the per-display switch) are written to the
+// settings store; windows are opened through `AppControl`.
 import AppKit
 import OverbrightCore
 
@@ -32,9 +32,6 @@ public struct PanelCommands {
         case .tryAgain: services.boost.retry(card.key)
         case .learnMore(let anchor): showHelp(anchor)
         case .runSelfTest: openSettings(SettingsLinks.selfTest)
-        case .useCompatibilityMode:
-            useCompatibilityMode(on: [card.key])
-            services.boost.retry(card.key)
         case .turnOnExtraBrightness: setExtraBrightness(true, for: card.key, name: card.name, isOLED: card.isOLED)
         case .openDisplaySettings: openSystemSettings(SettingsLinks.systemDisplays)
         case .changeTaperSetting: openSettings(SettingsLinks.nearFullBrightness)
@@ -42,11 +39,6 @@ public struct PanelCommands {
         case .changeRules: openSettings(SettingsLinks.appRules)
         case .editApps: openSettings(SettingsLinks.pausedApps)
         case .continueAnyway(let app): services.boost.continueAnyway(app)
-        case .continueInCompatibilityMode(let app):
-            // A booster is let through only when continued AND on the overlay (§7.2): both, or the display stays
-            // stopped behind a conflict. Continuing clears the drift trips the app caused.
-            useCompatibilityMode(on: [card.key])
-            services.boost.continueAnyway(app)
         }
     }
 
@@ -102,16 +94,6 @@ public struct PanelCommands {
                                     source: source)
         }
         return true
-    }
-
-    /// Compatibility mode (the overlay) on `displays`: what "Use Compatibility mode" chooses next to another
-    /// brightness app or after failed tries (ARCHITECTURE.md §7.2, §7.5).
-    public func useCompatibilityMode(on displays: [DisplayKey]) {
-        for display in displays {
-            var preferences = preferences(of: display)
-            preferences.mechanism = .overlay
-            store(preferences, for: display)
-        }
     }
 
     /// The stored preferences of `display` (the defaults when none are stored).

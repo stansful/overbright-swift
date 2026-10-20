@@ -1,5 +1,5 @@
 // OverbrightDesign/Copy/ChipCopy.swift — the table of DESIGN.md §12.2: every per-display `LimitReason` → chip text,
-// glyph, colour, popover sentence and actions. Global reasons (a user pause, S1/S2 conflicts, Focus, heat that stops,
+// glyph, colour and popover sentence. Global reasons (a user pause, S1/S2 conflicts, Focus, heat that stops,
 // Low Power, battery, the schedule) and states that show no chip (off, shielded) map to nil.
 import Foundation
 import OverbrightCore
@@ -22,9 +22,8 @@ nonisolated enum ChipCopy {
         let language = context.language
         let (b, l) = (language.bundle, language.locale)
         func chip(_ symbol: OverbrightSymbol, _ color: SemanticColor, _ text: String, _ explanation: String,
-                  _ actions: [FixAction] = [], label: String? = nil) -> ChipModel {
-            ChipModel(symbol: symbol, color: color, text: text, explanation: explanation, accessibilityLabel: label ?? text,
-                      showsProgress: false, actions: actions, helpAnchor: nil)
+                  label: String? = nil) -> ChipModel {
+            ChipModel(symbol: symbol, color: color, text: text, explanation: explanation, accessibilityLabel: label ?? text)
         }
         switch reason {
         case .waitingForHeadroom:
@@ -36,10 +35,10 @@ nonisolated enum ChipCopy {
                         String(localized: "Extra brightness off", bundle: b, locale: l,
                                comment: "Panel ▸ Display card: status chip, extra brightness is turned off for this display"),
                         String(localized: "Extra brightness is off for this display. Dimming still works.", bundle: b, locale: l,
-                               comment: "Panel ▸ Display card: popover of the Extra brightness off chip"), [.turnOn])
+                               comment: "Panel ▸ Display card: popover of the Extra brightness off chip"))
         case let .notSupported(verdict):
             let words = VerdictText.make(verdict, advisories: [], lastGrant: nil, capMode: .safe, in: language)
-            return chip(.display, .neutral, words.badge, words.sentence, words.fix.map { [$0] } ?? [])
+            return chip(.display, .neutral, words.badge, words.sentence)
         case .headroom:
             let explanation = context.allowedGain.map { gain in
                 let shown = CopyFormat.multiplier(gain, in: language)
@@ -57,21 +56,21 @@ nonisolated enum ChipCopy {
                         String(localized: "Below full brightness", bundle: b, locale: l,
                                comment: "Panel ▸ Display card: status chip, the display brightness is below full so extra brightness fades"),
                         String(localized: "Extra brightness fades out as you lower the display brightness. Turn the brightness up for more.",
-                               bundle: b, locale: l, comment: "Panel ▸ Display card: popover of Below full brightness"), [.changeSetting])
+                               bundle: b, locale: l, comment: "Panel ▸ Display card: popover of Below full brightness"))
         case .safeLimit:
             let first = context.safeLimit?.sentence(in: language)
                 ?? String(localized: "Safe stays at the level this display can hold across the whole screen.", bundle: b, locale: l,
                           comment: "Panel ▸ Display card: popover of the Safe limit chip when the display’s class is unknown")
             return chip(.lockFill, .info,
                         String(localized: "Safe limit", bundle: b, locale: l, comment: "Panel ▸ Display card: status chip, the Safe ceiling binds"),
-                        CopyFormat.sentences(first, choosePeakForMore(in: language), in: language), [.choosePeak])
+                        CopyFormat.sentences(first, choosePeakForMore(in: language), in: language))
         case .oledLimit:
             let gain = CopyFormat.roughNumber(GainCeiling.safeGainOLED, in: language)
             let first = String(localized: "Extra brightness stays at \(gain) times on OLED displays to protect the panel.",
                                bundle: b, locale: l, comment: "Panel ▸ Display card: popover of OLED limit; the argument is a multiplier such as 1.3")
             return chip(.lockFill, .info,
                         String(localized: "OLED limit", bundle: b, locale: l, comment: "Panel ▸ Display card: status chip, the OLED Safe ceiling binds"),
-                        CopyFormat.sentences(first, choosePeakForMore(in: language), in: language), [.choosePeak])
+                        CopyFormat.sentences(first, choosePeakForMore(in: language), in: language))
         case .thermalSerious:
             let gain = CopyFormat.roughNumber(GainCeiling.thermalSeriousGain, in: language)
             return chip(.thermometerMedium, .warning,
@@ -81,22 +80,21 @@ nonisolated enum ChipCopy {
         case .fullScreenVideo:
             return chip(.playRectangleFill, .neutral, pausedVideo(in: language),
                         String(localized: "Extra brightness pauses while an app plays video full screen on this display.",
-                               bundle: b, locale: l, comment: "Panel ▸ Display card: popover of Paused: video"), [.changeRules])
+                               bundle: b, locale: l, comment: "Panel ▸ Display card: popover of Paused: video"))
         case .fullScreenApp:
             return chip(.playRectangleFill, .neutral, pausedFullScreen(in: language),
                         String(localized: "Extra brightness pauses while an app is full screen on this display.",
-                               bundle: b, locale: l, comment: "Panel ▸ Display card: popover of Paused: full screen"), [.changeRules])
+                               bundle: b, locale: l, comment: "Panel ▸ Display card: popover of Paused: full screen"))
         case let .pausedApp(bundleID):
             let name = (context.appName ?? bundleID).overbrightIsolated
             let text = pausedApp(name, in: language)
             return chip(.pauseFill, .neutral, text,
                         String(localized: "Extra brightness pauses while \(name) is in front on this display.", bundle: b, locale: l,
-                               comment: "Panel ▸ Display card: popover of Paused: ‹App›; the argument is the app’s name"),
-                        [.editApps], label: text)
+                               comment: "Panel ▸ Display card: popover of Paused: ‹App›; the argument is the app’s name"), label: text)
         case .game:
             return chip(.gameControllerFill, .neutral, pausedGame(in: language),
                         String(localized: "Extra brightness pauses while a game is in front on this display.", bundle: b, locale: l,
-                               comment: "Panel ▸ Display card: popover of Paused: game"), [.changeRules])
+                               comment: "Panel ▸ Display card: popover of Paused: game"))
         case .oledIdle:
             let idle = CopyFormat.spokenDuration(minutes: context.oledIdleMinutes, in: language)
             return chip(.zzz, .neutral,
@@ -114,21 +112,20 @@ nonisolated enum ChipCopy {
             return chip(.exclamationMarkTriangleFill, .danger,
                         String(localized: "Stopped", bundle: b, locale: l, comment: "Panel ▸ Display card: status chip, Overbright stopped this display"),
                         String(localized: "Overbright stopped on this display to prevent flicker.", bundle: b, locale: l,
-                               comment: "Panel ▸ Display card: popover of Stopped"), [.tryAgain])
+                               comment: "Panel ▸ Display card: popover of Stopped"))
         case let .tripped(.attributedDrift(app)):
             let name = app.displayName.overbrightIsolated
             return chip(.exclamationMarkTriangleFill, .danger,
                         String(localized: "Stopped: \(name)", bundle: b, locale: l,
                                comment: "Panel ▸ Display card: status chip, an app changed this display’s colors; the argument is its name"),
                         String(localized: "\(name) changed the colors of this display.", bundle: b, locale: l,
-                               comment: "Panel ▸ Display card: popover of Stopped: ‹App›"),
-                        [app.severity == .booster ? .useCompatibilityMode : .continueAnyway])   // S1: §7.2
+                               comment: "Panel ▸ Display card: popover of Stopped: ‹App›"))
         case .tripped(.foreignTableAtLaunch):
             return chip(.exclamationMarkTriangleFill, .danger,
                         String(localized: "Colors changed", bundle: b, locale: l,
                                comment: "Panel ▸ Display card: status chip, another app changed this display’s colors"),
                         String(localized: "Another app changed this display’s colors in a way Overbright can’t reset.", bundle: b, locale: l,
-                               comment: "Panel ▸ Display card: popover of Colors changed"), [.openSystemSettings])
+                               comment: "Panel ▸ Display card: popover of Colors changed"))
         default:
             return nil
         }

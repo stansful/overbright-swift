@@ -11,8 +11,6 @@ extension CalibrationModel {
         case checklist
         /// Step 1: the comparison and its question.
         case comparison
-        /// Step 1 answered No: Compatibility mode, or keep the color table.
-        case notBrighter
         /// Step 2, before the sweep starts.
         case sweepIntro
         /// Step 2: the sweep runs (or waits at its pause).

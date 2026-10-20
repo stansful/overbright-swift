@@ -99,7 +99,7 @@ display (צג) = masculine; camera (מצלמה) = feminine.
 | Back to Standard (the instant off) | חזרה לסטנדרט | not “panic”, not “reset brightness” |
 | Indoor · Bright room · Sunlight · Max (presets) | בתוך הבית · חדר מואר · אור שמש · מקסימום | “Max” is a preset only |
 | Safe · Peak (ceilings) | בטוח · שיא | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | מצב תאימות · טבלת צבעים | never “fallback” or “overlay” |
+| color table (in sentences: “macOS ignores color table changes”) | טבלת צבעים | never “gamma”; no “fallback” or “overlay” in copy |
 | Fill Light (the edge light for video calls) | אור מילוי | never “ring light” |
 | extra range (headroom, in user copy) | טווח נוסף | “headroom” only in Advanced and diagnostics |
 | Calibrate… · Run Self-Test… · Reset Display Colors… | כיול… · הרצת בדיקה עצמית… · איפוס צבעי הצגים… |  |

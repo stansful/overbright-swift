@@ -125,11 +125,10 @@ enum ScriptedGallery {
                                conflicts: conflictStates(booster: booster, colorApp: colorApp)) + edgeStates
     }
 
-    /// The built-in after the ladder failed `tries` times (the compatibility advisory from the second on).
+    /// The built-in after the ladder failed `tries` times.
     static func failed(tries: Int) -> DisplayStatus {
         P.display(P.builtIn, phase: .failed(.headroomNeverArrived), reasons: [.tripped(.headroomNeverArrived)],
-                  eligibility: P.eligibility(P.builtInVerdict,
-                                             advisories: tries >= 2 ? [.compatibilityModeAdvised, .notCalibrated] : [.notCalibrated]),
+                  eligibility: P.eligibility(P.builtInVerdict, advisories: [.notCalibrated]),
                   requested: 1.291, failedTries: tries)
     }
 }

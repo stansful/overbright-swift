@@ -71,14 +71,6 @@ enum PanelText {
 
     // MARK: Card
 
-    static var compatibilityMode: String {
-        String(localized: "Compatibility mode", bundle: .module,
-               comment: "Panel ▸ Display card: caption under the readout of a display in Compatibility mode")
-    }
-    static var compatibilityFootnote: String {
-        String(localized: "Brightens through an overlay. The pointer isn’t brightened, and screen recordings may show the overlay.",
-               bundle: .module, comment: "Panel ▸ Display card: help tag of the Compatibility mode caption")
-    }
     static var readoutHelp: String {
         String(localized: "For the most light, turn your display brightness all the way up first; Overbright adds to it.",
                bundle: .module, comment: "Panel ▸ Display card: help tag of the readout")

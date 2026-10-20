@@ -87,7 +87,7 @@ Register and style follow Korean macOS 27 (checked in the system's own loctables
 | Back to Standard (the instant off) | 표준으로 돌아가기 | not “panic”, not “reset brightness” |
 | Indoor · Bright room · Sunlight · Max (presets) | 실내 · 밝은 방 · 햇빛 · 최대 | “Max” is a preset only |
 | Safe · Peak (ceilings) | 안전 · 피크 | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | 호환성 모드 · 색상 테이블 | never “fallback” or “overlay” |
+| color table (in sentences: “macOS ignores color table changes”) | 색상 테이블 | never “gamma”; no “fallback” or “overlay” in copy |
 | Fill Light (the edge light for video calls) | 보조 조명 | never “ring light” |
 | extra range (headroom, in user copy) | 여유 밝기 | “headroom” only in Advanced and diagnostics |
 | Calibrate… · Run Self-Test… · Reset Display Colors… | 보정… · 자체 테스트 실행… · 디스플레이 색상 재설정… |  |

@@ -63,7 +63,7 @@ private func strings(of copy: Any) -> [String] {
             (#"\bboost"#, "“extra brightness”, never “boost”"), (#"\b[HX]DR mode"#, "no “HDR mode”"),
             (#"\bEDR\b"#, "no “EDR” outside Advanced"), (#"gamma"#, "no “gamma”"), (#"headroom"#, "“extra range”"),
             (#"\bmonitor"#, "“display”"), (#"\bdimmer\b"#, "“Less Bright”"), (#"night mode"#, "“Dim below minimum”"),
-            (#"panic|reset brightness"#, "“Back to Standard”"), (#"fallback|overlay"#, "“Compatibility mode”"),
+            (#"panic|reset brightness"#, "“Back to Standard”"), (#"fallback|overlay"#, "no “fallback” or “overlay”"),
             (#"ring light"#, "“Fill Light”"), (#"normal mode|100 ?%"#, "“Standard”"),
             (#"\bdisabled\b|turns off for"#, "“Pause / Paused”"), (#"Launchpad"#, "removed in macOS 26"),
             (#"!"#, "no exclamation marks"), (#"\.\.\."#, "one-character ellipsis …"),

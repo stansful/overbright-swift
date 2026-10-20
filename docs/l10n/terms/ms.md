@@ -84,7 +84,7 @@ menus, Preview, System Settings, the keyboard-shortcut table).
 | Back to Standard (the instant off) | Kembali ke Standard | not “panic”, not “reset brightness” |
 | Indoor · Bright room · Sunlight · Max (presets) | Dalaman · Bilik terang · Cahaya matahari · Maksimum | “Max” is a preset only |
 | Safe · Peak (ceilings) | Selamat · Puncak | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | Mod keserasian · Jadual warna | never “fallback” or “overlay” |
+| color table (in sentences: “macOS ignores color table changes”) | jadual warna | never “gamma”; no “fallback” or “overlay” in copy |
 | Fill Light (the edge light for video calls) | Cahaya Pengisi | never “ring light” |
 | extra range (headroom, in user copy) | Julat tambahan | “headroom” only in Advanced and diagnostics |
 | Calibrate… · Run Self-Test… · Reset Display Colors… | Kalibrasi… · Jalankan Ujian Kendiri… · Reset Warna Paparan… |  |

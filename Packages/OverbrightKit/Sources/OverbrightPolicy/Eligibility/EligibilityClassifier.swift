@@ -5,7 +5,7 @@
 import OverbrightCore
 
 /// D8 classifier: tolerant comparisons, no name strings in logic, IORegistry inputs optional. `preferences` carries
-/// the OLED override and the calibration record; `machine` decides `compatibilityModeAdvised`.
+/// the OLED override and the calibration record; `machine` decides the default mechanism.
 public nonisolated enum EligibilityClassifier {
     /// Tolerance of every comparison with a headroom value (potential, reference).
     public static let epsilon = 0.01
@@ -42,7 +42,6 @@ public nonisolated enum EligibilityClassifier {
         let mechanism = effectiveMechanism(preferences.mechanism, defaultMechanism: defaultMechanism)
 
         var advisories: [Advisory] = []
-        if advised && (verdict.allowsBoost || verdict.allowsDim) { advisories.append(.compatibilityModeAdvised) }
         if verdict.allowsBoost {
             if oled { advisories.append(.oledCare) }
             if facts.isBuiltIn && facts.panelClass == .builtInXDR && machine.osMajor >= 26 {

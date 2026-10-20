@@ -42,7 +42,7 @@ obligations apply; we credit them as a courtesy (Settings ▸ About lists them t
 
 | Project | License | What we learned |
 |---|---|---|
-| [levelsio/xdr-boost](https://github.com/levelsio/xdr-boost) | MIT | That a full-screen EDR overlay with multiply compositing raises the whole picture; the idea behind Compatibility mode. Overbright's overlay is an independent implementation. |
+| [levelsio/xdr-boost](https://github.com/levelsio/xdr-boost) | MIT | Studied for a full-screen EDR overlay with multiply compositing, which Overbright tried and removed. No code was copied. |
 | [lichengzhe/xdr-light](https://github.com/lichengzhe/xdr-light) | MIT | Pairing a small EDR trigger with transfer-table scaling, and keeping the trigger alive. |
 | [noahlincke/displaytint](https://github.com/noahlincke/displaytint) | MIT | Its report that macOS reverts a process's transfer tables when that process dies. |
 | [MonitorControl/MonitorControl](https://github.com/MonitorControl/MonitorControl) | MIT | How transfer-table changes behave in screenshots. |

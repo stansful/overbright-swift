@@ -59,10 +59,10 @@ enum ScriptedParts {
     static let studioVerdict = DisplayVerdict.supported(safeGain: nil, peakGain: 0.97 * 2000 / 1000)
 
     /// An eligibility result.
-    static func eligibility(_ verdict: DisplayVerdict, advisories: [Advisory] = [], boostByDefault: Bool = true,
-                            mechanism: Mechanism = .table) -> EligibilityResult {
+    static func eligibility(_ verdict: DisplayVerdict, advisories: [Advisory] = [], boostByDefault: Bool = true)
+        -> EligibilityResult {
         EligibilityResult(verdict: verdict, advisories: advisories, defaultBoostEnabled: boostByDefault,
-                          defaultMechanism: mechanism)
+                          defaultMechanism: .table)
     }
 
     // MARK: Statuses
@@ -75,14 +75,13 @@ enum ScriptedParts {
 
     /// One display's status: `gain` is the light gain on screen (1 = Standard).
     static func display(_ facts: DisplayFacts, phase: EnginePhase = .idle, target: BoostTarget = .neutral,
-                        reasons: [LimitReason] = [], eligibility: EligibilityResult, mechanism: Mechanism = .table,
-                        gain: Double = 1, requested: Double? = nil, reading: HeadroomReading? = nil,
+                        reasons: [LimitReason] = [], eligibility: EligibilityResult, gain: Double = 1, requested: Double? = nil, reading: HeadroomReading? = nil,
                         sdrWhite: SDRWhiteEstimate? = nil, failedTries: Int = 0) -> DisplayStatus {
         let decision = DisplayDecision(key: facts.ref.key, target: target, reasons: reasons, eligibility: eligibility,
-                                       mechanism: mechanism, domain: .encoded, requestedGain: requested ?? gain)
+                                       mechanism: .table, domain: .encoded, requestedGain: requested ?? gain)
         return DisplayStatus(key: facts.ref.key, name: facts.name, phase: phase, decision: decision, appliedGain: gain,
                              appliedFactor: FactorMath.tableFactor(forLightGain: gain, domain: .encoded),
-                             mechanism: mechanism, strategy: phase == .idle ? nil : .taggedLayer, lastReading: reading,
+                             mechanism: .table, strategy: phase == .idle ? nil : .taggedLayer, lastReading: reading,
                              sdrWhite: sdrWhite, failedTries: failedTries)
     }
 

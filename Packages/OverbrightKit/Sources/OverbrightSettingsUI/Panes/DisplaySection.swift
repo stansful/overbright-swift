@@ -1,7 +1,7 @@
 // OverbrightSettingsUI/Panes/DisplaySection.swift — one connected display in Settings ▸ Displays (DESIGN.md §7.4): the
 // header with the display's name and verdict badge; the verdict sentence with its advisories and fix (§12.1); "Use
-// extra brightness on this display" (only where it can boost; an OLED asks first); the level; Safe or Peak; the method;
-// the calibration with Calibrate…; the display type (externals); and the advisory about Automatically adjust
+// extra brightness on this display" (only where it can boost; an OLED asks first); the level; Safe or Peak; the
+// calibration with Calibrate…; the display type (externals); and the advisory about Automatically adjust
 // brightness (built-in XDR on macOS 26 and later). `rows(_:)` and `values(_:services:)` list exactly what `body`
 // draws, for the search index and the Reset to Default tests.
 import OverbrightCore
@@ -27,9 +27,6 @@ struct DisplaySection: View {
             }
             if let value = values[DisplaysRows.limit(model.key, name: model.name).id] {
                 DisplayLimitRow(services: services, model: model, value: value)
-            }
-            if let value = values[DisplaysRows.method(model.key, name: model.name).id] {
-                methodRow(value)
             }
             if let value = values[DisplaysRows.calibration(model.key, name: model.name).id] {
                 calibrationRow(value)
@@ -79,10 +76,6 @@ struct DisplaySection: View {
         if model.canBoost {
             values.append(value(DisplaysRows.limit(key, name: name), isDefault: { $0.capMode == defaults.capMode },
                                 reset: { $0.capMode = defaults.capMode }))
-        }
-        if model.canAdjust {
-            values.append(value(DisplaysRows.method(key, name: name), isDefault: { $0.mechanism == defaults.mechanism },
-                                reset: { $0.mechanism = defaults.mechanism }))
         }
         if model.canBoost {
             values.append(value(DisplaysRows.calibration(key, name: name), isDefault: { $0.calibration == nil },
@@ -156,18 +149,6 @@ struct DisplaySection: View {
             }
         }
         .searchTarget(DisplaysRows.section(model.key, name: model.name))
-    }
-
-    private func methodRow(_ value: RowValue) -> some View {
-        let editor = DisplayPreferencesEditor(settings: services.settings)
-        let shown = DisplayMethodText.shown(model.preferences.mechanism)
-        let selection = Binding<MechanismPreference>(get: { shown }, set: { preference in
-            editor.update(model.key, name: model.name) { $0.mechanism = preference }
-        })
-        return ChoiceRow(info: value.info, selection: selection,
-                         choices: MechanismPreference.selectableCases.map { Choice(value: $0, label: $0.localizedName()) },
-                         footnote: DisplayMethodText.footnote(preference: shown, effective: model.mechanism),
-                         style: .menu, isDefault: value.isDefault(), reset: value.reset)
     }
 
     private func calibrationRow(_ value: RowValue) -> some View {

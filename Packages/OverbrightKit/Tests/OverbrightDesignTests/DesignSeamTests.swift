@@ -36,7 +36,7 @@ import Testing
         _ = StatusChip(model, actions: [ChipAction(title: "", perform: {})])
         _ = GuardChip(GuardChipModel(symbol: .timer, text: "", accessibilityLabel: ""),
                       menu: [.item(title: "", isChecked: true, perform: {}), .separator, .submenu(title: "", items: [])])
-        _ = PausedBanner(BannerModel.make(.focusOff), primary: {}, secondary: nil)
+        _ = PausedBanner(BannerModel.make(.focusOff), primary: {})
         _ = EDRPreviewSurface(gain: 1.6, divider: .constant(0.5), simulated: true)
         _ = StepWedgeView(patches: [0.95, 1], surround: 0)
         _ = KeyCap("")

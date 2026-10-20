@@ -83,7 +83,7 @@ Register and typography (as macOS writes Thai):
 | Back to Standard (the instant off) | กลับสู่มาตรฐาน | not “panic”, not “reset brightness” |
 | Indoor · Bright room · Sunlight · Max (presets) | ในอาคาร · ห้องสว่าง · แสงแดด · สูงสุด | “Max” is a preset only |
 | Safe · Peak (ceilings) | ปลอดภัย · ขีดสุด | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | โหมดความเข้ากันได้ · ตารางสี | never “fallback” or “overlay” |
+| color table (in sentences: “macOS ignores color table changes”) | ตารางสี | never “gamma”; no “fallback” or “overlay” in copy |
 | Fill Light (the edge light for video calls) | แสงเสริม | never “ring light” |
 | extra range (headroom, in user copy) | ช่วงเพิ่มเติม | “headroom” only in Advanced and diagnostics |
 | Calibrate… · Run Self-Test… · Reset Display Colors… | ปรับเทียบ… · เรียกใช้การทดสอบตัวเอง… · รีเซ็ตสีจอภาพ… |  |

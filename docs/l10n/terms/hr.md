@@ -84,7 +84,7 @@ Reviewed 2026-10-14 (independent review).
 | Back to Standard (the instant off) | Vrati na standardno | not “panic”, not “reset brightness” |
 | Indoor · Bright room · Sunlight · Max (presets) | U zatvorenom · Svijetla prostorija · Na suncu · Maksimum | “Max” is a preset only |
 | Safe · Peak (ceilings) | Sigurno · Vršno | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | Način kompatibilnosti · Tablica boja | never “fallback” or “overlay” |
+| color table (in sentences: “macOS ignores color table changes”) | tablica boja | never “gamma”; no “fallback” or “overlay” in copy |
 | Fill Light (the edge light for video calls) | Osvjetljenje lica | never “ring light” |
 | extra range (headroom, in user copy) | Rezerva svjetline | “headroom” only in Advanced and diagnostics |
 | Calibrate… · Run Self-Test… · Reset Display Colors… | Kalibriraj… · Pokreni samoprovjeru… · Resetiraj boje zaslona… |  |

@@ -1,7 +1,7 @@
 // OverbrightSettingsUITests/CalibrationViewModelTests.swift — the calibration window's steps (DESIGN.md §9;
 // ARCHITECTURE.md §5.2) over a scripted session and manual time: the live checklist gates Start; step 1 waits for the
-// session to be ready, then shows Brighter and Standard three times each, at most one change per 1.5 s; No offers
-// Compatibility mode (a new session, step 1 again) or keeps the color table; step 2 starts, keeps going past the pause
+// session to be ready, then shows Brighter and Standard three times each, at most one change per 1.5 s; No goes
+// straight to the results and keeps the color table; step 2 starts, keeps going past the pause
 // and marks the merge with Space; step 3 appears only when the session asks for it; every result stores the session's
 // record and ends with the "turn them back on" line; Esc stores nothing; a session that stops by itself ends the steps.
 import Foundation
@@ -13,7 +13,7 @@ import Testing
 @MainActor @Suite struct CalibrationViewModelTests {
     private let display = DisplayFixture.Keys.builtIn
 
-    /// A model over `sessions` (each Try Again or Compatibility mode takes the next one).
+    /// A model over `sessions` (each Try Again takes the next one).
     private func model(_ services: OverbrightServices, sessions: [FakeCalibrationSession?]) -> (CalibrationModel, () -> Int) {
         var queue = sessions
         var begun = 0
@@ -171,35 +171,22 @@ import Testing
         #expect(model.flips == 1)
     }
 
-    @Test func noThenCompatibilityModeStoresTheAnswerAndRepeatsStepOneWithANewSession() async throws {
+    /// No goes straight to the results: the answer is stored, the session ends, and the method stays as it was.
+    @Test func noStoresTheAnswerAndGoesStraightToTheResults() async throws {
         let services = OverbrightServices.preview()
         let time = try time(services)
-        let first = FakeCalibrationSession(state: .ready), second = FakeCalibrationSession(state: .ready)
-        first.record = FakeCalibrationSession.record(.notBrighter)
-        let (model, begun) = model(services, sessions: [first, second])
-        model.start()
-        await time.advance(by: .milliseconds(100))
-        model.answerBrighter(false)
-        #expect(model.step == .notBrighter)
-        model.useCompatibilityMode()
-        let preferences = DisplayPreferencesEditor(settings: services.settings).preferences(of: display)
-        #expect(first.calls.last == "finish(false)")
-        #expect(preferences.calibration?.outcome == .notBrighter && preferences.mechanism == .overlay)
-        #expect(begun() == 2 && model.session === second && model.step == .comparison)
-        await time.advance(by: .milliseconds(100))
-        #expect(second.calls.contains("showComparison(true)"))
-    }
-
-    @Test func noThenKeepColorTableEndsWithTheColorTable() throws {
-        let services = OverbrightServices.preview()
         let session = FakeCalibrationSession(state: .ready)
         session.record = FakeCalibrationSession.record(.notBrighter)
-        let (model, _) = model(services, sessions: [session])
+        let (model, begun) = model(services, sessions: [session])
         model.start()
+        await time.advance(by: .milliseconds(100))
         model.answerBrighter(false)
-        model.keepColorTable()
-        #expect(model.step == .results && model.ending == .keptColorTable)
-        #expect(DisplayPreferencesEditor(settings: services.settings).preferences(of: display).mechanism == .table)
+        #expect(model.step == .results && model.ending == .keptColorTable && !model.isFlipping)
+        let preferences = DisplayPreferencesEditor(settings: services.settings).preferences(of: display)
+        #expect(session.calls.last == "finish(false)")
+        #expect(preferences.calibration?.outcome == .notBrighter)
+        #expect(preferences.mechanism == DisplayPreferences().mechanism)
+        #expect(begun() == 1)
         #expect(CalibrationCopy.result(.keptColorTable) != CalibrationCopy.result(.inconclusive))
     }
 

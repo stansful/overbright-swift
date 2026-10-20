@@ -1,5 +1,5 @@
 // OverbrightDesignTests/ChipModelTests.swift — DESIGN.md §12.2 and ARCHITECTURE.md §6.2: every `LimitReason` maps to
-// its chip (copy, colour, symbol, actions) or to none; chips are per-display only (a reason the banner says never
+// its chip (copy, colour, symbol) or to none; chips are per-display only (a reason the banner says never
 // repeats as a chip); the engine phase wins while preparing or failed. English whatever the system language.
 import Foundation
 import OverbrightCore
@@ -46,51 +46,50 @@ import Testing
         #expect(OverbrightSymbol.allCases.contains(model.symbol))
     }
 
-    /// The table of DESIGN.md §12.2: text, glyph, colour, sentence and actions.
+    /// The table of DESIGN.md §12.2: text, glyph, colour and sentence.
     @Test func theChipTable() throws {
-        typealias Row = (LimitReason, String, OverbrightSymbol, SemanticColor, String, [FixAction])
+        typealias Row = (LimitReason, String, OverbrightSymbol, SemanticColor, String)
         let rows: [Row] = [
             (.boostNotEnabled, "Extra brightness off", .sunMax, .neutral,
-             "Extra brightness is off for this display. Dimming still works.", [.turnOn]),
+             "Extra brightness is off for this display. Dimming still works."),
             (.headroom, "Limited by macOS", .sunMin, .info,
-             "macOS allows ×1.55 right now. It lowers the extra range when the surroundings are bright, the display is warm or the battery is low.", []),
-            (.hdrSuppressedByMacOS, "Limited by macOS", .sunMin, .info, "macOS is limiting HDR right now.", []),
+             "macOS allows ×1.55 right now. It lowers the extra range when the surroundings are bright, the display is warm or the battery is low."),
+            (.hdrSuppressedByMacOS, "Limited by macOS", .sunMin, .info, "macOS is limiting HDR right now."),
             (.nearFullBrightnessOnly, "Below full brightness", .sunMin, .info,
-             "Extra brightness fades out as you lower the display brightness. Turn the brightness up for more.", [.changeSetting]),
+             "Extra brightness fades out as you lower the display brightness. Turn the brightness up for more."),
             (.oledLimit, "OLED limit", .lockFill, .info,
-             "Extra brightness stays at 1.3 times on OLED displays to protect the panel. Choose Peak for more.", [.choosePeak]),
+             "Extra brightness stays at 1.3 times on OLED displays to protect the panel. Choose Peak for more."),
             (.thermalSerious, "Limited by heat", .thermometerMedium, .warning,
-             "Your Mac is warm, so extra brightness stays at 1.2 times until it cools down.", []),
+             "Your Mac is warm, so extra brightness stays at 1.2 times until it cools down."),
             (.fullScreenVideo, "Paused: video", .playRectangleFill, .neutral,
-             "Extra brightness pauses while an app plays video full screen on this display.", [.changeRules]),
+             "Extra brightness pauses while an app plays video full screen on this display."),
             (.fullScreenApp, "Paused: full screen", .playRectangleFill, .neutral,
-             "Extra brightness pauses while an app is full screen on this display.", [.changeRules]),
+             "Extra brightness pauses while an app is full screen on this display."),
             (.pausedApp(bundleID: "com.example.player"), "Paused: \u{2068}Player\u{2069}", .pauseFill, .neutral,
-             "Extra brightness pauses while \u{2068}Player\u{2069} is in front on this display.", [.editApps]),
+             "Extra brightness pauses while \u{2068}Player\u{2069} is in front on this display."),
             (.game, "Paused: game", .gameControllerFill, .neutral,
-             "Extra brightness pauses while a game is in front on this display.", [.changeRules]),
+             "Extra brightness pauses while a game is in front on this display."),
             (.oledIdle, "Paused: idle", .zzz, .neutral,
-             "Extra brightness pauses after 5 minutes without input on OLED displays. Move the pointer or press a key to continue.", []),
+             "Extra brightness pauses after 5 minutes without input on OLED displays. Move the pointer or press a key to continue."),
             (.conflict(Self.mayInterfere), "\u{2068}Tool\u{2069} may interfere", .exclamationMarkCircleFill, .info,
-             "\u{2068}Tool\u{2069} can change display colors in some modes. If it does, Overbright stops on this display.", []),
+             "\u{2068}Tool\u{2069} can change display colors in some modes. If it does, Overbright stops on this display."),
             (.tripped(.oscillation), "Stopped", .exclamationMarkTriangleFill, .danger,
-             "Overbright stopped on this display to prevent flicker.", [.tryAgain]),
+             "Overbright stopped on this display to prevent flicker."),
             (.tripped(.repairBudgetExceeded), "Stopped", .exclamationMarkTriangleFill, .danger,
-             "Overbright stopped on this display to prevent flicker.", [.tryAgain]),
+             "Overbright stopped on this display to prevent flicker."),
             (.tripped(.attributedDrift(Self.colorApp)), "Stopped: \u{2068}Warmth\u{2069}", .exclamationMarkTriangleFill, .danger,
-             "\u{2068}Warmth\u{2069} changed the colors of this display.", [.continueAnyway]),
+             "\u{2068}Warmth\u{2069} changed the colors of this display."),
             (.tripped(.attributedDrift(Self.booster)), "Stopped: \u{2068}Booster\u{2069}", .exclamationMarkTriangleFill, .danger,
-             "\u{2068}Booster\u{2069} changed the colors of this display.", [.useCompatibilityMode]),   // S1: never Continue
+             "\u{2068}Booster\u{2069} changed the colors of this display."),
             (.tripped(.foreignTableAtLaunch), "Colors changed", .exclamationMarkTriangleFill, .danger,
-             "Another app changed this display’s colors in a way Overbright can’t reset.", [.openSystemSettings]),
+             "Another app changed this display’s colors in a way Overbright can’t reset."),
         ]
-        for (reason, text, symbol, color, sentence, actions) in rows {
+        for (reason, text, symbol, color, sentence) in rows {
             let model = try #require(chip(reason), "\(reason)")
             #expect(model.text == text, "\(reason)")
             #expect(model.symbol == symbol, "\(reason)")
             #expect(model.color == color, "\(reason)")
             #expect(model.explanation == sentence, "\(reason)")
-            #expect(model.actions == actions, "\(reason)")
         }
     }
 
@@ -99,7 +98,7 @@ import Testing
         let model = try #require(ChipModel.make(reason: .safeLimit, phase: .boosted, failedTries: 0,
                                                 context: ChipContext(safeLimit: xdr, language: english)))
         #expect(model.text == "Safe limit")
-        #expect(model.symbol == .lockFill && model.color == .info && model.actions == [.choosePeak])
+        #expect(model.symbol == .lockFill && model.color == .info)
         #expect(model.explanation
                 == "Safe stays at the level this display can hold across the whole screen, ×1.67 here. Choose Peak for more.")
         let unknown = try #require(chip(.safeLimit))
@@ -119,24 +118,19 @@ import Testing
         #expect(chip(.waitingForHeadroom)?.text == "Preparing…")
     }
 
-    /// After two failed tries the popover changes and offers the self-test (and Compatibility mode where advised).
+    /// After two failed tries the popover changes (PanelUI's `CardChip` then adds the self-test).
     @Test func noExtraRangeChangesAfterTwoTries() {
         let first = ChipModel.noExtraRange(failedTries: 1, context: ChipContext(language: english))
         #expect(first.explanation == "macOS didn’t make extra range available. This can happen right after waking up, or when HDR is off.")
-        #expect(first.actions == [.tryAgain, .learnMore])
-        #expect(first.helpAnchor == "no-extra-range")
         let again = ChipModel.noExtraRange(failedTries: 2, context: ChipContext(language: english))
         #expect(again.explanation == "macOS still didn’t make extra range available.")
-        #expect(again.actions == [.tryAgain, .runSelfTest, .learnMore])
-        let advised = ChipModel.noExtraRange(failedTries: 2, context: ChipContext(compatibilityAdvised: true, language: english))
-        #expect(advised.actions == [.tryAgain, .runSelfTest, .useCompatibilityMode, .learnMore])
+        #expect(again.text == first.text && again.color == .danger)
     }
 
-    /// A dim-only display shows its verdict badge as a neutral chip with the verdict's sentence and fix.
+    /// A dim-only display shows its verdict badge as a neutral chip with the verdict's sentence.
     @Test func aDimOnlyVerdictIsANeutralChip() throws {
         let model = try #require(chip(.notSupported(.turnOnHDR)))
         #expect(model.text == "HDR is off" && model.color == .neutral && model.symbol == .display)
-        #expect(model.actions == [.openSystemSettings])
         #expect(model.explanation.hasPrefix("Turn on High Dynamic Range for this display in Displays settings"))
     }
 

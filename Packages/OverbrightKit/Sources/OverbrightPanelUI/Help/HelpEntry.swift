@@ -45,7 +45,7 @@ public struct HelpEntry: Identifiable, Hashable {
             HelpEntry(id: Anchor.noExtraRange,
                       question: String(localized: "The screen didn’t get brighter", bundle: .module,
                                        comment: "Help: question"),
-                      answer: String(localized: "Turn the display brightness all the way up; Overbright adds to it. Check the display’s verdict in Settings ▸ Displays. On a MacBook Pro, use the 1600-nit preset. On some Macs, macOS ignores color table changes: choose Calibrate… to check, or try Compatibility mode. Run Self-Test… shows what macOS reports.",
+                      answer: String(localized: "Turn the display brightness all the way up; Overbright adds to it. Check the display’s verdict in Settings ▸ Displays. On a MacBook Pro, use the 1600-nit preset. On some Macs, macOS ignores color table changes: choose Calibrate… to check. Run Self-Test… shows what macOS reports.",
                                      bundle: .module, comment: "Help: answer to “The screen didn’t get brighter”")),
             HelpEntry(id: Anchor.washedOut,
                       question: String(localized: "Colors look washed out, or HDR video looks flat", bundle: .module,

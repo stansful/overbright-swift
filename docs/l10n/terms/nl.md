@@ -81,7 +81,7 @@ as Apple writes it.
 | Back to Standard (the instant off) | Terug naar Standaard | not “panic”, not “reset brightness” |
 | Indoor · Bright room · Sunlight · Max (presets) | Binnen · Lichte ruimte · Zonlicht · Maximum | “Max” is a preset only |
 | Safe · Peak (ceilings) | Veilig · Piek | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | Compatibiliteitsmodus · Kleurentabel | never “fallback” or “overlay” |
+| color table (in sentences: “macOS ignores color table changes”) | kleurentabel | never “gamma”; no “fallback” or “overlay” in copy |
 | Fill Light (the edge light for video calls) | Invullicht | never “ring light” |
 | extra range (headroom, in user copy) | Extra bereik | “headroom” only in Advanced and diagnostics |
 | Calibrate… · Run Self-Test… · Reset Display Colors… | Kalibreer… · Voer zelftest uit… · Stel beeldschermkleuren opnieuw in… |  |

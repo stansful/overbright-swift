@@ -282,8 +282,9 @@ numbers, percentages and durations go through `FormatStyle`.
 **Copy** (DESIGN.md §16): American English; sentence case, title case only in AppKit chrome (menus, Settings push
 buttons, sheets, alerts); ’ “ ” and one-character …; System Settings named by its pane, never by a ▸ path; a button
 into System Settings is "Open System Settings", a button into Overbright names the action. Vocabulary: Standard,
-extra brightness, Dim below minimum / Dimmed, Brighter / Less Bright, Safe / Peak, Compatibility mode, Fill Light,
-Back to Standard, extra range — never "boost", "EDR", "gamma" or "headroom" outside Advanced and diagnostics.
+extra brightness, Dim below minimum / Dimmed, Brighter / Less Bright, Safe / Peak, Fill Light, Back to Standard,
+extra range — never "boost", "EDR", "gamma" or "headroom" outside Advanced and diagnostics, and never "fallback" or
+"overlay".
 
 **Settings in tests and previews.** `OverbrightServices.preview()` keeps its settings in memory; anything else that
 needs a `UserDefaults` takes `InMemoryDefaults()`. Never create a `UserDefaults(suiteName:)` in a test or preview

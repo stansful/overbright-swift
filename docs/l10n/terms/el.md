@@ -90,7 +90,7 @@ Register and style, as macOS writes Greek:
 | Back to Standard (the instant off) | Επιστροφή στο Τυπικό | not “panic”, not “reset brightness” |
 | Indoor · Bright room · Sunlight · Max (presets) | Κλειστός χώρος · Φωτεινό δωμάτιο · Ηλιακό φως · Μέγιστο | “Max” is a preset only |
 | Safe · Peak (ceilings) | Ασφαλές · Αιχμή | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | Λειτουργία συμβατότητας · Πίνακας χρωμάτων | never “fallback” or “overlay” |
+| color table (in sentences: “macOS ignores color table changes”) | πίνακας χρωμάτων | never “gamma”; no “fallback” or “overlay” in copy |
 | Fill Light (the edge light for video calls) | Φωτισμός προσώπου | never “ring light” |
 | extra range (headroom, in user copy) | Περιθώριο φωτεινότητας | “headroom” only in Advanced and diagnostics |
 | Calibrate… · Run Self-Test… · Reset Display Colors… | Βαθμονόμηση… · Εκτέλεση αυτοελέγχου… · Επαναφορά χρωμάτων οθόνης… |  |

@@ -6910,215 +6910,6 @@
         }
       }
     },
-    "Automatic uses Compatibility mode, because macOS ignores color table changes on this Mac." : {
-      "comment" : "Settings ▸ Displays: footnote of Method when Automatic chose Compatibility mode",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "يستخدم الخيار \"تلقائي\" وضع التوافق، لأن macOS يتجاهل تغييرات جدول الألوان على جهاز Mac هذا."
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "“Automàtic” fa servir el mode de compatibilitat, perquè el macOS ignora els canvis a la taula de colors en aquest Mac."
-          }
-        },
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Volba Automaticky používá režim kompatibility, protože na tomto Macu macOS ignoruje změny tabulky barev."
-          }
-        },
-        "da" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "“Automatisk” bruger kompatibilitetstilstand, fordi macOS ignorerer ændringer i farvetabellen på denne Mac."
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "„Automatisch“ verwendet den Kompatibilitätsmodus, da macOS auf diesem Mac Änderungen der Farbtabelle ignoriert."
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Η επιλογή «Αυτόματα» χρησιμοποιεί τη λειτουργία συμβατότητας, επειδή το macOS αγνοεί τις αλλαγές στον πίνακα χρωμάτων σε αυτό το Mac."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "“Automático” usa el modo de compatibilidad, porque macOS ignora los cambios en la tabla de colores en este Mac."
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "”Automaattinen” käyttää yhteensopivuustilaa, koska macOS ohittaa väritaulukon muutokset tässä Macissa."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "« Automatique » utilise le mode de compatibilité, car macOS ignore les modifications de la table des couleurs sur ce Mac."
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "״אוטומטי״ משתמש במצב תאימות, כי מערכת macOS מתעלמת משינויים בטבלת הצבעים ב-Mac זה."
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "“ऑटोमैटिक” संगतता मोड इस्तेमाल करता है, क्योंकि इस Mac पर macOS रंग टेबल में किए गए बदलावों को अनदेखा करता है।"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Opcija “Automatski” koristi način kompatibilnosti jer macOS na ovom Macu zanemaruje promjene tablice boja."
-          }
-        },
-        "hu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Az „Automatikus” kompatibilitási módot használ, mert ezen a Macen a macOS figyelmen kívül hagyja a színtábla módosításait."
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "“Otomatis” menggunakan Mode kompatibilitas, karena macOS mengabaikan perubahan tabel warna di Mac ini."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "“Automatico” usa la modalità compatibilità, perché su questo Mac macOS ignora le modifiche alla tabella colori."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "このMacではmacOSがカラーテーブルの変更を無視するため、“自動”では互換モードを使用します。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "이 Mac에서는 macOS가 색상 테이블 변경을 무시하므로 ‘자동’은 호환성 모드를 사용합니다."
-          }
-        },
-        "ms" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "“Automatik” menggunakan Mod keserasian kerana macOS mengabaikan perubahan jadual warna pada Mac ini."
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "«Automatisk» bruker kompatibilitetsmodus, fordi macOS ignorerer endringer i fargetabellen på denne Macen."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "‘Automatisch’ gebruikt de compatibiliteitsmodus, omdat macOS op deze Mac wijzigingen in de kleurentabel negeert."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Opcja „Automatycznie” używa trybu zgodności, ponieważ na tym Macu macOS ignoruje zmiany tabeli kolorów."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "“Automático” usa o Modo de Compatibilidade porque, neste Mac, o macOS ignora alterações na tabela de cores."
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "“Automático” usa o modo de compatibilidade, porque o macOS ignora as alterações à tabela de cores neste Mac."
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "„Automat” folosește modul de compatibilitate, deoarece macOS ignoră modificările tabelului de culori pe acest Mac."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Вариант «Автоматически» использует режим совместимости, так как на этом Mac macOS игнорирует изменения цветовой таблицы."
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Možnosť Automaticky používa režim kompatibility, pretože na tomto Macu macOS ignoruje zmeny tabuľky farieb."
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Možnost »Samodejno« uporablja način združljivosti, ker macOS na tem Macu prezre spremembe barvne tabele."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "”Automatiskt” använder kompatibilitetsläge eftersom macOS ignorerar ändringar i färgtabellen på den här Macen."
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "“อัตโนมัติ” ใช้โหมดความเข้ากันได้ เพราะ macOS ไม่สนใจการเปลี่ยนแปลงตารางสีบน Mac เครื่องนี้"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Otomatik seçeneği uyumluluk modunu kullanıyor, çünkü bu Mac’te macOS renk tablosu değişikliklerini yok sayıyor."
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Варіант «Автоматично» використовує режим сумісності, бо на цьому Mac macOS ігнорує зміни колірної таблиці."
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "“Tự động” dùng Chế độ tương thích vì macOS bỏ qua thay đổi bảng màu trên máy Mac này."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "由于macOS在此Mac上会忽略颜色表更改，“自动”使用兼容模式。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "「自動」使用相容模式，因為macOS會忽略此Mac上的色彩表更改。"
-          }
-        }
-      }
-    },
     "Automatically adjust brightness" : {
       "comment" : "Settings ▸ Displays: search title of the advisory row; macOS’s own name of the setting in Displays settings",
       "localizations" : {
@@ -7951,215 +7742,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "長時間停留在同一位置的明亮內容（例如選單列）可能會使OLED面板損耗不均。Overbright會在OLED顯示器上將額外亮度維持在較低程度，並在%@無操作後暫停。"
-          }
-        }
-      }
-    },
-    "Brightens through an overlay. The pointer isn’t brightened, and screen recordings may show the overlay." : {
-      "comment" : "Settings ▸ Displays: footnote of Method set to Compatibility mode",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "يزيد الإضاءة من خلال طبقة تراكب. لا يصبح المؤشر أكثر إضاءة، وقد تظهر الطبقة في تسجيلات الشاشة."
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Augmenta la brillantor amb una capa superposada. El punter no es fa més brillant i les gravacions de pantalla poden mostrar la capa."
-          }
-        },
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zjasňuje pomocí překryvné vrstvy. Ukazatel se nezjasní a na záznamech obrazovky může být překryvná vrstva vidět."
-          }
-        },
-        "da" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gør skærmen lysere med en overlejring. Markøren bliver ikke lysere, og skærmoptagelser kan vise overlejringen."
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hellt über eine Überlagerung auf. Der Zeiger wird nicht aufgehellt, und Bildschirmaufnahmen können die Überlagerung zeigen."
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Αυξάνει τη φωτεινότητα μέσω επικάλυψης. Ο δείκτης δεν γίνεται φωτεινότερος και η επικάλυψη μπορεί να φαίνεται στις εγγραφές οθόνης."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aumenta el brillo mediante una superposición. El puntero no gana brillo y las grabaciones de pantalla pueden mostrar la superposición."
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kirkastaa peittokuvan avulla. Osoitin ei kirkastu, ja peittokuva voi näkyä näyttötallenteissa."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Éclaircit au moyen d’une superposition. Le pointeur n’est pas éclairci et les enregistrements d’écran peuvent montrer la superposition."
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "מגביר את הבהירות באמצעות שכבת על. המצביע לא מתבהר, וייתכן ששכבת העל תופיע בהקלטות מסך."
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ओवरले के ज़रिए ब्राइटनेस बढ़ाता है। पॉइंटर ब्राइट नहीं होता, और स्क्रीन रिकॉर्डिंग में ओवरले दिख सकता है।"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Posvjetljuje pomoću prekrivnog sloja. Pokazivač se ne posvjetljuje, a prekrivni sloj može biti vidljiv na snimkama zaslona."
-          }
-        },
-        "hu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Átfedő réteggel világosít. A mutató nem lesz világosabb, és a képernyőfelvételeken látszódhat az átfedés."
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mencerahkan melalui lapisan di atas layar. Penunjuk tidak ikut lebih terang, dan rekaman layar dapat menampilkan lapisan tersebut."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aumenta la luminosità tramite una sovrapposizione. Il puntatore non diventa più luminoso e le registrazioni dello schermo potrebbero mostrare la sovrapposizione."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "オーバーレイを使って明るくします。ポインタは明るくならず、画面収録にオーバーレイが映ることがあります。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "오버레이를 통해 밝게 합니다. 포인터는 밝아지지 않으며 화면 기록에 오버레이가 나타날 수 있습니다."
-          }
-        },
-        "ms" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mencerahkan melalui lapisan tindih. Penuding tidak dicerahkan dan rakaman skrin mungkin menunjukkan lapisan itu."
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gjør lysere med et overlegg. Pekeren blir ikke lysere, og skjermopptak kan vise overlegget."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Maakt helderder via een laag over het scherm. De aanwijzer wordt niet helderder en schermopnamen kunnen die laag tonen."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rozjaśnia za pomocą nakładki. Wskaźnik nie jest rozjaśniany, a nakładka może być widoczna na nagraniach ekranu."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aumenta o brilho por meio de uma sobreposição. O ponteiro não fica mais claro, e gravações de tela podem mostrar a sobreposição."
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aumenta o brilho através de uma sobreposição. O cursor não fica mais brilhante e as gravações de ecrã podem mostrar a sobreposição."
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mărește luminozitatea printr‑un strat suprapus. Cursorul nu devine mai luminos, iar înregistrările ecranului pot arăta stratul suprapus."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Повышает яркость с помощью наложения. Указатель не становится ярче, а наложение может быть видно в записях экрана."
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zjasňuje pomocou prekryvnej vrstvy. Ukazovateľ sa nezjasní a na záznamoch obrazovky môže byť prekryvná vrstva viditeľná."
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Posvetli s prekrivnim slojem. Kazalec se ne posvetli, na posnetkih zaslona pa je prekrivni sloj lahko viden."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gör skärmen ljusare med ett överlägg. Pekaren blir inte ljusare och skärminspelningar kan visa överlägget."
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "เพิ่มความสว่างผ่านภาพซ้อนทับ ตัวชี้จะไม่สว่างขึ้น และภาพซ้อนทับอาจปรากฏในการบันทึกหน้าจอ"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bir kaplama katmanıyla parlaklaştırır. İmleç parlaklaşmaz ve ekran kayıtlarında kaplama görünebilir."
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Підвищує яскравість за допомогою накладання. Курсор не стає яскравішим, а накладання може бути видно на записах екрана."
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Làm sáng bằng một lớp phủ. Con trỏ không được làm sáng, và bản ghi màn hình có thể hiện lớp phủ."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "通过叠加层提高亮度。指针不会变亮，且屏幕录制中可能会出现叠加层。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "透過疊加層來提高亮度。指標不會變亮，且螢幕錄影中可能會顯示疊加層。"
           }
         }
       }
@@ -23003,215 +22585,6 @@
         }
       }
     },
-    "Keep Color Table" : {
-      "comment" : "Calibration: keeps the color table method (title case)",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "الإبقاء على جدول الألوان"
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mantén la taula de colors"
-          }
-        },
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ponechat tabulku barev"
-          }
-        },
-        "da" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Behold farvetabel"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Farbtabelle behalten"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Διατήρηση πίνακα χρωμάτων"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mantener tabla de colores"
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pidä väritaulukko"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Garder la table des couleurs"
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "השארת טבלת הצבעים"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "रंग टेबल रखें"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zadrži tablicu boja"
-          }
-        },
-        "hu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Színtábla megtartása"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pertahankan Tabel Warna"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mantieni tabella colori"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "カラーテーブルを維持"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "색상 테이블 유지"
-          }
-        },
-        "ms" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kekalkan Jadual Warna"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Behold fargetabell"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Behoud kleurentabel"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pozostaw tabelę kolorów"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Manter Tabela de Cores"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Manter tabela de cores"
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Păstrați tabelul de culori"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Оставить цветовую таблицу"
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ponechať tabuľku farieb"
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ohrani barvno tabelo"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Behåll färgtabell"
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "คงตารางสีไว้"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Renk Tablosunu Koru"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Залишити колірну таблицю"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Giữ bảng màu"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "保留颜色表"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "保留色彩表"
-          }
-        }
-      }
-    },
     "Keep Going" : {
       "comment" : "Calibration: continues the sweep past its pause (title case)",
       "localizations" : {
@@ -24462,215 +23835,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "選單列"
-          }
-        }
-      }
-    },
-    "Method" : {
-      "comment" : "Settings ▸ Displays: how Overbright brightens the display, Automatic, Color table or Compatibility mode (pop-up)",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "الطريقة"
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mètode"
-          }
-        },
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Metoda"
-          }
-        },
-        "da" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Metode"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Methode"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Μέθοδος"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Método"
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Menetelmä"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Méthode"
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "שיטה"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "तरीका"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Metoda"
-          }
-        },
-        "hu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Módszer"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Metode"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Metodo"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "方式"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "방식"
-          }
-        },
-        "ms" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kaedah"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Metode"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Methode"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Metoda"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Método"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Método"
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Metodă"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Способ"
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Metóda"
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Metoda"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Metod"
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "วิธี"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Yöntem"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Спосіб"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Phương thức"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "方式"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "方式"
           }
         }
       }
@@ -30318,215 +29482,6 @@
         }
       }
     },
-    "Overbright can’t run next to another brightness app on the color table. Use Compatibility mode on a display to run alongside it." : {
-      "comment" : "Settings ▸ Advanced: note under a running brightness app",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "لا يستطيع Overbright العمل عبر جدول الألوان إلى جانب تطبيق إضاءة آخر. استخدم وضع التوافق على إحدى الشاشات ليعمل إلى جانبه."
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "L’Overbright no pot funcionar amb la taula de colors al costat d’una altra app de brillantor. Fes servir el mode de compatibilitat en una pantalla per funcionar al seu costat."
-          }
-        },
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright nemůže pracovat s tabulkou barev souběžně s jinou aplikací pro jas. Chcete‑li je používat zároveň, zapněte na monitoru režim kompatibility."
-          }
-        },
-        "da" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright kan ikke køre via farvetabellen sammen med en anden lysstyrkeapp. Brug kompatibilitetstilstand på en skærm for at køre side om side med den."
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright kann nicht gleichzeitig mit einer anderen Helligkeits-App über die Farbtabelle arbeiten. Nutze auf einem Display den Kompatibilitätsmodus, um parallel dazu zu arbeiten."
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Το Overbright δεν μπορεί να λειτουργεί μέσω του πίνακα χρωμάτων παράλληλα με άλλη εφαρμογή φωτεινότητας. Χρησιμοποιήστε τη λειτουργία συμβατότητας σε μια οθόνη για να λειτουργεί μαζί της."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright no puede funcionar junto a otra app de brillo con la tabla de colores. Usa el modo de compatibilidad en una pantalla para funcionar junto a ella."
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright ei voi toimia väritaulukon kautta toisen kirkkausapin rinnalla. Käytä näytöllä yhteensopivuustilaa, niin Overbright toimii sen rinnalla."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright ne peut pas utiliser la table des couleurs en même temps qu’une autre app de luminosité. Utilisez le mode de compatibilité sur un écran pour fonctionner à ses côtés."
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "לא ניתן להפעיל את Overbright דרך טבלת הצבעים לצד יישום בהירות אחר. כדי לפעול לצדו, יש להשתמש במצב תאימות בצג."
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright रंग टेबल पर किसी दूसरे ब्राइटनेस ऐप के साथ नहीं चल सकता। उसके साथ चलाने के लिए डिस्प्ले पर संगतता मोड इस्तेमाल करें।"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright ne može raditi preko tablice boja uz drugu aplikaciju za svjetlinu. Za rad uz nju uključite način kompatibilnosti na zaslonu."
-          }
-        },
-        "hu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Az Overbright a színtáblán nem tud egy másik fényerő-szabályozó app mellett működni. Ha vele együtt szeretné használni, kapcsolja be a kijelzőn a kompatibilitási módot."
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright tidak dapat berjalan bersama app kecerahan lain melalui tabel warna. Gunakan Mode kompatibilitas di sebuah layar agar dapat berjalan bersamanya."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright non può funzionare con la tabella colori insieme a un’altra app per la luminosità. Usa la modalità compatibilità su uno schermo per funzionare insieme a essa."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "カラーテーブルを使用する場合、Overbrightはほかの輝度調整Appと同時に動作できません。そのAppと併用するには、ディスプレイで互換モードを使用してください。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright는 색상 테이블 방식으로 다른 밝기 앱과 함께 실행할 수 없습니다. 함께 실행하려면 디스플레이에서 호환성 모드를 사용하십시오."
-          }
-        },
-        "ms" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright tidak boleh berjalan bersama app kecerahan lain pada jadual warna. Gunakan Mod keserasian pada paparan untuk berjalan bersamanya."
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright kan ikke bruke fargetabellen samtidig med en annen lysstyrkeapp. Bruk kompatibilitetsmodus på en skjerm for å kjøre side om side med den."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright kan niet via de kleurentabel werken naast een andere helderheidsapp. Gebruik de compatibiliteitsmodus op een beeldscherm om ermee samen te werken."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright nie może działać przez tabelę kolorów równocześnie z inną aplikacją do jasności. Aby działać razem z nią, użyj na wyświetlaczu trybu zgodności."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "O Overbright não pode funcionar pela tabela de cores junto com outro app de brilho. Use o Modo de Compatibilidade em uma tela para funcionar junto com ele."
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "O Overbright não pode funcionar com a tabela de cores ao mesmo tempo que outra aplicação de brilho. Use o modo de compatibilidade num monitor para funcionar em conjunto com ela."
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright nu poate funcționa prin tabelul de culori alături de o altă aplicație pentru luminozitate. Pentru a funcționa împreună cu aceasta, folosiți modul de compatibilitate pe afișaj."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright не может работать через цветовую таблицу одновременно с другим приложением для настройки яркости. Чтобы работать вместе с ним, включите на дисплее режим совместимости."
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright nemôže pracovať s tabuľkou farieb súčasne s inou apkou na úpravu jasu. Ak ich chcete používať zároveň, zapnite na displeji režim kompatibility."
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright ne more delovati prek barvne tabele hkrati z drugo aplikacijo za svetlost. Če želite, da delujeta skupaj, na zaslonu uporabite način združljivosti."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright kan inte köras via färgtabellen samtidigt med en annan ljusstyrkeapp. Använd kompatibilitetsläge på en skärm för att köra tillsammans med den."
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright ไม่สามารถทำงานผ่านตารางสีพร้อมกับแอปปรับความสว่างอื่นได้ ให้ใช้โหมดความเข้ากันได้บนจอภาพเพื่อทำงานร่วมกัน"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright, renk tablosu üzerinden başka bir parlaklık uygulamasıyla birlikte çalışamaz. Onunla birlikte çalışmak için bir ekranda uyumluluk modunu kullanın."
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright не може працювати через колірну таблицю одночасно з іншою програмою для налаштування яскравості. Щоб працювати разом із нею, увімкніть на дисплеї режим сумісності."
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright không thể chạy trên bảng màu cùng lúc với một ứng dụng độ sáng khác. Hãy dùng Chế độ tương thích trên một màn hình để chạy song song."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "使用颜色表时，Overbright无法与其他亮度App同时运行。若要同时运行，请在显示器上使用兼容模式。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright無法與其他亮度App同時使用色彩表運作。請在顯示器上使用相容模式，以便與其同時運作。"
-          }
-        }
-      }
-    },
     "Overbright collects nothing and needs no permissions. It connects to the internet only to check GitHub for updates, and only if you turn that on." : {
       "comment" : "Settings ▸ About: the privacy statement",
       "localizations" : {
@@ -31154,215 +30109,6 @@
         }
       }
     },
-    "Overbright keeps the color table on this display. If the screen doesn’t get brighter, choose Compatibility mode in Settings ▸ Displays." : {
-      "comment" : "Calibration: result after the screen did not get brighter and the color table was kept",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "يُبقي Overbright جدول الألوان على هذه الشاشة. وإذا لم تصبح الشاشة أكثر إضاءة، فاختر \"وضع التوافق\" في الإعدادات ◂ شاشات العرض."
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "L’Overbright manté la taula de colors en aquesta pantalla. Si la pantalla no es fa més brillant, tria el mode de compatibilitat a Configuració ▸ Pantalles."
-          }
-        },
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright na tomto monitoru ponechá tabulku barev. Pokud se obrazovka nezjasní, zvolte v Nastavení ▸ Monitory režim kompatibility."
-          }
-        },
-        "da" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright beholder farvetabellen på denne skærm. Hvis skærmen ikke bliver lysere, så vælg kompatibilitetstilstand under Indstillinger ▸ Skærme."
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright behält auf diesem Display die Farbtabelle bei. Falls der Bildschirm nicht heller wird, wähle unter Einstellungen ▸ Displays den Kompatibilitätsmodus."
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Το Overbright διατηρεί τον πίνακα χρωμάτων σε αυτήν την οθόνη. Αν η οθόνη δεν γίνει φωτεινότερη, επιλέξτε «Λειτουργία συμβατότητας» στις Ρυθμίσεις ▸ Οθόνες."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright mantiene la tabla de colores en esta pantalla. Si la pantalla no gana brillo, elige el modo de compatibilidad en Ajustes ▸ Pantallas."
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright pitää väritaulukon käytössä tällä näytöllä. Jos näyttö ei kirkastu, valitse yhteensopivuustila kohdassa Asetukset ▸ Näytöt."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright conserve la table des couleurs sur cet écran. Si l’écran ne devient pas plus lumineux, choisissez le mode de compatibilité dans Réglages ▸ Écrans."
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "בצג הזה Overbright ימשיך להשתמש בטבלת הצבעים. אם המסך לא נעשה בהיר יותר, יש לבחור ״מצב תאימות״ ב״הגדרות״ > ״צגים״."
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright इस डिस्प्ले पर रंग टेबल बनाए रखता है। अगर स्क्रीन ज़्यादा ब्राइट नहीं होती, तो सेटिंग ▸ डिस्प्ले में संगतता मोड चुनें।"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright zadržava tablicu boja na ovom zaslonu. Ako zaslon ne postane svjetliji, odaberite način kompatibilnosti u odjeljku Postavke ▸ Zasloni."
-          }
-        },
-        "hu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Az Overbright ezen a kijelzőn a színtáblát használja tovább. Ha a képernyő nem lesz világosabb, válassza a kompatibilitási módot a Beállítások ▸ Kijelzők részben."
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright mempertahankan tabel warna di layar ini. Jika layar tidak menjadi lebih terang, pilih Mode kompatibilitas di Pengaturan ▸ Layar."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright mantiene la tabella colori su questo schermo. Se lo schermo non diventa più luminoso, scegli la modalità compatibilità in Impostazioni ▸ Schermi."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbrightはこのディスプレイでカラーテーブルを使い続けます。画面が明るくならない場合は、設定 ▸ ディスプレイで互換モードを選択してください。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright는 이 디스플레이에서 색상 테이블을 계속 사용합니다. 화면이 밝아지지 않으면 설정 ▸ 디스플레이에서 호환성 모드를 선택하십시오."
-          }
-        },
-        "ms" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright mengekalkan jadual warna pada paparan ini. Jika skrin tidak menjadi lebih cerah, pilih Mod keserasian dalam Seting ▸ Paparan."
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright beholder fargetabellen på denne skjermen. Hvis skjermen ikke blir lysere, velger du kompatibilitetsmodus i Innstillinger ▸ Skjermer."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright behoudt de kleurentabel op dit beeldscherm. Als het scherm niet helderder wordt, kies dan de compatibiliteitsmodus in Instellingen ▸ Beeldschermen."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright zachowuje tabelę kolorów na tym wyświetlaczu. Jeśli ekran nie stanie się jaśniejszy, wybierz tryb zgodności w sekcji Ustawienia ▸ Wyświetlacze."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "O Overbright mantém a tabela de cores nesta tela. Se a tela não ficar mais clara, escolha o Modo de Compatibilidade em Ajustes ▸ Telas."
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "O Overbright mantém a tabela de cores neste monitor. Se o ecrã não ficar mais brilhante, escolha o modo de compatibilidade em Definições ▸ Monitores."
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright păstrează tabelul de culori pe acest afișaj. Dacă ecranul nu devine mai luminos, alegeți modul de compatibilitate în Configurări ▸ Afișaje."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright оставляет на этом дисплее цветовую таблицу. Если экран не станет ярче, выберите режим совместимости в разделе Настройки ▸ Дисплеи."
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright na tomto displeji ponechá tabuľku farieb. Ak sa obrazovka nezjasní, zvoľte v Nastaveniach ▸ Displeje režim kompatibility."
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright na tem zaslonu ohrani barvno tabelo. Če zaslon ne postane svetlejši, v Nastavitvah ▸ Zasloni izberite način združljivosti."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright behåller färgtabellen på den här skärmen. Om skärmen inte blir ljusare väljer du kompatibilitetsläge i Inställningar ▸ Skärmar."
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright จะใช้ตารางสีต่อไปบนจอภาพนี้ หากหน้าจอไม่สว่างขึ้น ให้เลือกโหมดความเข้ากันได้ใน การตั้งค่า ▸ จอภาพ"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright bu ekranda renk tablosunu korur. Ekran parlaklaşmazsa Ayarlar ▸ Ekranlar bölümünde uyumluluk modunu seçin."
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright залишає на цьому дисплеї колірну таблицю. Якщо екран не стане яскравішим, виберіть режим сумісності в розділі Параметри ▸ Дисплеї."
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright giữ bảng màu trên màn hình này. Nếu màn hình không sáng hơn, hãy chọn Chế độ tương thích trong Cài đặt ▸ Màn hình."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright将在此显示器上继续使用颜色表。如果屏幕没有变亮，请在“设置”▸“显示器”中选择兼容模式。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright會在此顯示器上保留色彩表。如果螢幕沒有變亮，請在「設定」▸「顯示器」中選擇相容模式。"
-          }
-        }
-      }
-    },
     "Overbright limits extra brightness when your Mac gets warm and turns it off when it gets hot. This can’t be turned off." : {
       "comment" : "Settings ▸ Automations: the heat note",
       "localizations" : {
@@ -31568,215 +30314,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "當你的Mac溫度升高時，Overbright會限制額外亮度；當Mac過熱時則會將其關閉。此功能無法關閉。"
-          }
-        }
-      }
-    },
-    "Overbright picks the method that works on this Mac." : {
-      "comment" : "Settings ▸ Displays: footnote of Method set to Automatic",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "يختار Overbright الطريقة التي تعمل على جهاز Mac هذا."
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "L’Overbright tria el mètode que funciona en aquest Mac."
-          }
-        },
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright zvolí metodu, která na tomto Macu funguje."
-          }
-        },
-        "da" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright vælger den metode, der virker på denne Mac."
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright wählt die Methode, die auf diesem Mac funktioniert."
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Το Overbright επιλέγει τη μέθοδο που λειτουργεί σε αυτό το Mac."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright elige el método que funciona en este Mac."
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright valitsee menetelmän, joka toimii tässä Macissa."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright choisit la méthode qui fonctionne sur ce Mac."
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ב-Mac זה Overbright בוחר את השיטה שעובדת."
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright वह तरीका चुनता है जो इस Mac पर काम करता है।"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright bira metodu koja radi na ovom Macu."
-          }
-        },
-        "hu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Az Overbright azt a módszert választja, amely ezen a Macen működik."
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright memilih metode yang berfungsi di Mac ini."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright sceglie il metodo che funziona su questo Mac."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "OverbrightがこのMacで機能する方式を選択します。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright가 이 Mac에서 작동하는 방식을 선택합니다."
-          }
-        },
-        "ms" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright memilih kaedah yang berfungsi pada Mac ini."
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright velger metoden som fungerer på denne Macen."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright kiest de methode die op deze Mac werkt."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright wybiera metodę, która działa na tym Macu."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "O Overbright escolhe o método que funciona neste Mac."
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "O Overbright escolhe o método que funciona neste Mac."
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright alege metoda care funcționează pe acest Mac."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright выбирает способ, который работает на этом Mac."
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright zvolí metódu, ktorá na tomto Macu funguje."
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright izbere metodo, ki deluje na tem Macu."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright väljer den metod som fungerar på den här Macen."
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright จะเลือกวิธีที่ใช้งานได้บน Mac เครื่องนี้"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright bu Mac’te çalışan yöntemi seçer."
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright вибирає спосіб, який працює на цьому Mac."
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright chọn phương thức hoạt động được trên máy Mac này."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright会选择适用于此Mac的方式。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overbright會選擇在此Mac上有效的方式。"
           }
         }
       }
@@ -44530,6 +43067,215 @@
         }
       }
     },
+    "Studied for a full-screen overlay that multiplies the picture, which Overbright tried and removed. No code was copied." : {
+      "comment" : "Settings ▸ About ▸ Acknowledgments: what Overbright learned from xdr-boost",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "دُرس من أجل طبقة تراكب بملء الشاشة تضاعف الصورة، جرّبها Overbright ثم أزالها. لم يُنسخ أي رمز."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estudiat per a una capa superposada a pantalla completa que multiplica la imatge, que l’Overbright va provar i va retirar. No s’ha copiat cap codi."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Studováno kvůli překryvné vrstvě na celou obrazovku, která násobí obraz; Overbright ji vyzkoušel a odstranil. Žádný kód nebyl zkopírován."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Studeret for en overlejring på hele skærmen, der forstærker billedet, som Overbright prøvede og fjernede igen. Der blev ikke kopieret kode."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Studiert für eine Vollbild-Überlagerung, die das Bild verstärkt; Overbright hat sie ausprobiert und wieder entfernt. Es wurde kein Code kopiert."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Μελετήθηκε για μια επικάλυψη πλήρους οθόνης που πολλαπλασιάζει την εικόνα, την οποία το Overbright δοκίμασε και αφαίρεσε. Δεν αντιγράφηκε κώδικας."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estudiado para una superposición a pantalla completa que multiplica la imagen, que Overbright probó y retiró. No se ha copiado código."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tutkittu koko näytön peittokuvaa varten, joka vahvistaa kuvaa; Overbright kokeili sitä ja poisti sen. Koodia ei kopioitu."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Étudié pour une superposition plein écran qui multiplie l’image, qu’Overbright a essayée puis retirée. Aucun code n’a été copié."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "נלמד עבור שכבת על במסך מלא שמגבירה את התמונה, ש-Overbright ניסה והסיר. לא הועתק קוד."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "एक फ़ुल स्क्रीन ओवरले के लिए अध्ययन किया गया, जो तस्वीर को कई गुना करता है; Overbright ने इसे आज़माया और हटा दिया। कोई कोड कॉपी नहीं किया गया।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Proučeno radi prekrivnog sloja preko cijelog zaslona koji pojačava sliku, koji je Overbright isprobao i uklonio. Kod nije kopiran."
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Egy teljes képernyős, a képet felerősítő átfedés miatt tanulmányoztuk, amelyet az Overbright kipróbált, majd eltávolított. Kódot nem másoltunk."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dipelajari untuk lapisan layar penuh yang melipatgandakan gambar, yang pernah dicoba lalu dihapus oleh Overbright. Tidak ada kode yang disalin."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Studiato per una sovrapposizione a tutto schermo che moltiplica l’immagine, che Overbright ha provato e poi rimosso. Nessun codice è stato copiato."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "画面を乗算して明るくする全画面オーバーレイのために参考にしました。Overbrightはこれを試した後、削除しました。コードはコピーしていません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "화면을 배가하는 전체 화면 오버레이를 위해 참고했습니다. Overbright는 이를 시도했다가 제거했습니다. 코드는 복사하지 않았습니다."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dikaji untuk lapisan tindih skrin penuh yang menggandakan gambar, yang pernah dicuba dan dibuang oleh Overbright. Tiada kod disalin."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Studert for et overlegg i fullskjerm som forsterker bildet, som Overbright prøvde og fjernet. Ingen kode ble kopiert."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bestudeerd voor een schermvullende laag die het beeld vermenigvuldigt, die Overbright heeft geprobeerd en weer verwijderd. Er is geen code gekopieerd."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Przeanalizowany pod kątem pełnoekranowej nakładki wzmacniającej obraz, którą Overbright wypróbował i usunął. Żaden kod nie został skopiowany."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estudado para uma sobreposição em tela cheia que multiplica a imagem, que o Overbright testou e removeu. Nenhum código foi copiado."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estudado para uma sobreposição em ecrã completo que multiplica a imagem, que o Overbright experimentou e removeu. Não foi copiado código."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Studiat pentru un strat suprapus pe tot ecranul care amplifică imaginea, pe care Overbright l‑a încercat și l‑a eliminat. Nu a fost copiat cod."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Изучен ради полноэкранного наложения, усиливающего изображение, которое Overbright попробовал и убрал. Код не копировался."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Študované kvôli prekryvnej vrstve na celú obrazovku, ktorá násobí obraz; Overbright ju vyskúšal a odstránil. Žiadny kód nebol skopírovaný."
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preučeno zaradi celozaslonskega prekrivnega sloja, ki pomnoži sliko; Overbright ga je preskusil in odstranil. Koda ni bila kopirana."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Studerat för ett överlägg över hela skärmen som förstärker bilden, som Overbright provade och tog bort. Ingen kod kopierades."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ศึกษาเพื่อทำภาพซ้อนทับเต็มหน้าจอที่ขยายความสว่างของภาพ ซึ่ง Overbright เคยลองใช้แล้วนำออกไป ไม่มีการคัดลอกโค้ด"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görüntüyü çoğaltan, Overbright’ın denediği ve sonra kaldırdığı tam ekran bir kaplama için incelendi. Hiçbir kod kopyalanmadı."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вивчено заради повноекранного накладання, що підсилює зображення, яке Overbright спробував і прибрав. Код не копіювався."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đã được nghiên cứu cho một lớp phủ toàn màn hình nhân độ sáng của hình ảnh, mà Overbright đã thử rồi gỡ bỏ. Không sao chép mã nào."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "曾为一个对画面进行倍增的全屏叠加层而参考，Overbright试用后已将其移除。未拷贝任何代码。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "曾為以全螢幕疊加層放大畫面亮度的做法而參考，Overbright試用後已將其移除。未拷貝任何程式碼。"
+          }
+        }
+      }
+    },
     "Suggested" : {
       "comment" : "Settings ▸ Automations ▸ Add App: submenu of installed video apps worth adding (title case)",
       "localizations" : {
@@ -46202,215 +44948,6 @@
         }
       }
     },
-    "The idea behind Compatibility mode: a full-screen overlay that multiplies the picture. No code was copied." : {
-      "comment" : "Settings ▸ About ▸ Acknowledgments: what Overbright learned from xdr-boost",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "الفكرة وراء وضع التوافق: طبقة تراكب بملء الشاشة تضاعف الصورة. لم يُنسخ أي رمز."
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La idea del mode de compatibilitat: una capa superposada a pantalla completa que multiplica la imatge. No s’ha copiat cap codi."
-          }
-        },
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Myšlenka, na které stojí režim kompatibility: překryvná vrstva na celou obrazovku, která násobí obraz. Žádný kód nebyl zkopírován."
-          }
-        },
-        "da" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Idéen bag kompatibilitetstilstand: en overlejring på hele skærmen, der forstærker billedet. Der blev ikke kopieret kode."
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Die Idee hinter dem Kompatibilitätsmodus: eine Vollbild-Überlagerung, die das Bild verstärkt. Es wurde kein Code kopiert."
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Η ιδέα πίσω από τη λειτουργία συμβατότητας: μια επικάλυψη πλήρους οθόνης που πολλαπλασιάζει την εικόνα. Δεν αντιγράφηκε κώδικας."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La idea del modo de compatibilidad: una superposición a pantalla completa que multiplica la imagen. No se ha copiado código."
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Yhteensopivuustilan idea: koko näytön peittokuva, joka vahvistaa kuvaa. Koodia ei kopioitu."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "L’idée du mode de compatibilité : une superposition plein écran qui multiplie l’image. Aucun code n’a été copié."
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "הרעיון שמאחורי מצב התאימות: שכבת על במסך מלא שמגבירה את התמונה. לא הועתק קוד."
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "संगतता मोड के पीछे का विचार: एक फ़ुल स्क्रीन ओवरले जो तस्वीर को कई गुना करता है। कोई कोड कॉपी नहीं किया गया।"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ideja iza načina kompatibilnosti: prekrivni sloj preko cijelog zaslona koji pojačava sliku. Kod nije kopiran."
-          }
-        },
-        "hu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "A kompatibilitási mód alapötlete: teljes képernyős átfedés, amely felerősíti a képet. Kódot nem másoltunk."
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ide di balik Mode kompatibilitas: lapisan layar penuh yang melipatgandakan gambar. Tidak ada kode yang disalin."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "L’idea alla base della modalità compatibilità: una sovrapposizione a tutto schermo che moltiplica l’immagine. Nessun codice è stato copiato."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "互換モードの元になったアイデア: 画面を乗算して明るくする全画面オーバーレイ。コードはコピーしていません。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "호환성 모드의 바탕이 된 아이디어: 화면을 배가하는 전체 화면 오버레이. 코드는 복사하지 않았습니다."
-          }
-        },
-        "ms" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Idea di sebalik Mod keserasian: lapisan tindih skrin penuh yang menggandakan gambar. Tiada kod disalin."
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ideen bak kompatibilitetsmodus: et overlegg i fullskjerm som forsterker bildet. Ingen kode ble kopiert."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Het idee achter de compatibiliteitsmodus: een schermvullende laag die het beeld vermenigvuldigt. Er is geen code gekopieerd."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pomysł, na którym opiera się tryb zgodności: pełnoekranowa nakładka, która wzmacnia obraz. Żaden kod nie został skopiowany."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "A ideia por trás do Modo de Compatibilidade: uma sobreposição em tela cheia que multiplica a imagem. Nenhum código foi copiado."
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "A ideia por trás do modo de compatibilidade: uma sobreposição em ecrã completo que multiplica a imagem. Não foi copiado código."
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ideea din spatele modului de compatibilitate: un strat suprapus pe tot ecranul care amplifică imaginea. Nu a fost copiat cod."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Идея, на которой основан режим совместимости: полноэкранное наложение, усиливающее изображение. Код не копировался."
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Myšlienka, na ktorej stojí režim kompatibility: prekryvná vrstva na celú obrazovku, ktorá násobí obraz. Žiadny kód nebol skopírovaný."
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zamisel, na kateri temelji način združljivosti: celozaslonski prekrivni sloj, ki pomnoži sliko. Koda ni bila kopirana."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Idén bakom kompatibilitetsläget: ett överlägg över hela skärmen som förstärker bilden. Ingen kod kopierades."
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "แนวคิดเบื้องหลังโหมดความเข้ากันได้: ภาพซ้อนทับเต็มหน้าจอที่ขยายความสว่างของภาพ ไม่มีการคัดลอกโค้ด"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Uyumluluk modunun arkasındaki fikir: görüntüyü çoğaltan tam ekran bir kaplama. Hiçbir kod kopyalanmadı."
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ідея, на якій ґрунтується режим сумісності: повноекранне накладання, що підсилює зображення. Код не копіювався."
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ý tưởng đằng sau Chế độ tương thích: một lớp phủ toàn màn hình nhân độ sáng của hình ảnh. Không sao chép mã nào."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "兼容模式背后的理念：一个对画面进行倍增的全屏叠加层。未拷贝任何代码。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "相容模式背後的概念：以全螢幕疊加層放大畫面亮度。未拷貝任何程式碼。"
-          }
-        }
-      }
-    },
     "The log contains display models, the macOS version and measurements. It never contains your files, window titles or app names." : {
       "comment" : "Self-test: privacy note beside the results",
       "localizations" : {
@@ -46825,6 +45362,215 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "結果不明確，因此Overbright會保留安全的預設值。你可以再試一次。"
+          }
+        }
+      }
+    },
+    "The screen didn’t get brighter, so Overbright keeps its safe default. Run Self-Test… in Settings ▸ Advanced shows what macOS reports." : {
+      "comment" : "Calibration: result after the screen did not get brighter (“Run Self-Test…” is the button in Settings ▸ Advanced)",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لم تصبح الشاشة أكثر إضاءة، لذا يُبقي Overbright قيمته الافتراضية الآمنة. ويعرض \"تشغيل الاختبار الذاتي…\" في الإعدادات ◂ متقدم ما يُبلغ عنه macOS."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La pantalla no s’ha fet més brillant, per això l’Overbright manté el valor per omissió prudent. “Executa l’autoprova…”, a Configuració ▸ Avançat, mostra què indica el macOS."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obrazovka se nezjasnila, a proto Overbright ponechá bezpečné výchozí nastavení. Volba Spustit autotest… v Nastavení ▸ Pokročilé ukáže, co hlásí macOS."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skærmen blev ikke lysere, så Overbright beholder sin sikre standardværdi. Kør selvtest… under Indstillinger ▸ Avanceret viser, hvad macOS rapporterer."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Bildschirm wurde nicht heller, daher behält Overbright seinen sicheren Standardwert bei. „Selbsttest ausführen …“ unter Einstellungen ▸ Erweitert zeigt, was macOS meldet."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Η οθόνη δεν έγινε φωτεινότερη, οπότε το Overbright διατηρεί την ασφαλή προεπιλογή του. Η «Εκτέλεση αυτοελέγχου…» στις Ρυθμίσεις ▸ Προηγμένα δείχνει τι αναφέρει το macOS."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La pantalla no ha ganado brillo, así que Overbright mantiene su valor predeterminado prudente. “Ejecutar autoprueba…”, en Ajustes ▸ Avanzado, muestra lo que informa macOS."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Näyttö ei kirkastunut, joten Overbright pitää varovaisen oletusarvonsa. ”Suorita itsetesti…” kohdassa Asetukset ▸ Lisävalinnat näyttää, mitä macOS ilmoittaa."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’écran n’est pas devenu plus lumineux : Overbright conserve donc sa valeur par défaut prudente. « Lancer l’autotest… », dans Réglages ▸ Avancé, montre ce que signale macOS."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "המסך לא נעשה בהיר יותר, ולכן Overbright שומר על ברירת המחדל הבטוחה. ״הרצת בדיקה עצמית…״ ב״הגדרות״ > ״מתקדם״ מראה מה מערכת macOS מדווחת."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "स्क्रीन ज़्यादा ब्राइट नहीं हुई, इसलिए Overbright अपना सुरक्षित डिफ़ॉल्ट बनाए रखता है। सेटिंग ▸ एडवांस में “सेल्फ़-टेस्ट चलाएँ…” दिखाता है कि macOS क्या रिपोर्ट करता है।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaslon nije postao svjetliji, pa Overbright zadržava sigurnu standardnu vrijednost. “Pokreni samoprovjeru…” u odjeljku Postavke ▸ Napredno prikazuje što macOS javlja."
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A képernyő nem lett világosabb, ezért az Overbright megtartja a biztonságos alapértelmezett értéket. A Beállítások ▸ Speciális részben az „Önteszt futtatása…” megmutatja, mit jelez a macOS."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Layar tidak menjadi lebih terang, jadi Overbright mempertahankan default yang aman. “Jalankan Uji Mandiri…” di Pengaturan ▸ Lanjutan menampilkan apa yang dilaporkan macOS."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lo schermo non è diventato più luminoso, quindi Overbright mantiene l’impostazione predefinita prudente. “Esegui autotest…” in Impostazioni ▸ Avanzate mostra cosa riporta macOS."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "画面が明るくならなかったため、Overbrightは安全なデフォルト値を使い続けます。設定 ▸ 詳細の“セルフテストを実行…”では、macOSが報告する内容を確認できます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "화면이 밝아지지 않아 Overbright가 안전한 기본값을 계속 사용합니다. 설정 ▸ 고급에서 ‘자체 테스트 실행…’을 선택하면 macOS가 보고하는 내용을 볼 수 있습니다."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skrin tidak menjadi lebih cerah, jadi Overbright mengekalkan lalai yang selamat. “Jalankan Ujian Kendiri…” dalam Seting ▸ Lanjutan menunjukkan apa yang dilaporkan oleh macOS."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skjermen ble ikke lysere, så Overbright beholder den forsiktige standardverdien. «Kjør selvtest…» i Innstillinger ▸ Avansert viser hva macOS rapporterer."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Het scherm werd niet helderder, dus Overbright behoudt zijn veilige standaardwaarde. ‘Voer zelftest uit…’ in Instellingen ▸ Geavanceerd laat zien wat macOS rapporteert."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ekran nie stał się jaśniejszy, więc Overbright zachowuje bezpieczną wartość domyślną. „Uruchom autotest…” w sekcji Ustawienia ▸ Zaawansowane pokaże, co zgłasza macOS."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A tela não ficou mais clara, então o Overbright mantém a configuração padrão cautelosa. “Executar Autoteste…”, em Ajustes ▸ Avançado, mostra o que o macOS informa."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O ecrã não ficou mais brilhante, por isso o Overbright mantém o valor predefinido seguro. “Executar autoteste…”, em Definições ▸ Avançado, mostra o que o macOS indica."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ecranul nu a devenit mai luminos, așa că Overbright păstrează valoarea implicită sigură. „Rulați autotestul…” din Configurări ▸ Avansat arată ce raportează macOS."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Экран не стал ярче, поэтому Overbright оставляет безопасное значение по умолчанию. «Запустить самопроверку…» в разделе Настройки ▸ Дополнительно покажет, что сообщает macOS."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obrazovka sa nezjasnila, a preto Overbright ponechá bezpečné predvolené nastavenie. Voľba Spustiť autotest… v Nastaveniach ▸ Rozšírené ukáže, čo hlási macOS."
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaslon ni postal svetlejši, zato Overbright ohrani varno privzeto nastavitev. »Zaženi samopreizkus …« v Nastavitvah ▸ Napredno pokaže, kaj sporoča macOS."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skärmen blev inte ljusare, så Overbright behåller sitt säkra förval. Kör självtest… i Inställningar ▸ Avancerat visar vad macOS rapporterar."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "หน้าจอไม่สว่างขึ้น Overbright จึงใช้ค่าเริ่มต้นที่ปลอดภัยต่อไป “เรียกใช้การทดสอบตัวเอง…” ใน การตั้งค่า ▸ ขั้นสูง จะแสดงสิ่งที่ macOS รายงาน"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ekran parlaklaşmadı, bu yüzden Overbright güvenli saptanmış değerini korur. Ayarlar ▸ İleri Düzey bölümündeki “Öz Testi Çalıştır…”, macOS tarafından bildirilenleri gösterir."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Екран не став яскравішим, тому Overbright залишає безпечне типове значення. «Запустити самоперевірку…» в розділі Параметри ▸ Додатково покаже, що повідомляє macOS."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Màn hình không sáng hơn, nên Overbright giữ mặc định an toàn. “Chạy tự kiểm tra…” trong Cài đặt ▸ Nâng cao cho biết macOS báo cáo những gì."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "屏幕没有变亮，因此Overbright将保留安全的默认值。“设置”▸“高级”中的“运行自检…”会显示macOS报告的内容。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "螢幕沒有變亮，因此Overbright會保留安全的預設值。「設定」▸「進階」中的「執行自我測試⋯」會顯示macOS回報的內容。"
           }
         }
       }
@@ -51005,215 +49751,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "更新項目"
-          }
-        }
-      }
-    },
-    "Use Compatibility Mode" : {
-      "comment" : "Calibration: switches the display to Compatibility mode and repeats step 1 (title case)",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "استخدام وضع التوافق"
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Utilitza el mode de compatibilitat"
-          }
-        },
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Použít režim kompatibility"
-          }
-        },
-        "da" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Brug kompatibilitetstilstand"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kompatibilitätsmodus nutzen"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Χρήση λειτουργίας συμβατότητας"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Usar el modo de compatibilidad"
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Käytä yhteensopivuustilaa"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Utiliser le mode de compatibilité"
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "שימוש במצב תאימות"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "संगतता मोड चुनें"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Koristi način kompatibilnosti"
-          }
-        },
-        "hu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kompatibilitási mód használata"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gunakan Mode Kompatibilitas"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Usa la modalità compatibilità"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "互換モードを使用"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "호환성 모드 사용"
-          }
-        },
-        "ms" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Guna Mod Keserasian"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bruk kompatibilitetsmodus"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gebruik compatibiliteitsmodus"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Użyj trybu zgodności"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Usar o Modo de Compatibilidade"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Usar modo de compatibilidade"
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Utilizați modul de compatibilitate"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Включить режим совместимости"
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Použiť režim kompatibility"
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Uporabi način združljivosti"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Använd kompatibilitetsläge"
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ใช้โหมดความเข้ากันได้"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Uyumluluk Modunu Kullan"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Увімкнути режим сумісності"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dùng Chế độ tương thích"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "使用兼容模式"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "使用相容模式"
           }
         }
       }
@@ -66532,215 +65069,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "macOS需要你在「登入項目」設定中核准。"
-          }
-        }
-      }
-    },
-    "macOS seems to ignore color table changes on this Mac. Use Compatibility mode on this display?" : {
-      "comment" : "Calibration: question after the screen did not get brighter",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "يبدو أن macOS يتجاهل تغييرات جدول الألوان على جهاز Mac هذا. هل تريد استخدام وضع التوافق على هذه الشاشة؟"
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sembla que el macOS ignora els canvis a la taula de colors en aquest Mac. Vols fer servir el mode de compatibilitat en aquesta pantalla?"
-          }
-        },
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zdá se, že macOS na tomto Macu ignoruje změny tabulky barev. Použít pro tento monitor režim kompatibility?"
-          }
-        },
-        "da" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS ser ud til at ignorere ændringer i farvetabellen på denne Mac. Vil du bruge kompatibilitetstilstand på denne skærm?"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS scheint auf diesem Mac Änderungen der Farbtabelle zu ignorieren. Kompatibilitätsmodus für dieses Display verwenden?"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Το macOS φαίνεται να αγνοεί τις αλλαγές στον πίνακα χρωμάτων σε αυτό το Mac. Να χρησιμοποιηθεί η λειτουργία συμβατότητας σε αυτήν την οθόνη;"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Parece que macOS ignora los cambios en la tabla de colores en este Mac. ¿Usar el modo de compatibilidad en esta pantalla?"
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS näyttää ohittavan väritaulukon muutokset tässä Macissa. Käytetäänkö tällä näytöllä yhteensopivuustilaa?"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS semble ignorer les modifications de la table des couleurs sur ce Mac. Utiliser le mode de compatibilité sur cet écran ?"
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "נראה שמערכת macOS מתעלמת משינויים בטבלת הצבעים ב-Mac זה. להשתמש במצב תאימות בצג הזה?"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "लगता है इस Mac पर macOS रंग टेबल में किए गए बदलावों को अनदेखा करता है। इस डिस्प्ले पर संगतता मोड इस्तेमाल करें?"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Čini se da macOS na ovom Macu zanemaruje promjene tablice boja. Koristiti način kompatibilnosti na ovom zaslonu?"
-          }
-        },
-        "hu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Úgy tűnik, ezen a Macen a macOS figyelmen kívül hagyja a színtábla módosításait. Használja a kompatibilitási módot ezen a kijelzőn?"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS tampaknya mengabaikan perubahan tabel warna di Mac ini. Gunakan Mode kompatibilitas di layar ini?"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sembra che su questo Mac macOS ignori le modifiche alla tabella colori. Usare la modalità compatibilità su questo schermo?"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "このMacでは、macOSがカラーテーブルの変更を無視しているようです。このディスプレイで互換モードを使用しますか?"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "이 Mac에서는 macOS가 색상 테이블 변경을 무시하는 것 같습니다. 이 디스플레이에서 호환성 모드를 사용하겠습니까?"
-          }
-        },
-        "ms" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS nampaknya mengabaikan perubahan jadual warna pada Mac ini. Guna Mod keserasian pada paparan ini?"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS ser ut til å ignorere endringer i fargetabellen på denne Macen. Vil du bruke kompatibilitetsmodus på denne skjermen?"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS lijkt op deze Mac wijzigingen in de kleurentabel te negeren. Compatibiliteitsmodus gebruiken op dit beeldscherm?"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wygląda na to, że na tym Macu macOS ignoruje zmiany tabeli kolorów. Użyć trybu zgodności na tym wyświetlaczu?"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Parece que o macOS ignora alterações na tabela de cores neste Mac. Usar o Modo de Compatibilidade nesta tela?"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Parece que o macOS ignora as alterações à tabela de cores neste Mac. Usar o modo de compatibilidade neste monitor?"
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Se pare că macOS ignoră modificările tabelului de culori pe acest Mac. Utilizați modul de compatibilitate pe acest afișaj?"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Похоже, на этом Mac macOS игнорирует изменения цветовой таблицы. Включить для этого дисплея режим совместимости?"
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zdá sa, že macOS na tomto Macu ignoruje zmeny tabuľky farieb. Použiť pre tento displej režim kompatibility?"
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kaže, da macOS na tem Macu prezre spremembe barvne tabele. Želite za ta zaslon uporabiti način združljivosti?"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS verkar ignorera ändringar i färgtabellen på den här Macen. Vill du använda kompatibilitetsläge på den här skärmen?"
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ดูเหมือนว่า macOS จะไม่สนใจการเปลี่ยนแปลงตารางสีบน Mac เครื่องนี้ ใช้โหมดความเข้ากันได้บนจอภาพนี้หรือไม่"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS bu Mac’te renk tablosu değişikliklerini yok sayıyor gibi görünüyor. Bu ekranda uyumluluk modu kullanılsın mı?"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Схоже, на цьому Mac macOS ігнорує зміни колірної таблиці. Увімкнути для цього дисплея режим сумісності?"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Có vẻ macOS bỏ qua thay đổi bảng màu trên máy Mac này. Dùng Chế độ tương thích trên màn hình này?"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在此Mac上，macOS似乎会忽略颜色表更改。要在此显示器上使用兼容模式吗？"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS似乎會忽略此Mac上的色彩表更改。要在此顯示器上使用相容模式嗎？"
           }
         }
       }

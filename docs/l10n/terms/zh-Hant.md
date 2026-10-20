@@ -100,7 +100,7 @@ Register and typography (follow macOS 27 Traditional Chinese, Taiwan vocabulary;
 | Back to Standard (the instant off) | 回到標準 | not “panic”, not “reset brightness” |
 | Indoor · Bright room · Sunlight · Max (presets) | 室內 · 明亮房間 · 陽光 · 最大 | “Max” is a preset only |
 | Safe · Peak (ceilings) | 安全 · 峰值 | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | 相容模式 · 色彩表 | never “fallback” or “overlay” |
+| color table (in sentences: “macOS ignores color table changes”) | 色彩表 | never “gamma”; no “fallback” or “overlay” in copy |
 | Fill Light (the edge light for video calls) | 補光 | never “ring light” |
 | extra range (headroom, in user copy) | 亮度餘裕 | “headroom” only in Advanced and diagnostics |
 | Calibrate… · Run Self-Test… · Reset Display Colors… | 校正⋯ · 執行自我測試⋯ · 重置顯示器顏色⋯ |  |

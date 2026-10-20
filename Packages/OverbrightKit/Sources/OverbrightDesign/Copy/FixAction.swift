@@ -14,8 +14,6 @@ public nonisolated enum FixAction: String, CaseIterable, Hashable, Sendable {
     case learnMore
     /// Opens the self-test sheet.
     case runSelfTest
-    /// Switches the display to Compatibility mode.
-    case useCompatibilityMode
     /// Turns extra brightness on for the display (an OLED shows its notice first).
     case turnOn
     /// Opens Displays ▸ Add extra brightness only near full brightness.
@@ -47,8 +45,6 @@ public nonisolated enum FixAction: String, CaseIterable, Hashable, Sendable {
                                 comment: "Panel: button that opens the Help window at the matching answer")
         case .runSelfTest: String(localized: "Run self-test…", bundle: b, locale: l,
                                   comment: "Panel: chip popover button that opens the self-test sheet (sentence case)")
-        case .useCompatibilityMode: String(localized: "Use Compatibility mode", bundle: b, locale: l,
-                                           comment: "Panel: chip or banner button that switches the display to Compatibility mode (sentence case)")
         case .turnOn: String(localized: "Turn on", bundle: b, locale: l,
                              comment: "Panel: chip button that turns extra brightness on for this display (sentence case)")
         case .changeSetting: String(localized: "Change setting…", bundle: b, locale: l,
@@ -79,8 +75,6 @@ public nonisolated enum FixAction: String, CaseIterable, Hashable, Sendable {
         case .learnMore: String(localized: "Learn More", bundle: b, locale: l, comment: "Menu: opens the Help window (title case)")
         case .runSelfTest: String(localized: "Run Self-Test…", bundle: b, locale: l,
                                   comment: "Menu and Settings: opens the self-test sheet (title case)")
-        case .useCompatibilityMode: String(localized: "Use Compatibility Mode", bundle: b, locale: l,
-                                           comment: "Menu: banner action (title case)")
         case .turnOn: String(localized: "Turn On", bundle: b, locale: l,
                              comment: "Menu: turns extra brightness on for a display (title case)")
         case .changeSetting: String(localized: "Change Setting…", bundle: b, locale: l, comment: "Menu: chip action (title case)")

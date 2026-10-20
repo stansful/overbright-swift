@@ -71,7 +71,7 @@ struct ComponentSnapshotTests {
             ("banners", CGSize(width: 320, height: 820), AnyView(VStack(spacing: Space.m) {
                 ForEach(Array(banners.enumerated()), id: \.offset) { _, banner in
                     PausedBanner(BannerModel.make(banner, displayNames: [DisplayKey(rawValue: "A"): "Studio Display"],
-                                                  in: language), primary: {}, secondary: nil)
+                                                  in: language), primary: {})
                 }
             })),
             ("footer-chips", CGSize(width: 320, height: 60), AnyView(HStack(spacing: Space.s) {   // English: PanelUI's words

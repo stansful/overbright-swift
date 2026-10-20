@@ -79,7 +79,7 @@ Register and style, following macOS 27 Arabic:
 | Back to Standard (the instant off) | العودة إلى المستوى القياسي | not “panic”, not “reset brightness” |
 | Indoor · Bright room · Sunlight · Max (presets) | داخلي · غرفة مضاءة · ضوء الشمس · الأقصى | “Max” is a preset only |
 | Safe · Peak (ceilings) | آمن · الذروة | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | وضع التوافق · جدول الألوان | never “fallback” or “overlay” |
+| color table (in sentences: “macOS ignores color table changes”) | جدول الألوان | never “gamma”; no “fallback” or “overlay” in copy |
 | Fill Light (the edge light for video calls) | إضاءة الوجه | never “ring light” |
 | extra range (headroom, in user copy) | هامش الإضاءة | “headroom” only in Advanced and diagnostics |
 | Calibrate… · Run Self-Test… · Reset Display Colors… | معايرة… · تشغيل الاختبار الذاتي… · إعادة تعيين ألوان الشاشة… |  |

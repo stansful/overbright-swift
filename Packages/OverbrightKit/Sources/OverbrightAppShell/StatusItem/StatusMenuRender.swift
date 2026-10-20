@@ -60,7 +60,6 @@ enum StatusMenuRender {
     static func titleKind(_ action: BannerAction) -> StatusMenuText.BannerActionTitle {
         switch action {
         case .resume: .resume
-        case .useCompatibilityMode: .useCompatibilityMode
         case .continueAnyway: .continueAnyway
         case .openDisplaySettings, .openFocusSettings: .openSystemSettings
         case .tryAgain: .tryAgain
@@ -81,7 +80,7 @@ enum StatusMenuRender {
         case .status, .pausedUntil:
             return ActionMenuItem.disabled(title)
         case .bannerAction(let action):
-            return ActionMenuItem.make(title) { action.perform(commands, status: boost.status) }
+            return ActionMenuItem.make(title) { action.perform(commands) }
         case .showPanel:
             return ActionMenuItem.make(title, handler: showPanel)
         case .master(let isOn, let key):

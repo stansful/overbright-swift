@@ -122,7 +122,7 @@ System text styles only; SF Pro Rounded with monospaced digits for live numbers 
 | `cardTitle` | 13 semibold (`.headline`), up to two lines, tail truncation, full name in the help tag | display names |
 | `readout` | 13 medium, SF Pro Rounded, monospaced digits | "Bright room · ×1.29 · ≈ 775 nits" |
 | `chip` | 11 medium (`.caption` medium) | status chips, footer chips |
-| `caption` | 11 regular, `secondaryLabelColor` | "Compatibility mode" under the readout |
+| `caption` | 11 regular, `secondaryLabelColor` | the Fill Light card's Cool and Warm |
 | `banner` | 12 regular (`.callout`), as many lines as the sentence needs (never cut; an app name in it is middle-truncated) | "Paused because…" |
 | `valueTag` | 11 semibold, rounded, monospaced digits | the tag above the slider thumb |
 | `hudValue` | 15 semibold, rounded, monospaced digits | HUD value |
@@ -253,7 +253,7 @@ Turning on or off from the icon announces "Overbright on" / "Overbright off" to 
 ```
 ‹Status sentence›                                     (disabled; only while a banner applies: the banner's own sentence, §12.3)
 ‹Its action›                                          (the banner's primary action: Resume, Try Again, Continue Anyway,
-                                                       Use Compatibility Mode, Change Power Rules…, Change Hours…, Open System Settings)
+                                                       Change Power Rules…, Change Hours…, Open System Settings)
 ───────────
 Turn Off Overbright                       ‹live›      ("Turn On Overbright" while off)
 Dim All Displays                          ‹live›      ("Stop Dimming" while dimmed)
@@ -352,7 +352,7 @@ Quit Overbright                           ⌘Q
 - `card` fill, `cardStroke` hairline, `Radius.card`, padding 12, 8 pt between cards. Every display that can boost **or dim** gets a full card. As built (WP14): one card style (`panelCard`) for the display cards, the calibration tip, the Fill Light card and the expanded "Why?" rows, each exactly 304 pt wide, so their edges line up with each other and the banner, all opaque with a full-strength hairline under Increase Contrast.
 - **Title:** display name (`cardTitle`, up to two lines). With linked levels a `link` glyph precedes the name of every card ("Same level on all displays"). Two displays with the same name get " (1)", " (2)" in UUID order, as macOS does.
 - **Slider row** (§5.5) with `sun.min` at the dim end and `sun.max.fill` at the boost end (14 pt, `secondaryLabelColor`), 6 pt gaps: a 240-pt track whose boost half is 120 pt (the thumb's centre travels 220 pt of it, §5.5). The glyphs draw 16 and 17 pt wide, so each sits in a 14 × 14 frame and the row is exactly the 280-pt inner width.
-- **Readout** (§5.6). In Compatibility mode a `caption` line "Compatibility mode" sits under it, with the method's footnote (§7.4) as its help tag (unused while Compatibility mode is disabled, since 2026-10-20: ARCHITECTURE.md §7.5).
+- **Readout** (§5.6). Nothing sits under it: the color table is the only method, so no caption names one (the Compatibility-mode caption went with the method, 2026-10-20: ARCHITECTURE.md §7.5).
 - **Chip line** (§5.7): only when a per-display reason applies. The chip and an inline **Turn on** share the line when both fit its 280 pt; otherwise Turn on drops under the chip. A **Safe limit** or **OLED limit** chip has a gear button beside it (`gearshape.fill`, `IconButtonStyle`, `Space.xs` gap; help tag and VoiceOver label "Choose Peak…") that opens Settings ▸ Displays at this display's Limit row, so Safe becomes Peak in one click (the owner's request, 2026-10-20; `DisplayCardView.offersLimitSetting`); the chip's popover keeps its own "Choose Peak…". Chip, gap and gear fit 280 pt in every language (`ChipFitTests`).
 - **Context menu** (right-click, ⌃-click, or ⌃↩ while the card's slider has keyboard focus): the shown presets · Dimmed · 25% · separator · Calibrate… · Settings for This Display… (Overbright's Settings ▸ Displays at this display) · Don't Use on This Display / Use Extra Brightness on This Display · Try Again (only when failed). Every item is also a **VoiceOver custom action** on the card and on its slider (where VoiceOver lands), and the items that fix a limit (Try again, Continue anyway, Turn on, Choose Peak…) are also actions in the chip's popover, so nothing depends on right-click.
 - **Extra brightness off for this display** (opt-in displays, or after "Don't Use on This Display"): the boost half draws with `inactiveHatch` and the chip "Extra brightness off" offers **Turn on**. Moving the thumb past the detent turns it on as well; an OLED display shows the OLED notice first (§12.4), and the thumb waits at Standard until the notice is answered (asked when the move ends, for the level it ended at; a move back to Standard or below asks nothing). Dimming always works. The thumb, the value tag, VoiceOver's value, the HUD bar and the menus' checkmark show the level the display has: Standard while the boost half is off or unavailable, whatever level is stored for the next turn-on (as built, WP14).
@@ -406,7 +406,7 @@ A chip appears **on its own line under the readout**, only when a **per-display*
 
 ### 5.8 Banners
 
-At most one banner, between the header and the first card, for **a reason that applies to all displays** (a user pause, a conflict, Focus, heat, Low Power, battery, the schedule) or an attention state (a stop to prevent flicker, colours changed by another app): `card` fill tinted 10 % with the semantic colour, a 14-pt glyph, the sentence (`banner`) and up to two text buttons (primary first). The sentence is never cut: the banner grows in height for a long translation while the card list below scrolls, and only an app name in it is middle-truncated (to 200 pt, as a chip does), with the full sentence in the help tag and VoiceOver. Banners reflect state, so they have no close button; they leave with `bannerOut` when the cause clears, and the next reason in precedence takes their place. The same sentence is the first line of the right-click menu (§4.3), there with the app name in full. Precedence and exact copy: §12.3.
+At most one banner, between the header and the first card, for **a reason that applies to all displays** (a user pause, a conflict, Focus, heat, Low Power, battery, the schedule) or an attention state (a stop to prevent flicker, colours changed by another app): `card` fill tinted 10 % with the semantic colour, a 14-pt glyph, the sentence (`banner`) and at most one text button (§12.3: one action per banner). The sentence is never cut: the banner grows in height for a long translation while the card list below scrolls, and only an app name in it is middle-truncated (to 200 pt, as a chip does), with the full sentence in the help tag and VoiceOver. Banners reflect state, so they have no close button; they leave with `bannerOut` when the cause clears, and the next reason in precedence takes their place. The same sentence is the first line of the right-click menu (§4.3), there with the app name in full. Precedence and exact copy: §12.3.
 
 ### 5.9 Footer guard chips
 
@@ -471,7 +471,7 @@ Every state below is a named status in PanelUI's `ScriptedStatuses` (`--qa-state
 | `small-gain` | OLED in Safe: only Bright room and Max shown, value tag "· small gain on this display" |
 | `below-full-brightness` | the taper binds: chip "Below full brightness" |
 | `preparing` | first arm, chip "Preparing…", symbol `preparing` |
-| `no-extra-range`, `still-no-extra-range` | failed ladder, first and after two tries (Self-Test, Compatibility mode, Help link) |
+| `no-extra-range`, `still-no-extra-range` | failed ladder, first and after two tries (Self-Test, Help link) |
 | `dimmed` | built-in at "Dimmed · 25%", dim fill |
 | `extra-brightness-off` | an opt-in HDR external: hatched boost half, chip with Turn On |
 | `linked` | two cards with link glyphs moving together |
@@ -481,7 +481,6 @@ Every state below is a named status in PanelUI's `ScriptedStatuses` (`--qa-state
 | `conflict-may-interfere` | the S3 info chip |
 | `flicker-stop`, `foreign-table` | danger banners |
 | `full-screen-video`, `full-screen`, `paused-app`, `oled-idle` | per-display pause chips while the other display boosts; `paused-app` with a long app name, middle-truncated |
-| `compatibility` | a card in Compatibility mode with its caption line |
 | `why-expanded` | a virtual display in the expanded "Why?" rows |
 | `nothing-capable` | the empty state with the dim-only cards |
 | `two-identical-externals`, `long-russian-name` | name handling in the title |
@@ -518,7 +517,7 @@ Every state below is a named status in PanelUI's `ScriptedStatuses` (`--qa-state
 | Pane | Icon | Contents |
 |---|---|---|
 | General | `gearshape.fill` / gray | startup, menu bar (with Quit), Dock, feedback, updates |
-| Displays | `display` / blue | all displays (same level, near full brightness); one section per display: verdict, extra brightness, level, limit, method, calibration, type |
+| Displays | `display` / blue | all displays (same level, near full brightness); one section per display: verdict, extra brightness, level, limit, calibration, type |
 | Automations | `bolt.fill` / green | battery, Low Power, heat note, timer, apps and video, schedule, OLED idle, Focus |
 | Shortcuts | `keyboard` / indigo | recorders, step size, Shortcuts app and Control Center |
 | Fill Light | `person.crop.rectangle` / orange | preview, switch, display, width, warmth, brightness, camera rule |
@@ -570,7 +569,6 @@ Every state below is a named status in PanelUI's `ScriptedStatuses` (`--qa-state
 | Use extra brightness on this display | switch | built-in XDR and Apple XDR displays on; other HDR and OLED displays off | — | "Dimming below the minimum works either way." OLED: turning it on shows the OLED notice (§12.4). Hidden for displays that cannot boost. |
 | Level | `BoostSlider` + readout | Bright room | −1 … 1 | — |
 | Limit | segmented | **Safe** | Safe · Peak | The class-specific Safe sentence of §12.2 (`safeLimit`), then "Peak goes up to what macOS allows; it uses more power, and macOS may lower it when the display gets warm." A switch to Peak confirms (§12.4). As built (WP14): every switch from Safe to Peak asks, because ARCHITECTURE.md §3.8 keeps no record of an earlier answer; asking only the first time waits for a settings key through the contract lane (ARCHITECTURE.md §10.13). |
-| Method | pop-up | Automatic | **Automatic · Color table** (Compatibility mode is disabled since 2026-10-20: the overlay turned the owner's built-in white, ARCHITECTURE.md §7.5; `MechanismPreference.selectableCases`) | Automatic: "Overbright picks the method that works on this Mac." A Compatibility-mode choice stored earlier shows as Color table, the method used. Kept for when the overlay returns: with the advisory, "Automatic uses Compatibility mode, because macOS ignores color table changes on this Mac."; Compatibility: "Brightens through an overlay. The pointer isn't brightened, and screen recordings may show the overlay." |
 | Calibration | value + **Calibrate…** | Not calibrated | Not calibrated · Standard curve (macOS 27.0.1) · Linear (macOS 27.0.1) · Check again: macOS, the preset or the method changed | "A one-minute check that makes the numbers exact and lets Overbright use the right amount of range on this display." |
 | Display type (externals) | pop-up | Automatic | Automatic (OLED) / Automatic (not OLED) · OLED · Not OLED | "OLED displays get a lower Safe limit and pause extra brightness when idle." |
 | (advisory, built-in XDR on macOS 26+) | info row | — | — | "Keep Automatically adjust brightness as it is while extra brightness is on. Changing it then can leave the picture wrong until you change the display preset." |
@@ -648,7 +646,7 @@ A preview at the top: a 200 × 125 pt miniature of the chosen display with the f
 | Run Self-Test… | button | — | "Checks how each display responds. About a minute per display." |
 | Detailed logging | switch | off | "Adds headroom samples to the system log for troubleshooting." |
 | **Other apps** | | | |
-| Apps that change display colors or brightness | live list: icon, name, kind ("Brightness app", "Color app", "May change brightness") and, for color apps and "may change" apps, an **Always continue** switch | — | "None running." when empty. Under brightness apps: "Overbright can't run next to another brightness app on the color table. Use Compatibility mode on a display to run alongside it." (hidden while Compatibility mode is disabled, since 2026-10-20; ARCHITECTURE.md §7.5) |
+| Apps that change display colors or brightness | live list: icon, name, kind ("Brightness app", "Color app", "May change brightness") and, for color apps and "may change" apps, an **Always continue** switch | — | "None running." when empty. |
 | **Trigger method** | | | |
 | (one pop-up per display) | Automatic · Tagged layer · Metal layer · Metal layer, refreshed · HDR frame · HDR video still | Automatic | "Automatic finds the lightest way to unlock extra range on each display and remembers it." Unavailable methods are disabled with the reason. |
 | Forget Learned Methods | button | — | — |
@@ -685,7 +683,7 @@ The calibration check is not part of Welcome: it asks for changes that are unsaf
 - **Step 2 has a compact stage.** A band of display glyphs, one per display, instead of the half-height stage; the headline sits at the band's lower edge, as on every step, and the rows follow it down to the footer, so two or three displays show at once (more scroll visibly in `DisplayRowList`). A half-height stage would leave room for barely one row. (WP12 built the step without a band, its rows as its stage; C-ONBOARD-1 gave it the compact band so every step has the same split, see Layout above.)
 - **The rows are Welcome's own views over `DisplayCardModel`**, not PanelUI's `DisplayCardView`: step 2 shows a glyph, name, verdict, fix and switch, never a slider, and the model gives it the panel's own limit, switch default and top, so the two never disagree.
 - **Done applies the choices of steps 2 and 3.** The "Use extra brightness" switches wait with step 3's choices; Skip and the close button drop them, so Skip still applies every default and nothing else.
-- **Step 2 shows only two advisories,** Compatibility mode and OLED care (§12.1); the Compatibility one never appears while Compatibility mode is disabled (since 2026-10-20). "Not calibrated" would repeat on every row of a first run while calibration is not part of Welcome, and the auto-brightness advisory is Settings only (§7.4).
+- **Step 2 shows only one advisory,** OLED care (§12.1). "Not calibrated" would repeat on every row of a first run while calibration is not part of Welcome, and the auto-brightness advisory is Settings only (§7.4).
 
 ---
 
@@ -696,7 +694,7 @@ A guided check per display, from Settings ▸ Displays, the card's context menu 
 - **Starting it returns every display to Standard first** (neutral tables, triggers removed) and holds Overbright off until it ends; the window then brightens only the display under test, step by step.
 - **Window:** borderless, full screen on the display under test, our colour space set to the screen's so code values reach the framebuffer unchanged; a **black** surround; four **100 × 100 pt** patches; instructions in a dark card at the top (light text on near-black), so an over-bright moment lights only small areas. Esc always restores at once and closes. A display without a screen of its own (a mirror member) cannot be calibrated: the window opens as an ordinary titled window with "This display can't be calibrated right now…" and nothing brightens (as built, WP14); simulated displays (`--qa-simulate`) always use that titled window, with their scripted session.
 - **Before starting** (a checklist with live state where we can read it): "Plug in your Mac" (power source) · "Set brightness to maximum" · "Overbright is at Standard now, so it's safe to change these: turn off Automatically adjust brightness, True Tone and Night Shift in Displays settings." (asked, cannot be read) · "No other color or brightness app is running" (live) · "Your Mac is cool" (thermal state, live). **Start** is enabled when the live items pass.
-- **Step 1, Does it get brighter?** The display under test switches between Standard and ×1.3 three times, at most once per 1.5 s, with a label "Standard" / "Brighter"; VoiceOver hears each label as it changes (§15). Question: "Did the screen get brighter when the label said Brighter?" **Yes** · **No** · **Show Again**. **No** → "macOS seems to ignore color table changes on this Mac. Use Compatibility mode on this display?" **Use Compatibility Mode** · **Keep Color Table** (Compatibility mode repeats step 1). While Compatibility mode is disabled (since 2026-10-20; ARCHITECTURE.md §7.5) the question is hidden and **Keep Color Table** is the only, default, button.
+- **Step 1, Does it get brighter?** The display under test switches between Standard and ×1.3 three times, at most once per 1.5 s, with a label "Standard" / "Brighter"; VoiceOver hears each label as it changes (§15). Question: "Did the screen get brighter when the label said Brighter?" **Yes** · **No** · **Show Again**. **No** goes straight to the results: the record says the screen did not get brighter, and the color table stays (no other method to offer since 2026-10-20; ARCHITECTURE.md §7.5).
 - **Step 2, Where does white stop?** The four patches at 85 %, 90 %, 95 % and 100 % grey. Overbright raises extra brightness in small steps every 0.4 s. "Watch the two squares on the right. Press Space the moment you can no longer tell them apart." At 1.15 × the point where they usually merge, the sweep pauses: "The two squares on the right usually merge before this point. Keep going?" **Keep Going** · **Stop**. The sweep ends at the latest at 1.15 × the linear prediction, and on Space, Esc, 60 s, any lock, occlusion or headroom drop; it always returns to Standard at once.
 - **Step 3, One more check** (only when the merge was near the linear prediction): "For two seconds the squares are shown much brighter. Can you still tell the two squares on the right apart?" **Show** · then **Yes, They Look Different** · **No, They Look the Same** · **Show Again**. Only "Yes" can record the linear result; it is impossible to see a difference there if the table works on encoded values.
 - **Decision** (ARCHITECTURE.md §5.2): a merge nearer the encoded prediction → "standard curve"; nearer the linear prediction **and** confirmed in step 3 → "linear"; anything else (unconfirmed, within 15 % of the midpoint, a sweep that ended without a mark: Space never pressed, the sweep reached its end) → "inconclusive", and the safe default stays. A run interrupted by a lock, occlusion, Esc, a headroom drop or the 60 s cap records nothing and an earlier result stays, unless it had already measured something: a No in step 1, a mark, or an answered confirmation (as built, WP14; ARCHITECTURE.md §11.1 #35).
@@ -704,6 +702,7 @@ A guided check per display, from Settings ▸ Displays, the card's context menu 
   - "Standard curve confirmed. Overbright keeps its default for this display."
   - "This display responds in linear light. Overbright can now use more of its range."
   - "The result wasn't clear, so Overbright keeps its safe default. You can try again."
+  - After **No** in step 1: "The screen didn't get brighter, so Overbright keeps its safe default. Run Self-Test… in Settings ▸ Advanced shows what macOS reports."
   - Always followed by: "If you use Automatically adjust brightness, True Tone or Night Shift, turn them back on now, before you turn on extra brightness."
 - **Colorimeter (optional disclosure):** "I have a colorimeter" reveals a field "SDR white: [ ] nits" (measured at Standard). A value makes the nits readout and the Safe cap exact for this display while the display shows the white it was measured at: as built (WP14), only while macOS's headroom stays within 5 % of the headroom at the measurement (macOS moves white with the brightness setting and the ambient light, and the headroom with it); otherwise, outdoors for example, the value is set aside and the readout and Safe behave as they do without one (ARCHITECTURE.md §5.5, §5.6's outdoor row). A value outside 20–4,000 nits (which the engine ignores) shows "Use a value from 20 to 4,000." under the field and holds **Start** (as built, WP14).
 - **Validity:** stored per display with the macOS build, the method and the display's potential. When any of them changes, the result is no longer used (numbers become estimates again, "≈"), and the Displays pane shows "Check again: macOS, the preset or the method changed."
@@ -757,7 +756,7 @@ The supported sentence quotes the display's current limit (Safe by default) and,
 | `noGammaTable` | Not supported | "macOS doesn't let apps adjust this display." | — |
 | `checking` | Checking… | "Overbright is reading this display." | — |
 
-Advisories (a second line under the verdict): `compatibilityModeAdvised` "On this Mac, macOS ignores color table changes, so Overbright uses Compatibility mode." (never added while Compatibility mode is disabled, since 2026-10-20) · `oledCare` "OLED display: extra brightness stays lower and pauses after 5 minutes without input." · `autoBrightnessInteracts` (Settings only, §7.4) · `notCalibrated` (not in Welcome step 2, §8) "Not calibrated. Numbers are estimates, and Overbright uses a safe default."
+Advisories (a second line under the verdict): `oledCare` "OLED display: extra brightness stays lower and pauses after 5 minutes without input." · `autoBrightnessInteracts` (Settings only, §7.4) · `notCalibrated` (not in Welcome step 2, §8) "Not calibrated. Numbers are estimates, and Overbright uses a safe default."
 
 As built (WP14), one row above is not what every display gets yet (a boosting class whose panel peak or SDR maximum no source gives reads `panelFactsUnknown`, "Range unknown", and no longer an unbacked "Little gain"; ARCHITECTURE.md §5.3, C-PLATFORM-3):
 - **"macOS allowed up to … last time"** needs the largest grant macOS gave, which the engine keeps (`DisplayStatus.lastGrant`, WP14); Settings, Welcome and the panel do not pass it to the verdict yet, so every supported display reads the "no grant seen yet" sentence.
@@ -770,7 +769,7 @@ As built (WP14), one row above is not what every display gets yet (a boosting cl
 |---|---|---|---|---|---|
 | arming, gating | Preparing… | (progress) | info | "Overbright is unlocking extra range on this display. The first time takes a few seconds." | — |
 | failed, no headroom (first) | No extra range | `exclamationmark.triangle.fill` | danger | "macOS didn't make extra range available. This can happen right after waking up, or when HDR is off." | Try again · Learn more |
-| failed, after two tries in this session | No extra range | `exclamationmark.triangle.fill` | danger | "macOS still didn't make extra range available." | Try again · Run self-test… · Use Compatibility mode (only where the compatibility advisory applies; never while Compatibility mode is disabled, since 2026-10-20) · Learn more (Help: "The screen didn't get brighter") |
+| failed, after two tries in this session | No extra range | `exclamationmark.triangle.fill` | danger | "macOS still didn't make extra range available." | Try again · Run self-test… · Learn more (Help: "The screen didn't get brighter") |
 | `boostNotEnabled` | Extra brightness off | `sun.max` | neutral | "Extra brightness is off for this display. Dimming still works." | Turn on |
 | verdict of a dim-only display | its badge (§12.1) | `display` | neutral | its sentence | its fix |
 | `headroom` | Limited by macOS | `sun.min` | info | "macOS allows ×1.55 right now. It lowers the extra range when the surroundings are bright, the display is warm or the battery is low." | — |
@@ -786,7 +785,7 @@ As built (WP14), one row above is not what every display gets yet (a boosting cl
 | `oledIdle` | Paused: idle | `zzz` | neutral | "Extra brightness pauses after 5 minutes without input on OLED displays. Move the pointer or press a key to continue." | — |
 | `conflict` (S3, not blocking) | ‹App› may interfere | `exclamationmark.circle.fill` | info | "‹App› can change display colors in some modes. If it does, Overbright stops on this display." | — |
 | `tripped` (flicker, repairs) | Stopped | `exclamationmark.triangle.fill` | danger | "Overbright stopped on this display to prevent flicker." | Try again |
-| `tripped` (attributed drift) | Stopped: ‹App› | `exclamationmark.triangle.fill` | danger | "‹App› changed the colors of this display." | Continue anyway (Use Compatibility mode when ‹App› is a booster, S1: this display switches to Compatibility mode and Overbright continues next to ‹App›, so it boosts again; two tables never compound, ARCHITECTURE.md §7.2). While Compatibility mode is disabled (since 2026-10-20) a booster's stop offers no action: never Continue anyway |
+| `tripped` (attributed drift) | Stopped: ‹App› | `exclamationmark.triangle.fill` | danger | "‹App› changed the colors of this display." | Continue anyway; none when ‹App› is a booster (S1: never Continue anyway, so two tables never compound, ARCHITECTURE.md §7.2) |
 | `tripped` (foreign table) | Colors changed | `exclamationmark.triangle.fill` | danger | "Another app changed this display's colors in a way Overbright can't reset." | Open System Settings |
 
 Reasons that apply to every display (a user pause, S1/S2 conflicts, Focus, heat that stops, Low Power, battery, the schedule) are never chips: the banner says them once (§12.3). A card also shows no chip for the reason the banner currently shows (a trip on that display).
@@ -808,12 +807,12 @@ Action destinations: "Choose Peak…" opens Settings ▸ Displays at the display
 | Banner | Sentence | Buttons |
 |---|---|---|
 | user pause | "Overbright is paused until 14:20." | Resume |
-| conflict, booster (S1) | "Paused because ‹App› also changes display brightness. Quit it, or use Compatibility mode, which works alongside it." | Use Compatibility mode (no action while Compatibility mode is disabled, since 2026-10-20; the sentence still names it until the copy is revised, ARCHITECTURE.md §7.2) |
+| conflict, booster (S1) | "Paused because ‹App› also changes display brightness. Quit it to continue." | — (no action: never Continue anyway, ARCHITECTURE.md §7.2) |
 | conflict, color app (S2) | "Paused because ‹App› changes display colors. Night Shift gives warm light without a conflict." | Continue anyway |
 | foreign table at launch | "Another app changed the display colors and they couldn't be reset. Change the color profile or preset in Displays settings and back, or log out." | Open System Settings |
 | flicker stop | "Overbright stopped on ‹Display› to prevent flicker." | Try again |
 | unattributed drift | "Another app keeps changing the colors of ‹Display›, so Overbright stopped there." | Try again |
-| attributed drift | "‹App› changed the colors of ‹Display›, so Overbright stopped there." | Continue anyway (Use Compatibility mode when ‹App› is a booster, S1: two tables never compound, ARCHITECTURE.md §7.2; a booster's offers no action while Compatibility mode is disabled) |
+| attributed drift | "‹App› changed the colors of ‹Display›, so Overbright stopped there." | Continue anyway; none when ‹App› is a booster (S1: two tables never compound, ARCHITECTURE.md §7.2) |
 | Focus | "Off because of the current Focus." | Open System Settings |
 | heat | "Paused because your Mac is hot. Overbright continues when it cools down." | — |
 | Low Power Mode | "Paused because Low Power Mode is on." | Change power rules… |
@@ -821,7 +820,7 @@ Action destinations: "Choose Peak…" opens Settings ▸ Displays at the display
 | on battery | "Paused while on battery." | Change power rules… |
 | schedule | "Extra brightness is allowed from 08:00 to 20:00." | Change hours… |
 
-The same sentence, with the app name in full, is the first, disabled line of the right-click menu, and its primary action the second line in title case ("Resume", "Use Compatibility Mode", "Continue Anyway", "Open System Settings", "Try Again", "Change Power Rules…", "Change Hours…").
+The same sentence, with the app name in full, is the first, disabled line of the right-click menu, and its primary action the second line in title case ("Resume", "Continue Anyway", "Open System Settings", "Try Again", "Change Power Rules…", "Change Hours…").
 
 ### 12.4 Sheets and alerts (title-case buttons)
 
@@ -852,7 +851,7 @@ The same sentence, with the app name in full, is the first, disabled line of the
 
 Each answer has an anchor; "Learn more" links open the window scrolled to it.
 
-1. **The screen didn't get brighter** (`no-extra-range`). "Turn the display brightness all the way up; Overbright adds to it. Check the display's verdict in Settings ▸ Displays. On a MacBook Pro, use the 1600-nit preset. On some Macs, macOS ignores color table changes: choose Calibrate… to check, or try Compatibility mode. Run Self-Test… shows what macOS reports." (The Compatibility-mode hint stays in the copy while the method is disabled, since 2026-10-20, until the copy is revised; ARCHITECTURE.md §7.5.)
+1. **The screen didn't get brighter** (`no-extra-range`). "Turn the display brightness all the way up; Overbright adds to it. Check the display's verdict in Settings ▸ Displays. On a MacBook Pro, use the 1600-nit preset. On some Macs, macOS ignores color table changes: choose Calibrate… to check. Run Self-Test… shows what macOS reports."
 2. **Colors look washed out, or HDR video looks flat** (`washed-out`). "While extra brightness is on, HDR highlights can't go above the brightened white. In Settings ▸ Automations, Overbright can pause for full-screen video and for the apps you choose." (Reworded 2026-10-20: both rules ship off, so "Overbright pauses for full-screen video and for video players" was no longer true.)
 3. **How do I get back to normal right away?** (`back-to-standard`). "Press ‹Back to Standard shortcut›, or choose Turn Off Overbright. If Overbright stops responding, Force Quit it: macOS restores your displays at once." Without a registered shortcut: "Choose Turn Off Overbright in the menu or the panel. If Overbright stops responding, …"
 4. **The display looks wrong even after quitting** (`looks-wrong`). "Change the display preset in Displays settings and back, or log out. If another color app was running, quit it. Settings ▸ Advanced ▸ Reset Display Colors can also help."
@@ -990,10 +989,10 @@ None. Overbright ships no audio and plays no system sound.
 | Brighter · Less Bright | one step up or down | "Dimmer" (it reads like Dim) |
 | Indoor · Bright room · Sunlight · Max | presets | — |
 | Safe · Peak | ceilings | "Max" for a ceiling |
-| Compatibility mode | the overlay method | "fallback", "overlay" |
 | Fill Light | the edge light | "ring light" |
 | Back to Standard | the instant off action | "panic", "reset brightness" |
 | extra range | headroom, in user copy | "headroom" outside Advanced and diagnostics |
+| color table | what Overbright scales, in sentences only ("macOS ignores color table changes") | "gamma", "fallback", "overlay" |
 | display | a screen | "monitor" (except "external display"), "screen" for a device |
 | Pause / Paused | temporary stop by a guard or the user | "disabled", "turns off" for a pause |
 
@@ -1017,7 +1016,6 @@ Displays use more power when brighter: that is the product, and the README says 
 | Boosted with T3 (the automatic ladder's first rung since 2026-10-20, ARCHITECTURE.md D4) | + one tiny clear-only present every 0.2 s: **5 presents/s** (about 5 more wake-ups/s), and the GPU working set the driver would free between slower presents stays allocated while boosting; the price of the cadence proven on the owner's built-in XDR (5 s before) | measured (H-S1) and reported in the release notes; the ≤ 1.5 wake-ups/s of the steady row holds only for T1/T2; the simulated `make perf` runs use fake triggers and do not include these presents |
 | Ramping | ≈ 60 table writes/s for ≤ 0.4 s | — |
 | Panel open | redraw on change only; the allowed-now marker ≤ 4 Hz | < 2 % CPU while dragging |
-| Compatibility mode | a full-screen blend in WindowServer on every redraw | measured (H-S1) and stated in Settings |
 | Fill Light | one static layer; no redraw unless settings change | — |
 
 **Measured after the energy pass** (2026-10-19, main 6d3552f vs 9ef2587, `make perf` on the optimized measurement build under `--qa-simulate`, runs interleaved A/B on a loaded M4 Max; own = app minus the control app; full tables in the pass's comparison report). Real-display numbers come from the owner's hardware session (H-S1).
@@ -1054,8 +1052,7 @@ Open misses: the panel drag (SwiftUI/AttributeGraph re-rendering; an unreviewed 
 8. **Flicker-safe by guarantee**, not by luck.
 9. **Native:** a template menu bar symbol, a panel and a menu, Shortcuts actions, a Focus filter, 35 languages, VoiceOver and the keyboard throughout.
 10. **Always escapable:** Back to Standard on a shortcut you choose, every launch shows its UI, Quit everywhere, "Keep this level?" for very dark levels, `--off`, `--restore-gamma`, Force Quit restores.
-11. **Compatibility mode** for Macs where macOS ignores color table changes, and next to another brightness app (disabled since 2026-10-20 until a cross-window blend is proven: the overlay turned the owner's built-in white; ARCHITECTURE.md §7.5).
-12. **One control** for dimming below the minimum and brightening above the maximum, with Dim All Displays on a shortcut you choose, extra brightness that respects the brightness keys, and a Fill Light that turns on with the camera.
+11. **One control** for dimming below the minimum and brightening above the maximum, with Dim All Displays on a shortcut you choose, extra brightness that respects the brightness keys, and a Fill Light that turns on with the camera.
 
 ---
 
@@ -1067,7 +1064,7 @@ Open misses: the panel drag (SwiftUI/AttributeGraph re-rendering; an unreviewed 
 | `ReadoutText` | the readout line (§5.6) | rounded monospaced digits, estimate prefix, no numeric content transition |
 | `StatusChip` | per-display limit and phase chips (§5.7, §12.2) | a button: glyph + text on a tint; popover with one sentence and its actions |
 | `GuardChip` | footer chips (§5.9) | a menu button showing its setting |
-| `PausedBanner` | the one banner (§5.8, §12.3) | glyph, sentence, up to two buttons |
+| `PausedBanner` | the one banner (§5.8, §12.3) | glyph, sentence, at most one button |
 | `EDRPreviewSurface` | the Welcome card (§8) | EDR content in our own view, divider moved by dragging, ← / → (10 %, mirrored right to left) or VoiceOver, SDR stand-in under `--qa-simulate`, paused when hidden |
 | `StepWedgeView` | the calibration squares (§9) | drawn in the screen's colour space on black |
 | `KeyCap` | shortcut key caps | renders the text it is given (from `ShortcutCenter.displayString`) in system colours |

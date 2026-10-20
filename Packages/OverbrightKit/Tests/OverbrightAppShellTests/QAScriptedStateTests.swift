@@ -27,7 +27,7 @@ import Testing
     }
 
     @Test func everyReadoutMatchesItsThumb() throws {
-        #expect(ScriptedStatuses.names.count >= 57)
+        #expect(ScriptedStatuses.names.count >= 56)
         var cards = 0
         for name in ScriptedStatuses.names {
             let (shell, _) = try launch(name)

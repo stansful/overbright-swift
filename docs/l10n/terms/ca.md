@@ -93,7 +93,7 @@ _Reviewed 2026-10-14 (independent review): rows marked ★ changed or were added
 | Back to Standard (the instant off) | Torna a Estàndard | not “panic”, not “reset brightness” |
 | Indoor · Bright room · Sunlight · Max (presets) | Interior · Sala lluminosa · Llum solar · Màxim | “Max” is a preset only |
 | Safe · Peak (ceilings) | Segur · Pic | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | Mode de compatibilitat · Taula de colors | never “fallback” or “overlay” |
+| color table (in sentences: “macOS ignores color table changes”) | taula de colors | never “gamma”; no “fallback” or “overlay” in copy |
 | Fill Light (the edge light for video calls) | Llum de farciment | never “ring light” |
 | extra range (headroom, in user copy) | Marge extra | “headroom” only in Advanced and diagnostics |
 | Calibrate… · Run Self-Test… · Reset Display Colors… | Calibra… · Executa l’autoprova… · Restableix els colors de les pantalles… |  |

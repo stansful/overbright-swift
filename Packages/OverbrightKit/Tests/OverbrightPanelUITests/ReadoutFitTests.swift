@@ -133,8 +133,6 @@ import Testing
                 : "«\(full)» \(fullWidth) pt, without the preset \(numbersWidth) pt"
         }
         #expect(failures.isEmpty, "\(code): readouts wider than \(PanelLayout.readoutWidth) pt: \(failures)")
-        let caption = try #require(PanelWords(code), "\(code): no PanelUI table").compatibilityMode
-        #expect(FitMeasure.textWidth(caption, .caption) <= PanelLayout.readoutWidth, "\(code): «\(caption)»")
     }
 
     @Test(arguments: ShippedLanguages.codes)

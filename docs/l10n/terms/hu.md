@@ -88,7 +88,7 @@ Nouns after a number stay singular ("3 elem", "5 kijelző"), so the one/other pl
 | Back to Standard (the instant off) | Vissza az alapszintre | not “panic”, not “reset brightness” |
 | Indoor · Bright room · Sunlight · Max (presets) | Beltéri · Világos szoba · Napfény · Maximum | “Max” is a preset only |
 | Safe · Peak (ceilings) | Biztonságos · Csúcs | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | Kompatibilitási mód · Színtábla | never “fallback” or “overlay” |
+| color table (in sentences: “macOS ignores color table changes”) | színtábla | never “gamma”; no “fallback” or “overlay” in copy |
 | Fill Light (the edge light for video calls) | Arcmegvilágítás | never “ring light” |
 | extra range (headroom, in user copy) | Fényerőtartalék | “headroom” only in Advanced and diagnostics |
 | Calibrate… · Run Self-Test… · Reset Display Colors… | Kalibrálás… · Önteszt futtatása… · Kijelzőszínek visszaállítása… |  |

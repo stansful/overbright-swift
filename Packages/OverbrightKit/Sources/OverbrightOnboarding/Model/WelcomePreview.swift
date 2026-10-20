@@ -48,10 +48,10 @@ enum WelcomePreview {
         let eligibility = EligibilityClassifier.classify(facts, preferences: preferences, reading: reading,
                                                          machine: machine)
         let decision = DisplayDecision(key: facts.ref.key, target: .neutral, reasons: [.masterOff],
-                                       eligibility: eligibility, mechanism: eligibility.defaultMechanism,
+                                       eligibility: eligibility, mechanism: .table,
                                        domain: .encoded, requestedGain: 1, level: preferences.level)
         return DisplayStatus(key: facts.ref.key, name: facts.name, phase: .idle, decision: decision, appliedGain: 1,
-                             appliedFactor: 1, mechanism: eligibility.defaultMechanism, strategy: nil,
+                             appliedFactor: 1, mechanism: .table, strategy: nil,
                              lastReading: reading, sdrWhite: nil)
     }
 }

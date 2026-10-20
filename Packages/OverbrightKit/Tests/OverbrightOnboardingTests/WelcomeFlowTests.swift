@@ -234,7 +234,7 @@ private typealias Keys = DisplayFixture.Keys
         #expect(!harness.rows.flatMap(\.text.advisories).contains(settingsOnly))
         let msi = try harness.row(Keys.mpg322ux)
         #expect(msi.text.advisories == [VerdictText.line(for: .oledCare, in: .english())])
-        #expect(Advisory.allCases.filter(WelcomeDisplayRow.showsInWelcome) == [.compatibilityModeAdvised, .oledCare])
+        #expect(Advisory.allCases.filter(WelcomeDisplayRow.showsInWelcome) == [.oledCare])
     }
 
     /// The sentence quotes the display's own limit and the fix comes with those words (Design's `VerdictText`):

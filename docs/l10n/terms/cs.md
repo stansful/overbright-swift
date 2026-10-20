@@ -81,7 +81,7 @@ Register and typography (as macOS 27 in Czech):
 | Back to Standard (the instant off) | Zpět na standardní jas | not “panic”, not “reset brightness” |
 | Indoor · Bright room · Sunlight · Max (presets) | V místnosti · Světlá místnost · Na slunci · Maximum | “Max” is a preset only |
 | Safe · Peak (ceilings) | Bezpečný · Špičkový | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | Režim kompatibility · Tabulka barev | never “fallback” or “overlay” |
+| color table (in sentences: “macOS ignores color table changes”) | tabulka barev | never “gamma”; no “fallback” or “overlay” in copy |
 | Fill Light (the edge light for video calls) | Osvětlení obličeje | never “ring light” |
 | extra range (headroom, in user copy) | Rezerva jasu | “headroom” only in Advanced and diagnostics |
 | Calibrate… · Run Self-Test… · Reset Display Colors… | Kalibrovat… · Spustit autotest… · Resetovat barvy monitorů… |  |

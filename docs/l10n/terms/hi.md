@@ -90,7 +90,7 @@ Register and style, following macOS 27 in Hindi (checked against the system's ow
 | Back to Standard (the instant off) | मानक पर वापस जाएँ | not “panic”, not “reset brightness” |
 | Indoor · Bright room · Sunlight · Max (presets) | घर के अंदर · रोशन कमरा · धूप · अधिकतम | “Max” is a preset only |
 | Safe · Peak (ceilings) | सुरक्षित · पीक | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | संगतता मोड · रंग टेबल | never “fallback” or “overlay” |
+| color table (in sentences: “macOS ignores color table changes”) | रंग टेबल | never “gamma”; no “fallback” or “overlay” in copy |
 | Fill Light (the edge light for video calls) | फ़िल लाइट | never “ring light” |
 | extra range (headroom, in user copy) | अतिरिक्त रेंज | “headroom” only in Advanced and diagnostics |
 | Calibrate… · Run Self-Test… · Reset Display Colors… | कैलिब्रेट करें… · सेल्फ़-टेस्ट चलाएँ… · डिस्प्ले के रंग रीसेट करें… |  |

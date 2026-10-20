@@ -417,7 +417,7 @@ import Testing
 
     /// Compatibility mode is unavailable (`MechanismPreference.overlayIsAvailable`, 2026-10-20: the overlay turned the
     /// owner's built-in white): Automatic on a compatibility model, an explicit Compatibility-mode preference and a
-    /// "did not get brighter" record all give the table, and no display carries the advisory (§7.5).
+    /// "did not get brighter" record all give the table (§7.5).
     @Test func overlayIsNeverChosenWhileUnavailable() {
         #expect(!MechanismPreference.overlayIsAvailable)
         #expect(builtIn(brightRoom, mechanism: .overlay)?.mechanism == .table)
@@ -425,7 +425,6 @@ import Testing
         let neo = DisplayFixture.neoIgnoresWrites
         let onNeo = decide([T.display(neo.displays[0])], machine: neo.machine).builtIn
         #expect(onNeo?.mechanism == .table && onNeo?.boostGain != nil)
-        #expect(onNeo?.eligibility.advisories.contains(.compatibilityModeAdvised) == false)
         #expect(decide([T.display(neo.displays[0], mechanism: .overlay)], machine: neo.machine).builtIn?.mechanism
                 == .table)
         let notBrighter = T.display(calibration: T.record(.notBrighter))

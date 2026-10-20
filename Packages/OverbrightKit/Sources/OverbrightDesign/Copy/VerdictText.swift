@@ -117,9 +117,6 @@ public nonisolated struct VerdictText: Hashable, Sendable {
     public static func line(for advisory: Advisory, oledIdleMinutes: Int = 5, in language: CopyLanguage = .app) -> String {
         let (b, l) = (language.bundle, language.locale)
         switch advisory {
-        case .compatibilityModeAdvised:
-            return String(localized: "On this Mac, macOS ignores color table changes, so Overbright uses Compatibility mode.",
-                          bundle: b, locale: l, comment: "Verdict advisory: this Mac ignores color table changes")
         case .oledCare:
             let idle = CopyFormat.spokenDuration(minutes: oledIdleMinutes, in: language)
             return String(localized: "OLED display: extra brightness stays lower and pauses after \(idle) without input.",

@@ -83,7 +83,7 @@ Reviewed by an independent review pass; the rows above include its changes.
 | Back to Standard (the instant off) | 恢复标准 | not “panic”, not “reset brightness” |
 | Indoor · Bright room · Sunlight · Max (presets) | 室内 · 明亮房间 · 阳光 · 最大 | “Max” is a preset only |
 | Safe · Peak (ceilings) | 安全 · 峰值 | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | 兼容模式 · 颜色表 | never “fallback” or “overlay” |
+| color table (in sentences: “macOS ignores color table changes”) | 颜色表 | never “gamma”; no “fallback” or “overlay” in copy |
 | Fill Light (the edge light for video calls) | 补光 | never “ring light” |
 | extra range (headroom, in user copy) | 亮度余量 | “headroom” only in Advanced and diagnostics |
 | Calibrate… · Run Self-Test… · Reset Display Colors… | 校准… · 运行自检… · 重置显示器颜色… |  |

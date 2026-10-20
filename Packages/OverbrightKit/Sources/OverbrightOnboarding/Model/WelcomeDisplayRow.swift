@@ -118,12 +118,12 @@ extension WelcomeDisplayRow {
                                  top: card.canBoost ? card.top : 1, fix: Fix(text.fix))
     }
 
-    /// The advisories step 2 shows as a second line under the verdict (DESIGN.md §12.1): Compatibility mode and OLED
-    /// care. "Keep Automatically adjust brightness…" is Settings only (§7.4), and the calibration note is left out
-    /// because calibration is not part of Welcome (§8): on a first run it would repeat on every row.
+    /// The advisories step 2 shows as a second line under the verdict (DESIGN.md §12.1): OLED care. "Keep
+    /// Automatically adjust brightness…" is Settings only (§7.4), and the calibration note is left out because
+    /// calibration is not part of Welcome (§8): on a first run it would repeat on every row.
     static func showsInWelcome(_ advisory: Advisory) -> Bool {
         switch advisory {
-        case .compatibilityModeAdvised, .oledCare: true
+        case .oledCare: true
         case .autoBrightnessInteracts, .notCalibrated: false
         }
     }

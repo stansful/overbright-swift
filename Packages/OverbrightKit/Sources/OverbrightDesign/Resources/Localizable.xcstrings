@@ -9749,215 +9749,6 @@
         }
       }
     },
-    "Color table" : {
-      "comment" : "Settings ▸ Displays: the default method, scaling the display’s color table (pop-up item)",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "جدول الألوان"
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Taula de colors"
-          }
-        },
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tabulka barev"
-          }
-        },
-        "da" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Farvetabel"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Farbtabelle"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Πίνακας χρωμάτων"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tabla de colores"
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Väritaulukko"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Table des couleurs"
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "טבלת צבעים"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "रंग टेबल"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tablica boja"
-          }
-        },
-        "hu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Színtábla"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tabel warna"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tabella colori"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "カラーテーブル"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "색상 테이블"
-          }
-        },
-        "ms" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jadual warna"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fargetabell"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kleurentabel"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tabela kolorów"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tabela de cores"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tabela de cores"
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tabel de culori"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Цветовая таблица"
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tabuľka farieb"
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Barvna tabela"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Färgtabell"
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ตารางสี"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Renk tablosu"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Колірна таблиця"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bảng màu"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "颜色表"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "色彩表"
-          }
-        }
-      }
-    },
     "Colors changed" : {
       "comment" : "Panel ▸ Display card: status chip, another app changed this display’s colors",
       "localizations" : {
@@ -10163,215 +9954,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "顏色已更改"
-          }
-        }
-      }
-    },
-    "Compatibility mode" : {
-      "comment" : "Panel ▸ Display card: the method that brightens through an overlay (caption and Settings pop-up item)",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "وضع التوافق"
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mode de compatibilitat"
-          }
-        },
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Režim kompatibility"
-          }
-        },
-        "da" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kompatibilitetstilstand"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kompatibilitätsmodus"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Λειτουργία συμβατότητας"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Modo de compatibilidad"
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Yhteensopivuustila"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mode de compatibilité"
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "מצב תאימות"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "संगतता मोड"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Način kompatibilnosti"
-          }
-        },
-        "hu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kompatibilitási mód"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mode kompatibilitas"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Modalità compatibilità"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "互換モード"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "호환성 모드"
-          }
-        },
-        "ms" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mod keserasian"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kompatibilitetsmodus"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Compatibiliteitsmodus"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tryb zgodności"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Modo de Compatibilidade"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Modo de compatibilidade"
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mod de compatibilitate"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Режим совместимости"
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Režim kompatibility"
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Način združljivosti"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kompatibilitetsläge"
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "โหมดความเข้ากันได้"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Uyumluluk modu"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Режим сумісності"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chế độ tương thích"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "兼容模式"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "相容模式"
           }
         }
       }
@@ -24385,215 +23967,6 @@
         }
       }
     },
-    "On this Mac, macOS ignores color table changes, so Overbright uses Compatibility mode." : {
-      "comment" : "Verdict advisory: this Mac ignores color table changes",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "على جهاز Mac هذا، يتجاهل macOS تغييرات جدول الألوان، لذا يستخدم Overbright وضع التوافق."
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "En aquest Mac, el macOS ignora els canvis a la taula de colors, per això l’Overbright fa servir el mode de compatibilitat."
-          }
-        },
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Na tomto Macu macOS ignoruje změny tabulky barev, proto Overbright používá režim kompatibility."
-          }
-        },
-        "da" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "På denne Mac ignorerer macOS ændringer i farvetabellen, så Overbright bruger kompatibilitetstilstand."
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Auf diesem Mac ignoriert macOS Änderungen der Farbtabelle, daher nutzt Overbright den Kompatibilitätsmodus."
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Σε αυτό το Mac, το macOS αγνοεί τις αλλαγές στον πίνακα χρωμάτων, οπότε το Overbright χρησιμοποιεί τη λειτουργία συμβατότητας."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "En este Mac, macOS ignora los cambios en la tabla de colores, así que Overbright usa el modo de compatibilidad."
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tässä Macissa macOS ohittaa väritaulukon muutokset, joten Overbright käyttää yhteensopivuustilaa."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sur ce Mac, macOS ignore les modifications de la table des couleurs ; Overbright utilise donc le mode de compatibilité."
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ב-Mac זה, מערכת macOS מתעלמת משינויים בטבלת הצבעים, ולכן Overbright משתמש במצב תאימות."
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "इस Mac पर macOS रंग टेबल में किए गए बदलावों को अनदेखा करता है, इसलिए Overbright संगतता मोड इस्तेमाल करता है।"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Na ovom Macu macOS zanemaruje promjene tablice boja, pa Overbright koristi način kompatibilnosti."
-          }
-        },
-        "hu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ezen a Macen a macOS figyelmen kívül hagyja a színtábla módosításait, ezért az Overbright kompatibilitási módot használ."
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Di Mac ini, macOS mengabaikan perubahan tabel warna, jadi Overbright menggunakan Mode kompatibilitas."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Su questo Mac, macOS ignora le modifiche alla tabella colori, quindi Overbright usa la modalità compatibilità."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "このMacではmacOSがカラーテーブルの変更を無視するため、Overbrightは互換モードを使用します。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "이 Mac에서는 macOS가 색상 테이블 변경을 무시하므로 Overbright가 호환성 모드를 사용합니다."
-          }
-        },
-        "ms" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pada Mac ini, macOS mengabaikan perubahan jadual warna, jadi Overbright menggunakan Mod keserasian."
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "På denne Macen ignorerer macOS endringer i fargetabellen, så Overbright bruker kompatibilitetsmodus."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Op deze Mac negeert macOS wijzigingen in de kleurentabel, dus gebruikt Overbright de compatibiliteitsmodus."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Na tym Macu macOS ignoruje zmiany tabeli kolorów, więc Overbright używa trybu zgodności."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neste Mac, o macOS ignora alterações na tabela de cores, então o Overbright usa o Modo de Compatibilidade."
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neste Mac, o macOS ignora as alterações à tabela de cores, por isso o Overbright usa o modo de compatibilidade."
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pe acest Mac, macOS ignoră modificările tabelului de culori, așa că Overbright folosește modul de compatibilitate."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "На этом Mac macOS игнорирует изменения цветовой таблицы, поэтому Overbright использует режим совместимости."
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Na tomto Macu macOS ignoruje zmeny tabuľky farieb, preto Overbright používa režim kompatibility."
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Na tem Macu macOS prezre spremembe barvne tabele, zato Overbright uporablja način združljivosti."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "På den här Macen ignorerar macOS ändringar i färgtabellen, så Overbright använder kompatibilitetsläge."
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "บน Mac เครื่องนี้ macOS จะไม่สนใจการเปลี่ยนแปลงตารางสี Overbright จึงใช้โหมดความเข้ากันได้"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bu Mac’te macOS renk tablosu değişikliklerini yok sayar, bu yüzden Overbright uyumluluk modunu kullanır."
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "На цьому Mac macOS ігнорує зміни колірної таблиці, тому Overbright використовує режим сумісності."
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Trên máy Mac này, macOS bỏ qua thay đổi bảng màu, nên Overbright dùng Chế độ tương thích."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在此Mac上，macOS会忽略颜色表更改，因此Overbright使用兼容模式。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在此Mac上，macOS會忽略色彩表的更改，因此Overbright會使用相容模式。"
-          }
-        }
-      }
-    },
     "Open Overbright and turn it on" : {
       "comment" : "Settings ▸ General: When you log in, radio button",
       "localizations" : {
@@ -27311,211 +26684,211 @@
         }
       }
     },
-    "Paused because %@ also changes display brightness. Quit it, or use Compatibility mode, which works alongside it." : {
+    "Paused because %@ also changes display brightness. Quit it to continue." : {
       "comment" : "Panel: banner while another brightness app runs; the argument is its name",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "متوقف مؤقتًا لأن التطبيق \"%@\" يغيّر إضاءة الشاشة أيضًا. أنهِه، أو استخدم وضع التوافق الذي يعمل إلى جانبه."
+            "value" : "متوقف مؤقتًا لأن التطبيق \"%@\" يغيّر إضاءة الشاشة أيضًا. أنهِه للمتابعة."
           }
         },
         "ca" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "En pausa perquè l’app %@ també canvia la brillantor de la pantalla. Surt‑ne o fes servir el mode de compatibilitat, que funciona al seu costat."
+            "value" : "En pausa perquè l’app %@ també canvia la brillantor de la pantalla. Surt‑ne per continuar."
           }
         },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pozastaveno, protože aplikace %@ také mění jas monitoru. Ukončete ji, nebo použijte režim kompatibility, který s ní funguje souběžně."
+            "value" : "Pozastaveno, protože aplikace %@ také mění jas monitoru. Chcete‑li pokračovat, ukončete ji."
           }
         },
         "da" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sat på pause, fordi %@ også ændrer skærmens lysstyrke. Slut den, eller brug kompatibilitetstilstand, som fungerer sammen med den."
+            "value" : "Sat på pause, fordi %@ også ændrer skærmens lysstyrke. Slut den for at fortsætte."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pausiert, weil „%@“ ebenfalls die Displayhelligkeit ändert. Beende die App oder nutze den Kompatibilitätsmodus, der parallel dazu funktioniert."
+            "value" : "Pausiert, weil „%@“ ebenfalls die Displayhelligkeit ändert. Beende die App, um fortzufahren."
           }
         },
         "el" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Σε παύση, επειδή η εφαρμογή «%@» αλλάζει επίσης τη φωτεινότητα της οθόνης. Τερματίστε την ή χρησιμοποιήστε τη λειτουργία συμβατότητας, που λειτουργεί παράλληλα με αυτήν."
+            "value" : "Σε παύση, επειδή η εφαρμογή «%@» αλλάζει επίσης τη φωτεινότητα της οθόνης. Τερματίστε την για να συνεχίσετε."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "En pausa porque %@ también cambia el brillo de la pantalla. Ciérrala o usa el modo de compatibilidad, que funciona junto a ella."
+            "value" : "En pausa porque %@ también cambia el brillo de la pantalla. Ciérrala para continuar."
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tauolla, koska appi %@ muuttaa myös näytön kirkkautta. Lopeta se tai käytä yhteensopivuustilaa, joka toimii sen rinnalla."
+            "value" : "Tauolla, koska appi %@ muuttaa myös näytön kirkkautta. Lopeta se, jotta voit jatkaa."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "En pause, car « %@ » modifie aussi la luminosité de l’écran. Quittez cette app ou utilisez le mode de compatibilité, qui fonctionne en parallèle."
+            "value" : "En pause, car « %@ » modifie aussi la luminosité de l’écran. Quittez cette app pour continuer."
           }
         },
         "he" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "מושהה כי גם %@ משנה את בהירות הצג. יש לסיים אותו, או להשתמש במצב תאימות, שפועל לצדו."
+            "value" : "מושהה כי גם %@ משנה את בהירות הצג. כדי להמשיך, יש לסיים אותו."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "पॉज़ किया गया, क्योंकि %@ भी डिस्प्ले की ब्राइटनेस बदलता है। उसे बंद करें, या संगतता मोड इस्तेमाल करें, जो उसके साथ काम करता है।"
+            "value" : "पॉज़ किया गया, क्योंकि %@ भी डिस्प्ले की ब्राइटनेस बदलता है। जारी रखने के लिए उसे बंद करें।"
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pauzirano jer aplikacija %@ također mijenja svjetlinu zaslona. Zatvorite je ili koristite način kompatibilnosti, koji radi uz nju."
+            "value" : "Pauzirano jer aplikacija %@ također mijenja svjetlinu zaslona. Zatvorite je da biste nastavili."
           }
         },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Szüneteltetve, mert a(z) %@ is módosítja a kijelző fényerejét. Lépjen ki belőle, vagy használja a kompatibilitási módot, amely együtt tud működni vele."
+            "value" : "Szüneteltetve, mert a(z) %@ is módosítja a kijelző fényerejét. A folytatáshoz lépjen ki belőle."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dijeda karena %@ juga mengubah kecerahan layar. Tutup app tersebut, atau gunakan Mode kompatibilitas yang dapat berjalan bersamanya."
+            "value" : "Dijeda karena %@ juga mengubah kecerahan layar. Tutup app tersebut untuk melanjutkan."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "In pausa perché anche %@ modifica la luminosità dello schermo. Chiudila oppure usa la modalità compatibilità, che funziona insieme a essa."
+            "value" : "In pausa perché anche %@ modifica la luminosità dello schermo. Chiudila per continuare."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "“%@”もディスプレイの輝度を変更するため、一時停止しています。そのAppを終了するか、併用できる互換モードを使用してください。"
+            "value" : "“%@”もディスプレイの輝度を変更するため、一時停止しています。続けるには、そのAppを終了してください。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "‘%@’도 디스플레이 밝기를 변경하므로 일시 정지되었습니다. 해당 앱을 종료하거나 함께 작동하는 호환성 모드를 사용하십시오."
+            "value" : "‘%@’도 디스플레이 밝기를 변경하므로 일시 정지되었습니다. 계속하려면 해당 앱을 종료하십시오."
           }
         },
         "ms" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dijeda kerana %@ turut menukar kecerahan paparan. Keluar daripadanya, atau gunakan Mod keserasian, yang berfungsi bersamanya."
+            "value" : "Dijeda kerana %@ turut menukar kecerahan paparan. Keluar daripadanya untuk meneruskan."
           }
         },
         "nb" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Satt på pause fordi %@ også endrer lysstyrken på skjermen. Avslutt den, eller bruk kompatibilitetsmodus, som fungerer sammen med den."
+            "value" : "Satt på pause fordi %@ også endrer lysstyrken på skjermen. Avslutt den for å fortsette."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gepauzeerd omdat %@ ook de helderheid van het beeldscherm wijzigt. Stop die app of gebruik de compatibiliteitsmodus, die ermee samenwerkt."
+            "value" : "Gepauzeerd omdat %@ ook de helderheid van het beeldscherm wijzigt. Stop die app om door te gaan."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wstrzymano, ponieważ aplikacja %@ również zmienia jasność wyświetlacza. Zakończ ją lub użyj trybu zgodności, który działa razem z nią."
+            "value" : "Wstrzymano, ponieważ aplikacja %@ również zmienia jasność wyświetlacza. Zakończ ją, aby kontynuować."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pausado porque o app %@ também altera o brilho da tela. Encerre-o ou use o Modo de Compatibilidade, que funciona junto com ele."
+            "value" : "Pausado porque o app %@ também altera o brilho da tela. Encerre-o para continuar."
           }
         },
         "pt-PT" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Em pausa porque a aplicação %@ também altera o brilho do monitor. Feche‑a ou use o modo de compatibilidade, que funciona em conjunto com ela."
+            "value" : "Em pausa porque a aplicação %@ também altera o brilho do monitor. Feche‑a para continuar."
           }
         },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pe pauză deoarece și %@ modifică luminozitatea afișajului. Închideți aplicația sau folosiți modul de compatibilitate, care funcționează alături de ea."
+            "value" : "Pe pauză deoarece și %@ modifică luminozitatea afișajului. Închideți aplicația pentru a continua."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Приостановлено: приложение «%@» тоже меняет яркость дисплея. Завершите его или включите режим совместимости, который работает вместе с ним."
+            "value" : "Приостановлено: приложение «%@» тоже меняет яркость дисплея. Чтобы продолжить, завершите его."
           }
         },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pozastavené, pretože apka %@ tiež mení jas displeja. Ukončite ju alebo použite režim kompatibility, ktorý funguje súčasne s ňou."
+            "value" : "Pozastavené, pretože apka %@ tiež mení jas displeja. Ak chcete pokračovať, ukončite ju."
           }
         },
         "sl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Začasno ustavljeno, ker aplikacija %@ prav tako spreminja svetlost zaslona. Zaprite jo ali uporabite način združljivosti, ki deluje skupaj z njo."
+            "value" : "Začasno ustavljeno, ker aplikacija %@ prav tako spreminja svetlost zaslona. Zaprite jo, da nadaljujete."
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pausad eftersom %@ också ändrar skärmens ljusstyrka. Avsluta den eller använd kompatibilitetsläge, som fungerar tillsammans med den."
+            "value" : "Pausad eftersom %@ också ändrar skärmens ljusstyrka. Avsluta den för att fortsätta."
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "หยุดพักอยู่เนื่องจาก %@ เปลี่ยนความสว่างของจอภาพด้วย ให้ออกจากแอปนั้น หรือใช้โหมดความเข้ากันได้ซึ่งทำงานร่วมกับแอปนั้นได้"
+            "value" : "หยุดพักอยู่เนื่องจาก %@ เปลี่ยนความสว่างของจอภาพด้วย ให้ออกจากแอปนั้นเพื่อดำเนินการต่อ"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ uygulaması da ekran parlaklığını değiştirdiği için duraklatıldı. Bu uygulamadan çıkın ya da onunla birlikte çalışan uyumluluk modunu kullanın."
+            "value" : "%@ uygulaması da ekran parlaklığını değiştirdiği için duraklatıldı. Devam etmek için bu uygulamadan çıkın."
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Призупинено: програма «%@» теж змінює яскравість дисплея. Завершіть її або ввімкніть режим сумісності, який працює разом із нею."
+            "value" : "Призупинено: програма «%@» теж змінює яскравість дисплея. Щоб продовжити, завершіть її."
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Đã tạm dừng vì %@ cũng thay đổi độ sáng màn hình. Hãy thoát ứng dụng đó, hoặc dùng Chế độ tương thích để chạy song song."
+            "value" : "Đã tạm dừng vì %@ cũng thay đổi độ sáng màn hình. Hãy thoát ứng dụng đó để tiếp tục."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "已暂停，因为“%@”也会更改显示器亮度。请退出该App，或使用可与其同时运行的兼容模式。"
+            "value" : "已暂停，因为“%@”也会更改显示器亮度。请退出该App以继续。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "已暫停，因為「%@」也會更改顯示器亮度。請結束該App，或使用可與其同時運作的相容模式。"
+            "value" : "已暫停，因為「%@」也會更改顯示器亮度。請結束該App以繼續。"
           }
         }
       }
@@ -41321,424 +40694,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "開啟或關閉Overbright"
-          }
-        }
-      }
-    },
-    "Use Compatibility Mode" : {
-      "comment" : "Menu: banner action (title case)",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "استخدام وضع التوافق"
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Utilitza el mode de compatibilitat"
-          }
-        },
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Použít režim kompatibility"
-          }
-        },
-        "da" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Brug kompatibilitetstilstand"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kompatibilitätsmodus nutzen"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Χρήση λειτουργίας συμβατότητας"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Usar el modo de compatibilidad"
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Käytä yhteensopivuustilaa"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Utiliser le mode de compatibilité"
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "שימוש במצב תאימות"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "संगतता मोड चुनें"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Koristi način kompatibilnosti"
-          }
-        },
-        "hu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kompatibilitási mód használata"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gunakan Mode Kompatibilitas"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Usa la modalità compatibilità"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "互換モードを使用"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "호환성 모드 사용"
-          }
-        },
-        "ms" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Guna Mod Keserasian"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bruk kompatibilitetsmodus"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gebruik compatibiliteitsmodus"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Użyj trybu zgodności"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Usar o Modo de Compatibilidade"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Usar modo de compatibilidade"
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Utilizați modul de compatibilitate"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Включить режим совместимости"
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Použiť režim kompatibility"
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Uporabi način združljivosti"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Använd kompatibilitetsläge"
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ใช้โหมดความเข้ากันได้"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Uyumluluk Modunu Kullan"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Увімкнути режим сумісності"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dùng Chế độ tương thích"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "使用兼容模式"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "使用相容模式"
-          }
-        }
-      }
-    },
-    "Use Compatibility mode" : {
-      "comment" : "Panel: chip or banner button that switches the display to Compatibility mode (sentence case)",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "استخدام وضع التوافق"
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Utilitza el mode de compatibilitat"
-          }
-        },
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Použít režim kompatibility"
-          }
-        },
-        "da" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Brug kompatibilitetstilstand"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kompatibilitätsmodus nutzen"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Χρήση λειτουργίας συμβατότητας"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Usar el modo de compatibilidad"
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Käytä yhteensopivuustilaa"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Utiliser le mode de compatibilité"
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "שימוש במצב תאימות"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "संगतता मोड चुनें"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Koristi način kompatibilnosti"
-          }
-        },
-        "hu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kompatibilitási mód használata"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gunakan Mode kompatibilitas"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Usa la modalità compatibilità"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "互換モードを使用"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "호환성 모드 사용"
-          }
-        },
-        "ms" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Guna Mod keserasian"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bruk kompatibilitetsmodus"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gebruik compatibiliteitsmodus"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Użyj trybu zgodności"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Usar o Modo de Compatibilidade"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Usar modo de compatibilidade"
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Utilizați modul de compatibilitate"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Включить режим совместимости"
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Použiť režim kompatibility"
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Uporabi način združljivosti"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Använd kompatibilitetsläge"
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ใช้โหมดความเข้ากันได้"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Uyumluluk modunu kullan"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Увімкнути режим сумісності"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dùng Chế độ tương thích"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "使用兼容模式"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "使用相容模式"
           }
         }
       }
