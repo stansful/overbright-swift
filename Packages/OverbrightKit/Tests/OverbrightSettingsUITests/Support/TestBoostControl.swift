@@ -55,8 +55,8 @@ import OverbrightCore
     func step(_ direction: StepDirection, source: ControlSource) { calls.append("step") }
     func toggleDim(source: ControlSource) { calls.append("toggleDim") }
     func returnToStandard(source: ControlSource) { calls.append("returnToStandard") }
-    func keepLowLevel() { calls.append("keepLowLevel") }
-    func revertLowLevel() { calls.append("revertLowLevel") }
+    func keepLevel() { calls.append("keepLevel") }
+    func revertLevel() { calls.append("revertLevel") }
     func pause(until deadline: Date?, source: ControlSource) { calls.append("pause") }
     func resume(source: ControlSource) { calls.append("resume") }
     func continueAnyway(_ app: ConflictingApp) { calls.append("continueAnyway") }

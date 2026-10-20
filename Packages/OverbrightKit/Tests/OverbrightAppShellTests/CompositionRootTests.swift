@@ -36,7 +36,7 @@ import Testing
             help: HelpWindowController(services: services), calibration: CalibrationWindowController(services: services),
             selfTest: SelfTestSheetPresenter(), diagnostics: { nil }))
         _ = HUDController(services: services)
-        _ = LowLevelPromptController(services: services)
+        _ = LevelConfirmationPromptController(services: services)
         _ = DockMenuController(services: services)
 
         #expect(log.calls.isEmpty, "touched before start(): \(log.calls)")

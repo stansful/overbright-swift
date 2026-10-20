@@ -82,11 +82,11 @@ import Testing
             let services = try #require(ScriptedStatuses.services(named: name))
             let status = services.boost.status
             let rep: NSBitmapImageRep
-            if let pending = status.pendingLowLevel {
-                let model = LowLevelPromptModel()
-                model.secondsLeft = LowLevelPromptController.seconds(until: pending.deadline,
+            if let pending = status.pendingConfirmation {
+                let model = LevelConfirmationPromptModel()
+                model.secondsLeft = LevelConfirmationPromptController.seconds(until: pending.deadline,
                                                                       now: pending.deadline.addingTimeInterval(-10))
-                rep = try render(LowLevelPromptView(model: model, keep: {}, goBack: {}), appearance)
+                rep = try render(LevelConfirmationPromptView(model: model, keep: {}, goBack: {}), appearance)
                 #expect(rep.pixelsWide >= Int(HUDPlacement.promptSize.width), "\(name)")
             } else {
                 let change = try #require(status.lastChange, "\(name)")

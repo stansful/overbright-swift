@@ -126,10 +126,10 @@ enum ScriptedParts {
     /// A status of `displays`.
     static func status(_ displays: [DisplayStatus], isOn: Bool = true, symbol: StatusSymbolState? = nil,
                        banner: Banner? = nil, pausedUntil: Date? = nil, autoOffAt: Date? = nil,
-                       lastChange: LevelChange? = nil, pendingLowLevel: LowLevelConfirmation? = nil) -> BoostStatus {
+                       lastChange: LevelChange? = nil, pendingConfirmation: LevelConfirmation? = nil) -> BoostStatus {
         BoostStatus(isOn: isOn, isReady: true, pausedUntil: pausedUntil, autoOffAt: autoOffAt, displays: displays,
                     banner: banner, symbol: symbol ?? (isOn ? .on : .off), lastChange: lastChange,
-                    pendingLowLevel: pendingLowLevel)
+                    pendingConfirmation: pendingConfirmation)
     }
 
     /// A level change for the HUD gallery.

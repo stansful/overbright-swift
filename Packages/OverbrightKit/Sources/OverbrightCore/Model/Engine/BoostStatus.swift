@@ -20,14 +20,14 @@ public nonisolated struct BoostStatus: Hashable, Sendable {
     /// The last change the HUD may show.
     public var lastChange: LevelChange?
     /// A pending "Keep this level?".
-    public var pendingLowLevel: LowLevelConfirmation?
+    public var pendingConfirmation: LevelConfirmation?
     /// A status.
     public init(isOn: Bool, isReady: Bool, pausedUntil: Date?, autoOffAt: Date?, displays: [DisplayStatus],
                 banner: Banner?, symbol: StatusSymbolState, lastChange: LevelChange? = nil,
-                pendingLowLevel: LowLevelConfirmation? = nil) {
+                pendingConfirmation: LevelConfirmation? = nil) {
         self.isOn = isOn; self.isReady = isReady; self.pausedUntil = pausedUntil; self.autoOffAt = autoOffAt
         self.displays = displays; self.banner = banner; self.symbol = symbol; self.lastChange = lastChange
-        self.pendingLowLevel = pendingLowLevel
+        self.pendingConfirmation = pendingConfirmation
     }
     /// Before the engine started: off, not ready, no displays.
     public static let initial = BoostStatus(isOn: false, isReady: false, pausedUntil: nil, autoOffAt: nil,

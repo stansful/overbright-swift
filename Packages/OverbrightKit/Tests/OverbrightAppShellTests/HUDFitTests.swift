@@ -111,7 +111,7 @@ import Testing
     }
 
     /// The Keep-this-level prompt (DESIGN.md §6, 280 pt wide): its title, its countdown and its two buttons each fit
-    /// between the prompt's insets, in the StatusMenu words `LowLevelPromptView` reads.
+    /// between the prompt's insets, in the StatusMenu words `LevelConfirmationPromptView` reads.
     @Test(arguments: languages)
     func theKeepLevelPromptFitsInEveryLanguage(_ code: String) throws {
         // The language's own table, required: falling back to `.module` would measure English (C-PANEL-33).

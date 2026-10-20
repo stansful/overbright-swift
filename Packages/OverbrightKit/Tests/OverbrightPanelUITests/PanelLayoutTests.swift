@@ -48,7 +48,7 @@ import Testing
         #expect(try status("dimmed").symbol == .dimming)
         #expect(try status("banner-paused").pausedUntil != nil)
         #expect(try status("flicker-stop").banner == .flickerStop(display: DisplayFixture.Keys.builtIn))
-        #expect(try status("keep-level").pendingLowLevel != nil)
+        #expect(try status("keep-level").pendingConfirmation != nil)
         #expect(try status("hud-automation-timer").lastChange?.kind == .timerEnded)
         #expect(try status("still-no-extra-range").displays.first?.failedTries == 2)
         let services = try #require(ScriptedStatuses.services(named: "linked"))

@@ -38,7 +38,7 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
     private var panel: PanelController?
     private var welcome: WelcomeWindowController?
     private var hud: HUDController?
-    private var lowLevelPrompt: LowLevelPromptController?
+    private var levelConfirmationPrompt: LevelConfirmationPromptController?
     private var dock: DockMenuController?
     private var quitFlow: QuitFlow?
     private let launchGate = LaunchGate()
@@ -112,7 +112,7 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
         #endif
         shell.runner.stopNow()
         hud?.stop()
-        lowLevelPrompt?.stop()
+        levelConfirmationPrompt?.stop()
     }
 
     /// Opening Overbright again (Finder, Spotlight, `open`, the Dock icon) always shows something (D13).
@@ -254,11 +254,11 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
         let dock = DockMenuController(services: services)
         dock.start()
         let hud = HUDController(services: services)
-        let lowLevelPrompt = LowLevelPromptController(services: services)
+        let levelConfirmationPrompt = LevelConfirmationPromptController(services: services)
         hud.start()
-        lowLevelPrompt.start()
+        levelConfirmationPrompt.start()
         self.appControl = appControl; self.icon = icon; self.panel = panel; self.welcome = welcome
-        self.dock = dock; self.hud = hud; self.lowLevelPrompt = lowLevelPrompt
+        self.dock = dock; self.hud = hud; self.levelConfirmationPrompt = levelConfirmationPrompt
         if !pendingURLs.isEmpty {
             let urls = pendingURLs
             pendingURLs = []

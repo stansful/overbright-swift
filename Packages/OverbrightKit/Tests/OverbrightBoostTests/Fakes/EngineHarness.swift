@@ -31,7 +31,7 @@ import OverbrightTestSupport
     /// with `decide` when given. `wrapGamma` puts a decorator (`CountingGammaPort`) between the engine and `gamma`;
     /// `defaults` backs the settings (`CountingDefaults` counts their writes). `asksToKeep` false (the default) switches
     /// "Keep this level?" off (`BoostEngine.keepPromptEnabled`), so a level change does not go back to Standard 10 s
-    /// later (§4.9); `KeepPromptTests` and `LowLevelConfirmationTests` pass true.
+    /// later (§4.9); `KeepPromptTests` and `KeepPromptTests` pass true.
     init(fixture: DisplayFixture = .builtinXDRLidOpen, reducer: ReferenceReducer = ReferenceReducer(),
          machine: MachineIdentity? = nil, decide: ((PolicyInput) -> PolicyDecision)? = nil,
          wrapGamma: (FakeGammaPort, ManualTimeSource) -> any GammaPort = { gamma, _ in gamma },

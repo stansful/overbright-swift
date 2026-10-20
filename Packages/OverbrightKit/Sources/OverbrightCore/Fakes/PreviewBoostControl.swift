@@ -78,9 +78,9 @@ import Observation
         turn(false, source: source)
     }
     /// Clears the pending confirmation.
-    public func keepLowLevel() { record("keepLowLevel"); status.pendingLowLevel = nil }
+    public func keepLevel() { record("keepLevel"); status.pendingConfirmation = nil }
     /// Clears the pending confirmation.
-    public func revertLowLevel() { record("revertLowLevel"); status.pendingLowLevel = nil }
+    public func revertLevel() { record("revertLevel"); status.pendingConfirmation = nil }
     /// Sets `pausedUntil`.
     public func pause(until deadline: Date?, source: ControlSource) {
         record("pause(\(deadline.map { "\($0.timeIntervalSinceReferenceDate)" } ?? "indefinitely"),\(source.rawValue))")

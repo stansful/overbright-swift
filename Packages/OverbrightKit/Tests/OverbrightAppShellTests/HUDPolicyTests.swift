@@ -155,9 +155,9 @@ import Testing
         let slot = HUDSlot()
         let hud = HUDController(services: services, slot: slot, text: Self.text)
         hud.presentsWindows = false
-        let prompt = LowLevelPromptController(services: services, slot: slot)
+        let prompt = LevelConfirmationPromptController(services: services, slot: slot)
         prompt.presentsWindows = false
-        prompt.update(LowLevelConfirmation(display: nil, previousLevels: [:],
+        prompt.update(LevelConfirmation(display: nil, previousLevels: [:],
                                            deadline: services.time.wallClock.addingTimeInterval(10)))
         hud.handle(change(.level, .shortcut, sequence: 1))
         #expect(hud.visible == nil && slot.occupant == .prompt)
@@ -309,9 +309,9 @@ import Testing
         hud.presentsWindows = false
         hud.handle(change(.level, .shortcut, sequence: 1))
         #expect(hud.visible != nil)
-        let prompt = LowLevelPromptController(services: services, slot: slot)
+        let prompt = LevelConfirmationPromptController(services: services, slot: slot)
         prompt.presentsWindows = false
-        prompt.update(LowLevelConfirmation(display: nil, previousLevels: [:],
+        prompt.update(LevelConfirmation(display: nil, previousLevels: [:],
                                            deadline: services.time.wallClock.addingTimeInterval(10)))
         #expect(hud.visible == nil && slot.occupant == .prompt)            // never two
         hud.handle(change(.level, .shortcut, sequence: 2))

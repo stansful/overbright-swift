@@ -1,9 +1,9 @@
 // OverbrightBoost/Engine/BoostEngine.swift — the engine behind `BoostControl`. ARCHITECTURE.md §4.1, §4.9, §10.6.
 // Seeded by WP0a with the fixed initializers (§10.0); body by WP4: master state, the policy loop over the injected
 // reducer, one `DisplayController` per display, synchronous shield delivery, pause and auto-off, the HUD's
-// `lastChange`, the low-level confirmation, and the self-test, calibration and rescue entry points through WP5's seams.
+// `lastChange`, the level confirmation, and the self-test, calibration and rescue entry points through WP5's seams.
 // This file holds the state, the initializers and the lifecycle; requests live in
-// `BoostEngine+Control.swift`, the low-level confirmation in `+LowLevel`, the policy loop and HUD changes in `+Policy`,
+// `BoostEngine+Control.swift`, the level confirmation in `+LevelConfirmation`, the policy loop and HUD changes in `+Policy`,
 // events and deadlines in `+Events`, the instruments in `+Instruments`, status publication in `+Publication`.
 // MainActor.
 import CoreGraphics
@@ -63,7 +63,7 @@ import OverbrightPolicy
     @ObservationIgnored var continued: [String: Int32] = [:]
     @ObservationIgnored var changeSequence: UInt64 = 0
     @ObservationIgnored var lastChange: LevelChange?
-    @ObservationIgnored var pendingLowLevel: LowLevelConfirmation?
+    @ObservationIgnored var pendingConfirmation: LevelConfirmation?
     @ObservationIgnored var dimMemory: [DisplayKey: LevelPosition] = [:]
     @ObservationIgnored var linkedDimMemory: LevelPosition?
     @ObservationIgnored var autoOffAt: Date?
@@ -73,7 +73,7 @@ import OverbrightPolicy
     @ObservationIgnored var lastDirectoryGeneration: Int?
     @ObservationIgnored let pauseSlot = TaskSlot()
     @ObservationIgnored let autoOffSlot = TaskSlot()
-    @ObservationIgnored let lowLevelSlot = TaskSlot()
+    @ObservationIgnored let confirmationSlot = TaskSlot()
     @ObservationIgnored let scheduleSlot = TaskSlot()
     @ObservationIgnored let preparingSlot = TaskSlot()
     /// The coalesced re-reduction of screen-parameters notifications (`scheduleScreenParametersReduce`).
@@ -218,13 +218,13 @@ import OverbrightPolicy
 
     /// Tasks alive in the engine and its controllers (zero while off and not dimmed, §4.5 invariant 4).
     var activeTaskCount: Int {
-        [pauseSlot, autoOffSlot, lowLevelSlot, scheduleSlot, preparingSlot, screenParametersSlot, minorPublishSlot,
+        [pauseSlot, autoOffSlot, confirmationSlot, scheduleSlot, preparingSlot, screenParametersSlot, minorPublishSlot,
          levelPersistSlot].filter(\.isRunning).count + controllers.values.map(\.activeTaskCount).reduce(0, +)
     }
 
     /// The live tasks by name ("pause", "<display>.drift"), for a test that reports one left running.
     var activeTaskNames: [String] {
-        let engine = [("pause", pauseSlot), ("autoOff", autoOffSlot), ("lowLevel", lowLevelSlot),
+        let engine = [("pause", pauseSlot), ("autoOff", autoOffSlot), ("levelConfirmation", confirmationSlot),
                       ("schedule", scheduleSlot), ("preparing", preparingSlot),
                       ("screenParameters", screenParametersSlot), ("minorPublish", minorPublishSlot),
                       ("levelPersist", levelPersistSlot)]

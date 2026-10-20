@@ -1,6 +1,6 @@
 // OverbrightBoost/Engine/BoostEngine+Control.swift — the `BoostControl` requests: master, levels (linked or per
 // display), extra brightness, dimming and Dim All, steps in stops, Back to Standard, pause and resume, Continue Anyway
-// and Try Again (the low-level confirmation lives in `+LowLevel`). ARCHITECTURE.md §3.6, §4.9, §5.3, §5.9, §7.2;
+// and Try Again (the level confirmation lives in `+LevelConfirmation`). ARCHITECTURE.md §3.6, §4.9, §5.3, §5.9, §7.2;
 // DESIGN.md §5.5. MainActor.
 import Foundation
 import OverbrightCore
@@ -55,7 +55,7 @@ extension BoostEngine {
     /// (`finishStop`).
     func turnOff(persisting: Bool = true) {
         if persisting { persistLevels() }
-        if pendingLowLevel != nil { restoreLowLevel() }
+        if pendingConfirmation != nil { restorePreviousLevels() }
         guard isMasterOn else { return }
         isMasterOn = false
         journal.record("master.off", display: nil, time: time)
@@ -187,7 +187,7 @@ extension BoostEngine {
         Dictionary(pairs, uniquingKeysWith: { first, _ in first })
     }
 
-    /// Stores levels (the linked level when linked), turns on, ends a user pause, checks the low-level rule, reduces.
+    /// Stores levels (the linked level when linked), turns on, ends a user pause, checks the Keep rule, reduces.
     func applyLevels(_ levels: [DisplayKey: LevelPosition], source: ControlSource, display: DisplayKey?) {
         guard let first = levels.first else { return }
         let linked = settings[DisplaySettings.linkLevels]

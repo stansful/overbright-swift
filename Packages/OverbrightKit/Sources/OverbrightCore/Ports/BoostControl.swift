@@ -25,9 +25,9 @@ import Observation
     /// Back to Standard: master off within 120 ms, dims undone, stored levels KEPT. Always available.
     func returnToStandard(source: ControlSource)
     /// Confirms a pending "Keep this level?".
-    func keepLowLevel()
+    func keepLevel()
     /// Reverts a pending "Keep this level?" now.
-    func revertLowLevel()
+    func revertLevel()
     /// The engine owns the pause deadline (`automations.pausedUntil`) and its single sleep.
     func pause(until deadline: Date?, source: ControlSource)
     /// Ends a pause.

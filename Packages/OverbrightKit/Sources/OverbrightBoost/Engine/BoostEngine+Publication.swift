@@ -38,7 +38,7 @@ extension BoostEngine {
         let statuses = displays.displays.compactMap { controllers[$0.ref.key]?.status() }
         return BoostStatus(isOn: isMasterOn, isReady: isReady, pausedUntil: pausedUntil, autoOffAt: autoOffAt,
                            displays: statuses, banner: lastDecision?.banner, symbol: symbol(), lastChange: lastChange,
-                           pendingLowLevel: pendingLowLevel)
+                           pendingConfirmation: pendingConfirmation)
     }
 
     /// The reducer's symbol, with `preparing` while a display that should boost is arming or gating and none is
@@ -59,13 +59,13 @@ extension BoostEngine {
 
     /// Whether `next` differs from `published` only in what may wait for the trailing publish: each display's reading
     /// and the grant learned from readings (`lastGrant`), and, while a display ramps (`ramping` or `disarming` in both),
-    /// its applied gain and factor. Phase, target, decision, symbol, banner, `lastChange`, `pendingLowLevel`, on, ready,
+    /// its applied gain and factor. Phase, target, decision, symbol, banner, `lastChange`, `pendingConfirmation`, on, ready,
     /// pause, auto-off and the display set are major.
     static func differsInMinorFieldsOnly(_ published: BoostStatus, _ next: BoostStatus) -> Bool {
         guard published.isOn == next.isOn, published.isReady == next.isReady,
               published.pausedUntil == next.pausedUntil, published.autoOffAt == next.autoOffAt,
               published.banner == next.banner, published.symbol == next.symbol,
-              published.lastChange == next.lastChange, published.pendingLowLevel == next.pendingLowLevel,
+              published.lastChange == next.lastChange, published.pendingConfirmation == next.pendingConfirmation,
               published.displays.count == next.displays.count else { return false }
         return zip(published.displays, next.displays).allSatisfy { majorPart(of: $0) == majorPart(of: $1) }
     }

@@ -1,7 +1,7 @@
 // OverbrightBoostTests/Engine/MinorPublishTests.swift — DESIGN.md §17's "allowed-now marker ≤ 4 Hz": a status change of
 // minor fields only (readings, and the applied gain while a ramp runs) is published at most every
 // `minorPublishInterval` on the trailing edge; a major change (phase, target, decision, symbol, banner, `lastChange`,
-// `pendingLowLevel`, on, ready, pause, auto-off, the display set) publishes at once with the latest minor values; stop
+// `pendingConfirmation`, on, ready, pause, auto-off, the display set) publishes at once with the latest minor values; stop
 // leaves no task (§4.5 invariant 4). Counted with the DEBUG `publishCount` probe.
 import Foundation
 import OverbrightCore

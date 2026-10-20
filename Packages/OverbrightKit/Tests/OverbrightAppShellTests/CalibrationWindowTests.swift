@@ -53,8 +53,8 @@ import Testing
     func step(_ direction: StepDirection, source: ControlSource) {}
     func toggleDim(source: ControlSource) {}
     func returnToStandard(source: ControlSource) {}
-    func keepLowLevel() {}
-    func revertLowLevel() {}
+    func keepLevel() {}
+    func revertLevel() {}
     func pause(until deadline: Date?, source: ControlSource) {}
     func resume(source: ControlSource) {}
     func continueAnyway(_ app: ConflictingApp) {}

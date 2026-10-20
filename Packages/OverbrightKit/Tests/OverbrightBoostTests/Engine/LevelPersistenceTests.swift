@@ -1,5 +1,5 @@
 // OverbrightBoostTests/Engine/LevelPersistenceTests.swift — level persistence is coalesced during drags (ARCHITECTURE.md
-// §4.9): every step is stored at once for every reader (the reducer, the UI, the low-level rule, Signals), but the
+// §4.9): every step is stored at once for every reader (the reducer, the UI, the Keep rule, Signals), but the
 // `defaults` write (a JSON encode of every display's preferences and a cfprefsd message) happens once,
 // `levelPersistDelay` after the last step, and at once on stop, stopNow (after its baselines) and every turn-off; and a
 // step costs one reduction, not two (the observed settings change it made is the one it reduced with). Counted with
