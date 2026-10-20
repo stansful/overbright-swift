@@ -10,6 +10,13 @@ extension BoostEngine {
     /// (DESIGN.md §6).
     static let lowLevelSources: Set<ControlSource> = [.panel, .menu, .shortcut, .intent]
 
+    /// Sources whose boost asks on a display's first boost of a macOS build: every way a person starts one (a login
+    /// launch with "turn on", the status item's toggle, Settings, Welcome and Focus included), so a panel that turns
+    /// white after a macOS update comes back by itself whichever way the boost began. Automations only resume a
+    /// level that was already on screen, so they never ask.
+    static let firstBoostSources: Set<ControlSource> = [.panel, .menu, .shortcut, .intent, .focusFilter, .welcome, .settings,
+                                                          .launch, .statusItem]
+
     /// Confirms the pending level; a first boost records the running macOS build for its displays, so they do not
     /// ask again until macOS changes.
     public func keepLowLevel() {
@@ -62,7 +69,7 @@ extension BoostEngine {
             journal.record("firstBoost.ended", display: pending.display, time: time)
             return
         }
-        guard Self.lowLevelSources.contains(source), pendingLowLevel == nil, isMasterOn else { return }
+        guard Self.firstBoostSources.contains(source), pendingLowLevel == nil, isMasterOn else { return }
         let build = machine.osBuild
         let preferences = settings[DisplaySettings.perDisplay]
         let fresh = priorStored.keys.filter { key in

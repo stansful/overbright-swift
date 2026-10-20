@@ -113,14 +113,28 @@ import Testing
         #expect(idle && h.everyTableAtBase)
     }
 
-    /// Sources other than the panel, the menu, a shortcut or an intent never ask (the low-level rule's list).
-    @Test func otherSourcesDoNotAsk() async throws {
+    /// Every way a person starts a boost asks: a login launch with "turn on", the status item's toggle, Settings and a
+    /// Focus filter too, so a display that turns white after a macOS update comes back whichever way it began.
+    @Test(arguments: [ControlSource.launch, .statusItem, .settings, .welcome])
+    func turningOnFromAnyPersonSourceAsks(_ source: ControlSource) async throws {
         let h = EngineHarness(confirmsFirstBoost: false)
         await h.start()
-        h.engine.setOn(true, source: .settings)
-        #expect(h.engine.status.pendingLowLevel == nil)
-        h.engine.setLevel(.standard, for: h.builtIn, source: .settings)
+        h.engine.setOn(true, source: source)
+        let pending = try #require(h.engine.status.pendingLowLevel)
+        #expect(pending.firstBoostDisplays == [h.builtIn])
+    }
+
+    /// A Focus filter's level asks as well.
+    @Test func aFocusFilterBoostAsks() async throws {
+        let h = await atStandard()
         h.engine.setLevel(brightRoom, for: h.builtIn, source: .focusFilter)
+        #expect(h.engine.status.pendingLowLevel?.firstBoostDisplays == [h.builtIn])
+    }
+
+    /// Automations only resume a level that was already on screen: they never ask.
+    @Test func automationsDoNotAsk() async throws {
+        let h = await atStandard()
+        h.engine.setLevel(brightRoom, for: h.builtIn, source: .automation)
         #expect(h.engine.status.pendingLowLevel == nil)
     }
 
