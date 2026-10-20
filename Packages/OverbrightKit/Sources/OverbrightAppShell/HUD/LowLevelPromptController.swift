@@ -73,6 +73,14 @@ final class LowLevelPromptController {
             return
         }
         guard pending != shown else { return }
+        if let current = shown, current.display == pending.display, window?.isVisible ?? !presentsWindows {
+            // The same display's level is still moving (a drag): restart the countdown in place, without ordering the
+            // window front again, so the slider keeps the pointer and the panel stays open.
+            shown = pending
+            model.secondsLeft = Self.seconds(until: pending.deadline, now: services.time.wallClock)
+            runCountdown(to: pending.deadline)
+            return
+        }
         shown = pending
         slot.claim(.prompt) { [weak self] in self?.close() }
         model.secondsLeft = Self.seconds(until: pending.deadline, now: services.time.wallClock)

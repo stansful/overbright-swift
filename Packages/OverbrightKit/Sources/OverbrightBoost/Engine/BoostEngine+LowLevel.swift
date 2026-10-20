@@ -1,93 +1,75 @@
-// OverbrightBoost/Engine/BoostEngine+LowLevel.swift — "Keep this level?": a level change that takes a display below
-// 10 % of Standard light asks, and so does a display's first boost on a macOS build; both revert by themselves after
-// 10 s unless kept. ARCHITECTURE.md §3.6, §4.9; DESIGN.md §6.
+// OverbrightBoost/Engine/BoostEngine+LowLevel.swift — "Keep this level?": every level change a person makes away from
+// Standard asks on the display whose control moved, and so does turning on with a level away from Standard; without an
+// answer the display goes back to Standard after 10 s (the owner's rule, 2026-10-20). ARCHITECTURE.md §3.6, §4.9;
+// DESIGN.md §6.
 // MainActor.
 import Foundation
 import OverbrightCore
 
 extension BoostEngine {
-    /// Sources whose level changes ask "Keep this level?" below 10 % of Standard light, or on a first boost
-    /// (DESIGN.md §6).
-    static let lowLevelSources: Set<ControlSource> = [.panel, .menu, .shortcut, .intent]
+    /// Sources whose level changes ask "Keep this level?": every way a person moves a display's level.
+    static let keepPromptSources: Set<ControlSource> = [.panel, .menu, .shortcut, .intent, .settings]
 
-    /// Sources whose boost asks on a display's first boost of a macOS build: every way a person starts one (a login
-    /// launch with "turn on", the status item's toggle, Settings, Welcome and Focus included), so a panel that turns
-    /// white after a macOS update comes back by itself whichever way the boost began. Automations only resume a
-    /// level that was already on screen, so they never ask.
-    static let firstBoostSources: Set<ControlSource> = [.panel, .menu, .shortcut, .intent, .focusFilter, .welcome, .settings,
-                                                          .launch, .statusItem]
+    /// Sources whose turning on asks when a stored level is away from Standard: every way a person turns Overbright
+    /// on (a login launch with "turn on", the status item's toggle, Welcome and Focus included), so a panel that turns
+    /// white comes back by itself whichever way the boost began. Automations only resume a level that was already on
+    /// screen, so they never ask.
+    static let turnOnPromptSources: Set<ControlSource> = keepPromptSources.union([.focusFilter, .welcome, .launch,
+                                                                                  .statusItem])
 
-    /// Confirms the pending level; a first boost records the running macOS build for its displays, so they do not
-    /// ask again until macOS changes.
+    /// Confirms the pending level.
     public func keepLowLevel() {
         guard let pending = pendingLowLevel else { return }
         pendingLowLevel = nil
         lowLevelSlot.cancel()
-        recordBoostConfirmed(pending.firstBoostDisplays)
-        journal.record(pending.firstBoostDisplays.isEmpty ? "lowLevel.kept" : "firstBoost.kept",
-                       display: pending.display, time: time)
+        journal.record("lowLevel.kept", display: pending.display, time: time)
         publish()
     }
 
-    /// Returns to the levels before the pending change.
+    /// Returns the displays of the pending question to Standard.
     public func revertLowLevel() {
         guard pendingLowLevel != nil else { return }
         restoreLowLevel()
         reduceNow()
     }
 
-    /// "Keep this level?" when a change from the panel, the menu, a shortcut or an intent takes a display from at
-    /// least 10 % to below 10 % of Standard light; the engine reverts by itself after 10 s (§4.9).
-    func checkLowLevel(priorStored: [DisplayKey: LevelPosition], priorLight: [DisplayKey: Double],
-                       source: ControlSource) {
-        guard Self.lowLevelSources.contains(source) else { return }
-        let crossed = priorLight.keys.filter { key in
-            (priorLight[key] ?? 1) >= EngineTiming.lowLevelThreshold
-                && light(of: storedLevel(of: key)) < EngineTiming.lowLevelThreshold
-        }.sorted()
-        guard !crossed.isEmpty else { return }
-        let previous = pendingLowLevel?.previousLevels ?? priorStored
-        pendingLowLevel = LowLevelConfirmation(display: crossed.count == 1 ? crossed.first : nil,
-                                               previousLevels: previous,
+    /// The owner's rule (2026-10-20): every change a person makes to a display's level away from Standard asks "Keep
+    /// this level?" on that display, and the display goes back to **Standard** after 10 s without an answer. How a
+    /// scaled table looks depends on each panel and macOS release and software cannot see it, so a screen that turns
+    /// white or dark always comes back by itself. A drag is one change: while the level keeps moving, the 10 s start
+    /// again from the last step. A change back to Standard ends the question for that display. `display` is the
+    /// display whose control moved (nil: every display).
+    func askToKeep(priorStored: [DisplayKey: LevelPosition], source: ControlSource, display: DisplayKey?) {
+        guard keepPromptEnabled, Self.keepPromptSources.contains(source), isMasterOn else { return }
+        let changed = priorStored.keys.filter { storedLevel(of: $0) != priorStored[$0] }
+        guard !changed.isEmpty else { return }
+        var revertTo = pendingLowLevel?.previousLevels ?? [:]
+        for key in changed { revertTo[key] = storedLevel(of: key) == .standard ? nil : .standard }
+        guard !revertTo.isEmpty else {
+            if let pending = pendingLowLevel {
+                pendingLowLevel = nil
+                lowLevelSlot.cancel()
+                journal.record("keep.ended", display: pending.display, time: time)
+            }
+            return
+        }
+        let shown = display ?? (revertTo.count == 1 ? revertTo.keys.first : pendingLowLevel?.display)
+        pendingLowLevel = LowLevelConfirmation(display: shown, previousLevels: revertTo,
                                                deadline: time.wallClock + EngineTiming.lowLevelConfirmTimeout.timeInterval)
-        journal.record("lowLevel.asked", display: crossed.count == 1 ? crossed.first : nil, time: time)
+        journal.record("keep.asked", display: shown, time: time)
         armConfirmationRevert()
     }
 
-    /// "Keep this level?" when a change from the panel, the menu, a shortcut or an intent starts a boost on a display
-    /// whose boost nobody has kept on this macOS build (§4.9). How a table above 1 looks depends on the display
-    /// pipeline of each panel and macOS release, and software cannot see it: a display that turns white (or dark)
-    /// instead of brighter must come back by itself, without anyone reading the prompt. Unanswered, the engine
-    /// returns those displays to Standard after 10 s. `wasBoosting` says which displays boosted before the change.
-    func checkFirstBoost(priorStored: [DisplayKey: LevelPosition], wasBoosting: [DisplayKey: Bool],
-                         source: ControlSource) {
-        if let pending = pendingLowLevel, !pending.firstBoostDisplays.isEmpty,
-           !pending.firstBoostDisplays.contains(where: { isMasterOn && storedLevel(of: $0).isBoost }) {
-            // The boost it asked about has ended: nothing is left to keep or revert.
-            pendingLowLevel = nil
-            lowLevelSlot.cancel()
-            journal.record("firstBoost.ended", display: pending.display, time: time)
-            return
-        }
-        guard Self.firstBoostSources.contains(source), pendingLowLevel == nil, isMasterOn else { return }
-        let build = machine.osBuild
-        let preferences = settings[DisplaySettings.perDisplay]
-        let fresh = priorStored.keys.filter { key in
-            !(wasBoosting[key] ?? false) && storedLevel(of: key).isBoost && canBoost(key)
-                && preferences[key]?.boostConfirmedBuild != build
-        }.sorted()
-        guard !fresh.isEmpty else { return }
-        // Linked, one level serves every display (`restoreLowLevel` writes one of these back), so every boost goes.
-        let linked = settings[DisplaySettings.linkLevels]
-        var previous = priorStored
-        for key in priorStored.keys where (linked || fresh.contains(key)) && (priorStored[key]?.isBoost ?? true) {
-            previous[key] = .standard
-        }
-        pendingLowLevel = LowLevelConfirmation(display: fresh.count == 1 ? fresh.first : nil,
-                                               previousLevels: previous,
-                                               deadline: time.wallClock + EngineTiming.lowLevelConfirmTimeout.timeInterval,
-                                               firstBoostDisplays: fresh)
-        journal.record("firstBoost.asked", display: fresh.count == 1 ? fresh.first : nil, time: time)
+    /// Turning Overbright on with a level away from Standard asks too (the same rule, the master as the change).
+    func askToKeepAfterTurningOn(source: ControlSource) {
+        guard keepPromptEnabled, Self.turnOnPromptSources.contains(source), isMasterOn else { return }
+        let keys = displays.displays.map(\.ref.key).filter { storedLevel(of: $0) != .standard }
+        guard !keys.isEmpty else { return }
+        let revertTo = Self.byKey(keys.map { ($0, LevelPosition.standard) })
+        let shown = keys.count == 1 ? keys.first : nil
+        pendingLowLevel = LowLevelConfirmation(display: shown, previousLevels: revertTo,
+                                               deadline: time.wallClock + EngineTiming.lowLevelConfirmTimeout.timeInterval)
+        journal.record("keep.asked", display: shown, time: time)
         armConfirmationRevert()
     }
 
@@ -111,34 +93,15 @@ extension BoostEngine {
 
     // MARK: Internals
 
-    /// The 10 s revert of the pending confirmation (§4.9); one slot for both kinds.
+    /// The 10 s revert of the pending confirmation (§4.9).
     private func armConfirmationRevert() {
         lowLevelSlot.run { [weak self] in
             guard let self else { return }
             do { try await self.time.sleep(for: EngineTiming.lowLevelConfirmTimeout) } catch { return }
             guard let pending = self.pendingLowLevel else { return }
-            self.journal.record(pending.firstBoostDisplays.isEmpty ? "lowLevel.reverted" : "firstBoost.reverted",
-                                display: pending.display, time: self.time)
+            self.journal.record("lowLevel.reverted", display: pending.display, time: self.time)
             self.restoreLowLevel()
             self.reduceNow()
         }
-    }
-
-    /// Whether `key` can boost by the last decision (unknown or still checking counts as yes: the prompt is cheap).
-    private func canBoost(_ key: DisplayKey) -> Bool {
-        guard let verdict = lastDecision?.displays[key]?.eligibility.verdict, verdict != .checking else { return true }
-        return verdict.allowsBoost
-    }
-
-    /// Records the running macOS build as kept for `keys`.
-    private func recordBoostConfirmed(_ keys: [DisplayKey]) {
-        guard !keys.isEmpty else { return }
-        var all = settings[DisplaySettings.perDisplay]
-        for key in keys {
-            var preferences = all[key] ?? DisplayPreferences()
-            preferences.boostConfirmedBuild = machine.osBuild
-            all[key] = preferences
-        }
-        settings[DisplaySettings.perDisplay] = all
     }
 }

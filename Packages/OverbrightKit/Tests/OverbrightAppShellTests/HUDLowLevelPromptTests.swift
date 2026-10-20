@@ -72,6 +72,7 @@ import Testing
         #expect(LowLevelPromptText.countdown(10).contains("10"))
     }
 
+    /// A question on another display replaces the shown one: it is presented (and announced) again.
     @Test func aNewConfirmationReplacesTheShownOne() {
         let (services, _, _, posted) = setup()
         let prompt = LowLevelPromptController(services: services, slot: HUDSlot())
@@ -80,8 +81,38 @@ import Testing
         prompt.update(first)
         prompt.update(first)                                              // the same one: nothing new
         #expect(posted.lines.count == 1)
-        let second = pending(services, in: 6)
-        prompt.update(second)
-        #expect(prompt.shown == second && prompt.secondsLeft == 6 && posted.lines.count == 2)
+        let other = LowLevelConfirmation(display: DisplayFixture.Keys.mpg322ux,
+                                         previousLevels: [DisplayFixture.Keys.mpg322ux: .standard],
+                                         deadline: services.time.wallClock.addingTimeInterval(6))
+        prompt.update(other)
+        #expect(prompt.shown == other && prompt.secondsLeft == 6 && posted.lines.count == 2)
+    }
+
+    /// A drag on the same display moves its deadline at every step (ARCHITECTURE.md §4.9, the owner's rule of
+    /// 2026-10-20): the countdown restarts in place, without presenting or announcing the prompt again, so the slider
+    /// keeps the pointer and VoiceOver is not interrupted at every step.
+    @Test func aDragRestartsTheCountdownInPlace() async throws {
+        let (services, boost, time, posted) = setup()
+        let slot = HUDSlot()
+        let prompt = LowLevelPromptController(services: services, slot: slot)
+        prompt.presentsWindows = false
+        prompt.start()
+        boost.status.pendingLowLevel = pending(services)
+        #expect(await eventually { prompt.shown != nil })
+        #expect(posted.lines.count == 1 && slot.occupant == .prompt)
+        #expect(await eventually { time.sleeperCount == 1 })
+        await time.advance(by: .seconds(4))
+        #expect(await eventually { prompt.secondsLeft == 6 })
+        let moved = pending(services)                                     // the next step: 10 s from now again
+        boost.status.pendingLowLevel = moved
+        #expect(await eventually { prompt.shown == moved })
+        #expect(prompt.secondsLeft == 10)
+        #expect(posted.lines.count == 1)                                  // not announced again
+        #expect(slot.occupant == .prompt)
+        #expect(await eventually { time.sleeperCount == 1 })
+        await time.advance(by: .seconds(3))
+        #expect(await eventually { prompt.secondsLeft == 7 })            // one countdown, from the new deadline
+        #expect(await eventually { time.sleeperCount == 1 })
+        prompt.stop()
     }
 }

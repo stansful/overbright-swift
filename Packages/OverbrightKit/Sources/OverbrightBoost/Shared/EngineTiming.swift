@@ -131,9 +131,7 @@ public nonisolated enum EngineTiming {
 
     // MARK: Levels, pauses and the HUD (§4.9, D10, D19)
 
-    /// "Keep this level?" below this fraction of Standard light …
-    public static let lowLevelThreshold = 0.10
-    /// … reverting after this long without an answer.
+    /// "Keep this level?" goes back to Standard after this long without an answer (counted from the last step).
     public static let lowLevelConfirmTimeout: Duration = .seconds(10)
     /// Levels set by a drag, steps or presets reach UserDefaults this long after the last change (every reader sees
     /// them at once), and at once on stop, quit and every turn-off. Settings only: no safety state waits for it.

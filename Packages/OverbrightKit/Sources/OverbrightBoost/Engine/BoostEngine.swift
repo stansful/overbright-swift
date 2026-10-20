@@ -42,6 +42,9 @@ import OverbrightPolicy
     @ObservationIgnored var watchdog: HangWatchdog
     /// Tests switch the hang watchdog off and simulate it (the WP5 body runs a real timer).
     @ObservationIgnored var watchdogEnabled = true
+    /// Tests that do not exercise "Keep this level?" switch it off (§4.9), so a level change does not go back to
+    /// Standard 10 s later.
+    @ObservationIgnored var keepPromptEnabled = true
     /// `--off` wins over "Launch and turn on" (§3.8); tests replace it.
     @ObservationIgnored var launchArguments = LaunchArguments.current
     /// The display under the pointer for Brighter / Less Bright (tests replace it).

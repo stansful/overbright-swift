@@ -8,21 +8,11 @@ import OverbrightHotKeys
 
 /// Builds shells over the simulated ports.
 @MainActor enum TestShell {
-    /// A context over `settings` and `time` with the fixture's Mac. `confirmsFirstBoost` stores a kept first boost on
-    /// the fixture's macOS build for every fixture display, so a scenario's boost does not ask "Keep this level?" and
-    /// return to Standard after 10 s (ARCHITECTURE.md §4.9); pass false to see the prompt.
+    /// A context over `settings` and `time` with the fixture's Mac. Every level change a person makes asks "Keep this
+    /// level?" and goes back to Standard after 10 s unanswered (ARCHITECTURE.md §4.9): scenarios answer `keep`.
     static func context(fixture: DisplayFixture = .builtinXDRLidOpen,
                         settings: SettingsStore = SettingsStore(defaults: InMemoryDefaults()),
-                        time: any TimeSource = ManualTimeSource(), confirmsFirstBoost: Bool = true) -> ShellContext {
-        if confirmsFirstBoost {
-            var all = settings[DisplaySettings.perDisplay]
-            for display in fixture.displays {
-                var preferences = all[display.facts.ref.key] ?? DisplayPreferences()
-                preferences.boostConfirmedBuild = fixture.machine.osBuild
-                all[display.facts.ref.key] = preferences
-            }
-            settings[DisplaySettings.perDisplay] = all
-        }
+                        time: any TimeSource = ManualTimeSource()) -> ShellContext {
         return ShellContext(settings: settings, paths: .temporary(), machine: fixture.machine, time: time,
                             journal: RingBufferJournal(capacity: 5_000), announcer: Announcer(post: { _ in }, now: { 0 }))
     }

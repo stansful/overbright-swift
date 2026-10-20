@@ -677,7 +677,7 @@ script_for() {
   local pre="dump ready; wait 2; panel close; wait 2"
   case "$1" in
     launch)  printf '%s; wait 20; quit' "$pre" ;;
-    base)    printf '%s; %s; %s; on; keep; wait 12; %s; %s; panel open; wait 3; %s; %s; panel close; level bright-room; wait 3; %s; level bright-room; wait 3; %s; level bright-room; wait 3; dim 40; wait 5; %s; %s; off; wait 5; panel open; wait 3; %s; panel close; wait 5; %s; %s; quit' \
+    base)    printf '%s; %s; %s; on; keep; wait 12; %s; %s; panel open; wait 3; %s; %s; panel close; level bright-room; wait 3; %s; level bright-room; wait 3; %s; level bright-room; wait 3; dim 40; keep; wait 5; %s; %s; off; wait 5; panel open; wait 3; %s; panel close; wait 5; %s; %s; quit' \
                "$pre" "$(steady off-1)" "$(steady off-2)" "$(steady boosted-1)" "$(steady boosted-2)" \
                "$(steady panel-boosted)" "$(moving panel-drag 0.1)" "$(moving storm 1)" "$(hud)" \
                "$(steady dimmed-1)" "$(steady dimmed-2)" "$(steady panel-off)" "$(steady off-final-1)" \
@@ -697,7 +697,7 @@ script_for() {
                   "$(repeat 5 "panel open; wait 2; panel close; wait 2;")" 10)" ;;
     timeline) printf '%s; boost msi on; wait 2; on; keep; wait 15; dump timeline.start; wait %s; dump timeline.end; off; wait 3; dump done; wait 2; quit' \
                "$pre" "$TIMELINE" ;;
-    signals) printf '%s; %s; on; keep; wait 12; %s; level bright-room; wait 3; dim 40; wait 5; %s; off; wait 3; dump done; wait 2; quit' \
+    signals) printf '%s; %s; on; keep; wait 12; %s; level bright-room; wait 3; dim 40; keep; wait 5; %s; off; wait 3; dump done; wait 2; quit' \
                "$pre" "$(steady off)" "$(steady boosted)" "$(steady dimmed)" ;;
     *) die "unknown run $1 (launch, base, ruleoff, two, ui, events, panelcycle, timeline, signals)" ;;
   esac

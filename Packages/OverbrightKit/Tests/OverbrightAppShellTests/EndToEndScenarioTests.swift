@@ -15,12 +15,12 @@ import Testing
 @MainActor @Suite struct EndToEndScenarioTests {
     // MARK: Running a scenario
 
-    /// Runs `script` over `fixture` on a manual clock; returns the dumps by label. `confirmsFirstBoost` false leaves
-    /// the fixture's displays unconfirmed, as the QA matrix's fresh defaults suite does (`TestShell.context`).
-    static func run(_ fixture: DisplayFixture, _ script: String,
-                    confirmsFirstBoost: Bool = true) async throws -> [String: StatusSummary] {
+    /// Runs `script` over `fixture` on a manual clock; returns the dumps by label. Every level change from a person
+    /// asks "Keep this level?" (ARCHITECTURE.md §4.9), as in the QA matrix: a script answers `keep` where a level must
+    /// outlast 10 s.
+    static func run(_ fixture: DisplayFixture, _ script: String) async throws -> [String: StatusSummary] {
         let time = ManualTimeSource()
-        let context = TestShell.context(fixture: fixture, time: time, confirmsFirstBoost: confirmsFirstBoost)
+        let context = TestShell.context(fixture: fixture, time: time)
         let shell = TestShell.shell(fixture, context: context)
         await CompositionRoot.runLaunchWork(shell)
         let rig = try #require(ScenarioRunner.Rig(shell: shell))
@@ -179,14 +179,13 @@ import Testing
         }
     }
 
-    /// Unconfirmed, as in the QA matrix's fresh suite: the first boost asks, `keep` answers it, and the standard
-    /// scenario runs as with a kept build (without `keep`, the built-in would be back at Standard at "resumed").
-    @Test func theStandardScenarioAnswersTheFirstBoost() async throws {
+    /// Turning on with a level away from Standard asks, `keep` answers it, and the standard scenario runs on (without
+    /// `keep`, the built-in would be back at Standard at "resumed"; ARCHITECTURE.md §4.9).
+    @Test func theStandardScenarioAnswersTheKeepPrompt() async throws {
         #expect(try ScenarioScript.parse("on; keep") == [.on, .keep])
-        let dumps = try await Self.run(.builtinXDRLidOpen, Self.standard, confirmsFirstBoost: false)
+        let dumps = try await Self.run(.builtinXDRLidOpen, Self.standard)
         Self.check(dumps, Self.boosting("built-in"), .builtinXDRLidOpen)
-        let unanswered = try await Self.run(.builtinXDRLidOpen, Self.standard.replacingOccurrences(of: "keep; ", with: ""),
-                                            confirmsFirstBoost: false)
+        let unanswered = try await Self.run(.builtinXDRLidOpen, Self.standard.replacingOccurrences(of: "keep; ", with: ""))
         #expect(unanswered["on"]?.displays.first.map(Self.state) == "boosted")
         #expect(unanswered["resumed"]?.displays.first.map(Self.state) == "idle")
     }
@@ -195,7 +194,7 @@ import Testing
 
     @Test func guardsAndAutomationsOnTheBuiltIn() async throws {
         let script = """
-            on; wait 8; dump on; thermal serious; wait 3; dump warm; thermal critical; wait 1; dump hot; \
+            on; keep; wait 8; dump on; thermal serious; wait 3; dump warm; thermal critical; wait 1; dump hot; \
             thermal nominal; wait 8; dump cool; battery 15; wait 1; dump battery; battery adapter; wait 8; dump adapter; \
             focus off; wait 1; dump focus-off; focus leave; wait 8; dump focus-leave; full-screen video built-in; \
             wait 1; dump video; full-screen none; wait 8; dump no-video; conflict writer; wait 1; dump writer; \
@@ -244,8 +243,8 @@ import Testing
     /// An opt-in OLED external: once its switch is on it boosts within the OLED limit, and guards pause it.
     @Test func anOLEDBoostsOnceTurnedOn() async throws {
         let dumps = try await Self.run(.mpg322uxHDROn, """
-            on; boost msi on; wait 10; dump enabled; low-power on; wait 1; dump low-power; low-power off; level max; \
-            wait 10; dump max
+            on; boost msi on; keep; wait 10; dump enabled; low-power on; wait 1; dump low-power; low-power off; \
+            level max; keep; wait 10; dump max
             """)
         Self.check(dumps, [
             "enabled": Expect("on", nil, ["msi": (nil, "boosted")]),
@@ -257,7 +256,7 @@ import Testing
 
     /// A preset that never grants headroom ends in "No extra range" once the ladder ran out, with every trigger gone.
     @Test func aDisplayThatNeverGetsHeadroomSaysSo() async throws {
-        let dumps = try await Self.run(.builtinXDRPreset600, "on; wait 40; dump failed")
+        let dumps = try await Self.run(.builtinXDRPreset600, "on; keep; wait 40; dump failed")
         Self.check(dumps, ["failed": Expect("on", nil, ["built-in": ("No extra range", "failed")])], .builtinXDRPreset600)
         #expect(dumps["failed"]?.triggerWindows == 0 && dumps["failed"]?.gammaWrites == 0)
     }
