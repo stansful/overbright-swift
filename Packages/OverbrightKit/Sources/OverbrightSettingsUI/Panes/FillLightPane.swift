@@ -71,7 +71,7 @@ struct FillLightPane: SettingsPaneView {
                              footnote: String(localized: "Lights your face on video calls with a glowing frame around the screen.",
                                               bundle: .module, comment: "Settings ▸ Fill Light: footnote of the Fill Light switch"))
                 }
-                .toggleStyle(.switch)
+                .toggleStyle(.accentSwitch)
                 .controlSize(.small)
                 .searchTarget(FillLightRows.fillLight)
             }

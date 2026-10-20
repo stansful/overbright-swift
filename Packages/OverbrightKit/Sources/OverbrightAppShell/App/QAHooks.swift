@@ -194,7 +194,7 @@ enum QAHooks {
     }
 
     /// Parses `script` and runs it over the simulated ports once the engine is ready; nil (logged) when it cannot run.
-    /// `panel open|close` acts on `appControl`'s panel.
+    /// `panel open|close` acts on `appControl`'s panel, `settings|help|welcome open|close` on its windows.
     static func runScenario(_ script: String, statusFile: String?, shell: Shell,
                             appControl: ShellAppControl) -> Task<Void, Never>? {
         guard let rig = ScenarioRunner.Rig(shell: shell) else {
@@ -211,7 +211,8 @@ enum QAHooks {
         let runner = ScenarioRunner(rig: rig, wait: { duration in try? await Task.sleep(for: duration) },
                                     record: { summary in append(summary.jsonLine, to: output) },
                                     quit: { NSApp.terminate(nil) },
-                                    panel: { open in open ? appControl.showPanel() : appControl.closePanel() })
+                                    panel: { open in open ? appControl.showPanel() : appControl.closePanel() },
+                                    window: { window, open, at in appControl.qaWindow(window, open: open, at: at) })
         let boost = shell.services.boost
         return Task {
             while !boost.status.isReady, !Task.isCancelled { try? await Task.sleep(for: .milliseconds(100)) }

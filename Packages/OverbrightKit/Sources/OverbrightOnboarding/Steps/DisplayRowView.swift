@@ -79,7 +79,7 @@ struct ExtraBrightnessSwitch: View {
 
     var body: some View {
         Toggle(isOn: $isOn) { Text(verbatim: title) }
-            .toggleStyle(.switch)
+            .toggleStyle(.accentSwitch)
             .controlSize(.small)
             .fixedSize()
     }

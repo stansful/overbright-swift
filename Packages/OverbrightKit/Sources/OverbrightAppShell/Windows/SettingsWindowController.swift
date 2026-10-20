@@ -7,11 +7,12 @@
 // empty one and routes ⌘, here). 860 × 620 by default, 780 × 560 minimum; the frame is autosaved (not in a Debug QA run
 // with its own defaults suite) and the last pane is restored (`ShellDefaults`). SwiftUI drives the toolbar and title
 // (`sceneBridgingOptions`), so the sidebar and toolbar get the system's Liquid Glass on macOS 26+ and Overbright adds
-// none. The controller keeps one `SettingsSession` for the run: opening a pane navigates it, so the search survives.
-// Closing releases the window, its hosting controller and the SwiftUI tree, and ends the Undo offer of Reset All
-// (DESIGN.md §7.8); the next open builds them again around the same session, at the frame the window had. ⌘Q quits
-// Overbright (the app menu's Quit, while Settings is key); ⌘Z undoes Reset All (Edit ▸ Undo, through the window's
-// undo manager).
+// none. While Settings is open, opening a pane navigates its `SettingsSession`, so the search and the Undo offer
+// survive. Closing releases the window, its hosting controller, the SwiftUI tree and the session (energy E3, DESIGN.md
+// §17) and ends the Undo offer of Reset All (DESIGN.md §7.8); the next open builds them again at the pane shown last,
+// with the search text of before, at the frame the window had.
+// ⌘Q quits Overbright (the app menu's Quit, while Settings is key); ⌘Z undoes Reset All (Edit ▸ Undo, through the
+// window's undo manager).
 import AppKit
 import OverbrightCore
 import OverbrightSettingsUI
@@ -33,8 +34,12 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
     private let autosavesFrame: Bool
     /// Only while Settings is open: released on close.
     private(set) var window: NSWindow?
-    /// The window's state, kept for the run (also while no window exists); `show(pane:)` navigates it.
+    /// The open window's state (nil while no window exists); `show(pane:)` navigates it.
     private(set) var session: SettingsSession?
+    /// The search text of the last window that closed, for the next one.
+    private var closedQuery: String?
+    /// Whether a window was built this run (the Debug QA hooks act on the first one only).
+    private var hasOpened = false
     /// The app that was frontmost before Settings opened gets activation back on close.
     private var previousApp: NSRunningApplication?
     /// Without frame autosave (a QA run with its own suite): where the window was when it closed, so the next one
@@ -68,26 +73,24 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
         log.info("settings shown at \(pane ?? "-", privacy: .public) (pane \(self.session?.currentPane.rawValue ?? "-", privacy: .public), window \(window.windowNumber, privacy: .public))")
     }
 
-    /// The Settings window at `pane` (nil keeps the session's pane; the first open restores the last one), not yet
-    /// ordered in: the open window navigated, never rebuilt, or a new one built around the kept session.
-    /// `show(pane:)` brings it forward; tests call this alone.
+    /// The Settings window at `pane` (nil keeps the open window's pane, else restores the one shown last), not yet
+    /// ordered in: the open window navigated, never rebuilt, or a new one built around a new session that carries
+    /// the search text of the last window. `show(pane:)` brings it forward; tests call this alone.
     func preparedWindow(at pane: String?) -> NSWindow {
         if let window, let session {
             session.open(pane)
             return window
         }
-        let session: SettingsSession
-        if let kept = self.session {
-            kept.open(pane)
-            session = kept
-        } else {
-            session = SettingsSession(services: services, initialPane: pane ?? lastPane)
-            self.session = session
-            #if DEBUG
+        let session = SettingsSession(services: services, initialPane: pane ?? lastPane)
+        if let closedQuery { session.query = closedQuery }
+        self.session = session
+        #if DEBUG
+        if !hasOpened {
             scheduleQASnapshot()
             scheduleQAClose()
-            #endif
         }
+        #endif
+        hasOpened = true
         let window = makeWindow(session: session)
         self.window = window
         return window
@@ -126,13 +129,17 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
         // Cooperative activation hand-back.
         if let previousApp, !previousApp.isTerminated { previousApp.activate() }
         previousApp = nil
-        // Release the window (AppKit lets go of it once the close is done) and with it the hosting controller and the
-        // SwiftUI tree; keep the session. The frame is already saved: giving up the autosave name keeps it saved and
-        // lets the next window take the name even if this one is still alive then (a name is unique per live window).
-        // Without the autosave, the controller keeps the frame for the next window.
+        // Release the window (AppKit lets go of it once the close is done), the hosting controller and the SwiftUI
+        // tree now, and the session; keep the search text. The frame is already saved: giving up the autosave name
+        // keeps it saved and lets the next window take the name even if this one is still alive then (a name is unique
+        // per live window). Without the autosave, the controller keeps the frame for the next window.
         if autosavesFrame { window?.setFrameAutosaveName("") } else { closedFrame = window?.frame }
+        window?.contentViewController = nil
+        window?.delegate = nil
         window = nil
+        closedQuery = session?.query
         session?.windowDidClose()
+        session = nil
         log.info("settings closed")
     }
 

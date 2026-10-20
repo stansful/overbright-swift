@@ -72,7 +72,7 @@ private struct OtherAppRow: View {
                     Text("Always continue", bundle: .module,
                          comment: "Settings ▸ Advanced: switch that lets Overbright keep working next to this app")
                 }
-                .toggleStyle(.switch)
+                .toggleStyle(.accentSwitch)
                 .controlSize(.small)
                 .accessibilityLabel(Text(verbatim: OtherAppsSection.alwaysContinueLabel(app)))
             }

@@ -2,7 +2,10 @@
 // §7.2: "sliders always show their value with its unit"). Ported from Cranny's SettingControls.swift (the owner's MIT
 // code). As built (WP14): the track draws no tick marks (one per step put 27 dots under Fill Light's Width); the value
 // settles on whole steps in the binding instead, and words for the two ends ("Cool", "Warm") sit under the track, so
-// every slider row has the same track and the tracks of a pane line up.
+// every slider row has the same track and the tracks of a pane line up. As built (energy E3, 2026-10-21): the track is
+// Design's `AccentSlider`, not the system `Slider`, whose Liquid Glass knob left in-process Metal state that woke the
+// app every 3 s after Settings closed (DESIGN.md §17); it takes focus and ← / → like a system slider (one twentieth of
+// the range, settled on a whole step) and VoiceOver adjusts it by the same step.
 import OverbrightCore
 import OverbrightDesign
 import SwiftUI
@@ -28,12 +31,10 @@ struct SliderRow: View {
     var footnote: String?
     let isDefault: Bool
     let reset: @MainActor () -> Void
-    var onEditingChanged: @MainActor (Bool) -> Void = { _ in }
 
     var body: some View {
         LabeledContent {
-            SliderControl(title: info.title, value: value, range: range, snap: snap, format: format, captions: captions,
-                          onEditingChanged: onEditingChanged)
+            SliderControl(title: info.title, value: value, range: range, snap: snap, format: format, captions: captions)
         } label: {
             RowLabel(title: info.title, footnote: footnote)
         }
@@ -73,22 +74,27 @@ struct SliderControl: View {
     let snap: (Double) -> Double
     let format: (Double) -> String
     var captions: SliderCaptions?
-    var onEditingChanged: @MainActor (Bool) -> Void = { _ in }
+    @Environment(\.layoutDirection) private var direction
+
+    /// One key press or VoiceOver increment: a twentieth of the range (the binding settles it on a whole step).
+    var keyStep: Double { (range.upperBound - range.lowerBound) / 20 }
 
     var body: some View {
-        // No `step:` (it draws a tick per step); the binding settles the value on a whole step instead.
+        // The binding settles the value on a whole step (no tick marks).
         let settling = Binding<Double>(get: { value.wrappedValue }, set: { value.wrappedValue = snap($0) })
         HStack(alignment: .sliderTrack, spacing: Space.m) {
             VStack(spacing: Space.xxs) {
-                Slider(value: settling, in: range) {
-                    Text(verbatim: title)
-                } onEditingChanged: { editing in
-                    onEditingChanged(editing)
+                AccentSlider(value: settling, range: range, step: keyStep, label: title,
+                             valueText: format(value.wrappedValue))
+                .focusable()
+                .onKeyPress(keys: [.leftArrow, .rightArrow]) { press in
+                    guard let step = direction.step(for: press.key) else { return .ignored }
+                    settling.wrappedValue = AccentSlider.stepped(settling.wrappedValue, in: range, by: keyStep,
+                                                                 towardEnd: step > 0)
+                    return .handled
                 }
-                .labelsHidden()
                 .alignmentGuide(.sliderTrack) { $0[VerticalAlignment.center] }
                 .anchorPreference(key: SliderTrackBounds.self, value: .bounds) { [title: $0] }
-                .accessibilityValue(Text(verbatim: format(value.wrappedValue)))
                 if let captions {
                     HStack {
                         Text(verbatim: captions.minimum)

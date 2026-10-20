@@ -66,7 +66,7 @@ struct GuardSwitches: View {
             accessory()
             Toggle(isOn: isOn) { Text(verbatim: title) }
                 .labelsHidden()
-                .toggleStyle(.switch)
+                .toggleStyle(.accentSwitch)
                 .controlSize(.small)
                 .accessibilityLabel(Text(verbatim: title))
         }

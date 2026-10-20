@@ -1,17 +1,18 @@
-// OverbrightPanelUI/FillLight/PanelSlider.swift — the Fill Light card's Brightness and Warmth sliders, drawn in shapes
-// like the level slider's track (DESIGN.md §2.1 `track`, `thumb`, `thumbRing`; §5.3; §15): a capsule track, the
-// accent colour up to the thumb as a system slider fills, and a white thumb with the system shadow (and its ring under
-// Increase Contrast), at the small control size the card used (14 pt). The thumb's centre travels the track inset by
-// its radius at both ends, as a system slider's does. Not the system `Slider`: on macOS 26 and later its Liquid Glass
-// knob renders with in-process Metal on every showing, a ≈ 270 MB GPU-driver charge for ≈ 1 s each time the panel
-// opens while Fill Light is on (DESIGN.md §17). One accessibility element: VoiceOver reads the label and the card's
-// value text and adjusts by the card's keyboard step; the panel's focus wrapper (`panelFocus`) takes ← and →. A
-// pointer press or drag sets the value under it (mirrored right to left: input stays physical, `RightToLeft.swift`).
-import OverbrightDesign
+// OverbrightDesign/Components/AccentSlider.swift — Overbright's plain slider (the Fill Light card's Brightness and
+// Warmth, Settings' Width, Warmth and Brightness), drawn in shapes like the level slider's track (DESIGN.md §2.1
+// `track`, `thumb`, `thumbRing`; §5.3; §7.2; §15): a capsule track, the accent colour up to the thumb as a system
+// slider fills, and a white thumb with the system shadow (and its ring under Increase Contrast), at the small control
+// size (14 pt). The thumb's centre travels the track inset by its radius at both ends, as a system slider's does. Not
+// the system `Slider`: on macOS 26 and later its Liquid Glass knob renders with in-process Metal on every showing, a
+// ≈ 270 MB GPU-driver charge for ≈ 1 s each time the panel opens while Fill Light is on, and state that stays after
+// Settings closes and wakes the app every 3 s (DESIGN.md §17, energy U5 and E3). One accessibility element: VoiceOver
+// reads the label and the host's value text and adjusts by `step`; the host takes ← and → (the panel's focus wrapper
+// `panelFocus`, Settings' `SliderControl`). A pointer press or drag sets the value under it (mirrored right to left:
+// input stays physical, `RightToLeft.swift`). Moved from PanelUI's `PanelSlider` (energy E3, 2026-10-21).
 import SwiftUI
 
 /// A compact horizontal slider over `range`, drawn without system controls.
-struct PanelSlider: View {
+public struct AccentSlider: View {
     @Binding var value: Double
     let range: ClosedRange<Double>
     /// One VoiceOver increment (the card's ← / → step).
@@ -24,11 +25,20 @@ struct PanelSlider: View {
     @Environment(\.layoutDirection) private var direction
 
     /// The control's height: a small system slider's.
-    static let height: CGFloat = 14
+    public static let height: CGFloat = 14
     /// The thumb's diameter.
-    static let thumbSize: CGFloat = 14
+    public static let thumbSize: CGFloat = 14
 
-    var body: some View {
+    /// A slider over `range` setting `value`; VoiceOver reads `label` and `valueText` and adjusts by `step`.
+    public init(value: Binding<Double>, range: ClosedRange<Double>, step: Double, label: String, valueText: String) {
+        _value = value
+        self.range = range
+        self.step = step
+        self.label = label
+        self.valueText = valueText
+    }
+
+    public var body: some View {
         Capsule(style: .continuous)
             .fill(theme.color(.track))
             .frame(height: StrokeWidth.track)
@@ -70,19 +80,25 @@ struct PanelSlider: View {
     }
 
     /// VoiceOver's increment or decrement of `value`: one `step`, kept in `range` (nil for anything else).
-    static func adjusted(_ value: Double, by adjustment: AccessibilityAdjustmentDirection, in range: ClosedRange<Double>,
-                         step: Double) -> Double? {
+    public static func adjusted(_ value: Double, by adjustment: AccessibilityAdjustmentDirection,
+                                in range: ClosedRange<Double>, step: Double) -> Double? {
         switch adjustment {
-        case .increment: FillLightCard.stepped(value, in: range, by: step, towardEnd: true)
-        case .decrement: FillLightCard.stepped(value, in: range, by: step, towardEnd: false)
+        case .increment: stepped(value, in: range, by: step, towardEnd: true)
+        case .decrement: stepped(value, in: range, by: step, towardEnd: false)
         @unknown default: nil
         }
+    }
+
+    /// `value` one `step` toward the end of `range` (or its start), kept in `range`: what ← and → do in a host.
+    public static func stepped(_ value: Double, in range: ClosedRange<Double>, by step: Double,
+                               towardEnd: Bool) -> Double {
+        min(max(value + (towardEnd ? step : -step), range.lowerBound), range.upperBound)
     }
 
     // MARK: Geometry
 
     /// Where `value` sits in `range`, 0 at its start and 1 at its end (clamped).
-    static func fraction(of value: Double, in range: ClosedRange<Double>) -> Double {
+    public static func fraction(of value: Double, in range: ClosedRange<Double>) -> Double {
         let span = range.upperBound - range.lowerBound
         guard span > 0 else { return 0 }
         return min(max((value - range.lowerBound) / span, 0), 1)
@@ -90,23 +106,23 @@ struct PanelSlider: View {
 
     /// The x of the thumb's centre at `fraction` from the leading edge of a `width`-wide track: a thumb's radius in
     /// from either end.
-    static func x(of fraction: Double, width: CGFloat) -> CGFloat {
+    public static func x(of fraction: Double, width: CGFloat) -> CGFloat {
         thumbSize / 2 + CGFloat(fraction) * max(width - thumbSize, 0)
     }
 
     /// The value under physical `x` (a gesture's location from the track's left edge) of a `width`-wide track:
     /// leading to trailing in the layout's direction, the ends a thumb's radius in, clamped to `range`.
-    static func value(atPhysicalX x: CGFloat, width: CGFloat, in range: ClosedRange<Double>,
-                      direction: LayoutDirection) -> Double {
+    public static func value(atPhysicalX x: CGFloat, width: CGFloat, in range: ClosedRange<Double>,
+                             direction: LayoutDirection) -> Double {
         let fraction = direction.fraction(atPhysicalX: x - thumbSize / 2, width: max(width - thumbSize, 1))
         return range.lowerBound + fraction * (range.upperBound - range.lowerBound)
     }
 }
 
-#Preview("Fill Light slider") {
+#Preview("Accent slider") {
     @Previewable @State var value = 0.8
-    PanelSlider(value: $value, range: FillLightCard.brightnessRange, step: FillLightCard.brightnessStep,
-                label: PanelText.brightness, valueText: FillLightCard.percentText(value))
+    AccentSlider(value: $value, range: 0.2...1, step: 0.05, label: "Brightness",
+                 valueText: value.formatted(.percent.precision(.fractionLength(0))))
         .frame(width: 160)
         .padding()
         .overbrightThemeRoot()

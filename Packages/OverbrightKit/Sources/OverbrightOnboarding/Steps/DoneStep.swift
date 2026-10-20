@@ -164,7 +164,7 @@ struct UpdateSwitch: View {
             Toggle(isOn: Binding(get: { isOn }, set: { choices.checksForUpdates = $0 })) {
                 Text(verbatim: copy.checkForUpdates)
             }
-            .toggleStyle(.switch)
+            .toggleStyle(.accentSwitch)
             .controlSize(.small)
             Text(verbatim: copy.updatesNote)
                 .font(.caption)
