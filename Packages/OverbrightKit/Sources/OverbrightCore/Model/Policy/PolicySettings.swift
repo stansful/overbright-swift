@@ -30,8 +30,8 @@ public nonisolated struct PolicySettings: Hashable, Sendable {
     public var alwaysContinueEntryIDs: Set<String>
     /// Settings with the defaults of §3.8.
     public init(batteryGuard: BatteryGuard = .belowThreshold, batteryThreshold: Int = 20, pauseInLowPowerMode: Bool = true,
-                pauseForFullScreenVideo: Bool = true, pauseForAllFullScreen: Bool = false, pauseInGames: Bool = false,
-                pauseForListedApps: Bool = true, pausedApps: [PausedAppRule] = [], schedule: ScheduleWindow? = nil,
+                pauseForFullScreenVideo: Bool = false, pauseForAllFullScreen: Bool = false, pauseInGames: Bool = false,
+                pauseForListedApps: Bool = false, pausedApps: [PausedAppRule] = [], schedule: ScheduleWindow? = nil,
                 linkLevels: Bool = false, linkedLevel: LevelPosition = LevelPreset.brightRoom.position,
                 boostOnlyNearFullBrightness: Bool = false, alwaysContinueEntryIDs: Set<String> = []) {
         self.batteryGuard = batteryGuard; self.batteryThreshold = batteryThreshold

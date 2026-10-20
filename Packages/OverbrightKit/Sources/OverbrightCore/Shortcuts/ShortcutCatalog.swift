@@ -1,18 +1,18 @@
 // OverbrightCore/Shortcuts/ShortcutCatalog.swift — the global shortcuts and their defaults. ARCHITECTURE.md §3.7, D17.
 
-/// Defaults avoid ⌃⌥Space (input sources), ⌃⌥⌘8 and ⌃⌥⌘,/. (accessibility) and ⌃⌥⌘V / ⌃⌥⌘D, another booster's
-/// defaults (D17). Key codes are kVK_ANSI_* POSITIONS (B = 11, Equal = 24, Minus = 27, 9 = 25, 0 = 29); the key caps
-/// shown in copy and menus come from the current keyboard layout (`ShortcutCenter.displayString`).
+/// Every global shortcut ships unbound (the owner's rule, 2026-10-20): nothing is registered until the user records a
+/// combination in Settings ▸ Shortcuts. Key codes are kVK_ANSI_* POSITIONS; the key caps shown in copy and menus come
+/// from the current keyboard layout (`ShortcutCenter.displayString`). Suggestions when recording should still avoid
+/// ⌃⌥Space (input sources), ⌃⌥⌘8 and ⌃⌥⌘,/. (accessibility) and ⌃⌥⌘V / ⌃⌥⌘D, another booster's defaults (D17).
 public nonisolated enum ShortcutCatalog {
-    static let hyper: KeyCombo.Modifiers = [.control, .option, .command]
-    /// Every global shortcut, in menu order.
+    /// Every global shortcut, in menu order, all without a default combination.
     public static let all: [GlobalShortcut] = [
-        GlobalShortcut(id: .toggle, defaultCombo: KeyCombo(keyCode: 11, modifiers: hyper)),     // ⌃⌥⌘B
-        GlobalShortcut(id: .brighter, defaultCombo: KeyCombo(keyCode: 24, modifiers: hyper)),   // ⌃⌥⌘= (US)
-        GlobalShortcut(id: .lessBright, defaultCombo: KeyCombo(keyCode: 27, modifiers: hyper)), // ⌃⌥⌘- (US)
+        GlobalShortcut(id: .toggle, defaultCombo: nil),
+        GlobalShortcut(id: .brighter, defaultCombo: nil),
+        GlobalShortcut(id: .lessBright, defaultCombo: nil),
         GlobalShortcut(id: .max, defaultCombo: nil),
-        GlobalShortcut(id: .standard, defaultCombo: KeyCombo(keyCode: 29, modifiers: hyper)),   // ⌃⌥⌘0 (US)
-        GlobalShortcut(id: .dimToggle, defaultCombo: KeyCombo(keyCode: 25, modifiers: hyper)),  // ⌃⌥⌘9 (US)
+        GlobalShortcut(id: .standard, defaultCombo: nil),
+        GlobalShortcut(id: .dimToggle, defaultCombo: nil),
         GlobalShortcut(id: .fillLight, defaultCombo: nil),
     ]
 }

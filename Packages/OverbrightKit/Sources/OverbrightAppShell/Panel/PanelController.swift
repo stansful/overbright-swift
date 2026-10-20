@@ -12,6 +12,7 @@ import AppKit
 import OverbrightCore
 import OverbrightDesign
 import OverbrightPanelUI
+import QuartzCore
 import os
 import SwiftUI
 
@@ -48,6 +49,13 @@ final class PanelController {
     /// Observers of the anchor's window while the panel is open.
     private var anchorObservers: [any NSObjectProtocol] = []
     private var isClosing = false
+    /// When an outside click last closed the panel (`CACurrentMediaTime`). A click on the status item can reach the
+    /// outside-click monitors before the item's own action (its window on another display's menu bar is not the
+    /// anchor's window), so that action finds the panel closing and would open it again; within
+    /// `toggleAfterOutsideCloseWindow` it counts as the closing click instead (the owner's report, 2026-10-20).
+    private var lastOutsideCloseAt: CFTimeInterval?
+    /// See `lastOutsideCloseAt`.
+    static let toggleAfterOutsideCloseWindow: CFTimeInterval = 0.4
 
     /// False keeps the panel open on clicks elsewhere: no outside-click monitor is installed (Debug QA `--qa-panel`,
     /// `QAHooks.keepsPanelOpen`).
@@ -66,6 +74,9 @@ final class PanelController {
     func toggle(from anchor: NSView?) {
         if isShown {
             close(.toggle)
+        } else if let closedAt = lastOutsideCloseAt,
+                  CACurrentMediaTime() - closedAt < Self.toggleAfterOutsideCloseWindow {
+            lastOutsideCloseAt = nil                     // this press closed it: leave it closed
         } else {
             show(from: anchor, takingFocus: ClickRouting.isKeyboardOrAccessibility(NSApp.currentEvent)
                     || NSWorkspace.shared.isVoiceOverEnabled)
@@ -104,6 +115,7 @@ final class PanelController {
     func close(_ cause: CloseCause = .request) {
         guard let panel, panel.isVisible, !isClosing else { return }
         log.info("panel closes: \(cause.rawValue, privacy: .public)")
+        lastOutsideCloseAt = cause == .outsideClick ? CACurrentMediaTime() : nil
         beginClosing()
         NSAnimationContext.runAnimationGroup({ context in
             context.duration = OverbrightMotion.Kind.panelOut.duration
