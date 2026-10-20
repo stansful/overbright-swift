@@ -77,14 +77,14 @@ Nothing here boosts: keep Overbright running but off (master switch off in the p
 
 Monitor running (`monitor-2.jsonl`). **Run 2.0a and 2.0 before every other step that boosts.**
 
-Since 2026-10-20 a display's first boost on each macOS build asks **"Keep this level?"**: answer **Keep** only when the screen got brighter; with no answer it goes back to Standard by itself after 10 s.
+Since 2026-10-20 (the owner's rule) **every** level change you make away from Standard (the panel, the menu, a shortcut, Shortcuts, Settings), and turning Overbright on with such a level stored, asks **"Keep this level?"** on the display you moved: answer **Keep** only when the screen looks right; with no answer that display goes back to **Standard** by itself 10 s after your last step. Answer Keep after each change the steps below rely on.
 
 | Step | Do | Expected |
 |---|---|---|
 | **2.0a (H-WS1, white screen)** | Settings ▸ Advanced ▸ Trigger method: built-in **Automatic**; built-in brightness at maximum. (1) Drag its slider from Standard to **Bright room** and look for 10 s **without answering** the prompt. (2) Set Trigger method to **Tagged layer**, drag past Standard again and again do not answer. (3) Set it back to **Automatic**, drag past Standard and press **Keep**. `obdiag …/2.0a-N.json` after each try. | (1) The built-in gets **brighter, not white** (the diagnostics show `cachedRung` 5, “Metal layer, refreshed”), and returns to Standard after 10 s on its own. (2) Expected **white** (the 2026-10-20 report), back to Standard after 10 s; note whether it whitens. (3) Brighter, and it stays. If (1) or (3) turns white, **stop the session** and report it. |
 | **2.0 (H-R1)** | Settings ▸ Displays ▸ Built-in: Limit **Peak**. Turn Overbright on, built-in at **Max**, brightness at maximum. Watch the monitor for 10 s. Then Back to Standard. | Record the monitor's **table max** while boosted: **> 1.0** (read-back keeps values above 1) or **exactly 1.0** (read-back clamps). Either way the class must read `scaled` while boosted and `matchesBase` after Back to Standard. If the class reads `matchesBase` while the screen is visibly brighter, **stop the session** and report it: every later SCALED check would be meaningless. |
 | 2.1 (H-DM1) | Built-in at Bright room, then press Less Bright (⌃⌥⌘- by default) repeatedly | it stops at Standard once, then dims in steps; the panel shows "Dimmed · N %"; the class reads `scaled` with a ratio below 1 |
-| 2.2 | With the panel's slider, step through the named dim stops with ⌥← (50 %, 25 %, 10 %, 5 %, 2 %) | below 10 % the "Keep this level?" prompt appears; without an answer the level returns after 10 s; with Keep it stays; Back to Standard always works |
+| 2.2 | With the panel's slider, step through the named dim stops with ⌥← (50 %, 25 %, 10 %, 5 %, 2 %) | the "Keep this level?" prompt appears at the first step and its countdown restarts at every step (it does not flash or move); without an answer the built-in goes back to **Standard** 10 s after the last step; with Keep it stays; Back to Standard always works |
 | 2.3 | The MSI with **HDR off**: dim it to 25 % from the panel | it dims (no extra brightness needed); class `scaled`, ratio < 1 |
 | 2.4 (H-NS1) | Boost the built-in at Bright room and dim the MSI to 50 %; turn **Night Shift** on (Displays ▸ Night Shift ▸ Turn On Until Tomorrow), wait 10 s, turn it off; then the same with **True Tone** | note whether the monitor's class changes (`foreign`?), whether a chip or banner appears, whether the picture looks right; no flicker; record which of the two touch the table |
 | 2.5 (H-K2) | Boosted and dimmed as in 2.4; in a third Terminal run `ob --restore-gamma` (a separate process that writes and exits) | every display is reset by macOS when that process exits; within ≈ 0.3 s Overbright brings the boost and the dim back **with a ramp** (no hard flash back); the journal shows `drift.reapplied` |
@@ -166,7 +166,7 @@ Overbright on, both displays boosting; monitor running (`monitor-7.jsonl`).
 | 7.6 | Low Power Mode on/off | banner and HUD "Paused: Low Power Mode"; resumes with the HUD |
 | 7.7 | Set Turn off after: 5 minutes, wait | turns off at the deadline; the HUD shows "Off: timer ended" (and VoiceOver announces it if running) |
 | 7.8 | A game (or any app with the games category) full screen | paused only with "Pause for every full-screen app" or "Pause in games" on |
-| 7.9 (H-B1) | "Add extra brightness only near full brightness" on (default). Built-in at Max (Safe); set system brightness to 100 %, about 75 %, 50 %, 25 %, using the brightness keys; then turn the option off and repeat | with the option on: full boost at 100 %, partly at 75 %, none at 50 % and below, and every brightness-key step looks like a normal step (no bigger jumps); with it off: the multiplier applies at every level. Note any step that looks uneven |
+| 7.9 (H-B1) | Turn "Add extra brightness only near full brightness" **on** (off by default since 2026-10-20: its reference was measured while the grant still ramped, 1.31 on this Mac, and it cut every boost to ×1; the reference is now never below 1600 ÷ 600 ≈ 2.67). Built-in at Max (Safe); set system brightness to 100 %, about 75 %, 50 %, 25 %, using the brightness keys; then turn the option off and repeat | with the option on: full boost at 100 %, partly at 75 %, none at 50 % and below, and every brightness-key step looks like a normal step (no bigger jumps); with it off: the multiplier applies at every level. Note any step that looks uneven |
 | 7.10 (H-FS2) | (WP6) System Settings ▸ Desktop & Dock: turn **Displays have separate Spaces** off (log out and back in), then repeat 7.1 and 7.3; afterwards turn it back on | as built (C-SIGNALS-5): only the main display (the one at the global origin, the built-in here) has a menu bar then, so on the MSI a window counts as full screen only while its app is frontmost and it covers the MSI exactly; a background window there is no evidence. Expected: a full-screen video on the MSI pauses the MSI only, while the player is frontmost (if macOS lets you type on the built-in meanwhile, the player becomes a background window and the MSI resumes); a zoomed (not full-screen) window that fills the MSI exactly (it does when nothing reserves space there: the MSI has no menu bar, and the Dock is on the built-in) counts as full screen while it is frontmost, the known limit of §7.3: with "Pause for every full-screen app" on (as in 7.3) the MSI pauses, with only the video rule it pauses only while that app holds a display-sleep assertion (plays video); a zoomed window that leaves a margin (the Dock) pauses nothing; the built-in behaves as in 7.1–7.3. Note any display that pauses (or not) otherwise |
 | 7.11 | (WP11) Settings ▸ Automations ▸ Pause for these apps ▸ add from the suggestions: for each of Prime Video, Infuse, GeForce NOW and Moonlight that is installed, run `osascript -e 'id of app "<its name>"'` | the suggestion lists the installed ones by their Finder names; their IDs are `com.amazon.aiv.AIVApp`, `com.firecore.infuse.enterprise`, `com.nvidia.gfnpc.mall` and `com.moonlight-stream.Moonlight` (unverified publishers' IDs; note any that differ) |
 | 7.12 (H-FS2) | (WP6, C-SIGNALS-5) **Displays have separate Spaces** off as in 7.10, "Pause for every full-screen app" on; make the MSI the main display (System Settings ▸ Displays ▸ Arrange: drag the menu bar onto the MSI). On the built-in: (a) an app full screen, frontmost; (b) the same, then click on the MSI if macOS lets you; (c) a zoomed (not full-screen) window, frontmost. Capture `obdiag ~/Overbright-HW/7.12-<case>.json` for each (look at `signals.fullScreenDisplays`). Afterwards put the menu bar back on the built-in, then turn the setting back on | as built: the built-in has no menu bar of its own then, so a frontmost window counts as full screen when it covers the display exactly or below the notch band. (a) the built-in pauses (chip "Paused: full screen"), the MSI does not; (b) note whether the built-in resumes (expected: a background window is no evidence there); (c) the zoomed window counts as full screen while it is frontmost and fills the built-in down to its bottom edge, whether its top edge sits at the display's top edge (an exact cover) or right below the notch band (a full-screen app's frame there): the built-in pauses either way, the known limit of §7.3, which this step measures. Note where the top edge sits; a zoomed window that leaves a margin (the Dock) is not paused |
@@ -176,6 +176,8 @@ Overbright on, both displays boosting; monitor running (`monitor-7.jsonl`).
 ## 8. Other apps (15 min) — conflicts
 
 **Run only after §2.0 has passed.** Never choose Continue Anyway next to a brightness app with the color table method: two boosts would compound.
+
+**Since 2026-10-20 Compatibility mode is disabled** (see §10): the banner below shows **no** button, and Overbright stays paused on every display until the other app quits. Skip step 3.
 
 1. Start the commercial booster that is installed on this Mac (Vivid). <!-- denylist-ok -->
 2. Open Overbright's panel: expected banner "Paused because ‹that app› also changes display brightness. …" with **Use Compatibility mode**, and **no** launch rescue (the journal must not show `launch.rescued`). There is no Continue Anyway button for it.
@@ -196,6 +198,8 @@ Overbright on, both displays boosting; monitor running (`monitor-7.jsonl`).
 ---
 
 ## 10. Compatibility mode (20 min) — H-C1–C3
+
+**Disabled since 2026-10-20 — skip this section.** On this MacBook Pro (M4 Max, macOS 27.0.1) the built-in turned **white** the moment Compatibility mode boosted: WindowServer does not blend the overlay's `multiplyBlendMode` layer with the windows beneath it, so the overlay paints instead of multiplying (ARCHITECTURE.md §7.5). Settings no longer offers the method (Method: Automatic · Color table), and a stored Compatibility-mode choice uses the color table. The steps stay for when a blend that works across windows has been found.
 
 1. Settings ▸ Displays ▸ Built-in ▸ Method: **Compatibility mode**; level Bright room.
 2. Check: are other apps' windows, the menu bar, the Dock and a full-screen app brighter? Is the **pointer** brighter (expected: no)? Does Mission Control or a Space switch flicker? Is the overlay in a ⌘⇧5 recording?
@@ -241,7 +245,7 @@ footprint -p $(obpid) > ~/Overbright-HW/13-<case>-footprint.txt
 sudo powermetrics -i 1000 -n 30 --samplers cpu_power,gpu_power,tasks --show-process-energy > ~/Overbright-HW/13-<case>-power.txt
 ```
 
-Cases: Overbright **off**; on with the winning trigger at Bright room; on with *Metal layer* forced; Compatibility mode; Fill Light on; both displays at Bright room, once with "Pause for full-screen video" on (the default) and once with it and every other full-screen and "while playing" rule off (ARCHITECTURE.md D28: Signals' 2 s full-screen watch is its own timer). Optional: 30 minutes on battery at Bright room vs Standard (battery % before and after).
+Cases: Overbright **off**; on with the winning trigger at Bright room; on with *Metal layer* forced; Compatibility mode (skip while it is disabled, §10); Fill Light on; both displays at Bright room, once with "Pause for full-screen video" on (the default) and once with it and every other full-screen and "while playing" rule off (ARCHITECTURE.md D28: Signals' 2 s full-screen watch is its own timer). Optional: 30 minutes on battery at Bright room vs Standard (battery % before and after).
 
 **Expected:** off = 0 idle wake-ups; on = ≤ 1.5 wake-ups/s and < 0.1 % CPU with no GPU work after the first frame (DESIGN.md §17). Both displays with the full-screen rule on: about 2.0 wake-ups/s by D28's count (two drift checks, the hang ping, the watch), about 1.5 with the rules off; note both, since they decide whether WP16 moves the watch onto one engine tick.
 
@@ -277,7 +281,7 @@ Cases: Overbright **off**; on with the winning trigger at Bright room; on with *
 
 | ID | Question | Result | Files |
 |---|---|---|---|
-| **H-WS1** | **built-in brighter, not white, with the automatic ladder (T3, 0.2 s)? first-boost prompt reverts after 10 s? Tagged layer still white?** | | 2.0a |
+| **H-WS1** | **built-in brighter, not white, with the automatic ladder (T3, 0.2 s)? Keep prompt reverts to Standard after 10 s? Tagged layer still white?** | | 2.0a |
 | **H-R1** | **read-back while boosted: table max > 1.0, or exactly 1.0 (clamps)? class `scaled` either way?** | | 2.0 |
 | H-E1 | potential / reference per preset; MSI on/off/after wake; name localized? | | 1.x |
 | H-DM1 | table-method dimming on the built-in and the MSI; Keep this level | | 2.1–2.3 |
@@ -298,7 +302,7 @@ Cases: Overbright **off**; on with the winning trigger at Bright room; on with *
 | H-B1 | taper: continuous light from 100 % to 50 % brightness; even key steps | | 7.9 |
 | conflicts | booster banner without Continue, Compatibility mode alongside, no rescue, behaviour after quitting it | | 8 |
 | H-A1 | auto-brightness toggle: wrong picture? cleared by? | | 9 |
-| H-C1–C3 | Compatibility mode coverage, pointer, flicker, capture, domain, power | | 10 |
+| H-C1–C3 | Compatibility mode coverage, pointer, flicker, capture, domain, power (disabled 2026-10-20: turned the built-in white) | | 10 |
 | H-F1 | camera detection without a prompt; Fill Light card; boost still prepares with Fill Light on | | 11 |
 | H-AI-1–3 | intents, Focus filter, translations, key caps by layout, Run Shortcut | | 12 |
 | H-CC-1–2 | ad-hoc control: listed, rendered, after rebuild, after kill -9 | | 12.5–12.6 |
