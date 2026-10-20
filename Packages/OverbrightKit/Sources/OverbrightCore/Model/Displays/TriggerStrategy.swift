@@ -6,7 +6,7 @@ public nonisolated enum TriggerStrategy: String, Codable, Sendable, CaseIterable
     case taggedLayer
     /// T2: CAMetalLayer rgba16Float, one clear-only frame, re-presented on events.
     case metalOneShot
-    /// T3: T2 plus a slow keep-alive (5 s).
+    /// T3: T2 plus a keep-alive frame every 0.2 s.
     case metalKeepAlive
     /// T4-alt: AVSampleBufferDisplayLayer with one in-memory HLG frame.
     case hlgSampleBuffer

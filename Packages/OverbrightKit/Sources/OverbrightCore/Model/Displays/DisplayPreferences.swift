@@ -22,13 +22,19 @@ public nonisolated struct DisplayPreferences: Hashable, Codable, Sendable {
     public var oledNoticeAcknowledged: Bool
     /// Last name seen, so a disconnected display can be listed and forgotten.
     public var lastKnownName: String?
+    /// The macOS build on which someone answered Keep to this display's first boost; until it matches the running
+    /// build, a boost from the panel, the menu, a shortcut or an intent asks "Keep this level?" and goes back by itself
+    /// (§4.9: a display that turns white when boosted recovers without being seen).
+    public var boostConfirmedBuild: String?
     /// Preferences with every default of §3.8.
     public init(boostEnabled: Bool? = nil, level: LevelPosition = LevelPreset.brightRoom.position,
                 capMode: CapMode = .safe, mechanism: MechanismPreference = .automatic,
                 triggerOverride: TriggerStrategy? = nil, calibration: CalibrationRecord? = nil,
-                oled: OLEDOverride = .automatic, oledNoticeAcknowledged: Bool = false, lastKnownName: String? = nil) {
+                oled: OLEDOverride = .automatic, oledNoticeAcknowledged: Bool = false, lastKnownName: String? = nil,
+                boostConfirmedBuild: String? = nil) {
         self.boostEnabled = boostEnabled; self.level = level; self.capMode = capMode; self.mechanism = mechanism
         self.triggerOverride = triggerOverride; self.calibration = calibration
         self.oled = oled; self.oledNoticeAcknowledged = oledNoticeAcknowledged; self.lastKnownName = lastKnownName
+        self.boostConfirmedBuild = boostConfirmedBuild
     }
 }

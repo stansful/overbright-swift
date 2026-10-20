@@ -4,7 +4,7 @@
 //
 // - The first present is retried every 50 ms for up to 2 s, because the window may not yet be in the render tree.
 // - After that T2 presents again only on events (`represent()`: wake, unlock, occlusion → visible, screen
-//   parameters). T3 adds a keep-alive frame every 5 s, a stored `Task` cancelled by `remove()`.
+//   parameters). T3 adds a keep-alive frame every 0.2 s, a stored `Task` cancelled by `remove()`.
 // - `remove()` releases the device, the queue and the drawable pool so the driver can free its working set.
 // - Generations (§4.6): a retry or keep-alive started for an earlier present or before `remove()` never presents.
 import CoreGraphics
