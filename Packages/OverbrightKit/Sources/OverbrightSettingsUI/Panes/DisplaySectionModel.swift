@@ -91,7 +91,7 @@ struct DisplaySectionModel {
     var verdict: DisplayVerdict { eligibility.verdict }
     /// The display can show extra brightness at all (the switch, the limit and calibration rows).
     var canBoost: Bool { verdict.allowsBoost }
-    /// The display can be dimmed (or would use the overlay): the level row.
+    /// The display can be boosted or dimmed: the level row.
     var canAdjust: Bool { verdict.allowsBoost || verdict.allowsDim }
     /// The per-display switch: the preference, else the class default.
     var boostEnabled: Bool { preferences.boostEnabled ?? eligibility.defaultBoostEnabled }

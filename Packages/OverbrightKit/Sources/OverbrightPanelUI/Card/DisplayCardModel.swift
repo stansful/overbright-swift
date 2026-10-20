@@ -57,7 +57,7 @@ public struct DisplayCardModel: Hashable {
     public var allowedNow: Double?
     /// The presets shown on this display.
     public var presets: [LevelPreset]
-    /// The dim half works (a transfer table or the overlay).
+    /// The dim half works (the display has a transfer table).
     public var dimEnabled: Bool
     /// The per-display switch of extra brightness (preference, else the class default).
     public var boostEnabled: Bool
@@ -182,7 +182,7 @@ public struct DisplayCardModel: Hashable {
         }
     }
 
-    /// The display has a transfer table (or could use the overlay): dimming works.
+    /// The display has a transfer table: dimming works.
     static func hasTable(_ facts: DisplayFacts?) -> Bool {
         guard let facts else { return true }
         return facts.gammaCapacity > 0 && facts.panelClass != .virtualDisplay

@@ -1468,7 +1468,7 @@ public protocol GammaPort: Sendable {
     /// The engine owns the pause deadline (`automations.pausedUntil`) and its single sleep.
     func pause(until deadline: Date?, source: ControlSource)
     func resume(source: ControlSource)
-    /// S2/S3 only; for S1 boosters it is honoured only on Compatibility-mode displays (§7.2).
+    /// S2/S3 only; an S1 booster is never continued (§7.2).
     func continueAnyway(_ app: ConflictingApp)
     /// Try Again: clears any trip on this display (the only way to clear flicker, repair and drift trips).
     func retry(_ display: DisplayKey)

@@ -159,8 +159,8 @@ extension BoostEngine {
         reduceNow(ControlRequest(source: source, kind: .resume, display: nil, wantsBoost: false))
     }
 
-    /// S2/S3 (and S1 on Compatibility-mode displays, decided by the reducer): continue until that app quits or
-    /// Overbright relaunches. Clears the drift trips the app caused.
+    /// S2/S3 (an S1 booster is never continued; the reducer decides): continue until that app quits or Overbright
+    /// relaunches. Clears the drift trips the app caused.
     public func continueAnyway(_ app: ConflictingApp) {
         continued[app.entryID] = app.processID
         for controller in controllers.values {

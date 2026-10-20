@@ -2,7 +2,7 @@
 
 /// Severity classes of apps that also change display colours or brightness.
 public nonisolated enum ConflictSeverity: String, Codable, Sendable, CaseIterable {
-    /// S1: suspend every display; continuing is possible only in Compatibility mode (no table).
+    /// S1: suspend every display; never continued (§7.2).
     case booster
     /// S2: suspend before starting; Continue Anyway allowed (the repair budget stays authoritative).
     case gammaWriter
