@@ -17,8 +17,8 @@ public nonisolated enum ConflictCatalog {
     /// The entry with `id`, if any.
     public static func entry(id: String) -> ConflictCatalogEntry? { entries.first { $0.id == id } }
 
-    /// S1: another EDR trigger plus its own table or overlay boost. Suspends every display; only Compatibility mode
-    /// continues next to one.
+    /// S1: another EDR trigger plus its own table or overlay boost. Suspends every display; nothing continues next to
+    /// one (§7.2).
     static let boosters: [ConflictCatalogEntry] = [
         // Table booster with Mac App Store, direct and Setapp builds: the IDs vary, so prefixes confirmed by the
         // team ID of the store and direct builds (local Info.plist, App Store lookup id6443470555, code signature).

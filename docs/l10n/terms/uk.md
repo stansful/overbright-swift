@@ -90,7 +90,7 @@ System Settings and Shortcuts loctables):
 | Back to Standard (the instant off) | Повернутися до стандарту | not “panic”, not “reset brightness” |
 | Indoor · Bright room · Sunlight · Max (presets) | У кімнаті · Яскраве світло · На сонці · Максимум | “Max” is a preset only |
 | Safe · Peak (ceilings) | Безпечно · Пік | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | Режим сумісності · Колірна таблиця | never “fallback” or “overlay” |
+| color table (in sentences: “macOS ignores color table changes”) | колірна таблиця | never “gamma”; no “fallback” or “overlay” in copy |
 | Fill Light (the edge light for video calls) | Підсвітка обличчя | never “ring light” |
 | extra range (headroom, in user copy) | Запас яскравості | “headroom” only in Advanced and diagnostics |
 | Calibrate… · Run Self-Test… · Reset Display Colors… | Відкалібрувати… · Запустити самоперевірку… · Скинути кольори дисплеїв… |  |

@@ -1,15 +1,15 @@
 // OverbrightDisplays/Directory/ReconfigurationPipeline.swift — the timing of display reconfiguration (D9).
-// ARCHITECTURE.md §4.3, §4.4 (`reconfigurationDebounce`), §7.1, §10.4. Thread: main.
+// ARCHITECTURE.md §4.3, §4.4 (`ReconfigurationPipeline.debounce`, `.confirmation`), §7.1, §10.4. Thread: main.
 //
 // One reconfiguration calls back once per online display with the begin flag, then once per added, removed and online
 // display in the after phase. The pipeline turns that burst into:
-// - **began**, once per burst (overlays go to factor 1; no display queries in the begin phase);
-// - **removed(id)**, at once for every remove flag, never debounced (the display's trigger and overlay windows are
-//   ordered out before AppKit can move them to another screen);
+// - **began**, once per burst (no display queries in the begin phase);
+// - **removed(id)**, at once for every remove flag, never debounced (the display's trigger window is ordered out
+//   before AppKit can move it to another screen);
 // - **settle(.debounced)** 0.5 s after the last after-phase callback, then **settle(.confirming)** 2 s after it (facts
 //   that lag, such as NSScreen objects and IORegistry attributes, are read again). Any new callback restarts both.
-// A begin phase that never gets an after phase settles by itself after `unfinishedBeginTimeout`, so overlays parked at
-// factor 1 are never left there. Every wait is one `TimeSource.sleep` in one stored task (§8.1 rule 5).
+// A begin phase that never gets an after phase settles by itself after `unfinishedBeginTimeout`, so the engine still
+// gets its reconfiguration pass. Every wait is one `TimeSource.sleep` in one stored task (§8.1 rule 5).
 import CoreGraphics
 import OverbrightCore
 
@@ -23,7 +23,7 @@ final class ReconfigurationPipeline {
         case confirming
     }
 
-    /// The debounce of the after phase (`EngineTiming.reconfigurationDebounce`, D9).
+    /// The debounce of the after phase (D9).
     static let debounce: Duration = .milliseconds(500)
     /// The confirming pass, counted from the last after-phase callback (D9).
     static let confirmation: Duration = .seconds(2)

@@ -1,8 +1,8 @@
 // OverbrightBoostTests/Calibration/CalibrationEngineTests.swift — a calibration through the engine's real
-// `DisplayController` and `TableWriter` (ARCHITECTURE.md §5.2, §4.6, §4.7, §7.5; DESIGN.md §9): the sweep passes
-// 0.97 × H and can record a linear result, a hang restore or the engine's own stops end the session and nothing is
-// scaled again until a new one, Compatibility mode measures the overlay alone, and a lost trigger ends the session
-// (or the self-test on that display). Only the fakes are written.
+// `DisplayController` and `TableWriter` (ARCHITECTURE.md §5.2, §4.6, §4.7; DESIGN.md §9): the sweep passes 0.97 × H
+// and can record a linear result, a hang restore or the engine's own stops end the session and nothing is scaled again
+// until a new one, and a lost trigger ends the session (or the self-test on that display). Only the fakes are
+// written.
 import Foundation
 import OverbrightCore
 import OverbrightPolicy
@@ -61,7 +61,7 @@ import Testing
         await h.advance(.seconds(2), step: .milliseconds(100))
         session.answerLinearConfirmation(distinguishable: true)
         let record = try #require(session.finish(brighter: true))
-        #expect(record.outcome == .linear && record.mechanism == .table)
+        #expect(record.outcome == .linear)
         #expect(!h.codes.contains("interlock.refusedCalibration"))
         #expect(!h.codes.contains("calibration.aborted.writeRefused"))
         #expect(h.everyTableAtBase && h.liveTriggers().isEmpty && h.engine.ledger.entries().isEmpty)
@@ -122,26 +122,6 @@ import Testing
         await h.advance(.seconds(2), step: .milliseconds(100))
         #expect(factors(h, since: writes).allSatisfy { $0 <= 1 + 1e-6 })
         #expect(h.everyTableAtBase && h.liveTriggers().isEmpty)
-    }
-
-    // MARK: Compatibility mode (C-BOOST-3)
-
-    /// A Compatibility-mode display calibrates its overlay: no table write and no trigger at any step, the overlay
-    /// keeps its own EDR request, and the record says what was measured.
-    @Test func compatibilityModeCalibratesTheOverlayAlone() async throws {
-        let h = EngineHarness()
-        h.setPreferences { $0.mechanism = .overlay }
-        let session = try await readySession(h)
-        #expect(h.controller()?.mechanism == .overlay)
-        await sweep(session, h, to: 1.6)
-        let overlay = try #require(h.triggers.liveOverlays(on: h.builtIn).first)
-        #expect(abs(overlay.factor - session.currentFactor) < 1e-9 && overlay.factor >= 1.6 - 1e-9)
-        #expect(overlay.factors.allSatisfy { $0.headroomRequest > 1 })
-        session.markMerged()
-        let record = try #require(session.finish(brighter: true))
-        #expect(record.mechanism == .overlay && record.outcome == .encoded)
-        #expect(h.gamma.writeCount == 0 && h.triggers.made.isEmpty && h.engine.ledger.entries().isEmpty)
-        #expect(h.triggers.liveOverlays(on: h.builtIn).isEmpty)
     }
 
     // MARK: A lost trigger (C-BOOST-9)

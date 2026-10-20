@@ -1,7 +1,7 @@
 // OverbrightBoostTests/Calibration/CalibrationSafetyTests.swift — what keeps the calibration safe (ARCHITECTURE.md §5.2,
 // §5.8, §10.7; DESIGN.md §9): Standard first, the sweep's steps, its pause at 1.15 × the encoded prediction and its cap,
 // the black surround, the comparison's flip limit, the linear confirmation required before `.linear`, and a record that
-// no longer counts once the OS build, mechanism or potential changed.
+// no longer counts once the OS build or the potential changed.
 import Foundation
 import OverbrightCore
 import OverbrightPolicy
@@ -20,10 +20,10 @@ import Testing
         #expect(abs((c.controller.headroom ?? 0) - h) < 0.01)
     }
 
-    /// The pattern the window draws (`CalibrationController.pattern`, public for the calibration window) is DESIGN.md
-    /// §9's, and the predictions are about its merge patch, the third one, next to white (C-BOOST-21).
+    /// The pattern the window draws (`CalibrationPattern.standard`) is DESIGN.md §9's, and the predictions are about its
+    /// merge patch, the third one, next to white (C-BOOST-21).
     @Test func theWindowDrawsFourPatchesOnBlack() {
-        let pattern = CalibrationController.pattern
+        let pattern = CalibrationPattern.standard
         #expect(pattern.patches == [0.85, 0.90, 0.95, 1.00] && pattern.surround == 0)
         #expect(pattern.patches.firstIndex(of: pattern.mergePatch) == pattern.patches.count - 2)
         #expect(pattern.patches.last == 1 && pattern.patches == pattern.patches.sorted())
@@ -145,7 +145,7 @@ import Testing
 
     // MARK: Validity
 
-    @Test func aRecordStopsCountingWhenTheBuildMechanismOrPotentialChanges() async throws {
+    @Test func aRecordStopsCountingWhenTheBuildOrPotentialChanges() async throws {
         let c = CalibrationRig()
         #expect(await c.ready())
         #expect(await c.sweep(to: 3.0, continuingPastThePause: true))
@@ -156,25 +156,14 @@ import Testing
         let record = try #require(c.controller.finish(brighter: true))
         #expect(record.outcome == .linear)
         let machine = DisplayFixture.ownerMachine
-        func domain(_ machine: MachineIdentity, mechanism: Mechanism = .table, potential: Double = 16)
-            -> TransferDomain {
-            TransferDomainResolver.effectiveDomain(record, mechanism: mechanism, machine: machine, potential: potential)
+        func domain(_ machine: MachineIdentity, potential: Double = 16) -> TransferDomain {
+            TransferDomainResolver.effectiveDomain(record, machine: machine, potential: potential)
         }
         #expect(domain(machine) == .linear)
         #expect(domain(machine, potential: 16 * 1.04) == .linear)
         var updated = machine
         updated.osBuild = "26B100"
         #expect(domain(updated) == .encoded)                           // macOS changed
-        #expect(domain(machine, mechanism: .overlay) == .encoded)      // the other mechanism
         #expect(domain(machine, potential: 16 * 1.06) == .encoded)     // the preset changed
-    }
-
-    @Test func aCompatibilityModeSessionRecordsTheOverlay() async throws {
-        let c = CalibrationRig()
-        c.controller.mechanism = .overlay
-        #expect(await c.ready())
-        #expect(await c.sweep(to: 1.6))
-        c.controller.markMerged()
-        #expect(try #require(c.controller.finish(brighter: true)).mechanism == .overlay)
     }
 }

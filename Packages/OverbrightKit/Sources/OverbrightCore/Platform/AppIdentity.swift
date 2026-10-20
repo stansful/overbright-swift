@@ -184,10 +184,4 @@ public struct AppIdentity {
         let isSafe = ProtectedLocations.isSafeToRead(url)
         return AppIdentity.Location(url: url, name: AppIdentity.name(of: url, isSafeToRead: { _ in isSafe }), isSafeToRead: isSafe)
     }
-
-    /// Where the app is, wherever that is (to launch it on the user's click: opening an app reads none of its files).
-    /// Off the main actor.
-    @concurrent public nonisolated static func applicationURL(for bundleID: String) async -> URL? {
-        NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleID)
-    }
 }

@@ -56,7 +56,7 @@ public nonisolated final class FakeGammaPort: GammaPort, @unchecked Sendable {
 
     // MARK: Behaviour switches
 
-    /// Writes succeed and read back correctly but change nothing on screen (`CompatibilityModels`, §7.5).
+    /// Writes succeed and read back correctly but change nothing on screen (`IgnoredTableWriteModels`, §7.5).
     public var ignoresWrites: Bool {
         get { lock.withLock { ignoring } }
         set { lock.withLock { ignoring = newValue } }

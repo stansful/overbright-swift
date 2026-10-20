@@ -68,14 +68,6 @@ extension ScriptedGallery {
             paused("paused-app", .pausedApp(bundleID: "com.example.long-named-video-player-for-testing")),
             ScriptedState(id: "oled-idle", status: P.status(oledIdle), facts: pair,
                           configure: { settings in builtInBrightRoom(settings); msiOn(0.5)(settings) }),
-            ScriptedState(id: "compatibility",
-                          status: P.status([P.display(P.builtIn, phase: .boosted, target: .boost(gain: 1.291),
-                                                      eligibility: P.eligibility(P.builtInVerdict,
-                                                                                 advisories: [.compatibilityModeAdvised, .notCalibrated],
-                                                                                 mechanism: .overlay),
-                                                      mechanism: .overlay, gain: 1.291,
-                                                      reading: P.reading(P.builtIn, current: 2.667, potential: 16))]),
-                          facts: [P.builtIn], configure: builtInBrightRoom),
         ]
     }
 

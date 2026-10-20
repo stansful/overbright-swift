@@ -28,7 +28,6 @@ import Testing
     let finder = await AppIdentityResolver.locate("com.apple.finder")
     #expect(finder.map { !$0.name.isEmpty && $0.name != "com.apple.finder" && !$0.name.hasSuffix(".app") && $0.isSafeToRead } == true)
     #expect(await AppIdentityResolver.locate("com.example.overbright.not-installed") == nil)
-    #expect(await AppIdentityResolver.applicationURL(for: "com.example.overbright.not-installed") == nil)
 }
 
 // MARK: - The resolver

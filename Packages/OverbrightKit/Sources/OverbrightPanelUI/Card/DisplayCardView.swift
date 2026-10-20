@@ -1,5 +1,5 @@
 // OverbrightPanelUI/Card/DisplayCardView.swift — one display's card in the panel (and in Welcome). DESIGN.md §5.4
-// (title, slider row, readout, caption, chip line, context menu, VoiceOver actions on the card and on its slider, the
+// (title, slider row, readout, chip line, context menu, VoiceOver actions on the card and on its slider, the
 // switched-off boost half), §5.5 (the thumb shows the level the display has; moving it turns Overbright on; past the
 // detent it turns extra brightness on, an OLED asks first and the thumb waits at Standard), §5.6, §5.7 (Space and Return
 // open the chip's popover), §5.12 (⌃↩ opens the context menu); ARCHITECTURE.md §4.9.
@@ -149,12 +149,6 @@ public struct DisplayCardView: View {
         .frame(maxWidth: PanelLayout.readoutWidth, alignment: .leading)
         .help(model.readout.isEstimate ? PanelText.readoutHelp + "\n" + PanelText.notCalibratedHelp
               : PanelText.readoutHelp)
-        if model.isCompatibilityMode {
-            Text(verbatim: PanelText.compatibilityMode)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .help(PanelText.compatibilityFootnote)
-        }
     }
 
     /// The readout without its preset name (the fallback of a readout that does not fit its line).
@@ -342,8 +336,7 @@ extension DisplayCardView: Equatable {
     let services = OverbrightServices.preview()
     let status = ScriptedStatuses.status(named: "boosting")?.displays.first
         ?? DisplayStatus(key: DisplayFixture.Keys.builtIn, name: "Built-in Display", phase: .idle, decision: nil,
-                         appliedGain: 1, appliedFactor: 1, mechanism: .table, strategy: nil, lastReading: nil,
-                         sdrWhite: nil)
+                         appliedGain: 1, appliedFactor: 1, strategy: nil, lastReading: nil, sdrWhite: nil)
     DisplayCardView(status: status, isMasterOn: true, services: services)
         .frame(width: PanelLayout.cardWidth)
         .padding()

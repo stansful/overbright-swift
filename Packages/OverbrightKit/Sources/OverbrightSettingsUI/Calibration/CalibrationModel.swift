@@ -2,7 +2,7 @@
 // ARCHITECTURE.md §5.2) over a `CalibrationSession`, which owns every table write: the checklist (with the optional
 // colorimeter value, checked against the range the engine accepts), step 1 (the display switches between Standard and
 // ×1.3 light three times, at most once per 1.5 s, each change announced to VoiceOver; `ComparisonSequence` paces them;
-// then "Did the screen get brighter…?"; No offers Compatibility mode, which repeats step 1 with a new session), step 2
+// then "Did the screen get brighter…?"; No goes straight to the results, and the color table stays), step 2
 // (the sweep on the black surround with its pause, ended by Space), step 3 (only after a merge near the linear
 // prediction: the 2-s confirmation frame and its question), and the results with the "turn them back on" line. The
 // record `finish(brighter:)` returns is stored with the display's preferences. Esc ends the session at once and stores
@@ -118,28 +118,14 @@ private let log = Log.logger(.engine)
         guard step == .comparison else { return }
         stopComparison()
         brighter = yes
-        step = yes ? .sweepIntro : .notBrighter
-    }
-
-    /// Compatibility mode on this display, then step 1 again with a session for it.
-    func useCompatibilityMode() {
-        guard step == .notBrighter else { return }
-        store(session?.finish(brighter: false))
-        DisplayPreferencesEditor(settings: services.settings).update(display, name: displayName) { $0.mechanism = .overlay }
-        brighter = nil
-        replaceSession()
-        guard session != nil else { return }
-        step = .comparison
-        runComparison()
-    }
-
-    /// Keep the color table: the steps end.
-    func keepColorTable() {
-        guard step == .notBrighter else { return }
-        store(session?.finish(brighter: false))
-        DisplayPreferencesEditor(settings: services.settings).update(display, name: displayName) { $0.mechanism = .table }
-        ending = .keptColorTable
-        step = .results
+        if yes {
+            step = .sweepIntro
+        } else {
+            // No: the steps end, and the record says the screen did not get brighter.
+            store(session?.finish(brighter: false))
+            ending = .keptColorTable
+            step = .results
+        }
     }
 
     // MARK: Step 2
@@ -268,7 +254,7 @@ private let log = Log.logger(.engine)
         switch state {
         case .swept(_, let needsConfirmation) where step == .sweep:
             if needsConfirmation { step = .confirmation } else { complete() }
-        case .aborted(let reason) where [.comparison, .notBrighter, .sweepIntro, .sweep, .confirmation].contains(step):
+        case .aborted(let reason) where [.comparison, .sweepIntro, .sweep, .confirmation].contains(step):
             stopComparison()
             stopReason = reason == .cancelled ? nil : reason
             log.info("calibration ended early: \(reason.rawValue, privacy: .public)")

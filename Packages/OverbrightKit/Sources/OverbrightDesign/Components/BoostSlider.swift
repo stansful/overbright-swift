@@ -47,8 +47,7 @@ public struct BoostSlider: View {
     ///   - boostHalf: how the boost half draws and behaves.
     ///   - accessibilityName: the display name in "Level, ‹display name›".
     ///   - valueText: the value tag of a position, exactly as shown: the canonical text (`ValueText.forLevel`, with
-    ///     the host's "· small gain on this display" when Max is below ×1.3), or the guard that holds the display
-    ///     (`ValueText.guarded(by:)`). The slider adds nothing to it.
+    ///     the host's "· small gain on this display" when Max is below ×1.3). The slider adds nothing to it.
     ///   - onCommit: called once when a drag or a key step ends.
     public init(level: Binding<LevelPosition>, top: Double, allowedNow: Double?, presets: [LevelPreset],
                 dimEnabled: Bool, boostHalf: BoostHalfState, accessibilityName: String,

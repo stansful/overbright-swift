@@ -50,7 +50,7 @@ import Testing
         await harness.advance(ReconfigurationPipeline.unfinishedBeginTimeout - .milliseconds(1))
         #expect(harness.reconfiguredCount == 0)
         await harness.advance(.milliseconds(1))
-        #expect(harness.reconfiguredCount == 1)                   // overlays parked at factor 1 get their pass
+        #expect(harness.reconfiguredCount == 1)                   // the engine still gets its pass
         harness.callback(1, .beginConfigurationFlag)
         #expect(harness.events.filter { $0 == .displayConfigurationBegan }.count == 2)
     }

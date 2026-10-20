@@ -101,7 +101,7 @@ read on this Mac). Brazilian vocabulary only: arquivo, tela, câmera, app, apaga
 | Back to Standard (the instant off) | Voltar ao Padrão | not “panic”, not “reset brightness” |
 | Indoor · Bright room · Sunlight · Max (presets) | Ambiente interno · Luz intensa · Luz do sol · Máximo | “Max” is a preset only |
 | Safe · Peak (ceilings) | Seguro · Pico | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | Modo de Compatibilidade · Tabela de cores | never “fallback” or “overlay” |
+| color table (in sentences: “macOS ignores color table changes”) | tabela de cores | never “gamma”; no “fallback” or “overlay” in copy |
 | Fill Light (the edge light for video calls) | Luz de Preenchimento | never “ring light” |
 | extra range (headroom, in user copy) | Margem de brilho | “headroom” only in Advanced and diagnostics |
 | Calibrate… · Run Self-Test… · Reset Display Colors… | Calibrar… · Executar Autoteste… · Redefinir Cores da Tela… |  |

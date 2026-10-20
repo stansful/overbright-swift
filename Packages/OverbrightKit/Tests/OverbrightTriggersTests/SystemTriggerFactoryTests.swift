@@ -60,7 +60,6 @@ import Testing
                 _ = try bed.factory.makeTrigger(TriggerTestBed.request(strategy), on: gone)
             }
         }
-        #expect(throws: TriggerError.displayGone) { _ = try bed.factory.makeOverlay(on: gone) }
     }
 
     @Test func metalStrategiesWithoutADeviceThrowAndTheOthersDoNot() throws {
@@ -76,32 +75,28 @@ import Testing
     }
 
     @Test func openWindowCountFollowsPresentsRemovalsAndDroppedHandles() async throws {
-        let bed = TriggerTestBed(overlaySurface: .metal)
+        let bed = TriggerTestBed()
         let t2 = try bed.factory.makeTrigger(TriggerTestBed.request(.metalOneShot), on: TriggerTestBed.builtIn)
         var t3: (any TriggerHandle)? = try bed.factory.makeTrigger(TriggerTestBed.request(.metalKeepAlive),
                                                                    on: TriggerTestBed.external)
-        let overlay = try bed.factory.makeOverlay(on: TriggerTestBed.builtIn)
         #expect(bed.factory.openWindowCount == 0)
         #expect(await t2.present(.black))
         #expect(bed.factory.openWindowCount == 1)
         #expect(await t3?.present(.bright) == true)
-        try overlay.setFactor(1, headroomRequest: 1.2)
-        #expect(bed.factory.openWindowCount == 3)
-        t2.remove()
         #expect(bed.factory.openWindowCount == 2)
-        t3 = nil   // the engine dropped it without remove(): its window goes with it
+        t2.remove()
         #expect(bed.factory.openWindowCount == 1)
-        #expect(bed.presenter.orderedOut.count == 2)
-        overlay.remove()
+        t3 = nil   // the engine dropped it without remove(): its window goes with it
         #expect(bed.factory.openWindowCount == 0)
+        #expect(bed.presenter.orderedOut.count == 2)
     }
 
     @Test func stoppingRemovesEveryWindowTheEngineLeftBehind() async throws {
-        let bed = TriggerTestBed(overlaySurface: .metal)
+        let bed = TriggerTestBed()
         let t3 = try bed.factory.makeTrigger(TriggerTestBed.request(.metalKeepAlive), on: TriggerTestBed.builtIn)
-        let overlay = try bed.factory.makeOverlay(on: TriggerTestBed.external)
+        let t2 = try bed.factory.makeTrigger(TriggerTestBed.request(.metalOneShot), on: TriggerTestBed.external)
         #expect(await t3.present(.bright))
-        try overlay.setFactor(0.8, headroomRequest: 1)
+        #expect(await t2.present(.black))
         #expect(await eventually { bed.time.sleeperCount == 1 })
         #expect(bed.factory.openWindowCount == 2)
         await bed.factory.stop()

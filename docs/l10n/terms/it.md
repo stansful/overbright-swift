@@ -94,7 +94,7 @@ Where Apple has a word for a concept, Overbright uses it; Overbright's own conce
 | Back to Standard (the instant off) | Torna a Standard | not “panic”, not “reset brightness” |
 | Indoor · Bright room · Sunlight · Max (presets) | Interni · Luce intensa · Luce solare · Massimo | “Max” is a preset only |
 | Safe · Peak (ceilings) | Sicuro · Picco | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | Modalità compatibilità · Tabella colori | never “fallback” or “overlay” |
+| color table (in sentences: “macOS ignores color table changes”) | tabella colori | never “gamma”; no “fallback” or “overlay” in copy |
 | Fill Light (the edge light for video calls) | Luce di riempimento | never “ring light” |
 | extra range (headroom, in user copy) | Margine di luminosità | “headroom” only in Advanced and diagnostics |
 | Calibrate… · Run Self-Test… · Reset Display Colors… | Calibra… · Esegui autotest… · Ripristina colori schermo… |  |

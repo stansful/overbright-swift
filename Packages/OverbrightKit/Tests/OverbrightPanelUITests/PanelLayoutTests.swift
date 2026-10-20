@@ -21,7 +21,7 @@ import Testing
         "no-extra-range", "still-no-extra-range", "dimmed", "extra-brightness-off", "linked", "banner-battery",
         "banner-low-power", "banner-heat", "banner-paused", "banner-focus", "banner-schedule", "heat-cap",
         "conflict-booster", "conflict-color-app", "conflict-may-interfere", "flicker-stop", "foreign-table",
-        "full-screen-video", "full-screen", "paused-app", "oled-idle", "compatibility", "why-expanded",
+        "full-screen-video", "full-screen", "paused-app", "oled-idle", "why-expanded",
         "nothing-capable", "two-identical-externals", "long-russian-name", "fill-light-card", "calibration-tip",
         "four-displays", "menubar-hidden", "move-to-applications", "hud-boost", "hud-dim", "hud-standard", "hud-off",
         "hud-preparing", "hud-blocked", "hud-two-displays", "hud-automation-timer", "hud-automation-battery",

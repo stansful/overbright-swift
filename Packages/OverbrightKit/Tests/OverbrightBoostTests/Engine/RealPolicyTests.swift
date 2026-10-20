@@ -59,7 +59,7 @@ import Testing
         let h = EngineHarness(decide: BoostPolicy.reduce)
         let grant = 1600.0 / 600
         let potential = try #require(h.scripted.script(for: h.builtIn)?.potential)
-        let record = CalibrationRecord(outcome: .encoded, mechanism: .table, mergeFactor: 1.61, estimatedExponent: 2.4,
+        let record = CalibrationRecord(outcome: .encoded, mergeFactor: 1.61, estimatedExponent: 2.4,
                                        measuredSDRWhiteNits: 600, headroomAtTest: grant, potentialAtTest: potential,
                                        osBuild: h.fixture.machine.osBuild, measuredAt: Date())
         h.setPreferences { $0.calibration = record; $0.level = LevelPreset.max.position }

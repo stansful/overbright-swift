@@ -1,12 +1,12 @@
 // OverbrightBoostTests/Fakes/OrderCheckingTriggers.swift — a TriggerFactory that checks invariant 2 on every removal.
-// ARCHITECTURE.md §4.5 invariant 2 (un-scale before removing a trigger or overlay, in every path except display
-// removal). Wraps Core's FakeTriggerFactory; opens no window.
+// ARCHITECTURE.md §4.5 invariant 2 (un-scale before removing a trigger, in every path except display removal).
+// Wraps Core's FakeTriggerFactory; opens no window.
 import CoreGraphics
 import OverbrightCore
 @testable import OverbrightBoost
 
-/// Forwards to a `FakeTriggerFactory` and, whenever a trigger or overlay is removed, records a violation if its
-/// display's live table is still above its base at that moment.
+/// Forwards to a `FakeTriggerFactory` and, whenever a trigger is removed, records a violation if its display's live
+/// table is still above its base at that moment.
 @MainActor final class OrderCheckingTriggers: TriggerFactory {
     let inner: FakeTriggerFactory
     let gamma: FakeGammaPort
@@ -27,16 +27,11 @@ import OverbrightCore
 
     static func name(_ request: TriggerRequest) -> String { "\(request.strategy.rawValue)/\(request.pixel.rawValue)" }
 
-    func makeOverlay(on display: DisplayRef) throws -> any OverlayHandle {
-        CheckedOverlay(inner: try inner.makeOverlay(on: display), display: display, owner: self)
-    }
-
     var openWindowCount: Int { inner.openWindowCount }
 
     /// The removal check: the display's table must not be above its base.
-    fileprivate func removing(on display: DisplayRef, overlayFactor: Double? = nil, request: TriggerRequest? = nil) {
-        events.append("remove:\(request.map(Self.name) ?? "overlay")")
-        if let overlayFactor, overlayFactor > 1 + 1e-9 { violations.append("\(display.id): overlay \(overlayFactor)") }
+    fileprivate func removing(on display: DisplayRef, request: TriggerRequest) {
+        events.append("remove:\(Self.name(request))")
         guard let table = gamma.table(of: display.id), let base = gamma.base(of: display.id) else { return }
         let above = zip(table.channels, base.channels).contains { t, b in zip(t, b).contains { $0 > $1 + 1e-6 } }
         if above { violations.append("\(display.id): table above base") }
@@ -68,38 +63,6 @@ import OverbrightCore
     func requestHeadroom(_ headroom: Double) { inner.requestHeadroom(headroom) }
     func remove() {
         if !removed { owner?.removing(on: display, request: inner.request) }
-        removed = true
-        inner.remove()
-    }
-}
-
-@MainActor private final class CheckedOverlay: OverlayHandle {
-    let inner: any OverlayHandle
-    let display: DisplayRef
-    weak var owner: OrderCheckingTriggers?
-    private var factor = 1.0
-    private var removed = false
-
-    init(inner: any OverlayHandle, display: DisplayRef, owner: OrderCheckingTriggers) {
-        self.inner = inner; self.display = display; self.owner = owner
-    }
-
-    var isOccluded: Bool { inner.isOccluded }
-    var onOcclusionChange: ((Bool) -> Void)? {
-        get { inner.onOcclusionChange }
-        set { inner.onOcclusionChange = newValue }
-    }
-    var onScreenChange: ((CGDirectDisplayID?) -> Void)? {
-        get { inner.onScreenChange }
-        set { inner.onScreenChange = newValue }
-    }
-    func setFactor(_ factor: Double, headroomRequest: Double) throws {
-        try inner.setFactor(factor, headroomRequest: headroomRequest)
-        self.factor = factor
-    }
-    func represent() { inner.represent() }
-    func remove() {
-        if !removed { owner?.removing(on: display, overlayFactor: factor) }
         removed = true
         inner.remove()
     }

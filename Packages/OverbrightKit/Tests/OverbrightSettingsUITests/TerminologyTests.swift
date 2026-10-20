@@ -1,6 +1,6 @@
 // OverbrightSettingsUITests/TerminologyTests.swift — the words of Settings, calibration and the self-test against
 // DESIGN.md §16 (ARCHITECTURE.md §8.8): the vocabulary ("extra brightness", never "boost" or "EDR" in copy; "trigger"
-// and "headroom" only in Advanced, the self-test and diagnostics; "Compatibility mode", never "fallback"; "Max" never
+// and "headroom" only in Advanced, the self-test and diagnostics; never "fallback"; "Max" never
 // for a ceiling), title case for push buttons and sheet buttons, sentence case for row labels, a "<Surface>: <purpose>"
 // comment on every key, and the Russian glossary wherever Russian is translated (pending keys carry English until
 // WP15). Reads SettingsUI's catalog and the shell's Calibration table from the source tree.
@@ -91,7 +91,7 @@ private enum Catalog {
     @Test func theVocabularyIsDesigns() throws {
         let banned: [(Regex<Substring>, String)] = [
             (/(?i)\bboost/, "“extra brightness”, never “boost”"), (/(?i)\b(?:HDR|XDR) mode\b/, "no “HDR mode”"),
-            (/\bEDR\b/, "no “EDR” in copy"), (/(?i)\bgamma\b/, "no “gamma”"), (/(?i)\bfallback\b/, "“Compatibility mode”"),
+            (/\bEDR\b/, "no “EDR” in copy"), (/(?i)\bgamma\b/, "no “gamma”"), (/(?i)\bfallback\b/, "no “fallback”"),
             (/(?i)\bring light\b/, "“Fill Light”"), (/(?i)\bpanic\b/, "“Back to Standard”"),
             (/(?i)\breset brightness\b/, "“Back to Standard”"), (/(?i)\bnight mode\b/, "“Dim below minimum”"),
             (/(?i)\bdimmer\b/, "“Less Bright”"), (/(?i)\bmonitor\b/, "“display”"), (/(?i)\bdisabled\b/, "“Paused”"),
@@ -160,7 +160,7 @@ private enum Catalog {
     /// The Russian glossary (ARCHITECTURE.md §8.8), wherever Russian is translated.
     @Test func translatedRussianFollowsTheGlossary() throws {
         let glossary: [(english: Regex<Substring>, russian: String)] = [
-            (/\bCompatibility mode\b/, "режим совместимости"), (/\bFill Light\b/, "подсветк"), (/\bPeak\b/, "пик"),
+            (/\bFill Light\b/, "подсветк"), (/\bPeak\b/, "пик"),
             (/\bLess Bright\b/, "менее ярко"), (/(?i)\bextra brightness\b/, "дополнительн"),
         ]
         var problems: [String] = []

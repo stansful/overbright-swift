@@ -46,7 +46,4 @@ public enum LevelText {
 
     /// The dim percentage of `light` (2 … 99 % of Standard light).
     public static func dimPercent(_ light: Double) -> Int { min(max(Int((light * 100).rounded()), 2), 99) }
-
-    /// The named dim stops of the dim half, as light (50, 25, 10, 5 and 2 % of Standard, ARCHITECTURE.md §5.3).
-    public static let namedDimLights: [Double] = [0.5, 0.25, 0.1, 0.05, 0.02]
 }

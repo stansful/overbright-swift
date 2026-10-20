@@ -12,13 +12,13 @@ public nonisolated enum AutomationSettings {
     /// Minutes; nil = never. Allowed: 5, 10, 15, 20, 30, 45, 60, 90, 120.
     public static let autoOffMinutes = SettingKey(.automations, "autoOffMinutes", default: Int?.none)
     /// Full-screen window whose owner holds a display-sleep assertion (beta until H-P1).
-    public static let pauseForFullScreenVideo = SettingKey(.automations, "pauseForFullScreenVideo", default: true)
+    public static let pauseForFullScreenVideo = SettingKey(.automations, "pauseForFullScreenVideo", default: false)
     /// Any full-screen window, documents and games included.
     public static let pauseForAllFullScreen = SettingKey(.automations, "pauseForAllFullScreen", default: false)
     /// Pause while a game is frontmost.
     public static let pauseInGames = SettingKey(.automations, "pauseInGames", default: false)
     /// Master switch for the list below (the panel's Auto-pause chip toggles it without losing the list).
-    public static let pauseForListedApps = SettingKey(.automations, "pauseForListedApps", default: true)
+    public static let pauseForListedApps = SettingKey(.automations, "pauseForListedApps", default: false)
     /// The per-app pause list.
     public static let pausedApps = SettingKey(.automations, "pausedApps", default: PausedAppDefaults.rules)
     /// "Only allow extra brightness during set hours"; nil = always.

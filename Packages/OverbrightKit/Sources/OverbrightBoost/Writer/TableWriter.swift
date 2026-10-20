@@ -109,9 +109,9 @@ public nonisolated final class TableWriter: Sendable {
         return Outcome(appliedGain: cap.appliedGain, factor: factor, limit: cap.limit)
     }
 
-    /// The gain the interlock allows for `request` with `reading`, without writing (the Compatibility-mode overlay
-    /// applies the same ceiling to its factor, and the engine uses it to plan a ramp's end). Throws
-    /// `GammaError.writeRefused` for a missing, foreign or stale reading.
+    /// The gain the interlock allows for `request` with `reading`, without writing (the engine uses it to plan a ramp's
+    /// end and to follow new write parameters). Throws `GammaError.writeRefused` for a missing, foreign or stale
+    /// reading.
     public func allowedGain(for request: Request, on display: DisplayRef, reading: HeadroomReading?) throws -> Outcome {
         guard request.gain > 1 else {
             return Outcome(appliedGain: max(request.gain, 0), factor: request.gain, limit: nil)
@@ -154,11 +154,11 @@ public nonisolated final class TableWriter: Sendable {
         try writeScaled(baseline, factor: factor, to: display, epoch: epoch)
     }
 
-    /// The checks of a calibration factor without a write (the Compatibility-mode overlay calibrates with the same
-    /// bound): finite and positive, at most `maxFactor`, a reading of `display` at most 150 ms old, and above 1 only
-    /// with extra range granted (`minimumBoostHeadroom`) and at most the calibration ceiling of that reading's headroom.
-    public func checkCalibrationFactor(_ factor: Double, on display: DisplayRef, reading: HeadroomReading,
-                                       maxFactor: Double) throws {
+    /// The checks of a calibration factor before its write: finite and positive, at most `maxFactor`, a reading of
+    /// `display` at most 150 ms old, and above 1 only with extra range granted (`minimumBoostHeadroom`) and at most the
+    /// calibration ceiling of that reading's headroom.
+    private func checkCalibrationFactor(_ factor: Double, on display: DisplayRef, reading: HeadroomReading,
+                                        maxFactor: Double) throws {
         guard factor.isFinite, factor > 0, factor <= maxFactor + Self.neutralTolerance else {
             refuse("interlock.refusedCalibration", display: display, values: ["factor": factor, "maxFactor": maxFactor])
             throw GammaError.writeRefused

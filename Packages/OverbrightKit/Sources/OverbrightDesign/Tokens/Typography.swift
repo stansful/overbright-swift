@@ -14,7 +14,7 @@ public nonisolated enum OverbrightFont: String, CaseIterable, Sendable {
     case readout
     /// Status and footer chips: 11 medium.
     case chip
-    /// "Compatibility mode" under the readout: 11 regular, secondary.
+    /// Small secondary labels (the Fill Light card's Cool and Warm): 11 regular, secondary.
     case caption
     /// Banner sentences: 12 regular, as many lines as the sentence takes.
     case banner

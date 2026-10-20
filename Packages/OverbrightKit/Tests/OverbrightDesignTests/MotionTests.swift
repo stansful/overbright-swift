@@ -23,8 +23,7 @@ import Testing
         for kind in OverbrightMotion.Kind.allCases where kind != .press {
             #expect(kind.spec.bounce == 0, "\(kind)")
         }
-        #expect(OverbrightMotion.pressScale == 0.97 && OverbrightMotion.hudScale == 0.96)
-        #expect(OverbrightMotion.bannerSlide == 6 && OverbrightMotion.panelSettle == 4)
+        #expect(OverbrightMotion.pressScale == 0.97 && OverbrightMotion.bannerSlide == 6)
     }
 
     /// Reduce Motion: cross-fades only, at most 0.2 s, never a spring; the press and the snaps are immediate.
@@ -49,11 +48,5 @@ import Testing
         }
         #expect(!calm.animatesSymbols && lively.animatesSymbols)
         #expect(!calm.allowsScale && lively.allowsScale)
-    }
-
-    /// The HUD stays 1.5 s after the last change and 3 s for automation reasons (DESIGN.md §6).
-    @Test func hudTimings() {
-        #expect(OverbrightMotion.hudDwell == .milliseconds(1500))
-        #expect(OverbrightMotion.hudAutomationDwell == .seconds(3))
     }
 }

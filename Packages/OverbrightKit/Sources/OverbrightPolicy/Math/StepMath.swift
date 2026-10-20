@@ -7,8 +7,6 @@ import OverbrightCore
 public nonisolated enum StepMath {
     /// Arrow keys and scroll: 1/12 stop (≈ 6 % light).
     public static let arrowKeyStops = 1.0 / 12
-    /// Property-tested bound for every arrow, scroll and Brighter / Less Bright step (named-stop jumps excluded).
-    public static let maximumSingleStepStops = 0.5
     /// Signed stops of light relative to Standard at `level`.
     public static func stops(at level: LevelPosition, top: Double) -> Double {
         if level.isBoost { return log2(LevelMapping.requestedGain(for: level, top: top)) }

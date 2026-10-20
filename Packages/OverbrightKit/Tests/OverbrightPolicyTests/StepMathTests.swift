@@ -65,7 +65,7 @@ import Testing
             let delta = Bool.random(using: &random) ? size : -size
             let next = StepMath.step(from: level, by: delta, top: top)
             let moved = abs(StepMath.stops(at: next, top: top) - StepMath.stops(at: level, top: top))
-            #expect(moved <= StepMath.maximumSingleStepStops + 1e-9)
+            #expect(moved <= 0.5 + 1e-9)                                     // named-stop jumps excluded
             #expect(!(level.isBoost && next.isDim) && !(level.isDim && next.isBoost))
         }
         // A step that would cross Standard stops at Standard first; the next press continues past it.

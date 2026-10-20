@@ -1,6 +1,6 @@
-// OverbrightBoost/Engine/DisplayController+Arming.swift — starting an arm: idle headroom, the pre-held test, the
-// ladder's rungs (make before break) and the Compatibility-mode overlay. ARCHITECTURE.md §4.3 (idle → arming/gating,
-// arming rows), §4.7 (ladder, cache), §7.5, D6. MainActor.
+// OverbrightBoost/Engine/DisplayController+Arming.swift — starting an arm: idle headroom, the pre-held test and the
+// ladder's rungs (make before break). ARCHITECTURE.md §4.3 (idle → arming/gating, arming rows), §4.7 (ladder, cache),
+// D6. MainActor.
 import Foundation
 import OverbrightCore
 import OverbrightPolicy
@@ -20,7 +20,7 @@ extension DisplayController {
         generation += 1
         let stamp = generation
         armSlot.cancel(); burstSlot.cancel(); driftSlot.cancel(); lingerSlot.cancel()
-        if phase == .idle, mechanism == .table, !isScaledOrDimmed, !lastWriteIsScaled {
+        if phase == .idle, !isScaledOrDimmed, !lastWriteIsScaled {
             guard captureBaseline() else {
                 if !phase.isFailed { couldNotStart() }
                 return
@@ -56,11 +56,7 @@ extension DisplayController {
         belowNeededSince = nil
         deps.journal.record(armedPreHeld ? "gate.preHeld" : "arm.start", display: key,
                             values: ["h0": idleHeadroom], time: deps.time)
-        if mechanism == .overlay {
-            guard showOverlay(stamp) else { return }
-        } else {
-            guard await presentRung(from: 0, stamp) else { return }
-        }
+        guard await presentRung(from: 0, stamp) else { return }
         await gateLoop(stamp)
     }
 
@@ -145,48 +141,6 @@ extension DisplayController {
         previous?.remove()
         return true
     }
-
-    /// Compatibility mode: the overlay is its own EDR request (shown at factor 1 with `G ÷ 0.97`, §7.5).
-    func showOverlay(_ stamp: UInt64) -> Bool {
-        guard ensureOverlay(), let overlay else {
-            if isCurrent(stamp) { fail(.headroomNeverArrived) }
-            return false
-        }
-        do {
-            try overlay.setFactor(max(appliedFactor, 1), headroomRequest: overlayRequest)
-        } catch {
-            deps.journal.record("overlay.failed", display: key, time: deps.time, category: .trigger)
-            if isCurrent(stamp) { fail(.headroomNeverArrived) }
-            return false
-        }
-        currentRung = nil
-        restartGate()
-        return true
-    }
-
-    /// The display's Compatibility-mode overlay, made (with its occlusion and screen callbacks) when missing.
-    func ensureOverlay() -> Bool {
-        guard overlay == nil else { return true }
-        do {
-            let handle = try deps.triggers.makeOverlay(on: ref)
-            handle.onOcclusionChange = { [weak self, weak handle] occluded in
-                guard let self, let handle else { return }
-                self.windowOcclusionChanged(occluded, isCurrentWindow: handle === self.overlay)
-            }
-            handle.onScreenChange = { [weak self, weak handle] displayID in
-                guard let self, let handle else { return }
-                self.windowMoved(to: displayID, isCurrentWindow: handle === self.overlay)
-            }
-            overlay = handle
-            return true
-        } catch {
-            deps.journal.record("overlay.failed", display: key, time: deps.time, category: .trigger)
-            return false
-        }
-    }
-
-    /// The headroom the overlay asks for: the target gain ÷ 0.97 while boosting, else none.
-    var overlayRequest: Double { targetGain.map { $0 / FactorMath.headroomMargin } ?? 1 }
 
     /// A fresh gate on the current rung: the rung timeout restarts, samples are dropped.
     func restartGate() {

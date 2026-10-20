@@ -12,8 +12,7 @@ import os
 import sys
 
 LOW = "Paused because Low Power Mode is on."
-BOOSTER = ("Paused because ⁨QA booster⁩ also changes display brightness. Quit it, or use Compatibility "
-           "mode, which works alongside it.")
+BOOSTER = "Paused because ⁨QA booster⁩ also changes display brightness. Quit it to continue."
 ON = ["on", "low-power", "resumed", "locked", "unlocked", "booster", "clear"]
 
 
@@ -104,9 +103,9 @@ def check(directory, fixture):
                 problems.append(f"{label}: {role} state {state(display['phase'])} != {expected_state}")
     if dumps.get("off", {}).get("triggerWindows") != 0:
         problems.append("off: trigger windows left open")
-    # Compatibility mode is disabled (ARCHITECTURE.md §7.5, 2026-10-20): this Mac uses the color table like any other.
+    # A Mac that ignores color table changes still gets them (ARCHITECTURE.md §7.5): the color table is the only method.
     if fixture == "neo-ignores-writes" and not dumps.get("on", {}).get("gammaWrites"):
-        problems.append("on: no color table written (Compatibility mode is disabled)")
+        problems.append("on: no color table written")
     return problems
 
 

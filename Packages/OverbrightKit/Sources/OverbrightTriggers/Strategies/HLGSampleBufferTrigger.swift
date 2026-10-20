@@ -14,8 +14,6 @@ private let log = Log.logger(.trigger)
 final class HLGSampleBufferTrigger: TriggerHandle, RegisteredWindowOwner {
     /// The rung.
     let request: TriggerRequest
-    /// The level on screen, once presented.
-    private(set) var shownLevel: HLGStillAsset.Level?
     /// `remove()` ran.
     private(set) var isRemoved = false
     /// The layer, once presented.
@@ -104,7 +102,6 @@ final class HLGSampleBufferTrigger: TriggerHandle, RegisteredWindowOwner {
         }
         layer.sampleBufferRenderer.enqueue(frame)
         sample = frame
-        shownLevel = level
         return await waitUntilReady(layer, generation: current)
     }
 

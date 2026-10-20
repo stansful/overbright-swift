@@ -98,9 +98,6 @@ enum StatusMenuText {
     static func title(of action: BannerActionTitle) -> String {
         switch action {
         case .resume: resume
-        case .useCompatibilityMode:
-            String(localized: "Use Compatibility Mode", table: "StatusMenu", bundle: .module,
-                   comment: "Menu: banner action that switches to Compatibility mode next to another brightness app")
         case .continueAnyway:
             String(localized: "Continue Anyway", table: "StatusMenu", bundle: .module,
                    comment: "Menu: banner action that continues next to an app that changes display colors")
@@ -119,6 +116,5 @@ enum StatusMenuText {
     }
 
     /// The kinds of banner action titles.
-    enum BannerActionTitle { case resume, useCompatibilityMode, continueAnyway, openSystemSettings, tryAgain,
-                                  changePowerRules, changeHours }
+    enum BannerActionTitle { case resume, continueAnyway, openSystemSettings, tryAgain, changePowerRules, changeHours }
 }

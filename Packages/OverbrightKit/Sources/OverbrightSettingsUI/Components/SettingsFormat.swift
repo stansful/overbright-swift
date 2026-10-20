@@ -28,11 +28,4 @@ enum SettingsFormat {
     static func minutes(_ minutes: Int, locale: Locale = .autoupdatingCurrent) -> String {
         Duration.seconds(minutes * 60).formatted(.units(allowed: [.hours, .minutes], width: .abbreviated).locale(locale))
     }
-
-    /// "Brighter, ⌃⌥⌘=": a name and its detail as one VoiceOver label, through a localized pattern rather than
-    /// concatenation.
-    static func pair(_ name: String, _ detail: String) -> String {
-        String(localized: "\(name), \(detail)", bundle: .module,
-               comment: "VoiceOver: a name and its detail read as one label in Settings (\"Brighter, Off\")")
-    }
 }

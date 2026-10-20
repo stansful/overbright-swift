@@ -103,27 +103,16 @@ public nonisolated enum OverbrightMotion {
             }
         }
 
-        /// The animation of DESIGN.md §3.1.
-        public var animation: Animation { spec.animation }
-
         /// The animation to play: the Reduce Motion variant when `reduceMotion`, nil when nothing may move.
         public func animation(reduceMotion: Bool) -> Animation? {
             reduceMotion ? reducedSpec?.animation : spec.animation
         }
     }
 
-    /// The panel's downward settle while it appears.
-    public static let panelSettle: CGFloat = 4
-    /// The HUD's starting scale.
-    public static let hudScale: CGFloat = 0.96
     /// The banner's slide.
     public static let bannerSlide: CGFloat = 6
     /// The press scale of buttons and chips.
     public static let pressScale: CGFloat = 0.97
-    /// The HUD stays this long after the last change …
-    public static let hudDwell: Duration = .milliseconds(1500)
-    /// … and this long for automation reasons (DESIGN.md §6).
-    public static let hudAutomationDwell: Duration = .seconds(3)
 
     /// A banner's insertion and removal: a 6-pt slide plus fade, or a fade under Reduce Motion.
     public static func bannerTransition(reduceMotion: Bool) -> AnyTransition {
@@ -131,12 +120,5 @@ public nonisolated enum OverbrightMotion {
         let removal = Kind.bannerOut.animation(reduceMotion: reduceMotion)
         let move: AnyTransition = reduceMotion ? .opacity : .offset(y: -bannerSlide).combined(with: .opacity)
         return .asymmetric(insertion: move.animation(insertion), removal: move.animation(removal))
-    }
-
-    /// The HUD's content: scale 0.96 → 1 and fade in, fade out; a fade only under Reduce Motion.
-    public static func hudTransition(reduceMotion: Bool) -> AnyTransition {
-        let insertion: AnyTransition = reduceMotion ? .opacity : .scale(scale: hudScale).combined(with: .opacity)
-        return .asymmetric(insertion: insertion.animation(Kind.hudIn.animation(reduceMotion: reduceMotion)),
-                           removal: AnyTransition.opacity.animation(Kind.hudOut.animation(reduceMotion: reduceMotion)))
     }
 }

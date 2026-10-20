@@ -49,19 +49,6 @@ enum DisplaysRows {
                         keywords: [name, CapMode.safe.localizedName(), CapMode.peak.localizedName()])
     }
 
-    static func method(_ display: DisplayKey, name: String) -> SettingsRowInfo {
-        SettingsRowInfo(.displays, "\(display.rawValue).method",
-                        title: String(localized: "Method", bundle: .module,
-                                      comment: "Settings ▸ Displays: how Overbright brightens the display, Automatic, Color table or Compatibility mode (pop-up)"),
-                        keywords: [name] + methodKeywords)
-    }
-
-    /// The names the Method row is found by: its methods, without Compatibility mode while it is unavailable.
-    private static var methodKeywords: [String] {
-        (MechanismPreference.overlayIsAvailable ? [Mechanism.overlay.localizedName()] : [])
-            + [Mechanism.table.localizedName()]
-    }
-
     static func calibration(_ display: DisplayKey, name: String) -> SettingsRowInfo {
         SettingsRowInfo(.displays, "\(display.rawValue).calibration",
                         title: String(localized: "Calibration", bundle: .module,

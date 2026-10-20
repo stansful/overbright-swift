@@ -86,7 +86,7 @@ or the Apple pattern “Sil: “%@””. Dotted/dotless i: İ/i, I/ı. Turkish 
 | Back to Standard (the instant off) | Standart’a Dön | not “panic”, not “reset brightness” |
 | Indoor · Bright room · Sunlight · Max (presets) | İç mekân · Aydınlık oda · Güneş ışığı · Maksimum | “Max” is a preset only |
 | Safe · Peak (ceilings) | Güvenli · Tepe | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | Uyumluluk modu · Renk tablosu | never “fallback” or “overlay” |
+| color table (in sentences: “macOS ignores color table changes”) | renk tablosu | never “gamma”; no “fallback” or “overlay” in copy |
 | Fill Light (the edge light for video calls) | Yüz Işığı | never “ring light” |
 | extra range (headroom, in user copy) | Parlaklık payı | “headroom” only in Advanced and diagnostics |
 | Calibrate… · Run Self-Test… · Reset Display Colors… | Kalibre Et… · Öz Testi Çalıştır… · Ekran Renklerini Sıfırla… |  |

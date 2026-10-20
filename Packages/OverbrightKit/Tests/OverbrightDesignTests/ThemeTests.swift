@@ -66,7 +66,6 @@ import Testing
         #expect(StrokeWidth.detent == CGSize(width: 1.5, height: 8))
         #expect(StrokeWidth.presetTick == CGSize(width: 1, height: 5))
         #expect(StrokeWidth.allowedMarker == CGSize(width: 2, height: 24))
-        #expect(StrokeWidth.hairline(scale: 2) == 0.5)
     }
 
     /// The hatch: parallel 45° lines every 3 pt.

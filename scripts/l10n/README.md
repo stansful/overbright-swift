@@ -96,8 +96,8 @@ a picker segment, a Control Center title, a table column header. The column budg
   shows them in your language — take them from `apple-terms.py` (`--details` shows where each one comes from and the
   alternatives macOS also uses). People look for these words on screen (German “Hochkontrastbild” for High Dynamic
   Range).
-- Overbright's own names (Standard, extra brightness, Dim below minimum, Safe, Peak, Compatibility mode, Fill Light,
-  Back to Standard, the presets Indoor · Bright room · Sunlight · Max) get one fixed translation each, used everywhere
+- Overbright's own names (Standard, extra brightness, Dim below minimum, Safe, Peak, Fill Light, Back to Standard,
+  the presets Indoor · Bright room · Sunlight · Max) get one fixed translation each, used everywhere
   (the Russian glossary in docs/ARCHITECTURE.md §8.8 shows how the reviewed translation does it).
 - Sentence case everywhere, except where the language capitalizes otherwise (German nouns) and where English uses
   title case for standard macOS menus and buttons — follow your language's macOS convention there.

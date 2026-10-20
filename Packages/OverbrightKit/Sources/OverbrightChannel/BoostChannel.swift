@@ -84,9 +84,6 @@ public enum BoostChannel {
         return unpack(word)
     }
 
-    /// Writes the snapshot to the app's own preferences domain (app only).
-    public static func writeSnapshot(_ state: State) { writeSnapshot(state, to: PreferencesChannelStore.app) }
-
     /// Writes the snapshot (the packed word, as decimal text) to `store`.
     public static func writeSnapshot(_ state: State, to store: any ChannelStore) {
         store.set(String(pack(state)), forKey: snapshotKey)

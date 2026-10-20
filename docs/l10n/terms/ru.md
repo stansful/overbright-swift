@@ -75,7 +75,7 @@ confirmed in WP15: the table below shows every name as the catalogs ship it.
 | Back to Standard (the instant off) | Вернуться к стандарту | not “panic”, not “reset brightness” |
 | Indoor · Bright room · Sunlight · Max (presets) | В комнате · Яркий свет · На солнце · Максимум | “Max” is a preset only |
 | Safe · Peak (ceilings) | Безопасно · Пик | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | Режим совместимости · Цветовая таблица | never “fallback” or “overlay” |
+| color table (in sentences: “macOS ignores color table changes”) | цветовая таблица | never “gamma”; no “fallback” or “overlay” in copy |
 | Fill Light (the edge light for video calls) | Подсветка лица | never “ring light” |
 | extra range (headroom, in user copy) | Запас яркости | “headroom” only in Advanced and diagnostics |
 | Calibrate… · Run Self-Test… · Reset Display Colors… | Откалибровать… · Запустить самопроверку… · Сбросить цвета дисплеев… |  |

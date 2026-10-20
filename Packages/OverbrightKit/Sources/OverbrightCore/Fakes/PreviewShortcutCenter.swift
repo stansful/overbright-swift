@@ -1,8 +1,9 @@
 // OverbrightCore/Fakes/PreviewShortcutCenter.swift — an in-memory ShortcutCenter. ARCHITECTURE.md §3.9, D17.
 import Observation
 
-/// A `ShortcutCenter` holding the catalog defaults in memory. `displayString` renders key caps with a US layout
-/// (the real center uses the current keyboard layout).
+/// A `ShortcutCenter` holding bindings in memory (the catalog defaults, none since 2026-10-20, unless a test or preview
+/// passes its own). `displayString` renders key caps with a US layout (the real center uses the current keyboard
+/// layout).
 @MainActor @Observable public final class PreviewShortcutCenter: ShortcutCenter {
     /// The bindings (nil = cleared).
     public private(set) var bindings: [ShortcutID: KeyCombo?]
@@ -11,9 +12,15 @@ import Observation
     /// The recorder is listening.
     public private(set) var isRecording = false
 
-    /// The catalog defaults (`ShortcutCatalog.all`).
+    /// The catalog defaults (`ShortcutCatalog.all`: every shortcut unbound, D17).
     public init() {
         bindings = Dictionary(uniqueKeysWithValues: ShortcutCatalog.all.map { ($0.id, $0.defaultCombo) })
+    }
+
+    /// `bindings` over the catalog defaults (a shortcut without an entry keeps its default).
+    public convenience init(bindings: [ShortcutID: KeyCombo?]) {
+        self.init()
+        self.bindings.merge(bindings) { _, new in new }
     }
 
     /// The state of one shortcut.

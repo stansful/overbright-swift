@@ -28,8 +28,7 @@ import Observation
     public convenience init(fixture: DisplayFixture) {
         let displays = fixture.displays.map { display in
             DisplayStatus(key: display.key, name: display.facts.name, phase: .idle, decision: nil, appliedGain: 1,
-                          appliedFactor: 1, mechanism: fixture.tableWritesIgnored ? .overlay : .table, strategy: nil,
-                          lastReading: nil, sdrWhite: nil)
+                          appliedFactor: 1, strategy: nil, lastReading: nil, sdrWhite: nil)
         }
         self.init(status: BoostStatus(isOn: false, isReady: true, pausedUntil: nil, autoOffAt: nil, displays: displays,
                                       banner: nil, symbol: .off),

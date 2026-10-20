@@ -13,9 +13,6 @@ enum CalibrationCopy {
         String(localized: "Calibrate \(display.overbrightIsolated)", bundle: .module,
                comment: "Calibration: heading of the window; the argument is the display’s name")
     }
-    static var checklistHeading: String {
-        String(localized: "Before you start", bundle: .module, comment: "Calibration: heading of the checklist")
-    }
     static var comparisonHeading: String {
         String(localized: "Does it get brighter?", bundle: .module, comment: "Calibration: heading of step 1")
     }
@@ -96,16 +93,6 @@ enum CalibrationCopy {
     static var showAgain: String {
         String(localized: "Show Again", bundle: .module, comment: "Calibration: shows the comparison or the brighter squares again (title case)")
     }
-    static var notBrighterQuestion: String {
-        String(localized: "macOS seems to ignore color table changes on this Mac. Use Compatibility mode on this display?",
-               bundle: .module, comment: "Calibration: question after the screen did not get brighter")
-    }
-    static var useCompatibilityMode: String {
-        String(localized: "Use Compatibility Mode", bundle: .module, comment: "Calibration: switches the display to Compatibility mode and repeats step 1 (title case)")
-    }
-    static var keepColorTable: String {
-        String(localized: "Keep Color Table", bundle: .module, comment: "Calibration: keeps the color table method (title case)")
-    }
 
     // MARK: Step 2
 
@@ -160,8 +147,8 @@ enum CalibrationCopy {
             String(localized: "The result wasn’t clear, so Overbright keeps its safe default. You can try again.", bundle: .module,
                    comment: "Calibration: result when nothing could be decided")
         case .keptColorTable:
-            String(localized: "Overbright keeps the color table on this display. If the screen doesn’t get brighter, choose Compatibility mode in Settings ▸ Displays.",
-                   bundle: .module, comment: "Calibration: result after the screen did not get brighter and the color table was kept")
+            String(localized: "The screen didn’t get brighter, so Overbright keeps its safe default. Run Self-Test… in Settings ▸ Advanced shows what macOS reports.",
+                   bundle: .module, comment: "Calibration: result after the screen did not get brighter (“Run Self-Test…” is the button in Settings ▸ Advanced)")
         }
     }
     static var turnBackOn: String {

@@ -78,7 +78,7 @@ many (millions; same wording as other), other.
 | Back to Standard (the instant off) | Revenir au standard | not “panic”, not “reset brightness” |
 | Indoor · Bright room · Sunlight · Max (presets) | Intérieur · Pièce claire · Plein soleil · Maximum | “Max” is a preset only |
 | Safe · Peak (ceilings) | Sécurité · Pic | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | Mode de compatibilité · Table des couleurs | never “fallback” or “overlay” |
+| color table (in sentences: “macOS ignores color table changes”) | table des couleurs | never “gamma”; no “fallback” or “overlay” in copy |
 | Fill Light (the edge light for video calls) | Lumière d’appoint | never “ring light” |
 | extra range (headroom, in user copy) | Marge de luminosité | “headroom” only in Advanced and diagnostics |
 | Calibrate… · Run Self-Test… · Reset Display Colors… | Calibrer… · Lancer l’autotest… · Réinitialiser les couleurs des écrans… |  |

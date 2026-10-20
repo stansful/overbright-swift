@@ -122,11 +122,12 @@ import Testing
         let services = TestServices.classified(.builtinXDRLidOpen)
         let ids = Set(DisplaysPane.rows(services: services).map(\.id))
         let key = builtIn.rawValue
-        for field in ["extraBrightness", "level", "limit", "method", "calibration", "autoBrightness"] {
+        for field in ["extraBrightness", "level", "limit", "calibration", "autoBrightness"] {
             #expect(ids.contains("displays.\(key).\(field)"), "\(field)")
         }
         #expect(ids.contains("displays.\(key)"))                                   // the section: its verdict
         #expect(!ids.contains("displays.\(key).type"))                             // built-in: no display type
+        #expect(!ids.contains("displays.\(key).method"))                           // one method: no Method row
         #expect(ids.isSuperset(of: ["displays.linkLevels", "displays.nearFullBrightness"]))
     }
 
@@ -151,12 +152,12 @@ import Testing
         #expect(VerdictText.make(model.verdict, advisories: [], lastGrant: nil).badge == VerdictText.make(.virtualDisplay, advisories: [], lastGrant: nil).badge)
     }
 
-    /// An SDR external can dim: the level and method rows show, the boost rows do not.
+    /// An SDR external can dim: the level row shows, the boost rows do not.
     @Test func anSDRExternalCanOnlyDim() throws {
         let services = TestServices.classified(.mpg322uxHDROff)
         let key = oled.rawValue
         let ids = Set(DisplaysPane.rows(services: services).map(\.id))
-        #expect(ids.isSuperset(of: ["displays.\(key).level", "displays.\(key).method", "displays.\(key).type"]))
+        #expect(ids.isSuperset(of: ["displays.\(key).level", "displays.\(key).type"]))
         #expect(ids.isDisjoint(with: ["displays.\(key).extraBrightness", "displays.\(key).limit", "displays.\(key).calibration"]))
         let model = try #require(DisplaysPane.models(services: services).first)
         #expect(model.verdict == .turnOnHDR)
@@ -303,43 +304,19 @@ import Testing
         #expect(xdr.spokenValue(at: max) == ValueText.forLevel(max, top: xdr.top, presets: xdr.presets, isEstimate: xdr.readout.isEstimate).accessibilityText)
     }
 
-    /// A calibration record applies while the build and the method match and the potential is within 5 %; without a
-    /// reading it is not called stale for the potential alone.
+    /// A calibration record applies while the build matches and the potential is within 5 %; without a reading it is
+    /// not called stale for the potential alone.
     @Test func calibrationValidity() {
         let machine = DisplayFixture.ownerMachine
         let record = FakeCalibrationSession.record(.encoded)
-        #expect(DisplaySectionModel.isValid(record, mechanism: .table, machine: machine, potential: 16))
-        #expect(DisplaySectionModel.isValid(record, mechanism: .table, machine: machine, potential: 16.7))
-        #expect(!DisplaySectionModel.isValid(record, mechanism: .table, machine: machine, potential: 17))
-        #expect(DisplaySectionModel.isValid(record, mechanism: .table, machine: machine, potential: nil))
-        #expect(!DisplaySectionModel.isValid(record, mechanism: .overlay, machine: machine, potential: 16))
+        #expect(DisplaySectionModel.isValid(record, machine: machine, potential: 16))
+        #expect(DisplaySectionModel.isValid(record, machine: machine, potential: 16.7))
+        #expect(!DisplaySectionModel.isValid(record, machine: machine, potential: 17))
+        #expect(DisplaySectionModel.isValid(record, machine: machine, potential: nil))
         var updated = machine
         updated.osBuild = "27A1"
-        #expect(!DisplaySectionModel.isValid(record, mechanism: .table, machine: updated, potential: 16))
-        #expect(!DisplaySectionModel.isValid(nil, mechanism: .table, machine: machine, potential: 16))
-    }
-
-    /// Compatibility mode is unavailable (`MechanismPreference.overlayIsAvailable`, ARCHITECTURE.md §7.5): Method offers
-    /// Automatic and Color table only; a Compatibility-mode choice stored earlier shows as Color table, the method Policy
-    /// uses for it, without the overlay's footnote; and search no longer finds the row by the overlay's name.
-    @Test func settingsOffersNoCompatibilityMode() {
-        #expect(!MechanismPreference.overlayIsAvailable)
-        #expect(MechanismPreference.selectableCases == [.automatic, .table])
-        #expect(DisplayMethodText.shown(.overlay) == .table)
-        #expect(DisplayMethodText.shown(.automatic) == .automatic && DisplayMethodText.shown(.table) == .table)
-        #expect(DisplayMethodText.footnote(preference: DisplayMethodText.shown(.overlay), effective: .table) == nil)
-        let method = DisplaysRows.method(builtIn, name: "Built-in")
-        #expect(!method.keywords.contains(Mechanism.overlay.localizedName()))
-        #expect(method.keywords.contains(Mechanism.table.localizedName()))
-    }
-
-    @Test func theMethodFootnoteSaysWhatAutomaticChose() {
-        let automatic = DisplayMethodText.footnote(preference: .automatic, effective: .table)
-        let advised = DisplayMethodText.footnote(preference: .automatic, effective: .overlay)
-        let overlay = DisplayMethodText.footnote(preference: .overlay, effective: .overlay)
-        #expect(automatic != nil && advised != nil && overlay != nil)
-        #expect(Set([automatic, advised, overlay]).count == 3)
-        #expect(DisplayMethodText.footnote(preference: .table, effective: .table) == nil)
+        #expect(!DisplaySectionModel.isValid(record, machine: updated, potential: 16))
+        #expect(!DisplaySectionModel.isValid(nil, machine: machine, potential: 16))
     }
 
     /// Editing a display remembers its name (for "Not connected") and an entry back at every default is removed.

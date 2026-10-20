@@ -34,7 +34,7 @@ import Testing
             icon: StatusIconPresence(services: services, statusItem: statusItem), panel: PanelController(services: services),
             settings: SettingsWindowController(services: services), welcome: WelcomeWindowController(services: services),
             help: HelpWindowController(services: services), calibration: CalibrationWindowController(services: services),
-            selfTest: SelfTestSheetPresenter(services: services), diagnostics: { nil }))
+            selfTest: SelfTestSheetPresenter(), diagnostics: { nil }))
         _ = HUDController(services: services)
         _ = LowLevelPromptController(services: services)
         _ = DockMenuController(services: services)

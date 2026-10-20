@@ -2,8 +2,10 @@
 // (DESIGN.md §5.1, §5.12, §2.4): ⌘W closes, ⌘, opens Settings, ⌘Q quits (nothing else is taken); the container is glass
 // on macOS 26+, the popover material on 14/15, opaque under Reduce Transparency and Increase Contrast; the panel grows
 // to 70 % of the screen's visible height and no further. A closed panel keeps its window but no SwiftUI content
-// (DESIGN.md §17: no work while closed), and a reopen during the close's fade keeps its new content. Nothing is
-// ordered in: `preparedPanel(takingFocus:)` builds what `show` brings forward, and the close's two halves run by hand.
+// (DESIGN.md §17: no work while closed), and a reopen during the close's fade keeps its new content. A click on the
+// icon that an outside-click monitor saw first closes the panel and leaves it closed (DESIGN.md §4.2). Nothing is
+// ordered in: `preparedPanel(takingFocus:)` builds what `show` brings forward, the close's two halves run by hand, and
+// a press is decided by `press()` on a manual clock.
 import AppKit
 import OverbrightCore
 import OverbrightPanelUI
@@ -83,6 +85,41 @@ import Testing
         #expect(reopened === panel && controller.hostedContent != nil && panel.contentView != nil)
         controller.finishClosing()                                            // no close pending: nothing happens
         #expect(controller.hostedContent != nil)
+    }
+
+    /// The owner's report (2026-10-20): a second click on the icon reopened the panel. The click reached the
+    /// outside-click monitor first, which closed the panel, and then the status item's action, which found it closed;
+    /// within 0.4 s of an outside-click close that action is the same click and leaves the panel closed, once.
+    @Test func aClickOnTheIconRightAfterAnOutsideCloseLeavesThePanelClosed() {
+        var clock: CFTimeInterval = 100
+        let controller = PanelController(services: .preview())
+        controller.now = { clock }
+        #expect(!controller.isShown && controller.press() == .open)          // a first click opens it
+        controller.recordClose(.outsideClick)                               // the monitor saw the second click first
+        clock += 0.05                                                       // the item's action, the same click
+        #expect(controller.press() == .staysClosed)
+        #expect(controller.press() == .open)                                // the next click opens it again
+        controller.recordClose(.outsideClick)
+        clock += PanelController.toggleAfterOutsideCloseWindow - 0.001
+        #expect(controller.press() == .staysClosed)
+    }
+
+    /// A click on the icon 0.4 s or more after an outside-click close, or after any other close, opens the panel.
+    @Test func aClickOnTheIconAfterTheWindowReopensThePanel() {
+        var clock: CFTimeInterval = 100
+        let controller = PanelController(services: .preview())
+        controller.now = { clock }
+        controller.recordClose(.outsideClick)                               // a click in another app
+        clock += PanelController.toggleAfterOutsideCloseWindow
+        #expect(controller.press() == .open)
+        controller.recordClose(.outsideClick)
+        clock += 2
+        #expect(controller.press() == .open)
+        for cause: PanelController.CloseCause in [.toggle, .escape, .command, .action, .request] {
+            controller.recordClose(cause)
+            clock += 0.05
+            #expect(controller.press() == .open, "\(cause)")
+        }
     }
 
     @Test func aReopenDuringTheFadeKeepsItsNewContent() {

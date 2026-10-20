@@ -2,9 +2,10 @@
 // §16; ARCHITECTURE.md §8.8 width rule `chip`), and when a long translation would not fit, the chips drop to glyph +
 // value one at a time, the battery last, and the row still fits. Measured on the footer row the panel draws (its glyphs as wide as they draw:
 // `battery.25percent` is 21 pt at 12 pt, not 12), for the widest settings (pause below a level, every rule off, a running
-// 1 h 30 min timer), in English and the pseudo-long locale, and in every language Overbright ships (WP15), where the
-// default row must show its words in full. Also: what each chip says for its settings, what VoiceOver hears (the
-// chip's name as the label, its state as the value, in every row style), and that its menu edits exactly that setting.
+// 1 h 30 min timer), in English and the pseudo-long locale, and in every language Overbright ships (WP15), where the row
+// with Auto-pause on must show its words in full and the default row (every Auto-pause rule off since 2026-10-20)
+// keeps the battery's words. Also: what each chip says for its settings, what VoiceOver hears (the chip's name as the
+// label, its state as the value, in every row style), and that its menu edits exactly that setting.
 import AppKit
 import Foundation
 import OverbrightCore
@@ -43,25 +44,51 @@ import Testing
         FitMeasure.idealWidth(PanelFooter(chips: chips, focus: nil).row(style))
     }
 
-    /// The default settings: "Below 20%", "Auto-pause", "No timer".
+    /// The default settings: "Below 20%", "Auto-pause · Off" (every rule ships off, 2026-10-20), "No timer".
     private func defaultChips() -> [FooterChip] {
         FooterChips.chips(settings: SettingsStore(defaults: InMemoryDefaults()), hasBattery: true, autoOffAt: nil, now: now,
                           editApps: {})
     }
 
-    @Test func theDefaultRowFitsInFullInEnglish() {
-        let width = rowWidth(defaultChips(), .full)
-        #expect(width > 0 && width <= PanelLayout.footerWidth, "the default footer row is \(width) pt")
-        // "20 %" alone would read as a battery level: the default row never drops to glyph + value in English.
-        let footer = PanelFooter(chips: defaultChips(), focus: nil)
+    /// The default settings with Pause for full-screen video on: "Below 20%", "Auto-pause", "No timer".
+    private func autoPauseOnChips() -> [FooterChip] {
+        let settings = SettingsStore(defaults: InMemoryDefaults())
+        settings[AutomationSettings.pauseForFullScreenVideo] = true
+        return FooterChips.chips(settings: settings, hasBattery: true, autoOffAt: nil, now: now, editApps: {})
+    }
+
+    /// With Auto-pause on the row shows its words in full in English; "20 %" alone would read as a battery level.
+    @Test func theAutoPauseOnRowFitsInFullInEnglish() {
+        let width = rowWidth(autoPauseOnChips(), .full)
+        #expect(width > 0 && width <= PanelLayout.footerWidth, "the footer row is \(width) pt")
+        let footer = PanelFooter(chips: autoPauseOnChips(), focus: nil)
         let drawn = FitMeasure.width(footer, offered: PanelLayout.footerWidth)
         #expect(abs(drawn - width) < 1, "drawn \(drawn) pt, the full row \(width) pt")
+    }
+
+    /// The default row ("Auto-pause · Off") shows its words in full where they fit, else the timer drops to its glyph
+    /// first (English: "No timer" goes, the full row is wider than 304 pt); the battery and Auto-pause keep their
+    /// words. Checked on the chips as drawn.
+    @Test func theDefaultRowKeepsTheBatteryAndAutoPauseInWordsInEnglish() throws {
+        let chips = defaultChips()
+        let footer = PanelFooter(chips: chips, focus: nil)
+        let full = rowWidth(chips, .full)
+        let timerDropped = FitMeasure.idealWidth(footer.row(compacting: [.timer]))
+        #expect(timerDropped <= PanelLayout.footerWidth, "with the timer as its glyph the row is \(timerDropped) pt")
+        func chipWidth(_ model: GuardChipModel) -> CGFloat {
+            max(FitMeasure.idealWidth(GuardChip(model, menu: [])), HitTarget.footerChipWidth)
+        }
+        let timer = full <= PanelLayout.footerWidth ? chips[2].model : chips[2].compact
+        let expected = [chipWidth(chips[0].model), chipWidth(chips[1].model), chipWidth(timer)]
+        let drawn = try drawnChipWidths(footer)
+        #expect(drawn.count == 3 && zip(drawn, expected).allSatisfy { abs($0 - $1) < 2 },
+                "drawn chips \(drawn) pt, expected \(expected) pt (the full row \(full) pt)")
     }
 
     /// Design's row budget counts the glyphs as they draw, and agrees with the rendered row (C-PANEL-3).
     @Test func theRowBudgetMeasuresTheGlyphs() {
         #expect(GuardChip.glyphWidth(.battery25Percent) > GlyphSize.chip + 4)      // 21 pt, not 12
-        for chips in [defaultChips(), widestChips()] {
+        for chips in [defaultChips(), autoPauseOnChips(), widestChips()] {
             let budget = GuardChip.rowWidth(of: chips.map(\.model), compact: false)
             let drawn = rowWidth(chips, .full)
             #expect(abs(budget - drawn) <= 2, "budget \(budget) pt, drawn \(drawn) pt")
@@ -69,7 +96,7 @@ import Testing
     }
 
     @Test func everyRowFitsInFullOrAsGlyphAndValue() {
-        let rows = ["default": defaultChips(), "widest": widestChips(),
+        let rows = ["default": defaultChips(), "auto-pause on": autoPauseOnChips(), "widest": widestChips(),
                     "default pseudo-long": lengthened(defaultChips()), "widest pseudo-long": lengthened(widestChips())]
         for (name, chips) in rows {
             let full = rowWidth(chips, .full)
@@ -149,18 +176,19 @@ import Testing
 
     // MARK: Every language (WP15)
 
-    /// The footer rows in `code`'s words: the default settings, each other battery rule beside the default chips, and
-    /// the widest settings ("Below 20 %", "Auto-pause · Off", "Off in 1 h 30 min").
+    /// The footer rows in `code`'s words: the default settings ("Below 20 %", "Auto-pause · Off", "No timer"), the same
+    /// with Auto-pause on, each other battery rule beside the Auto-pause-on chips, and the widest settings ("Below
+    /// 20 %", "Auto-pause · Off", "Off in 1 h 30 min").
     private func rows(in code: String) throws -> [(name: String, chips: [FooterChip])] {
         let words = try #require(PanelWords(code), "\(code): no PanelUI table")
         let percent = words.percent(20)
         let duration = words.duration(minutes: 90)
-        func localized(_ chips: [FooterChip], battery: String = words.below(percent),
+        func localized(_ chips: [FooterChip], battery: String = words.below(percent), autoPauseOn: Bool = false,
                        widest: Bool = false) -> [FooterChip] {
             chips.map { chip in
                 let (text, compact): (String, String) = switch chip.kind {
                 case .battery: (battery, battery == words.below(percent) ? percent : "")
-                case .autoPause: widest ? (words.autoPauseOff, words.off) : (words.autoPause, "")
+                case .autoPause: autoPauseOn ? (words.autoPause, "") : (words.autoPauseOff, words.off)
                 case .timer: widest ? (words.offIn(duration), duration) : (words.noTimer, "")
                 }
                 let model = GuardChipModel(symbol: chip.model.symbol, text: text, accessibilityLabel: text)
@@ -169,19 +197,26 @@ import Testing
             }
         }
         return [("default", localized(defaultChips())),
-                ("adapter only", localized(defaultChips(), battery: words.adapterOnly)),
-                ("any charge", localized(defaultChips(), battery: words.anyCharge)),
+                ("auto-pause on", localized(autoPauseOnChips(), autoPauseOn: true)),
+                ("adapter only", localized(autoPauseOnChips(), battery: words.adapterOnly, autoPauseOn: true)),
+                ("any charge", localized(autoPauseOnChips(), battery: words.anyCharge, autoPauseOn: true)),
                 ("widest", localized(widestChips(), widest: true))]
     }
 
-    /// The default row shows its words in every language; every other row shows them or drops to glyph + value, and the
-    /// footer as drawn never leaves its row.
+    /// The row with Auto-pause on shows its words in every language, and the default row keeps the battery's words (at
+    /// most the timer and Auto-pause drop to glyph + value); every other row shows them or drops to glyph + value, and
+    /// the footer as drawn never leaves its row.
     @Test(arguments: ShippedLanguages.codes)
     func everyRowFitsInEveryLanguage(_ code: String) throws {
         let rows = try rows(in: code)
+        let onRow = try #require(rows.first { $0.name == "auto-pause on" })
+        let width = rowWidth(onRow.chips, .full)
+        #expect(width > 0 && width <= PanelLayout.footerWidth, "\(code): the Auto-pause-on footer row is \(width) pt")
         let defaultRow = try #require(rows.first { $0.name == "default" })
-        let width = rowWidth(defaultRow.chips, .full)
-        #expect(width > 0 && width <= PanelLayout.footerWidth, "\(code): the default footer row is \(width) pt")
+        let batteryInWords = FitMeasure.idealWidth(PanelFooter(chips: defaultRow.chips, focus: nil)
+            .row(compacting: [.timer, .autoPause]))
+        #expect(batteryInWords <= PanelLayout.footerWidth,
+                "\(code): the default row with the battery in words is \(batteryInWords) pt")
         for (name, chips) in rows {
             let full = rowWidth(chips, .full)
             let compact = rowWidth(chips, .compact)
@@ -210,10 +245,11 @@ import Testing
         #expect(adapterOnly != below && !adapterOnly.contains(percent))
         settings[AutomationSettings.batteryGuard] = .off
         #expect(try #require(texts()[.battery]) != adapterOnly)
-        let autoPauseOn = try #require(texts()[.autoPause])
-        settings[AutomationSettings.pauseForFullScreenVideo] = false
+        let autoPauseOff = try #require(texts()[.autoPause])                   // every rule ships off (2026-10-20)
+        settings[AutomationSettings.pauseForListedApps] = true
+        #expect(try #require(texts()[.autoPause]) != autoPauseOff)
         settings[AutomationSettings.pauseForListedApps] = false
-        #expect(try #require(texts()[.autoPause]) != autoPauseOn)
+        #expect(try #require(texts()[.autoPause]) == autoPauseOff)
         let noTimer = try #require(texts()[.timer])
         settings[AutomationSettings.autoOffMinutes] = 30
         let set = try #require(texts()[.timer])
@@ -222,8 +258,8 @@ import Testing
         #expect(running.contains("23"))
     }
 
-    /// VoiceOver hears each chip's name, then its state, once: "Battery limit, Below 20 %", "Auto-pause, On",
-    /// "Timer, No timer"; the same in the compact and glyph-only rows (C-PANEL-17).
+    /// VoiceOver hears each chip's name, then its state, once: "Battery limit, Below 20 %", "Auto-pause, Off" (every
+    /// rule ships off), "Timer, No timer"; the same in the compact and glyph-only rows (C-PANEL-17).
     @Test func voiceOverHearsTheNameThenTheState() throws {
         let settings = SettingsStore(defaults: InMemoryDefaults())
         settings[AutomationSettings.autoOffMinutes] = 30
@@ -232,7 +268,7 @@ import Testing
         #expect(names == [FooterText.batteryLimit, FooterText.autoPause, FooterText.timerLabel])
         let battery = try #require(chips.first)
         #expect(battery.model.accessibilityValue == battery.model.text)            // "Below 20 %", not twice
-        #expect(chips[1].model.accessibilityValue == FooterText.on)
+        #expect(chips[1].model.accessibilityValue == FooterText.off)
         #expect(chips[2].model.accessibilityValue == chips[2].model.text)          // "Off after 30 min", in full
         for chip in chips {
             for style in PanelFooter.Style.allCases {

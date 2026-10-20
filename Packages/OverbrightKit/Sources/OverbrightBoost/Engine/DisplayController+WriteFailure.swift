@@ -1,5 +1,5 @@
-// OverbrightBoost/Engine/DisplayController+WriteFailure.swift — what a controller does when WindowServer (or the
-// overlay) refuses a write: land on the baseline, keep the windows until it has, retry within the repair budget.
+// OverbrightBoost/Engine/DisplayController+WriteFailure.swift — what a controller does when WindowServer refuses a
+// write: land on the baseline, keep the windows until it has, retry within the repair budget.
 // ARCHITECTURE.md §4.5 invariants 2 (un-scale before removing a window), 4 (off means the baseline and no work) and 8
 // (flicker safety), §9.1 ("every sequence ending in off leaves every table equal to its baseline"), D9. MainActor.
 import Foundation
@@ -17,7 +17,7 @@ extension DisplayController {
         var origin: Origin
         /// The phase once the table is at `gain` (nil keeps the phase: a dim factor returning to 1 while arming).
         var finalPhase: EnginePhase?
-        /// Remove the trigger and overlay once the table is at or below the baseline.
+        /// Remove the trigger once the table is at or below the baseline.
         var removesWindowsAtEnd: Bool
         /// False for Back to Standard and the ramped stop, which never wait.
         var rateLimited: Bool
@@ -92,7 +92,7 @@ extension DisplayController {
     /// request. The windows go only once the table reads back as the baseline (WindowServer did not take that write,
     /// or replaced it); a table that cannot be read keeps them.
     var keepsWindowsWhileMarked: Bool {
-        guard trigger != nil, mechanism == .table, deps.ledger.isMarked(key) else { return false }
+        guard trigger != nil, deps.ledger.isMarked(key) else { return false }
         guard let baseline = baseline ?? deps.ledger.entry(for: key)?.baseline,
               let read = try? deps.gamma.read(ref.id) else { return true }
         return !read.matches(baseline, tolerance: Self.sameTableTolerance)
@@ -106,7 +106,7 @@ extension DisplayController {
         guard !isActive else { return }
         settlePendingRebase()
         let scaled = isScaledOrDimmed || tableMayBeOffBaseline
-        guard scaled || trigger != nil || overlay != nil else { return }
+        guard scaled || trigger != nil else { return }
         if scaled {
             deps.journal.record("baseline.retried", display: key, time: deps.time, category: .gamma)
             guard writeBaselineNow() else { return }

@@ -16,14 +16,14 @@ public nonisolated enum FactorMath {
     }
     /// Above white, `.encoded` uses this pure power: `F^k ≤ G` for every truth exponent k ≤ 2.4 (incl. the sRGB curve).
     public static let boostExponent = 2.4
-    /// The table (or overlay) factor that yields light gain `g` on this display.
+    /// The table factor that yields light gain `g` on this display.
     public static func tableFactor(forLightGain g: Double, domain: TransferDomain) -> Double {
         switch domain {
         case .encoded: g <= 1 ? encodeSRGB(g) : pow(g, 1 / boostExponent)
         case .linear: g
         }
     }
-    /// The light gain a table (or overlay) factor `f` yields on this display.
+    /// The light gain a table factor `f` yields on this display.
     public static func lightGain(forTableFactor f: Double, domain: TransferDomain) -> Double {
         switch domain {
         case .encoded: f <= 1 ? decodeSRGB(f) : pow(f, boostExponent)

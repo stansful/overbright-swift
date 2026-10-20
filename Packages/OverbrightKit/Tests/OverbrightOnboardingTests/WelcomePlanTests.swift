@@ -32,11 +32,10 @@ private final class BundleMarker {}
     }
 
     /// Step 4: Turn on or off, Back to Standard, Dim Below Minimum On or Off, in this order (DESIGN.md §8); never the
-    /// shortcuts without a default or the step shortcuts.
+    /// step shortcuts, Max or Fill Light. Each shows only once the user has recorded it: none ships bound (D17).
     @Test func stepFourNamesThreeShortcuts() {
         #expect(WelcomePlan.shortcuts == [.toggle, .standard, .dimToggle])
-        let defaults = Set(ShortcutCatalog.all.filter { $0.defaultCombo != nil }.map(\.id))
-        #expect(Set(WelcomePlan.shortcuts).isSubset(of: defaults))
+        #expect(Set(WelcomePlan.shortcuts).isSubset(of: Set(ShortcutCatalog.all.map(\.id))))
     }
 
     /// Step 1's card shows Bright room, the default level of a newly enabled display (ARCHITECTURE.md §3.2).

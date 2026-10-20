@@ -96,6 +96,7 @@ import Testing
     @Test func aPlayerRuleAloneKeepsTheWatch() async {
         let harness = SignalsHarness()
         harness.settings[AutomationSettings.pauseForFullScreenVideo] = false
+        harness.settings[AutomationSettings.pauseForListedApps] = true                // off by default (2026-10-20)
         harness.settings[AutomationSettings.pausedApps] = [PausedAppRule(bundleID: "com.example.player", mode: .whilePlaying)]
         await harness.start()
         harness.monitor.setBoostActive(true)
@@ -108,7 +109,7 @@ import Testing
     /// The watch re-checks every 2 s on the shared grid (D29; `WatchGridTests` pins the phase): boosting at 1 s, the
     /// first tick comes at 2 s, then every 2 s, and none after the boost ends.
     @Test func theWatchRechecksEveryTwoSecondsWhileBoosting() async {
-        let harness = SignalsHarness()
+        let harness = SignalsHarness(fullScreenVideoRule: true)
         await harness.start()
         await harness.advance(.seconds(1))
         let reads = harness.platform.windowReads
@@ -134,7 +135,7 @@ import Testing
     }
 
     @Test func stopEndsEverything() async {
-        let harness = SignalsHarness(fixture: .mpg322uxHDROn)
+        let harness = SignalsHarness(fixture: .mpg322uxHDROn, fullScreenVideoRule: true)
         harness.settings[FillLightSettings.autoWithCamera] = true
         harness.settings[AutomationSettings.schedule] = ScheduleWindow(startMinute: 0, endMinute: 60)
         harness.platform.power = PowerState(source: .battery, batteryPercent: 50, isLowPowerMode: false)
@@ -207,7 +208,7 @@ import Testing
 
     @Test(arguments: Shield.allCases)
     func aShieldStopsTheWatchAndTheBatteryPercentUntilItLifts(_ shield: Shield) async {
-        let harness = SignalsHarness()
+        let harness = SignalsHarness(fullScreenVideoRule: true)
         harness.platform.power = PowerState(source: .battery, batteryPercent: 80, isLowPowerMode: false)
         await harness.start()
         harness.monitor.setBoostActive(true)                                  // the engine kept the boost active
@@ -234,7 +235,7 @@ import Testing
     }
 
     @Test func overlappingShieldsResumeOnlyWhenTheLastOneLifts() async {
-        let harness = SignalsHarness()
+        let harness = SignalsHarness(fullScreenVideoRule: true)
         await harness.start()
         harness.monitor.setBoostActive(true)
         #expect(harness.monitor.activeSources.contains(.fullScreenWatch))

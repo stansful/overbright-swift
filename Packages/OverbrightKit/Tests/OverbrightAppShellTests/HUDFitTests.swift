@@ -87,7 +87,10 @@ import Testing
             guard let status = ScriptedStatuses.status(named: name), let change = status.lastChange else { return nil }
             return HUDText.make(change, status: status, on: nil, in: language)
         }
-        let lines = reasons.compactMap { HUDText.reasonLine(for: $0, in: language) }
+        let lines = reasons.compactMap { reason in
+            HUDText.make(LevelChange(sequence: 1, kind: .blocked(reason), source: .shortcut, display: nil), status: status,
+                         on: nil, in: language)?.reason
+        }
         return (values + gallery.compactMap(\.value), lines + changes + gallery.compactMap(\.reason))
     }
 
@@ -108,7 +111,7 @@ import Testing
     }
 
     /// The Keep-this-level prompt (DESIGN.md §6, 280 pt wide): its title, its countdown and its two buttons each fit
-    /// between the prompt's insets, in the shell's words and in Design's.
+    /// between the prompt's insets, in the StatusMenu words `LowLevelPromptView` reads.
     @Test(arguments: languages)
     func theKeepLevelPromptFitsInEveryLanguage(_ code: String) throws {
         // The language's own table, required: falling back to `.module` would measure English (C-PANEL-33).
@@ -116,30 +119,19 @@ import Testing
         let bundle = try #require(folder.flatMap { FileManager.default.fileExists(atPath: $0.path) ? Bundle(url: $0) : nil },
                                   "\(code): no \(code).lproj in the shell's resources")
         let locale = Locale(identifier: code)
-        let language = try #require(CopyLanguage.named(code), "\(code): no Design table")
-        let titles = [String(localized: "Keep this level?", table: "StatusMenu", bundle: bundle, locale: locale),
-                      ConfirmationText.keepLevelTitle(in: language)]
-        let countdowns = [String(localized: "Going back in \(10) s", table: "StatusMenu", bundle: bundle,
-                                 locale: locale),
-                          ConfirmationText.goingBack(seconds: 10, in: language)]
-        let buttons = [(String(localized: "Go Back", table: "StatusMenu", bundle: bundle, locale: locale),
-                        String(localized: "Keep", table: "StatusMenu", bundle: bundle, locale: locale)),
-                       (ConfirmationText.goBack(in: language), ConfirmationText.keep(in: language))]
+        let title = String(localized: "Keep this level?", table: "StatusMenu", bundle: bundle, locale: locale)
+        let countdown = String(localized: "Going back in \(10) s", table: "StatusMenu", bundle: bundle, locale: locale)
+        let goBack = String(localized: "Go Back", table: "StatusMenu", bundle: bundle, locale: locale)
+        let keep = String(localized: "Keep", table: "StatusMenu", bundle: bundle, locale: locale)
         let room = HUDPlacement.promptSize.width - 2 * Space.l
-        for title in titles {
-            #expect(width(title, .headline) <= room, "\(code): «\(title)» \(width(title, .headline)) pt")
-        }
-        for countdown in countdowns {
-            let measured = width(countdown, .callout.monospacedDigit())
-            #expect(measured <= room, "\(code): «\(countdown)» \(measured) pt")
-        }
-        for (goBack, keep) in buttons {
-            let row = NSHostingView(rootView: HStack(spacing: Space.m) {
-                Button(action: {}) { Text(verbatim: goBack) }
-                Button(action: {}) { Text(verbatim: keep) }
-            }.fixedSize()).fittingSize.width
-            #expect(row <= room, "\(code): «\(goBack)» «\(keep)» \(row) pt")
-        }
+        #expect(width(title, .headline) <= room, "\(code): «\(title)» \(width(title, .headline)) pt")
+        let measured = width(countdown, .callout.monospacedDigit())
+        #expect(measured <= room, "\(code): «\(countdown)» \(measured) pt")
+        let row = NSHostingView(rootView: HStack(spacing: Space.m) {
+            Button(action: {}) { Text(verbatim: goBack) }
+            Button(action: {}) { Text(verbatim: keep) }
+        }.fixedSize()).fittingSize.width
+        #expect(row <= room, "\(code): «\(goBack)» «\(keep)» \(row) pt")
     }
 
     @Test func theHUDKeepsItsSizeWhateverItSays() {

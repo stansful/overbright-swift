@@ -85,7 +85,7 @@ import Testing
                 let model = BannerModel.make(banner, displayNames: [Self.display: "Studio Display"], in: language)
                 let column = Self.width - 2 * Space.l - glyphWidth(model.symbol) - Space.m
                 let sentence = height(Text(verbatim: model.sentence).font(OverbrightFont.banner.font), width: column)
-                let drawn = height(PausedBanner(model, primary: nil, secondary: nil), width: Self.width)
+                let drawn = height(PausedBanner(model, primary: nil), width: Self.width)
                 if drawn + 0.5 < sentence + 2 * Space.l {
                     failures.append("\(Self.kind(banner)) «\(model.sentence)»: \(drawn) pt for \(sentence) pt of text")
                 }

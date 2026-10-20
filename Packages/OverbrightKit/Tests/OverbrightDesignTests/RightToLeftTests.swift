@@ -33,7 +33,6 @@ import Testing
         #expect(BoostSlider.key(for: .rightArrow, option: false, direction: .rightToLeft) == .stepTowardDim)
         #expect(BoostSlider.key(for: .leftArrow, option: true, direction: .rightToLeft) == .nextStop)
         #expect(LayoutDirection.rightToLeft.step(for: .upArrow) == nil)
-        #expect(LayoutDirection.rightToLeft.step(physical: -1) == 1)
     }
 
     @Test func isolationWrapsOnceAndLeavesEmptyTextAlone() {
@@ -43,13 +42,6 @@ import Testing
         let font = NSFont.systemFont(ofSize: 13)
         func width(_ s: String) -> CGFloat { (s as NSString).size(withAttributes: [.font: font]).width }
         #expect(abs(width("Built-in Display".overbrightIsolated) - width("Built-in Display")) < 0.01)
-    }
-
-    @Test func aTextReadsInTheDirectionOfItsFirstLetter() {
-        #expect(BidiIsolation.direction(of: "Built-in Display") == .leftToRight)
-        #expect(BidiIsolation.direction(of: "شاشة مدمجة") == .rightToLeft)
-        #expect(BidiIsolation.direction(of: "מסך") == .rightToLeft)
-        #expect(BidiIsolation.direction(of: "1.29") == nil)
     }
 
     /// Names inside chips and banners are isolated, so a Hebrew app name cannot reorder an English sentence.

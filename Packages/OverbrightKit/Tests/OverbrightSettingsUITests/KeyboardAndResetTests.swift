@@ -130,12 +130,13 @@ private let marker = BoostMarker(since: Date(timeIntervalSinceReferenceDate: 800
         #expect(SystemShortcuts.parse(id: 7, entry: negative) == nil)
     }
 
-    /// D17: the defaults avoid every enabled macOS shortcut; the accessibility neighbours are known by name.
-    @Test func theDesignDefaultsCollideWithNoKnownSystemShortcut() throws {
+    /// D17: the combinations Overbright suggested before every shortcut shipped unbound (`SampleShortcuts`) avoid every
+    /// enabled macOS shortcut; the accessibility neighbours are known by name.
+    @Test func theSampleCombinationsCollideWithNoKnownSystemShortcut() throws {
         let shortcuts = SystemShortcuts.enabled(from: [:])
-        for shortcut in ShortcutCatalog.all {
-            guard let combo = shortcut.defaultCombo else { continue }
-            #expect(SystemShortcuts.conflict(for: combo, in: shortcuts) == nil, "\(shortcut.id)")
+        for (id, combo) in SampleShortcuts.bindings {
+            guard let combo else { continue }
+            #expect(SystemShortcuts.conflict(for: combo, in: shortcuts) == nil, "\(id)")
         }
         let invert = KeyCombo(keyCode: 28, modifiers: hyper)                       // ⌃⌥⌘8
         let clash = try #require(SystemShortcuts.conflict(for: invert, in: shortcuts))

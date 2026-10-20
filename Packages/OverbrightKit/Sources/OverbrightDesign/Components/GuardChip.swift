@@ -15,14 +15,11 @@ public struct GuardChip: View {
 
     /// The footer row's width (the panel's cards' width; the row lines up with their edges).
     public static let rowWidth: CGFloat = 304
-    /// The gap between footer chips.
-    public static let spacing: CGFloat = Space.s
     /// The padding each side of a chip's glyph and text.
     public static let horizontalPadding: CGFloat = Space.s
 
     private let model: GuardChipModel
     private let menu: [GuardChipMenuItem]
-    @Environment(\.overbright) private var theme
     @Environment(\.overbrightCompactGuardChips) private var compact
 
     /// A chip for `model` with the rows `menu`.
@@ -38,7 +35,7 @@ public struct GuardChip: View {
             let label = glyphWidth(model.symbol) + (words.map { Space.xs + OverbrightFont.chip.width(of: $0) } ?? 0)
             return max(label + 2 * horizontalPadding, HitTarget.footerChipWidth)
         }
-        return chips.reduce(0, +) + CGFloat(max(models.count - 1, 0)) * spacing
+        return chips.reduce(0, +) + CGFloat(max(models.count - 1, 0)) * Space.s       // the footer's gap between chips
     }
 
     /// The width `symbol` draws at the chip's glyph size (`GlyphSize.chip`); the point size when it cannot be read.
@@ -105,16 +102,4 @@ private struct GuardChipMenuRow: View {
             Divider()
         }
     }
-}
-
-#Preview("Footer chips") {
-    HStack(spacing: GuardChip.spacing) {
-        GuardChip(.battery(.belowThreshold, threshold: 20),
-                  menu: GuardChipMenus.battery(current: .belowThreshold, threshold: 20, setGuard: { _ in }, setThreshold: { _ in }))
-        GuardChip(.autoPause(anyRuleOn: true), menu: [])
-        GuardChip(.timer(minutes: 30, remaining: .seconds(23 * 60)), menu: GuardChipMenus.timer(minutes: 30, set: { _ in }))
-    }
-    .padding()
-    .frame(width: 320)
-    .overbrightThemeRoot()
 }

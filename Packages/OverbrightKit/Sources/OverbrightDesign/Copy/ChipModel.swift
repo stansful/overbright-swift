@@ -19,28 +19,20 @@ public nonisolated struct ChipModel: Hashable, Sendable {
     public var accessibilityLabel: String
     /// A small progress indicator replaces the glyph ("Preparing…").
     public var showsProgress: Bool
-    /// The popover's actions, in order (also VoiceOver actions on the card).
-    public var actions: [FixAction]
-    /// The Help answer "Learn more" opens.
-    public var helpAnchor: String?
 
     /// A chip.
     public init(symbol: OverbrightSymbol, color: SemanticColor, text: String, explanation: String,
                 accessibilityLabel: String) {
         self.init(symbol: symbol, color: color, text: text, explanation: explanation,
-                  accessibilityLabel: accessibilityLabel, showsProgress: false, actions: [], helpAnchor: nil)
+                  accessibilityLabel: accessibilityLabel, showsProgress: false)
     }
 
-    /// A chip with its progress indicator, actions and Help anchor.
+    /// A chip with its progress indicator.
     public init(symbol: OverbrightSymbol, color: SemanticColor, text: String, explanation: String,
-                accessibilityLabel: String, showsProgress: Bool, actions: [FixAction], helpAnchor: String?) {
+                accessibilityLabel: String, showsProgress: Bool) {
         self.symbol = symbol; self.color = color; self.text = text; self.explanation = explanation
-        self.accessibilityLabel = accessibilityLabel; self.showsProgress = showsProgress; self.actions = actions
-        self.helpAnchor = helpAnchor
+        self.accessibilityLabel = accessibilityLabel; self.showsProgress = showsProgress
     }
-
-    /// The Help anchor of "The screen didn't get brighter" (DESIGN.md §12.6).
-    public static let noExtraRangeAnchor = "no-extra-range"
 
     /// The chip of a display: "Preparing…" and "No extra range" come from the engine phase and win while they apply,
     /// else the first per-display reason in policy order; nil when nothing per-display applies (global reasons are the
@@ -93,29 +85,21 @@ public nonisolated struct ChipModel: Hashable, Sendable {
                                  bundle: language.bundle, locale: language.locale,
                                  comment: "Panel ▸ Display card: popover of the Preparing… chip")
         return ChipModel(symbol: .hourglass, color: .info, text: text, explanation: explanation, accessibilityLabel: text,
-                         showsProgress: true, actions: [], helpAnchor: nil)
+                         showsProgress: true)
     }
 
-    /// "No extra range": the ladder found no headroom; after two tries the popover offers more.
+    /// "No extra range": the ladder found no headroom; after two tries the popover says so again.
     public static func noExtraRange(failedTries: Int, context: ChipContext) -> ChipModel {
         let (b, l) = (context.language.bundle, context.language.locale)
         let text = String(localized: "No extra range", bundle: b, locale: l,
                           comment: "Panel ▸ Display card: status chip when macOS gave no extra range")
-        if failedTries >= 2 {
-            let explanation = String(localized: "macOS still didn’t make extra range available.", bundle: b, locale: l,
-                                     comment: "Panel ▸ Display card: popover of No extra range after two tries")
-            var actions: [FixAction] = [.tryAgain, .runSelfTest]
-            if context.compatibilityAdvised { actions.append(.useCompatibilityMode) }
-            actions.append(.learnMore)
-            return ChipModel(symbol: .exclamationMarkTriangleFill, color: .danger, text: text, explanation: explanation,
-                             accessibilityLabel: text, showsProgress: false, actions: actions,
-                             helpAnchor: noExtraRangeAnchor)
-        }
-        let explanation = String(localized: "macOS didn’t make extra range available. This can happen right after waking up, or when HDR is off.",
-                                 bundle: b, locale: l, comment: "Panel ▸ Display card: popover of No extra range")
+        let explanation = failedTries >= 2
+            ? String(localized: "macOS still didn’t make extra range available.", bundle: b, locale: l,
+                     comment: "Panel ▸ Display card: popover of No extra range after two tries")
+            : String(localized: "macOS didn’t make extra range available. This can happen right after waking up, or when HDR is off.",
+                     bundle: b, locale: l, comment: "Panel ▸ Display card: popover of No extra range")
         return ChipModel(symbol: .exclamationMarkTriangleFill, color: .danger, text: text, explanation: explanation,
-                         accessibilityLabel: text, showsProgress: false, actions: [.tryAgain, .learnMore],
-                         helpAnchor: noExtraRangeAnchor)
+                         accessibilityLabel: text)
     }
 
     /// Whether `banner` is the banner of `reason` on `display` (then the card shows no chip for it).

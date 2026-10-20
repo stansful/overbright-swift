@@ -1,10 +1,10 @@
-// OverbrightTriggers/Windows/WindowRecipes.swift — the one window recipe for the 1 pt trigger and the full-screen
-// Compatibility overlay. ARCHITECTURE.md §7.5, §7.6 ("Trigger windows"), D4. Thread: main.
+// OverbrightTriggers/Windows/WindowRecipes.swift — the one window recipe for the 1 pt trigger. ARCHITECTURE.md §7.6
+// ("Trigger windows"), D4. Thread: main.
 //
 // Making a panel orders nothing in: only `SystemWindowPresenter` does that, and tests never construct it.
 import AppKit
 
-/// The trigger and overlay panel recipe.
+/// The trigger panel recipe.
 enum WindowRecipes {
     /// Above the menu bar, the Dock, pop-up menus and full-screen windows; below the lock-screen shield, so locking
     /// hides the trigger and headroom drops, which the engine wants.

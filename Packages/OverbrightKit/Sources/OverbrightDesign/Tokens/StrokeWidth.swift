@@ -26,7 +26,4 @@ public nonisolated enum StrokeWidth {
     public static let hatchLine: CGFloat = 1
     /// The distance between hatch lines.
     public static let hatchSpacing: CGFloat = 3
-
-    /// One device pixel at `scale` (the card hairline).
-    public static func hairline(scale: CGFloat) -> CGFloat { 1 / max(scale, 1) }
 }

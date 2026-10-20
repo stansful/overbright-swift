@@ -69,4 +69,12 @@ public nonisolated enum LimitReason: Hashable, Sendable {
         default: false
         }
     }
+    /// Reasons an automation stops or caps the boost on its own: battery, Low Power, heat and the schedule (DESIGN.md
+    /// §6 (4)); never the full-screen, app, game or idle pauses the user caused. The timer has its own change.
+    public var isAutomation: Bool {
+        switch self {
+        case .battery, .onBattery, .lowPowerMode, .thermalSerious, .thermalCritical, .outsideSchedule: true
+        default: false
+        }
+    }
 }

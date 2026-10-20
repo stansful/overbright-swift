@@ -317,22 +317,6 @@ import Testing
         let host = ValueText.extraRange(allowed: 1.4, peak: 2.6, in: english)
         #expect(BoostSlider.extraRange(model(allowed: 1.4), given: host) == host)
     }
-
-    /// While a guard pauses the display the tag names it; a user pause, a cap and per-display reasons do not
-    /// (DESIGN.md §5.5 "Paused").
-    @Test func theValueTagNamesTheGuard() {
-        #expect(ValueText.guarded(by: .lowPowerMode, in: english)?.text == "Paused: Low Power Mode")
-        #expect(ValueText.guarded(by: .battery(percent: 12, threshold: 20), in: english)?.text
-                == "Paused: battery below 20%")
-        #expect(ValueText.guarded(by: .onBattery, in: english)?.text == "Paused: on battery")
-        #expect(ValueText.guarded(by: .thermalCritical, in: english)?.text == "Paused: Mac is hot")
-        #expect(ValueText.guarded(by: .outsideSchedule, in: english)?.text == "Paused: outside set hours")
-        #expect(ValueText.guarded(by: .focusOff, in: english)?.accessibilityText == "Off for this Focus")
-        for reason in [LimitReason.userPaused(until: Date(timeIntervalSince1970: 0)), .thermalSerious, .fullScreenVideo,
-                       .masterOff, .headroom, .boostNotEnabled] {
-            #expect(ValueText.guarded(by: reason, in: english) == nil, "\(reason)")
-        }
-    }
 }
 
 /// The slider drawn: warm only while extra light is on screen, the marker, the hatch.

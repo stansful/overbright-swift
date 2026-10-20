@@ -41,7 +41,6 @@ import Testing
             case "extraBrightness": editor.update(key, name: "x") { $0.boostEnabled = false }
             case "level": editor.update(key, name: "x") { $0.level = LevelPosition(0.8) }
             case "limit": editor.update(key, name: "x") { $0.capMode = .peak }
-            case "method": editor.update(key, name: "x") { $0.mechanism = .table }
             case "calibration": editor.update(key, name: "x") { $0.calibration = FakeCalibrationSession.record(.encoded) }
             case "type": editor.update(key, name: "x") { $0.oled = .notOLED }
             default: return false
@@ -72,7 +71,7 @@ import Testing
         case "automations.batteryThreshold": settings[AutomationSettings.batteryThreshold] = 40
         case "automations.lowPowerMode": settings[AutomationSettings.pauseInLowPowerMode] = false
         case "automations.timer": settings[AutomationSettings.autoOffMinutes] = 30
-        case "automations.apps": settings[AutomationSettings.pauseForFullScreenVideo] = false
+        case "automations.apps": settings[AutomationSettings.pauseForFullScreenVideo] = true
         case "automations.fullScreenApps": settings[AutomationSettings.pauseForAllFullScreen] = true
         case "automations.games": settings[AutomationSettings.pauseInGames] = true
         case "automations.pausedApps": settings[AutomationSettings.pausedApps] = []

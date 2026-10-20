@@ -11,6 +11,7 @@
 import AppKit
 import OverbrightCore
 import OverbrightDesign
+import OverbrightTestSupport
 import SwiftUI
 import Testing
 @testable import OverbrightOnboarding
@@ -80,10 +81,11 @@ import Testing
         ]
     }
 
-    /// The stage content of step 4 with `transform` applied to its words from `bundle` (English by default).
+    /// The stage content of step 4 with `transform` applied to its words from `bundle` (English by default), with all
+    /// three shortcut rows (the sample bindings: none ships bound, D17), its tallest content.
     static func stages(in bundle: Bundle = englishBundle,
                        _ transform: @escaping (String) -> String) -> [(String, AnyView)] {
-        let services = WelcomePreview.services()
+        let services = servicesWithShortcuts(PreviewShortcutCenter(bindings: SampleShortcuts.bindings))
         let findIt = FindItStep.Copy.localized(in: bundle).map(transform)
         return [
             ("findIt", AnyView(FindItStage(shortcuts: FindItShortcut.rows(services.shortcuts), copy: findIt)

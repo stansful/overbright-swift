@@ -23,10 +23,8 @@ import OverbrightCore
 import OverbrightPolicy
 import OverbrightDesign
 
-private typealias ProbeAnnouncementText = AnnouncementText
 private typealias ProbeBannerModel = BannerModel
 private typealias ProbeBidiIsolation = BidiIsolation
-private typealias ProbeBoostColor = BoostColor
 private typealias ProbeBoostHalfState = BoostHalfState
 private typealias ProbeBoostSlider = BoostSlider
 private typealias ProbeBoostSliderModel = BoostSliderModel
@@ -36,14 +34,12 @@ private typealias ProbeChipButtonStyle = ChipButtonStyle
 private typealias ProbeChipContext = ChipContext
 private typealias ProbeChipModel = ChipModel
 private typealias ProbeCommonNames = CommonNames
-private typealias ProbeConfirmationText = ConfirmationText
 private typealias ProbeCopyFormat = CopyFormat
 private typealias ProbeCopyLanguage = CopyLanguage
 private typealias ProbeEDRPreviewSurface = EDRPreviewSurface
 private typealias ProbeFixAction = FixAction
 private typealias ProbeGlyphSize = GlyphSize
 private typealias ProbeGuardChip = GuardChip
-private typealias ProbeGuardChipMenus = GuardChipMenus
 private typealias ProbeGuardChipModel = GuardChipModel
 private typealias ProbeHUDText = HUDText
 private typealias ProbeHapticFeedback = HapticFeedback
@@ -53,7 +49,6 @@ private typealias ProbeIconButtonStyle = IconButtonStyle
 private typealias ProbeKeyCap = KeyCap
 private typealias ProbeKeyboardInteraction = KeyboardInteraction
 private typealias ProbeOverbrightColor = OverbrightColor
-private typealias ProbeOverbrightDesignModule = OverbrightDesignModule
 private typealias ProbeOverbrightFocusRing = OverbrightFocusRing
 private typealias ProbeOverbrightFont = OverbrightFont
 private typealias ProbeOverbrightLinkButtonStyle = OverbrightLinkButtonStyle

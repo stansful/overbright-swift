@@ -51,8 +51,6 @@ final class ScriptedClearSurface: ClearFrameSurface {
     private(set) var presentedValues: [Double] = []
     /// Number of present attempts (failed ones included).
     private(set) var attempts = 0
-    /// Every `setWantsEDR(_:)` value.
-    private(set) var wantsEDRCalls: [Bool] = []
     /// Every `applyTag(_:)` value.
     private(set) var tags: [Double?] = []
     /// `release()` ran.
@@ -71,7 +69,6 @@ final class ScriptedClearSurface: ClearFrameSurface {
         return true
     }
 
-    func setWantsEDR(_ wantsEDR: Bool) { wantsEDRCalls.append(wantsEDR) }
     func applyTag(_ headroom: Double?) { tags.append(headroom) }
     func release() { isReleased = true }
 }

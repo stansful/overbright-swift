@@ -95,7 +95,7 @@ Register and style, following macOS 27 in Slovenian (checked in the system's own
 | Back to Standard (the instant off) | Nazaj na standardno svetlost | not “panic”, not “reset brightness” |
 | Indoor · Bright room · Sunlight · Max (presets) | V sobi · Svetla soba · Na soncu · Maksimum | “Max” is a preset only |
 | Safe · Peak (ceilings) | Varno · Vrh | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | Način združljivosti · Barvna tabela | never “fallback” or “overlay” |
+| color table (in sentences: “macOS ignores color table changes”) | barvna tabela | never “gamma”; no “fallback” or “overlay” in copy |
 | Fill Light (the edge light for video calls) | Osvetlitev obraza | never “ring light” |
 | extra range (headroom, in user copy) | Rezerva svetlosti | “headroom” only in Advanced and diagnostics |
 | Calibrate… · Run Self-Test… · Reset Display Colors… | Umeri … · Zaženi samopreizkus … · Ponastavi barve zaslonov … |  |

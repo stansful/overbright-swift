@@ -90,7 +90,7 @@ Reviewed 2026-10-14 (independent review).
 | Back to Standard (the instant off) | 標準に戻す | not “panic”, not “reset brightness” |
 | Indoor · Bright room · Sunlight · Max (presets) | 室内 · 明るい部屋 · 日差し · 最大 | “Max” is a preset only |
 | Safe · Peak (ceilings) | 安全 · ピーク | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | 互換モード · カラーテーブル | never “fallback” or “overlay” |
+| color table (in sentences: “macOS ignores color table changes”) | カラーテーブル | never “gamma”; no “fallback” or “overlay” in copy |
 | Fill Light (the edge light for video calls) | フィルライト | never “ring light” |
 | extra range (headroom, in user copy) | 輝度の余力 | “headroom” only in Advanced and diagnostics |
 | Calibrate… · Run Self-Test… · Reset Display Colors… | キャリブレーション… · セルフテストを実行… · ディスプレイの色をリセット… |  |

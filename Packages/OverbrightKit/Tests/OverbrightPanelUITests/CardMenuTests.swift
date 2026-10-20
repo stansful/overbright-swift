@@ -2,7 +2,7 @@
 // submenu, DESIGN.md §4.3, §5.4): only the shown presets, the last dim level, Calibrate… and Settings for This
 // Display… on the card, Don't Use / Use Extra Brightness, Try Again while failed; and what each row does through the
 // engine and the settings, including the OLED notice before extra brightness turns on (§12.4), the banner actions
-// (§12.3) and the chip's Compatibility mode for a booster's stop (§12.2).
+// (§12.3), and no action at all for a booster's stop (§12.2).
 import Foundation
 import OverbrightCore
 import OverbrightDesign
@@ -134,33 +134,26 @@ import Testing
         var opened: [URL] = []
         let commands = PanelCommands(services: services, source: .panel, confirmOLED: { _ in true },
                                      openURL: { opened.append($0) })
-        let banner = try #require(services.boost.status.banner)
-        guard case .conflict(let app) = banner, app.severity == .booster else { Issue.record("an S1 banner"); return }
-        // The action itself still does what its button said (switch to the overlay, continue next to the app); no
-        // banner offers it while Compatibility mode is unavailable (`aBoostersStopOffersNoCompatibilityMode`).
-        BannerAction.useCompatibilityMode(app).perform(commands, status: services.boost.status)
-        #expect(commands.preferences(of: builtIn).mechanism == .overlay)
-        #expect(boost.calls == ["continueAnyway(\(app.entryID))"])
         #expect(BannerAction.primary(for: .thermalCritical) == nil)
         #expect(BannerAction.primary(for: .battery(percent: 10, threshold: 20)) == .changePowerRules)
         #expect(BannerAction.primary(for: .flickerStop(display: builtIn)) == .tryAgain(builtIn))
         // A stop caused by a color app offers Continue anyway; a booster's never does (§7.2).
         let s2 = ConflictingApp(entryID: "c", severity: .gammaWriter, bundleID: nil, processID: 2, displayName: "C")
         #expect(BannerAction.primary(for: .attributedDrift(s2, display: builtIn)) == .continueAnyway(s2))
-        BannerAction.openFocusSettings.perform(commands, status: services.boost.status)
+        BannerAction.continueAnyway(s2).perform(commands)
+        #expect(boost.calls == ["continueAnyway(\(s2.entryID))"])
+        BannerAction.openFocusSettings.perform(commands)
         #expect(opened == [SettingsLinks.systemFocus].compactMap { $0 })
-        BannerAction.resume.perform(commands, status: services.boost.status)
+        BannerAction.resume.perform(commands)
         #expect(boost.calls.last == "resume(panel)")
     }
 
-    /// A booster on a card or in the banner while Compatibility mode is unavailable (`MechanismPreference
-    /// .overlayIsAvailable`, ARCHITECTURE.md §7.2, §7.5): the banner explains the stop without an action, the drift
-    /// chip offers nothing (never Continue anyway, and no longer Compatibility mode), and the reducer keeps blocking
-    /// that display even with an overlay preference stored and the app continued, because Policy uses the table.
-    @Test func aBoostersStopOffersNoCompatibilityMode() throws {
+    /// A booster on a card or in the banner (ARCHITECTURE.md §7.2): the banner explains the stop without an action,
+    /// the drift chip offers nothing (never Continue anyway), and the reducer keeps blocking that display even with
+    /// the app continued.
+    @Test func aBoostersStopOffersNoAction() throws {
         let (services, boost) = try setup("boosting")
         let booster = ConflictingApp(entryID: "b", severity: .booster, bundleID: nil, processID: 1, displayName: "B")
-        #expect(!MechanismPreference.overlayIsAvailable)
         #expect(BannerAction.primary(for: .conflict(booster)) == nil)
         #expect(BannerAction.primary(for: .attributedDrift(booster, display: builtIn)) == nil)
         var status = services.boost.status
@@ -191,7 +184,6 @@ import Testing
             return BoostPolicy.reduce(input).displays[builtIn]?.reasons ?? []
         }
         #expect(reasons(DisplayPreferences(), continued: []).contains(.conflict(booster)))
-        #expect(reasons(DisplayPreferences(mechanism: .overlay), continued: [booster.entryID]).contains(.conflict(booster)))
         #expect(reasons(DisplayPreferences(), continued: [booster.entryID]).contains(.conflict(booster)))
     }
 }

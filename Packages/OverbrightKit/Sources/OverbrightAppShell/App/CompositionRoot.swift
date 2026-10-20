@@ -81,7 +81,8 @@ enum CompositionRoot {
     }
 
     /// D27: a command-line mode, or a launch wired to the simulated ports, skips the single-instance check. Decided on
-    /// what `ports(for:context:)` actually returned, so a launch that got the real ports is never exempt.
+    /// what `ports(fixture:context:liveSignals:)` actually returned, so a launch that got the real ports is never
+    /// exempt.
     static func skipsSingleInstanceCheck(_ arguments: LaunchArguments, ports: ShellPorts) -> Bool {
         arguments.isCommandLineMode || ports.fixture != nil
     }
@@ -121,12 +122,6 @@ enum CompositionRoot {
     /// the standard domain, and the control's token and snapshot live there).
     static func controlOutlet(for context: ShellContext) -> any ControlStateOutlet {
         context.qaSuite == nil ? SystemControlOutlet() : QuietControlOutlet()
-    }
-
-    /// The ports for this launch: the simulated ones whenever `--qa-simulate` is present (in any build; a Release
-    /// build has refused the switch before this, see `refusedSwitches`), the real ones only without it.
-    static func ports(for arguments: LaunchArguments, context: ShellContext) -> ShellPorts {
-        ports(fixture: simulatedFixture(for: arguments), context: context, liveSignals: wiresLiveSignals(arguments))
     }
 
     /// The simulated ports over `fixture` (with the real Signals when `liveSignals`), or the real ones for nil.

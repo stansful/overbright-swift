@@ -1,6 +1,6 @@
 // OverbrightDesignTests/HUDTextTests.swift — DESIGN.md §6 and §12.9: when the HUD shows (shortcuts, the Shortcuts app,
 // a Focus; never the panel, the menu or Settings; never the user's own full-screen, app or game pauses), its reason
-// lines, glyphs, the display name with two displays, the announcement and the dwell.
+// lines, glyphs, the display name with two displays and the announcement.
 import Foundation
 import OverbrightCore
 import OverbrightPolicy
@@ -11,7 +11,7 @@ import Testing
     nonisolated static let builtIn = DisplayKey(rawValue: "A"), external = DisplayKey(rawValue: "B")
 
     private func display(_ key: DisplayKey, _ name: String, phase: EnginePhase = .boosted, gain: Double = 1.29) -> DisplayStatus {
-        DisplayStatus(key: key, name: name, phase: phase, decision: nil, appliedGain: gain, appliedFactor: 1, mechanism: .table,
+        DisplayStatus(key: key, name: name, phase: phase, decision: nil, appliedGain: gain, appliedFactor: 1,
                       strategy: nil, lastReading: nil, sdrWhite: nil)
     }
 
@@ -89,20 +89,6 @@ import Testing
         #expect(hud(.blocked(.lowPowerMode), source: .shortcut)?.symbol == .pauseFill)
     }
 
-    /// The reason line on its own, for the slider's value tag and any other surface that names a guard: the same words
-    /// as the HUD (ARCHITECTURE.md §8.8: one key per sentence).
-    @Test func theReasonLineIsPublic() {
-        #expect(HUDText.reasonLine(for: .lowPowerMode, in: english) == "Paused: Low Power Mode")
-        #expect(HUDText.reasonLine(for: .thermalSerious, in: english) == "Limited: Mac is warm")
-        #expect(HUDText.reasonLine(for: .fullScreenVideo, in: english) == "Paused: video")
-        #expect(HUDText.reasonLine(for: .masterOff, in: english) == nil)
-        #expect(HUDText.reasonLine(for: .shielded, in: english) == nil)
-        for reason in [LimitReason.lowPowerMode, .onBattery, .battery(percent: 12, threshold: 20), .thermalCritical,
-                       .outsideSchedule, .focusOff] {
-            #expect(HUDText.reasonLine(for: reason, in: english) == hud(.automationStopped(reason))?.reason, "\(reason)")
-        }
-    }
-
     /// Off shows "Off"; a level shows the readout's own value text, byte for byte (DESIGN.md §1 principle 4).
     @Test func levelValuesAreTheReadoutsText() throws {
         let off = try #require(hud(.level, source: .shortcut, status: status(isOn: false)))
@@ -121,28 +107,5 @@ import Testing
         let all = HUDText.make(LevelChange(sequence: 1, kind: .automationResumed, source: .automation, display: nil),
                                status: status(two: true), on: Self.external, in: english)
         #expect(all?.displayName == "Studio Display", "a change to every display shows on the display under the pointer")
-    }
-
-    @Test func automationsStayLonger() {
-        func change(_ kind: LevelChange.Kind) -> LevelChange { LevelChange(sequence: 1, kind: kind, source: .automation, display: nil) }
-        #expect(HUDText.dwell(after: change(.timerEnded)) == .seconds(3))
-        #expect(HUDText.dwell(after: change(.automationStopped(.lowPowerMode))) == .seconds(3))
-        #expect(HUDText.dwell(after: change(.level)) == .milliseconds(1500))
-        #expect(HUDText.isAutomation(change(.automationResumed)))
-        #expect(!HUDText.isAutomation(change(.blocked(.lowPowerMode))))
-    }
-
-    @Test func announcementsAndConfirmations() {
-        #expect(AnnouncementText.overbright(isOn: true, in: english) == "Overbright on")
-        #expect(AnnouncementText.overbright(isOn: false, in: english) == "Overbright off")
-        #expect(AnnouncementText.timerEnded(in: english) == "Overbright turned off: the timer ended.")
-        #expect(AnnouncementText.fillLight(isOn: true, in: english) == "Fill Light on")
-        #expect(ConfirmationText.keepLevelTitle(in: english) == "Keep this level?")
-        #expect(ConfirmationText.keepLevelAnnouncement(seconds: 10, in: english) == "Keep this level? Going back in 10 seconds.")
-        #expect(ConfirmationText.goingBack(seconds: 10, in: english).hasPrefix("Going back in 10"))
-        #expect(ConfirmationText.goBack(in: english) == "Go Back" && ConfirmationText.keep(in: english) == "Keep")
-        let reset = ConfirmationText.resetPane("Displays", includesCalibration: true, in: english)
-        #expect(reset.title == "Reset \u{2068}Displays\u{2069} settings?")
-        #expect(reset.message == "Every setting in \u{2068}Displays\u{2069} returns to its default, including display calibration.")
     }
 }

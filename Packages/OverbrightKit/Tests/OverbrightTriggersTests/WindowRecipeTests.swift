@@ -1,4 +1,4 @@
-// OverbrightTriggersTests/WindowRecipeTests.swift — the trigger and overlay panel as AppKit configures it (never
+// OverbrightTriggersTests/WindowRecipeTests.swift — the trigger panel as AppKit configures it (never
 // shown), and `TriggerHost`'s wiring: layer hosting, soft light, occlusion and screen-change callbacks, re-placement
 // and teardown. ARCHITECTURE.md §4.3 ("onScreenChange" row), §4.7, §7.6, §10.5. No window is ordered in: the host's
 // presenter only records.
@@ -72,13 +72,6 @@ import Testing
         let layer = CALayer()
         try host.prepare(layer: layer, blend: .softLight)
         #expect(layer.compositingFilter as? String == "softLightBlendMode")
-        host.tearDown()
-    }
-
-    @Test func overlayShapeCoversTheWholeScreen() throws {
-        let host = host(screens(), RecordingPresenter(), shape: .fullScreen)
-        try host.prepare(layer: CALayer(), blend: .normal)
-        #expect(host.window?.frame == TriggerTestBed.builtInGeometry.frame)
         host.tearDown()
     }
 
@@ -163,20 +156,6 @@ import Testing
         screens.screens[TriggerTestBed.builtIn.id] = nil
         host.reposition()
         #expect(host.window?.frame == CGRect(x: 1799, y: 1168, width: 1, height: 1))
-        host.tearDown()
-    }
-
-    @Test func overlayRepositionResizesTheHostedLayer() throws {
-        let screens = screens()
-        let host = host(screens, RecordingPresenter(), shape: .fullScreen)
-        let layer = CALayer()
-        try host.prepare(layer: layer, blend: .normal)
-        var resized = TriggerTestBed.builtInGeometry
-        resized.frame = CGRect(x: 0, y: 0, width: 1800, height: 1169)
-        screens.screens[TriggerTestBed.builtIn.id] = resized
-        host.reposition()
-        #expect(host.window?.frame == resized.frame)
-        #expect(layer.frame.size == CGSize(width: 1800, height: 1169))
         host.tearDown()
     }
 

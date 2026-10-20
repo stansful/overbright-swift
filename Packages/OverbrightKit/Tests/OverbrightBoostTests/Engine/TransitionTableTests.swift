@@ -460,23 +460,6 @@ import Testing
         #expect(abs((h.liveFactor() ?? 0) - factor) < 1e-6)                 // repaired
     }
 
-    /// Compatibility mode dims with the overlay alone (a factor below 1, no EDR request) and removes it at Standard.
-    @Test func overlayDimsWithoutATable() async throws {
-        let h = EngineHarness()
-        h.setPreferences { $0.mechanism = .overlay }
-        await h.start()
-        h.engine.setLevel(LevelPosition(-0.5), for: h.builtIn, source: .panel)
-        await h.advance(.milliseconds(400))
-        #expect(h.phase() == .dimmed)
-        let overlay = try #require(h.triggers.liveOverlays(on: h.builtIn).first)
-        #expect(overlay.factor < 1 && overlay.factors.last?.headroomRequest == 1)
-        #expect(h.gamma.writeCount == 0 && h.triggers.made.isEmpty)
-        h.engine.setOn(false, source: .panel)
-        await h.advance(.milliseconds(400))
-        #expect(h.phase() == .idle && h.triggers.liveOverlays(on: h.builtIn).isEmpty)
-        #expect(h.orderViolations.isEmpty)
-    }
-
     // MARK: displays and reconfiguration
 
     /// A display is removed while boosted: its windows go at once, its controller and ledger entry are dropped; the
@@ -496,22 +479,6 @@ import Testing
         await h.advance(.seconds(3))
         #expect(h.phase(h.builtIn) == .boosted)
         #expect(h.engine.status.displays.map(\.key) == [h.builtIn])
-    }
-
-    /// Compatibility mode: the overlay goes to factor 1 at the begin phase of a reconfiguration, then reapplies.
-    @Test func overlayGoesToOneWhenConfigurationBegins() async throws {
-        let h = EngineHarness()
-        h.setPreferences { $0.mechanism = .overlay }
-        await h.start()
-        #expect(await h.boost())
-        let overlay = try #require(h.triggers.liveOverlays(on: h.builtIn).first)
-        #expect(overlay.factor > 1)
-        #expect(h.triggers.made.isEmpty && h.gamma.writeCount == 0)
-        h.signals.emit(.displayConfigurationBegan)
-        #expect(overlay.factor == 1)
-        h.signals.emit(.displaysReconfigured)
-        await h.advance(.milliseconds(400))
-        #expect(overlay.factor > 1)
     }
 
     /// Wake: settle 1 s, then the cached rung only, with backoff, never escalating; failed after the last backoff.

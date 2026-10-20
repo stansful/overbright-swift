@@ -58,9 +58,9 @@ import Testing
         settings[AutomationSettings.pausedApps] = PausedAppsList.adding(["com.example.player"],
                                                                          to: PausedAppsList.removing("com.apple.TV", from: defaults))
         #expect(!value.isDefault())
-        settings[AutomationSettings.pauseForListedApps] = false
+        settings[AutomationSettings.pauseForListedApps] = true                   // off by default (2026-10-20)
         value.reset()
-        #expect(settings[AutomationSettings.pausedApps] == defaults && settings[AutomationSettings.pauseForListedApps])
+        #expect(settings[AutomationSettings.pausedApps] == defaults && !settings[AutomationSettings.pauseForListedApps])
         #expect(value.isDefault())
     }
 
@@ -102,6 +102,7 @@ import Testing
     @Test func theSwitchKeepsTheRules() {
         let settings = OverbrightServices.preview().settings
         settings[AutomationSettings.pausedApps] = PausedAppsList.adding(["com.example.player"], to: defaults)
+        settings[AutomationSettings.pauseForListedApps] = true
         settings[AutomationSettings.pauseForListedApps] = false
         #expect(settings[AutomationSettings.pausedApps].count == defaults.count + 1)
     }

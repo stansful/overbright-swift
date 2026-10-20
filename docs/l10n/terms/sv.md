@@ -80,7 +80,7 @@ needed, adjectives in common gender (“Overbright är öppen”).
 | Back to Standard (the instant off) | Tillbaka till Standard | not “panic”, not “reset brightness” |
 | Indoor · Bright room · Sunlight · Max (presets) | Inomhus · Ljust rum · Solljus · Max | “Max” is a preset only |
 | Safe · Peak (ceilings) | Säker · Topp | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | Kompatibilitetsläge · Färgtabell | never “fallback” or “overlay” |
+| color table (in sentences: “macOS ignores color table changes”) | färgtabell | never “gamma”; no “fallback” or “overlay” in copy |
 | Fill Light (the edge light for video calls) | Fyllnadsljus | never “ring light” |
 | extra range (headroom, in user copy) | Ljusreserv | “headroom” only in Advanced and diagnostics |
 | Calibrate… · Run Self-Test… · Reset Display Colors… | Kalibrera… · Kör självtest… · Återställ skärmfärger… |  |

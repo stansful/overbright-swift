@@ -10,7 +10,7 @@
 | Outcome | A folder of diagnostics, monitor captures, self-test logs and a filled results table, analysed by WP16 to set the engine's defaults. |
 
 **Safety first.** Everything here is reversible.
-- **Back to Standard** (⌃⌥⌘0 with the default shortcut) returns every display to Standard at any time.
+- **Back to Standard** returns every display to Standard at any time. No shortcut ships bound (since 2026-10-20): record one in Settings ▸ Shortcuts during setup (step 0.7; ⌃⌥⌘0 is free on macOS 27), or choose Turn Off Overbright in the menu.
 - If Overbright stops responding, **Force Quit** it (⌥⌘⎋): macOS restores your displays at once.
 - `/Applications/Overbright.app/Contents/MacOS/Overbright --restore-gamma` resets every display's colours from Terminal.
 - If a display still looks wrong: switch its preset in System Settings ▸ Displays and back; as a last resort, log out.
@@ -45,7 +45,8 @@
    ```zsh
    log stream --level info --predicate 'subsystem == "app.overbright.Overbright"' > ~/Overbright-HW/log-<section>.txt
    ```
-7. Only one Overbright app may run. A second launch (a Debug build from `scripts/run.sh`, `open -n`) hands over to the running one and quits; quit the installed copy before any step that uses a Debug build.
+7. Shortcuts and automations ship off (since 2026-10-20). In Settings ▸ Shortcuts record **Back to Standard** (⌃⌥⌘0), **Less Bright** (⌃⌥⌘-) and **Brighter** (⌃⌥⌘=), the keys this plan names; §7 turns its own automations on.
+8. Only one Overbright app may run. A second launch (a Debug build from `scripts/run.sh`, `open -n`) hands over to the running one and quits; quit the installed copy before any step that uses a Debug build.
 
 **What to send back:** zip `~/Overbright-HW` and hand it to WP16 together with `results.md`. Nothing in it contains personal files or window titles; display names and app names appear only where you typed them in `results.md`.
 
@@ -83,12 +84,12 @@ Since 2026-10-20 (the owner's rule) **every** level change you make away from St
 |---|---|---|
 | **2.0a (H-WS1, white screen)** | Settings ▸ Advanced ▸ Trigger method: built-in **Automatic**; built-in brightness at maximum. (1) Drag its slider from Standard to **Bright room** and look for 10 s **without answering** the prompt. (2) Set Trigger method to **Tagged layer**, drag past Standard again and again do not answer. (3) Set it back to **Automatic**, drag past Standard and press **Keep**. `obdiag …/2.0a-N.json` after each try. | (1) The built-in gets **brighter, not white** (the diagnostics show `cachedRung` 5, “Metal layer, refreshed”), and returns to Standard after 10 s on its own. (2) Expected **white** (the 2026-10-20 report), back to Standard after 10 s; note whether it whitens. (3) Brighter, and it stays. If (1) or (3) turns white, **stop the session** and report it. |
 | **2.0 (H-R1)** | Settings ▸ Displays ▸ Built-in: Limit **Peak**. Turn Overbright on, built-in at **Max**, brightness at maximum. Watch the monitor for 10 s. Then Back to Standard. | Record the monitor's **table max** while boosted: **> 1.0** (read-back keeps values above 1) or **exactly 1.0** (read-back clamps). Either way the class must read `scaled` while boosted and `matchesBase` after Back to Standard. If the class reads `matchesBase` while the screen is visibly brighter, **stop the session** and report it: every later SCALED check would be meaningless. |
-| 2.1 (H-DM1) | Built-in at Bright room, then press Less Bright (⌃⌥⌘- by default) repeatedly | it stops at Standard once, then dims in steps; the panel shows "Dimmed · N %"; the class reads `scaled` with a ratio below 1 |
+| 2.1 (H-DM1) | Built-in at Bright room, then press Less Bright (the shortcut recorded in step 0.7) repeatedly | it stops at Standard once, then dims in steps; the panel shows "Dimmed · N %"; the class reads `scaled` with a ratio below 1 |
 | 2.2 | With the panel's slider, step through the named dim stops with ⌥← (50 %, 25 %, 10 %, 5 %, 2 %) | the "Keep this level?" prompt appears at the first step and its countdown restarts at every step (it does not flash or move); without an answer the built-in goes back to **Standard** 10 s after the last step; with Keep it stays; Back to Standard always works |
 | 2.3 | The MSI with **HDR off**: dim it to 25 % from the panel | it dims (no extra brightness needed); class `scaled`, ratio < 1 |
 | 2.4 (H-NS1) | Boost the built-in at Bright room and dim the MSI to 50 %; turn **Night Shift** on (Displays ▸ Night Shift ▸ Turn On Until Tomorrow), wait 10 s, turn it off; then the same with **True Tone** | note whether the monitor's class changes (`foreign`?), whether a chip or banner appears, whether the picture looks right; no flicker; record which of the two touch the table |
 | 2.5 (H-K2) | Boosted and dimmed as in 2.4; in a third Terminal run `ob --restore-gamma` (a separate process that writes and exits) | every display is reset by macOS when that process exits; within ≈ 0.3 s Overbright brings the boost and the dim back **with a ramp** (no hard flash back); the journal shows `drift.reapplied` |
-| 2.6 (H-W5) | Boost both displays (MSI with HDR on). **Close the lid** (the MSI stays on) without killing Overbright; wait 10 s; open the lid. Then unplug the MSI while boosted, wait, plug it back | at no time does a bright dot, an overlay or an extra boost appear on the remaining display; each display comes back neutral or re-armed |
+| 2.6 (H-W5) | Boost both displays (MSI with HDR on). **Close the lid** (the MSI stays on) without killing Overbright; wait 10 s; open the lid. Then unplug the MSI while boosted, wait, plug it back | at no time does a bright dot or an extra boost appear on the remaining display; each display comes back neutral or re-armed |
 
 ---
 
@@ -154,7 +155,7 @@ Monitor running (`monitor-5.jsonl`). Overbright on, built-in at **Max**. §2.0 m
 
 ## 7. Guards, full screen, players, games and the taper (35 min) — H-FS1, H-FS2, H-P1, H-B1
 
-Overbright on, both displays boosting; monitor running (`monitor-7.jsonl`).
+Overbright on, both displays boosting; monitor running (`monitor-7.jsonl`). First turn on **Pause for full-screen video** and **Pause for these apps** in Settings ▸ Automations (both off by default since 2026-10-20).
 
 | Step | Do | Expected |
 |---|---|---|
@@ -177,13 +178,10 @@ Overbright on, both displays boosting; monitor running (`monitor-7.jsonl`).
 
 **Run only after §2.0 has passed.** Never choose Continue Anyway next to a brightness app with the color table method: two boosts would compound.
 
-**Since 2026-10-20 Compatibility mode is disabled** (see §10): the banner below shows **no** button, and Overbright stays paused on every display until the other app quits. Skip step 3.
-
 1. Start the commercial booster that is installed on this Mac (Vivid). <!-- denylist-ok -->
-2. Open Overbright's panel: expected banner "Paused because ‹that app› also changes display brightness. …" with **Use Compatibility mode**, and **no** launch rescue (the journal must not show `launch.rescued`). There is no Continue Anyway button for it.
-3. Choose **Use Compatibility mode** on the built-in: Overbright boosts through the overlay without touching the table; note how the two combine and whether anything flickers (it should stop itself if they fight: "stopped to prevent flicker").
-4. Quit the other app: the banner clears; note whether every display read `matchesBase` right after it quit (`monitor-8.jsonl`) and whether Overbright reapplied with a ramp.
-5. Optional: f.lux or MonitorControl if you have them (colour-app and conditional behaviour; Continue Anyway is offered for colour apps; note whether the boost pumps or stops within seconds).
+2. Open Overbright's panel: expected banner "Paused because ‹that app› also changes display brightness. Quit it to continue." with **no** button, and **no** launch rescue (the journal must not show `launch.rescued`). Overbright stays paused on every display until the other app quits.
+3. Quit the other app: the banner clears; note whether every display read `matchesBase` right after it quit (`monitor-8.jsonl`) and whether Overbright reapplied with a ramp.
+4. Optional: f.lux or MonitorControl if you have them (colour-app and conditional behaviour; Continue Anyway is offered for colour apps; note whether the boost pumps or stops within seconds).
 
 ---
 
@@ -197,15 +195,9 @@ Overbright on, both displays boosting; monitor running (`monitor-7.jsonl`).
 
 ---
 
-## 10. Compatibility mode (20 min) — H-C1–C3
+## 10. (Removed) Compatibility mode — H-C1–C3
 
-**Disabled since 2026-10-20 — skip this section.** On this MacBook Pro (M4 Max, macOS 27.0.1) the built-in turned **white** the moment Compatibility mode boosted: WindowServer does not blend the overlay's `multiplyBlendMode` layer with the windows beneath it, so the overlay paints instead of multiplying (ARCHITECTURE.md §7.5). Settings no longer offers the method (Method: Automatic · Color table), and a stored Compatibility-mode choice uses the color table. The steps stay for when a blend that works across windows has been found.
-
-1. Settings ▸ Displays ▸ Built-in ▸ Method: **Compatibility mode**; level Bright room.
-2. Check: are other apps' windows, the menu bar, the Dock and a full-screen app brighter? Is the **pointer** brighter (expected: no)? Does Mission Control or a Space switch flicker? Is the overlay in a ⌘⇧5 recording?
-3. Dim side: set the MSI with **HDR off** to Compatibility mode and slide left: does it dim?
-4. Run Calibrate… in Compatibility mode (its own domain).
-5. Energy: run §13 with the table method and with Compatibility mode at the same level.
+Nothing to run. On this MacBook Pro (M4 Max, macOS 27.0.1) the built-in turned **white** the moment the full-screen overlay boosted: WindowServer does not blend the overlay's `multiplyBlendMode` layer with the windows beneath it (ARCHITECTURE.md §7.5). The method was disabled on 2026-10-20, its panel, menu, Settings and calibration surfaces were removed on 2026-10-21, and its code the same day (the overlay engine, its triggers and the `OverlayHandle` port; the last commit with the code is `c76b47c`); the color table is the only method. The section number stays so the references below keep their numbers.
 
 ---
 
@@ -245,7 +237,7 @@ footprint -p $(obpid) > ~/Overbright-HW/13-<case>-footprint.txt
 sudo powermetrics -i 1000 -n 30 --samplers cpu_power,gpu_power,tasks --show-process-energy > ~/Overbright-HW/13-<case>-power.txt
 ```
 
-Cases: Overbright **off**; on with the winning trigger at Bright room; on with *Metal layer* forced; Compatibility mode (skip while it is disabled, §10); Fill Light on; both displays at Bright room, once with "Pause for full-screen video" on (the default) and once with it and every other full-screen and "while playing" rule off (ARCHITECTURE.md D28: Signals' 2 s full-screen watch is its own timer). Optional: 30 minutes on battery at Bright room vs Standard (battery % before and after).
+Cases (the Compatibility-mode case was removed with the overlay, §10; last commit with the code: `c76b47c`): Overbright **off**; on with the winning trigger at Bright room; on with *Metal layer* forced; Fill Light on; both displays at Bright room, once with "Pause for full-screen video" on (the default) and once with it and every other full-screen and "while playing" rule off (ARCHITECTURE.md D28: Signals' 2 s full-screen watch is its own timer). Optional: 30 minutes on battery at Bright room vs Standard (battery % before and after).
 
 **Expected:** off = 0 idle wake-ups; on = ≤ 1.5 wake-ups/s and < 0.1 % CPU with no GPU work after the first frame (DESIGN.md §17). Both displays with the full-screen rule on: about 2.0 wake-ups/s by D28's count (two drift checks, the hang ping, the watch), about 1.5 with the rules off; note both, since they decide whether WP16 moves the watch onto one engine tick.
 
@@ -300,9 +292,9 @@ Cases: Overbright **off**; on with the winning trigger at Bright room; on with *
 | H-FS1 | full-screen heuristic cases; documents not paused by default | | 7.1–7.3 |
 | H-P1 | players' and browsers' assertions while playing / paused, windowed and full screen | | 7.4 |
 | H-B1 | taper: continuous light from 100 % to 50 % brightness; even key steps | | 7.9 |
-| conflicts | booster banner without Continue, Compatibility mode alongside, no rescue, behaviour after quitting it | | 8 |
+| conflicts | booster banner without a button, no rescue, behaviour after quitting it | | 8 |
 | H-A1 | auto-brightness toggle: wrong picture? cleared by? | | 9 |
-| H-C1–C3 | Compatibility mode coverage, pointer, flicker, capture, domain, power (disabled 2026-10-20: turned the built-in white) | | 10 |
+| ~~H-C1–C3~~ | removed with Compatibility mode (§10; last commit with the code: `c76b47c`) | — | 10 |
 | H-F1 | camera detection without a prompt; Fill Light card; boost still prepares with Fill Light on | | 11 |
 | H-AI-1–3 | intents, Focus filter, translations, key caps by layout, Run Shortcut | | 12 |
 | H-CC-1–2 | ad-hoc control: listed, rendered, after rebuild, after kill -9 | | 12.5–12.6 |

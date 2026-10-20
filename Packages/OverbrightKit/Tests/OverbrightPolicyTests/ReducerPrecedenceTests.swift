@@ -23,8 +23,8 @@ import Testing
     private func builtIn(_ level: LevelPosition, settings: PolicySettings = PolicySettings(),
                          system: SystemSnapshot = T.system(), pausedUntil: Date? = nil, minuteOfDay: Int = 600,
                          continued: Set<String> = [], trip: TripCause? = nil, capMode: CapMode = .safe,
-                         mechanism: MechanismPreference = .automatic, boostEnabled: Bool? = nil) -> DisplayDecision? {
-        decide([T.display(level: level, boostEnabled: boostEnabled, capMode: capMode, mechanism: mechanism, trip: trip)],
+                         boostEnabled: Bool? = nil) -> DisplayDecision? {
+        decide([T.display(level: level, boostEnabled: boostEnabled, capMode: capMode, trip: trip)],
                settings: settings, system: system, pausedUntil: pausedUntil, minuteOfDay: minuteOfDay,
                continued: continued).builtIn
     }
@@ -56,7 +56,7 @@ import Testing
         let decision = try #require(builtIn(brightRoom))
         #expect(abs((decision.boostGain ?? 0) - 1.291) < 0.0005 && decision.reasons.isEmpty)
         #expect(abs(decision.requestedGain - 1.291) < 0.0005 && decision.level == brightRoom)
-        #expect(decision.mechanism == .table && decision.domain == .encoded)
+        #expect(decision.domain == .encoded)
         #expect(builtIn(.standard)?.target == .neutral && builtIn(.standard)?.reasons == [])
         #expect(abs((builtIn(dimHalf)?.dimLight ?? 0) - 0.501) < 0.0005)
     }
@@ -105,13 +105,10 @@ import Testing
         #expect(stopsBothHalves(.conflict(booster), system: system(booster)))
         #expect(stopsBothHalves(.conflict(colors), system: system(colors)))
         #expect(stopsBothHalves(.conflict(booster), system: system(colors, booster)))       // S1 before S2
-        // S1 continues only on an overlay display, which no display uses while Compatibility mode is unavailable
-        // (§7.5: a stored overlay preference uses the table), and never through "always continue".
+        // S1 always blocks (§7.2): neither a continuation in this session nor "always continue" lifts it.
         #expect(builtIn(brightRoom, system: system(booster), continued: ["booster-x"])?.target == .neutral)
-        #expect(builtIn(brightRoom, system: system(booster), continued: ["booster-x"], mechanism: .overlay)?.target
-                == .neutral)
-        #expect(builtIn(brightRoom, settings: PolicySettings(alwaysContinueEntryIDs: ["booster-x"]), system: system(booster),
-                        mechanism: .overlay)?.target == .neutral)
+        #expect(builtIn(brightRoom, settings: PolicySettings(alwaysContinueEntryIDs: ["booster-x"]),
+                        system: system(booster))?.target == .neutral)
         // S2 continues for this session or always.
         #expect(builtIn(brightRoom, system: system(colors), continued: ["gamma-x"])?.boostGain != nil)
         #expect(builtIn(brightRoom, settings: PolicySettings(alwaysContinueEntryIDs: ["gamma-x"]),
@@ -200,11 +197,12 @@ import Testing
 
     @Test func row14FullScreenVideoOnThisDisplay() {
         let video = SystemSnapshot(power: T.adapter, fullScreenDisplays: [builtInKey], fullScreenVideoDisplays: [builtInKey])
-        #expect(stopsOnlyTheBoostHalf(.fullScreenVideo, system: video))
-        #expect(boosts(settings: PolicySettings(pauseForFullScreenVideo: false), system: video))
+        let rule = PolicySettings(pauseForFullScreenVideo: true)
+        #expect(boosts(system: video))                                                       // off by default
+        #expect(stopsOnlyTheBoostHalf(.fullScreenVideo, settings: rule, system: video))
         // Only the display that shows the video pauses.
         let other = T.display(DisplayFixture.proDisplayXDR.displays[0])
-        let decision = decide([T.display(), other], system: video)
+        let decision = decide([T.display(), other], settings: rule, system: video)
         #expect(decision.builtIn?.reasons == [.fullScreenVideo])
         #expect(decision.displays[DisplayFixture.Keys.proDisplayXDR]?.boostGain != nil)
     }
@@ -217,7 +215,8 @@ import Testing
     }
 
     @Test func row16PausedApps() {
-        let rules = PolicySettings(pausedApps: [PausedAppRule(bundleID: "com.example.Player", mode: .whilePlaying),
+        let rules = PolicySettings(pauseForListedApps: true,
+                                   pausedApps: [PausedAppRule(bundleID: "com.example.Player", mode: .whilePlaying),
                                                 PausedAppRule(bundleID: "com.example.Editor", mode: .whileFrontmost),
                                                 PausedAppRule(bundleID: "com.example.Off", mode: .whileFrontmost,
                                                               isEnabled: false)])
@@ -411,22 +410,5 @@ import Testing
         #expect(builtIn(LevelPosition(0.005))?.target == .neutral)                            // ×1.0026: a no-op
         #expect(builtIn(LevelPosition(0.02))?.boostGain != nil)                               // ×1.0103
         #expect(builtIn(LevelPosition(-1))?.dimLight == 0.02)
-    }
-
-    /// Compatibility mode is unavailable (`MechanismPreference.overlayIsAvailable`, 2026-10-20: the overlay turned the
-    /// owner's built-in white): Automatic on a compatibility model, an explicit Compatibility-mode preference and a
-    /// "did not get brighter" record all give the table, and no display carries the advisory (§7.5).
-    @Test func overlayIsNeverChosenWhileUnavailable() {
-        #expect(!MechanismPreference.overlayIsAvailable)
-        #expect(builtIn(brightRoom, mechanism: .overlay)?.mechanism == .table)
-        #expect(builtIn(brightRoom, mechanism: .table)?.mechanism == .table)
-        let neo = DisplayFixture.neoIgnoresWrites
-        let onNeo = decide([T.display(neo.displays[0])], machine: neo.machine).builtIn
-        #expect(onNeo?.mechanism == .table && onNeo?.boostGain != nil)
-        #expect(onNeo?.eligibility.advisories.contains(.compatibilityModeAdvised) == false)
-        #expect(decide([T.display(neo.displays[0], mechanism: .overlay)], machine: neo.machine).builtIn?.mechanism
-                == .table)
-        let notBrighter = T.display(calibration: T.record(.notBrighter))
-        #expect(decide([notBrighter]).builtIn?.mechanism == .table)
     }
 }

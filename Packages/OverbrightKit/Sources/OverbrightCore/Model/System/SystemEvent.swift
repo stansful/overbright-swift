@@ -25,7 +25,7 @@ public nonisolated enum SystemEvent: Hashable, Sendable {
     case sessionResigned
     /// Our session is on the console again.
     case sessionBecameActive
-    /// Begin-phase callback: overlays go to factor 1, nothing else.
+    /// Begin-phase callback: no display queries now (the engine waits for the after phase, §4.3).
     case displayConfigurationBegan
     /// Remove flag: immediate, not debounced (§4.3).
     case displayRemoved(CGDirectDisplayID)

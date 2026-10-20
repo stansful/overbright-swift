@@ -2,8 +2,8 @@
 import CoreGraphics
 
 /// A `TriggerFactory` that records requests, placements and presents, couples to `ScriptedHeadroom` (a successful
-/// present or an overlay's EDR request makes the script grant headroom), can fail per strategy, can move windows to
-/// another screen (`onScreenChange`) and reports `openWindowCount`. It never orders a window in.
+/// present makes the script grant headroom), can fail per strategy, can move windows to another screen
+/// (`onScreenChange`) and reports `openWindowCount`. It never orders a window in.
 @MainActor public final class FakeTriggerFactory: TriggerFactory {
     /// One recorded present.
     public struct Present: Hashable, Sendable {
@@ -32,20 +32,16 @@ import CoreGraphics
     public var makeErrors: [TriggerStrategy: TriggerError] = [:]
     /// `present` returns false for these strategies (T2/T3 after their 2 s of retries).
     public var failingPresents: Set<TriggerStrategy> = []
-    /// `makeOverlay` throws this error when set.
-    public var overlayError: TriggerError?
     /// Every trigger made, in order.
     public private(set) var made: [Made] = []
     /// Every present, in order.
     public private(set) var presents: [Present] = []
     /// Every trigger handle made (removed ones included).
     public private(set) var triggers: [FakeTriggerHandle] = []
-    /// Every overlay handle made (removed ones included).
-    public private(set) var overlays: [FakeOverlayHandle] = []
     private var lastID: UInt64 = 0
-    /// Keeps only about the newest `recordLimit` entries of `made` and `presents`, and of the removed handles in
-    /// `triggers` and `overlays` and of each handle's own records (nil, the default: everything). `--qa-simulate`
-    /// sets one, so a long QA run or soak does not grow with the fake's own history.
+    /// Keeps only about the newest `recordLimit` entries of `made` and `presents`, of the removed handles in `triggers`
+    /// and of each handle's own records (nil, the default: everything). `--qa-simulate` sets one, so a long QA run or
+    /// soak does not grow with the fake's own history.
     public var recordLimit: Int? { didSet { trim() } }
 
     /// A factory; pass the `ScriptedHeadroom` the presents should drive.
@@ -68,20 +64,8 @@ import CoreGraphics
         return handle
     }
 
-    /// A recorded overlay handle (throws `overlayError` when set).
-    public func makeOverlay(on display: DisplayRef) throws -> any OverlayHandle {
-        if let overlayError { throw overlayError }
-        lastID += 1
-        let handle = FakeOverlayHandle(id: lastID, display: display, factory: self)
-        overlays.append(handle)
-        trim()
-        return handle
-    }
-
-    /// Triggers and overlays not yet removed.
-    public var openWindowCount: Int {
-        triggers.filter { !$0.isRemoved }.count + overlays.filter { !$0.isRemoved }.count
-    }
+    /// Triggers not yet removed.
+    public var openWindowCount: Int { triggers.filter { !$0.isRemoved }.count }
 
     // MARK: Test control
 
@@ -89,19 +73,13 @@ import CoreGraphics
     public func liveTriggers(on key: DisplayKey) -> [FakeTriggerHandle] {
         triggers.filter { !$0.isRemoved && $0.display.key == key }
     }
-    /// Live overlays on `key`.
-    public func liveOverlays(on key: DisplayKey) -> [FakeOverlayHandle] {
-        overlays.filter { !$0.isRemoved && $0.display.key == key }
-    }
     /// AppKit moved every live window of `key` to the screen of `displayID` (nil: no screen).
     public func moveWindows(on key: DisplayKey, toScreen displayID: CGDirectDisplayID?) {
         for handle in liveTriggers(on: key) { handle.onScreenChange?(displayID) }
-        for handle in liveOverlays(on: key) { handle.onScreenChange?(displayID) }
     }
     /// The live windows of `key` became occluded or visible.
     public func setOccluded(_ occluded: Bool, on key: DisplayKey) {
         for handle in liveTriggers(on: key) { handle.setOccluded(occluded) }
-        for handle in liveOverlays(on: key) { handle.setOccluded(occluded) }
     }
 
     // MARK: Handles
@@ -120,7 +98,6 @@ import CoreGraphics
         if made.count > 2 * limit { made.removeFirst(made.count - limit) }
         if presents.count > 2 * limit { presents.removeFirst(presents.count - limit) }
         triggers = Self.droppingOldestRemoved(triggers, keep: limit) { $0.isRemoved }
-        overlays = Self.droppingOldestRemoved(overlays, keep: limit) { $0.isRemoved }
     }
 
     /// `items` without its oldest removed entries beyond `keep` (live ones always stay), once there are twice `keep`.
@@ -133,8 +110,6 @@ import CoreGraphics
             return false
         }
     }
-
-    func requestStarted(_ id: UInt64, on key: DisplayKey) { headroom?.requestStarted(id, strategy: nil, on: key) }
 
     func requestEnded(_ id: UInt64, on key: DisplayKey) { headroom?.requestEnded(id, on: key) }
 }

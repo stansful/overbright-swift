@@ -32,7 +32,7 @@ import Observation
     func pause(until deadline: Date?, source: ControlSource)
     /// Ends a pause.
     func resume(source: ControlSource)
-    /// S2/S3 only; for S1 boosters it is honoured only on Compatibility-mode displays (§7.2).
+    /// S2/S3 only; an S1 booster is never continued (§7.2).
     func continueAnyway(_ app: ConflictingApp)
     /// Try Again: clears any trip on this display (the only way to clear flicker, repair and drift trips).
     func retry(_ display: DisplayKey)

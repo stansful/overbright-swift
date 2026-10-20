@@ -1,6 +1,6 @@
 // OverbrightPanelUI/Card/CardChip.swift — which reason a card's chip shows, and the actions of its popover.
-// ARCHITECTURE.md §6.2, §7.2 (a stop caused by an S1 booster offers Compatibility mode, never Continue anyway, and it
-// continues next to the app on that display, as the banner's does);
+// ARCHITECTURE.md §6.2, §7.2 (a stop caused by an S1 booster never offers Continue anyway: the app has to quit, as the
+// banner says);
 // DESIGN.md §5.7, §12.2 (actions and their destinations). The words are Design's (`ChipModel.make`); this file decides
 // only WHICH reason and WHAT each action does.
 import OverbrightCore
@@ -46,11 +46,7 @@ public enum CardChip {
     public static func kinds(for card: DisplayCardModel, isMasterOn: Bool) -> [CardAction] {
         if isMasterOn, case .failed(.headroomNeverArrived) = card.phase {
             guard card.failedTries >= 2 else { return [.tryAgain, .learnMore(HelpEntry.Anchor.noExtraRange)] }
-            var actions: [CardAction] = [.tryAgain, .runSelfTest]
-            if MechanismPreference.overlayIsAvailable, card.advisories.contains(.compatibilityModeAdvised) {
-                actions.append(.useCompatibilityMode)
-            }
-            return actions + [.learnMore(HelpEntry.Anchor.noExtraRange)]
+            return [.tryAgain, .runSelfTest, .learnMore(HelpEntry.Anchor.noExtraRange)]
         }
         switch card.chipReason {
         case .boostNotEnabled?: return [.turnOnExtraBrightness]
@@ -59,10 +55,7 @@ public enum CardChip {
         case .safeLimit?, .oledLimit?: return [.choosePeak]
         case .fullScreenVideo?, .fullScreenApp?, .game?: return [.changeRules]
         case .pausedApp?: return [.editApps]
-        case .tripped(.attributedDrift(let app))?:
-            return app.severity == .booster
-                ? (MechanismPreference.overlayIsAvailable ? [.continueInCompatibilityMode(app)] : [])
-                : [.continueAnyway(app)]
+        case .tripped(.attributedDrift(let app))?: return app.severity == .booster ? [] : [.continueAnyway(app)]
         case .tripped(.foreignTableAtLaunch)?: return [.openDisplaySettings]
         case .tripped?: return [.tryAgain]
         default: return []

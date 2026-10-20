@@ -2,7 +2,7 @@
 // ARCHITECTURE.md §3.2, §5.2, §7.5.
 import Foundation
 
-/// The Mac and OS build, for the compatibility-model list, the strategy cache key and calibration validity (§7.5).
+/// The Mac and OS build, for the ignored-table-write list, the strategy cache key and calibration validity (§7.5).
 public nonisolated struct MachineIdentity: Hashable, Codable, Sendable {
     /// `hw.model`, e.g. "Mac16,5".
     public var model: String

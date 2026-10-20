@@ -12,6 +12,7 @@ import AppKit
 import OverbrightCore
 import OverbrightDesign
 import OverbrightPanelUI
+import QuartzCore
 import os
 import SwiftUI
 
@@ -48,6 +49,15 @@ final class PanelController {
     /// Observers of the anchor's window while the panel is open.
     private var anchorObservers: [any NSObjectProtocol] = []
     private var isClosing = false
+    /// When an outside click last closed the panel (`now`). A click on the status item can reach the outside-click
+    /// monitors before the item's own action (its window on another display's menu bar is not the anchor's window),
+    /// so that action finds the panel closing and would open it again; within `toggleAfterOutsideCloseWindow` it
+    /// counts as the closing click instead (the owner's report, 2026-10-20; DESIGN.md §4.2).
+    private var lastOutsideCloseAt: CFTimeInterval?
+    /// See `lastOutsideCloseAt`.
+    static let toggleAfterOutsideCloseWindow: CFTimeInterval = 0.4
+    /// The clock of `lastOutsideCloseAt` (tests pass their own).
+    var now: () -> CFTimeInterval = { CACurrentMediaTime() }
 
     /// False keeps the panel open on clicks elsewhere: no outside-click monitor is installed (Debug QA `--qa-panel`,
     /// `QAHooks.keepsPanelOpen`).
@@ -61,15 +71,42 @@ final class PanelController {
     /// Whether the panel is on screen.
     var isShown: Bool { panel?.isVisible == true && !isClosing }
 
-    /// Opens the panel under `anchor` (the status button), or closes it when it is open. A press that is not a mouse
-    /// click (the keyboard, VoiceOver's press) gives the panel keyboard focus (DESIGN.md §5.1).
+    /// What a press on the status item does (`press()`).
+    enum Press: Equatable {
+        /// The panel is open: the press closes it.
+        case close
+        /// An outside click closed the panel within `toggleAfterOutsideCloseWindow`: that was this press, which
+        /// reached the outside-click monitors first, so the panel stays closed.
+        case staysClosed
+        /// The panel opens.
+        case open
+    }
+
+    /// Opens the panel under `anchor` (the status button), or closes it when it is open (also when this press already
+    /// closed it as an outside click, `Press.staysClosed`). A press that is not a mouse click (the keyboard,
+    /// VoiceOver's press) gives the panel keyboard focus (DESIGN.md §5.1).
     func toggle(from anchor: NSView?) {
-        if isShown {
-            close(.toggle)
-        } else {
+        switch press() {
+        case .close: close(.toggle)
+        case .staysClosed: log.info("panel stays closed: the press on the icon closed it")
+        case .open:
             show(from: anchor, takingFocus: ClickRouting.isKeyboardOrAccessibility(NSApp.currentEvent)
                     || NSWorkspace.shared.isVoiceOverEnabled)
         }
+    }
+
+    /// Decides a press on the status item: an open panel closes; a press within `toggleAfterOutsideCloseWindow` of an
+    /// outside-click close leaves it closed, once; any other press opens it.
+    func press() -> Press {
+        if isShown { return .close }
+        defer { lastOutsideCloseAt = nil }
+        if let closedAt = lastOutsideCloseAt, now() - closedAt < Self.toggleAfterOutsideCloseWindow { return .staysClosed }
+        return .open
+    }
+
+    /// Notes why the panel closes: only an outside click opens the window in which a press on the icon stays closed.
+    func recordClose(_ cause: CloseCause) {
+        lastOutsideCloseAt = cause == .outsideClick ? now() : nil
     }
 
     /// Opens the panel under `anchor`; without an anchor (the icon is hidden) at the top centre of the main screen;
@@ -104,6 +141,7 @@ final class PanelController {
     func close(_ cause: CloseCause = .request) {
         guard let panel, panel.isVisible, !isClosing else { return }
         log.info("panel closes: \(cause.rawValue, privacy: .public)")
+        recordClose(cause)
         beginClosing()
         NSAnimationContext.runAnimationGroup({ context in
             context.duration = OverbrightMotion.Kind.panelOut.duration

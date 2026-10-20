@@ -1,12 +1,13 @@
-// OverbrightPanelUI — the panel, its display cards, the HUD view and Help. ARCHITECTURE.md §10.12.
-// Placeholder written by WP0a so that every target of Package.swift exists from the start (§2.1 rule 4);
-// its owner (WP10) replaces it.
-import OverbrightCore
-import OverbrightPolicy
-import OverbrightDesign
-
-/// Names the module until its work package lands; the placeholder test checks that it links.
-public enum OverbrightPanelUIModule {
-    /// The target name.
-    public static let name = "OverbrightPanelUI"
-}
+// OverbrightPanelUI — the panel's content, its display cards, the Fill Light card and the local Help.
+// ARCHITECTURE.md §2.1 (L2), §10.12; DESIGN.md §5, §12.6.
+//
+//   Panel/       `PanelView` (header, Fill Light card, banner, calibration tip, the cards, the footer's guard chips),
+//                what it lists (`PanelContent`), its keyboard map and focus, its commands, its fixed sizes and its words
+//   Card/        one display's card: `DisplayCardModel` (derived without a view from the services hub), its chip and
+//                actions, its quick-level menu (SwiftUI and AppKit, shared with the status menu), the value text
+//   FillLight/   the compact Fill Light card and its sliders
+//   Help/        the answers of the Help window and its view
+//   QA/          named engine statuses and gallery states for snapshots and `--qa-state`
+//
+// Layer 2: imports OverbrightCore, OverbrightPolicy, OverbrightDesign and Apple frameworks only (§2.1). The window that
+// hosts the panel is AppShell's; Onboarding reuses the display card.

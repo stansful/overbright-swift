@@ -16,7 +16,6 @@ import OverbrightCore
     public private(set) var records: [String: StrategyRecord] = [:]
     private var file: JSONDocumentFile<[String: StrategyRecord]>?
     private var revision = 0
-    private var saving: Task<Void, Never>?
 
     /// An empty cache, in memory until `attach(file:osBuild:)`.
     public init() {}
@@ -118,7 +117,7 @@ import OverbrightCore
         guard let file else { return }
         revision += 1
         let snapshot = records, revision = revision
-        saving = Task(priority: .utility) {
+        Task(priority: .utility) {
             _ = try? await file.writeInBackground(snapshot, revision: revision)
         }
     }

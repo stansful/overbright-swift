@@ -2,7 +2,7 @@
 // and the preferences: the slider's top per cap mode and the shown presets (ARCHITECTURE.md §5.3), the boost half's
 // state and the level the display shows for each (DESIGN.md §5.4, §5.5, §5.11), the allowed-now marker (§5.6,
 // `GainCeiling.liveCap` lowered to the decision's binding cap, in steps of ×0.01), the chip's reason (ARCHITECTURE.md
-// §6.2) and its actions (DESIGN.md §12.2), Compatibility mode for a booster's stop (§7.2).
+// §6.2) and its actions (DESIGN.md §12.2), none for a booster's stop (§7.2).
 import Foundation
 import OverbrightCore
 import OverbrightPolicy
@@ -15,16 +15,14 @@ import Testing
 
     private func status(_ facts: DisplayFacts, verdict: DisplayVerdict?, phase: EnginePhase = .idle,
                         target: BoostTarget = .neutral, reasons: [LimitReason] = [], reading: HeadroomReading? = nil,
-                        failedTries: Int = 0, advisories: [Advisory] = [], requested: Double = 1,
-                        applied: Double = 1) -> DisplayStatus {
+                        failedTries: Int = 0, requested: Double = 1, applied: Double = 1) -> DisplayStatus {
         let decision = verdict.map {
             DisplayDecision(key: facts.ref.key, target: target, reasons: reasons,
-                            eligibility: EligibilityResult(verdict: $0, advisories: advisories, defaultBoostEnabled: true,
-                                                           defaultMechanism: .table),
-                            mechanism: .table, domain: .encoded, requestedGain: requested)
+                            eligibility: EligibilityResult(verdict: $0, advisories: [], defaultBoostEnabled: true),
+                            domain: .encoded, requestedGain: requested)
         }
         return DisplayStatus(key: facts.ref.key, name: facts.name, phase: phase, decision: decision, appliedGain: applied,
-                             appliedFactor: 1, mechanism: .table, strategy: nil, lastReading: reading, sdrWhite: nil,
+                             appliedFactor: 1, strategy: nil, lastReading: reading, sdrWhite: nil,
                              failedTries: failedTries)
     }
 
@@ -246,18 +244,14 @@ import Testing
     }
 
     @Test func chipActionsFollowTheCopyCatalogue() {
-        func kinds(_ reasons: [LimitReason], phase: EnginePhase = .idle, tries: Int = 0,
-                   advisories: [Advisory] = []) -> [CardAction] {
+        func kinds(_ reasons: [LimitReason], phase: EnginePhase = .idle, tries: Int = 0) -> [CardAction] {
             let card = model(status(builtIn, verdict: ScriptedParts.builtInVerdict, phase: phase, reasons: reasons,
-                                    failedTries: tries, advisories: advisories), facts: builtIn)
+                                    failedTries: tries), facts: builtIn)
             return CardChip.kinds(for: card, isMasterOn: true)
         }
         let anchor = HelpEntry.Anchor.noExtraRange
         #expect(kinds([], phase: .failed(.headroomNeverArrived), tries: 1) == [.tryAgain, .learnMore(anchor)])
         #expect(kinds([], phase: .failed(.headroomNeverArrived), tries: 2) == [.tryAgain, .runSelfTest, .learnMore(anchor)])
-        // Compatibility mode is unavailable (§7.5): even a display carrying the advisory is not offered it.
-        #expect(kinds([], phase: .failed(.headroomNeverArrived), tries: 2, advisories: [.compatibilityModeAdvised])
-            == [.tryAgain, .runSelfTest, .learnMore(anchor)])
         #expect(kinds([.boostNotEnabled]) == [.turnOnExtraBrightness])
         #expect(kinds([.safeLimit]) == [.choosePeak])
         #expect(kinds([.oledLimit]) == [.choosePeak])
@@ -268,8 +262,7 @@ import Testing
         #expect(kinds([.tripped(.foreignTableAtLaunch)]) == [.openDisplaySettings])
         let booster = ConflictingApp(entryID: "b", severity: .booster, bundleID: nil, processID: 1, displayName: "B")
         let colorApp = ConflictingApp(entryID: "c", severity: .gammaWriter, bundleID: nil, processID: 2, displayName: "C")
-        #expect(kinds([.tripped(.attributedDrift(booster))]).isEmpty)   // not Continue, nor Compatibility mode (§7.5)
-        #expect(CardAction.continueInCompatibilityMode(booster).title == CardAction.useCompatibilityMode.title)
+        #expect(kinds([.tripped(.attributedDrift(booster))]).isEmpty)   // never Continue anyway (§7.2)
         #expect(kinds([.tripped(.attributedDrift(colorApp))]) == [.continueAnyway(colorApp)])
         #expect(kinds([.headroom]).isEmpty)
         #expect(kinds([.thermalSerious]).isEmpty)

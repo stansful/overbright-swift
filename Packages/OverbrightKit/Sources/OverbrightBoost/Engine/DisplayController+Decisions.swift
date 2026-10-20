@@ -17,16 +17,6 @@ extension DisplayController {
         target = decision.target
         guard !isOffConsole, parameters.isSessionActive, !isDriven else { return }
         retryLandingAtRest()
-        if decision.mechanism != mechanism {
-            guard isActive || isScaledOrDimmed else {
-                mechanism = decision.mechanism
-                return update(decision, parameters: parameters, requested: requested)
-            }
-            // Switch mechanisms through neutral: disarm, then the next reduction arms the other one.
-            switchesMechanism = true
-            disarm(kind: rampKind)
-            return
-        }
         switch phase {
         case .failed:
             return
@@ -72,8 +62,8 @@ extension DisplayController {
         }
     }
 
-    /// The arm or dim could not start (the table could not be read, the overlay could not be made): the display stays
-    /// idle and forgets the target, so the next reduction tries again instead of waiting for the target to change.
+    /// The arm or dim could not start (the table could not be read): the display stays idle and forgets the target,
+    /// so the next reduction tries again instead of waiting for the target to change.
     func couldNotStart() {
         target = .neutral
         deps.journal.record("arm.couldNotStart", display: key, time: deps.time)
@@ -86,7 +76,7 @@ extension DisplayController {
         case .arming, .gating, .suspended, .failed:
             break
         case .disarming:
-            if trigger != nil || overlay != nil, appliedGain >= 1 {
+            if trigger != nil, appliedGain >= 1 {
                 rampSerial &+= 1                                      // the disarm ramp stops where it is
                 rampSlot.cancel()
                 phase = .boosted
@@ -99,7 +89,7 @@ extension DisplayController {
                 beginArm()
             }
         case .ramping, .boosted:
-            if trigger == nil && overlay == nil { beginArm() } else { adjustBoost(gain, requested: requested) }
+            if trigger == nil { beginArm() } else { adjustBoost(gain, requested: requested) }
         }
     }
 
@@ -107,9 +97,7 @@ extension DisplayController {
         switch phase {
         case .idle:
             generation += 1
-            if mechanism == .overlay {
-                guard ensureOverlay() else { return couldNotStart() }
-            } else if !isScaledOrDimmed, !lastWriteIsScaled {           // never capture our own write still on screen
+            if !isScaledOrDimmed, !lastWriteIsScaled {                  // never capture our own write still on screen
                 guard captureBaseline() else {
                     if !phase.isFailed { couldNotStart() }
                     return

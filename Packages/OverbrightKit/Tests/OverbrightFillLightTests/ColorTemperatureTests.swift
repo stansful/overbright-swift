@@ -61,9 +61,6 @@ private func components(_ rgb: LinearRGB) -> [Double] { [rgb.red, rgb.green, rgb
         #expect(ColorTemperature.kelvin(warmth: -3) == 6_500)
         #expect(ColorTemperature.kelvin(warmth: 7) == 3_000)
         #expect(abs(ColorTemperature.kelvin(warmth: .nan) - 5_100) < 1e-9)
-        for warmth in stride(from: 0.0, through: 1.0, by: 0.05) {
-            #expect(abs(ColorTemperature.warmth(kelvin: ColorTemperature.kelvin(warmth: warmth)) - warmth) < 1e-12)
-        }
     }
 
     @Test func kelvinOutsideTheRangeIsClamped() {

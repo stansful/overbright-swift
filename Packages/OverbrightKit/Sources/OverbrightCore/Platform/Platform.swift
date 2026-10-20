@@ -9,7 +9,7 @@ import os
 
 /// One `Logger` category per area (Console: subsystem app.overbright.Overbright). ARCHITECTURE.md §8.3.
 public nonisolated enum LogCategory: String, Sendable, CaseIterable {
-    case app, settings, storage, updates, onboarding, displays, gamma, trigger, engine, policy, signals, conflicts
+    case app, settings, storage, updates, onboarding, displays, gamma, trigger, engine, policy, signals
     case fillLight, hotKeys, intents, menuBar, panel, diagnostics, selfTest
 }
 
@@ -53,7 +53,7 @@ public nonisolated enum HapticPattern: Sendable {
 /// ~/Library/Application Support/app.overbright.Overbright/ and ~/Library/Caches/app.overbright.Overbright/ — the
 /// only places Overbright writes files (ARCHITECTURE.md §8.2).
 public nonisolated struct AppPaths: Sendable {
-    /// Application Support/app.overbright.Overbright: self-test logs (`directory(for:)`).
+    /// Application Support/app.overbright.Overbright: self-test logs (`selfTestFolder`).
     public let root: URL
     /// Caches/app.overbright.Overbright: rebuildable data (strategy cache, HLG stills, update cache).
     public let caches: URL
@@ -80,19 +80,6 @@ public nonisolated struct AppPaths: Sendable {
     public static func temporary() -> AppPaths {
         let base = FileManager.default.temporaryDirectory.appending(path: "overbright-\(UUID().uuidString)", directoryHint: .isDirectory)
         return AppPaths(root: base.appending(path: "Support"), caches: base.appending(path: "Caches"))
-    }
-
-    /// `root/<folder>`, created on first use.
-    public func directory(for folder: String) throws -> URL {
-        let url = root.appending(path: folder, directoryHint: .isDirectory)
-        try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
-        return url
-    }
-    /// `caches/<folder>`, created on first use.
-    public func cacheDirectory(for folder: String) throws -> URL {
-        let url = caches.appending(path: folder, directoryHint: .isDirectory)
-        try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
-        return url
     }
 }
 

@@ -155,7 +155,7 @@ private nonisolated enum RandomPolicyInput {
         }
         let preferences = DisplayPreferences(
             boostEnabled: pick([nil, nil, true, true, false], &random), level: level,
-            capMode: pick(CapMode.allCases, &random), mechanism: pick(MechanismPreference.allCases, &random),
+            capMode: pick(CapMode.allCases, &random),
             calibration: chance(0.3, &random)
                 ? PolicyTestInputs.record(pick([.encoded, .linear, .inconclusive, .notBrighter], &random),
                                           potential: display.headroom.potential) : nil,

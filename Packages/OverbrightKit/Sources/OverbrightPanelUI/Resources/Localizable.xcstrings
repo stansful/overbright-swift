@@ -3461,215 +3461,6 @@
         }
       }
     },
-    "Brightens through an overlay. The pointer isn’t brightened, and screen recordings may show the overlay." : {
-      "comment" : "Panel ▸ Display card: help tag of the Compatibility mode caption",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "يزيد الإضاءة من خلال طبقة تراكب. لا يصبح المؤشر أكثر إضاءة، وقد تظهر الطبقة في تسجيلات الشاشة."
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Augmenta la brillantor amb una capa superposada. El punter no es fa més brillant i les gravacions de pantalla poden mostrar la capa."
-          }
-        },
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zjasňuje pomocí překryvné vrstvy. Ukazatel se nezjasní a na záznamech obrazovky může být překryvná vrstva vidět."
-          }
-        },
-        "da" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gør skærmen lysere med en overlejring. Markøren bliver ikke lysere, og skærmoptagelser kan vise overlejringen."
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hellt über eine Überlagerung auf. Der Zeiger wird nicht aufgehellt, und Bildschirmaufnahmen können die Überlagerung zeigen."
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Αυξάνει τη φωτεινότητα μέσω επικάλυψης. Ο δείκτης δεν γίνεται φωτεινότερος και η επικάλυψη μπορεί να φαίνεται στις εγγραφές οθόνης."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aumenta el brillo mediante una superposición. El puntero no gana brillo y las grabaciones de pantalla pueden mostrar la superposición."
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kirkastaa peittokuvan avulla. Osoitin ei kirkastu, ja peittokuva voi näkyä näyttötallenteissa."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Éclaircit au moyen d’une superposition. Le pointeur n’est pas éclairci et les enregistrements d’écran peuvent montrer la superposition."
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "מגביר את הבהירות באמצעות שכבת על. המצביע לא מתבהר, וייתכן ששכבת העל תופיע בהקלטות מסך."
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ओवरले के ज़रिए ब्राइटनेस बढ़ाता है। पॉइंटर ब्राइट नहीं होता, और स्क्रीन रिकॉर्डिंग में ओवरले दिख सकता है।"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Posvjetljuje pomoću prekrivnog sloja. Pokazivač se ne posvjetljuje, a prekrivni sloj može biti vidljiv na snimkama zaslona."
-          }
-        },
-        "hu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Átfedő réteggel világosít. A mutató nem lesz világosabb, és a képernyőfelvételeken látszódhat az átfedés."
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mencerahkan melalui lapisan di atas layar. Penunjuk tidak ikut lebih terang, dan rekaman layar dapat menampilkan lapisan tersebut."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aumenta la luminosità tramite una sovrapposizione. Il puntatore non diventa più luminoso e le registrazioni dello schermo potrebbero mostrare la sovrapposizione."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "オーバーレイを使って明るくします。ポインタは明るくならず、画面収録にオーバーレイが映ることがあります。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "오버레이를 통해 밝게 합니다. 포인터는 밝아지지 않으며 화면 기록에 오버레이가 나타날 수 있습니다."
-          }
-        },
-        "ms" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mencerahkan melalui lapisan tindih. Penuding tidak dicerahkan dan rakaman skrin mungkin menunjukkan lapisan itu."
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gjør lysere med et overlegg. Pekeren blir ikke lysere, og skjermopptak kan vise overlegget."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Maakt helderder via een laag over het scherm. De aanwijzer wordt niet helderder en schermopnamen kunnen die laag tonen."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rozjaśnia za pomocą nakładki. Wskaźnik nie jest rozjaśniany, a nakładka może być widoczna na nagraniach ekranu."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aumenta o brilho por meio de uma sobreposição. O ponteiro não fica mais claro, e gravações de tela podem mostrar a sobreposição."
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aumenta o brilho através de uma sobreposição. O cursor não fica mais brilhante e as gravações de ecrã podem mostrar a sobreposição."
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mărește luminozitatea printr‑un strat suprapus. Cursorul nu devine mai luminos, iar înregistrările ecranului pot arăta stratul suprapus."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Повышает яркость с помощью наложения. Указатель не становится ярче, а наложение может быть видно в записях экрана."
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zjasňuje pomocou prekryvnej vrstvy. Ukazovateľ sa nezjasní a na záznamoch obrazovky môže byť prekryvná vrstva viditeľná."
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Posvetli s prekrivnim slojem. Kazalec se ne posvetli, na posnetkih zaslona pa je prekrivni sloj lahko viden."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gör skärmen ljusare med ett överlägg. Pekaren blir inte ljusare och skärminspelningar kan visa överlägget."
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "เพิ่มความสว่างผ่านภาพซ้อนทับ ตัวชี้จะไม่สว่างขึ้น และภาพซ้อนทับอาจปรากฏในการบันทึกหน้าจอ"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bir kaplama katmanıyla parlaklaştırır. İmleç parlaklaşmaz ve ekran kayıtlarında kaplama görünebilir."
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Підвищує яскравість за допомогою накладання. Курсор не стає яскравішим, а накладання може бути видно на записах екрана."
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Làm sáng bằng một lớp phủ. Con trỏ không được làm sáng, và bản ghi màn hình có thể hiện lớp phủ."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "通过叠加层提高亮度。指针不会变亮，且屏幕录制中可能会出现叠加层。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "透過疊加層來提高亮度。指標不會變亮，且螢幕錄影中可能會顯示疊加層。"
-          }
-        }
-      }
-    },
     "Brightness" : {
       "comment" : "Panel: Fill Light card, the brightness slider’s label",
       "localizations" : {
@@ -5756,215 +5547,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "顏色看起來褪色，或HDR影片看起來平淡"
-          }
-        }
-      }
-    },
-    "Compatibility mode" : {
-      "comment" : "Panel ▸ Display card: caption under the readout of a display in Compatibility mode",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "وضع التوافق"
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mode de compatibilitat"
-          }
-        },
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Režim kompatibility"
-          }
-        },
-        "da" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kompatibilitetstilstand"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kompatibilitätsmodus"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Λειτουργία συμβατότητας"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Modo de compatibilidad"
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Yhteensopivuustila"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mode de compatibilité"
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "מצב תאימות"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "संगतता मोड"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Način kompatibilnosti"
-          }
-        },
-        "hu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kompatibilitási mód"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mode kompatibilitas"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Modalità compatibilità"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "互換モード"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "호환성 모드"
-          }
-        },
-        "ms" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mod keserasian"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kompatibilitetsmodus"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Compatibiliteitsmodus"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tryb zgodności"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Modo de Compatibilidade"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Modo de compatibilidade"
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mod de compatibilitate"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Режим совместимости"
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Režim kompatibility"
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Način združljivosti"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kompatibilitetsläge"
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "โหมดความเข้ากันได้"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Uyumluluk modu"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Режим сумісності"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chế độ tương thích"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "兼容模式"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "相容模式"
           }
         }
       }
@@ -17673,420 +17255,211 @@
         }
       }
     },
-    "Turn the display brightness all the way up; Overbright adds to it. Check the display’s verdict in Settings ▸ Displays. On a MacBook Pro, use the 1600-nit preset. On some Macs, macOS ignores color table changes: choose Calibrate… to check, or try Compatibility mode. Run Self-Test… shows what macOS reports." : {
+    "Turn the display brightness all the way up; Overbright adds to it. Check the display’s verdict in Settings ▸ Displays. On a MacBook Pro, use the 1600-nit preset. On some Macs, macOS ignores color table changes: choose Calibrate… to check. Run Self-Test… shows what macOS reports." : {
       "comment" : "Help: answer to “The screen didn’t get brighter”",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ارفع إضاءة الشاشة إلى أقصاها، إذ يضيف Overbright إليها. تحقق من تقييم الشاشة في الإعدادات ◂ شاشات العرض. على MacBook Pro، استخدم الإعداد المسبق 1600 نيت. وعلى بعض أجهزة Mac، يتجاهل macOS تغييرات جدول الألوان: اختر \"معايرة…\" للتحقق، أو جرّب وضع التوافق. ويعرض \"تشغيل الاختبار الذاتي…\" ما يُبلغ عنه macOS."
+            "value" : "ارفع إضاءة الشاشة إلى أقصاها، إذ يضيف Overbright إليها. تحقق من تقييم الشاشة في الإعدادات ◂ شاشات العرض. على MacBook Pro، استخدم الإعداد المسبق 1600 نيت. وعلى بعض أجهزة Mac، يتجاهل macOS تغييرات جدول الألوان: اختر \"معايرة…\" للتحقق. ويعرض \"تشغيل الاختبار الذاتي…\" ما يُبلغ عنه macOS."
           }
         },
         "ca" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apuja del tot la brillantor de la pantalla; l’Overbright hi afegeix llum. Consulta la valoració de la pantalla a Configuració ▸ Pantalles. En un MacBook Pro, fes servir la preconfiguració de 1600 nits. En alguns Mac, el macOS ignora els canvis a la taula de colors: tria “Calibra…” per comprovar‑ho o prova el mode de compatibilitat. “Executa l’autoprova…” mostra què indica el macOS."
+            "value" : "Apuja del tot la brillantor de la pantalla; l’Overbright hi afegeix llum. Consulta la valoració de la pantalla a Configuració ▸ Pantalles. En un MacBook Pro, fes servir la preconfiguració de 1600 nits. En alguns Mac, el macOS ignora els canvis a la taula de colors: tria “Calibra…” per comprovar‑ho. “Executa l’autoprova…” mostra què indica el macOS."
           }
         },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nastavte jas monitoru na maximum; Overbright přidá světlo navíc. Stav monitoru zkontrolujte v Nastavení ▸ Monitory. Na MacBooku Pro použijte předvolbu 1600 nitů. Na některých Macích macOS ignoruje změny tabulky barev: ověřte to volbou Kalibrovat… nebo zkuste režim kompatibility. Volba Spustit autotest… ukáže, co hlásí macOS."
+            "value" : "Nastavte jas monitoru na maximum; Overbright přidá světlo navíc. Stav monitoru zkontrolujte v Nastavení ▸ Monitory. Na MacBooku Pro použijte předvolbu 1600 nitů. Na některých Macích macOS ignoruje změny tabulky barev: zvolte Kalibrovat… a ověřte to. Volba Spustit autotest… ukáže, co hlásí macOS."
           }
         },
         "da" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Skru helt op for skærmens lysstyrke – Overbright lægger lys oven i. Tjek skærmens status under Indstillinger ▸ Skærme. På en MacBook Pro skal du bruge forindstillingen med 1600 nits. På nogle Mac-computere ignorerer macOS ændringer i farvetabellen: Vælg Kalibrer… for at tjekke det, eller prøv kompatibilitetstilstand. Kør selvtest… viser, hvad macOS rapporterer."
+            "value" : "Skru helt op for skærmens lysstyrke – Overbright lægger lys oven i. Tjek skærmens status under Indstillinger ▸ Skærme. På en MacBook Pro skal du bruge forindstillingen med 1600 nits. På nogle Mac-computere ignorerer macOS ændringer i farvetabellen: Vælg Kalibrer… for at tjekke det. Kør selvtest… viser, hvad macOS rapporterer."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stelle die Displayhelligkeit ganz hoch; Overbright erhöht sie zusätzlich. Prüfe die Bewertung des Displays unter Einstellungen ▸ Displays. Verwende auf einem MacBook Pro die Voreinstellung mit 1600 Nits. Auf manchen Macs ignoriert macOS Änderungen der Farbtabelle: Wähle „Kalibrieren …“, um das zu prüfen, oder probiere den Kompatibilitätsmodus. „Selbsttest ausführen …“ zeigt, was macOS meldet."
+            "value" : "Stelle die Displayhelligkeit ganz hoch; Overbright erhöht sie zusätzlich. Prüfe die Bewertung des Displays unter Einstellungen ▸ Displays. Verwende auf einem MacBook Pro die Voreinstellung mit 1600 Nits. Auf manchen Macs ignoriert macOS Änderungen der Farbtabelle: Wähle „Kalibrieren …“, um das zu prüfen. „Selbsttest ausführen …“ zeigt, was macOS meldet."
           }
         },
         "el" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ανεβάστε τη φωτεινότητα της οθόνης στο μέγιστο. Το Overbright προσθέτει φως πάνω σε αυτήν. Ελέγξτε την αξιολόγηση της οθόνης στις Ρυθμίσεις ▸ Οθόνες. Σε MacBook Pro, χρησιμοποιήστε την προεπιλογή 1600 nit. Σε ορισμένα Mac, το macOS αγνοεί τις αλλαγές στον πίνακα χρωμάτων: επιλέξτε «Βαθμονόμηση…» για να το ελέγξετε ή δοκιμάστε τη λειτουργία συμβατότητας. Η «Εκτέλεση αυτοελέγχου…» δείχνει τι αναφέρει το macOS."
+            "value" : "Ανεβάστε τη φωτεινότητα της οθόνης στο μέγιστο. Το Overbright προσθέτει φως πάνω σε αυτήν. Ελέγξτε την αξιολόγηση της οθόνης στις Ρυθμίσεις ▸ Οθόνες. Σε MacBook Pro, χρησιμοποιήστε την προεπιλογή 1600 nit. Σε ορισμένα Mac, το macOS αγνοεί τις αλλαγές στον πίνακα χρωμάτων: επιλέξτε «Βαθμονόμηση…» για να το ελέγξετε. Η «Εκτέλεση αυτοελέγχου…» δείχνει τι αναφέρει το macOS."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sube el brillo de la pantalla del todo; Overbright se suma a él. Consulta el estado de la pantalla en Ajustes ▸ Pantallas. En un MacBook Pro, usa el preajuste de 1600 nits. En algunos Mac, macOS ignora los cambios en la tabla de colores: elige “Calibrar…” para comprobarlo o prueba el modo de compatibilidad. “Ejecutar autoprueba…” muestra lo que informa macOS."
+            "value" : "Sube el brillo de la pantalla del todo; Overbright se suma a él. Consulta el estado de la pantalla en Ajustes ▸ Pantallas. En un MacBook Pro, usa el preajuste de 1600 nits. En algunos Mac, macOS ignora los cambios en la tabla de colores: elige “Calibrar…” para comprobarlo. “Ejecutar autoprueba…” muestra lo que informa macOS."
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nosta näytön kirkkaus täysille – Overbright lisää valoa sen päälle. Tarkista näytön arvio kohdassa Asetukset ▸ Näytöt. Käytä MacBook Prossa 1600 nitin esiasetusta. Joissakin Maceissa macOS ohittaa väritaulukon muutokset: tarkista asia valitsemalla ”Kalibroi…” tai kokeile yhteensopivuustilaa. ”Suorita itsetesti…” näyttää, mitä macOS ilmoittaa."
+            "value" : "Nosta näytön kirkkaus täysille – Overbright lisää valoa sen päälle. Tarkista näytön arvio kohdassa Asetukset ▸ Näytöt. Käytä MacBook Prossa 1600 nitin esiasetusta. Joissakin Maceissa macOS ohittaa väritaulukon muutokset: tarkista asia valitsemalla ”Kalibroi…”. ”Suorita itsetesti…” näyttää, mitä macOS ilmoittaa."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Montez la luminosité de l’écran au maximum ; Overbright s’y ajoute. Consultez l’évaluation de l’écran dans Réglages ▸ Écrans. Sur un MacBook Pro, utilisez le préréglage à 1600 nits. Sur certains Mac, macOS ignore les modifications de la table des couleurs : choisissez « Calibrer… » pour le vérifier, ou essayez le mode de compatibilité. « Lancer l’autotest… » montre ce que signale macOS."
+            "value" : "Montez la luminosité de l’écran au maximum ; Overbright s’y ajoute. Consultez l’évaluation de l’écran dans Réglages ▸ Écrans. Sur un MacBook Pro, utilisez le préréglage à 1600 nits. Sur certains Mac, macOS ignore les modifications de la table des couleurs : choisissez « Calibrer… » pour le vérifier. « Lancer l’autotest… » montre ce que signale macOS."
           }
         },
         "he" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "יש להגביר את בהירות הצג עד הסוף; Overbright מוסיף עליה. אפשר לבדוק את ההערכה של הצג ב״הגדרות״ > ״צגים״. ב-MacBook Pro יש להשתמש בתצורה של 1600 ניט. בחלק ממחשבי ה-Mac, מערכת macOS מתעלמת משינויים בטבלת הצבעים: כדי לבדוק, יש לבחור ״כיול…״, או לנסות את מצב התאימות. ״הרצת בדיקה עצמית…״ מראה מה מערכת macOS מדווחת."
+            "value" : "יש להגביר את בהירות הצג עד הסוף; Overbright מוסיף עליה. אפשר לבדוק את ההערכה של הצג ב״הגדרות״ > ״צגים״. ב-MacBook Pro יש להשתמש בתצורה של 1600 ניט. בחלק ממחשבי ה-Mac, מערכת macOS מתעלמת משינויים בטבלת הצבעים: כדי לבדוק, יש לבחור ״כיול…״. ״הרצת בדיקה עצמית…״ מראה מה מערכת macOS מדווחת."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "डिस्प्ले की ब्राइटनेस पूरी बढ़ाएँ; Overbright उसमें और जोड़ता है। सेटिंग ▸ डिस्प्ले में डिस्प्ले का आकलन देखें। MacBook Pro पर 1600 निट वाला प्रीसेट इस्तेमाल करें। कुछ Mac पर macOS रंग टेबल में किए गए बदलावों को अनदेखा करता है: जाँचने के लिए “कैलिब्रेट करें…” चुनें, या संगतता मोड आज़माएँ। “सेल्फ़-टेस्ट चलाएँ…” दिखाता है कि macOS क्या रिपोर्ट करता है।"
+            "value" : "डिस्प्ले की ब्राइटनेस पूरी बढ़ाएँ; Overbright उसमें और जोड़ता है। सेटिंग ▸ डिस्प्ले में डिस्प्ले का आकलन देखें। MacBook Pro पर 1600 निट वाला प्रीसेट इस्तेमाल करें। कुछ Mac पर macOS रंग टेबल में किए गए बदलावों को अनदेखा करता है: जाँचने के लिए “कैलिब्रेट करें…” चुनें। “सेल्फ़-टेस्ट चलाएँ…” दिखाता है कि macOS क्या रिपोर्ट करता है।"
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Povećajte svjetlinu zaslona do kraja; Overbright dodaje svjetlo povrh nje. Provjerite status zaslona u odjeljku Postavke ▸ Zasloni. Na MacBook Pro računalu koristite podešenje od 1600 nita. Na nekim Mac računalima macOS zanemaruje promjene tablice boja: odaberite “Kalibriraj…” da biste to provjerili ili isprobajte način kompatibilnosti. “Pokreni samoprovjeru…” prikazuje što macOS javlja."
+            "value" : "Povećajte svjetlinu zaslona do kraja; Overbright dodaje svjetlo povrh nje. Provjerite status zaslona u odjeljku Postavke ▸ Zasloni. Na MacBook Pro računalu koristite podešenje od 1600 nita. Na nekim Mac računalima macOS zanemaruje promjene tablice boja: odaberite “Kalibriraj…” da biste to provjerili. “Pokreni samoprovjeru…” prikazuje što macOS javlja."
           }
         },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Állítsa a kijelző fényerejét maximumra; az Overbright ehhez ad hozzá. Ellenőrizze a kijelző értékelését a Beállítások ▸ Kijelzők részben. MacBook Prón használja az 1600 nites előbeállítást. Egyes Mac gépeken a macOS figyelmen kívül hagyja a színtábla módosításait: az ellenőrzéshez válassza a „Kalibrálás…” lehetőséget, vagy próbálja ki a kompatibilitási módot. Az „Önteszt futtatása…” megmutatja, mit jelez a macOS."
+            "value" : "Állítsa a kijelző fényerejét maximumra; az Overbright ehhez ad hozzá. Ellenőrizze a kijelző értékelését a Beállítások ▸ Kijelzők részben. MacBook Prón használja az 1600 nites előbeállítást. Egyes Mac gépeken a macOS figyelmen kívül hagyja a színtábla módosításait: az ellenőrzéshez válassza a „Kalibrálás…” lehetőséget. Az „Önteszt futtatása…” megmutatja, mit jelez a macOS."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Naikkan kecerahan layar sepenuhnya; Overbright menambah di atasnya. Periksa status layar di Pengaturan ▸ Layar. Di MacBook Pro, gunakan preset 1600 nit. Di beberapa Mac, macOS mengabaikan perubahan tabel warna: pilih “Kalibrasi…” untuk memeriksa, atau coba Mode kompatibilitas. “Jalankan Uji Mandiri…” menampilkan apa yang dilaporkan macOS."
+            "value" : "Naikkan kecerahan layar sepenuhnya; Overbright menambah di atasnya. Periksa status layar di Pengaturan ▸ Layar. Di MacBook Pro, gunakan preset 1600 nit. Di beberapa Mac, macOS mengabaikan perubahan tabel warna: pilih “Kalibrasi…” untuk memeriksa. “Jalankan Uji Mandiri…” menampilkan apa yang dilaporkan macOS."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Porta la luminosità dello schermo al massimo; Overbright si aggiunge a essa. Controlla lo stato dello schermo in Impostazioni ▸ Schermi. Su un MacBook Pro, usa il preset da 1600 nit. Su alcuni Mac, macOS ignora le modifiche alla tabella colori: scegli “Calibra…” per verificarlo, oppure prova la modalità compatibilità. “Esegui autotest…” mostra cosa riporta macOS."
+            "value" : "Porta la luminosità dello schermo al massimo; Overbright si aggiunge a essa. Controlla lo stato dello schermo in Impostazioni ▸ Schermi. Su un MacBook Pro, usa il preset da 1600 nit. Su alcuni Mac, macOS ignora le modifiche alla tabella colori: scegli “Calibra…” per verificarlo. “Esegui autotest…” mostra cosa riporta macOS."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ディスプレイの輝度を最大まで上げてください。Overbrightはそこに上乗せします。設定 ▸ ディスプレイで、ディスプレイの判定を確認してください。MacBook Proでは、1600ニトのプリセットを使用してください。一部のMacでは、macOSがカラーテーブルの変更を無視します。“キャリブレーション…”を選択して確認するか、互換モードを試してください。“セルフテストを実行…”では、macOSが報告する内容を確認できます。"
+            "value" : "ディスプレイの輝度を最大まで上げてください。Overbrightはそこに上乗せします。設定 ▸ ディスプレイで、ディスプレイの判定を確認してください。MacBook Proでは、1600ニトのプリセットを使用してください。一部のMacでは、macOSがカラーテーブルの変更を無視します。“キャリブレーション…”を選択して確認してください。“セルフテストを実行…”では、macOSが報告する内容を確認できます。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "디스플레이 밝기를 끝까지 높이십시오. Overbright는 그 위에 밝기를 더합니다. 설정 ▸ 디스플레이에서 디스플레이의 판정 결과를 확인하십시오. MacBook Pro에서는 1600니트 프리셋을 사용하십시오. 일부 Mac에서는 macOS가 색상 테이블 변경을 무시합니다. ‘보정…’을 선택하여 확인하거나 호환성 모드를 사용해 보십시오. ‘자체 테스트 실행…’을 선택하면 macOS가 보고하는 내용을 볼 수 있습니다."
+            "value" : "디스플레이 밝기를 끝까지 높이십시오. Overbright는 그 위에 밝기를 더합니다. 설정 ▸ 디스플레이에서 디스플레이의 판정 결과를 확인하십시오. MacBook Pro에서는 1600니트 프리셋을 사용하십시오. 일부 Mac에서는 macOS가 색상 테이블 변경을 무시합니다. ‘보정…’을 선택하여 확인하십시오. ‘자체 테스트 실행…’을 선택하면 macOS가 보고하는 내용을 볼 수 있습니다."
           }
         },
         "ms" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Naikkan kecerahan paparan sepenuhnya; Overbright menambah di atasnya. Semak status paparan dalam Seting ▸ Paparan. Pada MacBook Pro, gunakan praset 1600 nit. Pada sesetengah Mac, macOS mengabaikan perubahan jadual warna: pilih “Kalibrasi…” untuk menyemak, atau cuba Mod keserasian. “Jalankan Ujian Kendiri…” menunjukkan apa yang dilaporkan oleh macOS."
+            "value" : "Naikkan kecerahan paparan sepenuhnya; Overbright menambah di atasnya. Semak status paparan dalam Seting ▸ Paparan. Pada MacBook Pro, gunakan praset 1600 nit. Pada sesetengah Mac, macOS mengabaikan perubahan jadual warna: pilih “Kalibrasi…” untuk menyemak. “Jalankan Ujian Kendiri…” menunjukkan apa yang dilaporkan oleh macOS."
           }
         },
         "nb" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Skru lysstyrken på skjermen helt opp – Overbright legger til mer. Sjekk skjermens vurdering i Innstillinger ▸ Skjermer. På en MacBook Pro bruker du forhåndsinnstillingen med 1600 nit. På noen Macer ignorerer macOS endringer i fargetabellen: velg «Kalibrer…» for å sjekke, eller prøv kompatibilitetsmodus. «Kjør selvtest…» viser hva macOS rapporterer."
+            "value" : "Skru lysstyrken på skjermen helt opp – Overbright legger til mer. Sjekk skjermens vurdering i Innstillinger ▸ Skjermer. På en MacBook Pro bruker du forhåndsinnstillingen med 1600 nit. På noen Macer ignorerer macOS endringer i fargetabellen: velg «Kalibrer…» for å sjekke. «Kjør selvtest…» viser hva macOS rapporterer."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zet de helderheid van het beeldscherm helemaal omhoog; Overbright voegt daar licht aan toe. Bekijk de beoordeling van het beeldscherm in Instellingen ▸ Beeldschermen. Gebruik op een MacBook Pro de voorinstelling van 1600 nits. Op sommige Macs negeert macOS wijzigingen in de kleurentabel: kies ‘Kalibreer…’ om dit te controleren, of probeer de compatibiliteitsmodus. ‘Voer zelftest uit…’ laat zien wat macOS rapporteert."
+            "value" : "Zet de helderheid van het beeldscherm helemaal omhoog; Overbright voegt daar licht aan toe. Bekijk de beoordeling van het beeldscherm in Instellingen ▸ Beeldschermen. Gebruik op een MacBook Pro de voorinstelling van 1600 nits. Op sommige Macs negeert macOS wijzigingen in de kleurentabel: kies ‘Kalibreer…’ om dit te controleren. ‘Voer zelftest uit…’ laat zien wat macOS rapporteert."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ustaw maksymalną jasność wyświetlacza; Overbright dodaje światło ponad nią. Sprawdź ocenę wyświetlacza w sekcji Ustawienia ▸ Wyświetlacze. Na MacBooku Pro użyj ustawienia wstępnego 1600 nt. Na niektórych Macach macOS ignoruje zmiany tabeli kolorów: wybierz „Skalibruj…”, aby to sprawdzić, lub spróbuj trybu zgodności. „Uruchom autotest…” pokaże, co zgłasza macOS."
+            "value" : "Ustaw maksymalną jasność wyświetlacza; Overbright dodaje światło ponad nią. Sprawdź ocenę wyświetlacza w sekcji Ustawienia ▸ Wyświetlacze. Na MacBooku Pro użyj ustawienia wstępnego 1600 nt. Na niektórych Macach macOS ignoruje zmiany tabeli kolorów: wybierz „Skalibruj…”, aby to sprawdzić. „Uruchom autotest…” pokaże, co zgłasza macOS."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aumente o brilho da tela até o fim; o Overbright acrescenta luz a ele. Confira o status da tela em Ajustes ▸ Telas. Em um MacBook Pro, use o pré-ajuste de 1600 nits. Em alguns Macs, o macOS ignora alterações na tabela de cores: escolha “Calibrar…” para verificar ou experimente o Modo de Compatibilidade. “Executar Autoteste…” mostra o que o macOS informa."
+            "value" : "Aumente o brilho da tela até o fim; o Overbright acrescenta luz a ele. Confira o status da tela em Ajustes ▸ Telas. Em um MacBook Pro, use o pré-ajuste de 1600 nits. Em alguns Macs, o macOS ignora alterações na tabela de cores: escolha “Calibrar…” para verificar. “Executar Autoteste…” mostra o que o macOS informa."
           }
         },
         "pt-PT" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ponha o brilho do monitor no máximo; o Overbright acrescenta luz a esse brilho. Verifique o diagnóstico do monitor em Definições ▸ Monitores. Num MacBook Pro, use a predefinição de 1600 nits. Em alguns Mac, o macOS ignora as alterações à tabela de cores: escolha “Calibrar…” para verificar ou experimente o modo de compatibilidade. “Executar autoteste…” mostra o que o macOS indica."
+            "value" : "Ponha o brilho do monitor no máximo; o Overbright acrescenta luz a esse brilho. Verifique o diagnóstico do monitor em Definições ▸ Monitores. Num MacBook Pro, use a predefinição de 1600 nits. Em alguns Mac, o macOS ignora as alterações à tabela de cores: escolha “Calibrar…” para verificar. “Executar autoteste…” mostra o que o macOS indica."
           }
         },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Setați luminozitatea afișajului la maximum; Overbright adaugă peste ea. Verificați starea afișajului în Configurări ▸ Afișaje. Pe un MacBook Pro, folosiți preconfigurarea de 1600 de niți. Pe unele Mac‑uri, macOS ignoră modificările tabelului de culori: alegeți „Calibrați…” pentru a verifica sau încercați modul de compatibilitate. „Rulați autotestul…” arată ce raportează macOS."
+            "value" : "Setați luminozitatea afișajului la maximum; Overbright adaugă peste ea. Verificați starea afișajului în Configurări ▸ Afișaje. Pe un MacBook Pro, folosiți preconfigurarea de 1600 de niți. Pe unele Mac‑uri, macOS ignoră modificările tabelului de culori: alegeți „Calibrați…” pentru a verifica. „Rulați autotestul…” arată ce raportează macOS."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Поднимите яркость дисплея до максимума: Overbright добавляет свет поверх неё. Проверьте статус дисплея в разделе Настройки ▸ Дисплеи. На MacBook Pro выберите набор настроек на 1600 нит. На некоторых Mac macOS игнорирует изменения цветовой таблицы: чтобы проверить это, выберите «Откалибровать…» или попробуйте режим совместимости. «Запустить самопроверку…» покажет, что сообщает macOS."
+            "value" : "Поднимите яркость дисплея до максимума: Overbright добавляет свет поверх неё. Проверьте статус дисплея в разделе Настройки ▸ Дисплеи. На MacBook Pro выберите набор настроек на 1600 нит. На некоторых Mac macOS игнорирует изменения цветовой таблицы: чтобы проверить это, выберите «Откалибровать…». «Запустить самопроверку…» покажет, что сообщает macOS."
           }
         },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nastavte jas displeja na maximum; Overbright pridáva navyše. Stav displeja skontrolujte v Nastaveniach ▸ Displeje. Na MacBooku Pro použite predvoľbu 1600 nitov. Na niektorých Macoch macOS ignoruje zmeny tabuľky farieb: overte to pomocou voľby Kalibrovať… alebo skúste režim kompatibility. Voľba Spustiť autotest… ukáže, čo hlási macOS."
+            "value" : "Nastavte jas displeja na maximum; Overbright pridáva navyše. Stav displeja skontrolujte v Nastaveniach ▸ Displeje. Na MacBooku Pro použite predvoľbu 1600 nitov. Na niektorých Macoch macOS ignoruje zmeny tabuľky farieb: zvoľte Kalibrovať… a overte to. Voľba Spustiť autotest… ukáže, čo hlási macOS."
           }
         },
         "sl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nastavite najvišjo svetlost zaslona; Overbright doda še več. Stanje zaslona preverite v Nastavitvah ▸ Zasloni. Na MacBooku Pro uporabite prednastavitev 1600 nitov. Na nekaterih Macih macOS prezre spremembe barvne tabele: to preverite z možnostjo »Umeri …« ali preskusite način združljivosti. »Zaženi samopreizkus …« pokaže, kaj sporoča macOS."
+            "value" : "Nastavite najvišjo svetlost zaslona; Overbright doda še več. Stanje zaslona preverite v Nastavitvah ▸ Zasloni. Na MacBooku Pro uporabite prednastavitev 1600 nitov. Na nekaterih Macih macOS prezre spremembe barvne tabele: to preverite z možnostjo »Umeri …«. »Zaženi samopreizkus …« pokaže, kaj sporoča macOS."
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Höj skärmens ljusstyrka hela vägen – Overbright lägger till ljus ovanpå. Kontrollera skärmens status i Inställningar ▸ Skärmar. På en MacBook Pro använder du förinställningen för 1600 cd/㎡. På vissa Mac-datorer ignorerar macOS ändringar i färgtabellen – välj Kalibrera… för att kontrollera, eller prova kompatibilitetsläge. Kör självtest… visar vad macOS rapporterar."
+            "value" : "Höj skärmens ljusstyrka hela vägen – Overbright lägger till ljus ovanpå. Kontrollera skärmens status i Inställningar ▸ Skärmar. På en MacBook Pro använder du förinställningen för 1600 cd/㎡. På vissa Mac-datorer ignorerar macOS ändringar i färgtabellen – välj Kalibrera… för att kontrollera. Kör självtest… visar vad macOS rapporterar."
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "เพิ่มความสว่างของจอภาพจนสุด Overbright จะเพิ่มต่อจากนั้น ตรวจสอบผลการประเมินของจอภาพใน การตั้งค่า ▸ จอภาพ บน MacBook Pro ให้ใช้ค่าที่ตั้งไว้ 1600 นิต บน Mac บางเครื่อง macOS จะไม่สนใจการเปลี่ยนแปลงตารางสี ให้เลือก “ปรับเทียบ…” เพื่อตรวจสอบ หรือลองใช้โหมดความเข้ากันได้ “เรียกใช้การทดสอบตัวเอง…” จะแสดงสิ่งที่ macOS รายงาน"
+            "value" : "เพิ่มความสว่างของจอภาพจนสุด Overbright จะเพิ่มต่อจากนั้น ตรวจสอบผลการประเมินของจอภาพใน การตั้งค่า ▸ จอภาพ บน MacBook Pro ให้ใช้ค่าที่ตั้งไว้ 1600 นิต บน Mac บางเครื่อง macOS จะไม่สนใจการเปลี่ยนแปลงตารางสี ให้เลือก “ปรับเทียบ…” เพื่อตรวจสอบ “เรียกใช้การทดสอบตัวเอง…” จะแสดงสิ่งที่ macOS รายงาน"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ekran parlaklığını sonuna kadar açın; Overbright bunun üstüne ekler. Ayarlar ▸ Ekranlar bölümünde ekranın değerlendirmesini denetleyin. MacBook Pro’da 1600 nit ön ayarını kullanın. Bazı Mac’lerde macOS renk tablosu değişikliklerini yok sayar: denetlemek için “Kalibre Et…” komutunu seçin ya da uyumluluk modunu deneyin. “Öz Testi Çalıştır…”, macOS tarafından bildirilenleri gösterir."
+            "value" : "Ekran parlaklığını sonuna kadar açın; Overbright bunun üstüne ekler. Ayarlar ▸ Ekranlar bölümünde ekranın değerlendirmesini denetleyin. MacBook Pro’da 1600 nit ön ayarını kullanın. Bazı Mac’lerde macOS renk tablosu değişikliklerini yok sayar: denetlemek için “Kalibre Et…” komutunu seçin. “Öz Testi Çalıştır…”, macOS tarafından bildirilenleri gösterir."
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Підніміть яскравість дисплея до максимуму: Overbright додає світло поверх неї. Перевірте статус дисплея в розділі Параметри ▸ Дисплеї. На MacBook Pro виберіть набір параметрів на 1600 ніт. На деяких Mac macOS ігнорує зміни колірної таблиці: щоб перевірити це, виберіть «Відкалібрувати…» або спробуйте режим сумісності. «Запустити самоперевірку…» покаже, що повідомляє macOS."
+            "value" : "Підніміть яскравість дисплея до максимуму: Overbright додає світло поверх неї. Перевірте статус дисплея в розділі Параметри ▸ Дисплеї. На MacBook Pro виберіть набір параметрів на 1600 ніт. На деяких Mac macOS ігнорує зміни колірної таблиці: щоб перевірити це, виберіть «Відкалібрувати…». «Запустити самоперевірку…» покаже, що повідомляє macOS."
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hãy tăng độ sáng màn hình lên tối đa; Overbright cộng thêm vào đó. Xem trạng thái của màn hình trong Cài đặt ▸ Màn hình. Trên MacBook Pro, hãy dùng giá trị đặt trước 1600 nit. Trên một số máy Mac, macOS bỏ qua thay đổi bảng màu: hãy chọn “Hiệu chỉnh…” để kiểm tra, hoặc thử Chế độ tương thích. “Chạy tự kiểm tra…” cho biết macOS báo cáo những gì."
+            "value" : "Hãy tăng độ sáng màn hình lên tối đa; Overbright cộng thêm vào đó. Xem trạng thái của màn hình trong Cài đặt ▸ Màn hình. Trên MacBook Pro, hãy dùng giá trị đặt trước 1600 nit. Trên một số máy Mac, macOS bỏ qua thay đổi bảng màu: hãy chọn “Hiệu chỉnh…” để kiểm tra. “Chạy tự kiểm tra…” cho biết macOS báo cáo những gì."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "将显示器亮度调到最高；Overbright会在此基础上增加亮度。在“设置”▸“显示器”中查看显示器的判定结果。在MacBook Pro上，请使用1600尼特预置。在某些Mac上，macOS会忽略颜色表更改：选择“校准…”进行检查，或尝试兼容模式。“运行自检…”会显示macOS报告的内容。"
+            "value" : "将显示器亮度调到最高；Overbright会在此基础上增加亮度。在“设置”▸“显示器”中查看显示器的判定结果。在MacBook Pro上，请使用1600尼特预置。在某些Mac上，macOS会忽略颜色表更改：选择“校准…”进行检查。“运行自检…”会显示macOS报告的内容。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "將顯示器亮度調到最高；Overbright會在此基礎上增加亮度。在「設定」▸「顯示器」中查看顯示器的狀態。在MacBook Pro上，請使用1600尼特的預設組。在部分Mac上，macOS會忽略色彩表的更改：選擇「校正⋯」來檢查，或試試相容模式。「執行自我測試⋯」會顯示macOS回報的內容。"
-          }
-        }
-      }
-    },
-    "Use Compatibility mode" : {
-      "comment" : "Panel ▸ Display card: chip action that switches the display to Compatibility mode",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "استخدام وضع التوافق"
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Utilitza el mode de compatibilitat"
-          }
-        },
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Použít režim kompatibility"
-          }
-        },
-        "da" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Brug kompatibilitetstilstand"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kompatibilitätsmodus nutzen"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Χρήση λειτουργίας συμβατότητας"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Usar el modo de compatibilidad"
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Käytä yhteensopivuustilaa"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Utiliser le mode de compatibilité"
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "שימוש במצב תאימות"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "संगतता मोड चुनें"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Koristi način kompatibilnosti"
-          }
-        },
-        "hu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kompatibilitási mód használata"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gunakan Mode kompatibilitas"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Usa la modalità compatibilità"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "互換モードを使用"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "호환성 모드 사용"
-          }
-        },
-        "ms" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Guna Mod keserasian"
-          }
-        },
-        "nb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bruk kompatibilitetsmodus"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gebruik compatibiliteitsmodus"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Użyj trybu zgodności"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Usar o Modo de Compatibilidade"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Usar modo de compatibilidade"
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Utilizați modul de compatibilitate"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Включить режим совместимости"
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Použiť režim kompatibility"
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Uporabi način združljivosti"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Använd kompatibilitetsläge"
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ใช้โหมดความเข้ากันได้"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Uyumluluk modunu kullan"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Увімкнути режим сумісності"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dùng Chế độ tương thích"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "使用兼容模式"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "使用相容模式"
+            "value" : "將顯示器亮度調到最高；Overbright會在此基礎上增加亮度。在「設定」▸「顯示器」中查看顯示器的狀態。在MacBook Pro上，請使用1600尼特的預設組。在部分Mac上，macOS會忽略色彩表的更改：選擇「校正⋯」來檢查。「執行自我測試⋯」會顯示macOS回報的內容。"
           }
         }
       }
@@ -19136,211 +18509,211 @@
         }
       }
     },
-    "While extra brightness is on, HDR highlights can’t go above the brightened white. Overbright pauses for full-screen video and for video players; add other apps in Settings ▸ Automations." : {
-      "comment" : "Help: answer about washed-out colors",
+    "While extra brightness is on, HDR highlights can’t go above the brightened white. In Settings ▸ Automations, Overbright can pause for full-screen video and for the apps you choose." : {
+      "comment" : "Help: answer about washed-out colors (Settings ▸ Automations is Overbright’s Settings window and pane; both rules are off until the user turns them on)",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "أثناء تشغيل الإضاءة الإضافية، لا يمكن أن تتجاوز المناطق الساطعة في محتوى HDR الأبيض بعد زيادة إضاءته. يتوقف Overbright مؤقتًا لفيديو بملء الشاشة ولمشغلات الفيديو؛ أضف تطبيقات أخرى في الإعدادات ◂ الأتمتة."
+            "value" : "أثناء تشغيل الإضاءة الإضافية، لا يمكن أن تتجاوز المناطق الساطعة في محتوى HDR الأبيض بعد زيادة إضاءته. في الإعدادات ◂ الأتمتة، يمكن أن يتوقف Overbright مؤقتًا لفيديو بملء الشاشة وللتطبيقات التي تختارها."
           }
         },
         "ca" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mentre la brillantor extra està activada, els punts brillants HDR no poden superar el blanc intensificat. L’Overbright es posa en pausa amb vídeo a pantalla completa i amb reproductors de vídeo; afegeix altres apps a Configuració ▸ Automatitzacions."
+            "value" : "Mentre la brillantor extra està activada, els punts brillants HDR no poden superar el blanc intensificat. A Configuració ▸ Automatitzacions, l’Overbright es pot posar en pausa amb vídeo a pantalla completa i amb les apps que triïs."
           }
         },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dokud je zapnutý extra jas, nemohou nejjasnější místa obrazu HDR přesáhnout zjasněnou bílou. Overbright se pozastavuje u videa na celou obrazovku a u přehrávačů videa; další aplikace přidáte v Nastavení ▸ Automatizace."
+            "value" : "Dokud je zapnutý extra jas, nemohou nejjasnější místa obrazu HDR přesáhnout zjasněnou bílou. V Nastavení ▸ Automatizace se Overbright může pozastavovat u videa na celou obrazovku a u aplikací, které vyberete."
           }
         },
         "da" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Når ekstra lysstyrke er slået til, kan HDR-højlys ikke blive lysere end den forstærkede hvide farve. Overbright holder pause ved video på fuld skærm og for videoafspillere – tilføj andre apps under Indstillinger ▸ Automatiseringer."
+            "value" : "Når ekstra lysstyrke er slået til, kan HDR-højlys ikke blive lysere end den forstærkede hvide farve. Under Indstillinger ▸ Automatiseringer kan Overbright holde pause ved video på fuld skærm og for de apps, du vælger."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Solange die Zusatzhelligkeit aktiv ist, können HDR-Spitzlichter nicht heller als das aufgehellte Weiß werden. Overbright pausiert bei Vollbildvideos und in Videoplayern; weitere Apps kannst du unter Einstellungen ▸ Automationen hinzufügen."
+            "value" : "Solange die Zusatzhelligkeit aktiv ist, können HDR-Spitzlichter nicht heller als das aufgehellte Weiß werden. Unter Einstellungen ▸ Automationen kann Overbright bei Vollbildvideos und in Apps deiner Wahl pausieren."
           }
         },
         "el" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Όσο η επιπλέον φωτεινότητα είναι ενεργή, τα φωτεινά σημεία του HDR δεν μπορούν να ξεπεράσουν το φωτεινότερο λευκό. Το Overbright μπαίνει σε παύση για βίντεο σε πλήρη οθόνη και για προγράμματα αναπαραγωγής βίντεο. Προσθέστε άλλες εφαρμογές στις Ρυθμίσεις ▸ Αυτοματισμοί."
+            "value" : "Όσο η επιπλέον φωτεινότητα είναι ενεργή, τα φωτεινά σημεία του HDR δεν μπορούν να ξεπεράσουν το φωτεινότερο λευκό. Στις Ρυθμίσεις ▸ Αυτοματισμοί, το Overbright μπορεί να μπαίνει σε παύση για βίντεο σε πλήρη οθόνη και για τις εφαρμογές που επιλέγετε."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mientras el brillo extra está activado, las zonas brillantes del contenido HDR no pueden superar el blanco intensificado. Overbright se pausa con el vídeo a pantalla completa y con los reproductores de vídeo; añade otras apps en Ajustes ▸ Automatizaciones."
+            "value" : "Mientras el brillo extra está activado, las zonas brillantes del contenido HDR no pueden superar el blanco intensificado. En Ajustes ▸ Automatizaciones, Overbright puede pausarse con el vídeo a pantalla completa y con las apps que elijas."
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kun lisäkirkkaus on päällä, HDR-kuvan kirkkaimmat kohdat eivät voi ylittää kirkastettua valkoista. Overbright pitää tauon koko näytön videon ja videosoittimien ajan; lisää muita appeja kohdassa Asetukset ▸ Automaatiot."
+            "value" : "Kun lisäkirkkaus on päällä, HDR-kuvan kirkkaimmat kohdat eivät voi ylittää kirkastettua valkoista. Kohdassa Asetukset ▸ Automaatiot Overbright voi pitää tauon koko näytön videon ja valitsemiesi appien ajan."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lorsque la luminosité supplémentaire est activée, les hautes lumières HDR ne peuvent pas dépasser le blanc éclairci. Overbright se met en pause pour la vidéo en plein écran et les lecteurs vidéo ; ajoutez d’autres apps dans Réglages ▸ Automatisations."
+            "value" : "Lorsque la luminosité supplémentaire est activée, les hautes lumières HDR ne peuvent pas dépasser le blanc éclairci. Dans Réglages ▸ Automatisations, Overbright peut se mettre en pause pour la vidéo en plein écran et les apps de votre choix."
           }
         },
         "he" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "כשהבהירות הנוספת פועלת, אזורים בהירים בתוכן HDR לא יכולים לעלות מעל הלבן המוגבר. Overbright מושהה בווידאו במסך מלא ובנגני וידאו; אפשר להוסיף יישומים אחרים ב״הגדרות״ > ״פעולות אוטומטיות״."
+            "value" : "כשהבהירות הנוספת פועלת, אזורים בהירים בתוכן HDR לא יכולים לעלות מעל הלבן המוגבר. ב״הגדרות״ > ״פעולות אוטומטיות״ אפשר להשהות את Overbright בווידאו במסך מלא וביישומים שבוחרים."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "अतिरिक्त ब्राइटनेस चालू रहने पर HDR हाइलाइट ब्राइट किए गए सफ़ेद से ऊपर नहीं जा सकते। Overbright फ़ुल स्क्रीन वीडियो और वीडियो प्लेयर के लिए पॉज़ हो जाता है; दूसरे ऐप सेटिंग ▸ ऑटोमेशन में जोड़ें।"
+            "value" : "अतिरिक्त ब्राइटनेस चालू रहने पर HDR हाइलाइट ब्राइट किए गए सफ़ेद से ऊपर नहीं जा सकते। सेटिंग ▸ ऑटोमेशन में आप Overbright को फ़ुल स्क्रीन वीडियो और अपने चुने हुए ऐप के लिए पॉज़ करवा सकते हैं।"
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dok je dodatna svjetlina uključena, svijetli dijelovi HDR slike ne mogu biti svjetliji od pojačane bijele. Overbright se pauzira za video preko cijelog zaslona i za reproduktore videa; ostale aplikacije dodajte u odjeljku Postavke ▸ Automatizacija."
+            "value" : "Dok je dodatna svjetlina uključena, svijetli dijelovi HDR slike ne mogu biti svjetliji od pojačane bijele. U odjeljku Postavke ▸ Automatizacija Overbright se može pauzirati za video preko cijelog zaslona i za aplikacije koje odaberete."
           }
         },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Amíg az extra fényerő be van kapcsolva, a HDR-csúcsfények nem lehetnek világosabbak a felerősített fehérnél. Az Overbright teljes képernyős videónál és videolejátszóknál szünetel; más appokat a Beállítások ▸ Automatizálás részben adhat hozzá."
+            "value" : "Amíg az extra fényerő be van kapcsolva, a HDR-csúcsfények nem lehetnek világosabbak a felerősített fehérnél. A Beállítások ▸ Automatizálás részben beállíthatja, hogy az Overbright szüneteljen teljes képernyős videónál és az Ön által választott appoknál."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Selama kecerahan ekstra menyala, sorotan HDR tidak dapat melebihi putih yang sudah dicerahkan. Overbright dijeda untuk video layar penuh dan pemutar video; tambahkan app lain di Pengaturan ▸ Otomatisasi."
+            "value" : "Selama kecerahan ekstra menyala, sorotan HDR tidak dapat melebihi putih yang sudah dicerahkan. Di Pengaturan ▸ Otomatisasi, Overbright dapat dijeda untuk video layar penuh dan app yang Anda pilih."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mentre la luminosità extra è attiva, le alte luci HDR non possono superare il bianco potenziato. Overbright va in pausa con i video a tutto schermo e con i player video; aggiungi altre app in Impostazioni ▸ Automazioni."
+            "value" : "Mentre la luminosità extra è attiva, le alte luci HDR non possono superare il bianco potenziato. In Impostazioni ▸ Automazioni, Overbright può andare in pausa con i video a tutto schermo e con le app che scegli."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "追加の輝度がオンの間は、HDRのハイライトが明るくなった白を超えることはできません。Overbrightは全画面ビデオとビデオプレーヤーでは一時停止します。ほかのAppは設定 ▸ 自動化で追加できます。"
+            "value" : "追加の輝度がオンの間は、HDRのハイライトが明るくなった白を超えることはできません。設定 ▸ 自動化で、全画面ビデオや選択したAppのときにOverbrightを一時停止するよう設定できます。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "추가 밝기가 켜져 있는 동안에는 HDR 하이라이트가 밝아진 흰색보다 밝아질 수 없습니다. Overbright는 전체 화면 비디오와 비디오 플레이어에서 일시 정지합니다. 다른 앱은 설정 ▸ 자동화에서 추가하십시오."
+            "value" : "추가 밝기가 켜져 있는 동안에는 HDR 하이라이트가 밝아진 흰색보다 밝아질 수 없습니다. 설정 ▸ 자동화에서 전체 화면 비디오와 선택한 앱에서 Overbright가 일시 정지하도록 설정할 수 있습니다."
           }
         },
         "ms" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Semasa kecerahan tambahan hidup, sorotan HDR tidak boleh melebihi putih yang telah dicerahkan. Overbright dijeda bagi video skrin penuh dan pemain video; tambah app lain dalam Seting ▸ Automasi."
+            "value" : "Semasa kecerahan tambahan hidup, sorotan HDR tidak boleh melebihi putih yang telah dicerahkan. Dalam Seting ▸ Automasi, Overbright boleh dijeda bagi video skrin penuh dan app yang anda pilih."
           }
         },
         "nb" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mens ekstra lysstyrke er på, kan ikke de lyseste HDR-partiene bli lysere enn det forsterkede hvite. Overbright settes på pause for video i fullskjerm og for videospillere – legg til andre apper i Innstillinger ▸ Automatiseringer."
+            "value" : "Mens ekstra lysstyrke er på, kan ikke de lyseste HDR-partiene bli lysere enn det forsterkede hvite. I Innstillinger ▸ Automatiseringer kan Overbright settes på pause for video i fullskjerm og for apper du velger."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Als extra helderheid is ingeschakeld, kunnen de hoge lichten van HDR niet boven het versterkte wit uitkomen. Overbright pauzeert bij schermvullende video en bij videospelers; voeg andere apps toe in Instellingen ▸ Automatisering."
+            "value" : "Als extra helderheid is ingeschakeld, kunnen de hoge lichten van HDR niet boven het versterkte wit uitkomen. In Instellingen ▸ Automatisering kan Overbright pauzeren bij schermvullende video en bij apps die je kiest."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gdy dodatkowa jasność jest włączona, jasne obszary HDR nie mogą przekroczyć rozjaśnionej bieli. Overbright wstrzymuje się przy wideo na pełnym ekranie i w odtwarzaczach wideo; inne aplikacje dodasz w sekcji Ustawienia ▸ Automatyzacja."
+            "value" : "Gdy dodatkowa jasność jest włączona, jasne obszary HDR nie mogą przekroczyć rozjaśnionej bieli. W sekcji Ustawienia ▸ Automatyzacja Overbright może się wstrzymywać przy wideo na pełnym ekranie i w wybranych aplikacjach."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enquanto o brilho extra está ativado, os realces HDR não podem passar do branco intensificado. O Overbright pausa com vídeo em tela cheia e com players de vídeo; adicione outros apps em Ajustes ▸ Automações."
+            "value" : "Enquanto o brilho extra está ativado, os realces HDR não podem passar do branco intensificado. Em Ajustes ▸ Automações, o Overbright pode pausar com vídeo em tela cheia e com os apps que você escolher."
           }
         },
         "pt-PT" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Com o brilho extra ativado, os realces HDR não podem ultrapassar o branco intensificado. O Overbright entra em pausa com vídeo em ecrã completo e com leitores de vídeo; pode adicionar outras aplicações em Definições ▸ Automatização."
+            "value" : "Com o brilho extra ativado, os realces HDR não podem ultrapassar o branco intensificado. Em Definições ▸ Automatização, o Overbright pode entrar em pausa com vídeo em ecrã completo e com as aplicações que escolher."
           }
         },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cât timp luminozitatea suplimentară este activată, zonele luminoase HDR nu pot depăși albul intensificat. Overbright se pune pe pauză pentru video pe tot ecranul și pentru playerele video; adăugați alte aplicații în Configurări ▸ Automatizări."
+            "value" : "Cât timp luminozitatea suplimentară este activată, zonele luminoase HDR nu pot depăși albul intensificat. În Configurări ▸ Automatizări, Overbright se poate pune pe pauză pentru video pe tot ecranul și pentru aplicațiile pe care le alegeți."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Пока включена дополнительная яркость, яркие участки HDR не могут быть ярче усиленного белого. Overbright приостанавливается для полноэкранного видео и видеоплееров; другие приложения можно добавить в разделе Настройки ▸ Автоматизация."
+            "value" : "Пока включена дополнительная яркость, яркие участки HDR не могут быть ярче усиленного белого. В разделе Настройки ▸ Автоматизация Overbright может приостанавливаться для полноэкранного видео и выбранных вами приложений."
           }
         },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kým je zapnutý extra jas, najjasnejšie miesta obrazu HDR nemôžu prekročiť zjasnenú bielu. Overbright sa pozastavuje pri videu na celej obrazovke a pri prehrávačoch videa; ďalšie apky pridáte v Nastaveniach ▸ Automatizácie."
+            "value" : "Kým je zapnutý extra jas, najjasnejšie miesta obrazu HDR nemôžu prekročiť zjasnenú bielu. V Nastaveniach ▸ Automatizácie sa Overbright môže pozastavovať pri videu na celej obrazovke a pri apkách, ktoré vyberiete."
           }
         },
         "sl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ko je vklopljena dodatna svetlost, najsvetlejši deli slike HDR ne morejo preseči posvetljene bele. Overbright se začasno ustavi pri celozaslonskem videu in predvajalnikih videa; druge aplikacije dodate v Nastavitvah ▸ Avtomatizacije."
+            "value" : "Ko je vklopljena dodatna svetlost, najsvetlejši deli slike HDR ne morejo preseči posvetljene bele. V Nastavitvah ▸ Avtomatizacije se lahko Overbright začasno ustavi pri celozaslonskem videu in pri aplikacijah, ki jih izberete."
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "När extra ljusstyrka är på kan HDR-högdagrar inte bli ljusare än det förstärkta vita. Overbright pausar för video i helskärm och för videospelare – lägg till andra appar i Inställningar ▸ Automatiseringar."
+            "value" : "När extra ljusstyrka är på kan HDR-högdagrar inte bli ljusare än det förstärkta vita. I Inställningar ▸ Automatiseringar kan Overbright pausa för video i helskärm och för appar du väljer."
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ขณะที่เปิดความสว่างเพิ่มเติมอยู่ ส่วนที่สว่างของ HDR จะสว่างเกินสีขาวที่เพิ่มความสว่างแล้วไม่ได้ Overbright จะหยุดพักสำหรับวิดีโอเต็มหน้าจอและแอปเล่นวิดีโอ เพิ่มแอปอื่นได้ใน การตั้งค่า ▸ การทำงานอัตโนมัติ"
+            "value" : "ขณะที่เปิดความสว่างเพิ่มเติมอยู่ ส่วนที่สว่างของ HDR จะสว่างเกินสีขาวที่เพิ่มความสว่างแล้วไม่ได้ ใน การตั้งค่า ▸ การทำงานอัตโนมัติ คุณสามารถให้ Overbright หยุดพักสำหรับวิดีโอเต็มหน้าจอและแอปที่คุณเลือกได้"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ek parlaklık açıkken HDR vurguları parlaklaştırılmış beyazın üstüne çıkamaz. Overbright tam ekran videoda ve video oynatıcılarda duraklar; başka uygulamaları Ayarlar ▸ Otomasyonlar bölümünde ekleyin."
+            "value" : "Ek parlaklık açıkken HDR vurguları parlaklaştırılmış beyazın üstüne çıkamaz. Ayarlar ▸ Otomasyonlar bölümünde Overbright’ın tam ekran videoda ve seçtiğiniz uygulamalarda duraklamasını sağlayabilirsiniz."
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Поки ввімкнено додаткову яскравість, яскраві ділянки HDR не можуть бути яскравішими за підсилений білий. Overbright призупиняється для повноекранного відео та відеоплеєрів; інші програми можна додати в розділі Параметри ▸ Автоматизація."
+            "value" : "Поки ввімкнено додаткову яскравість, яскраві ділянки HDR не можуть бути яскравішими за підсилений білий. У розділі Параметри ▸ Автоматизація Overbright може призупинятися для повноекранного відео та вибраних вами програм."
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Khi độ sáng bổ sung đang bật, vùng sáng HDR không thể vượt quá màu trắng đã được làm sáng. Overbright tạm dừng với video toàn màn hình và trình phát video; hãy thêm ứng dụng khác trong Cài đặt ▸ Tự động hóa."
+            "value" : "Khi độ sáng bổ sung đang bật, vùng sáng HDR không thể vượt quá màu trắng đã được làm sáng. Trong Cài đặt ▸ Tự động hóa, Overbright có thể tạm dừng với video toàn màn hình và các ứng dụng bạn chọn."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "额外亮度开启时，HDR高光无法超过已提亮的白色。Overbright会在全屏视频和视频播放器中暂停；可在“设置”▸“自动化”中添加其他App。"
+            "value" : "额外亮度开启时，HDR高光无法超过已提亮的白色。在“设置”▸“自动化”中，可以让Overbright在全屏视频和你选择的App中暂停。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "開啟額外亮度時，HDR高光無法超過增亮後的白色。Overbright會在全螢幕影片和影片播放器播放時暫停；你可以在「設定」▸「自動化」中加入其他App。"
+            "value" : "開啟額外亮度時，HDR高光無法超過增亮後的白色。你可以在「設定」▸「自動化」中，讓Overbright在全螢幕影片和你選擇的App中暫停。"
           }
         }
       }

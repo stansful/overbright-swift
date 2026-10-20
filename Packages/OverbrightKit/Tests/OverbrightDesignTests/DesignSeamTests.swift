@@ -36,7 +36,7 @@ import Testing
         _ = StatusChip(model, actions: [ChipAction(title: "", perform: {})])
         _ = GuardChip(GuardChipModel(symbol: .timer, text: "", accessibilityLabel: ""),
                       menu: [.item(title: "", isChecked: true, perform: {}), .separator, .submenu(title: "", items: [])])
-        _ = PausedBanner(BannerModel.make(.focusOff), primary: {}, secondary: nil)
+        _ = PausedBanner(BannerModel.make(.focusOff), primary: {})
         _ = EDRPreviewSurface(gain: 1.6, divider: .constant(0.5), simulated: true)
         _ = StepWedgeView(patches: [0.95, 1], surround: 0)
         _ = KeyCap("")
@@ -57,7 +57,6 @@ import Testing
         #expect(OverbrightTheme().animation(.panelIn) != nil)
         #expect(OverbrightTheme(increaseContrast: true).palette == .highContrast)
         #expect(Set(OverbrightSymbol.allCases.map(\.rawValue)).count == OverbrightSymbol.allCases.count)
-        #expect(OverbrightDesignModule.name == "OverbrightDesign")
     }
 
     /// The setting-row conventions: their words, and the dot's size.

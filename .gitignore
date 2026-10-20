@@ -7,11 +7,15 @@ DerivedData/
 .build/
 .build-*/
 .swiftpm/
-# Xcode per-user state
+# Xcode per-user state and test results
 xcuserdata/
 *.xcuserstate
-# Editors
+*.xcresult
+# Editors and SourceKit-LSP indexes
 .idea/
+.vscode/
+.sourcekit-lsp/
+.index-build/
 # macOS
 .DS_Store
 

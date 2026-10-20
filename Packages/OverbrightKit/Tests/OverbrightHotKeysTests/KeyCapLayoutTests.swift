@@ -1,26 +1,26 @@
 // OverbrightHotKeysTests/KeyCapLayoutTests.swift — key caps follow the keyboard layout (DESIGN.md §12.5, §16;
-// ARCHITECTURE.md §8.8): the defaults of D17 in the US, German and French layouts, read from the layouts installed with
-// macOS (read-only: no input source is selected or enabled). The same function draws the menu's key equivalents, the
-// recorder and `ShortcutCenter.displayString`.
+// ARCHITECTURE.md §8.8): the sample combinations (`SampleShortcuts`, the suggestions of D17 before every shortcut
+// shipped unbound) in the US, German and French layouts, read from the layouts installed with macOS (read-only: no
+// input source is selected or enabled). The same function draws the menu's key equivalents, the recorder and
+// `ShortcutCenter.displayString`.
 import Foundation
 import OverbrightCore
+import OverbrightTestSupport
 import Testing
 @testable import OverbrightHotKeys
-
-private let hyper: KeyCombo.Modifiers = [.control, .option, .command]
 
 @MainActor private func layout(_ name: String) throws -> KeyCombo.KeyboardLayout {
     try #require(KeyCombo.KeyboardLayout.named("com.apple.keylayout.\(name)"), "macOS ships the \(name) layout")
 }
 
-/// The caps of the catalog default of `id` in `layout`.
+/// The caps of the sample combination of `id` in `layout`.
 private func caps(_ id: ShortcutID, _ layout: KeyCombo.KeyboardLayout) throws -> String {
-    let combo = try #require(ShortcutCatalog.all.first { $0.id == id }?.defaultCombo)
+    let combo = try #require(SampleShortcuts.bindings[id] ?? nil)
     return combo.keyCaps(in: layout)
 }
 
 @MainActor @Suite struct KeyCapLayoutTests {
-    @Test func usLayoutShowsTheDesignDefaults() throws {
+    @Test func usLayoutShowsTheSampleKeyCaps() throws {
         let us = try layout("US")
         #expect(try caps(.toggle, us) == "⌃⌥⌘B")
         #expect(try caps(.brighter, us) == "⌃⌥⌘=")
@@ -70,8 +70,9 @@ private func caps(_ id: ShortcutID, _ layout: KeyCombo.KeyboardLayout) throws ->
     /// `displayString` renders a registered shortcut through the center's layout, and nothing for one that is off.
     @Test func displayStringUsesTheCentersLayout() async throws {
         let german = try layout("German")
-        let center = HotKeyCenter(settings: SettingsStore(defaults: InMemoryDefaults()), registrar: FakeRegistrar(),
-                                  layout: { german })
+        let settings = SettingsStore(defaults: InMemoryDefaults())
+        settings[ShortcutSettings.bindings] = SampleShortcuts.bindings                    // none ships bound (D17)
+        let center = HotKeyCenter(settings: settings, registrar: FakeRegistrar(), layout: { german })
         await center.start()
         #expect(center.displayString(.brighter) == "⌃⌥⌘´")
         #expect(center.displayString(.max) == nil)

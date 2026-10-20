@@ -57,7 +57,7 @@ private struct CalibrationCard: View {
     private var heading: String {
         switch model.step {
         case .unavailable, .checklist: CalibrationCopy.title(display: model.displayName)
-        case .comparison, .notBrighter: CalibrationCopy.comparisonHeading
+        case .comparison: CalibrationCopy.comparisonHeading
         case .sweepIntro, .sweep: CalibrationCopy.sweepHeading
         case .confirmation: CalibrationCopy.confirmationHeading
         case .results: CalibrationCopy.resultsHeading
@@ -79,8 +79,6 @@ private struct CalibrationCard: View {
                     .accessibilityAddTraits(.updatesFrequently)
             }
             paragraph(CalibrationCopy.brighterQuestion)
-        case .notBrighter:
-            if MechanismPreference.overlayIsAvailable { paragraph(CalibrationCopy.notBrighterQuestion) }
         case .sweepIntro:
             paragraph(CalibrationCopy.sweepInstructions())
         case .sweep:
@@ -113,15 +111,6 @@ private struct CalibrationCard: View {
             button(CalibrationCopy.showAgain) { model.showAgain() }.disabled(model.isFlipping)
             button(CalibrationCopy.no) { model.answerBrighter(false) }.disabled(model.flips == 0)
             button(CalibrationCopy.yes) { model.answerBrighter(true) }.disabled(model.flips == 0)
-        case .notBrighter:
-            cancelButton
-            Spacer()
-            if MechanismPreference.overlayIsAvailable {
-                button(CalibrationCopy.keepColorTable) { model.keepColorTable() }
-                button(CalibrationCopy.useCompatibilityMode) { model.useCompatibilityMode() }.keyboardShortcut(.defaultAction)
-            } else {
-                button(CalibrationCopy.keepColorTable) { model.keepColorTable() }.keyboardShortcut(.defaultAction)
-            }
         case .sweepIntro:
             cancelButton
             Spacer()

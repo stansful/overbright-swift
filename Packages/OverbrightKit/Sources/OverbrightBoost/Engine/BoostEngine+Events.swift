@@ -25,7 +25,7 @@ extension BoostEngine {
         case .displayRemoved(let id):
             removeDisplay(id)
         case .displayConfigurationBegan:
-            for controller in all { controller.configurationBegan() }
+            break                                                         // no display queries: the after phase acts
         case .didWake, .screensDidWake:
             for controller in all { controller.noteResume(.wake) }
         case .unlocked, .screensaverStopped:
@@ -134,8 +134,8 @@ extension BoostEngine {
         return controller
     }
 
-    /// A driven display lost its trigger or overlay (§4.7): the calibration of that display ends with `reason` (the
-    /// display is at Standard and `onEnd` runs), and the self-test stops measuring it.
+    /// A driven display lost its trigger (§4.7): the calibration of that display ends with `reason` (the display is at
+    /// Standard and `onEnd` runs), and the self-test stops measuring it.
     func drivenWindowLost(on key: DisplayKey, _ reason: CalibrationAbortReason) {
         if let session = calibrationSession, session.display == key { session.abort(reason) }
         selfTestRunner?.stop(key)
@@ -233,15 +233,5 @@ extension BoostEngine {
                               matchingPolicy: .nextTime)
         }
         return boundaries.min() ?? now.addingTimeInterval(86_400)
-    }
-}
-
-extension DisplayController {
-    /// The begin phase of a reconfiguration: the overlay goes to factor 1 at once (no display queries now).
-    func configurationBegan() {
-        guard mechanism == .overlay, let overlay else { return }
-        try? overlay.setFactor(1, headroomRequest: overlayRequest)
-        appliedGain = 1
-        appliedFactor = 1
     }
 }

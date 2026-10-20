@@ -26,9 +26,6 @@ final class StatusIconPresence {
         notice = IconNotVisibleWindowController(services: services)
     }
 
-    /// Whether the icon-not-visible window is on screen.
-    var isNoticeShown: Bool { notice.isShown }
-
     /// Installs the item (shown or hidden) and starts the visibility check (once).
     func install(visible: Bool) {
         statusItem.install()
@@ -58,9 +55,6 @@ final class StatusIconPresence {
         }
         return .visible
     }
-
-    /// The monitor's result now (`.visible` until the first check).
-    var visibility: MenuBarIconVisibility { monitor?.visibility ?? .visible }
 
     private func visibilityChanged(_ visibility: MenuBarIconVisibility) {
         onVisibilityChange?(visibility)

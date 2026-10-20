@@ -3,7 +3,7 @@
 
 /// The state of the slider's boost half (right of the Standard detent).
 public nonisolated enum BoostHalfState: Hashable, Sendable {
-    /// Extra light is on screen: the fill is `BoostColor.warm`.
+    /// Extra light is on screen: the fill is the theme's `OverbrightColor.boostWarm`.
     case active
     /// Overbright is off or paused: the fill is the inactive hatch; moving the thumb turns Overbright on (or ends a
     /// pause the user set).

@@ -1,7 +1,7 @@
 // OverbrightDesign/Copy/BannerModel.swift — what the panel's one banner shows. DESIGN.md §5.8, §12.3; ARCHITECTURE.md
 // §6.3. Seam written by WP0a (ARCHITECTURE.md §10.0): the type and `make(_:)` are fixed; WP9 writes the copy and the
-// precedence-specific actions. The same sentence is the first, disabled line of the status menu, and its primary action
-// the second line in title case. The panel shows the whole sentence, however many lines it takes; an app name in it is
+// precedence-specific actions. The same sentence is the first, disabled line of the status menu (the shell words its
+// action, the second line, in title case). The panel shows the whole sentence, however many lines it takes; an app name in it is
 // middle-truncated to `nameWidth`, and `accessibilityLabel` keeps the full sentence for the help tag, VoiceOver and
 // the status menu (a menu row has no help tag; WP14 C-DESIGN-1).
 import Foundation
@@ -20,27 +20,17 @@ public nonisolated struct BannerModel: Hashable, Sendable {
     public var accessibilityLabel: String
     /// The primary action's title (sentence case), if any.
     public var primaryTitle: String?
-    /// The secondary action's title, if any.
-    public var secondaryTitle: String?
-    /// What the primary button does.
-    public var primaryAction: FixAction?
-    /// The primary action in the status menu (title case).
-    public var primaryMenuTitle: String?
 
     /// A banner.
-    public init(symbol: OverbrightSymbol, color: SemanticColor, sentence: String, primaryTitle: String?,
-                secondaryTitle: String?) {
+    public init(symbol: OverbrightSymbol, color: SemanticColor, sentence: String, primaryTitle: String?) {
         self.symbol = symbol; self.color = color; self.sentence = sentence; accessibilityLabel = sentence
-        self.primaryTitle = primaryTitle; self.secondaryTitle = secondaryTitle
+        self.primaryTitle = primaryTitle
     }
 
     /// A banner whose primary button is `action` in `language`.
     public init(symbol: OverbrightSymbol, color: SemanticColor, sentence: String, action: FixAction?,
                 in language: CopyLanguage) {
-        self.init(symbol: symbol, color: color, sentence: sentence, primaryTitle: action?.title(in: language),
-                  secondaryTitle: nil)
-        primaryAction = action
-        primaryMenuTitle = action?.menuTitle(in: language)
+        self.init(symbol: symbol, color: color, sentence: sentence, primaryTitle: action?.title(in: language))
     }
 
     /// The widest an app name may be in a banner sentence, in the `banner` font on one line (about the room a status
@@ -73,8 +63,8 @@ public nonisolated struct BannerModel: Hashable, Sendable {
                          String(localized: "Overbright is paused until \(time).", bundle: b, locale: l,
                                 comment: "Panel: banner while the user paused Overbright; the argument is a time of day"), .resume)
         case let .conflict(app) where app.severity == .booster:
-            return model(.exclamationMarkTriangleFill, .warning, naming: app, .useCompatibilityMode) { app in
-                String(localized: "Paused because \(app) also changes display brightness. Quit it, or use Compatibility mode, which works alongside it.",
+            return model(.exclamationMarkTriangleFill, .warning, naming: app, nil) { app in
+                String(localized: "Paused because \(app) also changes display brightness. Quit it to continue.",
                        bundle: b, locale: l, comment: "Panel: banner while another brightness app runs; the argument is its name")
             }
         case let .conflict(app):

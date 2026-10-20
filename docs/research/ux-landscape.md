@@ -81,8 +81,8 @@ Readability outdoors and in bright rooms is behind every five-star review. Users
 | 17 | External HDR and OLED care | the owner's QD-OLED; competitors ignore third-party monitors | ARCHITECTURE D8 |
 | 18 | Dim below minimum in the same control, plus Dim All on its own shortcut | well-liked across tools; the incumbent's one-step dim mode | DESIGN §4.3, §5.5 |
 | 19 | Fill Light with camera automation | an edge light for calls exists in several tools | DESIGN §11 |
-| 20 | Compatibility mode | Macs where table writes do nothing | ARCHITECTURE §7.5 |
-| 21 | Brightness keys keep their range | "big, bouncing steps" complaints | ARCHITECTURE §5.4 (extra brightness only near full brightness, default on), DESIGN §7.4 |
+| 20 | Compatibility mode | Macs where table writes do nothing | ARCHITECTURE §7.5 (*as built: built, then removed 2026-10-21; the overlay turned the owner's built-in white*) |
+| 21 | Brightness keys keep their range | "big, bouncing steps" complaints | ARCHITECTURE §5.4 (extra brightness only near full brightness; *as built: default off since 2026-10-20*), DESIGN §7.4 |
 | 22 | Explained automatic stops | an unexplained dim reads as "it broke" | DESIGN §6 (HUD reasons for timer, battery, Low Power, heat, schedule) |
 | — | **Later (v1.x):** brightness-key integration (needs Accessibility), a Control Center control in ad-hoc builds, sunrise/sunset schedules, "learn my preference", a battery-impact estimate, a CLI and a Homebrew cask | | ARCHITECTURE §1.2, §11.3 |
 | — | **Won't:** trials, licences, accounts, analytics, remote config, Screen Recording or camera-based sensing, overriding macOS's heat and power limits | | |

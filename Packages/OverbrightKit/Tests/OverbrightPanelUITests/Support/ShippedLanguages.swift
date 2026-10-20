@@ -69,8 +69,6 @@ nonisolated struct PanelWords {
         Duration.seconds(minutes * 60).formatted(.units(allowed: [.hours, .minutes], width: .abbreviated).locale(locale))
     }
 
-    /// The readout caption of a display in Compatibility mode.
-    var compatibilityMode: String { String(localized: "Compatibility mode", bundle: bundle, locale: locale) }
     /// The card's inline "Turn on".
     var turnOn: String { String(localized: "Turn on", bundle: bundle, locale: locale) }
 }

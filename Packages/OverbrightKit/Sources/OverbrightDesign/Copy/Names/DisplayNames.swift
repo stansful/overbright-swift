@@ -1,31 +1,8 @@
-// OverbrightDesign/Copy/Names/DisplayNames.swift — the user-facing names of per-display methods and types.
-// DESIGN.md §7.4 (Method, Display type, Calibration), §7.8 (Trigger method), §10 (self-test rows), §16 (vocabulary:
-// "Compatibility mode", never "fallback" or "overlay").
+// OverbrightDesign/Copy/Names/DisplayNames.swift — the user-facing names of per-display choices.
+// DESIGN.md §7.4 (Display type), §7.8 (Trigger method), §10 (self-test rows), §16 (vocabulary: never "fallback" or
+// "overlay").
 import Foundation
 import OverbrightCore
-
-public extension Mechanism {
-    /// "Color table" / "Compatibility mode": the method a display uses (the panel's caption, Settings, diagnostics).
-    nonisolated func localizedName(in language: CopyLanguage = .app) -> String {
-        switch self {
-        case .table: String(localized: "Color table", bundle: language.bundle, locale: language.locale,
-                            comment: "Settings ▸ Displays: the default method, scaling the display’s color table (pop-up item)")
-        case .overlay: String(localized: "Compatibility mode", bundle: language.bundle, locale: language.locale,
-                              comment: "Panel ▸ Display card: the method that brightens through an overlay (caption and Settings pop-up item)")
-        }
-    }
-}
-
-public extension MechanismPreference {
-    /// "Automatic" · "Color table" · "Compatibility mode" (Settings ▸ Displays ▸ Method).
-    nonisolated func localizedName(in language: CopyLanguage = .app) -> String {
-        switch self {
-        case .automatic: CommonNames.automatic(in: language)
-        case .table: Mechanism.table.localizedName(in: language)
-        case .overlay: Mechanism.overlay.localizedName(in: language)
-        }
-    }
-}
 
 public extension TriggerStrategy {
     /// "Tagged layer" … "HDR video still" (Settings ▸ Advanced ▸ Trigger method, the self-test).

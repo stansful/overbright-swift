@@ -9,8 +9,8 @@
 // - Split View: two or more full-height, non-overlapping layer-0 windows tile ≥ 98 % of the display, menu bar absent;
 // - only regular apps count (an allowlist: the PIDs NSWorkspace lists with the `.regular` activation policy), plus the
 //   frontmost app; accessory and agent apps (overlay shades, other apps' overlays) and window owners NSWorkspace does
-//   not list at all never count unless frontmost; our own PID and the Dock never count (our Compatibility overlay,
-//   Fill Light and calibration windows are full-screen windows of ours);
+//   not list at all never count unless frontmost; our own PID and the Dock never count (our Fill Light and
+//   calibration windows are full-screen windows of ours);
 // - the menu-bar window is matched by the WindowServer's PID, never by its owner name (names are localized); with
 //   "Displays have separate Spaces" off only the main display has one, so on the others only the frontmost app's
 //   window counts, exact or (on a notched built-in that is not the main display) below the notch band, and no Split

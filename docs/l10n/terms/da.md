@@ -84,7 +84,7 @@ sentence go in quotes (“Energibesparende funktion”, “Åbn alligevel”), p
 | Back to Standard (the instant off) | Tilbage til Standard | not “panic”, not “reset brightness” |
 | Indoor · Bright room · Sunlight · Max (presets) | Indendørs · Lyst rum · Sollys · Maks. | “Max” is a preset only |
 | Safe · Peak (ceilings) | Sikker · Top | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | Kompatibilitetstilstand · Farvetabel | never “fallback” or “overlay” |
+| color table (in sentences: “macOS ignores color table changes”) | farvetabel | never “gamma”; no “fallback” or “overlay” in copy |
 | Fill Light (the edge light for video calls) | Udfyldningslys | never “ring light” |
 | extra range (headroom, in user copy) | Lysreserve | “headroom” only in Advanced and diagnostics |
 | Calibrate… · Run Self-Test… · Reset Display Colors… | Kalibrer… · Kør selvtest… · Nulstil skærmfarver… |  |

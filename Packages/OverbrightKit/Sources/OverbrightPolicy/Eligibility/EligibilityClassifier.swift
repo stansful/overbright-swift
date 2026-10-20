@@ -1,11 +1,11 @@
 // OverbrightPolicy/Eligibility/EligibilityClassifier.swift — what a display can do (D8). ARCHITECTURE.md §3.10, §5.2,
-// §5.3, §6.1 steps 1 and 4, §7.5; DESIGN.md §12.1. Locale-independent: names are never compared, and every IORegistry
+// §5.3, §6.1 step 1; DESIGN.md §12.1. Locale-independent: names are never compared, and every IORegistry
 // input is optional (a panel peak or SDR maximum that no fallback supplies gives a top of 1, never a guess, and the
 // verdict `panelFactsUnknown`: the display keeps its dim half).
 import OverbrightCore
 
 /// D8 classifier: tolerant comparisons, no name strings in logic, IORegistry inputs optional. `preferences` carries
-/// the OLED override and the calibration record; `machine` decides `compatibilityModeAdvised`.
+/// the OLED override and the calibration record; `machine` the OS major and build.
 public nonisolated enum EligibilityClassifier {
     /// Tolerance of every comparison with a headroom value (potential, reference).
     public static let epsilon = 0.01
@@ -29,33 +29,19 @@ public nonisolated enum EligibilityClassifier {
                                 machine: MachineIdentity) -> EligibilityResult {
         let oled = isOLED(facts, override: preferences.oled)
         let verdict = verdict(facts, isOLED: oled, reading: reading)
-        let advised = MechanismPreference.overlayIsAvailable && CompatibilityModels.tableWritesIgnored(machine)
         let potential = reading?.potential
-        let notBrighter = preferences.calibration.map { record in
-            record.outcome == .notBrighter
-                && isValid(record, mechanism: .table, machine: machine, potential: potential)
-        } ?? false
-        // Without Compatibility mode (`MechanismPreference.overlayIsAvailable`) a "did not get brighter" record keeps
-        // the table too: the record stays, and the overlay returns as the default once it is available again.
-        let overlayDefault = advised || (MechanismPreference.overlayIsAvailable && notBrighter)
-        let defaultMechanism: Mechanism = overlayDefault ? .overlay : .table
-        let mechanism = effectiveMechanism(preferences.mechanism, defaultMechanism: defaultMechanism)
-
         var advisories: [Advisory] = []
-        if advised && (verdict.allowsBoost || verdict.allowsDim) { advisories.append(.compatibilityModeAdvised) }
         if verdict.allowsBoost {
             if oled { advisories.append(.oledCare) }
             if facts.isBuiltIn && facts.panelClass == .builtInXDR && machine.osMajor >= 26 {
                 advisories.append(.autoBrightnessInteracts)
             }
-            if !hasValidCalibration(preferences.calibration, mechanism: mechanism, machine: machine,
-                                    potential: potential) {
+            if !hasValidCalibration(preferences.calibration, machine: machine, potential: potential) {
                 advisories.append(.notCalibrated)
             }
         }
         let classDefault = !oled && (facts.panelClass == .builtInXDR || facts.panelClass == .appleXDRExternal)
-        return EligibilityResult(verdict: verdict, advisories: advisories, defaultBoostEnabled: classDefault,
-                                 defaultMechanism: defaultMechanism)
+        return EligibilityResult(verdict: verdict, advisories: advisories, defaultBoostEnabled: classDefault)
     }
 
     /// The display is treated as OLED: the user's override, else an `oledExternal` class or an external whose
@@ -75,22 +61,12 @@ public nonisolated enum EligibilityClassifier {
         }
     }
 
-    /// The mechanism a display uses: an explicit preference wins; `automatic` takes the class default (§6.1 step 4).
-    public static func effectiveMechanism(_ preference: MechanismPreference, defaultMechanism: Mechanism) -> Mechanism {
-        guard MechanismPreference.overlayIsAvailable else { return .table }
-        return switch preference {
-        case .automatic: defaultMechanism
-        case .table: .table
-        case .overlay: .overlay
-        }
-    }
-
-    /// A record that confirmed a domain (`encoded` or `linear`) and still applies: same mechanism, same OS build, and
-    /// a potential within ±5 % of the one measured (§5.2). Readouts are estimates without one (DESIGN.md §5.6).
-    public static func hasValidCalibration(_ record: CalibrationRecord?, mechanism: Mechanism, machine: MachineIdentity,
+    /// A record that confirmed a domain (`encoded` or `linear`) and still applies: same OS build, and a potential
+    /// within ±5 % of the one measured (§5.2). Readouts are estimates without one (DESIGN.md §5.6).
+    public static func hasValidCalibration(_ record: CalibrationRecord?, machine: MachineIdentity,
                                            potential: Double?) -> Bool {
         guard let record, record.outcome == .encoded || record.outcome == .linear else { return false }
-        return isValid(record, mechanism: mechanism, machine: machine, potential: potential)
+        return isValid(record, machine: machine, potential: potential)
     }
 
     // MARK: Verdict (D8 order)
@@ -129,9 +105,8 @@ public nonisolated enum EligibilityClassifier {
         }
     }
 
-    private static func isValid(_ record: CalibrationRecord, mechanism: Mechanism, machine: MachineIdentity,
-                                potential: Double?) -> Bool {
-        guard record.mechanism == mechanism, record.osBuild == machine.osBuild, let potential else { return false }
+    private static func isValid(_ record: CalibrationRecord, machine: MachineIdentity, potential: Double?) -> Bool {
+        guard record.osBuild == machine.osBuild, let potential else { return false }
         return abs(potential - record.potentialAtTest) <= calibrationPotentialTolerance * record.potentialAtTest
     }
 }

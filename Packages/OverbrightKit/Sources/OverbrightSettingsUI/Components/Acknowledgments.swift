@@ -21,7 +21,7 @@ struct AcknowledgmentEntry: Identifiable, Equatable {
                                 note: String(localized: "Parts of the build scripts, translation tools, settings store, keyboard shortcuts and update check come from Cranny, by the same author.",
                                              bundle: .module, comment: "Settings ▸ About ▸ Acknowledgments: what Overbright uses from Cranny (keep the name)")),
             AcknowledgmentEntry(name: "xdr-boost", license: "MIT", url: URL(string: "https://github.com/levelsio/xdr-boost"),
-                                note: String(localized: "The idea behind Compatibility mode: a full-screen overlay that multiplies the picture. No code was copied.",
+                                note: String(localized: "Studied for a full-screen overlay that multiplies the picture, which Overbright tried and removed. No code was copied.",
                                              bundle: .module, comment: "Settings ▸ About ▸ Acknowledgments: what Overbright learned from xdr-boost")),
             AcknowledgmentEntry(name: "xdr-light", license: "MIT", url: URL(string: "https://github.com/lichengzhe/xdr-light"),
                                 note: String(localized: "Pairing a tiny trigger for the display’s extra range with color table scaling. No code was copied.",

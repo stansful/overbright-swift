@@ -26,7 +26,7 @@ extension DisplayController {
         writeBaselineNow()
         if cause == .notOnConsole { removeWindows(force: true) }
         phase = .suspended(cause)
-        if trigger != nil || overlay != nil { startLinger() }
+        if trigger != nil { startLinger() }
     }
 
     /// Removes the kept trigger after `triggerLinger` while still suspended. A shield whose baseline write failed left
@@ -36,11 +36,9 @@ extension DisplayController {
             guard let self else { return }
             do { try await self.deps.time.sleep(for: EngineTiming.triggerLinger) } catch { return }
             guard case .suspended = self.phase, self.writeBaselineNow() else { return }
-            let windows = (self.trigger, self.overlay)
+            let window = self.trigger
             self.trigger = nil
-            self.overlay = nil
-            windows.0?.remove()
-            windows.1?.remove()
+            window?.remove()
             self.notify()
         }
     }
@@ -66,8 +64,7 @@ extension DisplayController {
         case .shielded, .displayAsleep, .notOnConsole, .policy:
             if shielded { return }
         case .occluded:
-            let hidden = trigger?.isOccluded == true || overlay?.isOccluded == true
-            if hidden, targetGain != nil { return }
+            if trigger?.isOccluded == true, targetGain != nil { return }
         case .reconfiguring, .hungMainThread:
             if case .neutral = target { break }
             return
@@ -90,9 +87,7 @@ extension DisplayController {
             generation += 1
             cancelAllTasks()
             removeTrigger()
-            if mechanism == .overlay {
-                guard ensureOverlay() else { return }
-            } else if baseline == nil {
+            if baseline == nil {
                 guard captureBaseline() else { return }
             }
             startRamp(to: light, origin: .automatic, finalPhase: .dimmed, removesWindowsAtEnd: true)
@@ -113,8 +108,8 @@ extension DisplayController {
 
     // MARK: Windows
 
-    /// The trigger or overlay became hidden (the lock shield) or visible again. While driven, hidden ends the session on
-    /// this display and visible changes nothing (the session re-arms if it goes on).
+    /// The trigger became hidden (the lock shield) or visible again. While driven, hidden ends the session on this
+    /// display and visible changes nothing (the session re-arms if it goes on).
     func windowOcclusionChanged(_ occluded: Bool, isCurrentWindow: Bool) {
         guard isCurrentWindow else { return }
         if isDriven {
@@ -133,13 +128,12 @@ extension DisplayController {
             }
         } else if case .suspended(.occluded) = phase {
             trigger?.represent()
-            overlay?.represent()
             resume()
         }
     }
 
-    /// AppKit moved the trigger or overlay to another screen: un-scale, remove that window at once, wait for the
-    /// reconfiguration pass (§4.3, §4.7), so it never requests EDR on another display.
+    /// AppKit moved the trigger to another screen: un-scale, remove that window at once, wait for the reconfiguration
+    /// pass (§4.3, §4.7), so it never requests EDR on another display.
     func windowMoved(to displayID: CGDirectDisplayID?, isCurrentWindow: Bool) {
         guard isCurrentWindow, displayID != ref.id else { return }
         deps.journal.record("trigger.movedScreen", display: key, time: deps.time, category: .trigger)

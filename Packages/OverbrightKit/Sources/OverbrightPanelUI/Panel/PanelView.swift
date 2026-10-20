@@ -101,10 +101,10 @@ public struct PanelView: View {
         var primary: (() -> Void)?
         var activate: (@MainActor () -> Void)?
         if let action {
-            primary = { action.perform(commands, status: status) }
-            activate = { action.perform(commands, status: status) }
+            primary = { action.perform(commands) }
+            activate = { action.perform(commands) }
         }
-        return PausedBanner(Self.bannerModel(banner, status: status), primary: primary, secondary: nil)
+        return PausedBanner(Self.bannerModel(banner, status: status), primary: primary)
             .panelFocus($focus, .bannerPrimary, cornerRadius: Radius.card, activate: activate ?? {})
             .transition(theme.reduceMotion ? .opacity : .move(edge: .top).combined(with: .opacity))
     }

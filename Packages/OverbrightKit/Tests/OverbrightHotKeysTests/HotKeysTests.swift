@@ -1,6 +1,7 @@
 // OverbrightHotKeysTests/HotKeysTests.swift — the global shortcut center (ARCHITECTURE.md §3.6, §3.7, D17) against a
-// recording registrar: no test registers the catalog's real combinations system-wide. Ported from Cranny's hot-key
-// tests (the owner's MIT code); one test registers a real Carbon hot key on a combination nobody uses.
+// recording registrar: no test registers a real combination system-wide. The shipped catalog binds nothing (D17), so
+// the behaviour tests run on `SampleShortcuts.catalog`, the catalog with five sample defaults. Ported from Cranny's
+// hot-key tests (the owner's MIT code); one test registers a real Carbon hot key on a combination nobody uses.
 import Foundation
 import Observation
 import OverbrightCore
@@ -34,15 +35,18 @@ import Testing
     }
 }
 
-private let hyper: KeyCombo.Modifiers = [.control, .option, .command]
-private let toggleCombo = KeyCombo(keyCode: 11, modifiers: hyper)                  // ⌃⌥⌘B
+private let hyper = SampleShortcuts.hyper
+private let toggleCombo = SampleShortcuts.toggle                                   // ⌃⌥⌘B
 /// ⌃⌥⇧⌘F19: a combination nobody uses.
 private let unusedCombo = KeyCombo(keyCode: 80, modifiers: [.control, .option, .shift, .command])
 
+/// A center over `shortcuts` (the sample catalog unless a test checks the shipped one).
 @MainActor private func makeCenter(_ registrar: FakeRegistrar = FakeRegistrar(),
-                                   settings: SettingsStore = SettingsStore(defaults: InMemoryDefaults()))
+                                   settings: SettingsStore = SettingsStore(defaults: InMemoryDefaults()),
+                                   shortcuts: [GlobalShortcut] = SampleShortcuts.catalog)
     -> (HotKeyCenter, FakeRegistrar, SettingsStore) {
-    let center = HotKeyCenter(settings: settings, registrar: registrar, layout: { .named(KeyCombo.KeyboardLayout.us) })
+    let center = HotKeyCenter(settings: settings, shortcuts: shortcuts, registrar: registrar,
+                              layout: { .named(KeyCombo.KeyboardLayout.us) })
     return (center, registrar, settings)
 }
 
@@ -65,11 +69,22 @@ private let unusedCombo = KeyCombo(keyCode: 80, modifiers: [.control, .option, .
         #expect(center.state(.toggle) == .off && center.displayString(.toggle) == nil)
     }
 
-    /// D17: the catalog's five defaults register; Max and Fill Light have none.
+    /// D17: the shipped catalog binds nothing, so a first launch registers no hot key at all; every shortcut reads off.
+    @Test func aFirstLaunchRegistersNoHotKey() async {
+        let (center, registrar, _) = makeCenter(shortcuts: ShortcutCatalog.all)
+        await center.start()
+        #expect(registrar.registrations == 0 && registrar.live.isEmpty)
+        #expect(ShortcutCatalog.all.allSatisfy { center.state($0.id) == .off && center.displayString($0.id) == nil })
+        #expect(center.set(.standard, SampleShortcuts.standard) == .registered(SampleShortcuts.standard))  // recorded
+        #expect(registrar.live.values.contains(SampleShortcuts.standard))
+        await center.stop()
+    }
+
+    /// A catalog's defaults register (the sample catalog's five); Max and Fill Light have none.
     @Test func startRegistersTheCatalogDefaults() async {
         let (center, registrar, _) = makeCenter()
         await center.start()
-        let expected = ShortcutCatalog.all.compactMap(\.defaultCombo)
+        let expected = SampleShortcuts.catalog.compactMap(\.defaultCombo)
         #expect(Set(registrar.live.values) == Set(expected) && registrar.live.count == 5)
         #expect(center.state(.toggle) == .registered(toggleCombo))
         #expect(center.state(.max) == .off && center.state(.fillLight) == .off)

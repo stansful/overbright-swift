@@ -57,13 +57,8 @@ extension DisplayController {
             backoff = (current.kind, current.step + 1)
             guard await sleep(EngineTiming.wakeBackoff[current.step], stamp) else { return false }
             trigger?.represent()
-            overlay?.represent()
             restartGate()
             return true
-        }
-        guard mechanism == .table else {
-            fail(.headroomNeverArrived)
-            return false
         }
         return await presentRung(from: rungPosition + 1, stamp)
     }
@@ -94,23 +89,13 @@ extension DisplayController {
         backoff = kind.map { ($0, 0) }
         if kind != nil { quarantineUntil = deps.time.now + EngineTiming.escalationQuarantine }
         let wasPreHeld = armedPreHeld
-        let kept = mechanism == .overlay ? overlay != nil : trigger != nil
+        let kept = trigger != nil
         armedPreHeld = false
         preHeldHeadroom = nil
         gatePath = .normal
         cachedRungFailedThisArm = false
         belowNeededSince = nil
         restartPendingRebase()
-        if mechanism == .overlay {
-            overlay?.represent()
-            phase = .arming(rung: 0)
-            armSlot.run { [weak self] in
-                guard let self, await self.remeasureIdle(stamp, wasPreHeld: wasPreHeld, ownWindowKept: kept),
-                      self.showOverlay(stamp) else { return }
-                await self.gateLoop(stamp)
-            }
-            return
-        }
         if trigger != nil, let rung = currentRung {
             trigger?.represent()
             // The rungs after the kept one in the planned (automatic) order, not by number: the order is 5, 4, 3, 6, 7.
@@ -170,7 +155,7 @@ extension DisplayController {
         gatePath = .normal
         belowNeededSince = nil
         let next = rungPosition + 1
-        guard next < rungs.count, mechanism == .table else {
+        guard next < rungs.count else {
             fail(.headroomNeverArrived)
             return
         }

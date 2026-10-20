@@ -57,7 +57,7 @@ public struct DisplayCardModel: Hashable {
     public var allowedNow: Double?
     /// The presets shown on this display.
     public var presets: [LevelPreset]
-    /// The dim half works (a transfer table or the overlay).
+    /// The dim half works (the display has a transfer table).
     public var dimEnabled: Bool
     /// The per-display switch of extra brightness (preference, else the class default).
     public var boostEnabled: Bool
@@ -69,8 +69,6 @@ public struct DisplayCardModel: Hashable {
     public var phase: EnginePhase
     /// Failed tries in this session (the No extra range chip changes after two).
     public var failedTries: Int
-    /// The display runs in Compatibility mode (the caption line under the readout).
-    public var isCompatibilityMode: Bool
     /// The readout's numbers (Policy's `Readout.values`).
     public var readout: ReadoutValues
     /// The verdict's advisories.
@@ -104,7 +102,6 @@ public struct DisplayCardModel: Hashable {
         advisories = eligibility?.advisories ?? []
         phase = status.phase
         failedTries = status.failedTries
-        isCompatibilityMode = (status.decision?.mechanism ?? status.mechanism) == .overlay
         readout = Readout.values(for: status, isMasterOn: isMasterOn)
 
         top = Self.top(verdict: verdict, facts: facts, capMode: capMode, isOLED: isOLED)
@@ -185,7 +182,7 @@ public struct DisplayCardModel: Hashable {
         }
     }
 
-    /// The display has a transfer table (or could use the overlay): dimming works.
+    /// The display has a transfer table: dimming works.
     static func hasTable(_ facts: DisplayFacts?) -> Bool {
         guard let facts else { return true }
         return facts.gammaCapacity > 0 && facts.panelClass != .virtualDisplay

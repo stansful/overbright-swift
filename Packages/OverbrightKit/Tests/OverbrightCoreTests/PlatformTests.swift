@@ -1,4 +1,4 @@
-// OverbrightCoreTests/PlatformTests.swift — adapted from Cranny's PlatformTests (the owner's MIT code): files, debounce,
+// OverbrightCoreTests/PlatformTests.swift — adapted from Cranny's PlatformTests (the owner's MIT code): files,
 // versions, durations, launch arguments (with Overbright's switches of ARCHITECTURE.md §8.5), snapshot output; plus
 // MachineIdentity, SystemTimeSource and the journal ring buffer.
 import Foundation
@@ -15,7 +15,8 @@ private struct Document: Codable, Equatable, Sendable {
 @Test func jsonFileStoreRoundTripsAndSetsCorruptFilesAside() async throws {
     let paths = AppPaths.temporary()
     #expect(!FileManager.default.fileExists(atPath: paths.root.path))           // nothing is created up front
-    let directory = try paths.cacheDirectory(for: "strategy")
+    let directory = paths.caches.appending(path: "strategy", directoryHint: .isDirectory)
+    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
     #expect(directory.path.hasSuffix("/Caches/strategy"))
     let url = directory.appending(path: "strategy-cache.json")
     let store = JSONFileStore(url: url, defaultValue: Document(title: "default", items: []))
@@ -37,38 +38,8 @@ private struct Document: Codable, Equatable, Sendable {
     #expect(AppPaths.live.root.lastPathComponent == "app.overbright.Overbright")
     #expect(AppPaths.live.root.deletingLastPathComponent().lastPathComponent == "Application Support")
     #expect(AppPaths.live.caches.lastPathComponent == "app.overbright.Overbright")
-    let paths = AppPaths.temporary()
-    let selfTest = try paths.directory(for: AppPaths.selfTestFolder)
-    #expect(selfTest.path.hasSuffix("/Support/SelfTest") && FileManager.default.fileExists(atPath: selfTest.path))
-    try? FileManager.default.removeItem(at: paths.root.deletingLastPathComponent())
-}
-
-// MARK: - Debounce
-
-/// What a debounced action saw (written on the main actor).
-@MainActor private final class DebounceProbe { var priority: TaskPriority?; var runs = 0 }
-
-/// A debouncer given a priority runs its action at it (background saves at utility, so the `@concurrent` work they
-/// await does too).
-@MainActor @Test func aDebouncedActionRunsAtItsDebouncersPriority() async {
-    let probe = DebounceProbe()
-    let debouncer = Debouncer(delay: .milliseconds(1), priority: .utility)
-    debouncer.schedule { probe.priority = Task.currentPriority }
-    for _ in 0..<3000 where probe.priority == nil { try? await Task.sleep(for: .milliseconds(10)) }
-    #expect(probe.priority == .utility)
-}
-
-@MainActor @Test func aDebouncerRunsOnlyTheLastActionAndCancelDropsIt() async {
-    let probe = DebounceProbe()
-    let debouncer = Debouncer(delay: .milliseconds(20))
-    debouncer.schedule { probe.runs += 1 }
-    debouncer.schedule { probe.runs += 10 }
-    for _ in 0..<3000 where probe.runs == 0 { try? await Task.sleep(for: .milliseconds(10)) }
-    #expect(probe.runs == 10)
-    debouncer.schedule { probe.runs += 100 }
-    debouncer.cancel()
-    try? await Task.sleep(for: .milliseconds(100))
-    #expect(probe.runs == 10)
+    let selfTest = AppPaths.temporary().root.appending(path: AppPaths.selfTestFolder, directoryHint: .isDirectory)
+    #expect(selfTest.path.hasSuffix("/Support/SelfTest"))
 }
 
 // MARK: - Versions and durations

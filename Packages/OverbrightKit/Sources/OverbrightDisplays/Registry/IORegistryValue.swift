@@ -11,11 +11,6 @@ nonisolated enum IORegistryValue {
         littleEndianWord(value).map { Double($0) / 65536 }
     }
 
-    /// An IEEE 754 single stored as 4 little-endian bytes of device-tree data (`aurora-maximum-nits = <00007a44>`).
-    static func floatData(_ value: Any?) -> Double? {
-        littleEndianWord(value).map { Double(Float(bitPattern: $0)) }
-    }
-
     /// A 16.16 fixed-point number stored as an integer (`DisplayAttributes.Luminance.Max = 30506349` is 465.49 nits).
     static func fixedPointInteger(_ value: Any?) -> Double? {
         integer(value).map { Double($0) / 65536 }

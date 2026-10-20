@@ -3,11 +3,11 @@
 
 /// A `HeadroomPort` whose readings follow each display's `HeadroomScript` over a `TimeSource` (normally a
 /// `ManualTimeSource`): idle H, a pre-held value that can leave, and the grant that requests from `FakeTriggerFactory`
-/// (triggers and overlays) reach after the scripted delay and ramp. Tests drop or move H with `setOverride` (a lock
-/// shield) and `setGrant(_:for:over:)` (thermal limits, the brightness keys moving H monotonically).
+/// reach after the scripted delay and ramp. Tests drop or move H with `setOverride` (a lock shield) and
+/// `setGrant(_:for:over:)` (thermal limits, the brightness keys moving H monotonically).
 @MainActor public final class ScriptedHeadroom: HeadroomPort {
     private struct Request {
-        let strategy: TriggerStrategy?
+        let strategy: TriggerStrategy
         let presentedAt: MonotonicInstant
     }
     private struct GrantChange {
@@ -56,20 +56,12 @@
 
     /// The script of `key`.
     public func script(for key: DisplayKey) -> HeadroomScript? { states[key]?.script }
-    /// Adds or replaces the script of `key` (its pre-held clock starts now).
-    public func setScript(_ script: HeadroomScript, for key: DisplayKey) {
-        var state = State(script: script, start: time.now)
-        state.requests = states[key]?.requests ?? [:]
-        states[key] = state
-    }
     /// Changes the script of `key` in place (potential, reference, idle, …).
     public func update(_ key: DisplayKey, _ change: (inout HeadroomScript) -> Void) {
         guard var state = states[key] else { return }
         change(&state.script)
         states[key] = state
     }
-    /// The display is gone: no more readings.
-    public func removeDisplay(_ key: DisplayKey) { states[key] = nil }
     /// Pins H of `key` (nil = every display) to `value` until cleared with nil (a lock shield drops H to 1.0).
     public func setOverride(_ value: Double?, for key: DisplayKey? = nil) {
         for k in key.map({ [$0] }) ?? Array(states.keys) { states[k]?.override = value }
@@ -87,12 +79,12 @@
     public func currentHeadroom(of key: DisplayKey) -> Double? {
         states[key].map { current($0, at: time.now) }
     }
-    /// Number of live requests (triggers and overlays with an EDR request) on `key`.
+    /// Number of live requests (presented triggers) on `key`.
     public func requestCount(on key: DisplayKey) -> Int { states[key]?.requests.count ?? 0 }
 
     // MARK: Requests (FakeTriggerFactory)
 
-    func requestStarted(_ id: UInt64, strategy: TriggerStrategy?, on key: DisplayKey) {
+    func requestStarted(_ id: UInt64, strategy: TriggerStrategy, on key: DisplayKey) {
         guard states[key]?.requests[id] == nil else { return }
         states[key]?.requests[id] = Request(strategy: strategy, presentedAt: time.now)
     }

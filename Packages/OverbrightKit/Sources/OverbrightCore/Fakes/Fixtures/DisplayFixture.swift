@@ -24,7 +24,7 @@ public nonisolated enum DisplayFixture: String, CaseIterable, Sendable {
     case sidecar = "sidecar"
     /// The built-in plus a projector mirroring it (own table, no NSScreen of its own: dim only).
     case hardwareMirror = "hardware-mirror"
-    /// A Mac17,5 on macOS 26.3, where table writes succeed but change nothing (`CompatibilityModels`). The panel
+    /// A Mac17,5 on macOS 26.3, where table writes succeed but change nothing (`IgnoredTableWriteModels`). The panel
     /// values are the M4 Max built-in's, as stand-ins: the point of the fixture is the ignored writes.
     case neoIgnoresWrites = "neo-ignores-writes"
     /// The built-in with a calibrated (non-identity, per-channel) profile base.

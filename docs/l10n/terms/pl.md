@@ -84,7 +84,7 @@ Register and style, as macOS writes Polish:
 | Back to Standard (the instant off) | Wróć do standardu | not “panic”, not “reset brightness” |
 | Indoor · Bright room · Sunlight · Max (presets) | W pomieszczeniu · Mocne światło · Na słońcu · Maksimum | “Max” is a preset only |
 | Safe · Peak (ceilings) | Bezpieczny · Szczyt | Peak, never “Max”, for a ceiling; one short word each (segments) |
-| Compatibility mode · Color table (methods) | Tryb zgodności · Tabela kolorów | never “fallback” or “overlay” |
+| color table (in sentences: “macOS ignores color table changes”) | tabela kolorów | never “gamma”; no “fallback” or “overlay” in copy |
 | Fill Light (the edge light for video calls) | Światło wypełniające | never “ring light” |
 | extra range (headroom, in user copy) | Zapas jasności | “headroom” only in Advanced and diagnostics |
 | Calibrate… · Run Self-Test… · Reset Display Colors… | Skalibruj… · Uruchom autotest… · Wyzeruj kolory wyświetlaczy… |  |

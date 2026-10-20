@@ -83,8 +83,6 @@ import Testing
             "OLED display: extra brightness stays lower and pauses after 5 minutes without input.",
             "Not calibrated. Numbers are estimates, and Overbright uses a safe default.",
         ])
-        #expect(VerdictText.line(for: .compatibilityModeAdvised, in: english)
-                == "On this Mac, macOS ignores color table changes, so Overbright uses Compatibility mode.")
         #expect(VerdictText.line(for: .autoBrightnessInteracts, in: english).hasPrefix("Keep Automatically adjust brightness"))
         #expect(VerdictText.line(for: .oledCare, oledIdleMinutes: 10, in: english).contains("10 minutes"))
     }

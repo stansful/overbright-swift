@@ -159,8 +159,8 @@ extension BoostEngine {
         reduceNow(ControlRequest(source: source, kind: .resume, display: nil, wantsBoost: false))
     }
 
-    /// S2/S3 (and S1 on Compatibility-mode displays, decided by the reducer): continue until that app quits or
-    /// Overbright relaunches. Clears the drift trips the app caused.
+    /// S2/S3 (an S1 booster is never continued; the reducer decides): continue until that app quits or Overbright
+    /// relaunches. Clears the drift trips the app caused.
     public func continueAnyway(_ app: ConflictingApp) {
         continued[app.entryID] = app.processID
         for controller in controllers.values {
@@ -268,7 +268,7 @@ extension BoostEngine {
     /// Standard light at a level: the dim light on the dim half, 1 otherwise.
     func light(of level: LevelPosition) -> Double { level.isDim ? LevelMapping.dimLight(for: level) : 1 }
 
-    /// Displays that can dim (by the last decision's verdict; a table or the overlay when there is none yet).
+    /// Displays that can dim (by the last decision's verdict; a transfer table when there is none yet).
     func dimmableKeys() -> [DisplayKey] {
         displays.displays.filter { facts in
             if let verdict = lastDecision?.displays[facts.ref.key]?.eligibility.verdict, verdict != .checking {

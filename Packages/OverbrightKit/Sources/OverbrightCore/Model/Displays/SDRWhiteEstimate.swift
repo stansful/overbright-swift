@@ -6,8 +6,6 @@ public nonisolated struct SDRWhiteEstimate: Hashable, Sendable {
     public enum Source: String, Codable, Sendable {
         /// Typed from a colorimeter in the calibration sheet.
         case colorimeter
-        /// The built-in's backlight value (only if hardware test H-N1 confirms it).
-        case panelReported
         /// An external's HDR-mode frame-average luminance.
         case hdrFrameAverage
     }

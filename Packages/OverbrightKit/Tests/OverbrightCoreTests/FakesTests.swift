@@ -211,12 +211,12 @@ import Testing
         headroom.update(builtIn) { $0.respondingStrategies = [.hlgStill] }
         let factory = FakeTriggerFactory(headroom: headroom)
         factory.failingPresents = [.metalKeepAlive]
-        factory.makeErrors = [.hlgSampleBuffer: .assetUnavailable]
+        factory.makeErrors = [.hlgSampleBuffer: .colorUnavailable]
         let t2 = try factory.makeTrigger(request(.metalOneShot), on: ref)
         #expect(await t2.present(.bright))
         let t3 = try factory.makeTrigger(request(.metalKeepAlive), on: ref)
         #expect(await !t3.present(.bright))
-        #expect(throws: TriggerError.assetUnavailable) { try factory.makeTrigger(request(.hlgSampleBuffer), on: ref) }
+        #expect(throws: TriggerError.colorUnavailable) { try factory.makeTrigger(request(.hlgSampleBuffer), on: ref) }
         await time.advance(by: .seconds(5))
         #expect(headroom.currentHeadroom(of: builtIn) == 1)
         let t4 = try factory.makeTrigger(request(.hlgStill), on: ref)
@@ -246,8 +246,8 @@ import Testing
         let headroom = ScriptedHeadroom(fixture: .hardwareMirror, time: time)
         let factory = FakeTriggerFactory(headroom: headroom)
         #expect(headroom.reading(for: DisplayRef(key: DisplayFixture.Keys.projector, id: 6)) == nil)  // no own screen
-        let overlay = try factory.makeOverlay(on: ref)
-        try overlay.setFactor(1.2, headroomRequest: 1.3)                          // an overlay's EDR request
+        let trigger = try factory.makeTrigger(request(.taggedLayer), on: ref)
+        #expect(await trigger.present(.black))                                    // a trigger's EDR request
         await time.advance(by: .seconds(2))
         #expect(abs((headroom.currentHeadroom(of: builtIn) ?? 0) - 1600.0 / 600) < 1e-9)
         headroom.setOverride(1, for: nil)                                         // a lock shield
@@ -259,12 +259,13 @@ import Testing
         #expect(rising > 2.7 && rising < 5.3)
         await time.advance(by: .seconds(1))
         #expect(abs((headroom.currentHeadroom(of: builtIn) ?? 0) - 5.33) < 1e-9)
-        try overlay.setFactor(0.5, headroomRequest: 1)                            // dimming: no EDR request
+        trigger.remove()                                                          // the request ends
         #expect(headroom.requestCount(on: builtIn) == 0 && headroom.currentHeadroom(of: builtIn) == 1)
         headroom.update(builtIn) { $0.potential = 1 }                             // potential falls: H follows
         #expect(headroom.currentHeadroom(of: builtIn) == 1)
-        try overlay.setFactor(1, headroomRequest: 1.3)                            // request first, then boost (§7.5)
-        #expect(headroom.requestCount(on: builtIn) == 1)
+        let next = try factory.makeTrigger(request(.taggedLayer), on: ref)
+        #expect(await next.present(.black))
+        #expect(headroom.requestCount(on: builtIn) == 1 && headroom.currentHeadroom(of: builtIn) == 1)
     }
 
     @Test func aRecordLimitDropsOnlyRemovedHandles() async throws {
@@ -367,8 +368,9 @@ import Testing
         #expect(services.boost.beginCalibration(of: DisplayFixture.Keys.builtIn) == nil)
         #expect(boost?.calls.first == "setOn(true,panel)" && boost?.calls.count == 7)
 
-        #expect(services.shortcuts.displayString(.toggle) == "⌃⌥⌘B")
-        #expect(services.shortcuts.displayString(.brighter) == "⌃⌥⌘=" && services.shortcuts.displayString(.max) == nil)
+        #expect(services.shortcuts.displayString(.toggle) == nil && services.shortcuts.state(.toggle) == .off)  // D17
+        let bound = PreviewShortcutCenter(bindings: [.toggle: KeyCombo(keyCode: 11, modifiers: [.control, .option, .command])])
+        #expect(bound.displayString(.toggle) == "⌃⌥⌘B" && bound.displayString(.brighter) == nil)
         #expect(services.shortcuts.set(.max, KeyCombo(keyCode: 46, modifiers: [.control, .shift])) ==
                 .registered(KeyCombo(keyCode: 46, modifiers: [.control, .shift])))
         #expect(services.shortcuts.displayString(.max) == "⌃⇧M")

@@ -34,10 +34,9 @@ import OverbrightPolicy
             let eligibility = EligibilityClassifier.classify(display.facts, preferences: DisplayPreferences(),
                                                              reading: reading, machine: fixture.machine)
             let decision = DisplayDecision(key: display.key, target: .neutral, reasons: [.masterOff], eligibility: eligibility,
-                                           mechanism: eligibility.defaultMechanism, domain: .encoded, requestedGain: 1)
+                                           domain: .encoded, requestedGain: 1)
             return DisplayStatus(key: display.key, name: display.facts.name, phase: .idle, decision: decision,
-                                 appliedGain: 1, appliedFactor: 1, mechanism: eligibility.defaultMechanism, strategy: nil,
-                                 lastReading: reading, sdrWhite: nil)
+                                 appliedGain: 1, appliedFactor: 1, strategy: nil, lastReading: reading, sdrWhite: nil)
         }
         boost.status = BoostStatus(isOn: isOn, isReady: true, pausedUntil: nil, autoOffAt: nil, displays: displays,
                                    banner: nil, symbol: isOn ? .on : .off)

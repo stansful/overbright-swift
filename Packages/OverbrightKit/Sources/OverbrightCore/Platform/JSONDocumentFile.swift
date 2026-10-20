@@ -11,8 +11,8 @@
 // publishes a staged file, never for encoding or disk writes.
 //
 // Energy: the `…InBackground` variants run at the calling task's priority, and a task started on the main actor is
-// user-initiated. Start a save nobody waits on from a `.utility` task (`Task(priority: .utility)`, or
-// `Debouncer(delay:priority:)`), so encoding and the write run on efficiency cores with throttled I/O.
+// user-initiated. Start a save nobody waits on from a `.utility` task (`Task(priority: .utility)`), so encoding and the
+// write run on efficiency cores with throttled I/O.
 import Darwin
 import Foundation
 import os

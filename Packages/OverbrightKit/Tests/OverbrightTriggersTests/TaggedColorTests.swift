@@ -48,16 +48,6 @@ struct TaggedColorTests {
         #expect(bright.backgroundColor?.components?.first == 1.6)
     }
 
-    @Test func componentsAboveOneSurviveTheAppKitBuilder() throws {
-        guard #available(macOS 26.0, *) else { return }
-        let color = try #require(TaggedColor.nsColor(value: 1.6, headroom: 16))
-        #expect(color.cgColor.components?.first == 1.6)
-        #expect(color.cgColor.contentHeadroom == 16)
-        let black = try #require(TaggedColor.nsColor(value: 0, headroom: 16))
-        #expect(black.cgColor.contentHeadroom == 16)
-        #expect(black.cgColor.components?.prefix(3).allSatisfy { $0 == 0 } == true)
-    }
-
     /// The regression that made "EDR colours start from CGColor" a rule: AppKit's component-array initialiser keeps
     /// 8-bit components and wraps 1.6 to 152/255. If this starts failing, AppKit changed; the rule can then be
     /// revisited (the lint test keeps the initialiser out of Sources either way).
@@ -67,8 +57,8 @@ struct TaggedColorTests {
         let wrapped = NSColor(colorSpace: .extendedSRGB, components: &components, count: 4)
         let stored = Double(try #require(wrapped.cgColor.components?.first))
         #expect(abs(stored - 152.0 / 255.0) < 0.01, "stored \(stored)")
-        let ours = try #require(TaggedColor.nsColor(value: 1.6, headroom: 1.6))
-        #expect(Double(try #require(ours.cgColor.components?.first)) == 1.6)
+        let ours = try #require(TaggedColor.cgColor(value: 1.6, headroom: 1.6))
+        #expect(Double(try #require(ours.components?.first)) == 1.6)
     }
 
     @Test func untaggedColourCarriesNoTag() throws {

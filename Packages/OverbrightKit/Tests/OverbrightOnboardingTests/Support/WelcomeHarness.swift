@@ -7,6 +7,7 @@ import Foundation
 import Observation
 import OverbrightCore
 import OverbrightDesign
+import OverbrightTestSupport
 import SwiftUI
 import Testing
 @testable import OverbrightOnboarding
@@ -66,17 +67,18 @@ func onboardingBundle(_ code: String) -> Bundle {
     func row(_ key: DisplayKey) throws -> WelcomeDisplayRow { try #require(rows.first { $0.key == key }) }
 }
 
-/// A `ShortcutCenter` with the catalog defaults that renders key caps through one keyboard layout, as the real center
-/// does with the current one (`KeyCombo.keyCaps(in:)`, the code of `HotKeyCenter.displayString`).
+/// A `ShortcutCenter` with the sample bindings (`SampleShortcuts`; none ships bound, D17) that renders key caps through
+/// one keyboard layout, as the real center does with the current one (`KeyCombo.keyCaps(in:)`, the code of
+/// `HotKeyCenter.displayString`).
 @MainActor @Observable final class LayoutShortcutCenter: ShortcutCenter {
     /// The layout the caps are drawn in.
     let layout: KeyCombo.KeyboardLayout?
     private var bindings: [ShortcutID: KeyCombo?]
 
-    /// The catalog defaults in `layout`.
+    /// The sample bindings in `layout`.
     init(layout: KeyCombo.KeyboardLayout?) {
         self.layout = layout
-        bindings = Dictionary(uniqueKeysWithValues: ShortcutCatalog.all.map { ($0.id, $0.defaultCombo) })
+        bindings = SampleShortcuts.bindings
     }
 
     /// An installed macOS layout by its short name ("German"), read-only; the test fails when macOS has none by that

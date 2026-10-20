@@ -42,7 +42,7 @@ import Testing
         let colorimeter = model { model, _ in model.showsColorimeter = true; model.colorimeterNits = 9000 }
         let results = model { model, session in
             session.record = FakeCalibrationSession.record(.encoded)
-            model.start(); model.answerBrighter(false); model.keepColorTable()
+            model.start(); model.answerBrighter(false)
         }
         return [("calibration-checklist", checklist), ("calibration-colorimeter-range", colorimeter),
                 ("calibration-comparison", comparison),

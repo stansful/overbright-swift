@@ -71,13 +71,15 @@ struct ComponentSnapshotTests {
             ("banners", CGSize(width: 320, height: 820), AnyView(VStack(spacing: Space.m) {
                 ForEach(Array(banners.enumerated()), id: \.offset) { _, banner in
                     PausedBanner(BannerModel.make(banner, displayNames: [DisplayKey(rawValue: "A"): "Studio Display"],
-                                                  in: language), primary: {}, secondary: nil)
+                                                  in: language), primary: {})
                 }
             })),
-            ("footer-chips", CGSize(width: 320, height: 60), AnyView(HStack(spacing: Space.s) {
-                GuardChip(.battery(.belowThreshold, threshold: 20, in: language), menu: [])
-                GuardChip(.autoPause(anyRuleOn: true, in: language), menu: [])
-                GuardChip(.timer(minutes: nil, remaining: nil, in: language), menu: [])
+            ("footer-chips", CGSize(width: 320, height: 60), AnyView(HStack(spacing: Space.s) {   // English: PanelUI's words
+                GuardChip(GuardChipModel(symbol: .battery25Percent, text: "Below 20%", accessibilityLabel: "Battery limit",
+                                         compactText: "20%", accessibilityValue: "Below 20%"), menu: [])
+                GuardChip(GuardChipModel(symbol: .playRectangleFill, text: "Auto-pause · Off", accessibilityLabel: "Auto-pause",
+                                         compactText: "Off", accessibilityValue: "Off"), menu: [])
+                GuardChip(GuardChipModel(symbol: .timer, text: "No timer", accessibilityLabel: "Timer"), menu: [])
             })),
             ("readouts", CGSize(width: 320, height: 140), AnyView(VStack(alignment: .leading, spacing: Space.s) {
                 ReadoutText(ReadoutValues(state: .off, appliedGain: 1, requestedGain: nil, nits: nil, preset: nil,
