@@ -75,10 +75,13 @@ Nothing here boosts: keep Overbright running but off (master switch off in the p
 
 ## 2. First boost: read-back model, dimming, resets (35 min) — H-R1, H-DM1, H-NS1, H-K2, H-W5
 
-Monitor running (`monitor-2.jsonl`). **Run 2.0 before every other step that boosts.**
+Monitor running (`monitor-2.jsonl`). **Run 2.0a and 2.0 before every other step that boosts.**
+
+Since 2026-10-20 a display's first boost on each macOS build asks **"Keep this level?"**: answer **Keep** only when the screen got brighter; with no answer it goes back to Standard by itself after 10 s.
 
 | Step | Do | Expected |
 |---|---|---|
+| **2.0a (H-WS1, white screen)** | Settings ▸ Advanced ▸ Trigger method: built-in **Automatic**; built-in brightness at maximum. (1) Drag its slider from Standard to **Bright room** and look for 10 s **without answering** the prompt. (2) Set Trigger method to **Tagged layer**, drag past Standard again and again do not answer. (3) Set it back to **Automatic**, drag past Standard and press **Keep**. `obdiag …/2.0a-N.json` after each try. | (1) The built-in gets **brighter, not white** (the diagnostics show `cachedRung` 5, “Metal layer, refreshed”), and returns to Standard after 10 s on its own. (2) Expected **white** (the 2026-10-20 report), back to Standard after 10 s; note whether it whitens. (3) Brighter, and it stays. If (1) or (3) turns white, **stop the session** and report it. |
 | **2.0 (H-R1)** | Settings ▸ Displays ▸ Built-in: Limit **Peak**. Turn Overbright on, built-in at **Max**, brightness at maximum. Watch the monitor for 10 s. Then Back to Standard. | Record the monitor's **table max** while boosted: **> 1.0** (read-back keeps values above 1) or **exactly 1.0** (read-back clamps). Either way the class must read `scaled` while boosted and `matchesBase` after Back to Standard. If the class reads `matchesBase` while the screen is visibly brighter, **stop the session** and report it: every later SCALED check would be meaningless. |
 | 2.1 (H-DM1) | Built-in at Bright room, then press Less Bright (⌃⌥⌘- by default) repeatedly | it stops at Standard once, then dims in steps; the panel shows "Dimmed · N %"; the class reads `scaled` with a ratio below 1 |
 | 2.2 | With the panel's slider, step through the named dim stops with ⌥← (50 %, 25 %, 10 %, 5 %, 2 %) | below 10 % the "Keep this level?" prompt appears; without an answer the level returns after 10 s; with Keep it stays; Back to Standard always works |
@@ -274,6 +277,7 @@ Cases: Overbright **off**; on with the winning trigger at Bright room; on with *
 
 | ID | Question | Result | Files |
 |---|---|---|---|
+| **H-WS1** | **built-in brighter, not white, with the automatic ladder (T3, 0.2 s)? first-boost prompt reverts after 10 s? Tagged layer still white?** | | 2.0a |
 | **H-R1** | **read-back while boosted: table max > 1.0, or exactly 1.0 (clamps)? class `scaled` either way?** | | 2.0 |
 | H-E1 | potential / reference per preset; MSI on/off/after wake; name localized? | | 1.x |
 | H-DM1 | table-method dimming on the built-in and the MSI; Keep this level | | 2.1–2.3 |
