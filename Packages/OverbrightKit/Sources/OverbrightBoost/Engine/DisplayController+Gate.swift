@@ -23,11 +23,9 @@ extension DisplayController {
             if samples.count > Self.maximumSamples { samples.removeFirst(samples.count - Self.maximumSamples) }
             flicker.noteHeadroom(headroom)
             if appliedGain > 1, appliedGain > FactorMath.lowerThreshold * headroom { lowerForSafety() }
-            if parameters.isHDRSuppressed {
-                // Keep the rung and stop escalating: the timeouts pause (§4.3).
-                presentedAt = presentedAt.map { $0 + EngineTiming.gatePollInterval }
-                if movedAt != nil { gatePause += EngineTiming.gatePollInterval }
-            }
+            // macOS's HDR suppression pauses nothing (2026-10-20): macOS 27 sends it to a menu-bar agent from launch and
+            // never ends it, yet the triggers get their grant, so pausing the timeouts held a rung that does not
+            // answer in arming forever. `gatePause` stays for a pause with a real cause.
             guard let presentedAt else { continue }
             switch GateEvaluator.evaluate(path: gatePath, samples: samples, idle: idleHeadroom,
                                           presentedAt: presentedAt, movedAt: movedAt, gatePause: gatePause, now: now) {

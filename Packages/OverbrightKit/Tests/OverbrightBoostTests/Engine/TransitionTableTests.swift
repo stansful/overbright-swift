@@ -154,20 +154,18 @@ import Testing
         #expect(h.controller()?.trip == .headroomNeverArrived)
     }
 
-    /// macOS suppresses HDR: the current rung is kept and the ladder does not escalate; it resumes afterwards.
-    @Test func hdrSuppressionKeepsTheRung() async throws {
+    /// macOS's HDR suppression pauses nothing: macOS 27 sends it to a menu-bar agent from launch and never ends it,
+    /// while the triggers still get their grant, so a rung that does not answer must still give way to the next one
+    /// (2026-10-20; before, the rung timeout stood still and the display stayed in arming forever).
+    @Test func hdrSuppressionStillEscalates() async throws {
         let h = EngineHarness()
         h.scripted.update(h.builtIn) { $0.respondingStrategies = [.metalOneShot] }
         h.signals.snapshot.isHDRSuppressed = true
         await h.start()
         h.engine.setOn(true, source: .panel)
-        await h.advance(.seconds(10))
-        #expect(h.phase() == .arming(rung: 5))
-        #expect(h.triggers.made.count == 1)
-        h.signals.snapshot.isHDRSuppressed = false
-        h.signals.emit(.hdrSuppressionEnded)
         #expect(await h.boost())
         #expect(h.controller()?.currentRung?.number == 4)
+        #expect(h.triggers.made.count >= 2)
     }
 
     /// macOS 27 asks a menu-bar agent to suppress HDR from launch, and the suppression never ends; the grant still
