@@ -8367,6 +8367,215 @@
         }
       }
     },
+    "You can set keyboard shortcuts in Settings ▸ Shortcuts." : {
+      "comment" : "Welcome ▸ Find it: link shown while Back to Standard has no keyboard shortcut (none is set at first); opens Overbright’s Settings window at its Shortcuts pane",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يمكنك تعيين اختصارات لوحة المفاتيح في الإعدادات ◂ اختصارات لوحة المفاتيح."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pots definir dreceres de teclat a Configuració ▸ Dreceres de teclat."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klávesové zkratky můžete nastavit v Nastavení ▸ Klávesové zkratky."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Du kan indstille tastaturgenveje under Indstillinger ▸ Tastaturgenveje."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tastenkombinationen kannst du unter Einstellungen ▸ Tastenkombinationen festlegen."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Μπορείτε να ορίσετε συντομεύσεις πληκτρολογίου στις Ρυθμίσεις ▸ Συντομεύσεις πληκτρολογίου."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puedes configurar atajos de teclado en Ajustes ▸ Atajos de teclado."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voit asettaa pikanäppäimiä kohdassa Asetukset ▸ Oikotiet."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vous pouvez définir des raccourcis clavier dans Réglages ▸ Raccourcis clavier."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "אפשר להגדיר קיצורי מקלדת ב״הגדרות״ > ״קיצורי מקלדת״."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "आप सेटिंग ▸ कीबोर्ड शॉर्टकट में कीबोर्ड शॉर्टकट सेट कर सकते हैं।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prečace tipkovnice možete postaviti u odjeljku Postavke ▸ Prečaci tipkovnice."
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Billentyűparancsokat a Beállítások ▸ Billentyűparancsok részben állíthat be."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anda dapat mengatur pintasan papan ketik di Pengaturan ▸ Pintasan papan ketik."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puoi impostare le scorciatoie da tastiera in Impostazioni ▸ Scorciatoie."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "キーボードショートカットは設定 ▸ キーボードショートカットで設定できます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "설정 ▸ 단축키에서 키보드 단축키를 지정할 수 있습니다."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anda boleh menetapkan pintasan papan kekunci dalam Seting ▸ Pintasan papan kekunci."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Du kan angi tastatursnarveier i Innstillinger ▸ Tastatursnarveier."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je kunt toetscombinaties instellen in Instellingen ▸ Toetscombinaties."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skróty klawiszowe możesz ustawić w sekcji Ustawienia ▸ Skróty klawiszowe."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Você pode definir atalhos de teclado em Ajustes ▸ Atalhos de teclado."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pode definir atalhos de teclado em Definições ▸ Atalhos de teclado."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puteți seta scurtături din tastatură în Configurări ▸ Scurtături din tastatură."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сочетания клавиш можно задать в разделе Настройки ▸ Сочетания клавиш."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klávesové skratky môžete nastaviť v Nastaveniach ▸ Klávesové skratky."
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bližnjice na tipkovnici lahko nastavite v Nastavitvah ▸ Bližnjice na tipkovnici."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Du kan ställa in kortkommandon i Inställningar ▸ Kortkommandon."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "คุณสามารถตั้งค่าปุ่มลัดได้ใน การตั้งค่า ▸ ปุ่มลัด"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klavye kestirmelerini Ayarlar ▸ Klavye Kestirmeleri bölümünde ayarlayabilirsiniz."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Клавіатурні скорочення можна задати в розділі Параметри ▸ Клавіатурні скорочення."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bạn có thể đặt tổ hợp phím trong Cài đặt ▸ Tổ hợp phím."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你可以在“设置”▸“快捷键”中设置键盘快捷键。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你可以在「設定」▸「快速鍵」中設定鍵盤快速鍵。"
+          }
+        }
+      }
+    },
     "Your display can show light brighter than ordinary white. Overbright lets everyday content use that range, so the screen stays readable in a bright room or in sunlight. For the most light, turn your display brightness all the way up first; Overbright adds to it. Drag the divider to compare." : {
       "comment" : "Welcome ▸ Hello: body under the headline",
       "localizations" : {

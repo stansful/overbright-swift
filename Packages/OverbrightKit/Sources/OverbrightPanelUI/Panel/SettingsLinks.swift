@@ -19,6 +19,8 @@ public nonisolated enum SettingsLinks {
     public static let schedule = "automations#schedule"
     /// Settings ▸ Advanced ▸ Run Self-Test… (the sheet opens there).
     public static let selfTest = "advanced#selfTest"
+    /// Settings ▸ Shortcuts at the Back to Standard recorder (Welcome's Find it step while no shortcut is recorded).
+    public static let backToStandardShortcut = "shortcuts#shortcut.\(ShortcutID.standard.rawValue)"
 
     /// Settings ▸ Displays at `display`'s section ("Settings for This Display…").
     public static func display(_ display: DisplayKey) -> String { "displays#\(display.rawValue)" }

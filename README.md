@@ -21,7 +21,8 @@ no analytics.
   everyday content use it, so the screen stays readable in a bright room or in sunlight. It never scales past the
   range macOS grants at that moment, and always lands back on the display's own color profile.
 - **Dim below minimum** on any display, HDR or not, with one slider per display: left of Standard dims, right of it
-  adds extra brightness. **Dim All Displays** can have its own shortcut, and very dark levels ask "Keep this level?".
+  adds extra brightness. **Dim All Displays** can have its own shortcut, and every level change asks "Keep this
+  level?" and goes back to Standard after 10 seconds unless you keep it.
 - **Honest about every limit.** Each display gets a verdict and a fix ("Turn on High Dynamic Range for this display
   in Displays settings"), the slider shows where it stops right now, and the reason when battery, heat, a full-screen
   video or another app holds it back.
@@ -29,8 +30,8 @@ no analytics.
   and steps back on its own: on battery (below 20 % by default), in Low Power Mode, when the Mac gets warm, when an
   OLED display sits idle, next to another brightness or color app, and, if you choose, for full-screen video and the
   video apps on its list, after a timer, outside set hours, in games or in a Focus.
-- **Back to Standard** from anywhere (a shortcut you record, the menu, the Dock menu, Shortcuts), and a check at every launch
-  that no display was left scaled.
+- **Back to Standard** from anywhere, no shortcut needed (the panel, the menu, the Dock menu, Shortcuts, or a
+  shortcut you record), and a check at every launch that no display was left scaled.
 - **Fill Light** for video calls, on by hand or while a camera is in use; a small on-screen indicator for level
   changes and automatic stops; a Welcome tour; Settings with search; a one-minute calibration and a self-test.
 - **Shortcuts actions** (turn on or off, set extra brightness, dim, pause, resume, get the state, Back to Standard)
@@ -95,10 +96,13 @@ mode) reads only whether a camera runs, never its picture.
 Overbright changes your display's brightness through the display's color table and macOS's extra range. Every way
 back to a normal picture is built in:
 
-- **Back to Standard** — a shortcut you record in Settings ▸ Shortcuts (none is set by default), "Turn Off
-  Overbright" in the menu, "Back to Standard" in the Dock menu and the Shortcuts app — turns Overbright off at once
-  from anywhere. Your levels are kept for
-  next time.
+- **Back to Standard** — no keyboard shortcut needed (none is set by default): the switch at the top of the panel,
+  "Turn Off Overbright" in the menu bar menu, "Back to Standard" in the Dock menu (when the Dock icon is on) and the
+  Back to Standard action in the Shortcuts app each turn Overbright off at once. Your levels are kept for next time.
+  If you want a key for it, record one in Settings ▸ Shortcuts (Welcome's "Where to find Overbright" step links
+  there).
+- **"Keep this level?"** — every level change away from Standard asks. Without an answer the display goes back to
+  Standard after 10 seconds, so a screen you cannot read comes back on its own.
 - **Quit, crash or Force Quit** — macOS restores every display the moment Overbright's process ends. If Overbright
   ever stops responding, Force Quit it; your displays return to normal at once.
 - **Colors look wrong after another app quit?** Settings ▸ Advanced ▸ Reset Display Colors… puts every display back
@@ -114,8 +118,7 @@ back to a normal picture is built in:
   Displays settings and back, or log out.
 
 At every launch Overbright first checks that no display was left scaled; it never starts brighter than Standard
-unless you chose "Open Overbright and turn it on". Very dark levels ask "Keep this level?" and go back on their own
-after 10 seconds.
+unless you chose "Open Overbright and turn it on".
 
 ## Energy
 

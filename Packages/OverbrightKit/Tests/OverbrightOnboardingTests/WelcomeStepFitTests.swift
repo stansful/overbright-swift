@@ -87,8 +87,13 @@ import Testing
                        _ transform: @escaping (String) -> String) -> [(String, AnyView)] {
         let services = servicesWithShortcuts(PreviewShortcutCenter(bindings: SampleShortcuts.bindings))
         let findIt = FindItStep.Copy.localized(in: bundle).map(transform)
+        // Back to Standard unbound with the other two bound: two rows and the Settings ▸ Shortcuts link.
+        let noStandard = PreviewShortcutCenter(bindings: SampleShortcuts.bindings)
+        noStandard.set(.standard, nil)
         return [
             ("findIt", AnyView(FindItStage(shortcuts: FindItShortcut.rows(services.shortcuts), copy: findIt)
+                .fixedSize(horizontal: false, vertical: true))),
+            ("findIt-link", AnyView(FindItStage(shortcuts: FindItShortcut.rows(noStandard), copy: findIt)
                 .fixedSize(horizontal: false, vertical: true))),
         ]
     }

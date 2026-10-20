@@ -339,6 +339,23 @@ private typealias Keys = DisplayFixture.Keys
                 == ["Turn on or off", "Back to Standard", "Dim Below Minimum On or Off"])
     }
 
+    /// R2 (2026-10-21): while Back to Standard has no shortcut (a first run), step 4 offers one line that opens
+    /// Settings ▸ Shortcuts at Back to Standard; once it has one, its key caps show instead.
+    @Test func stepFourLinksToShortcutSettingsWhileBackToStandardHasNoShortcut() throws {
+        #expect(FindItShortcut.offersShortcutSettings(FindItShortcut.rows(PreviewShortcutCenter())))
+        let center = PreviewShortcutCenter(bindings: SampleShortcuts.bindings)
+        #expect(!FindItShortcut.offersShortcutSettings(FindItShortcut.rows(center)))
+        center.set(.standard, nil)
+        #expect(FindItShortcut.offersShortcutSettings(FindItShortcut.rows(center)))   // others bound, this one not
+        #expect(FindItStep.Copy.localized(in: englishBundle).setShortcuts
+                == "You can set keyboard shortcuts in Settings ▸ Shortcuts.")
+
+        let harness = try WelcomeHarness(step: .findIt)
+        FindItStep(session: harness.session).openShortcutSettings()
+        #expect(harness.app.calls == ["openSettings(shortcuts#shortcut.boost.standard)"])
+        #expect(SettingsLinks.backToStandardShortcut == "shortcuts#shortcut.boost.standard")
+    }
+
     // MARK: Step 5 · Turn On Overbright
 
     /// Offered only while some display would show extra brightness once Overbright is on (verdict, limit and switch,

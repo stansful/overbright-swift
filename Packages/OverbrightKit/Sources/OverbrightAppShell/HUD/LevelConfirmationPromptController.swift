@@ -60,7 +60,7 @@ final class LevelConfirmationPromptController {
         update(nil)
     }
 
-    /// Go Back (Esc): returns to the previous level now.
+    /// Go Back (Esc): returns the display to Standard now.
     func goBack() {
         services.boost.revertLevel()
         update(nil)

@@ -1,6 +1,7 @@
-// OverbrightCore/Shortcuts/GlobalShortcut.swift — a shortcut and its default combo. ARCHITECTURE.md §3.7, D17.
+// OverbrightCore/Shortcuts/GlobalShortcut.swift — a shortcut and its default combo (nil for every shortcut as shipped).
+// ARCHITECTURE.md §3.7, D17.
 
-/// A global shortcut and its default combo.
+/// A global shortcut and its default combo (none ships one, D17: the user records it in Settings ▸ Shortcuts).
 public nonisolated struct GlobalShortcut: Hashable, Sendable {
     /// The shortcut.
     public var id: ShortcutID

@@ -1,7 +1,8 @@
 // OverbrightAppShell/Launch/ProcessArguments.swift — the launch arguments of another process of the same user, read with
 // `sysctl(KERN_PROCARGS2)` (no permission; another user's process is not readable and reads as nil). ARCHITECTURE.md
 // §7.4, D27: the single-instance check ignores an instance launched with `--qa-simulate`, which runs on the simulated
-// ports and writes no table (a Release build refuses the switch, so such an instance is always a Debug QA run).
+// ports and writes no table (a Release build refuses the switch, so such an instance is always a Debug QA run), and a
+// command-line run (`--monitor`, `--diagnostics`; it waits for `--restore-gamma`), which starts no service.
 import Darwin
 import Foundation
 
