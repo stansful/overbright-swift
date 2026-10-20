@@ -58,7 +58,10 @@ nonisolated struct DisplayReducer: Sendable {
         var stops = stopReasons(display, verdict: verdict, halfAllowed: halfAllowed, mechanism: mechanism)
         if level.isBoost { stops += guardReasons(display, boostEnabled: boostEnabled, isOLED: isOLED) }
         // Row 19: a reason only.
-        let suppression: [LimitReason] = level.isBoost && input.system.isHDRSuppressed ? [.hdrSuppressedByMacOS] : []
+        // Not a reason any more (2026-10-20): macOS 27 asks a menu-bar agent to suppress HDR from launch, while the
+        // headroom our trigger asks for is granted and the boost works, so "Limited by macOS" hid the real ceiling
+        // (Safe). A suppression that really lowers the grant shows up as the headroom term, measured, not guessed.
+        let suppression: [LimitReason] = []
         if !stops.isEmpty { return decision(.neutral, stops + suppression) }
 
         // Step 7.

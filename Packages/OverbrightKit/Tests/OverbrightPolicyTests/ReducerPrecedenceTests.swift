@@ -262,11 +262,26 @@ import Testing
         #expect(overridden?.reasons.contains(.oledIdle) == true)
     }
 
-    @Test func row19HDRSuppressionIsAReasonOnly() {
+    /// Row 19 as built (2026-10-20): macOS asking the app to suppress HDR is no reason at all. macOS 27 sends a
+    /// menu-bar agent that request from launch while the headroom our trigger asks for is granted and the boost works,
+    /// so "Limited by macOS" only hid the real ceiling; a suppression that does lower the grant shows as the headroom
+    /// term, measured.
+    @Test func row19HDRSuppressionIsNoReason() {
         let suppressed = SystemSnapshot(power: T.adapter, isHDRSuppressed: true)
         let decision = builtIn(brightRoom, system: suppressed)
-        #expect(decision?.boostGain != nil && decision?.reasons.first == .hdrSuppressedByMacOS)
+        #expect(decision?.boostGain != nil && decision?.reasons == [])
         #expect(builtIn(dimHalf, system: suppressed)?.reasons == [])
+    }
+
+    /// A boost while macOS asks to suppress HDR reports the Safe limit when Safe binds (outdoors, H 1.6), never
+    /// "Limited by macOS" (the owner's built-in boosted to ×1.237 at Safe that way, 2026-10-20).
+    @Test func aSuppressedBoostReportsTheSafeLimit() {
+        let suppressed = SystemSnapshot(power: T.adapter, isHDRSuppressed: true)
+        let display = T.display(level: brightRoom, reading: T.reading(T.builtIn, current: 1.6))
+        let decision = decide([display], system: suppressed).builtIn
+        #expect(decision?.boostGain != nil)
+        #expect(decision?.reasons == [.safeLimit])
+        #expect(decision?.reasons.contains(.hdrSuppressedByMacOS) == false)
     }
 
     /// Every matching reason is kept in precedence order; the first stop decides and is the chip.
@@ -277,7 +292,7 @@ import Testing
         let decision = builtIn(brightRoom, system: system, pausedUntil: until, trip: .oscillation, boostEnabled: false)
         #expect(decision?.reasons == [.shielded, .tripped(.oscillation), .userPaused(until: until), .focusOff,
                                       .boostNotEnabled, .thermalCritical, .lowPowerMode,
-                                      .battery(percent: 10, threshold: 20), .hdrSuppressedByMacOS])
+                                      .battery(percent: 10, threshold: 20)])
         #expect(builtIn(dimHalf, system: system, pausedUntil: until, trip: .oscillation)?.reasons
                 == [.shielded, .tripped(.oscillation), .userPaused(until: until), .focusOff])
     }
