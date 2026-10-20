@@ -49,9 +49,6 @@ final class TriggerHost {
     /// Whether the window exists (prepared and not torn down).
     var hasWindow: Bool { window != nil }
 
-    /// The screen's backing scale now (nil when the display has no screen).
-    var backingScaleFactor: CGFloat? { screens.geometry(of: display.id)?.backingScaleFactor }
-
     /// The frame the window should have now; nil when the display has no screen.
     func targetFrame() -> CGRect? {
         guard let screen = screens.geometry(of: display.id) else { return nil }

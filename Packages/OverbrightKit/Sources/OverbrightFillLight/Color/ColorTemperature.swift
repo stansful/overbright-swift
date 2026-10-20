@@ -20,12 +20,6 @@ public nonisolated enum ColorTemperature {
         return coolest - (coolest - warmest) * w
     }
 
-    /// The Warmth value of a colour temperature (the inverse of `kelvin(warmth:)`, clamped to 0…1).
-    public static func warmth(kelvin: Double) -> Double {
-        let k = kelvin.isFinite ? min(max(kelvin, warmest), coolest) : coolest
-        return (coolest - k) / (coolest - warmest)
-    }
-
     /// CIE 1931 xy of a black body at `kelvin` (clamped to 3 000–6 500 K), Kim et al.'s Planckian-locus spline.
     public static func chromaticity(kelvin: Double) -> (x: Double, y: Double) {
         let t = kelvin.isFinite ? min(max(kelvin, warmest), coolest) : coolest

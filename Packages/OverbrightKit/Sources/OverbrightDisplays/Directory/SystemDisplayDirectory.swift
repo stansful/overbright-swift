@@ -53,9 +53,6 @@ public final class SystemDisplayDirectory: DisplayDirectory, ServiceLifecycle {
         model.addEventObserver(handler)
     }
 
-    /// Re-reads every display now (IORegistry off the main actor, then CoreGraphics and NSScreen).
-    public func reload() async { await model.reload() }
-
     // MARK: ServiceLifecycle
 
     /// "displays".

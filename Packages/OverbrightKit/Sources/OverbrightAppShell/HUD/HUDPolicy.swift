@@ -56,19 +56,10 @@ enum HUDPolicy {
             default: return nil
             }
         case .automationStopped(let reason):
-            guard isAutomation(reason) else { return nil }
+            guard reason.isAutomation else { return nil }
             return shown(automationDuration, .alert)
         case .automationResumed, .timerEnded:
             return shown(automationDuration, .alert)
-        }
-    }
-
-    /// Reasons an automation stops or caps the boost on its own (timer, battery, Low Power, heat, schedule); never the
-    /// full-screen, app, game or idle pauses the user caused.
-    static func isAutomation(_ reason: LimitReason) -> Bool {
-        switch reason {
-        case .battery, .onBattery, .lowPowerMode, .thermalSerious, .thermalCritical, .outsideSchedule: true
-        default: false
         }
     }
 

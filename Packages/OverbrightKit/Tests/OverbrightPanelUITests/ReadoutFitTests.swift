@@ -104,7 +104,7 @@ import Testing
         values(.boost, 2.6, nits: 2_340, preset: .max, estimate: true),
     ]
 
-    /// DESIGN.md §5.5's value tags as numbers (`englishValueTags`), every preset, and each guard's words.
+    /// DESIGN.md §5.5's value tags as numbers (`englishValueTags`) and every preset.
     static func valueTags(in language: CopyLanguage) -> [String] {
         let levels = [values(.boost, 1.29, preset: .brightRoom), values(.standard), values(.boost, 1.42),
                       values(.dim, 0.25, dim: 25), values(.boost, 1.29, estimate: true),
@@ -112,10 +112,7 @@ import Testing
                       values(.boost, 1.12, preset: .indoor, estimate: true),
                       values(.boost, 2.04, preset: .sunlight, estimate: true),
                       values(.boost, 1.3, preset: .max, estimate: true)]
-        let guards: [LimitReason] = [.battery(percent: 12, threshold: 20), .onBattery, .lowPowerMode, .thermalCritical,
-                                     .outsideSchedule, .focusOff]
         return levels.map { ValueText.make($0, in: language).text }
-            + guards.compactMap { ValueText.guarded(by: $0, in: language)?.text }
     }
 
     /// Every readout fits its line, or drops the preset name and then fits (the card's fallback).
@@ -144,7 +141,7 @@ import Testing
     func valueTagsFitTheTrackInEveryLanguage(_ code: String) throws {
         let language = try #require(ShippedLanguages.design(code), "\(code): no Design table")
         let tags = Self.valueTags(in: language)
-        #expect(tags.count == 15, "\(code)")
+        #expect(tags.count == 9, "\(code)")
         let failures = tags.compactMap { text -> String? in
             let width = FitMeasure.textWidth(text, Self.valueTagFont)
             return width <= PanelLayout.trackWidth ? nil : "«\(text)» \(width) pt"

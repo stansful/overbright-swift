@@ -57,7 +57,6 @@ import Testing
         #expect(OverbrightTheme().animation(.panelIn) != nil)
         #expect(OverbrightTheme(increaseContrast: true).palette == .highContrast)
         #expect(Set(OverbrightSymbol.allCases.map(\.rawValue)).count == OverbrightSymbol.allCases.count)
-        #expect(OverbrightDesignModule.name == "OverbrightDesign")
     }
 
     /// The setting-row conventions: their words, and the dot's size.

@@ -86,11 +86,9 @@ extension BoostEngine {
                        alwaysContinueEntryIDs: settings[AdvancedSettings.alwaysContinue])
     }
 
-    /// The reducer's input now: settings, the snapshot, every online display with its preferences, feedback (trip, the
-    /// latest reading and the taper reference the writer uses) and trusted SDR white.
-    func policyInput() -> PolicyInput { policyInput(observedInputs()) }
-
-    /// The reducer's input over `observed` (read once per reduction).
+    /// The reducer's input over `observed` (read once per reduction): settings, the snapshot, every online display with
+    /// its preferences, feedback (trip, the latest reading and the taper reference the writer uses) and trusted SDR
+    /// white.
     func policyInput(_ observed: ObservedInputs) -> PolicyInput {
         let now = time.wallClock
         let calendar = Calendar.current
@@ -242,17 +240,9 @@ extension BoostEngine {
     func automationReason(_ decision: PolicyDecision) -> LimitReason? {
         for facts in displays.displays {
             guard let reasons = decision.displays[facts.ref.key]?.reasons else { continue }
-            if let reason = reasons.first(where: Self.isAutomation) { return reason }
+            if let reason = reasons.first(where: \.isAutomation) { return reason }
         }
         return nil
-    }
-
-    /// Battery, Low Power, heat and the schedule (DESIGN.md §6 (4)).
-    static func isAutomation(_ reason: LimitReason) -> Bool {
-        switch reason {
-        case .battery, .onBattery, .lowPowerMode, .thermalCritical, .thermalSerious, .outsideSchedule: true
-        default: false
-        }
     }
 
     /// The case of a reason without its values (a battery percentage that moves is the same automation).

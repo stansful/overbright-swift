@@ -5,7 +5,6 @@
 // with 8-bit components that WRAP above 1.0 (1.6 becomes 152/255 ≈ 0.596, 4.0 becomes 252/255), for extended sRGB too.
 // Every EDR colour here therefore starts from a `CGColor`; a lint test keeps that initialiser out of this module,
 // FillLight and Design, and `TaggedColorTests` notices if AppKit ever changes.
-import AppKit
 import CoreGraphics
 
 /// Grey colours `(v, v, v, 1)` in extended linear sRGB, optionally headroom-tagged.
@@ -27,14 +26,6 @@ nonisolated enum TaggedColor {
         guard let space = extendedLinearSRGB() else { return nil }
         let v = CGFloat(clampedComponent(value))
         return CGColor(headroom: Float(headroom), colorSpace: space, red: v, green: v, blue: v, alpha: 1)
-    }
-
-    /// The AppKit equivalent of `cgColor(value:headroom:)`: same components, tag applied with
-    /// `applyingContentHeadroom(_:)`, which keeps the components. Its `cgColor` carries the tag.
-    @available(macOS 26.0, *)
-    static func nsColor(value: Double, headroom: Double) -> NSColor? {
-        guard let untagged = untaggedCGColor(value: value), let base = NSColor(cgColor: untagged) else { return nil }
-        return base.applyingContentHeadroom(CGFloat(headroom))
     }
 
     /// An untagged extended-range grey: the dimming overlay (no EDR request) and the macOS 14–25 legacy T1 path.

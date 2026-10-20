@@ -7,14 +7,10 @@ import OverbrightCore
 
 /// Deep links into Overbright's Settings ("pane" or "pane#row") and the System Settings panes the copy names.
 public nonisolated enum SettingsLinks {
-    /// Settings ▸ General.
-    public static let general = "general"
     /// Settings ▸ Displays ▸ Add extra brightness only near full brightness ("Change setting…").
     public static let nearFullBrightness = "displays#nearFullBrightness"
     /// Settings ▸ Automations ▸ Power ("Change power rules…").
     public static let powerRules = "automations#power"
-    /// Settings ▸ Automations ▸ Timer.
-    public static let timer = "automations#timer"
     /// Settings ▸ Automations ▸ Apps and video ("Change rules…").
     public static let appRules = "automations#apps"
     /// Settings ▸ Automations ▸ the paused-apps list ("Edit apps…", "Edit Apps…").
@@ -23,8 +19,6 @@ public nonisolated enum SettingsLinks {
     public static let schedule = "automations#schedule"
     /// Settings ▸ Advanced ▸ Run Self-Test… (the sheet opens there).
     public static let selfTest = "advanced#selfTest"
-    /// Settings ▸ Fill Light.
-    public static let fillLight = "fillLight"
 
     /// Settings ▸ Displays at `display`'s section ("Settings for This Display…").
     public static func display(_ display: DisplayKey) -> String { "displays#\(display.rawValue)" }

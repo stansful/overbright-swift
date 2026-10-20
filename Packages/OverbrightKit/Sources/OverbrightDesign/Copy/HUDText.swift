@@ -26,20 +26,6 @@ public nonisolated struct HUDText: Hashable, Sendable {
         self.announcement = announcement
     }
 
-    /// How long the HUD stays after `change`: 3 s for an automation, else 1.5 s (DESIGN.md §6).
-    public static func dwell(after change: LevelChange) -> Duration {
-        isAutomation(change) ? OverbrightMotion.hudAutomationDwell : OverbrightMotion.hudDwell
-    }
-
-    /// An automation stopped, capped or resumed the boost: the HUD stays longer and VoiceOver hears it at most once
-    /// per 10 s (an alert), while the user's own changes are never rate-limited (feedback).
-    public static func isAutomation(_ change: LevelChange) -> Bool {
-        switch change.kind {
-        case .automationStopped, .automationResumed, .timerEnded: true
-        case .level, .preparing, .blocked: false
-        }
-    }
-
     /// The HUD for `change` against the engine's current `status`; nil when the HUD shows nothing for it.
     public static func make(_ change: LevelChange, status: BoostStatus) -> HUDText? {
         make(change, status: status, on: nil, in: .app)
@@ -77,13 +63,6 @@ public nonisolated struct HUDText: Hashable, Sendable {
             return reasonLine(.sunMax, String(localized: "Off: timer ended", bundle: language.bundle, locale: language.locale,
                                               comment: "HUD: the auto-off timer turned Overbright off"))
         }
-    }
-
-    /// The short reason line of `reason` as the HUD and the slider's value tag write it (DESIGN.md §5.5, §12.9):
-    /// "Paused: Low Power Mode", "Limited: Mac is warm", "Paused until 14:20"; a per-display reason repeats its chip
-    /// ("Paused: video"). Nil for master off and shielded, which have no line.
-    public static func reasonLine(for reason: LimitReason, in language: CopyLanguage = .app) -> String? {
-        line(for: reason, userCaused: true, in: language)
     }
 
     // MARK: Private

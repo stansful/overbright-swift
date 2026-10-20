@@ -38,7 +38,6 @@ import Testing
         #expect(IORegistryValue.fixedPointData(Data([0x00, 0x00, 0x10, 0x00])) == 16.0)
         #expect(IORegistryValue.fixedPointData(Data([0x00, 0x00, 0x58, 0x02])) == 600.0)
         #expect(IORegistryValue.fixedPointData(Data([0x00, 0x80, 0x01, 0x00])) == 1.5)
-        #expect(IORegistryValue.floatData(OwnerIORegistry.builtInBacklight["aurora-maximum-nits"]) == 1000.0)
     }
 
     // MARK: Everything is optional

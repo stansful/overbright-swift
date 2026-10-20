@@ -1,7 +1,7 @@
 // OverbrightSettingsUI/SelfTest/SelfTestSheet.swift — the self-test sheet (DESIGN.md §10), from Settings ▸ Advanced ▸
-// Run Self-Test… (and the panel's "⋯" menu, which opens Settings there), or in its own window through the shell's
-// `SelfTestSheetPresenter`: the consent and options, the progress per display with Stop, and the results table with
-// Save Log…, Copy and Done. The state is a `SelfTestModel`; closing the sheet stops a run.
+// Run Self-Test… (and the panel's "⋯" menu, which opens Settings there): the consent and options, the progress per
+// display with Stop, and the results table with Save Log…, Copy and Done. The state is a `SelfTestModel`; closing the
+// sheet stops a run.
 import Foundation
 import OverbrightCore
 import OverbrightDesign

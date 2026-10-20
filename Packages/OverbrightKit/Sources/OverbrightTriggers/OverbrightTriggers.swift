@@ -15,9 +15,3 @@
 // none, D22); EDR colours start from `CGColor`, never from `NSColor`'s component initialiser (§4.7); only
 // `SystemWindowPresenter` orders a window in, and tests never construct it; zero work until the engine arms a rung;
 // errors reach `.public` logs only as `LoggedError` summaries, never as descriptions that can hold a path (§9.2 rule 8).
-
-/// The module's name, for diagnostics.
-public nonisolated enum OverbrightTriggersModule {
-    /// The target name.
-    public static let name = "OverbrightTriggers"
-}

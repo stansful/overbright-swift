@@ -1,7 +1,8 @@
 // OverbrightCore/Platform/Concurrency.swift — small, verified building blocks so modules never hand-roll threading.
 // Ported from Cranny's CrannyCore/Platform/Concurrency.swift (the owner's MIT code). Two changes: `ObservationToken`
 // takes its cancel action as a closure (ARCHITECTURE.md §3.6), so services such as `OwnEDRSurfaces` and
-// `SystemSignals` hand out the same token type; and `ProcessRunner` is dropped (Overbright spawns no tools).
+// `SystemSignals` hand out the same token type; and `ProcessRunner` and `Debouncer` are dropped (Overbright spawns no
+// tools, and every debounce has its own time source).
 // ARCHITECTURE.md §3.1, §8.1 rule 6.
 import Foundation
 import Observation
@@ -64,33 +65,4 @@ public extension Duration {
         let (seconds, attoseconds) = components
         return Double(seconds) + Double(attoseconds) / 1e18
     }
-}
-
-// MARK: - Debounce
-
-/// Trailing debounce on the main actor (settings-driven rebuilds, background saves).
-///
-/// Energy: the action's task runs at `priority`; nil inherits the caller's (on the main actor: user-initiated). Pass
-/// `.utility` for work nobody waits on, such as background saves and notification-driven reloads: the `@concurrent`
-/// work the action awaits then runs at utility QoS (efficiency cores, throttled I/O).
-@MainActor public final class Debouncer {
-    private let delay: Duration
-    private let priority: TaskPriority?
-    private var task: Task<Void, Never>?
-    /// A debouncer that waits `delay` after the last `schedule(_:)`; its actions run at `priority` (nil: inherited).
-    public init(delay: Duration, priority: TaskPriority? = nil) {
-        self.delay = delay
-        self.priority = priority
-    }
-    /// Runs `action` after the delay unless another `schedule` or `cancel` comes first.
-    public func schedule(_ action: @escaping @MainActor () async -> Void) {
-        task?.cancel()
-        task = Task(priority: priority) { [delay] in
-            try? await Task.sleep(for: delay)
-            guard !Task.isCancelled else { return }
-            await action()
-        }
-    }
-    /// Drops the pending action.
-    public func cancel() { task?.cancel(); task = nil }
 }

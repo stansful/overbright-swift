@@ -47,7 +47,6 @@ private typealias ProbeConflictProbe = any ConflictProbe
 private typealias ProbeConflictSeverity = ConflictSeverity
 private typealias ProbeConflictingApp = ConflictingApp
 private typealias ProbeControlSource = ControlSource
-private typealias ProbeDebouncer = Debouncer
 private typealias ProbeDiagnosticsJournal = any DiagnosticsJournal
 private typealias ProbeDisplayDecision = DisplayDecision
 private typealias ProbeDisplayDirectory = any DisplayDirectory

@@ -11,8 +11,6 @@ nonisolated enum CameraTransport {
     static let builtIn = fourCharacterCode("bltn")
     /// `kIOAudioDeviceTransportTypeUSB`.
     static let usb = fourCharacterCode("usb ")
-    /// `kIOAudioDeviceTransportTypeVirtual` (OBS, Camo and similar).
-    static let virtual = fourCharacterCode("virt")
 
     /// Whether a device with `transport` (nil: unknown) counts under `filter`.
     static func counts(transport: UInt32?, filter: CameraFilter) -> Bool {

@@ -78,6 +78,15 @@ import Testing
         #expect(LimitReason.lowPowerMode.isGlobal && !LimitReason.fullScreenVideo.isGlobal && !LimitReason.headroom.isGlobal)
     }
 
+    @Test func automationReasonsAreTheOnesNobodyAskedFor() {
+        let automations: [LimitReason] = [.battery(percent: 10, threshold: 20), .onBattery, .lowPowerMode, .thermalSerious,
+                                          .thermalCritical, .outsideSchedule]
+        #expect(automations.allSatisfy { $0.isAutomation })
+        let others: [LimitReason] = [.masterOff, .userPaused(until: Date()), .focusOff, .fullScreenVideo, .fullScreenApp,
+                                     .pausedApp(bundleID: "com.apple.TV"), .game, .oledIdle, .headroom, .safeLimit]
+        #expect(!others.contains { $0.isAutomation })
+    }
+
     @Test func verdictsSayWhatTheyAllow() {
         #expect(DisplayVerdict.supported(safeGain: nil, peakGain: 1.94).allowsBoost)
         #expect(DisplayVerdict.presetLimits(presetPeakNits: 600, panelPeakNits: 1600).allowsBoost)

@@ -7,7 +7,7 @@
 #   CHECK=1 scripts/sync-strings.sh [Target…]     # fail if a catalog would change (for CI)
 #
 # A target may hold several tables (Sources/<T>/Resources/*.xcstrings: Localizable plus a co-tenant's own table such
-# as AppShell's StatusMenu and Calibration, §8.8; Boost's Safety is reserved and empty). They are synced together, so each key lands in the
+# as AppShell's StatusMenu and Calibration, §8.8). They are synced together, so each key lands in the
 # table its `String(localized:table:)` names. Uses the compiler-produced .stringsdata (exact keys such as
 # "%lld minutes left"). `xcstringstool extract` exists too, but its lightweight parser turns interpolations into
 # "%arg" keys, so we do not use it. The app target's catalogs (App/*.xcstrings) are maintained by their owners.

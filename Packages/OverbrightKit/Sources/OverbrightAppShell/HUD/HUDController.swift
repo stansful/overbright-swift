@@ -58,8 +58,6 @@ final class HUDController {
     private(set) var drawn: Drawing?
     /// What the HUD says now (nil while hidden).
     var visible: HUDText? { drawn?.text }
-    /// The display the visible HUD is about.
-    private(set) var visibleDisplay: DisplayKey?
     /// Number of showings (a new change while visible updates it and counts again).
     private(set) var showCount = 0
     /// Hosting views made so far: one for the window, and another only when the container's material changes.
@@ -120,7 +118,7 @@ final class HUDController {
         following = nil
         guard presentation.showsWindow, slot.claim(.hud, onEvicted: { [weak self] in self?.hide() }) else { return }
         let placed = change.display ?? pointer
-        show(drawing, about: display, placed: placed)
+        show(drawing, placed: placed)
         if case .preparing = change.kind, HUDPolicy.isPreparing(status, display: change.display) {
             waitUntilReady(change, about: display, placed: placed)
         } else {
@@ -138,7 +136,6 @@ final class HUDController {
         following?.cancel()
         following = nil
         drawn = nil
-        visibleDisplay = nil
         slot.leave(.hud)
         guard let window, window.isVisible else { return }
         NSAnimationContext.runAnimationGroup({ context in
@@ -160,9 +157,8 @@ final class HUDController {
 
     // MARK: Showing
 
-    private func show(_ drawing: Drawing, about display: DisplayKey?, placed: DisplayKey?) {
+    private func show(_ drawing: Drawing, placed: DisplayKey?) {
         drawn = drawing
-        visibleDisplay = display
         showCount += 1
         present(drawing, placed: placed)
     }
@@ -228,7 +224,7 @@ final class HUDController {
             return
         }
         services.announcer.announce(drawing.text.announcement, kind: .feedback)
-        show(drawing, about: display, placed: placed)
+        show(drawing, placed: placed)
         follow(reached, about: display, placed: placed)
         hide(after: HUDPolicy.levelDuration)
     }

@@ -8,8 +8,6 @@ public nonisolated enum TriggerError: Error, Hashable, Sendable {
     case colorUnavailable
     /// No Metal device drives the display.
     case noMetalDevice
-    /// The HLG asset could not be generated or verified.
-    case assetUnavailable
     /// The display is gone.
     case displayGone
 }

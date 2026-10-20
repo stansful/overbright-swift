@@ -75,7 +75,7 @@ test and packaging.
 <repo>/scripts/check-modules.sh OverbrightBoost   # one target alone, zero warnings (logs in build/logs/)
 make -C <repo> test FILTER=OverbrightBoostTests    # swift test --filter, scratch path .build-test
 make -C <repo> check                               # every target alone (JOBS=4; TEST=1 adds swift test)
-make -C <repo> tsan FILTER='HangWatchdog|OffMain|GammaWriteGate|BoostColorTests|StatusSymbolTests'   # Thread Sanitizer (CI's filter)
+make -C <repo> tsan FILTER='HangWatchdog|OffMain|GammaWriteGate|StatusSymbolTests'   # Thread Sanitizer (CI's filter)
 make -C <repo> lint                                # copy rules, competitor denylist, no shader files, script self-tests
 make -C <repo> strings                             # add new English keys to the String Catalogs
 make -C <repo> l10n-pending                        # mark them pending in every language (docs/TRANSLATING.md)

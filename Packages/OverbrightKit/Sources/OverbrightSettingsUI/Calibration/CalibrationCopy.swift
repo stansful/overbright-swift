@@ -13,9 +13,6 @@ enum CalibrationCopy {
         String(localized: "Calibrate \(display.overbrightIsolated)", bundle: .module,
                comment: "Calibration: heading of the window; the argument is the display’s name")
     }
-    static var checklistHeading: String {
-        String(localized: "Before you start", bundle: .module, comment: "Calibration: heading of the checklist")
-    }
     static var comparisonHeading: String {
         String(localized: "Does it get brighter?", bundle: .module, comment: "Calibration: heading of step 1")
     }

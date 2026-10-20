@@ -1,14 +1,11 @@
 // OverbrightBoost/Engine/SDRWhiteSource.swift — the SDR white the engine trusts, if any. ARCHITECTURE.md §5.5
-// (colorimeter record; an external's HDR-mode frame average; the built-in backlight value only after H-N1), §5.6 (the
-// outdoor row), D5. Pure and nonisolated: nits are never shown or used without one of these sources.
+// (colorimeter record; an external's HDR-mode frame average), §5.6 (the outdoor row), D5. Pure and nonisolated: nits
+// are never shown or used without one of these sources.
 import OverbrightCore
 import OverbrightPolicy
 
 /// Picks the trusted SDR white of one display.
 nonisolated enum SDRWhiteSource {
-    /// Whether the built-in backlight's `BrightnessMilliNits` tracks SDR white while EDR is active (H-N1). Until the
-    /// hardware session says so it is never used, and `DisplayFacts` carries no such value yet.
-    static let trustsPanelReported = false
     /// A colorimeter value is SDR white only while the headroom stays within this fraction of the headroom it was
     /// measured with. macOS moves SDR white with the brightness and the ambient light (outdoors it raises it to about
     /// 1000 nits), and H = grant ÷ SDR white moves with it, so a different H means a different SDR white: the value no

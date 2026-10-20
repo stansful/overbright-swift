@@ -22,10 +22,6 @@ public nonisolated enum EngineTiming {
     public static let preHeldStable = 1.25
     /// A rung escalates this long after its first successful present without movement.
     public static let rungTimeout: Duration = .milliseconds(2500)
-    /// T2/T3 retry their first present this often …
-    public static let firstPresentRetryInterval: Duration = .milliseconds(50)
-    /// … for at most this long.
-    public static let firstPresentRetryLimit: Duration = .seconds(2)
     /// Ready (normal path): H ≥ max(this, H0 + `readyAboveIdle`); pre-held path: H ≥ this.
     public static let readyMinimum = 1.1
     /// See `readyMinimum`.
@@ -41,10 +37,8 @@ public nonisolated enum EngineTiming {
 
     /// `TableWriter` refuses readings older than this (`TimeSource.now − reading.time`).
     public static let readingMaxAge: Duration = .milliseconds(150)
-    /// A headroom-recovery raise needs a target at least this many times the applied gain …
+    /// A headroom-recovery raise needs a target at least this many times the applied gain (user raises do not).
     public static let raiseHysteresis = 1.05
-    /// … and headroom stable for this long (user raises need neither).
-    public static let raiseStableWindow: Duration = .milliseconds(1500)
     /// Poll burst while a raise waits for headroom: this interval …
     public static let pollBurstInterval: Duration = .milliseconds(100)
     /// … for at most this long.
@@ -71,10 +65,8 @@ public nonisolated enum EngineTiming {
 
     // MARK: Drift check and repairs (D9, §4.8)
 
-    /// Drift check interval while scaled or dimmed …
+    /// Drift check interval while scaled or dimmed.
     public static let watchdogInterval: Duration = .seconds(2)
-    /// … with this tolerance.
-    public static let watchdogTolerance: Duration = .milliseconds(500)
     /// Drift check this long after any app terminated while scaled or dimmed.
     public static let appTerminationCheckDelay: Duration = .milliseconds(50)
     /// Read-back tolerance at the sample index.
@@ -86,10 +78,8 @@ public nonisolated enum EngineTiming {
     /// … within this window trip the display.
     public static let repairWindow: Duration = .seconds(6)
     /// An adoption counts as a base change only within this long after a ColorSync, reconfiguration or accessibility
-    /// event …
+    /// event.
     public static let adoptionWindow: Duration = .seconds(2)
-    /// … and after this many identical reads.
-    public static let adoptionIdenticalReads = 2
     /// More than this many unexplained adoptions …
     public static let adoptionBudget = 2
     /// … within this window trip the display as a foreign writer.
@@ -107,10 +97,6 @@ public nonisolated enum EngineTiming {
     /// once per interval (macOS posts one per frame while headroom moves, up to 122/s). Coalescing only: the headroom
     /// check and its safety drop stay synchronous in the event handler (D5, §4.3), and any other reduction runs at once.
     public static let screenParametersReduceInterval: Duration = .milliseconds(100)
-    /// Reconfiguration after-phase debounce …
-    public static let reconfigurationDebounce: Duration = .milliseconds(500)
-    /// … and the confirming pass (display removal is immediate).
-    public static let reconfigurationConfirm: Duration = .seconds(2)
     /// Wait after wake or lid open before re-arming.
     public static let wakeSettle: Duration = .seconds(1)
     /// Backoff of the cached rung while headroom refuses after a wake or unlock (never escalating).
@@ -136,8 +122,6 @@ public nonisolated enum EngineTiming {
     /// Levels set by a drag, steps or presets reach UserDefaults this long after the last change (every reader sees
     /// them at once), and at once on stop, quit and every turn-off. Settings only: no safety state waits for it.
     public static let levelPersistDelay: Duration = .milliseconds(500)
-    /// A paused app's display resumes this long after the app leaves.
-    public static let pausedAppResumeSettle: Duration = .seconds(1)
     /// An icon, shortcut or intent turn-on not ready this long after the request shows "Preparing…".
     public static let preparingDelay: Duration = .milliseconds(500)
     /// A status change of minor fields only (readings, which place the allowed-now marker, and the applied gain while a

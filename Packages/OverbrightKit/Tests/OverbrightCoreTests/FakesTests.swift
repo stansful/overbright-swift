@@ -211,12 +211,12 @@ import Testing
         headroom.update(builtIn) { $0.respondingStrategies = [.hlgStill] }
         let factory = FakeTriggerFactory(headroom: headroom)
         factory.failingPresents = [.metalKeepAlive]
-        factory.makeErrors = [.hlgSampleBuffer: .assetUnavailable]
+        factory.makeErrors = [.hlgSampleBuffer: .colorUnavailable]
         let t2 = try factory.makeTrigger(request(.metalOneShot), on: ref)
         #expect(await t2.present(.bright))
         let t3 = try factory.makeTrigger(request(.metalKeepAlive), on: ref)
         #expect(await !t3.present(.bright))
-        #expect(throws: TriggerError.assetUnavailable) { try factory.makeTrigger(request(.hlgSampleBuffer), on: ref) }
+        #expect(throws: TriggerError.colorUnavailable) { try factory.makeTrigger(request(.hlgSampleBuffer), on: ref) }
         await time.advance(by: .seconds(5))
         #expect(headroom.currentHeadroom(of: builtIn) == 1)
         let t4 = try factory.makeTrigger(request(.hlgStill), on: ref)

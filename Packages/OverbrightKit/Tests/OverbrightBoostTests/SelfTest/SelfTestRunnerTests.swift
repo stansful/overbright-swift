@@ -85,7 +85,6 @@ import Testing
         #expect(results.map(\.verdict) == [.invalidBaseline])
         #expect(results.first?.baselineHeadroom == 2.6)
         #expect(rig.factory.made.isEmpty)
-        #expect(SelfTestRunner.cleanWinner(in: results) == nil)
     }
 
     @Test func unavailableAndFailingRungsAreSkipped() async throws {
@@ -99,7 +98,6 @@ import Testing
         #expect(results.map(\.verdict) == [.skipped, .skipped, .skipped, .skipped, .held, .held, .held, .held])
         #expect(!rig.factory.made.contains { $0.request.strategy == .taggedLayer })   // never armed before 26
         #expect(rig.codes.filter { $0 == "selftest.armFailed" }.count == 2)
-        #expect(SelfTestRunner.cleanWinner(in: results)?.strategy == .metalKeepAlive)
     }
 
     // MARK: Safety
@@ -181,17 +179,5 @@ import Testing
         #expect(codes.first == "selftest.started" && codes.contains("selftest.held") && codes.last == "selftest.finished")
         #expect(!codes.contains("earlier.event"))
         #expect(report.journal.allSatisfy { $0.category == LogCategory.selfTest.rawValue })
-    }
-
-    @Test func aCleanPassNamesTheFirstRungThatHeld() {
-        func result(_ strategy: TriggerStrategy, _ verdict: SelfTestStrategyResult.Verdict) -> SelfTestStrategyResult {
-            SelfTestStrategyResult(strategy: strategy, pixel: .black, verdict: verdict, baselineHeadroom: 1,
-                                   secondsToFirstMovement: nil, secondsToStable: nil, heldFraction: 0, samples: [])
-        }
-        #expect(SelfTestRunner.cleanWinner(in: [result(.taggedLayer, .noEngage), result(.metalOneShot, .held),
-                                                result(.hlgStill, .held)])?.strategy == .metalOneShot)
-        #expect(SelfTestRunner.cleanWinner(in: [result(.taggedLayer, .engagedButDropped)]) == nil)
-        #expect(SelfTestRunner.cleanWinner(in: [result(.taggedLayer, .invalidBaseline),
-                                                result(.metalOneShot, .held)]) == nil)
     }
 }

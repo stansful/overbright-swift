@@ -248,8 +248,7 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
         appControl.connect(ShellAppControl.Controllers(
             icon: icon, panel: panel, settings: SettingsWindowController(services: services), welcome: welcome,
             help: HelpWindowController(services: services), calibration: CalibrationWindowController(services: services),
-            selfTest: SelfTestSheetPresenter(services: services),
-            diagnostics: { [weak self] in self?.clipboardDiagnostics() }))
+            selfTest: SelfTestSheetPresenter(), diagnostics: { [weak self] in self?.clipboardDiagnostics() }))
         appControl.installIcon()
         Self.intentRouter?.connect(boost: services.boost, displays: services.displays, signals: services.signals)
         let dock = DockMenuController(services: services)

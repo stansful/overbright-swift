@@ -1,5 +1,5 @@
 // OverbrightDisplays/Directory/ReconfigurationPipeline.swift — the timing of display reconfiguration (D9).
-// ARCHITECTURE.md §4.3, §4.4 (`reconfigurationDebounce`), §7.1, §10.4. Thread: main.
+// ARCHITECTURE.md §4.3, §4.4 (`ReconfigurationPipeline.debounce`, `.confirmation`), §7.1, §10.4. Thread: main.
 //
 // One reconfiguration calls back once per online display with the begin flag, then once per added, removed and online
 // display in the after phase. The pipeline turns that burst into:
@@ -23,7 +23,7 @@ final class ReconfigurationPipeline {
         case confirming
     }
 
-    /// The debounce of the after phase (`EngineTiming.reconfigurationDebounce`, D9).
+    /// The debounce of the after phase (D9).
     static let debounce: Duration = .milliseconds(500)
     /// The confirming pass, counted from the last after-phase callback (D9).
     static let confirmation: Duration = .seconds(2)

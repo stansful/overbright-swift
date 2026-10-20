@@ -67,13 +67,6 @@ public final class SelfTestRunner {
         return report(startedAt: startedAt, displays: results, since: since)
     }
 
-    /// The rung to cache after a clean pass (DESIGN.md §10: "the cache is updated only from a clean pass"): the first
-    /// that held, provided no rung of the display was judged on an invalid (pre-held) baseline.
-    public static func cleanWinner(in results: [SelfTestStrategyResult]) -> SelfTestStrategyResult? {
-        guard !results.contains(where: { $0.verdict == .invalidBaseline }) else { return nil }
-        return results.first { $0.verdict == .held }
-    }
-
     /// The driven display lost its trigger (the engine calls it, §4.7): the rung in progress ends at its next sample and
     /// the display is not measured further; the other displays go on.
     func stop(_ display: DisplayKey) {

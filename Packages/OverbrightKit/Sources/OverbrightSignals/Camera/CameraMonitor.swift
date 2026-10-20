@@ -26,8 +26,6 @@ final class CameraMonitor {
 
     /// Listening now.
     private(set) var isRunning = false
-    /// The debounced value.
-    var isInUse: Bool { debouncer.published }
 
     /// Starts listening with `filter` and reads the devices once.
     func start(filter: CameraFilter) {

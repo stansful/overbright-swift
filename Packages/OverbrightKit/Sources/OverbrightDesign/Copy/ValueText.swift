@@ -81,24 +81,11 @@ public nonisolated struct ValueText: Hashable, Sendable {
     }
 
     /// "small gain on this display": the value tag's suffix on a display whose Max is small (DESIGN.md §5.5, §5.13).
-    /// The host decides when it applies and adds it to the canonical text (`CopyFormat.parts`), never to a guard's
-    /// words (`guarded(by:)`); `BoostSlider` shows its `valueText` as it is.
+    /// The host decides when it applies and adds it to the canonical text (`CopyFormat.parts`); `BoostSlider` shows its
+    /// `valueText` as it is.
     public static func smallGain(in language: CopyLanguage = .app) -> String {
         String(localized: "small gain on this display", bundle: language.bundle, locale: language.locale,
                comment: "Panel: value tag suffix when the display’s Max is below ×1.3, as in “Max · ×1.20 · small gain on this display”")
-    }
-
-    /// The value tag while a guard pauses the display (DESIGN.md §5.5 "Paused"): moving the slider stores the level
-    /// but does not lift battery, Low Power Mode, heat, the schedule or a Focus, so the tag names the guard ("Paused:
-    /// Low Power Mode"). Nil for every other reason: a pause the user set ends when the slider moves, a warm Mac only
-    /// caps the level (the tag keeps its value), and per-display reasons have their chip.
-    public static func guarded(by reason: LimitReason, in language: CopyLanguage = .app) -> ValueText? {
-        switch reason {
-        case .battery, .onBattery, .lowPowerMode, .thermalCritical, .outsideSchedule, .focusOff:
-            return HUDText.reasonLine(for: reason, in: language).map(same)
-        default:
-            return nil
-        }
     }
 
     // MARK: Private

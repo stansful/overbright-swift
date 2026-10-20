@@ -33,22 +33,6 @@ public extension LayoutDirection {
         }
         return self == .rightToLeft ? -physical : physical
     }
-
-    /// The step of a "Move Left" (`physical` −1) or "Move Right" (+1) command along this layout's order.
-    nonisolated func step(physical: Int) -> Int { self == .rightToLeft ? -physical : physical }
-}
-
-public extension View {
-    /// Moves the view `x` points toward the right edge of the screen in every layout direction: for content that
-    /// follows the pointer, whose translation is physical. A plain `offset(x:)` is mirrored right to left.
-    func overbrightPhysicalOffset(x: CGFloat) -> some View { modifier(PhysicalOffset(x: x)) }
-}
-
-private struct PhysicalOffset: ViewModifier {
-    @Environment(\.layoutDirection) private var direction
-    let x: CGFloat
-
-    func body(content: Content) -> some View { content.offset(x: direction.alongLayout(x)) }
 }
 
 /// Unicode bidirectional isolation for a name put into a sentence (a display, an app, a key combination): between
@@ -65,24 +49,6 @@ public nonisolated enum BidiIsolation {
     public static func isolate(_ text: String) -> String {
         guard !text.isEmpty, text.first != firstStrongIsolate else { return text }
         return String(firstStrongIsolate) + text + String(popDirectionalIsolate)
-    }
-
-    /// The direction `text` reads in on its own: that of its first letter (Unicode's "first strong" rule), or nil when
-    /// it has none ("12:30", "+3", "—").
-    public static func direction(of text: String) -> LayoutDirection? {
-        for scalar in text.unicodeScalars where scalar.properties.isAlphabetic {
-            return isRightToLeft(scalar) ? .rightToLeft : .leftToRight
-        }
-        return nil
-    }
-
-    /// The blocks of the right-to-left scripts (Hebrew, Arabic, Syriac, Thaana, N'Ko, Samaritan, Mandaic and their
-    /// presentation forms, and the historic ones above U+10800).
-    private static func isRightToLeft(_ scalar: Unicode.Scalar) -> Bool {
-        switch scalar.value {
-        case 0x0590...0x08FF, 0xFB1D...0xFDFF, 0xFE70...0xFEFF, 0x10800...0x10FFF, 0x1E800...0x1EFFF: true
-        default: false
-        }
     }
 }
 

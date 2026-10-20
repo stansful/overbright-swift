@@ -6,6 +6,9 @@ import Testing
 @testable import OverbrightSignals
 
 @Suite struct CameraDebounceTests {
+    /// `kIOAudioDeviceTransportTypeVirtual` (OBS, Camo and similar): never named by Signals, only filtered out.
+    private let virtualTransport = CameraTransport.fourCharacterCode("virt")
+
     private func at(_ seconds: Double) -> MonotonicInstant {
         MonotonicInstant(sinceOrigin: .milliseconds(Int64(seconds * 1000)))
     }
@@ -42,9 +45,9 @@ import Testing
         #expect(CameraTransport.builtIn == 0x626C_746E && CameraTransport.usb == 0x7573_6220)
         #expect(CameraTransport.counts(transport: CameraTransport.builtIn, filter: .builtInAndUSB))
         #expect(CameraTransport.counts(transport: CameraTransport.usb, filter: .builtInAndUSB))
-        #expect(!CameraTransport.counts(transport: CameraTransport.virtual, filter: .builtInAndUSB))
+        #expect(!CameraTransport.counts(transport: virtualTransport, filter: .builtInAndUSB))
         #expect(!CameraTransport.counts(transport: nil, filter: .builtInAndUSB))
-        #expect(CameraTransport.counts(transport: CameraTransport.virtual, filter: .anyCamera))
+        #expect(CameraTransport.counts(transport: virtualTransport, filter: .anyCamera))
         #expect(CameraTransport.counts(transport: nil, filter: .anyCamera))
     }
 
@@ -74,7 +77,7 @@ import Testing
         let harness = SignalsHarness()
         let cameras = harness.platform.cameraDevices
         cameras.add(1, transport: CameraTransport.builtIn)
-        cameras.add(2, transport: CameraTransport.virtual, running: true)
+        cameras.add(2, transport: virtualTransport, running: true)
         harness.settings[FillLightSettings.autoWithCamera] = true
         harness.settings[FillLightSettings.cameraFilter] = .builtInAndUSB
         await harness.start()

@@ -1,7 +1,6 @@
 // OverbrightDesign/Copy/Names/ShortcutNames.swift — the user-facing names of the global shortcuts and the step
-// directions, and the menu commands they stand for. DESIGN.md §4.3 (the menu), §4.4 (the Dock menu), §5.3 (the panel's
-// overflow menu), §7.6 (Settings ▸ Shortcuts), §8 (Welcome step 4), §16 (vocabulary: Brighter · Less Bright, Back to
-// Standard, Dim All Displays). Key caps are never part of a name: they come from `ShortcutCenter.displayString(_:)`.
+// directions. DESIGN.md §7.6 (Settings ▸ Shortcuts), §8 (Welcome step 4), §16 (vocabulary: Brighter · Less Bright,
+// Back to Standard). Key caps are never part of a name: they come from `ShortcutCenter.displayString(_:)`.
 import Foundation
 import OverbrightCore
 
@@ -23,26 +22,6 @@ public extension ShortcutID {
         case .standard: ShortcutWords.backToStandard(in: language)
         case .fillLight: ShortcutWords.fillLight(in: language)
         default: nil
-        }
-    }
-
-    /// The command a shortcut stands for in the menu, the Dock menu and the panel's ⋯ menu (title case): "Turn Off
-    /// Overbright" while `isActive` (Overbright is on), else "Turn On Overbright"; "Stop Dimming" while `isActive`
-    /// (the displays are dimmed), else "Dim All Displays"; "Back to Standard", "Brighter", "Less Bright", "Max",
-    /// "Fill Light". Nil for an identifier this build does not know.
-    nonisolated func menuTitle(isActive: Bool = false, in language: CopyLanguage = .app) -> String? {
-        let (b, l) = (language.bundle, language.locale)
-        return switch self {
-        case .toggle where isActive: String(localized: "Turn Off Overbright", bundle: b, locale: l,
-                                            comment: "Menu: turns Overbright off; also in the Dock menu (title case)")
-        case .toggle: String(localized: "Turn On Overbright", bundle: b, locale: l,
-                             comment: "Menu: turns Overbright on; also in the Dock menu (title case)")
-        case .dimToggle where isActive: String(localized: "Stop Dimming", bundle: b, locale: l,
-                                               comment: "Menu: brings dimmed displays back to Standard; also in the Dock and panel menus (title case)")
-        case .dimToggle: String(localized: "Dim All Displays", bundle: b, locale: l,
-                                comment: "Menu: dims every display to the last dim level; also in the Dock and panel menus (title case)")
-        case .max: LevelPreset.max.menuTitle(in: language)
-        default: localizedName(in: language)
         }
     }
 }

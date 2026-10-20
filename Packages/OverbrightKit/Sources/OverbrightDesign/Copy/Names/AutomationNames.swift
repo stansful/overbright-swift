@@ -1,5 +1,5 @@
-// OverbrightDesign/Copy/Names/AutomationNames.swift — the user-facing names of the automation choices. DESIGN.md §5.9
-// (footer chips and their menus, title case), §7.5 (Settings ▸ Automations, sentence case), §7.7 (cameras).
+// OverbrightDesign/Copy/Names/AutomationNames.swift — the user-facing names of the automation choices. DESIGN.md §7.5
+// (Settings ▸ Automations, sentence case), §7.7 (cameras).
 import Foundation
 import OverbrightCore
 
@@ -14,19 +14,6 @@ public extension BatteryGuard {
                                     comment: "Settings ▸ Automations: On battery pop-up item")
         case .off: String(localized: "Keep boosting", bundle: b, locale: l,
                           comment: "Settings ▸ Automations: On battery pop-up item (extra brightness continues on battery)")
-        }
-    }
-
-    /// "Pause Below a Level" · "Pause on Battery" · "Keep Boosting" (the Battery footer chip's menu, title case).
-    nonisolated func menuTitle(in language: CopyLanguage = .app) -> String {
-        let (b, l) = (language.bundle, language.locale)
-        return switch self {
-        case .belowThreshold: String(localized: "Pause Below a Level", bundle: b, locale: l,
-                                     comment: "Panel ▸ Footer chip: Battery chip menu item (title case)")
-        case .onlyOnAdapter: String(localized: "Pause on Battery", bundle: b, locale: l,
-                                    comment: "Panel ▸ Footer chip: Battery chip menu item (title case)")
-        case .off: String(localized: "Keep Boosting", bundle: b, locale: l,
-                          comment: "Panel ▸ Footer chip: Battery chip menu item (title case)")
         }
     }
 }
