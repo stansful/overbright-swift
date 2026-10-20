@@ -1,4 +1,4 @@
-// OverbrightAppShell/HUD/LowLevelPromptView.swift — the Keep-this-level prompt's content and words. DESIGN.md §6,
+// OverbrightAppShell/HUD/LevelConfirmationPromptView.swift — the Keep-this-level prompt's content and words. DESIGN.md §6,
 // §12.9 (exact English; "Keep this level?" / "Going back in 10 s" [Go Back] [Keep]; VoiceOver "Keep this level? Going
 // back in 10 seconds."), §12.4 (title-case buttons).
 import Foundation
@@ -7,13 +7,13 @@ import OverbrightDesign
 import SwiftUI
 
 /// The prompt's live countdown.
-@Observable final class LowLevelPromptModel {
+@Observable final class LevelConfirmationPromptModel {
     /// Seconds until the previous level returns.
     var secondsLeft = 0
 }
 
 /// The prompt's words (StatusMenu table).
-enum LowLevelPromptText {
+enum LevelConfirmationPromptText {
     static var title: String {
         String(localized: "Keep this level?", table: "StatusMenu", bundle: .module,
                comment: "HUD: Keep-this-level prompt after a very dark level was set")
@@ -39,26 +39,26 @@ enum LowLevelPromptText {
 }
 
 /// The prompt.
-struct LowLevelPromptView: View {
-    let model: LowLevelPromptModel
+struct LevelConfirmationPromptView: View {
+    let model: LevelConfirmationPromptModel
     let keep: () -> Void
     let goBack: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: Space.m) {
             VStack(alignment: .leading, spacing: Space.xxs) {
-                Text(verbatim: LowLevelPromptText.title)
+                Text(verbatim: LevelConfirmationPromptText.title)
                     .font(.headline)
                     .accessibilityAddTraits(.isHeader)
-                Text(verbatim: LowLevelPromptText.countdown(model.secondsLeft))
+                Text(verbatim: LevelConfirmationPromptText.countdown(model.secondsLeft))
                     .font(.callout.monospacedDigit())
                     .foregroundStyle(.secondary)
             }
             HStack(spacing: Space.m) {
                 Spacer()
-                Button(action: goBack) { Text(verbatim: LowLevelPromptText.goBack) }
+                Button(action: goBack) { Text(verbatim: LevelConfirmationPromptText.goBack) }
                     .keyboardShortcut(.cancelAction)
-                Button(action: keep) { Text(verbatim: LowLevelPromptText.keep) }
+                Button(action: keep) { Text(verbatim: LevelConfirmationPromptText.keep) }
                     .keyboardShortcut(.defaultAction)
             }
         }
@@ -69,8 +69,8 @@ struct LowLevelPromptView: View {
 }
 
 #Preview("Keep this level?") {
-    let model = LowLevelPromptModel()
+    let model = LevelConfirmationPromptModel()
     model.secondsLeft = 10
-    return LowLevelPromptView(model: model, keep: {}, goBack: {})
+    return LevelConfirmationPromptView(model: model, keep: {}, goBack: {})
         .overbrightThemeRoot()
 }

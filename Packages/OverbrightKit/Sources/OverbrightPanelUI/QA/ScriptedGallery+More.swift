@@ -128,7 +128,7 @@ extension ScriptedGallery {
                           facts: displays.map(\.key).compactMap { k in [P.builtIn, P.msi].first { $0.ref.key == k } },
                           configure: ScriptedGallery.levels(levels))
         }
-        let low = LowLevelConfirmation(display: key, previousLevels: [key: LevelPosition(0.5)],
+        let low = LevelConfirmation(display: key, previousLevels: [key: LevelPosition(0.5)],
                                        deadline: P.now.addingTimeInterval(10))
         let lowLight = LevelMapping.position(forDimLight: 0.05)
         return [
@@ -154,7 +154,7 @@ extension ScriptedGallery {
             ScriptedState(id: "keep-level",
                           status: P.status([P.display(P.builtIn, phase: .dimmed, target: .dim(light: 0.05),
                                                       eligibility: P.eligibility(P.builtInVerdict), gain: 0.05)],
-                                           symbol: .dimming, pendingLowLevel: low),
+                                           symbol: .dimming, pendingConfirmation: low),
                           facts: [P.builtIn], configure: ScriptedGallery.levels([key: lowLight.value])),
         ]
     }

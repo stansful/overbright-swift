@@ -20,20 +20,24 @@ public nonisolated struct DisplayPreferences: Hashable, Codable, Sendable {
     public var oledNoticeAcknowledged: Bool
     /// Last name seen, so a disconnected display can be listed and forgotten.
     public var lastKnownName: String?
+    /// The levels already kept with "Keep this level?" (§4.9); nil = none (settings from before 2026-10-21 too).
+    public var keptRange: KeptLevelRange?
     /// Preferences with every default of §3.8.
     public init(boostEnabled: Bool? = nil, level: LevelPosition = LevelPreset.brightRoom.position,
                 capMode: CapMode = .safe, triggerOverride: TriggerStrategy? = nil,
                 calibration: CalibrationRecord? = nil, oled: OLEDOverride = .automatic,
-                oledNoticeAcknowledged: Bool = false, lastKnownName: String? = nil) {
+                oledNoticeAcknowledged: Bool = false, lastKnownName: String? = nil, keptRange: KeptLevelRange? = nil) {
         self.boostEnabled = boostEnabled; self.level = level; self.capMode = capMode
         self.triggerOverride = triggerOverride; self.calibration = calibration
         self.oled = oled; self.oledNoticeAcknowledged = oledNoticeAcknowledged; self.lastKnownName = lastKnownName
+        self.keptRange = keptRange
     }
 
     /// Decodes what the synthesized decoder would, and drops a calibration record that measured Compatibility mode's
     /// overlay (removed 2026-10-21, ARCHITECTURE.md §7.5): its `mechanism` was `"overlay"`, and read as a table record
     /// it would confirm a domain the table never showed. The legacy `mechanism` keys (the preference here, the
-    /// record's) are otherwise ignored: every display uses the color table. Reading them never throws, because
+    /// record's) are otherwise ignored: every display uses the color table. A kept range that does not decode is dropped
+    /// (asking again is the safe side). Reading them never throws, because
     /// `SettingsStore` falls back to no preferences at all on a decode error, and one display's old record must not
     /// reset every display.
     public init(from decoder: any Decoder) throws {
@@ -46,6 +50,7 @@ public nonisolated struct DisplayPreferences: Hashable, Codable, Sendable {
         oled = try container.decode(OLEDOverride.self, forKey: .oled)
         oledNoticeAcknowledged = try container.decode(Bool.self, forKey: .oledNoticeAcknowledged)
         lastKnownName = try container.decodeIfPresent(String.self, forKey: .lastKnownName)
+        keptRange = (try? container.decodeIfPresent(KeptLevelRange.self, forKey: .keptRange)) ?? nil
         let record = try? container.nestedContainer(keyedBy: LegacyCalibrationKeys.self, forKey: .calibration)
         if (try? record?.decodeIfPresent(String.self, forKey: .mechanism)) == "overlay" { calibration = nil }
     }

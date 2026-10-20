@@ -121,7 +121,7 @@ import Testing
         let table = try #require(perDisplay[DisplayKey(rawValue: b)])
         #expect(overlay.boostEnabled == true && overlay.level == LevelPosition(0.6) && overlay.capMode == .peak)
         #expect(overlay.oled == .oled && overlay.oledNoticeAcknowledged && overlay.lastKnownName == "MPG322UX OLED")
-        #expect(overlay.calibration == nil)                                       // it measured the overlay
+        #expect(overlay.calibration == nil && overlay.keptRange == nil)           // it measured the overlay
         #expect(table.boostEnabled == nil && table.level == LevelPosition(-0.4) && table.capMode == .safe)
         #expect(table.triggerOverride == .metalKeepAlive && table.oled == .automatic && !table.oledNoticeAcknowledged)
         #expect(table.calibration?.outcome == .encoded && table.calibration?.mergeFactor == 1.61)

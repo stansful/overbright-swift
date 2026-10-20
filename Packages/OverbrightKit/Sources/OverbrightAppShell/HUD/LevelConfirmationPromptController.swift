@@ -1,5 +1,5 @@
-// OverbrightAppShell/HUD/LowLevelPromptController.swift — "Keep this level?". ARCHITECTURE.md §4.9 (the engine
-// publishes `status.pendingLowLevel` and reverts at its deadline by itself), §7.6; DESIGN.md §6 (in the HUD's place on
+// OverbrightAppShell/HUD/LevelConfirmationPromptController.swift — "Keep this level?". ARCHITECTURE.md §4.9 (the engine
+// publishes `status.pendingConfirmation` and reverts at its deadline by itself), §7.6; DESIGN.md §6 (in the HUD's place on
 // that display; "Going back in 10 s" counting down; [Go Back] [Keep]; Return = Keep, Esc = Go Back; excluded from
 // capture; VoiceOver hears "Keep this level? Going back in 10 seconds."), §12.9. Seam written by WP0a (§10.0):
 // `init(services:)`, `start()` and `stop()` are fixed. The countdown is one `TimeSource.sleep` per second while shown.
@@ -11,8 +11,8 @@ import SwiftUI
 
 private let log = Log.logger(.panel)
 
-/// Shows the Keep-this-level prompt while the engine has a pending low-level confirmation.
-final class LowLevelPromptController {
+/// Shows the Keep-this-level prompt while the engine has a pending level confirmation.
+final class LevelConfirmationPromptController {
     private let services: OverbrightServices
     private let slot: HUDSlot
     private var observation: ObservationToken?
@@ -22,9 +22,9 @@ final class LowLevelPromptController {
     /// Tests turn windows off: the controller then decides and records, but orders nothing in.
     var presentsWindows = true
     /// The confirmation the prompt shows now (nil while hidden).
-    private(set) var shown: LowLevelConfirmation?
+    private(set) var shown: LevelConfirmation?
     /// The countdown the prompt shows.
-    let model = LowLevelPromptModel()
+    let model = LevelConfirmationPromptModel()
     /// The seconds the prompt shows now.
     var secondsLeft: Int { model.secondsLeft }
 
@@ -37,12 +37,12 @@ final class LowLevelPromptController {
         self.slot = slot
     }
 
-    /// Starts observing `status.pendingLowLevel` (a pending confirmation shows at once).
+    /// Starts observing `status.pendingConfirmation` (a pending confirmation shows at once).
     func start() {
         guard observation == nil else { return }
         let boost = services.boost
-        update(boost.status.pendingLowLevel)
-        observation = OverbrightCore.observe({ boost.status.pendingLowLevel }) { [weak self] pending in
+        update(boost.status.pendingConfirmation)
+        observation = OverbrightCore.observe({ boost.status.pendingConfirmation }) { [weak self] pending in
             self?.update(pending)
         }
     }
@@ -56,18 +56,18 @@ final class LowLevelPromptController {
 
     /// Keep (Return): confirms the level.
     func keep() {
-        services.boost.keepLowLevel()
+        services.boost.keepLevel()
         update(nil)
     }
 
     /// Go Back (Esc): returns to the previous level now.
     func goBack() {
-        services.boost.revertLowLevel()
+        services.boost.revertLevel()
         update(nil)
     }
 
     /// Shows, updates or closes the prompt for `pending`.
-    func update(_ pending: LowLevelConfirmation?) {
+    func update(_ pending: LevelConfirmation?) {
         guard let pending else {
             close()
             return
@@ -84,7 +84,7 @@ final class LowLevelPromptController {
         shown = pending
         slot.claim(.prompt) { [weak self] in self?.close() }
         model.secondsLeft = Self.seconds(until: pending.deadline, now: services.time.wallClock)
-        services.announcer.announce(LowLevelPromptText.announcement(model.secondsLeft), kind: .feedback)
+        services.announcer.announce(LevelConfirmationPromptText.announcement(model.secondsLeft), kind: .feedback)
         present(pending)
         runCountdown(to: pending.deadline)
     }
@@ -109,7 +109,7 @@ final class LowLevelPromptController {
         }
     }
 
-    private func present(_ pending: LowLevelConfirmation) {
+    private func present(_ pending: LevelConfirmation) {
         guard presentsWindows,
               let frame = HUDPlacement.currentFrame(size: HUDPlacement.promptSize, display: pending.display,
                                                     services: services) else { return }
@@ -117,7 +117,7 @@ final class LowLevelPromptController {
         window.onCancel = { [weak self] in self?.goBack() }
         self.window = window
         window.setFrame(frame, display: false)
-        let view = LowLevelPromptView(model: model, keep: { [weak self] in self?.keep() },
+        let view = LevelConfirmationPromptView(model: model, keep: { [weak self] in self?.keep() },
                                       goBack: { [weak self] in self?.goBack() })
             .overbrightThemeRoot()
         window.contentView = PanelContainer.make(around: NSHostingView(rootView: view),
