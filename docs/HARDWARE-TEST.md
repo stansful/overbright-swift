@@ -10,7 +10,8 @@
 | Outcome | A folder of diagnostics, monitor captures, self-test logs and a filled results table, analysed by WP16 to set the engine's defaults. |
 
 **Safety first.** Everything here is reversible.
-- **Back to Standard** returns every display to Standard at any time. No shortcut ships bound (since 2026-10-20): record one in Settings ▸ Shortcuts during setup (step 0.7; ⌃⌥⌘0 is free on macOS 27), or choose Turn Off Overbright in the menu.
+- **Back to Standard** returns every display to Standard at any time, without a shortcut: the switch at the top of the panel, Turn Off Overbright in the menu, Back to Standard in the Dock menu (General ▸ Show in Dock) or the Shortcuts action. No shortcut ships bound (since 2026-10-20); this plan records ⌃⌥⌘0 for it during setup (step 0.7; free on macOS 27).
+- **"Keep this level?"** follows every level change you make: without an answer the display goes back to Standard after 10 s, so a white or dark screen comes back by itself.
 - If Overbright stops responding, **Force Quit** it (⌥⌘⎋): macOS restores your displays at once.
 - `/Applications/Overbright.app/Contents/MacOS/Overbright --restore-gamma` resets every display's colours from Terminal.
 - If a display still looks wrong: switch its preset in System Settings ▸ Displays and back; as a last resort, log out.
@@ -40,13 +41,13 @@
    ```zsh
    ob --monitor > ~/Overbright-HW/monitor-<section>.jsonl
    ```
-   It prints one line per display every 250 ms: the table's **class** against the display's colour profile (`matchesBase`, `scaled` with its ratio, `foreign`, `invalid`), the table maximum and mid entry, and current/potential/reference headroom. In this document **SCALED** means a class other than `matchesBase`. The monitor is read-only and exempt from the one-instance rule. Stop it with Ctrl-C.
+   It prints one line per display every 250 ms: the table's **class** against the display's colour profile (`matchesBase`, `scaled` with its ratio, `foreign`, `invalid`), the table maximum and mid entry, and current/potential/reference headroom. In this document **SCALED** means a class other than `matchesBase`. The monitor is read-only and exempt from the one-instance rule (since 2026-10-21: before that, opening the app while a monitor ran made the app hand over to the monitor and quit); `obdiag` is exempt too, and opening the app while `ob --restore-gamma` runs waits for it to finish. Stop it with Ctrl-C.
 6. Optional live log in a third window:
    ```zsh
    log stream --level info --predicate 'subsystem == "app.overbright.Overbright"' > ~/Overbright-HW/log-<section>.txt
    ```
 7. Shortcuts and automations ship off (since 2026-10-20). In Settings ▸ Shortcuts record **Back to Standard** (⌃⌥⌘0), **Less Bright** (⌃⌥⌘-) and **Brighter** (⌃⌥⌘=), the keys this plan names; §7 turns its own automations on.
-8. Only one Overbright app may run. A second launch (a Debug build from `scripts/run.sh`, `open -n`) hands over to the running one and quits; quit the installed copy before any step that uses a Debug build.
+8. Only one Overbright app may run (`ob --monitor` and `obdiag` do not count). A second launch (a Debug build from `scripts/run.sh`, `open -n`) hands over to the running one and quits; quit the installed copy before any step that uses a Debug build.
 
 **What to send back:** zip `~/Overbright-HW` and hand it to WP16 together with `results.md`. Nothing in it contains personal files or window titles; display names and app names appear only where you typed them in `results.md`.
 
@@ -63,7 +64,7 @@ Nothing here boosts: keep Overbright running but off (master switch off in the p
 | 1.3 | Switch to **HDR Video (P3-ST 2084)** | `obdiag …/1.3-hdrvideo.json` | potential ≈ 10, reference **> 0**, verdict *reference mode* |
 | 1.4 | Switch to **Internet & Web (sRGB)** | `obdiag …/1.4-srgb.json` | potential **1.0**, verdict *no HDR in this preset* |
 | 1.5 | Back to P3-1600. MSI with **HDR off** | `obdiag …/1.5-msi-off.json` | MSI potential **1.0**, verdict *HDR is off*, supports PQ **true**; its card in the panel can still dim |
-| 1.6 | Turn **HDR on** for the MSI (System Settings ▸ Displays) | `obdiag …/1.6-msi-on.json` | MSI potential **4.65**, panel peak ≈ 465, frame average ≈ 265, minimum ≈ 0.0003 nits, class *OLED external*, verdict *supported*; if Welcome is open on step 2, its row updates by itself |
+| 1.6 | Turn **HDR on** for the MSI (System Settings ▸ Displays) | `obdiag …/1.6-msi-on.json` | (verified by the owner on 2026-10-21: the MSI boosts with macOS HDR on; still capture the file for WP16's numbers) MSI potential **4.65**, panel peak ≈ 465, frame average ≈ 265, minimum ≈ 0.0003 nits, class *OLED external*, verdict *supported*; if Welcome is open on step 2, its row updates by itself |
 | 1.7 | Put the displays to sleep (`pmset displaysleepnow`), wake them | `obdiag …/1.7-msi-after-wake.json` | MSI potential 4.65 again; if current headroom stays 1.0 later when boosting, note it (known macOS 26 bug) |
 | 1.8 | Locale: your system runs Russian | look at `displays[].name` in 1.1 | the built-in's name may be Russian; verdicts in 1.1–1.7 must not depend on it |
 | 1.9 | **H-N1** (needs §2.0 first, so Overbright can boost): boost the built-in at Bright room; set the system brightness to about 25 %, 50 % and 100 %; at each level capture both files | `obdiag …/1.9-<level>.json` and `/usr/bin/log show --last 1m --style compact --predicate 'subsystem == "com.apple.coreanimation" AND category == "Brightness"' > …/1.9-<level>-ws.txt` | WP16 compares `displays[].backlightMilliNits` with WindowServer's own `sdr:` value; if they track, Overbright can show nits on the built-in |
@@ -258,8 +259,8 @@ Cases (the Compatibility-mode case was removed with the overlay, §10; last comm
 
 ## 15. Release checklist (every release, 15 min; WP17)
 
-1. Clean install from the release DMG on the owner's Mac; launch: the move-to-Applications offer only when launched from the DMG; then Welcome on first run; the status symbol shows *off*.
-2. Boost the built-in to Bright room; Back to Standard with its shortcut.
+1. Clean install from the release DMG on the owner's Mac; launch: the move-to-Applications offer only when launched from the DMG; then Welcome on first run; the status symbol shows *off*. Welcome's "Where to find Overbright" step shows no key caps and the line "You can set keyboard shortcuts in Settings ▸ Shortcuts."; clicking it opens Settings ▸ Shortcuts at Back to Standard.
+2. Boost the built-in to Bright room; Back to Standard without a shortcut: the panel's switch, then (boosted again) the Shortcuts action Back to Standard; once more and leave "Keep this level?" unanswered: Standard after 10 s.
 3. Lock/unlock and sleep/wake once with the monitor: `matchesBase` while shielded.
 4. `kill -9 $(obpid)` while boosted: `matchesBase` at once.
 5. The MSI: verdict correct for its HDR setting.
@@ -275,7 +276,7 @@ Cases (the Compatibility-mode case was removed with the overlay, §10; last comm
 |---|---|---|---|
 | **H-WS1** | **built-in brighter, not white, with the automatic ladder (T3, 0.2 s)? Keep prompt reverts to Standard after 10 s? Tagged layer still white?** | | 2.0a |
 | **H-R1** | **read-back while boosted: table max > 1.0, or exactly 1.0 (clamps)? class `scaled` either way?** | | 2.0 |
-| H-E1 | potential / reference per preset; MSI on/off/after wake; name localized? | | 1.x |
+| H-E1 | potential / reference per preset; MSI on/off/after wake; name localized? | MSI with macOS HDR on boosts (owner, 2026-10-21); the rest open | 1.x |
 | H-DM1 | table-method dimming on the built-in and the MSI; Keep this level | | 2.1–2.3 |
 | H-NS1 | Night Shift / True Tone while boosted and dimmed: table touched? chip? picture? | | 2.4 |
 | H-K2 | another table writer exits: reset, then ramped reapply within ≈ 0.3 s? | | 2.5 |

@@ -62,7 +62,7 @@ nonisolated enum SystemShortcuts {
     static let knownDefaults: [SystemShortcut] = enabled(from: nil)
 
     /// macOS defaults of shortcuts that collide most often: screenshots, Spaces, input sources, Spotlight, and the
-    /// accessibility shortcuts next to Overbright's ⌃⌥⌘ defaults (invert colours, contrast).
+    /// accessibility shortcuts on ⌃⌥⌘ (invert colours, contrast), where people often record Overbright's own.
     static let defaults: [Int: SystemShortcut] = {
         let hyper: KeyCombo.Modifiers = [.control, .option, .command]
         let list: [(Int, UInt16, KeyCombo.Modifiers)] = [

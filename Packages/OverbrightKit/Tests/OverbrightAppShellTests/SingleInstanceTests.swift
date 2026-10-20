@@ -111,6 +111,70 @@ private let me = SingleInstance.Instance(processIdentifier: 200, bundleURL: URL(
         #expect(system.reopened == [installed.processIdentifier])               // the real one, never the QA run
     }
 
+    /// The owner's report (R1): a `--monitor` (or `--diagnostics`) run of the same app only reads; launching the app
+    /// next to it starts the app instead of handing over to the monitor and quitting. A real engine still wins.
+    @Test func aMonitorIsNotAnEngine() {
+        let system = FakeSystem()
+        let monitor = SingleInstance.Instance(processIdentifier: 300, bundleURL: installed.bundleURL,
+                                              arguments: LaunchArguments(["Overbright", "--monitor"]))
+        let report = SingleInstance.Instance(processIdentifier: 301, bundleURL: installed.bundleURL,
+                                             arguments: LaunchArguments(["Overbright", "--diagnostics", "-"]))
+        system.running = [monitor, report, me]
+        #expect(!SingleInstance.handOverIfRunning(arguments: LaunchArguments(["Overbright"]),
+                                                  environment: system.environment()))
+        #expect(system.reopened.isEmpty && system.waitedFor.isEmpty)            // read-only runs are not waited for
+
+        system.running = [monitor, installed, me]
+        #expect(SingleInstance.handOverIfRunning(arguments: LaunchArguments(["Overbright"]),
+                                                 environment: system.environment()))
+        #expect(system.reopened == [installed.processIdentifier])               // the engine, never the monitor
+    }
+
+    /// `--restore-gamma` writes tables and quits: the launch waits for it, then starts (never hands over to it, which
+    /// would leave nothing running), also when it is slow to go.
+    @Test func aRestoreIsWaitedForThenTheAppStarts() {
+        let system = FakeSystem()
+        let restore = SingleInstance.Instance(processIdentifier: 300, bundleURL: installed.bundleURL,
+                                              arguments: LaunchArguments(["Overbright", "--restore-gamma"]))
+        system.running = [restore, me]
+        #expect(!SingleInstance.handOverIfRunning(arguments: LaunchArguments(["Overbright"]),
+                                                  environment: system.environment()))
+        #expect(system.waitedFor == [300] && system.reopened.isEmpty)
+
+        system.exitsInTime = false
+        #expect(!SingleInstance.handOverIfRunning(arguments: LaunchArguments(["Overbright"]),
+                                                  environment: system.environment()))
+        #expect(system.waitedFor == [300, 300] && system.reopened.isEmpty)
+    }
+
+    /// With a real engine running next to a restore, the launch hands over at once, without waiting for the restore.
+    @Test func anEngineNextToARestoreStillGetsTheHandOver() {
+        let system = FakeSystem()
+        let restore = SingleInstance.Instance(processIdentifier: 300, bundleURL: installed.bundleURL,
+                                              arguments: LaunchArguments(["Overbright", "--restore-gamma"]))
+        system.running = [restore, installed, me]
+        #expect(SingleInstance.handOverIfRunning(arguments: LaunchArguments(["Overbright"]),
+                                                 environment: system.environment()))
+        #expect(system.reopened == [installed.processIdentifier] && system.waitedFor.isEmpty)
+    }
+
+    /// What another process's arguments make of it; unreadable arguments count as an engine (one engine too few is
+    /// the safe direction, never two).
+    @Test func anInstanceIsClassifiedByItsArguments() {
+        func instance(_ arguments: [String]?) -> SingleInstance.Instance {
+            SingleInstance.Instance(processIdentifier: 300, bundleURL: nil, arguments: arguments.map(LaunchArguments.init))
+        }
+        let monitor = instance(["Overbright", "--monitor", "60"])
+        #expect(monitor.isCommandLine && !monitor.restoresGamma && !monitor.isSimulated)
+        #expect(instance(["Overbright", "--diagnostics", "/tmp/d.json"]).isCommandLine)
+        let restore = instance(["Overbright", "--restore-gamma"])
+        #expect(restore.isCommandLine && restore.restoresGamma)
+        #expect(instance(["Overbright", "--qa-simulate", "lcd-only"]).isSimulated)
+        let engine = instance(["Overbright", "--off"])
+        #expect(!engine.isCommandLine && !engine.restoresGamma && !engine.isSimulated)
+        #expect(instance(nil) == SingleInstance.Instance(processIdentifier: 300, bundleURL: nil))
+    }
+
     /// `KERN_PROCARGS2`: argc, the executable path, padding, then the arguments (the environment after them).
     @Test func processArgumentsParse() throws {
         var bytes: [UInt8] = [3, 0, 0, 0]

@@ -9,7 +9,7 @@ public nonisolated enum WelcomeStep: String, CaseIterable, Sendable {
     case displays
     /// 3 · "How Overbright behaves": guards and launch behaviour.
     case defaults
-    /// 4 · "Where to find Overbright": the menu bar, live key caps, Run Shortcut.
+    /// 4 · "Where to find Overbright": the menu bar, live key caps (or a link to Settings ▸ Shortcuts), Run Shortcut.
     case findIt
     /// 5 · "You’re set": the update toggle, Turn On Overbright and Done.
     case done

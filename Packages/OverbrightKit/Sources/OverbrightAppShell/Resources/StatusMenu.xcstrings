@@ -1465,7 +1465,7 @@
       }
     },
     "Go Back" : {
-      "comment" : "HUD: Keep-this-level prompt button that returns to the previous level now",
+      "comment" : "HUD: Keep-this-level prompt button that goes back to Standard now",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -1674,7 +1674,7 @@
       }
     },
     "Going back in %lld s" : {
-      "comment" : "HUD: Keep-this-level prompt, the countdown before the previous level returns",
+      "comment" : "HUD: Keep-this-level prompt, the countdown before the display goes back to Standard",
       "localizations" : {
         "ar" : {
           "variations" : {
@@ -2620,7 +2620,7 @@
       }
     },
     "Keep" : {
-      "comment" : "HUD: Keep-this-level prompt button that keeps the dark level",
+      "comment" : "HUD: Keep-this-level prompt button that keeps the new level",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -2829,7 +2829,7 @@
       }
     },
     "Keep this level?" : {
-      "comment" : "HUD: Keep-this-level prompt after a very dark level was set",
+      "comment" : "HUD: Keep-this-level prompt after any level change away from Standard",
       "localizations" : {
         "ar" : {
           "stringUnit" : {

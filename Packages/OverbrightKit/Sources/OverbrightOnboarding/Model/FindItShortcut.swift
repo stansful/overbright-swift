@@ -17,4 +17,10 @@ struct FindItShortcut: Hashable, Identifiable {
             center.displayString(id).map { FindItShortcut(id: id, keys: $0) }
         }
     }
+
+    /// True when `rows` have no Back to Standard key caps: step 4 then shows "You can set keyboard shortcuts in
+    /// Settings ▸ Shortcuts.", which opens Settings ▸ Shortcuts there (none ships bound, D17).
+    static func offersShortcutSettings(_ rows: [FindItShortcut]) -> Bool {
+        !rows.contains { $0.id == .standard }
+    }
 }

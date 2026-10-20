@@ -2,7 +2,9 @@
 // symbol at its trailing end (the menu bar extras' side; it follows the layout direction), the caption "Click for the
 // panel, right-click for the menu", and one row per registered shortcut: its live key caps (Design's `KeyCap`, text
 // from `ShortcutCenter.displayString`) and what it does; VoiceOver reads what it does as the label and the key caps as
-// the value. The sun is `sun.max`, the status symbol's own fallback (§4.1): the code-drawn symbol belongs to the shell.
+// the value. While Back to Standard has no shortcut (a first run: none ships bound, D17), a link under them reads "You
+// can set keyboard shortcuts in Settings ▸ Shortcuts." and opens Settings ▸ Shortcuts there. The sun is `sun.max`, the
+// status symbol's own fallback (§4.1): the code-drawn symbol belongs to the shell.
 import OverbrightCore
 import OverbrightDesign
 import SwiftUI
@@ -12,6 +14,8 @@ struct FindItStage: View {
     /// The registered shortcuts, in order.
     let shortcuts: [FindItShortcut]
     let copy: FindItStep.Copy
+    /// Opens Settings ▸ Shortcuts (the link shown while Back to Standard has no shortcut).
+    var openShortcutSettings: () -> Void = {}
 
     var body: some View {
         VStack(alignment: .leading, spacing: Space.l) {
@@ -39,6 +43,15 @@ struct FindItStage: View {
                         .accessibilityValue(Text(verbatim: shortcut.keys))
                     }
                 }
+            }
+            if FindItShortcut.offersShortcutSettings(shortcuts) {
+                Button(action: openShortcutSettings) {
+                    Text(verbatim: copy.setShortcuts)
+                        .font(.callout)
+                        .multilineTextAlignment(.leading)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .buttonStyle(OverbrightLinkButtonStyle())
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)

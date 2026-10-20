@@ -1,12 +1,14 @@
 // OverbrightOnboarding/Steps/FindItStep.swift — Welcome step 4 Find it (DESIGN.md §8): on the stage, the menu bar with
 // Overbright's symbol ("Click for the panel, right-click for the menu") and the key caps of the live Turn on or off,
 // Back to Standard and Dim Below Minimum On or Off shortcuts in the current keyboard layout (a row without a registered
-// shortcut is left out; key caps are never literal, §16); under the copy, "Shortcuts app and Control Center" with the
+// shortcut is left out; key caps are never literal, §16; while Back to Standard has none, as on a first run, one line
+// "You can set keyboard shortcuts in Settings ▸ Shortcuts." opens Settings ▸ Shortcuts there); under the copy, "Shortcuts app and Control Center" with the
 // Run Shortcut recipe (§7.6) and how to see Settings again. Seeded by WP0b with its headline; built by WP12
 // (ARCHITECTURE.md §10.14).
 import Foundation
 import OverbrightCore
 import OverbrightDesign
+import OverbrightPanelUI
 import SwiftUI
 
 /// Welcome step 4 Find it.
@@ -29,6 +31,8 @@ struct FindItStep: View {
         var standard: String
         /// "Dim Below Minimum On or Off".
         var dimToggle: String
+        /// "You can set keyboard shortcuts in Settings ▸ Shortcuts." (while Back to Standard has no shortcut).
+        var setShortcuts: String
         /// "Shortcuts app and Control Center".
         var shortcutsHeading: String
         /// The Run Shortcut recipe.
@@ -52,6 +56,8 @@ struct FindItStep: View {
                                   comment: "Welcome ▸ Find it: next to the key caps of the Back to Standard shortcut"),
                  dimToggle: String(localized: "Dim Below Minimum On or Off", bundle: bundle,
                                    comment: "Welcome ▸ Find it: next to the key caps of the shortcut that dims every display below the minimum or brings them back"),
+                 setShortcuts: String(localized: "You can set keyboard shortcuts in Settings ▸ Shortcuts.", bundle: bundle,
+                                      comment: "Welcome ▸ Find it: link shown while Back to Standard has no keyboard shortcut (none is set at first); opens Overbright’s Settings window at its Shortcuts pane"),
                  shortcutsHeading: String(localized: "Shortcuts app and Control Center", bundle: bundle,
                                           comment: "Welcome ▸ Find it: heading of the Run Shortcut recipe"),
                  recipe: String(localized: "To put Overbright in Control Center or the menu bar, make a shortcut with Turn Overbright On or Off, then add Control Center’s Run Shortcut control.",
@@ -65,7 +71,8 @@ struct FindItStep: View {
         func map(_ transform: (String) -> String) -> Copy {
             Copy(title: transform(title), message: transform(message), menuBar: transform(menuBar),
                  toggle: transform(toggle), standard: transform(standard), dimToggle: transform(dimToggle),
-                 shortcutsHeading: transform(shortcutsHeading), recipe: transform(recipe), finder: transform(finder))
+                 setShortcuts: transform(setShortcuts), shortcutsHeading: transform(shortcutsHeading),
+                 recipe: transform(recipe), finder: transform(finder))
         }
 
         /// What a shortcut row says the shortcut does.
@@ -81,7 +88,8 @@ struct FindItStep: View {
     var body: some View {
         StepLayout {
             StepStage {
-                FindItStage(shortcuts: FindItShortcut.rows(session.services.shortcuts), copy: copy)
+                FindItStage(shortcuts: FindItShortcut.rows(session.services.shortcuts), copy: copy,
+                            openShortcutSettings: openShortcutSettings)
             }
         } content: {
             StepHeader(title: copy.title, message: copy.message)
@@ -89,6 +97,11 @@ struct FindItStep: View {
             FindItLower(copy: copy)
         }
         .welcomeStepRoot()
+    }
+
+    /// Opens Settings ▸ Shortcuts at Back to Standard ("You can set keyboard shortcuts in Settings ▸ Shortcuts.").
+    func openShortcutSettings() {
+        session.services.app?.openSettings(SettingsLinks.backToStandardShortcut)
     }
 }
 

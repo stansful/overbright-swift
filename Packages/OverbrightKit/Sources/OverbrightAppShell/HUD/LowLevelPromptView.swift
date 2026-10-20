@@ -8,7 +8,7 @@ import SwiftUI
 
 /// The prompt's live countdown.
 @Observable final class LowLevelPromptModel {
-    /// Seconds until the previous level returns.
+    /// Seconds until the display goes back to Standard.
     var secondsLeft = 0
 }
 
@@ -16,20 +16,20 @@ import SwiftUI
 enum LowLevelPromptText {
     static var title: String {
         String(localized: "Keep this level?", table: "StatusMenu", bundle: .module,
-               comment: "HUD: Keep-this-level prompt after a very dark level was set")
+               comment: "HUD: Keep-this-level prompt after any level change away from Standard")
     }
     /// "Going back in 10 s".
     static func countdown(_ seconds: Int) -> String {
         String(localized: "Going back in \(seconds) s", table: "StatusMenu", bundle: .module,
-               comment: "HUD: Keep-this-level prompt, the countdown before the previous level returns")
+               comment: "HUD: Keep-this-level prompt, the countdown before the display goes back to Standard")
     }
     static var goBack: String {
         String(localized: "Go Back", table: "StatusMenu", bundle: .module,
-               comment: "HUD: Keep-this-level prompt button that returns to the previous level now")
+               comment: "HUD: Keep-this-level prompt button that goes back to Standard now")
     }
     static var keep: String {
         String(localized: "Keep", table: "StatusMenu", bundle: .module,
-               comment: "HUD: Keep-this-level prompt button that keeps the dark level")
+               comment: "HUD: Keep-this-level prompt button that keeps the new level")
     }
     /// "Keep this level? Going back in 10 seconds." (plural forms in the catalog).
     static func announcement(_ seconds: Int) -> String {
