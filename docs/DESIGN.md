@@ -31,7 +31,7 @@
 | 11 | Edge light name | Ring Light; Edge Light; Fill Light | **Fill Light**: the generic photography term for the same job; "Ring Light" is already used by other products in this category. |
 | 12 | Onboarding preview | Boost the whole screen; split the screen; boost a card | **Boost only a card** inside our own window with a draggable divider. Nothing outside the Welcome window changes, and there is no nag. |
 | 13 | Icons | Sun everywhere | **Sun motif only in the menu bar symbol** (the universal brightness sign, drawn as a template); the **app icon has no sun** and none of the incumbent's shapes or colours (§14). The moon is reserved for Focus. |
-| 14 | Defaults | Boost at launch; Max level | **Launch, keep off; Bright room; Safe; extra brightness only near full brightness; pause for full-screen video.** Nothing gets brighter until the user asks, and the brightness keys keep their range. |
+| 14 | Defaults | Boost at launch; Max level | **Launch, keep off; Bright room; Safe; no global shortcut bound; every Apps and video automation off** (the owner's rules, 2026-10-20, with "only near full brightness" off too). Nothing gets brighter until the user asks, no key combination is taken from other apps until the user records one, and only the power and heat guards step in on their own. |
 | 15 | Help | Remote FAQ; GitHub link; local | **Local Help window** with the answers that matter (§12.6), opened from anywhere, with anchors for chips and verdicts; a GitHub link only when the repository key is set. No network for help. |
 | 16 | Headroom display | A bar under the slider; a marker on the track; text only | **A marker on the slider track where the thumb will stop now**, plus the allowed and the potential multiplier in its help tag and VoiceOver. A bar scaled to the slider top could not show potential and was simply full in Safe. |
 | 17 | Launching and quitting | Silent agent; always open UI | **Every launch that is not a login launch shows UI**, and Quit is in the panel, the menu, Settings ▸ General and Welcome. An agent app that shows nothing when launched by hand, with its icon hidden, has no visible way out. |
@@ -52,8 +52,8 @@ Each principle has a test that a build passes or fails.
    *Test:* no trigger pixel is visible on the built-in display (HARDWARE-TEST H-W2); the words "trigger", "gamma", "EDR" and "headroom" appear only in Settings ▸ Advanced, Self-Test and diagnostics.
 4. **One control, one meaning, one value text.** The level of a display is one number with **canonical units everywhere**: extra brightness is a preset name and/or a multiplier ("Bright room · ×1.29"); dimming is "Dimmed · N %" of Standard light. The panel, the menu, the HUD, Settings, the Shortcuts app and VoiceOver use the same text.
    *Test:* a change from any surface updates every other surface within one frame, and the value text of a level is byte-identical in the readout, the HUD, the menu item, Get State's result and VoiceOver (apart from VoiceOver's spelled-out "times" and "percent").
-5. **Always escapable.** Back to Standard is one shortcut away; Quit is in the panel, the menu, Settings ▸ General and the Welcome window; every launch that is not a login launch shows UI; Force Quit restores the display; very dark levels revert on their own unless confirmed.
-   *Test:* with the menu bar icon hidden, launching Overbright from Finder (running or not) opens Settings ▸ General, whose Quit Overbright button quits; the Back to Standard shortcut works with every window closed and while a conflict banner is up; a level below 10 % of Standard returns after 10 s without input.
+5. **Always escapable.** Turn Off Overbright is one click away in the menu and the panel, Back to Standard is in the Dock menu and the Shortcuts app and one shortcut away once the user records one (none ships bound, 2026-10-20); Quit is in the panel, the menu, Settings ▸ General and the Welcome window; every launch that is not a login launch shows UI; Force Quit restores the display; every level change away from Standard goes back on its own unless kept (§6).
+   *Test:* with the menu bar icon hidden, launching Overbright from Finder (running or not) opens Settings ▸ General, whose Quit Overbright button quits; a recorded Back to Standard shortcut works with every window closed and while a conflict banner is up; a level change nobody keeps returns to Standard after 10 s.
 6. **Flicker-safe.** Brightness changes ramp, never strobe: at most one pair of opposing changes per second on a display, and Overbright stops itself if something keeps it reversing.
    *Test:* `FlickerGuardTests`; WCAG 2.3.1 (three flashes) can never be reached by Overbright alone.
 7. **Calm and frugal.** Off means zero work; on means as little as the display allows; a working display shows no chip; a reason is said once.
@@ -246,6 +246,8 @@ The symbol changes without animation (AppKit template images do not animate in t
 
 Turning on or off from the icon announces "Overbright on" / "Overbright off" to VoiceOver; the symbol itself is the feedback. If a turn-on is not ready within 0.5 s, the HUD shows "Preparing…" (§6) and the symbol shows `preparing`, so nobody clicks again and turns it off.
 
+**A second click closes the panel** (as built, the owner's report of 2026-10-20). A click on the icon can reach the panel's outside-click monitor before the icon's own action (the icon's window on another display's menu bar is not the window the panel is anchored to): the monitor closed the panel and the action, finding it closed, opened it again. A press on the icon within **0.4 s** of an outside-click close now counts as that closing click and leaves the panel closed, once; a later press opens it (`PanelController.press()`, `toggleAfterOutsideCloseWindow`). A close by any other cause (Esc, ⌘W, the icon itself, a control) never swallows the next press.
+
 ### 4.3 The menu (exact English, title case as AppKit chrome)
 
 ```
@@ -276,12 +278,12 @@ Help
 Quit Overbright                           ⌘Q
 ```
 
-- Key equivalents (`‹live›`) show the **live** global shortcut in the current keyboard layout, or nothing when the shortcut is cleared or failed to register (Cranny's `MenuKeyEquivalent`). As built (WP14): named keys (Space, Return, Tab, Delete, Esc, the arrows, F1–F12) come from the combo's key code, never from their localized caps ("Пробел", "Leertaste"); a character key comes from the caps of the current layout.
+- Key equivalents (`‹live›`) show the **live** global shortcut in the current keyboard layout, or nothing when the shortcut is not recorded (the default: none ships bound, §7.6), cleared or failed to register (Cranny's `MenuKeyEquivalent`). As built (WP14): named keys (Space, Return, Tab, Delete, Esc, the arrows, F1–F12) come from the combo's key code, never from their localized caps ("Пробел", "Leertaste"); a character key comes from the caps of the current layout.
 - The status sentence names an app in full (`BannerModel.accessibilityLabel`): the panel middle-truncates a long app name (§5.8) and keeps it whole for its help tag and VoiceOver, but a menu row has no help tag, and the menu sizes itself to its longest row (WP14).
 - Preset items list only the presets shown on that display (§5.5); the dim item uses the last dim level (default "Dimmed · 25%", light relative to Standard).
 - **Don't Use on This Display** turns extra brightness off for that display and returns it to Standard (dims undone); the opposite item turns extra brightness on (an OLED shows its notice first, §12.4).
 - With no display that can boost, the presets are replaced by a disabled "No Extra Brightness on This Display"; a display that can only dim keeps Standard and Dimmed.
-- **Back to Standard is not in this menu**: Turn Off already sits in the first group and does the same, a little slower. Back to Standard stays on its shortcut, in the Dock menu and in the Shortcuts app.
+- **Back to Standard is not in this menu**: Turn Off already sits in the first group and does the same, a little slower. Back to Standard stays on its shortcut (once recorded), in the Dock menu and in the Shortcuts app.
 
 ### 4.4 Launching, reopening, hiding the icon, quitting, Dock icon
 
@@ -292,7 +294,7 @@ Quit Overbright                           ⌘Q
   > You can still open Overbright from Finder or Spotlight, which shows Settings, or use ‹toggle shortcut› to turn it on or off. To quit, open Overbright again and click Quit Overbright in Settings.
   > [Hide Icon] [Cancel]
 
-  When the toggle shortcut is cleared or not registered, the middle clause is left out ("You can still open Overbright from Finder or Spotlight, which shows Settings. To quit, …").
+  When the toggle shortcut is not recorded (the default), cleared or not registered, the middle clause is left out ("You can still open Overbright from Finder or Spotlight, which shows Settings. To quit, …").
 - **Icon not visible.** 3 s after launch and after every screen change, Overbright checks that its icon is really on screen (its window exists, is visible and not occluded, and is not behind the notch). If it is not, and the user did not hide it: a small window, at most once per app version, and a warning row at the top of Settings ▸ General for as long as the condition holds:
   > **Overbright's icon isn't visible**
   > macOS may be hiding it, or the menu bar is too full to show it. You can still use ‹toggle shortcut›, or open Overbright from Finder or Spotlight. To show it, turn on Overbright under Allow in the Menu Bar in Menu Bar settings.
@@ -408,15 +410,17 @@ At most one banner, between the header and the first card, for **a reason that a
 
 ### 5.9 Footer guard chips
 
-Three menu chips (`GuardChip`, 24 pt high, 6 pt apart, 6 pt of padding each side) in a 44-pt footer inset like the cards; each shows its **setting** (never a live value) and opens a short menu (also on Space or Return). They are shortcuts to the most-used Automations rows; Settings has the rest. Together they fit 304 pt, the cards' width, in every language, measured with their glyphs as they draw (`battery.25percent` is 21 pt wide); when they would not (a long translation, a running timer, the widest settings), they drop to glyph + value one at a time, the timer first, then Auto-pause, the battery last, since its "20 %" alone reads as a battery level (WP14: a Russian countdown dropped all three at once), and as a last resort to their glyphs. VoiceOver reads each chip's name as its label and its setting as its value, once ("Battery limit, Below 20 %"). As built (WP14): the earlier 292-pt budget was checked with 12-pt glyphs and 10-pt text, so the drawn English default row (296 pt) dropped to glyph + value, where "20 %" read as a battery level; measured as drawn, the row takes the cards' 304 pt with 6-pt chip padding, and the longest translations were reworded to fit.
+Three menu chips (`GuardChip`, 24 pt high, 6 pt apart, 6 pt of padding each side) in a 44-pt footer inset like the cards; each shows its **setting** (never a live value) and opens a short menu (also on Space or Return). They are shortcuts to the most-used Automations rows; Settings has the rest. Together they fit 304 pt, the cards' width, in every language, measured with their glyphs as they draw (`battery.25percent` is 21 pt wide); when they would not (a long translation, a running timer, the widest settings, the default row with "Auto-pause · Off" in English, below), they drop to glyph + value one at a time, the timer first, then Auto-pause, the battery last, since its "20 %" alone reads as a battery level (WP14: a Russian countdown dropped all three at once), and as a last resort to their glyphs. VoiceOver reads each chip's name as its label and its setting as its value, once ("Battery limit, Below 20 %"). As built (WP14): the earlier 292-pt budget was checked with 12-pt glyphs and 10-pt text, so the drawn English default row (296 pt) dropped to glyph + value, where "20 %" read as a battery level; measured as drawn, the row takes the cards' 304 pt with 6-pt chip padding, and the longest translations were reworded to fit.
 
 | Chip | Label (state) | Menu |
 |---|---|---|
 | Battery (`battery.25percent`) | "Below 20 %" (pause below a level) / "Adapter only" / "Any charge" | ✓ Pause Below a Level · Pause on Battery · Keep Boosting · ─ · Battery Level ▸ 10 % · 20 % · 30 % · 50 % (the current value is inserted with a checkmark when it is not one of these; Settings offers 5–95 %) |
-| Auto-pause (`play.rectangle.fill`) | "Auto-pause" (any rule on) / "Auto-pause · Off" | ✓ Pause for Full-Screen Video · Pause for Every Full-Screen App · ✓ Pause for Apps in the List · ─ · Edit Apps… |
+| Auto-pause (`play.rectangle.fill`) | "Auto-pause" (any rule on) / "Auto-pause · Off" (the default since 2026-10-20: every rule ships off, §7.5) | Pause for Full-Screen Video · Pause for Every Full-Screen App · Pause for Apps in the List (a checkmark on each rule that is on; none by default) · ─ · Edit Apps… |
 | Timer (`timer`) | "No timer" / "Off in 23 min" (counting down) | Turn Off After ▸ Never · 15 Minutes · 30 Minutes · 1 Hour · 2 Hours (plus the current value when it is another one; Settings offers 5 minutes to 2 hours) |
 
 "Pause for Apps in the List" is the list's master switch (`automations.pauseForListedApps`); turning it off keeps every rule. On Macs without a battery the Battery chip is not shown.
+
+As built (2026-10-20): with every Auto-pause rule off by default the default row reads "Below 20 %" · "Auto-pause · Off" · "No timer", 311 pt in English, wider than the cards' 304, so the rule above drops the timer to its glyph first (262 pt) and the battery and Auto-pause keep their words; in every shipped language the default row keeps the battery's words at least, and the row with Auto-pause on ("Below 20 %" · "Auto-pause" · "No timer", the old default) still shows all its words (`FooterFitTests`). VoiceOver reads the default chip as "Auto-pause, Off".
 
 ### 5.10 Displays that cannot be boosted or dimmed
 
@@ -586,10 +590,10 @@ Every state below is a named status in PanelUI's `ScriptedStatuses` (`--qa-state
 | **Timer** | | | | |
 | Turn off after | pop-up | **Never** | Never · 5, 10, 15, 20, 30, 45 minutes · 1 hour · 1.5 hours · 2 hours | "Counts from when you turn Overbright on." |
 | **Apps and video** | | | | |
-| Pause for full-screen video (beta) | switch | **on** | — | "Pauses while an app plays video full screen on that display, including browsers." |
+| Pause for full-screen video (beta) | switch | **off** (on before 2026-10-20) | — | "Pauses while an app plays video full screen on that display, including browsers." |
 | Pause for every full-screen app | switch | off | — | "Includes documents and games, not just video." |
 | Pause in games | switch | off | — | "Apps that macOS knows as games, while in front." |
-| Pause for these apps | switch + list | on; 12 apps | add · remove · mode per app | "Only the display that shows the app pauses." |
+| Pause for these apps | switch + list | **off** (on before 2026-10-20); 12 apps | add · remove · mode per app | "Only the display that shows the app pauses." |
 | (each app row) | icon, Finder name, pop-up, remove button | QuickTime Player, TV, IINA, Infuse, VLC, Plex (×2): **While playing (beta)**; Photos, Final Cut Pro, DaVinci Resolve (×3): **While in front** | While in front · While playing (beta) | "While playing" pauses while the app keeps your Mac awake for video. An app no longer installed reads "App not installed" and can still be removed. |
 | (add) | **+** menu (VoiceOver and help tag: "Add App") | — | apps that are running · Choose… · Suggested ▸ (installed video apps, Prime Video, Infuse Enterprise, GeForce NOW, Moonlight) | — |
 | **Schedule** | | | | |
@@ -600,18 +604,20 @@ Every state below is a named status in PanelUI's `ScriptedStatuses` (`--qa-state
 | **Focus** | | | | |
 | (info) | text + **Open System Settings** | — | — | "Choose what Overbright does in each Focus in Focus settings: leave it alone, turn it off, or turn it on at a level." |
 
+**Apps and video starts off** (the owner's rule, 2026-10-20): every row of the section ships off, so nothing pauses extra brightness on its own except the Power and Heat guards (and the OLED idle pause on an OLED) until the user turns a rule on, here or in the panel's Auto-pause chip (§5.9). The list keeps its 12 suggested apps and their modes for when its switch is turned on; Welcome step 3 shows Pause for full-screen video off too (§8).
+
 ### 7.6 Shortcuts
 
-Key caps in this pane, in the menu and in all copy are rendered from the live binding in the current keyboard layout (§16); the defaults below are shown with US key caps.
+Key caps in this pane, in the menu and in all copy are rendered from the live binding in the current keyboard layout (§16). **No shortcut is bound by default** (the owner's rule, 2026-10-20; ARCHITECTURE.md D17): every recorder reads "Record Shortcut" and nothing is registered with macOS until the user records a combination; Reset to Default clears a row again. The menu shows no key equivalents (§4.3), Welcome step 4 no key caps (§8), Help answer 3 its no-shortcut sentence (§12.6) and the hidden-icon alerts leave out their shortcut clause (§4.4) until then. Before 2026-10-20 five shipped bound (⌃⌥⌘B, ⌃⌥⌘=, ⌃⌥⌘-, ⌃⌥⌘0, ⌃⌥⌘9, US key caps); they are still free of macOS shortcuts and are what the tests bind (`SampleShortcuts`).
 
 | Row | Default | Footnote |
 |---|---|---|
-| Turn Overbright on or off | ⌃⌥⌘B | — |
-| Brighter | ⌃⌥⌘= | — |
-| Less Bright | ⌃⌥⌘- | "Stops at Standard first; press again to dim below it." |
+| Turn Overbright on or off | none | — |
+| Brighter | none | — |
+| Less Bright | none | "Stops at Standard first; press again to dim below it." |
 | Max | none | — |
-| Dim Below Minimum On or Off | ⌃⌥⌘9 | "Dims every display to your last dim level, or brings them back." Shown as "Dimmed" in the menu and the HUD. |
-| Back to Standard | ⌃⌥⌘0 | "Turns Overbright off at once, from anywhere. Your levels are kept for next time." |
+| Dim Below Minimum On or Off | none | "Dims every display to your last dim level, or brings them back." Shown as "Dimmed" in the menu and the HUD. |
+| Back to Standard | none | "Turns Overbright off at once, from anywhere. Your levels are kept for next time." |
 | Fill Light | none | — |
 | Step size | segmented: **Regular** · Fine | "Each press of Brighter or Less Bright changes the light by about a fifth (Regular) or about 6 % (Fine)." |
 
@@ -669,8 +675,8 @@ The compiled icon, "Overbright", version and build; **Check for Updates** with t
 |---|---|---|---|
 | 1 Hello | Use your display's extra range | "Your display can show light brighter than ordinary white. Overbright lets everyday content use that range, so the screen stays readable in a bright room or in sunlight. For the most light, turn your display brightness all the way up first; Overbright adds to it. Drag the divider to compare." | **Before/after card:** a sample page (text on white) at Standard on the left and at Bright room on the right of a draggable divider (the card is a Tab stop: ← / → move the divider 10 %, mirrored right to left), rendered as EDR content inside this window only (`EDRPreviewSurface`). Caption: "Only this card is brighter. It's a preview: the real result depends on your display." Without a capable display: a static illustration and "None of your displays has extra range right now. The next step shows why." The card shows only the light of the display the window is on: when that display cannot show extra brightness while another can, the illustration and "This display has no extra range right now. Move this window to another display to compare." (as built, WP14). The card pauses while the window is hidden. |
 | 2 Displays | Your displays | "Overbright checks what each display can do." | One row per display: glyph, name, verdict (§12.1), fix button, **Use extra brightness** switch (OLED notice when turned on); when the name and the switch do not fit one line, the switch goes on its own line under the name. The rows re-evaluate whenever the displays change (for example after HDR is turned on in System Settings) and cross-fade (`contentSwap`). |
-| 3 Defaults | How Overbright behaves | "Extra light uses more power, so Overbright steps back on its own. Choose how it starts." | Under the copy, switches: **Pause on battery below 20 %** (with the level pop-up), **Pause in Low Power Mode**, **Pause for full-screen video**; note: "It also backs off when your Mac gets warm." Then three option cards for login: **Open and turn on** · **Open, keep off** (selected, "Recommended") · **Don't open at login**. |
-| 4 Find it | Where to find Overbright | "Overbright lives in the menu bar." | Rows: the menu bar symbol ("Click for the panel, right-click for the menu"); key caps of the live **Turn on or off**, **Back to Standard** and **Dim Below Minimum On or Off** shortcuts in the current keyboard layout (rows without a registered shortcut are left out); "Shortcuts app and Control Center" with the Run Shortcut recipe; "Open Overbright again from Finder or Spotlight to see Settings." |
+| 3 Defaults | How Overbright behaves | "Extra light uses more power, so Overbright steps back on its own. Choose how it starts." | Under the copy, switches: **Pause on battery below 20 %** (with the level pop-up), **Pause in Low Power Mode** (both on), **Pause for full-screen video** (off since 2026-10-20, §7.5); note: "It also backs off when your Mac gets warm." Then three option cards for login: **Open and turn on** · **Open, keep off** (selected, "Recommended") · **Don't open at login**. |
+| 4 Find it | Where to find Overbright | "Overbright lives in the menu bar." | Rows: the menu bar symbol ("Click for the panel, right-click for the menu"); key caps of the live **Turn on or off**, **Back to Standard** and **Dim Below Minimum On or Off** shortcuts in the current keyboard layout (rows without a registered shortcut are left out, so a first run, where none is bound (§7.6), shows the menu bar and its caption alone, and a later Welcome from Settings ▸ About shows the ones the user recorded); "Shortcuts app and Control Center" with the Run Shortcut recipe; "Open Overbright again from Finder or Spotlight to see Settings." |
 | 5 Done | You're set | — | A summary of step 3's choices that Done applies, in step 3's words and glyphs: the pause rules that are on, then "When you log in" and the chosen card. **Check for updates on GitHub** switch (off; only when configured); buttons **Turn On Overbright** (primary; hidden when no display can boost) and **Done**. |
 
 The calibration check is not part of Welcome: it asks for changes that are unsafe while boosted and only makes sense once extra brightness is in use. It is offered once, as the calibration tip card, after the first boost (§5.3).
@@ -847,7 +853,7 @@ The same sentence, with the app name in full, is the first, disabled line of the
 Each answer has an anchor; "Learn more" links open the window scrolled to it.
 
 1. **The screen didn't get brighter** (`no-extra-range`). "Turn the display brightness all the way up; Overbright adds to it. Check the display's verdict in Settings ▸ Displays. On a MacBook Pro, use the 1600-nit preset. On some Macs, macOS ignores color table changes: choose Calibrate… to check, or try Compatibility mode. Run Self-Test… shows what macOS reports." (The Compatibility-mode hint stays in the copy while the method is disabled, since 2026-10-20, until the copy is revised; ARCHITECTURE.md §7.5.)
-2. **Colors look washed out, or HDR video looks flat** (`washed-out`). "While extra brightness is on, HDR highlights can't go above the brightened white. Overbright pauses for full-screen video and for video players; add other apps in Settings ▸ Automations."
+2. **Colors look washed out, or HDR video looks flat** (`washed-out`). "While extra brightness is on, HDR highlights can't go above the brightened white. In Settings ▸ Automations, Overbright can pause for full-screen video and for the apps you choose." (Reworded 2026-10-20: both rules ship off, so "Overbright pauses for full-screen video and for video players" was no longer true.)
 3. **How do I get back to normal right away?** (`back-to-standard`). "Press ‹Back to Standard shortcut›, or choose Turn Off Overbright. If Overbright stops responding, Force Quit it: macOS restores your displays at once." Without a registered shortcut: "Choose Turn Off Overbright in the menu or the panel. If Overbright stops responding, …"
 4. **The display looks wrong even after quitting** (`looks-wrong`). "Change the display preset in Displays settings and back, or log out. If another color app was running, quit it. Settings ▸ Advanced ▸ Reset Display Colors can also help."
 5. **Why is extra brightness limited?** (`limited`). "macOS decides how much extra range a display gets. It gives less when the surroundings are already bright, the display is warm or the battery is low. The chip on each display says what limits it."
@@ -963,7 +969,7 @@ None. Overbright ships no audio and plays no system sound.
 | **Pointer and motor** | 28 × 24 pt hit targets; slider snapping only on slow drags; scroll-wheel adjustment in stops, following the hand whether natural scrolling is on or off (wheel away or fingers up: brighter). |
 | **Time limits** | The HUD is informational. The Undo of Reset All stays available as a button until the Settings window closes and through ⌘Z (the banner itself fades after 10 s). "Keep this level?" reverts after 10 s on purpose: going back is the safe direction, and any Overbright shortcut or Return keeps the level. |
 | **Flashing (WCAG 2.3.1)** | §3.4. |
-| **Photosensitivity** | Brightness changes ramp; the calibration flips are slow and announced; Back to Standard is always one shortcut away; very dark levels ask before staying. |
+| **Photosensitivity** | Brightness changes ramp; the calibration flips are slow and announced; Turn Off Overbright is always one click away in the menu, and Back to Standard one shortcut away once recorded; every level change away from Standard asks before staying. |
 
 ---
 
@@ -1047,9 +1053,9 @@ Open misses: the panel drag (SwiftUI/AttributeGraph re-rendering; an unreviewed 
 7. **Guards that matter:** battery, Low Power, heat, OLED idle, full-screen video, per-app, schedule, Focus, other apps, each explained on screen when it acts.
 8. **Flicker-safe by guarantee**, not by luck.
 9. **Native:** a template menu bar symbol, a panel and a menu, Shortcuts actions, a Focus filter, 35 languages, VoiceOver and the keyboard throughout.
-10. **Always escapable:** Back to Standard on a shortcut, every launch shows its UI, Quit everywhere, "Keep this level?" for very dark levels, `--off`, `--restore-gamma`, Force Quit restores.
+10. **Always escapable:** Back to Standard on a shortcut you choose, every launch shows its UI, Quit everywhere, "Keep this level?" for very dark levels, `--off`, `--restore-gamma`, Force Quit restores.
 11. **Compatibility mode** for Macs where macOS ignores color table changes, and next to another brightness app (disabled since 2026-10-20 until a cross-window blend is proven: the overlay turned the owner's built-in white; ARCHITECTURE.md §7.5).
-12. **One control** for dimming below the minimum and brightening above the maximum, with Dim All Displays on its own shortcut, extra brightness that respects the brightness keys, and a Fill Light that turns on with the camera.
+12. **One control** for dimming below the minimum and brightening above the maximum, with Dim All Displays on a shortcut you choose, extra brightness that respects the brightness keys, and a Fill Light that turns on with the camera.
 
 ---
 

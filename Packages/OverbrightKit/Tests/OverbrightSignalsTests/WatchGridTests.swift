@@ -28,7 +28,7 @@ import Testing
 
     /// Boosting at 1.3 s: the boost-on request reads at 1.9 s, then every watch tick at a multiple of 2 s.
     @Test func everyTickLandsOnTheGrid() async {
-        let harness = SignalsHarness()
+        let harness = SignalsHarness(fullScreenVideoRule: true)
         await harness.start()
         await harness.advance(.milliseconds(1_300))                          // the launch check settled at 0.6 s
         let boostOn = harness.time.now
@@ -43,7 +43,7 @@ import Testing
     /// Between ticks the watch is one sleeper whose deadline is the next grid point (the instant every other user of
     /// the grid waits for too), never a deadline of its own phase.
     @Test func theWatchSleepsUntilTheNextGridPoint() async {
-        let harness = SignalsHarness()
+        let harness = SignalsHarness(fullScreenVideoRule: true)
         await harness.start()
         await harness.advance(.milliseconds(1_300))
         harness.monitor.setBoostActive(true)
@@ -58,7 +58,7 @@ import Testing
     /// Starting just after, just before, exactly on and between grid points, the first tick reads the window list at
     /// the next grid point, at most 2 s after boosting.
     @Test(arguments: [0, 1, 1_999, 700]) func theFirstTickComesWithinTwoSecondsOfBoosting(offsetMilliseconds: Int) async {
-        let harness = SignalsHarness()
+        let harness = SignalsHarness(fullScreenVideoRule: true)
         await harness.start()
         await harness.advance(.milliseconds(2_000 + offsetMilliseconds))      // the launch check settled
         let boostOn = harness.time.now
@@ -73,7 +73,7 @@ import Testing
 
     /// The watch stops with the boost and starts again later on the same grid, not on the phase of the restart.
     @Test func aRestartedWatchKeepsTheGrid() async {
-        let harness = SignalsHarness()
+        let harness = SignalsHarness(fullScreenVideoRule: true)
         await harness.start()
         await harness.advance(.milliseconds(1_000))
         harness.monitor.setBoostActive(true)

@@ -28,7 +28,7 @@ import Testing
     choices.setPausesOnBattery(false, in: settings)
     choices.batteryThreshold = 50
     choices.pauseInLowPowerMode = false
-    choices.pauseForFullScreenVideo = false
+    choices.pauseForFullScreenVideo = true                                       // off by default (2026-10-20)
     choices.checksForUpdates = true
 }
 
@@ -39,7 +39,7 @@ import Testing
         let choices = harness.session.choices, settings = harness.services.settings
         #expect(choices.launchBehavior(in: settings) == .launchOnly)                     // "Open, keep off"
         #expect(choices.pausesOnBattery(in: settings) && choices.batteryThreshold(in: settings) == 20)
-        #expect(choices.pauseInLowPowerMode(in: settings) && choices.pauseForFullScreenVideo(in: settings))
+        #expect(choices.pauseInLowPowerMode(in: settings) && !choices.pauseForFullScreenVideo(in: settings))
         #expect(!choices.checksForUpdates(in: settings))
     }
 
@@ -101,7 +101,7 @@ import Testing
         harness.session.finish()
         #expect(settings[AutomationSettings.batteryGuard] == .off)
         #expect(settings[AutomationSettings.batteryThreshold] == 50)
-        #expect(!settings[AutomationSettings.pauseInLowPowerMode] && !settings[AutomationSettings.pauseForFullScreenVideo])
+        #expect(!settings[AutomationSettings.pauseInLowPowerMode] && settings[AutomationSettings.pauseForFullScreenVideo])
         #expect(settings[UpdateSettings.automatic])
         #expect(harness.app.calls == ["setLaunchBehavior(dontLaunch)"] && harness.app.loginItem == .disabled)
     }
@@ -160,10 +160,10 @@ import Testing
         let again = try WelcomeHarness(step: .done) { services in
             services.settings[AutomationSettings.batteryGuard] = .onlyOnAdapter
         }
-        again.session.choices.pauseForFullScreenVideo = false
+        again.session.choices.pauseForFullScreenVideo = true
         again.session.finish()
         #expect(again.services.settings[AutomationSettings.batteryGuard] == .onlyOnAdapter)
-        #expect(!again.services.settings[AutomationSettings.pauseForFullScreenVideo])
+        #expect(again.services.settings[AutomationSettings.pauseForFullScreenVideo])
     }
 
     /// The battery switch and its level pop-up (5–95 % in steps of 5, DESIGN.md §7.5).

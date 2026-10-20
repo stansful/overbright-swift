@@ -367,8 +367,9 @@ import Testing
         #expect(services.boost.beginCalibration(of: DisplayFixture.Keys.builtIn) == nil)
         #expect(boost?.calls.first == "setOn(true,panel)" && boost?.calls.count == 7)
 
-        #expect(services.shortcuts.displayString(.toggle) == "⌃⌥⌘B")
-        #expect(services.shortcuts.displayString(.brighter) == "⌃⌥⌘=" && services.shortcuts.displayString(.max) == nil)
+        #expect(services.shortcuts.displayString(.toggle) == nil && services.shortcuts.state(.toggle) == .off)  // D17
+        let bound = PreviewShortcutCenter(bindings: [.toggle: KeyCombo(keyCode: 11, modifiers: [.control, .option, .command])])
+        #expect(bound.displayString(.toggle) == "⌃⌥⌘B" && bound.displayString(.brighter) == nil)
         #expect(services.shortcuts.set(.max, KeyCombo(keyCode: 46, modifiers: [.control, .shift])) ==
                 .registered(KeyCombo(keyCode: 46, modifiers: [.control, .shift])))
         #expect(services.shortcuts.displayString(.max) == "⌃⇧M")

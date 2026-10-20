@@ -10,7 +10,7 @@
 | Outcome | A folder of diagnostics, monitor captures, self-test logs and a filled results table, analysed by WP16 to set the engine's defaults. |
 
 **Safety first.** Everything here is reversible.
-- **Back to Standard** (⌃⌥⌘0 with the default shortcut) returns every display to Standard at any time.
+- **Back to Standard** returns every display to Standard at any time. No shortcut ships bound (since 2026-10-20): record one in Settings ▸ Shortcuts during setup (step 0.7; ⌃⌥⌘0 is free on macOS 27), or choose Turn Off Overbright in the menu.
 - If Overbright stops responding, **Force Quit** it (⌥⌘⎋): macOS restores your displays at once.
 - `/Applications/Overbright.app/Contents/MacOS/Overbright --restore-gamma` resets every display's colours from Terminal.
 - If a display still looks wrong: switch its preset in System Settings ▸ Displays and back; as a last resort, log out.
@@ -45,7 +45,8 @@
    ```zsh
    log stream --level info --predicate 'subsystem == "app.overbright.Overbright"' > ~/Overbright-HW/log-<section>.txt
    ```
-7. Only one Overbright app may run. A second launch (a Debug build from `scripts/run.sh`, `open -n`) hands over to the running one and quits; quit the installed copy before any step that uses a Debug build.
+7. Shortcuts and automations ship off (since 2026-10-20). In Settings ▸ Shortcuts record **Back to Standard** (⌃⌥⌘0), **Less Bright** (⌃⌥⌘-) and **Brighter** (⌃⌥⌘=), the keys this plan names; §7 turns its own automations on.
+8. Only one Overbright app may run. A second launch (a Debug build from `scripts/run.sh`, `open -n`) hands over to the running one and quits; quit the installed copy before any step that uses a Debug build.
 
 **What to send back:** zip `~/Overbright-HW` and hand it to WP16 together with `results.md`. Nothing in it contains personal files or window titles; display names and app names appear only where you typed them in `results.md`.
 
@@ -83,7 +84,7 @@ Since 2026-10-20 (the owner's rule) **every** level change you make away from St
 |---|---|---|
 | **2.0a (H-WS1, white screen)** | Settings ▸ Advanced ▸ Trigger method: built-in **Automatic**; built-in brightness at maximum. (1) Drag its slider from Standard to **Bright room** and look for 10 s **without answering** the prompt. (2) Set Trigger method to **Tagged layer**, drag past Standard again and again do not answer. (3) Set it back to **Automatic**, drag past Standard and press **Keep**. `obdiag …/2.0a-N.json` after each try. | (1) The built-in gets **brighter, not white** (the diagnostics show `cachedRung` 5, “Metal layer, refreshed”), and returns to Standard after 10 s on its own. (2) Expected **white** (the 2026-10-20 report), back to Standard after 10 s; note whether it whitens. (3) Brighter, and it stays. If (1) or (3) turns white, **stop the session** and report it. |
 | **2.0 (H-R1)** | Settings ▸ Displays ▸ Built-in: Limit **Peak**. Turn Overbright on, built-in at **Max**, brightness at maximum. Watch the monitor for 10 s. Then Back to Standard. | Record the monitor's **table max** while boosted: **> 1.0** (read-back keeps values above 1) or **exactly 1.0** (read-back clamps). Either way the class must read `scaled` while boosted and `matchesBase` after Back to Standard. If the class reads `matchesBase` while the screen is visibly brighter, **stop the session** and report it: every later SCALED check would be meaningless. |
-| 2.1 (H-DM1) | Built-in at Bright room, then press Less Bright (⌃⌥⌘- by default) repeatedly | it stops at Standard once, then dims in steps; the panel shows "Dimmed · N %"; the class reads `scaled` with a ratio below 1 |
+| 2.1 (H-DM1) | Built-in at Bright room, then press Less Bright (the shortcut recorded in step 0.7) repeatedly | it stops at Standard once, then dims in steps; the panel shows "Dimmed · N %"; the class reads `scaled` with a ratio below 1 |
 | 2.2 | With the panel's slider, step through the named dim stops with ⌥← (50 %, 25 %, 10 %, 5 %, 2 %) | the "Keep this level?" prompt appears at the first step and its countdown restarts at every step (it does not flash or move); without an answer the built-in goes back to **Standard** 10 s after the last step; with Keep it stays; Back to Standard always works |
 | 2.3 | The MSI with **HDR off**: dim it to 25 % from the panel | it dims (no extra brightness needed); class `scaled`, ratio < 1 |
 | 2.4 (H-NS1) | Boost the built-in at Bright room and dim the MSI to 50 %; turn **Night Shift** on (Displays ▸ Night Shift ▸ Turn On Until Tomorrow), wait 10 s, turn it off; then the same with **True Tone** | note whether the monitor's class changes (`foreign`?), whether a chip or banner appears, whether the picture looks right; no flicker; record which of the two touch the table |
@@ -154,7 +155,7 @@ Monitor running (`monitor-5.jsonl`). Overbright on, built-in at **Max**. §2.0 m
 
 ## 7. Guards, full screen, players, games and the taper (35 min) — H-FS1, H-FS2, H-P1, H-B1
 
-Overbright on, both displays boosting; monitor running (`monitor-7.jsonl`).
+Overbright on, both displays boosting; monitor running (`monitor-7.jsonl`). First turn on **Pause for full-screen video** and **Pause for these apps** in Settings ▸ Automations (both off by default since 2026-10-20).
 
 | Step | Do | Expected |
 |---|---|---|

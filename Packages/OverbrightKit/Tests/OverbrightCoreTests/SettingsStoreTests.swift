@@ -109,6 +109,18 @@ import Testing
         token.cancel()
     }
 
+    /// The owner's rule (2026-10-20): every row of Settings ▸ Automations ▸ Apps and video starts off, in the store and
+    /// in the policy's own defaults; the per-app list keeps its suggested apps for when the switch is turned on.
+    @Test func appsAndVideoAutomationsAreOffByDefault() {
+        let s = SettingsStore(defaults: InMemoryDefaults())
+        #expect(!s[AutomationSettings.pauseForFullScreenVideo] && !s[AutomationSettings.pauseForAllFullScreen])
+        #expect(!s[AutomationSettings.pauseInGames] && !s[AutomationSettings.pauseForListedApps])
+        #expect(s[AutomationSettings.pausedApps] == PausedAppDefaults.rules && !PausedAppDefaults.rules.isEmpty)
+        let policy = PolicySettings()
+        #expect(!policy.pauseForFullScreenVideo && !policy.pauseForAllFullScreen && !policy.pauseInGames)
+        #expect(!policy.pauseForListedApps)
+    }
+
     /// The defaults of §3.8's "Defaults at a glance" and DESIGN.md §7.
     @Test func defaultsMatchTheCatalog() {
         let s = SettingsStore(defaults: InMemoryDefaults())
@@ -120,8 +132,8 @@ import Testing
         #expect(!s[DisplaySettings.boostOnlyNearFullBrightness])                     // off since 2026-10-20 (§5.4)
         #expect(s[AutomationSettings.batteryGuard] == .belowThreshold && s[AutomationSettings.batteryThreshold] == 20)
         #expect(s[AutomationSettings.pauseInLowPowerMode] && s[AutomationSettings.autoOffMinutes] == nil)
-        #expect(s[AutomationSettings.pauseForFullScreenVideo] && !s[AutomationSettings.pauseForAllFullScreen])
-        #expect(!s[AutomationSettings.pauseInGames] && s[AutomationSettings.pauseForListedApps])
+        #expect(!s[AutomationSettings.pauseForFullScreenVideo] && !s[AutomationSettings.pauseForAllFullScreen])
+        #expect(!s[AutomationSettings.pauseInGames] && !s[AutomationSettings.pauseForListedApps])  // off since 2026-10-20
         #expect(s[AutomationSettings.pausedApps].count == 12 && s[AutomationSettings.pausedApps].allSatisfy(\.isEnabled))
         #expect(s[AutomationSettings.schedule] == nil && s[AutomationSettings.oledIdleMinutes] == 5)
         #expect(s[AutomationSettings.pausedUntil] == nil)

@@ -170,9 +170,10 @@ import Testing
         let harness = try WelcomeHarness(step: .done)
         let choices = harness.session.choices, settings = harness.services.settings
         #expect(DoneSummary.lines(choices: choices, settings: settings)
-                == [.battery(percent: 20), .lowPower, .fullScreenVideo, .login(.launchOnly)])
+                == [.battery(percent: 20), .lowPower, .login(.launchOnly)])           // full-screen video: off
         choices.setBatteryThreshold(35, in: settings)
         choices.pauseInLowPowerMode = false
+        choices.pauseForFullScreenVideo = true
         choices.launchBehavior = .dontLaunch
         #expect(DoneSummary.lines(choices: choices, settings: settings)
                 == [.battery(percent: 35), .fullScreenVideo, .login(.dontLaunch)])

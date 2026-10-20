@@ -93,20 +93,15 @@ import Testing
         #expect(BoostStatus.initial.symbol == .off && !BoostStatus.initial.isOn && !BoostStatus.initial.isReady)
     }
 
-    /// D17: ⌃⌥⌘ with B, =, -, 0 and 9 (kVK_ANSI positions), no default for Max and Fill Light.
-    @Test func shortcutDefaults() {
-        let hyper: KeyCombo.Modifiers = [.control, .option, .command]
-        let defaults = Dictionary(uniqueKeysWithValues: ShortcutCatalog.all.map { ($0.id, $0.defaultCombo) })
-        #expect(ShortcutCatalog.all.count == 7 && defaults.count == 7)
-        #expect(defaults[.toggle] == KeyCombo(keyCode: 11, modifiers: hyper))
-        #expect(defaults[.brighter] == KeyCombo(keyCode: 24, modifiers: hyper))
-        #expect(defaults[.lessBright] == KeyCombo(keyCode: 27, modifiers: hyper))
-        #expect(defaults[.standard] == KeyCombo(keyCode: 29, modifiers: hyper))
-        #expect(defaults[.dimToggle] == KeyCombo(keyCode: 25, modifiers: hyper))
-        #expect(defaults[.max] == .some(nil) && defaults[.fillLight] == .some(nil))
-        // Never ⌃⌥⌘8 (28), ⌃⌥⌘, (43), ⌃⌥⌘. (47), ⌃⌥⌘V (9), ⌃⌥⌘D (2), or ⌃⌥Space.
-        let codes = ShortcutCatalog.all.compactMap(\.defaultCombo?.keyCode)
-        #expect(Set(codes).isDisjoint(with: [28, 43, 47, 9, 2, 49]))
+    /// D17 (the owner's rule, 2026-10-20): every global shortcut ships unbound; nothing registers until the user records
+    /// a combination in Settings ▸ Shortcuts.
+    @MainActor @Test func everyShortcutShipsUnbound() {
+        let ids = ShortcutCatalog.all.map(\.id)
+        #expect(ids == [.toggle, .brighter, .lessBright, .max, .standard, .dimToggle, .fillLight])   // menu order
+        #expect(ShortcutCatalog.all.allSatisfy { $0.defaultCombo == nil })
+        #expect(SettingsStore(defaults: InMemoryDefaults())[ShortcutSettings.bindings].isEmpty)  // no override either
+        let preview = PreviewShortcutCenter()
+        #expect(ids.allSatisfy { preview.state($0) == .off && preview.displayString($0) == nil })
     }
 
     /// Contract lane (WP0b): `UpdateChecking.repositoryURL` came after WP0a with a default, so existing conformers

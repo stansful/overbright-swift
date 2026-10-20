@@ -72,7 +72,7 @@ import Testing
         case "automations.batteryThreshold": settings[AutomationSettings.batteryThreshold] = 40
         case "automations.lowPowerMode": settings[AutomationSettings.pauseInLowPowerMode] = false
         case "automations.timer": settings[AutomationSettings.autoOffMinutes] = 30
-        case "automations.apps": settings[AutomationSettings.pauseForFullScreenVideo] = false
+        case "automations.apps": settings[AutomationSettings.pauseForFullScreenVideo] = true
         case "automations.fullScreenApps": settings[AutomationSettings.pauseForAllFullScreen] = true
         case "automations.games": settings[AutomationSettings.pauseInGames] = true
         case "automations.pausedApps": settings[AutomationSettings.pausedApps] = []

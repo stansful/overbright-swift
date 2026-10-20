@@ -28,8 +28,10 @@ import Testing
     @Test func answerThreeFollowsTheLiveShortcut() throws {
         let services = OverbrightServices.preview()
         let controller = HelpWindowController(services: services, defaults: .inMemory)
-        #expect(controller.backToStandardKeys == "⌃⌥⌘0")
+        #expect(controller.backToStandardKeys == nil)                                  // unbound by default (D17)
         let shortcuts = try #require(services.shortcuts as? PreviewShortcutCenter)
+        shortcuts.set(.standard, KeyCombo(keyCode: 29, modifiers: [.control, .option, .command]))
+        #expect(controller.backToStandardKeys == "⌃⌥⌘0")
         shortcuts.set(.standard, KeyCombo(keyCode: 29, modifiers: [.command, .shift]))
         #expect(controller.backToStandardKeys == "⇧⌘0")
         shortcuts.set(.standard, nil)
@@ -71,8 +73,7 @@ import Testing
     /// The open window's answer 3 follows the shortcut center: it registers after the window opened (any `--qa-help`
     /// run), is rebound or cleared while it is open (C-PANEL-16).
     @Test func theOpenWindowObservesTheShortcut() throws {
-        let center = PreviewShortcutCenter()
-        center.set(.standard, nil)                                          // not registered yet when Help opens
+        let center = PreviewShortcutCenter()                                // not registered yet when Help opens
         let view = HelpView(anchor: HelpEntry.Anchor.backToStandard, shortcuts: center)
         let answer = { view.entries.first { $0.id == HelpEntry.Anchor.backToStandard }?.answer ?? "" }
         #expect(!answer().contains("⌃⌥⌘"))

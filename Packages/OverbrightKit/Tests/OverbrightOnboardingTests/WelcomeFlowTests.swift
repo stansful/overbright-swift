@@ -324,9 +324,10 @@ private typealias Keys = DisplayFixture.Keys
     // MARK: Step 4 · shortcuts
 
     /// Turn on or off, Back to Standard and Dim Below Minimum On or Off, in that order, with their live key caps; a
-    /// cleared or conflicting shortcut is left out.
+    /// cleared or conflicting shortcut is left out, so a first run, where none is bound (D17), shows no key caps.
     @Test func stepFourShowsTheLiveShortcuts() {
-        let center = PreviewShortcutCenter()
+        #expect(FindItShortcut.rows(PreviewShortcutCenter()).isEmpty)
+        let center = PreviewShortcutCenter(bindings: SampleShortcuts.bindings)
         #expect(FindItShortcut.rows(center) == [FindItShortcut(id: .toggle, keys: "⌃⌥⌘B"),
                                                 FindItShortcut(id: .standard, keys: "⌃⌥⌘0"),
                                                 FindItShortcut(id: .dimToggle, keys: "⌃⌥⌘9")])

@@ -18,9 +18,11 @@ import Testing
     /// Runs `script` over `fixture` on a manual clock; returns the dumps by label. Every level change from a person
     /// asks "Keep this level?" (ARCHITECTURE.md §4.9), as in the QA matrix: a script answers `keep` where a level must
     /// outlast 10 s.
-    static func run(_ fixture: DisplayFixture, _ script: String) async throws -> [String: StatusSummary] {
+    static func run(_ fixture: DisplayFixture, _ script: String,
+                    settings: SettingsStore = SettingsStore(defaults: InMemoryDefaults())) async throws
+        -> [String: StatusSummary] {
         let time = ManualTimeSource()
-        let context = TestShell.context(fixture: fixture, time: time)
+        let context = TestShell.context(fixture: fixture, settings: settings, time: time)
         let shell = TestShell.shell(fixture, context: context)
         await CompositionRoot.runLaunchWork(shell)
         let rig = try #require(ScenarioRunner.Rig(shell: shell))
@@ -192,6 +194,7 @@ import Testing
 
     // MARK: Guards, automations, shields and levels
 
+    /// Every guard and automation in turn, Pause for full-screen video turned on (it ships off, 2026-10-20).
     @Test func guardsAndAutomationsOnTheBuiltIn() async throws {
         let script = """
             on; keep; wait 8; dump on; thermal serious; wait 3; dump warm; thermal critical; wait 1; dump hot; \
@@ -203,7 +206,9 @@ import Testing
             sleep; wait 0.1; dump asleep; wake; wait 10; dump awake; brighter; wait 1; dump brighter; level max; \
             wait 2; dump max; standard; wait 1; dump standard
             """
-        let dumps = try await Self.run(.builtinXDRLidOpen, script)
+        let settings = SettingsStore(defaults: InMemoryDefaults())
+        settings[AutomationSettings.pauseForFullScreenVideo] = true
+        let dumps = try await Self.run(.builtinXDRLidOpen, script, settings: settings)
         let boosted: Card = (nil, "boosted")
         let idle: Card = (nil, "idle")
         let writer = "Paused because \u{2068}QA gammaWriter\u{2069} changes display colors. Night Shift gives warm light "
@@ -240,6 +245,21 @@ import Testing
         #expect(abs(gain("max") - 1000.0 / 600) < 0.01)
     }
 
+    /// Every Apps and video automation ships off (2026-10-20): a full-screen video, or any full-screen app, leaves the
+    /// boost on.
+    @Test func aFullScreenVideoKeepsTheBoostByDefault() async throws {
+        let dumps = try await Self.run(.builtinXDRLidOpen, """
+            on; keep; wait 8; full-screen video built-in; wait 1; dump video; full-screen app built-in; wait 1; \
+            dump full-screen; full-screen none; wait 1; dump none
+            """)
+        let boosted: Card = (nil, "boosted")
+        Self.check(dumps, [
+            "video": Expect("on", nil, ["built-in": boosted]),
+            "full-screen": Expect("on", nil, ["built-in": boosted]),
+            "none": Expect("on", nil, ["built-in": boosted]),
+        ], .builtinXDRLidOpen)
+    }
+
     /// An opt-in OLED external: once its switch is on it boosts within the OLED limit, and guards pause it.
     @Test func anOLEDBoostsOnceTurnedOn() async throws {
         let dumps = try await Self.run(.mpg322uxHDROn, """
@@ -263,13 +283,25 @@ import Testing
 
     // MARK: Shortcuts, intents and Settings reach the engine
 
+    /// A first launch registers no hot key: every shortcut ships unbound (D17).
+    @Test func aFirstLaunchRegistersNoShortcut() async {
+        let hotKeys = RecordingHotKeys()
+        let shell = TestShell.shell(hotKeys: hotKeys)
+        await CompositionRoot.runLaunchWork(shell)
+        #expect(hotKeys.registered.isEmpty)
+        #expect(ShortcutCatalog.all.allSatisfy { shell.services.shortcuts.state($0.id) == .off })
+        shell.runner.stopNow()
+    }
+
     @Test func shortcutsIntentsAndSettingsReachTheEngine() async throws {
         let time = ManualTimeSource()
         let hotKeys = RecordingHotKeys()
-        let shell = TestShell.shell(context: TestShell.context(time: time), hotKeys: hotKeys)
+        let settings = SettingsStore(defaults: InMemoryDefaults())
+        settings[ShortcutSettings.bindings] = SampleShortcuts.bindings                // none ships bound (D17)
+        let shell = TestShell.shell(context: TestShell.context(settings: settings, time: time), hotKeys: hotKeys)
         await CompositionRoot.runLaunchWork(shell)
         let boost = shell.services.boost
-        let combo = { (id: ShortcutID) in ShortcutCatalog.all.first { $0.id == id }?.defaultCombo }
+        let combo = { (id: ShortcutID) in SampleShortcuts.bindings[id] ?? nil }
         // ⌃⌥⌘B turns it on, as a shortcut (the HUD shows shortcut changes); ⌃⌥⌘0 is Back to Standard.
         #expect(hotKeys.press(try #require(combo(.toggle))))
         #expect(boost.status.isOn && boost.status.lastChange?.source == .shortcut)

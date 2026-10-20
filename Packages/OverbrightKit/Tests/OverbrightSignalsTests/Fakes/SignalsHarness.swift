@@ -17,9 +17,12 @@ import OverbrightCore
     var calendar: Calendar
 
     /// A harness whose probe matches with `match` (the synthetic catalogue's test matcher unless a test counts).
+    /// `fullScreenVideoRule` turns on Pause for full-screen video, which ships off (2026-10-20), for the tests of the
+    /// full-screen watch it starts.
     init(fixture: DisplayFixture = .builtinXDRLidOpen, timeZone: TimeZone = TimeZone(identifier: "UTC") ?? .current,
-         match: RunningAppsConflictProbe.Matcher? = nil) {
+         match: RunningAppsConflictProbe.Matcher? = nil, fullScreenVideoRule: Bool = false) {
         settings = SettingsStore(defaults: defaults)
+        if fullScreenVideoRule { settings[AutomationSettings.pauseForFullScreenVideo] = true }
         directory = FakeDisplayDirectory(fixture: fixture)
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = timeZone

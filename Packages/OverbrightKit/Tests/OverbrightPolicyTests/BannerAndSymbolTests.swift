@@ -127,8 +127,10 @@ import Testing
         #expect(reduce(system: SystemSnapshot(power: T.adapter, isScreenLocked: true)).symbol == .paused)
         let key = DisplayFixture.Keys.builtIn
         let video = SystemSnapshot(power: T.adapter, fullScreenVideoDisplays: [key])
-        #expect(reduce([T.display()], system: video).symbol == .paused)
-        #expect(reduce([T.display(), T.display(pro)], system: video).symbol == .on)              // the other boosts
+        let videoRule = PolicySettings(pauseForFullScreenVideo: true)                           // off by default
+        #expect(reduce([T.display()], system: video).symbol == .on)
+        #expect(reduce([T.display()], settings: videoRule, system: video).symbol == .paused)
+        #expect(reduce([T.display(), T.display(pro)], settings: videoRule, system: video).symbol == .on) // the other boosts
         // A boost-only guard with a dimmed display: the boosting display is paused.
         #expect(reduce([T.display(), T.display(pro, level: dimHalf)], system: lowPower).symbol == .paused)
         // Dimming when every changed display is dimmed; a mix with a boost is on.

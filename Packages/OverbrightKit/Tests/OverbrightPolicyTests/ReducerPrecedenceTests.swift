@@ -200,11 +200,12 @@ import Testing
 
     @Test func row14FullScreenVideoOnThisDisplay() {
         let video = SystemSnapshot(power: T.adapter, fullScreenDisplays: [builtInKey], fullScreenVideoDisplays: [builtInKey])
-        #expect(stopsOnlyTheBoostHalf(.fullScreenVideo, system: video))
-        #expect(boosts(settings: PolicySettings(pauseForFullScreenVideo: false), system: video))
+        let rule = PolicySettings(pauseForFullScreenVideo: true)
+        #expect(boosts(system: video))                                                       // off by default
+        #expect(stopsOnlyTheBoostHalf(.fullScreenVideo, settings: rule, system: video))
         // Only the display that shows the video pauses.
         let other = T.display(DisplayFixture.proDisplayXDR.displays[0])
-        let decision = decide([T.display(), other], system: video)
+        let decision = decide([T.display(), other], settings: rule, system: video)
         #expect(decision.builtIn?.reasons == [.fullScreenVideo])
         #expect(decision.displays[DisplayFixture.Keys.proDisplayXDR]?.boostGain != nil)
     }
@@ -217,7 +218,8 @@ import Testing
     }
 
     @Test func row16PausedApps() {
-        let rules = PolicySettings(pausedApps: [PausedAppRule(bundleID: "com.example.Player", mode: .whilePlaying),
+        let rules = PolicySettings(pauseForListedApps: true,
+                                   pausedApps: [PausedAppRule(bundleID: "com.example.Player", mode: .whilePlaying),
                                                 PausedAppRule(bundleID: "com.example.Editor", mode: .whileFrontmost),
                                                 PausedAppRule(bundleID: "com.example.Off", mode: .whileFrontmost,
                                                               isEnabled: false)])

@@ -19136,211 +19136,211 @@
         }
       }
     },
-    "While extra brightness is on, HDR highlights can’t go above the brightened white. Overbright pauses for full-screen video and for video players; add other apps in Settings ▸ Automations." : {
-      "comment" : "Help: answer about washed-out colors",
+    "While extra brightness is on, HDR highlights can’t go above the brightened white. In Settings ▸ Automations, Overbright can pause for full-screen video and for the apps you choose." : {
+      "comment" : "Help: answer about washed-out colors (Settings ▸ Automations is Overbright’s Settings window and pane; both rules are off until the user turns them on)",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "أثناء تشغيل الإضاءة الإضافية، لا يمكن أن تتجاوز المناطق الساطعة في محتوى HDR الأبيض بعد زيادة إضاءته. يتوقف Overbright مؤقتًا لفيديو بملء الشاشة ولمشغلات الفيديو؛ أضف تطبيقات أخرى في الإعدادات ◂ الأتمتة."
+            "value" : "أثناء تشغيل الإضاءة الإضافية، لا يمكن أن تتجاوز المناطق الساطعة في محتوى HDR الأبيض بعد زيادة إضاءته. في الإعدادات ◂ الأتمتة، يمكن أن يتوقف Overbright مؤقتًا لفيديو بملء الشاشة وللتطبيقات التي تختارها."
           }
         },
         "ca" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mentre la brillantor extra està activada, els punts brillants HDR no poden superar el blanc intensificat. L’Overbright es posa en pausa amb vídeo a pantalla completa i amb reproductors de vídeo; afegeix altres apps a Configuració ▸ Automatitzacions."
+            "value" : "Mentre la brillantor extra està activada, els punts brillants HDR no poden superar el blanc intensificat. A Configuració ▸ Automatitzacions, l’Overbright es pot posar en pausa amb vídeo a pantalla completa i amb les apps que triïs."
           }
         },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dokud je zapnutý extra jas, nemohou nejjasnější místa obrazu HDR přesáhnout zjasněnou bílou. Overbright se pozastavuje u videa na celou obrazovku a u přehrávačů videa; další aplikace přidáte v Nastavení ▸ Automatizace."
+            "value" : "Dokud je zapnutý extra jas, nemohou nejjasnější místa obrazu HDR přesáhnout zjasněnou bílou. V Nastavení ▸ Automatizace se Overbright může pozastavovat u videa na celou obrazovku a u aplikací, které vyberete."
           }
         },
         "da" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Når ekstra lysstyrke er slået til, kan HDR-højlys ikke blive lysere end den forstærkede hvide farve. Overbright holder pause ved video på fuld skærm og for videoafspillere – tilføj andre apps under Indstillinger ▸ Automatiseringer."
+            "value" : "Når ekstra lysstyrke er slået til, kan HDR-højlys ikke blive lysere end den forstærkede hvide farve. Under Indstillinger ▸ Automatiseringer kan Overbright holde pause ved video på fuld skærm og for de apps, du vælger."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Solange die Zusatzhelligkeit aktiv ist, können HDR-Spitzlichter nicht heller als das aufgehellte Weiß werden. Overbright pausiert bei Vollbildvideos und in Videoplayern; weitere Apps kannst du unter Einstellungen ▸ Automationen hinzufügen."
+            "value" : "Solange die Zusatzhelligkeit aktiv ist, können HDR-Spitzlichter nicht heller als das aufgehellte Weiß werden. Unter Einstellungen ▸ Automationen kann Overbright bei Vollbildvideos und in Apps deiner Wahl pausieren."
           }
         },
         "el" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Όσο η επιπλέον φωτεινότητα είναι ενεργή, τα φωτεινά σημεία του HDR δεν μπορούν να ξεπεράσουν το φωτεινότερο λευκό. Το Overbright μπαίνει σε παύση για βίντεο σε πλήρη οθόνη και για προγράμματα αναπαραγωγής βίντεο. Προσθέστε άλλες εφαρμογές στις Ρυθμίσεις ▸ Αυτοματισμοί."
+            "value" : "Όσο η επιπλέον φωτεινότητα είναι ενεργή, τα φωτεινά σημεία του HDR δεν μπορούν να ξεπεράσουν το φωτεινότερο λευκό. Στις Ρυθμίσεις ▸ Αυτοματισμοί, το Overbright μπορεί να μπαίνει σε παύση για βίντεο σε πλήρη οθόνη και για τις εφαρμογές που επιλέγετε."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mientras el brillo extra está activado, las zonas brillantes del contenido HDR no pueden superar el blanco intensificado. Overbright se pausa con el vídeo a pantalla completa y con los reproductores de vídeo; añade otras apps en Ajustes ▸ Automatizaciones."
+            "value" : "Mientras el brillo extra está activado, las zonas brillantes del contenido HDR no pueden superar el blanco intensificado. En Ajustes ▸ Automatizaciones, Overbright puede pausarse con el vídeo a pantalla completa y con las apps que elijas."
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kun lisäkirkkaus on päällä, HDR-kuvan kirkkaimmat kohdat eivät voi ylittää kirkastettua valkoista. Overbright pitää tauon koko näytön videon ja videosoittimien ajan; lisää muita appeja kohdassa Asetukset ▸ Automaatiot."
+            "value" : "Kun lisäkirkkaus on päällä, HDR-kuvan kirkkaimmat kohdat eivät voi ylittää kirkastettua valkoista. Kohdassa Asetukset ▸ Automaatiot Overbright voi pitää tauon koko näytön videon ja valitsemiesi appien ajan."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lorsque la luminosité supplémentaire est activée, les hautes lumières HDR ne peuvent pas dépasser le blanc éclairci. Overbright se met en pause pour la vidéo en plein écran et les lecteurs vidéo ; ajoutez d’autres apps dans Réglages ▸ Automatisations."
+            "value" : "Lorsque la luminosité supplémentaire est activée, les hautes lumières HDR ne peuvent pas dépasser le blanc éclairci. Dans Réglages ▸ Automatisations, Overbright peut se mettre en pause pour la vidéo en plein écran et les apps de votre choix."
           }
         },
         "he" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "כשהבהירות הנוספת פועלת, אזורים בהירים בתוכן HDR לא יכולים לעלות מעל הלבן המוגבר. Overbright מושהה בווידאו במסך מלא ובנגני וידאו; אפשר להוסיף יישומים אחרים ב״הגדרות״ > ״פעולות אוטומטיות״."
+            "value" : "כשהבהירות הנוספת פועלת, אזורים בהירים בתוכן HDR לא יכולים לעלות מעל הלבן המוגבר. ב״הגדרות״ > ״פעולות אוטומטיות״ אפשר להשהות את Overbright בווידאו במסך מלא וביישומים שבוחרים."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "अतिरिक्त ब्राइटनेस चालू रहने पर HDR हाइलाइट ब्राइट किए गए सफ़ेद से ऊपर नहीं जा सकते। Overbright फ़ुल स्क्रीन वीडियो और वीडियो प्लेयर के लिए पॉज़ हो जाता है; दूसरे ऐप सेटिंग ▸ ऑटोमेशन में जोड़ें।"
+            "value" : "अतिरिक्त ब्राइटनेस चालू रहने पर HDR हाइलाइट ब्राइट किए गए सफ़ेद से ऊपर नहीं जा सकते। सेटिंग ▸ ऑटोमेशन में आप Overbright को फ़ुल स्क्रीन वीडियो और अपने चुने हुए ऐप के लिए पॉज़ करवा सकते हैं।"
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dok je dodatna svjetlina uključena, svijetli dijelovi HDR slike ne mogu biti svjetliji od pojačane bijele. Overbright se pauzira za video preko cijelog zaslona i za reproduktore videa; ostale aplikacije dodajte u odjeljku Postavke ▸ Automatizacija."
+            "value" : "Dok je dodatna svjetlina uključena, svijetli dijelovi HDR slike ne mogu biti svjetliji od pojačane bijele. U odjeljku Postavke ▸ Automatizacija Overbright se može pauzirati za video preko cijelog zaslona i za aplikacije koje odaberete."
           }
         },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Amíg az extra fényerő be van kapcsolva, a HDR-csúcsfények nem lehetnek világosabbak a felerősített fehérnél. Az Overbright teljes képernyős videónál és videolejátszóknál szünetel; más appokat a Beállítások ▸ Automatizálás részben adhat hozzá."
+            "value" : "Amíg az extra fényerő be van kapcsolva, a HDR-csúcsfények nem lehetnek világosabbak a felerősített fehérnél. A Beállítások ▸ Automatizálás részben beállíthatja, hogy az Overbright szüneteljen teljes képernyős videónál és az Ön által választott appoknál."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Selama kecerahan ekstra menyala, sorotan HDR tidak dapat melebihi putih yang sudah dicerahkan. Overbright dijeda untuk video layar penuh dan pemutar video; tambahkan app lain di Pengaturan ▸ Otomatisasi."
+            "value" : "Selama kecerahan ekstra menyala, sorotan HDR tidak dapat melebihi putih yang sudah dicerahkan. Di Pengaturan ▸ Otomatisasi, Overbright dapat dijeda untuk video layar penuh dan app yang Anda pilih."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mentre la luminosità extra è attiva, le alte luci HDR non possono superare il bianco potenziato. Overbright va in pausa con i video a tutto schermo e con i player video; aggiungi altre app in Impostazioni ▸ Automazioni."
+            "value" : "Mentre la luminosità extra è attiva, le alte luci HDR non possono superare il bianco potenziato. In Impostazioni ▸ Automazioni, Overbright può andare in pausa con i video a tutto schermo e con le app che scegli."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "追加の輝度がオンの間は、HDRのハイライトが明るくなった白を超えることはできません。Overbrightは全画面ビデオとビデオプレーヤーでは一時停止します。ほかのAppは設定 ▸ 自動化で追加できます。"
+            "value" : "追加の輝度がオンの間は、HDRのハイライトが明るくなった白を超えることはできません。設定 ▸ 自動化で、全画面ビデオや選択したAppのときにOverbrightを一時停止するよう設定できます。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "추가 밝기가 켜져 있는 동안에는 HDR 하이라이트가 밝아진 흰색보다 밝아질 수 없습니다. Overbright는 전체 화면 비디오와 비디오 플레이어에서 일시 정지합니다. 다른 앱은 설정 ▸ 자동화에서 추가하십시오."
+            "value" : "추가 밝기가 켜져 있는 동안에는 HDR 하이라이트가 밝아진 흰색보다 밝아질 수 없습니다. 설정 ▸ 자동화에서 전체 화면 비디오와 선택한 앱에서 Overbright가 일시 정지하도록 설정할 수 있습니다."
           }
         },
         "ms" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Semasa kecerahan tambahan hidup, sorotan HDR tidak boleh melebihi putih yang telah dicerahkan. Overbright dijeda bagi video skrin penuh dan pemain video; tambah app lain dalam Seting ▸ Automasi."
+            "value" : "Semasa kecerahan tambahan hidup, sorotan HDR tidak boleh melebihi putih yang telah dicerahkan. Dalam Seting ▸ Automasi, Overbright boleh dijeda bagi video skrin penuh dan app yang anda pilih."
           }
         },
         "nb" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mens ekstra lysstyrke er på, kan ikke de lyseste HDR-partiene bli lysere enn det forsterkede hvite. Overbright settes på pause for video i fullskjerm og for videospillere – legg til andre apper i Innstillinger ▸ Automatiseringer."
+            "value" : "Mens ekstra lysstyrke er på, kan ikke de lyseste HDR-partiene bli lysere enn det forsterkede hvite. I Innstillinger ▸ Automatiseringer kan Overbright settes på pause for video i fullskjerm og for apper du velger."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Als extra helderheid is ingeschakeld, kunnen de hoge lichten van HDR niet boven het versterkte wit uitkomen. Overbright pauzeert bij schermvullende video en bij videospelers; voeg andere apps toe in Instellingen ▸ Automatisering."
+            "value" : "Als extra helderheid is ingeschakeld, kunnen de hoge lichten van HDR niet boven het versterkte wit uitkomen. In Instellingen ▸ Automatisering kan Overbright pauzeren bij schermvullende video en bij apps die je kiest."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gdy dodatkowa jasność jest włączona, jasne obszary HDR nie mogą przekroczyć rozjaśnionej bieli. Overbright wstrzymuje się przy wideo na pełnym ekranie i w odtwarzaczach wideo; inne aplikacje dodasz w sekcji Ustawienia ▸ Automatyzacja."
+            "value" : "Gdy dodatkowa jasność jest włączona, jasne obszary HDR nie mogą przekroczyć rozjaśnionej bieli. W sekcji Ustawienia ▸ Automatyzacja Overbright może się wstrzymywać przy wideo na pełnym ekranie i w wybranych aplikacjach."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enquanto o brilho extra está ativado, os realces HDR não podem passar do branco intensificado. O Overbright pausa com vídeo em tela cheia e com players de vídeo; adicione outros apps em Ajustes ▸ Automações."
+            "value" : "Enquanto o brilho extra está ativado, os realces HDR não podem passar do branco intensificado. Em Ajustes ▸ Automações, o Overbright pode pausar com vídeo em tela cheia e com os apps que você escolher."
           }
         },
         "pt-PT" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Com o brilho extra ativado, os realces HDR não podem ultrapassar o branco intensificado. O Overbright entra em pausa com vídeo em ecrã completo e com leitores de vídeo; pode adicionar outras aplicações em Definições ▸ Automatização."
+            "value" : "Com o brilho extra ativado, os realces HDR não podem ultrapassar o branco intensificado. Em Definições ▸ Automatização, o Overbright pode entrar em pausa com vídeo em ecrã completo e com as aplicações que escolher."
           }
         },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cât timp luminozitatea suplimentară este activată, zonele luminoase HDR nu pot depăși albul intensificat. Overbright se pune pe pauză pentru video pe tot ecranul și pentru playerele video; adăugați alte aplicații în Configurări ▸ Automatizări."
+            "value" : "Cât timp luminozitatea suplimentară este activată, zonele luminoase HDR nu pot depăși albul intensificat. În Configurări ▸ Automatizări, Overbright se poate pune pe pauză pentru video pe tot ecranul și pentru aplicațiile pe care le alegeți."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Пока включена дополнительная яркость, яркие участки HDR не могут быть ярче усиленного белого. Overbright приостанавливается для полноэкранного видео и видеоплееров; другие приложения можно добавить в разделе Настройки ▸ Автоматизация."
+            "value" : "Пока включена дополнительная яркость, яркие участки HDR не могут быть ярче усиленного белого. В разделе Настройки ▸ Автоматизация Overbright может приостанавливаться для полноэкранного видео и выбранных вами приложений."
           }
         },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kým je zapnutý extra jas, najjasnejšie miesta obrazu HDR nemôžu prekročiť zjasnenú bielu. Overbright sa pozastavuje pri videu na celej obrazovke a pri prehrávačoch videa; ďalšie apky pridáte v Nastaveniach ▸ Automatizácie."
+            "value" : "Kým je zapnutý extra jas, najjasnejšie miesta obrazu HDR nemôžu prekročiť zjasnenú bielu. V Nastaveniach ▸ Automatizácie sa Overbright môže pozastavovať pri videu na celej obrazovke a pri apkách, ktoré vyberiete."
           }
         },
         "sl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ko je vklopljena dodatna svetlost, najsvetlejši deli slike HDR ne morejo preseči posvetljene bele. Overbright se začasno ustavi pri celozaslonskem videu in predvajalnikih videa; druge aplikacije dodate v Nastavitvah ▸ Avtomatizacije."
+            "value" : "Ko je vklopljena dodatna svetlost, najsvetlejši deli slike HDR ne morejo preseči posvetljene bele. V Nastavitvah ▸ Avtomatizacije se lahko Overbright začasno ustavi pri celozaslonskem videu in pri aplikacijah, ki jih izberete."
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "När extra ljusstyrka är på kan HDR-högdagrar inte bli ljusare än det förstärkta vita. Overbright pausar för video i helskärm och för videospelare – lägg till andra appar i Inställningar ▸ Automatiseringar."
+            "value" : "När extra ljusstyrka är på kan HDR-högdagrar inte bli ljusare än det förstärkta vita. I Inställningar ▸ Automatiseringar kan Overbright pausa för video i helskärm och för appar du väljer."
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ขณะที่เปิดความสว่างเพิ่มเติมอยู่ ส่วนที่สว่างของ HDR จะสว่างเกินสีขาวที่เพิ่มความสว่างแล้วไม่ได้ Overbright จะหยุดพักสำหรับวิดีโอเต็มหน้าจอและแอปเล่นวิดีโอ เพิ่มแอปอื่นได้ใน การตั้งค่า ▸ การทำงานอัตโนมัติ"
+            "value" : "ขณะที่เปิดความสว่างเพิ่มเติมอยู่ ส่วนที่สว่างของ HDR จะสว่างเกินสีขาวที่เพิ่มความสว่างแล้วไม่ได้ ใน การตั้งค่า ▸ การทำงานอัตโนมัติ คุณสามารถให้ Overbright หยุดพักสำหรับวิดีโอเต็มหน้าจอและแอปที่คุณเลือกได้"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ek parlaklık açıkken HDR vurguları parlaklaştırılmış beyazın üstüne çıkamaz. Overbright tam ekran videoda ve video oynatıcılarda duraklar; başka uygulamaları Ayarlar ▸ Otomasyonlar bölümünde ekleyin."
+            "value" : "Ek parlaklık açıkken HDR vurguları parlaklaştırılmış beyazın üstüne çıkamaz. Ayarlar ▸ Otomasyonlar bölümünde Overbright’ın tam ekran videoda ve seçtiğiniz uygulamalarda duraklamasını sağlayabilirsiniz."
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Поки ввімкнено додаткову яскравість, яскраві ділянки HDR не можуть бути яскравішими за підсилений білий. Overbright призупиняється для повноекранного відео та відеоплеєрів; інші програми можна додати в розділі Параметри ▸ Автоматизація."
+            "value" : "Поки ввімкнено додаткову яскравість, яскраві ділянки HDR не можуть бути яскравішими за підсилений білий. У розділі Параметри ▸ Автоматизація Overbright може призупинятися для повноекранного відео та вибраних вами програм."
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Khi độ sáng bổ sung đang bật, vùng sáng HDR không thể vượt quá màu trắng đã được làm sáng. Overbright tạm dừng với video toàn màn hình và trình phát video; hãy thêm ứng dụng khác trong Cài đặt ▸ Tự động hóa."
+            "value" : "Khi độ sáng bổ sung đang bật, vùng sáng HDR không thể vượt quá màu trắng đã được làm sáng. Trong Cài đặt ▸ Tự động hóa, Overbright có thể tạm dừng với video toàn màn hình và các ứng dụng bạn chọn."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "额外亮度开启时，HDR高光无法超过已提亮的白色。Overbright会在全屏视频和视频播放器中暂停；可在“设置”▸“自动化”中添加其他App。"
+            "value" : "额外亮度开启时，HDR高光无法超过已提亮的白色。在“设置”▸“自动化”中，可以让Overbright在全屏视频和你选择的App中暂停。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "開啟額外亮度時，HDR高光無法超過增亮後的白色。Overbright會在全螢幕影片和影片播放器播放時暫停；你可以在「設定」▸「自動化」中加入其他App。"
+            "value" : "開啟額外亮度時，HDR高光無法超過增亮後的白色。你可以在「設定」▸「自動化」中，讓Overbright在全螢幕影片和你選擇的App中暫停。"
           }
         }
       }

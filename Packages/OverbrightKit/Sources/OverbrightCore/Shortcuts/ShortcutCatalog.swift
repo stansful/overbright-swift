@@ -1,9 +1,8 @@
-// OverbrightCore/Shortcuts/ShortcutCatalog.swift — the global shortcuts and their defaults. ARCHITECTURE.md §3.7, D17.
+// OverbrightCore/Shortcuts/ShortcutCatalog.swift — the global shortcuts, none bound by default. ARCHITECTURE.md §3.7, D17.
 
 /// Every global shortcut ships unbound (the owner's rule, 2026-10-20): nothing is registered until the user records a
-/// combination in Settings ▸ Shortcuts. Key codes are kVK_ANSI_* POSITIONS; the key caps shown in copy and menus come
-/// from the current keyboard layout (`ShortcutCenter.displayString`). Suggestions when recording should still avoid
-/// ⌃⌥Space (input sources), ⌃⌥⌘8 and ⌃⌥⌘,/. (accessibility) and ⌃⌥⌘V / ⌃⌥⌘D, another booster's defaults (D17).
+/// combination in Settings ▸ Shortcuts, whose recorder warns about enabled macOS shortcuts (D17). The key caps shown
+/// in copy and menus come from the current keyboard layout (`ShortcutCenter.displayString`).
 public nonisolated enum ShortcutCatalog {
     /// Every global shortcut, in menu order, all without a default combination.
     public static let all: [GlobalShortcut] = [

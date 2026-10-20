@@ -10,12 +10,19 @@ import Observation
 import OverbrightCore
 import OverbrightDesign
 import OverbrightPanelUI
+import OverbrightTestSupport
 import Testing
 @testable import OverbrightAppShell
 
 @MainActor @Suite struct StatusMenuTests {
-    private func services(_ name: String) throws -> OverbrightServices {
-        try #require(ScriptedStatuses.services(named: name))
+    /// The scripted state `name`; `bound` records the sample shortcuts (none ships bound, D17).
+    private func services(_ name: String, bound: Bool = false) throws -> OverbrightServices {
+        let services = try #require(ScriptedStatuses.services(named: name))
+        if bound {
+            let shortcuts = try #require(services.shortcuts as? PreviewShortcutCenter)
+            for (id, combo) in SampleShortcuts.bindings { shortcuts.set(id, combo) }
+        }
+        return services
     }
 
     private func kinds(_ rows: [StatusMenuRow]) -> [String] {
@@ -48,13 +55,15 @@ import Testing
         let builtIn = try #require(model.cards[DisplayFixture.Keys.builtIn])
         let dimmed = "  " + (CardMenu.title(of: .dimmed(light: 0.25, isChecked: false), card: builtIn) ?? "")
         #expect(model.dump() == [
-            "Turn Off Overbright ⌃⌥⌘B", "Dim All Displays ⌃⌥⌘9", "---",
+            "Turn Off Overbright", "Dim All Displays", "---",                       // no shortcut ships bound (D17)
             "Built-in Retina Display ▸", "  Standard", "  Indoor", "  ✓ Bright Room", "  Sunlight", "  Max", "  ---",
             dimmed, "  ---", "  Don’t Use on This Display",
             "MPG322UX OLED ▸", "  ✓ Standard", "  Bright Room", "  Max", "  ---", dimmed, "  ---",
             "  Use Extra Brightness on This Display",
             "---", "Pause for 1 Hour", "Fill Light", "---", "Settings… ⌘,", "Help", "Quit Overbright ⌘Q",
         ])
+        let bound = StatusMenuModel.make(services: try services("boosting", bound: true)).dump()
+        #expect(bound.prefix(2) == ["Turn Off Overbright ⌃⌥⌘B", "Dim All Displays ⌃⌥⌘9"])
     }
 
     @Test func aBannerPutsItsSentenceAndActionFirst() throws {
@@ -145,6 +154,9 @@ import Testing
     @Test func keyEquivalentsShowTheLiveBindingOrNothing() throws {
         let services = try services("boosting")
         let shortcuts = try #require(services.shortcuts as? PreviewShortcutCenter)
+        #expect(MenuKeyEquivalent.of(.toggle, in: shortcuts) == nil)                       // unbound by default (D17)
+        shortcuts.set(.toggle, SampleShortcuts.toggle)                                      // recorded: ⌃⌥⌘B
+        shortcuts.set(.dimToggle, SampleShortcuts.dimToggle)
         let toggle = try #require(MenuKeyEquivalent.of(.toggle, in: shortcuts))
         #expect(toggle.key == "b" && toggle.modifiers == [.control, .option, .command])
         shortcuts.set(.toggle, KeyCombo(keyCode: 9, modifiers: [.command, .shift]))       // rebound to ⇧⌘V
@@ -185,7 +197,7 @@ import Testing
     // MARK: AppKit menu
 
     @Test func theAppKitMenuMatchesTheRowsAndActsThroughTheEngine() throws {
-        let services = try services("boosting")
+        let services = try services("boosting", bound: true)
         let model = StatusMenuModel.make(services: services)
         var panelShown = 0
         let menu = StatusMenuRender.menu(model, services: services) { panelShown += 1 }
