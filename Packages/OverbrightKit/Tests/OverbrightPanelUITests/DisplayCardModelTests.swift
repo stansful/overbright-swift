@@ -255,8 +255,9 @@ import Testing
         let anchor = HelpEntry.Anchor.noExtraRange
         #expect(kinds([], phase: .failed(.headroomNeverArrived), tries: 1) == [.tryAgain, .learnMore(anchor)])
         #expect(kinds([], phase: .failed(.headroomNeverArrived), tries: 2) == [.tryAgain, .runSelfTest, .learnMore(anchor)])
+        // Compatibility mode is unavailable (§7.5): even a display carrying the advisory is not offered it.
         #expect(kinds([], phase: .failed(.headroomNeverArrived), tries: 2, advisories: [.compatibilityModeAdvised])
-            == [.tryAgain, .runSelfTest, .useCompatibilityMode, .learnMore(anchor)])
+            == [.tryAgain, .runSelfTest, .learnMore(anchor)])
         #expect(kinds([.boostNotEnabled]) == [.turnOnExtraBrightness])
         #expect(kinds([.safeLimit]) == [.choosePeak])
         #expect(kinds([.oledLimit]) == [.choosePeak])
@@ -267,7 +268,7 @@ import Testing
         #expect(kinds([.tripped(.foreignTableAtLaunch)]) == [.openDisplaySettings])
         let booster = ConflictingApp(entryID: "b", severity: .booster, bundleID: nil, processID: 1, displayName: "B")
         let colorApp = ConflictingApp(entryID: "c", severity: .gammaWriter, bundleID: nil, processID: 2, displayName: "C")
-        #expect(kinds([.tripped(.attributedDrift(booster))]) == [.continueInCompatibilityMode(booster)])   // not Continue
+        #expect(kinds([.tripped(.attributedDrift(booster))]).isEmpty)   // not Continue, nor Compatibility mode (§7.5)
         #expect(CardAction.continueInCompatibilityMode(booster).title == CardAction.useCompatibilityMode.title)
         #expect(kinds([.tripped(.attributedDrift(colorApp))]) == [.continueAnyway(colorApp)])
         #expect(kinds([.headroom]).isEmpty)

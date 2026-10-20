@@ -1,5 +1,6 @@
 // OverbrightPolicyTests/DomainResolverTests.swift — the transfer domain actually used, and the compatibility models
-// that make the reducer default to the overlay. ARCHITECTURE.md §5.2, §6.1 steps 4–5, §7.5.
+// that made the reducer default to the overlay (unused while Compatibility mode is disabled). ARCHITECTURE.md §5.2,
+// §6.1 steps 4–5, §7.5.
 import Foundation
 import OverbrightCore
 import Testing
@@ -58,12 +59,17 @@ import Testing
         #expect(decided(record(.linear))?.domain == .linear)
         #expect(decided(record(.linear), potential: 6)?.domain == .encoded)                  // preset changed
         #expect(decided(record(.linear, build: "26A123"))?.domain == .encoded)               // macOS updated
-        #expect(decided(record(.linear), mechanism: .overlay)?.domain == .encoded)           // other mechanism
+        // Compatibility mode is unavailable (§7.5): a stored overlay preference uses the table, so a table record applies.
+        #expect(decided(record(.linear), mechanism: .overlay)?.domain == .linear)
+        #expect(decided(record(.linear, mechanism: .overlay), mechanism: .overlay)?.domain == .encoded)  // other mechanism
         #expect(decided(record(.inconclusive))?.domain == .encoded && decided(nil)?.domain == .encoded)
-        // On a compatibility model the automatic mechanism is the overlay, so a table record no longer applies.
+        // On a compatibility model the automatic mechanism is the table too, so its table record still applies.
         let neo = DisplayFixture.neoIgnoresWrites
-        let display = PolicyTestInputs.display(neo.displays[0], calibration: record(.linear, build: neo.machine.osBuild))
+        let calibration = record(.linear, build: neo.machine.osBuild)
+        let display = PolicyTestInputs.display(neo.displays[0], calibration: calibration)
         let decision = BoostPolicy.reduce(PolicyTestInputs.input([display], machine: neo.machine)).builtIn
-        #expect(decision?.mechanism == .overlay && decision?.domain == .encoded)
+        #expect(decision?.mechanism == .table)
+        #expect(decision?.domain == TransferDomainResolver.effectiveDomain(
+            calibration, mechanism: .table, machine: neo.machine, potential: neo.displays[0].headroom.potential))
     }
 }

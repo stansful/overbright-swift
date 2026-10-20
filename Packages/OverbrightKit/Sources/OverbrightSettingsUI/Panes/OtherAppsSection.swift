@@ -46,7 +46,7 @@ struct OtherAppsSection: View {
             ForEach(apps, id: \.processID) { app in
                 OtherAppRow(app: app, settings: services.settings)
             }
-            if apps.contains(where: { $0.severity == .booster }) {
+            if MechanismPreference.overlayIsAvailable, apps.contains(where: { $0.severity == .booster }) {
                 Text("Overbright can’t run next to another brightness app on the color table. Use Compatibility mode on a display to run alongside it.",
                      bundle: .module, comment: "Settings ▸ Advanced: note under a running brightness app")
                     .font(.footnote)

@@ -104,8 +104,9 @@ def check(directory, fixture):
                 problems.append(f"{label}: {role} state {state(display['phase'])} != {expected_state}")
     if dumps.get("off", {}).get("triggerWindows") != 0:
         problems.append("off: trigger windows left open")
-    if fixture == "neo-ignores-writes" and any(d["gammaWrites"] for d in dumps.values()):
-        problems.append("Compatibility mode wrote a table")
+    # Compatibility mode is disabled (ARCHITECTURE.md §7.5, 2026-10-20): this Mac uses the color table like any other.
+    if fixture == "neo-ignores-writes" and not dumps.get("on", {}).get("gammaWrites"):
+        problems.append("on: no color table written (Compatibility mode is disabled)")
     return problems
 
 

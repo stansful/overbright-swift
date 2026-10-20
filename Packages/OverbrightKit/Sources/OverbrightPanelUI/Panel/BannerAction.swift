@@ -23,14 +23,20 @@ public nonisolated enum BannerAction: Hashable, Sendable {
     /// Settings ▸ Automations ▸ Schedule.
     case changeHours
 
+    /// Compatibility mode for a booster's banner, only while the overlay is available (it is not since 2026-10-20:
+    /// the banner then explains the stop without an action).
+    private static func compatibility(_ app: ConflictingApp) -> BannerAction? {
+        MechanismPreference.overlayIsAvailable ? .useCompatibilityMode(app) : nil
+    }
+
     /// The action of `banner`, nil when it has none (heat).
     public static func primary(for banner: Banner) -> BannerAction? {
         switch banner {
         case .userPaused: .resume
-        case .conflict(let app): app.severity == .booster ? .useCompatibilityMode(app) : .continueAnyway(app)
+        case .conflict(let app): app.severity == .booster ? compatibility(app) : .continueAnyway(app)
         case .foreignTableAtLaunch: .openDisplaySettings
         case .flickerStop(let display), .unattributedDrift(let display): .tryAgain(display)
-        case .attributedDrift(let app, _): app.severity == .booster ? .useCompatibilityMode(app) : .continueAnyway(app)
+        case .attributedDrift(let app, _): app.severity == .booster ? compatibility(app) : .continueAnyway(app)
         case .focusOff: .openFocusSettings
         case .thermalCritical: nil
         case .lowPowerMode, .battery, .onBattery: .changePowerRules

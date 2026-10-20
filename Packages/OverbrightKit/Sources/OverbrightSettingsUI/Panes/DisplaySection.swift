@@ -160,13 +160,13 @@ struct DisplaySection: View {
 
     private func methodRow(_ value: RowValue) -> some View {
         let editor = DisplayPreferencesEditor(settings: services.settings)
-        let selection = Binding<MechanismPreference>(get: { model.preferences.mechanism }, set: { preference in
+        let shown = DisplayMethodText.shown(model.preferences.mechanism)
+        let selection = Binding<MechanismPreference>(get: { shown }, set: { preference in
             editor.update(model.key, name: model.name) { $0.mechanism = preference }
         })
         return ChoiceRow(info: value.info, selection: selection,
-                         choices: MechanismPreference.allCases.map { Choice(value: $0, label: $0.localizedName()) },
-                         footnote: DisplayMethodText.footnote(preference: model.preferences.mechanism,
-                                                              effective: model.mechanism),
+                         choices: MechanismPreference.selectableCases.map { Choice(value: $0, label: $0.localizedName()) },
+                         footnote: DisplayMethodText.footnote(preference: shown, effective: model.mechanism),
                          style: .menu, isDefault: value.isDefault(), reset: value.reset)
     }
 

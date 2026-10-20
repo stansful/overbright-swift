@@ -71,9 +71,9 @@ import Testing
         #expect(!kinds(paused.rows).contains("pause"))
     }
 
-    /// The first line names the display a stop happened on, and a booster's stop offers Compatibility Mode
-    /// (C-PANEL-9, C-PANEL-8).
-    @Test func theStatusLineNamesTheDisplayAndABoostersStopOffersCompatibilityMode() throws {
+    /// The first line names the display a stop happened on; a booster's stop offers no action while Compatibility mode
+    /// is unavailable (C-PANEL-9, C-PANEL-8, ARCHITECTURE.md §7.5), a color app's offers Continue Anyway.
+    @Test func theStatusLineNamesTheDisplayAndABoostersStopOffersNoAction() throws {
         let services = try services("flicker-stop")
         let boost = try #require(services.boost as? PreviewBoostControl)
         let builtIn = DisplayFixture.Keys.builtIn
@@ -83,8 +83,8 @@ import Testing
         boost.status.banner = .attributedDrift(booster, display: builtIn)
         let model = StatusMenuModel.make(services: services)
         #expect(model.dump()[0].contains(name))
-        #expect(model.rows[1] == .bannerAction(.useCompatibilityMode(booster)))
-        #expect(model.dump()[1] == "Use Compatibility Mode")
+        #expect(!model.rows.contains { if case .bannerAction = $0 { true } else { false } })
+        #expect(!model.dump().contains("Use Compatibility Mode"))
         let colorApp = ConflictingApp(entryID: "c", severity: .gammaWriter, bundleID: nil, processID: 2, displayName: "C")
         boost.status.banner = .attributedDrift(colorApp, display: builtIn)
         #expect(StatusMenuModel.make(services: services).rows[1] == .bannerAction(.continueAnyway(colorApp)))

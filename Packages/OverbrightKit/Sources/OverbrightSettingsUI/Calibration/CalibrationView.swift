@@ -80,7 +80,7 @@ private struct CalibrationCard: View {
             }
             paragraph(CalibrationCopy.brighterQuestion)
         case .notBrighter:
-            paragraph(CalibrationCopy.notBrighterQuestion)
+            if MechanismPreference.overlayIsAvailable { paragraph(CalibrationCopy.notBrighterQuestion) }
         case .sweepIntro:
             paragraph(CalibrationCopy.sweepInstructions())
         case .sweep:
@@ -116,8 +116,12 @@ private struct CalibrationCard: View {
         case .notBrighter:
             cancelButton
             Spacer()
-            button(CalibrationCopy.keepColorTable) { model.keepColorTable() }
-            button(CalibrationCopy.useCompatibilityMode) { model.useCompatibilityMode() }.keyboardShortcut(.defaultAction)
+            if MechanismPreference.overlayIsAvailable {
+                button(CalibrationCopy.keepColorTable) { model.keepColorTable() }
+                button(CalibrationCopy.useCompatibilityMode) { model.useCompatibilityMode() }.keyboardShortcut(.defaultAction)
+            } else {
+                button(CalibrationCopy.keepColorTable) { model.keepColorTable() }.keyboardShortcut(.defaultAction)
+            }
         case .sweepIntro:
             cancelButton
             Spacer()

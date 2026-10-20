@@ -6,6 +6,13 @@ import OverbrightCore
 
 /// The Method footnotes.
 enum DisplayMethodText {
+    /// The choice the Method pop-up shows for a stored `preference`: a Compatibility-mode choice stored before the
+    /// overlay was disabled (`MechanismPreference.overlayIsAvailable`) shows as Color table, the method Policy uses
+    /// for it, so the pop-up never selects a choice it does not offer.
+    static func shown(_ preference: MechanismPreference) -> MechanismPreference {
+        MechanismPreference.selectableCases.contains(preference) ? preference : .table
+    }
+
     /// The footnote for the chosen `preference`, given the mechanism the display uses now; nil for Color table.
     static func footnote(preference: MechanismPreference, effective: Mechanism) -> String? {
         switch preference {

@@ -105,10 +105,11 @@ import Testing
         #expect(stopsBothHalves(.conflict(booster), system: system(booster)))
         #expect(stopsBothHalves(.conflict(colors), system: system(colors)))
         #expect(stopsBothHalves(.conflict(booster), system: system(colors, booster)))       // S1 before S2
-        // S1 continues only on an overlay display, and never through "always continue".
+        // S1 continues only on an overlay display, which no display uses while Compatibility mode is unavailable
+        // (§7.5: a stored overlay preference uses the table), and never through "always continue".
         #expect(builtIn(brightRoom, system: system(booster), continued: ["booster-x"])?.target == .neutral)
-        #expect(builtIn(brightRoom, system: system(booster), continued: ["booster-x"], mechanism: .overlay)?.boostGain
-                != nil)
+        #expect(builtIn(brightRoom, system: system(booster), continued: ["booster-x"], mechanism: .overlay)?.target
+                == .neutral)
         #expect(builtIn(brightRoom, settings: PolicySettings(alwaysContinueEntryIDs: ["booster-x"]), system: system(booster),
                         mechanism: .overlay)?.target == .neutral)
         // S2 continues for this session or always.
@@ -397,11 +398,20 @@ import Testing
         #expect(builtIn(LevelPosition(-1))?.dimLight == 0.02)
     }
 
-    @Test func mechanismPerDisplay() {
-        #expect(builtIn(brightRoom, mechanism: .overlay)?.mechanism == .overlay)
+    /// Compatibility mode is unavailable (`MechanismPreference.overlayIsAvailable`, 2026-10-20: the overlay turned the
+    /// owner's built-in white): Automatic on a compatibility model, an explicit Compatibility-mode preference and a
+    /// "did not get brighter" record all give the table, and no display carries the advisory (§7.5).
+    @Test func overlayIsNeverChosenWhileUnavailable() {
+        #expect(!MechanismPreference.overlayIsAvailable)
+        #expect(builtIn(brightRoom, mechanism: .overlay)?.mechanism == .table)
+        #expect(builtIn(brightRoom, mechanism: .table)?.mechanism == .table)
         let neo = DisplayFixture.neoIgnoresWrites
         let onNeo = decide([T.display(neo.displays[0])], machine: neo.machine).builtIn
-        #expect(onNeo?.mechanism == .overlay && onNeo?.boostGain != nil)
-        #expect(decide([T.display(neo.displays[0], mechanism: .table)], machine: neo.machine).builtIn?.mechanism == .table)
+        #expect(onNeo?.mechanism == .table && onNeo?.boostGain != nil)
+        #expect(onNeo?.eligibility.advisories.contains(.compatibilityModeAdvised) == false)
+        #expect(decide([T.display(neo.displays[0], mechanism: .overlay)], machine: neo.machine).builtIn?.mechanism
+                == .table)
+        let notBrighter = T.display(calibration: T.record(.notBrighter))
+        #expect(decide([notBrighter]).builtIn?.mechanism == .table)
     }
 }

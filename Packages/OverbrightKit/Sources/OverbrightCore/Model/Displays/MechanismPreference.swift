@@ -8,4 +8,16 @@ public nonisolated enum MechanismPreference: String, Codable, Sendable, CaseIter
     case table
     /// Always the Compatibility-mode overlay.
     case overlay
+
+    /// Whether Compatibility mode (the full-screen multiply overlay, technique C) may be used at all. Off since
+    /// 2026-10-20: on the owner's MacBook Pro (M4 Max, macOS 27.0.1) the overlay turned the built-in display white
+    /// the moment it boosted, because WindowServer does not blend a window's `multiplyBlendMode` layer with the
+    /// windows beneath it. Until a blend that works across windows is proven on hardware, Policy uses the table for
+    /// every display, a stored `overlay` preference included, and no surface offers the overlay (D4, §7.5).
+    public static let overlayIsAvailable = false
+
+    /// The choices Settings offers: without the overlay, Automatic and Color table only.
+    public static var selectableCases: [MechanismPreference] {
+        overlayIsAvailable ? allCases : allCases.filter { $0 != .overlay }
+    }
 }

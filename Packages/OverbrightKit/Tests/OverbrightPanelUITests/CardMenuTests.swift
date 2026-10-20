@@ -119,18 +119,17 @@ import Testing
         let commands = PanelCommands(services: services, source: .panel, confirmOLED: { _ in true },
                                      openURL: { opened.append($0) })
         let banner = try #require(services.boost.status.banner)
-        let action = try #require(BannerAction.primary(for: banner))
-        guard case .useCompatibilityMode(let app) = action else { Issue.record("S1 offers Compatibility mode"); return }
-        action.perform(commands, status: services.boost.status)
+        guard case .conflict(let app) = banner, app.severity == .booster else { Issue.record("an S1 banner"); return }
+        // The action itself still does what its button said (switch to the overlay, continue next to the app); no
+        // banner offers it while Compatibility mode is unavailable (`aBoostersStopOffersNoCompatibilityMode`).
+        BannerAction.useCompatibilityMode(app).perform(commands, status: services.boost.status)
         #expect(commands.preferences(of: builtIn).mechanism == .overlay)
         #expect(boost.calls == ["continueAnyway(\(app.entryID))"])
         #expect(BannerAction.primary(for: .thermalCritical) == nil)
         #expect(BannerAction.primary(for: .battery(percent: 10, threshold: 20)) == .changePowerRules)
         #expect(BannerAction.primary(for: .flickerStop(display: builtIn)) == .tryAgain(builtIn))
-        // A stop caused by a booster offers Compatibility mode, never Continue anyway; a color app's offers it (§7.2).
-        let s1 = ConflictingApp(entryID: "b", severity: .booster, bundleID: nil, processID: 1, displayName: "B")
+        // A stop caused by a color app offers Continue anyway; a booster's never does (§7.2).
         let s2 = ConflictingApp(entryID: "c", severity: .gammaWriter, bundleID: nil, processID: 2, displayName: "C")
-        #expect(BannerAction.primary(for: .attributedDrift(s1, display: builtIn)) == .useCompatibilityMode(s1))
         #expect(BannerAction.primary(for: .attributedDrift(s2, display: builtIn)) == .continueAnyway(s2))
         BannerAction.openFocusSettings.perform(commands, status: services.boost.status)
         #expect(opened == [SettingsLinks.systemFocus].compactMap { $0 })
@@ -138,12 +137,16 @@ import Testing
         #expect(boost.calls.last == "resume(panel)")
     }
 
-    /// A booster's drift stop on a card (C-PANEL-8): the chip offers "Use Compatibility mode", never Continue anyway,
-    /// and performing it both switches that display to the overlay and continues the app, the two things the reducer's
-    /// S1 rule needs to let the display through (ARCHITECTURE.md §7.2); what the commands did is fed back into it.
-    @Test func theChipsCompatibilityModeLetsABoostersDisplayThrough() throws {
+    /// A booster on a card or in the banner while Compatibility mode is unavailable (`MechanismPreference
+    /// .overlayIsAvailable`, ARCHITECTURE.md §7.2, §7.5): the banner explains the stop without an action, the drift
+    /// chip offers nothing (never Continue anyway, and no longer Compatibility mode), and the reducer keeps blocking
+    /// that display even with an overlay preference stored and the app continued, because Policy uses the table.
+    @Test func aBoostersStopOffersNoCompatibilityMode() throws {
         let (services, boost) = try setup("boosting")
         let booster = ConflictingApp(entryID: "b", severity: .booster, bundleID: nil, processID: 1, displayName: "B")
+        #expect(!MechanismPreference.overlayIsAvailable)
+        #expect(BannerAction.primary(for: .conflict(booster)) == nil)
+        #expect(BannerAction.primary(for: .attributedDrift(booster, display: builtIn)) == nil)
         var status = services.boost.status
         let index = try #require(status.displays.firstIndex { $0.key == builtIn })
         status.displays[index].decision?.reasons = [.tripped(.attributedDrift(booster))]
@@ -151,13 +154,9 @@ import Testing
         let model = try card(services, builtIn)
         #expect(model.chipReason == .tripped(.attributedDrift(booster)))
         let commands = PanelCommands(services: services, source: .panel, confirmOLED: { _ in true }, openURL: { _ in })
-        let actions = CardChip.actions(for: model, isMasterOn: true, commands: commands)
-        #expect(actions.map(\.title) == [CardAction.useCompatibilityMode.title])
-        try #require(actions.count == 1)
-        actions[0].perform()
-        #expect(boost.calls == ["continueAnyway(\(booster.entryID))"])
-        #expect(commands.preferences(of: builtIn).mechanism == .overlay)
-        // The reducer over that display, next to the running booster: blocked before, let through after.
+        #expect(CardChip.kinds(for: model, isMasterOn: true).isEmpty)
+        #expect(CardChip.actions(for: model, isMasterOn: true, commands: commands).isEmpty)
+        // The reducer over that display, next to the running booster: blocked, whatever was stored or continued.
         let display = DisplayFixture.builtinXDRLidOpen.displays[0]
         try #require(display.key == builtIn)
         func reasons(_ preferences: DisplayPreferences, continued: Set<String>) -> [LimitReason] {
@@ -175,12 +174,9 @@ import Testing
                                     continuedEntryIDs: continued)
             return BoostPolicy.reduce(input).displays[builtIn]?.reasons ?? []
         }
-        let continued = Set(boost.calls.compactMap { call -> String? in
-            call.hasPrefix("continueAnyway(") ? String(call.dropFirst("continueAnyway(".count).dropLast()) : nil
-        })
         #expect(reasons(DisplayPreferences(), continued: []).contains(.conflict(booster)))
-        #expect(!reasons(commands.preferences(of: builtIn), continued: continued).contains(.conflict(booster)))
-        #expect(reasons(DisplayPreferences(), continued: continued).contains(.conflict(booster)))   // continue alone
+        #expect(reasons(DisplayPreferences(mechanism: .overlay), continued: [booster.entryID]).contains(.conflict(booster)))
+        #expect(reasons(DisplayPreferences(), continued: [booster.entryID]).contains(.conflict(booster)))
     }
 }
 

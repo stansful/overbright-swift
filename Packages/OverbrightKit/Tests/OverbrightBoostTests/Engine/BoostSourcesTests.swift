@@ -89,9 +89,15 @@ import Testing
 
     /// On that path too the read matters (real Policy): the battery is below the guard by the time of the request, the
     /// reads see it before the ramp's first step, and the overlay never asks for EDR nor shows a factor above 1 (this
-    /// holds even without the read before reducing: `setBoostActive(true)`'s read re-reduces before that step).
+    /// holds even without the read before reducing: `setBoostActive(true)`'s read re-reduces before that step). The
+    /// real reducer picks the table while Compatibility mode is unavailable (§7.5), so its decisions are handed to the
+    /// engine with the overlay mechanism: the engine's overlay path stays under test.
     @Test func anOverlayDimRampSwitchedToABoostSeesTheBatteryOfNow() async throws {
-        let h = EngineHarness(decide: BoostPolicy.reduce)
+        let h = EngineHarness(decide: { input in
+            var decision = BoostPolicy.reduce(input)
+            for key in decision.displays.keys { decision.displays[key]?.mechanism = .overlay }
+            return decision
+        })
         h.setPreferences { $0.mechanism = .overlay }
         await h.start()
         h.engine.setLevel(LevelPosition(-0.5), for: h.builtIn, source: .panel)

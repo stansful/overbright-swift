@@ -150,11 +150,8 @@ enum DiagnosticsReport {
         let preferences = inputs.settings[DisplaySettings.perDisplay][facts.ref.key] ?? DisplayPreferences()
         let eligibility = EligibilityClassifier.classify(facts, preferences: preferences, reading: reading,
                                                          machine: inputs.machine)
-        let mechanism: Mechanism = switch preferences.mechanism {
-        case .automatic: eligibility.defaultMechanism
-        case .table: .table
-        case .overlay: .overlay
-        }
+        let mechanism = EligibilityClassifier.effectiveMechanism(preferences.mechanism,
+                                                                 defaultMechanism: eligibility.defaultMechanism)
         entry["verdict"] = verdict(eligibility.verdict)
         entry["advisories"] = eligibility.advisories.map(\.rawValue)
         entry["boostEnabled"] = preferences.boostEnabled ?? eligibility.defaultBoostEnabled

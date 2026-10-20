@@ -29,13 +29,16 @@ public nonisolated enum EligibilityClassifier {
                                 machine: MachineIdentity) -> EligibilityResult {
         let oled = isOLED(facts, override: preferences.oled)
         let verdict = verdict(facts, isOLED: oled, reading: reading)
-        let advised = CompatibilityModels.tableWritesIgnored(machine)
+        let advised = MechanismPreference.overlayIsAvailable && CompatibilityModels.tableWritesIgnored(machine)
         let potential = reading?.potential
         let notBrighter = preferences.calibration.map { record in
             record.outcome == .notBrighter
                 && isValid(record, mechanism: .table, machine: machine, potential: potential)
         } ?? false
-        let defaultMechanism: Mechanism = advised || notBrighter ? .overlay : .table
+        // Without Compatibility mode (`MechanismPreference.overlayIsAvailable`) a "did not get brighter" record keeps
+        // the table too: the record stays, and the overlay returns as the default once it is available again.
+        let overlayDefault = advised || (MechanismPreference.overlayIsAvailable && notBrighter)
+        let defaultMechanism: Mechanism = overlayDefault ? .overlay : .table
         let mechanism = effectiveMechanism(preferences.mechanism, defaultMechanism: defaultMechanism)
 
         var advisories: [Advisory] = []
@@ -74,7 +77,8 @@ public nonisolated enum EligibilityClassifier {
 
     /// The mechanism a display uses: an explicit preference wins; `automatic` takes the class default (§6.1 step 4).
     public static func effectiveMechanism(_ preference: MechanismPreference, defaultMechanism: Mechanism) -> Mechanism {
-        switch preference {
+        guard MechanismPreference.overlayIsAvailable else { return .table }
+        return switch preference {
         case .automatic: defaultMechanism
         case .table: .table
         case .overlay: .overlay

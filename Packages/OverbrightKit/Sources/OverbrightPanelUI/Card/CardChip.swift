@@ -47,7 +47,9 @@ public enum CardChip {
         if isMasterOn, case .failed(.headroomNeverArrived) = card.phase {
             guard card.failedTries >= 2 else { return [.tryAgain, .learnMore(HelpEntry.Anchor.noExtraRange)] }
             var actions: [CardAction] = [.tryAgain, .runSelfTest]
-            if card.advisories.contains(.compatibilityModeAdvised) { actions.append(.useCompatibilityMode) }
+            if MechanismPreference.overlayIsAvailable, card.advisories.contains(.compatibilityModeAdvised) {
+                actions.append(.useCompatibilityMode)
+            }
             return actions + [.learnMore(HelpEntry.Anchor.noExtraRange)]
         }
         switch card.chipReason {
@@ -58,7 +60,9 @@ public enum CardChip {
         case .fullScreenVideo?, .fullScreenApp?, .game?: return [.changeRules]
         case .pausedApp?: return [.editApps]
         case .tripped(.attributedDrift(let app))?:
-            return app.severity == .booster ? [.continueInCompatibilityMode(app)] : [.continueAnyway(app)]
+            return app.severity == .booster
+                ? (MechanismPreference.overlayIsAvailable ? [.continueInCompatibilityMode(app)] : [])
+                : [.continueAnyway(app)]
         case .tripped(.foreignTableAtLaunch)?: return [.openDisplaySettings]
         case .tripped?: return [.tryAgain]
         default: return []

@@ -319,6 +319,20 @@ import Testing
         #expect(!DisplaySectionModel.isValid(nil, mechanism: .table, machine: machine, potential: 16))
     }
 
+    /// Compatibility mode is unavailable (`MechanismPreference.overlayIsAvailable`, ARCHITECTURE.md §7.5): Method offers
+    /// Automatic and Color table only; a Compatibility-mode choice stored earlier shows as Color table, the method Policy
+    /// uses for it, without the overlay's footnote; and search no longer finds the row by the overlay's name.
+    @Test func settingsOffersNoCompatibilityMode() {
+        #expect(!MechanismPreference.overlayIsAvailable)
+        #expect(MechanismPreference.selectableCases == [.automatic, .table])
+        #expect(DisplayMethodText.shown(.overlay) == .table)
+        #expect(DisplayMethodText.shown(.automatic) == .automatic && DisplayMethodText.shown(.table) == .table)
+        #expect(DisplayMethodText.footnote(preference: DisplayMethodText.shown(.overlay), effective: .table) == nil)
+        let method = DisplaysRows.method(builtIn, name: "Built-in")
+        #expect(!method.keywords.contains(Mechanism.overlay.localizedName()))
+        #expect(method.keywords.contains(Mechanism.table.localizedName()))
+    }
+
     @Test func theMethodFootnoteSaysWhatAutomaticChose() {
         let automatic = DisplayMethodText.footnote(preference: .automatic, effective: .table)
         let advised = DisplayMethodText.footnote(preference: .automatic, effective: .overlay)
