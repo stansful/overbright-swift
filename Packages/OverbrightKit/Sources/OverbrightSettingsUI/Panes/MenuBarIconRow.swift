@@ -20,7 +20,7 @@ struct MenuBarIconRow: View {
                      footnote: String(localized: "When it’s hidden, open Overbright from Finder or Spotlight to see Settings.",
                                       bundle: .module, comment: "Settings ▸ General: footnote of Show menu bar icon"))
         }
-        .toggleStyle(.switch)
+        .toggleStyle(.accentSwitch)
         .controlSize(.small)
         .alert(Text("Hide the menu bar icon?", bundle: .module, comment: "Settings ▸ General: title of the question before hiding the menu bar icon"),
                isPresented: $confirmingHide) {

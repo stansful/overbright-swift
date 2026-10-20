@@ -526,7 +526,7 @@ Every state below is a named status in PanelUI's `ScriptedStatuses` (`--qa-state
 
 ### 7.2 Conventions (Cranny's, carried over)
 
-- `Form { … }.formStyle(.grouped)`; `Toggle` with `.switch` and `.controlSize(.small)`; segmented pickers for ≤ 4 options, pop-ups otherwise; sliders always show their value with its unit and ticks at meaningful stops. As built (WP14): Settings' sliders (Fill Light's Width, Warmth and Brightness) have no stop worth a tick, so they draw none (a tick per step put 27 dots under Width); the value settles on whole steps, every track has the same width, and words for the ends sit under the track (Cool · Warm).
+- `Form { … }.formStyle(.grouped)`; `Toggle` with `.switch` and `.controlSize(.small)`; segmented pickers for ≤ 4 options, pop-ups otherwise; sliders always show their value with its unit and ticks at meaningful stops. As built (WP14): Settings' sliders (Fill Light's Width, Warmth and Brightness) have no stop worth a tick, so they draw none (a tick per step put 27 dots under Width); the value settles on whole steps, every track has the same width, and words for the ends sit under the track (Cool · Warm). As built (energy E3, 2026-10-21): the switches (Settings and Welcome) are Design's `AccentSwitch`, as the panel's master switch, accent while on whether or not the window is key, and the sliders are `AccentSlider`, as the Fill Light card's (focus and ← / → by a twentieth of the range, VoiceOver adjusts by the same step): the system `.switch` and `Slider` render their Liquid Glass knob with in-process Metal, whose state stayed after the window closed and woke the app every 3 s (§17).
 - Every non-obvious row has a one-line footnote in `.secondary`.
 - A 6-pt accent dot before the label marks a changed value; every row with a value has **Reset to Default** in its context menu; every pane footer has **Reset ‹Pane›…** (confirmation §12.9); Reset All is in Advanced, destructive, confirmed, and undoable until the window closes.
 - **Search** matches pane names, row labels and keywords ("HDR", "XDR", "nits", "brighter", "dim", "battery", "shortcut", "camera", "login", "OLED", "flicker", "colors", "quit"); a result opens the pane, scrolls to the row and highlights it with an accent wash fading over 1 s. Deep links `pane#row` serve chips, banners, the menu and Help. As built (WP14): the index is rebuilt as soon as a row appears or goes with a setting or app state (From / To, Battery level, OLED idle, the icon warning), and a row that acts when linked to (Run Self-Test… opens its sheet) acts only for a deep link, never for a search hit.
@@ -1032,11 +1032,11 @@ Displays use more power when brighter: that is the product, and the README says 
 | HUD, a press every 2 s / every 0.25 s | 6.2 % → 3.8 % / 16.2 % → 1.9 % CPU | — |
 | Fill Light card | peak 301 → 34 MB (no Metal on the default path) | pass |
 | Back to off | ≤ 0.01 wake-ups/s; 40 → 29 MB | pass (was a miss) |
-| After Settings, Help and Welcome have closed | 51–56 → 48–52 MB; a wake-up every 3.0 s remains (0.32/s) | **miss** (< 40 MB, ≤ 0.05/s) |
+| After Settings, Help and Welcome have closed | 51–56 → 48–52 MB, a wake-up every 3.0 s (0.32/s); energy E3 (2026-10-21, Debug build, `make perf`'s `windows` run): own wake-ups 0.33 → 0.00 (Settings), 0.33 → 0.03 (Help), 0.23 → 0.10/s (Welcome, irregular), none periodic; 64 → 60 MB (Settings, Help), 66 → 56 MB (Welcome) | wake-ups pass; **memory miss** (< 40 MB) |
 | Screen-parameters event | 5.6 → 0.25 ms CPU each (−95 %) | — |
 | 17-minute soak | passed: 0 own wake-ups in the 373 s final off phase; 30 MB at the end | pass |
 
-Open misses: the panel drag (SwiftUI/AttributeGraph re-rendering; an unreviewed attempt waits on branch `energy/panel-drag`), and the memory plus a 3 s periodic wake-up left behind after the Settings, Help or Welcome windows close.
+Open misses: the panel drag (SwiftUI/AttributeGraph re-rendering; an unreviewed attempt waits on branch `energy/panel-drag`), and the memory left behind after the Settings, Help or Welcome windows close: their windows, SwiftUI graphs and state are released, but SwiftUI's type metadata and caches stay (≈ 15 MB allocated after every Settings pane, 6.5 MB of it Swift metadata) and the allocator keeps ≈ 22 MB of fragmented Malloc Small pages (`malloc_zone_pressure_relief` hands back nothing). The 3 s wake-up is gone (energy E3).
 
 ---
 

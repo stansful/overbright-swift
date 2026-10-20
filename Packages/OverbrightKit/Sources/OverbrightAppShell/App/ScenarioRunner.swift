@@ -44,15 +44,19 @@ final class ScenarioRunner {
     private let record: (StatusSummary) -> Void
     private let quit: () -> Void
     private let panel: (Bool) -> Void
+    private let window: (ScenarioWindow, Bool, String?) -> Void
     private var nextProcessID: Int32 = 90_000
     /// The summaries `dump` recorded, in order.
     private(set) var summaries: [StatusSummary] = []
 
     /// A runner over `rig`; `wait` passes time (real sleeps in the app, a manual clock in tests), `record` receives
-    /// every `dump`, `quit` ends the app, `panel` opens (true) or closes the app's panel.
+    /// every `dump`, `quit` ends the app, `panel` opens (true) or closes the app's panel, `window` opens (true, at a
+    /// pane, anchor or step) or closes Settings, Help or Welcome.
     init(rig: Rig, wait: @escaping (Duration) async -> Void, record: @escaping (StatusSummary) -> Void = { _ in },
-         quit: @escaping () -> Void = {}, panel: @escaping (Bool) -> Void = { _ in }) {
+         quit: @escaping () -> Void = {}, panel: @escaping (Bool) -> Void = { _ in },
+         window: @escaping (ScenarioWindow, Bool, String?) -> Void = { _, _, _ in }) {
         self.rig = rig; self.wait = wait; self.record = record; self.quit = quit; self.panel = panel
+        self.window = window
     }
 
     /// Runs `steps` in order; `loop` starts them again (until the task is cancelled or a `quit`).
@@ -103,6 +107,7 @@ final class ScenarioRunner {
              .fullScreen, .focus, .conflict:
             performSignal(step)
         case .panel(let open): panel(open)
+        case let .window(name, open, at): window(name, open, at)
         case .wait, .dump, .loop, .quit: break
         }
     }

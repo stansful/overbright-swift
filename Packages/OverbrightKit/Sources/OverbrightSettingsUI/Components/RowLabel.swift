@@ -30,7 +30,7 @@ struct RowLabel: View {
         }
     }
     .formStyle(.grouped)
-    .toggleStyle(.switch)
+    .toggleStyle(.accentSwitch)
     .controlSize(.small)
     .frame(width: 520, height: 140)
 }

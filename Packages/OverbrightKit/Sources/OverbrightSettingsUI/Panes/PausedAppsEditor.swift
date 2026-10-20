@@ -27,7 +27,7 @@ struct PausedAppsEditor: View {
                 }
                 Toggle(isOn: settings.binding(AutomationSettings.pauseForListedApps)) { Text(verbatim: value.info.title) }
                     .labelsHidden()
-                    .toggleStyle(.switch)
+                    .toggleStyle(.accentSwitch)
                     .controlSize(.small)
             }
         } label: {

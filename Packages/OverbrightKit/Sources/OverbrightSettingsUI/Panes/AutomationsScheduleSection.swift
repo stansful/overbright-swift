@@ -21,7 +21,7 @@ struct AutomationsScheduleSection: View {
                          footnote: String(localized: "Outside these hours Overbright stays at Standard. Dimming still works.",
                                           bundle: .module, comment: "Settings ▸ Automations: footnote of the schedule switch"))
             }
-            .toggleStyle(.switch)
+            .toggleStyle(.accentSwitch)
             .controlSize(.small)
             .settingRow(AutomationsRows.schedule, settings: settings, key: AutomationSettings.schedule)
             if let schedule {

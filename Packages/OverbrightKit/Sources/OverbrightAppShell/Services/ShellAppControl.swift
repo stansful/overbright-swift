@@ -88,6 +88,29 @@ private let log = Log.logger(.app)
     /// Closes the panel (Debug QA scenarios: `panel close`).
     func closePanel() { controllers?.panel.close() }
 
+    #if DEBUG
+    /// Debug QA scenarios (`settings|help|welcome open [where]|close`): opens Settings at a pane, Help at an anchor or
+    /// Welcome at a step without taking focus from whoever uses the Mac (a visual QA Welcome, which records nothing),
+    /// or closes it as its close button would.
+    func qaWindow(_ window: ScenarioWindow, open: Bool, at place: String?) {
+        guard let controllers else { return }
+        if open {
+            switch window {
+            case .settings: controllers.settings.preparedWindow(at: place).orderFrontRegardless()
+            case .help: controllers.help.preparedWindow(anchor: place).orderFrontRegardless()
+            case .welcome: controllers.welcome.preparedWindow(at: place, isVisualQA: true).orderFrontRegardless()
+            }
+        } else {
+            switch window {
+            case .settings: controllers.settings.window?.performClose(nil)
+            case .help: controllers.help.window?.performClose(nil)
+            case .welcome: controllers.welcome.window?.performClose(nil)
+            }
+        }
+        log.info("QA: \(window.rawValue, privacy: .public) \(open ? "open" : "close", privacy: .public)")
+    }
+    #endif
+
     /// Settings at `pane` ("pane" or "pane#row").
     func openSettings(_ pane: String?) { controllers?.settings.show(pane: pane) }
 

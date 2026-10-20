@@ -15,7 +15,7 @@ struct ToggleRow: View {
         Toggle(isOn: settings.binding(key)) {
             RowLabel(title: info.title, footnote: footnote)
         }
-        .toggleStyle(.switch)
+        .toggleStyle(.accentSwitch)
         .controlSize(.small)
         .settingRow(info, settings: settings, key: key)
     }

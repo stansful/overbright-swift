@@ -49,6 +49,10 @@
 #              conflict-catalogue app keeps the engine from boosting: the engine line names it (by catalogue entry
 #              only, as the app's own dump does) and such a boosted phase is not judged. Its cost follows the apps
 #              launched and quit on the Mac (the apps column), so run it alternately with its base
+#   windows    off, then the panel opened and closed 5 times, then every Settings pane 3 s each and Settings closed,
+#              Help opened and closed, every Welcome step opened and closed (`settings|help|welcome open|close`: no
+#              focus is taken, Welcome records nothing), each followed by an off phase: what a window leaves behind
+#              after it closes (DESIGN.md §17's Off row: no periodic wake-up, under 40 MB)
 #
 #   make debug; make perf                              # → build/logs/perf/<variant>/
 #   make perf RUNS="ui events" APP=build/Overbright-opt.app VARIANT=opt
@@ -116,7 +120,7 @@ SPLIT = [("conflicts", r"ConflictMatcher|RunningAppsConflictProbe"),
          ("SwiftUI/AG", r"AttributeGraph|SwiftUI|AG::"),
          ("CA/AppKit", r"QuartzCore|CA::|AppKit|NSView|NSWindow")]
 ORDER = {"launch": 0, "base": 1, "ruleoff": 2, "two": 3, "ui": 4, "events": 5, "panelcycle": 6, "timeline": 7,
-         "signals": 8}
+         "signals": 8, "windows": 9}
 
 def budget_of(phase):
     if phase.startswith("off"):
@@ -699,7 +703,13 @@ script_for() {
                "$pre" "$TIMELINE" ;;
     signals) printf '%s; %s; on; keep; wait 12; %s; level bright-room; wait 3; dim 40; keep; wait 5; %s; off; wait 3; dump done; wait 2; quit' \
                "$pre" "$(steady off)" "$(steady boosted)" "$(steady dimmed)" ;;
-    *) die "unknown run $1 (launch, base, ruleoff, two, ui, events, panelcycle, timeline, signals)" ;;
+    windows) printf '%s; %s; %s wait 3; %s; %s settings close; wait 5; %s; help open; wait 4; help close; wait 5; %s; %s wait 5; %s; quit' \
+               "$pre" "$(steady off-1)" "$(repeat 5 "panel open; wait 3; panel close; wait 3;")" "$(steady off-after-panel)" \
+               "$(for p in general displays automations shortcuts fillLight advanced about; do printf 'settings open %s; wait 3; ' "$p"; done)" \
+               "$(steady off-after-settings)" "$(steady off-after-help)" \
+               "$(for s in hello displays defaults findIt done; do printf 'welcome open %s; wait 3; welcome close; wait 2; ' "$s"; done)" \
+               "$(steady off-after-welcome)" ;;
+    *) die "unknown run $1 (launch, base, ruleoff, two, ui, events, panelcycle, timeline, signals, windows)" ;;
   esac
 }
 fixture_for() { case "$1" in two|timeline) echo russian-names ;; *) echo builtin-xdr-lid-open ;; esac; }
@@ -877,7 +887,7 @@ run_one() {
 mkdir -p "$OUT"
 runs=("$@")
 (( ${#runs[@]} )) || runs=(launch base ruleoff two)
-KNOWN_RUNS="launch base ruleoff two ui events panelcycle timeline signals"
+KNOWN_RUNS="launch base ruleoff two ui events panelcycle timeline signals windows"
 for run in "${runs[@]}"; do                                        # an unknown run fails before anything starts
   [[ " $KNOWN_RUNS " == *" $run "* ]] || die "unknown run $run ($KNOWN_RUNS)"
 done

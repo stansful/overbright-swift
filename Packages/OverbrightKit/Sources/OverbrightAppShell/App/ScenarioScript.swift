@@ -13,10 +13,13 @@
 //   low-power on|off | battery <percent>|adapter | thermal nominal|fair|serious|critical
 //   full-screen video|app|none <display> | focus off|leave|<level> | conflict booster|writer|conditional|none
 //   wait <seconds> | dump <label> | panel open|close | loop | quit
+//   settings open [pane[#row]] | help open [anchor] | welcome open [step] | settings|help|welcome close
 //
 // Displays are named by fixture role: built-in, msi, pro, studio, sidecar, projector. Nothing here reaches a real
 // display: a script runs only when the ports are the Core fakes (`ScenarioRunner.Rig`). `panel` opens or closes the
-// app's panel (the soak closes it for its off phases and opens it once per cycle).
+// app's panel (the soak closes it for its off phases and opens it once per cycle); `settings`, `help` and `welcome`
+// open a window without taking focus and close it as its close button would (the soak opens Settings once per cycle,
+// `make perf`'s `windows` run each of them).
 #if DEBUG
 import Foundation
 import OverbrightCore
@@ -84,8 +87,20 @@ enum ScenarioScript {
         case "wait": return first.flatMap { Double($0) }.map { .wait(seconds: $0) }
         case "dump": return .dump(args.joined(separator: " "))
         case "panel": return first == "open" ? .panel(true) : first == "close" ? .panel(false) : nil
+        case "settings", "help", "welcome": return window(ScenarioWindow(rawValue: word), args)
         case "loop": return .loop
         case "quit": return .quit
+        default: return nil
+        }
+    }
+
+    /// `open [where]` or `close` of a window.
+    private static func window(_ window: ScenarioWindow?, _ args: [String]) -> ScenarioStep? {
+        guard let window else { return nil }
+        switch (args.first, args.count) {
+        case ("open", 1): return .window(window, open: true)
+        case ("open", 2): return .window(window, open: true, at: args[1])
+        case ("close", 1): return .window(window, open: false)
         default: return nil
         }
     }

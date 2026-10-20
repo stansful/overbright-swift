@@ -28,7 +28,7 @@ struct DisplayBoostSwitchRow: View {
                      footnote: String(localized: "Dimming below the minimum works either way.", bundle: .module,
                                       comment: "Settings ▸ Displays: footnote of Use extra brightness on this display"))
         }
-        .toggleStyle(.switch)
+        .toggleStyle(.accentSwitch)
         .controlSize(.small)
         .settingRow(value)
         .oledNotice(isPresented: $asksOLED, idleMinutes: services.settings[AutomationSettings.oledIdleMinutes]) {

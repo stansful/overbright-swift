@@ -29,7 +29,16 @@ enum ScenarioStep: Equatable {
     case dump(String)
     /// The panel under the icon opens (true) or closes; the app's QA hooks act on it, tests record it.
     case panel(Bool)
+    /// Settings, Help or Welcome opens (true; at a pane, anchor or step, else its default) or closes as its close
+    /// button would; the app's QA hooks act on it without taking focus, tests record it (`make perf`'s `windows`
+    /// run, the soak's cycle: what a window leaves behind after it closes, DESIGN.md §17).
+    case window(ScenarioWindow, open: Bool, at: String? = nil)
     case loop
     case quit
+}
+
+/// The windows a scenario opens and closes.
+enum ScenarioWindow: String, Equatable, CaseIterable {
+    case settings, help, welcome
 }
 #endif
