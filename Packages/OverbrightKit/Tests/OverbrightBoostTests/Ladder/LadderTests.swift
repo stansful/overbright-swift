@@ -122,26 +122,44 @@ import Testing
         #expect(StrategyCache.key(display, osBuild: "26A434") == "\(display.rawValue)|26A434")
     }
 
+    /// "Heavier" is later in the automatic order (5, 4, 3, 6, 7): rung 3 replaces rung 5 after two failed arms.
     @Test func heavierRungReplacesOnlyAfterTwoFailedArms() {
         let cache = StrategyCache()
-        cache.recordWin(rung: 1, for: display, osBuild: "b")
-        cache.recordFailure(rung: 1, for: display, osBuild: "b", quarantined: false)
+        cache.recordWin(rung: 5, for: display, osBuild: "b")
+        cache.recordFailure(rung: 5, for: display, osBuild: "b", quarantined: false)
         cache.recordWin(rung: 3, for: display, osBuild: "b")
-        #expect(cache.record(for: display, osBuild: "b")?.rung == 1)         // one failed arm: kept
-        cache.recordFailure(rung: 1, for: display, osBuild: "b", quarantined: false)
+        #expect(cache.record(for: display, osBuild: "b")?.rung == 5)         // one failed arm: kept
+        cache.recordFailure(rung: 5, for: display, osBuild: "b", quarantined: false)
         cache.recordWin(rung: 3, for: display, osBuild: "b")
         #expect(cache.record(for: display, osBuild: "b")?.rung == 3)         // the second: replaced
         #expect(cache.record(for: display, osBuild: "b")?.failures == 0)
+        cache.recordFailure(rung: 3, for: display, osBuild: "b", quarantined: false)
+        cache.recordFailure(rung: 3, for: display, osBuild: "b", quarantined: false)
+        cache.recordWin(rung: 4, for: display, osBuild: "b")                 // earlier in the order: never
+        #expect(cache.record(for: display, osBuild: "b")?.rung == 3)
+    }
+
+    /// A tagged rung cached before it left the automatic ladder never fails again, so the next win replaces it; a
+    /// tagged win under Advanced ▸ Trigger method never replaces an automatic rung.
+    @Test func taggedRungsGiveWayToTheAutomaticLadder() {
+        let cache = StrategyCache()
+        cache.recordWin(rung: 1, for: display, osBuild: "b")
+        cache.recordWin(rung: 5, for: display, osBuild: "b")
+        #expect(cache.record(for: display, osBuild: "b")?.rung == 5)
+        cache.recordFailure(rung: 5, for: display, osBuild: "b", quarantined: false)
+        cache.recordFailure(rung: 5, for: display, osBuild: "b", quarantined: false)
+        cache.recordWin(rung: 2, for: display, osBuild: "b")
+        #expect(cache.record(for: display, osBuild: "b")?.rung == 5)
     }
 
     @Test func quarantinedFailuresDoNotCount() {
         let cache = StrategyCache()
-        cache.recordWin(rung: 1, for: display, osBuild: "b")
-        cache.recordFailure(rung: 1, for: display, osBuild: "b", quarantined: true)
-        cache.recordFailure(rung: 1, for: display, osBuild: "b", quarantined: true)
+        cache.recordWin(rung: 5, for: display, osBuild: "b")
+        cache.recordFailure(rung: 5, for: display, osBuild: "b", quarantined: true)
+        cache.recordFailure(rung: 5, for: display, osBuild: "b", quarantined: true)
         cache.recordWin(rung: 4, for: display, osBuild: "b")
-        #expect(cache.record(for: display, osBuild: "b")?.rung == 1)
-        cache.recordFailure(rung: 2, for: display, osBuild: "b", quarantined: false)   // not the cached rung
+        #expect(cache.record(for: display, osBuild: "b")?.rung == 5)
+        cache.recordFailure(rung: 4, for: display, osBuild: "b", quarantined: false)   // not the cached rung
         #expect(cache.record(for: display, osBuild: "b")?.failures == 0)
     }
 
