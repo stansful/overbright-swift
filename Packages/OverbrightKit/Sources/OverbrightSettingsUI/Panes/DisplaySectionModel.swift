@@ -67,19 +67,15 @@ struct DisplaySectionModel {
             eligibility = EligibilityClassifier.classify(facts, preferences: preferences, reading: status.lastReading,
                                                          machine: machine)
         } else {
-            eligibility = EligibilityResult(verdict: .checking, advisories: [], defaultBoostEnabled: false,
-                                            defaultMechanism: .table)
+            eligibility = EligibilityResult(verdict: .checking, advisories: [], defaultBoostEnabled: false)
         }
-        // The mechanism the display uses now (the reducer's, else the preference over the class default).
-        let mechanism = status.decision?.mechanism
-            ?? EligibilityClassifier.effectiveMechanism(preferences.mechanism, defaultMechanism: eligibility.defaultMechanism)
         isLinked = linkLevels
         level = linkLevels ? linkedLevel : preferences.level
         top = Self.top(verdict: eligibility.verdict, facts: facts, capMode: preferences.capMode, isOLED: isOLED)
         peakTop = Self.top(verdict: eligibility.verdict, facts: facts, capMode: .peak, isOLED: isOLED)
         presets = PresetVisibility.visiblePresets(top: top)
         readout = Readout.values(for: status, isMasterOn: isMasterOn)
-        calibrationIsValid = Self.isValid(preferences.calibration, mechanism: mechanism, machine: machine,
+        calibrationIsValid = Self.isValid(preferences.calibration, machine: machine,
                                           potential: status.lastReading?.potential)
         osVersion = machine.osPatch > 0 ? "\(machine.osMajor).\(machine.osMinor).\(machine.osPatch)"
             : "\(machine.osMajor).\(machine.osMinor)"
@@ -175,13 +171,11 @@ struct DisplaySectionModel {
         return min(cap.gain, top)
     }
 
-    /// A record still applies while the macOS build and the method match and, when a reading is there, the potential is
-    /// within 5 % of the one measured (ARCHITECTURE.md §5.2, DESIGN.md §9 "Validity"). Without a reading the potential
+    /// A record still applies while the macOS build matches and, when a reading is there, the potential is within 5 %
+    /// of the one measured (ARCHITECTURE.md §5.2, DESIGN.md §9 "Validity"). Without a reading the potential
     /// cannot be compared, so the record is not called stale for that alone.
-    static func isValid(_ record: CalibrationRecord?, mechanism: Mechanism, machine: MachineIdentity,
-                        potential: Double?) -> Bool {
-        guard let record else { return false }
-        guard record.mechanism == mechanism, record.osBuild == machine.osBuild else { return false }
+    static func isValid(_ record: CalibrationRecord?, machine: MachineIdentity, potential: Double?) -> Bool {
+        guard let record, record.osBuild == machine.osBuild else { return false }
         guard let potential else { return true }
         return abs(potential - record.potentialAtTest)
             <= EligibilityClassifier.calibrationPotentialTolerance * record.potentialAtTest

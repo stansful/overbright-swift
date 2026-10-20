@@ -3,11 +3,11 @@
 
 /// A `HeadroomPort` whose readings follow each display's `HeadroomScript` over a `TimeSource` (normally a
 /// `ManualTimeSource`): idle H, a pre-held value that can leave, and the grant that requests from `FakeTriggerFactory`
-/// (triggers and overlays) reach after the scripted delay and ramp. Tests drop or move H with `setOverride` (a lock
-/// shield) and `setGrant(_:for:over:)` (thermal limits, the brightness keys moving H monotonically).
+/// reach after the scripted delay and ramp. Tests drop or move H with `setOverride` (a lock shield) and
+/// `setGrant(_:for:over:)` (thermal limits, the brightness keys moving H monotonically).
 @MainActor public final class ScriptedHeadroom: HeadroomPort {
     private struct Request {
-        let strategy: TriggerStrategy?
+        let strategy: TriggerStrategy
         let presentedAt: MonotonicInstant
     }
     private struct GrantChange {
@@ -79,12 +79,12 @@
     public func currentHeadroom(of key: DisplayKey) -> Double? {
         states[key].map { current($0, at: time.now) }
     }
-    /// Number of live requests (triggers and overlays with an EDR request) on `key`.
+    /// Number of live requests (presented triggers) on `key`.
     public func requestCount(on key: DisplayKey) -> Int { states[key]?.requests.count ?? 0 }
 
     // MARK: Requests (FakeTriggerFactory)
 
-    func requestStarted(_ id: UInt64, strategy: TriggerStrategy?, on key: DisplayKey) {
+    func requestStarted(_ id: UInt64, strategy: TriggerStrategy, on key: DisplayKey) {
         guard states[key]?.requests[id] == nil else { return }
         states[key]?.requests[id] = Request(strategy: strategy, presentedAt: time.now)
     }

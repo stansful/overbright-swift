@@ -12,7 +12,7 @@ import Testing
         let reading = HeadroomReading(display: display.facts.ref.id, current: script.grant,
                                       potential: potential ?? script.potential, reference: script.reference,
                                       time: MonotonicInstant(sinceOrigin: .zero))
-        return SDRWhiteSource.estimate(facts: display.facts, preferences: DisplayPreferences(), mechanism: .table,
+        return SDRWhiteSource.estimate(facts: display.facts, preferences: DisplayPreferences(),
                                        machine: DisplayFixture.ownerMachine, reading: reading)
     }
 

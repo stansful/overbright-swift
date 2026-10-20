@@ -185,7 +185,6 @@ import Testing
         let preferences = DisplayPreferencesEditor(settings: services.settings).preferences(of: display)
         #expect(session.calls.last == "finish(false)")
         #expect(preferences.calibration?.outcome == .notBrighter)
-        #expect(preferences.mechanism == DisplayPreferences().mechanism)
         #expect(begun() == 1)
         #expect(CalibrationCopy.result(.keptColorTable) != CalibrationCopy.result(.inconclusive))
     }

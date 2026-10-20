@@ -1,6 +1,6 @@
-// OverbrightTriggers/Windows/TriggerHost.swift — owns the one window of a trigger or overlay: layer hosting, occlusion
-// reporting, screen-change reporting, re-placement and teardown. ARCHITECTURE.md §3.6 (`TriggerHandle`,
-// `OverlayHandle`), §4.3 ("onScreenChange" row), §4.7, §7.1 ("Trigger occlusion, screen change"), §7.6.
+// OverbrightTriggers/Windows/TriggerHost.swift — owns the one window of a trigger: layer hosting, occlusion reporting,
+// screen-change reporting, re-placement and teardown. ARCHITECTURE.md §3.6 (`TriggerHandle`), §4.3 ("onScreenChange"
+// row), §4.7, §7.1 ("Trigger occlusion, screen change"), §7.6.
 // Thread: main. Both notifications are observed with `queue: .main`, so their blocks run on the main queue
 // (`MainActor.assumeIsolated` is used only there).
 import AppKit
@@ -8,14 +8,12 @@ import CoreGraphics
 import OverbrightCore
 import QuartzCore
 
-/// One trigger or overlay window on one display.
+/// One trigger window on one display.
 final class TriggerHost {
     /// Which frame the window takes on its screen.
     enum Shape: Hashable {
         /// The 1 pt trigger at `placement`, `edgePoints` on a side.
         case trigger(placement: TriggerPlacement, edgePoints: Double)
-        /// The Compatibility overlay: the whole screen, menu bar included.
-        case fullScreen
     }
 
     /// The display the window belongs to.
@@ -55,8 +53,6 @@ final class TriggerHost {
         switch shape {
         case .trigger(let placement, let edgePoints):
             return TriggerGeometry.triggerFrame(on: screen, placement: placement, edgePoints: edgePoints)
-        case .fullScreen:
-            return TriggerGeometry.overlayFrame(on: screen)
         }
     }
 

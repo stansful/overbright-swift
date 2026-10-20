@@ -12,10 +12,8 @@ public nonisolated struct DisplayStatus: Hashable, Sendable {
     public var decision: DisplayDecision?
     /// Light gain on screen right now (1 = Standard; < 1 dimmed).
     public var appliedGain: Double
-    /// Table factor written (or overlay factor) right now.
+    /// Table factor written right now.
     public var appliedFactor: Double
-    /// Table or overlay.
-    public var mechanism: Mechanism
     /// The trigger strategy holding, if any.
     public var strategy: TriggerStrategy?
     /// The newest headroom reading.
@@ -31,10 +29,10 @@ public nonisolated struct DisplayStatus: Hashable, Sendable {
     public var lastGrant: Double?
     /// A display's status.
     public init(key: DisplayKey, name: String, phase: EnginePhase, decision: DisplayDecision?, appliedGain: Double,
-                appliedFactor: Double, mechanism: Mechanism, strategy: TriggerStrategy?, lastReading: HeadroomReading?,
+                appliedFactor: Double, strategy: TriggerStrategy?, lastReading: HeadroomReading?,
                 sdrWhite: SDRWhiteEstimate?, failedTries: Int = 0, lastGrant: Double? = nil) {
         self.key = key; self.name = name; self.phase = phase; self.decision = decision; self.appliedGain = appliedGain
-        self.appliedFactor = appliedFactor; self.mechanism = mechanism; self.strategy = strategy
+        self.appliedFactor = appliedFactor; self.strategy = strategy
         self.lastReading = lastReading; self.sdrWhite = sdrWhite; self.failedTries = failedTries
         self.lastGrant = lastGrant
     }

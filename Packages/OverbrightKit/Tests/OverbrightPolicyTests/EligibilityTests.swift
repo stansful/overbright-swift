@@ -180,28 +180,24 @@ import Testing
     @Test func advisories() {
         let builtIn = classify(PolicyTestInputs.builtIn)
         #expect(builtIn.advisories == [.autoBrightnessInteracts, .notCalibrated])
-        #expect(builtIn.defaultMechanism == .table)
         #expect(classify(PolicyTestInputs.msi).advisories == [.oledCare, .notCalibrated])
         // macOS 25 or earlier: no auto-brightness advisory.
         let older = MachineIdentity(model: "Mac16,5", osBuild: "24A1", osMajor: 15, osMinor: 6, osPatch: 0)
         #expect(!classify(PolicyTestInputs.builtIn, machine: older).advisories.contains(.autoBrightnessInteracts))
-        // A Mac that ignores color table changes (§7.5): the table stays the default, and a display that can neither
-        // boost nor dim gets no advisory there either.
+        // A Mac that ignores color table changes (§7.5): a display that can neither boost nor dim gets no advisory
+        // there either.
         let neo = DisplayFixture.neoIgnoresWrites
-        #expect(classify(neo.displays[0], machine: neo.machine).defaultMechanism == .table)
         #expect(classify(DisplayFixture.sidecar.displays[1], machine: neo.machine).advisories.isEmpty)
         // Displays that cannot boost get no boost advisories.
         #expect(classify(DisplayFixture.mpg322uxHDROff.displays[0]).advisories.isEmpty)
     }
 
-    /// `notCalibrated` disappears only with a confirmed, still-valid record for the effective mechanism, which is the
-    /// table for every preference while Compatibility mode is unavailable; a valid "did not get brighter" record keeps
-    /// the table then too (§6.1 step 4, §7.5).
+    /// `notCalibrated` disappears only with a confirmed, still-valid record; a "did not get brighter" record confirms
+    /// nothing (§5.2).
     @Test func calibrationRecords() {
-        func advisories(_ record: CalibrationRecord?, mechanism: MechanismPreference = .automatic,
-                        potential: Double = 16) -> [Advisory] {
+        func advisories(_ record: CalibrationRecord?, potential: Double = 16) -> [Advisory] {
             let display = PolicyTestInputs.builtIn
-            return classify(display, preferences: DisplayPreferences(mechanism: mechanism, calibration: record),
+            return classify(display, preferences: DisplayPreferences(calibration: record),
                             reading: PolicyTestInputs.reading(display, potential: potential)).advisories
         }
         #expect(!advisories(PolicyTestInputs.record(.encoded)).contains(.notCalibrated))
@@ -210,18 +206,7 @@ import Testing
         #expect(advisories(PolicyTestInputs.record(.encoded, build: "26A123")).contains(.notCalibrated))
         #expect(advisories(PolicyTestInputs.record(.encoded), potential: 15.1).contains(.notCalibrated))
         #expect(!advisories(PolicyTestInputs.record(.encoded), potential: 16.7).contains(.notCalibrated))
-        // A stored Compatibility-mode preference uses the table: a table record applies, an overlay record does not.
-        #expect(!advisories(PolicyTestInputs.record(.encoded), mechanism: .overlay).contains(.notCalibrated))
-        #expect(advisories(PolicyTestInputs.record(.encoded, mechanism: .overlay), mechanism: .overlay)
-            .contains(.notCalibrated))
-
-        let notBrighter = DisplayPreferences(calibration: PolicyTestInputs.record(.notBrighter))
-        #expect(classify(PolicyTestInputs.builtIn, preferences: notBrighter).defaultMechanism == .table)
-        let stale = DisplayPreferences(calibration: PolicyTestInputs.record(.notBrighter, build: "26A123"))
-        #expect(classify(PolicyTestInputs.builtIn, preferences: stale).defaultMechanism == .table)
-        #expect(EligibilityClassifier.effectiveMechanism(.automatic, defaultMechanism: .overlay) == .table)
-        #expect(EligibilityClassifier.effectiveMechanism(.table, defaultMechanism: .overlay) == .table)
-        #expect(EligibilityClassifier.effectiveMechanism(.overlay, defaultMechanism: .table) == .table)
+        #expect(advisories(PolicyTestInputs.record(.notBrighter)).contains(.notCalibrated))
     }
 
     /// D8 and §4.5 invariant 10: the Russian-name fixture gives the same verdicts, advisories and defaults as the

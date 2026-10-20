@@ -1,13 +1,12 @@
-// OverbrightTriggers — the EDR trigger windows and the Compatibility-mode overlay. ARCHITECTURE.md D4, D22, §2.1
-// rule 6, §4.7, §7.5, §7.6, §10.5. Thread: main (AppKit windows, Core Animation, Metal layers); HLG still encoding
-// and verification run off the main actor in `@concurrent` functions (§8.1 rule 3).
+// OverbrightTriggers — the EDR trigger windows. ARCHITECTURE.md D4, D22, §2.1 rule 6, §4.7, §7.6, §10.5. Thread: main
+// (AppKit windows, Core Animation, Metal layers); HLG still encoding and verification run off the main actor in
+// `@concurrent` functions (§8.1 rule 3).
 //
 // What lives here:
 // - `SystemTriggerFactory` (public): the real `TriggerFactory` and a `ServiceLifecycle`; counts open windows for
 //   diagnostics (`triggerWindows`).
 // - The ladder's strategies, one handle type each: T1 `TaggedLayerTrigger`, T2/T3 `MetalClearTrigger`, T4
 //   `HLGStillTrigger` (over our own runtime-generated `HLGStillAsset`) and T4-alt `HLGSampleBufferTrigger`.
-// - `CompatibilityOverlay` (technique C, §7.5).
 // - The window recipe (`WindowRecipes`), the window owner (`TriggerHost`), the pure geometry (`TriggerGeometry`) and
 //   the EDR colour builders (`TaggedColor`).
 //

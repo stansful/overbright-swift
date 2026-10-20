@@ -11,7 +11,7 @@ public nonisolated struct PolicyInput: Hashable, Sendable {
     public var now: Date
     /// Local minute of day for the schedule (the engine computes it with the current calendar and time zone).
     public var minuteOfDay: Int
-    /// Model and OS: the compatibility-model list and calibration validity (`CompatibilityModels`, §5.2).
+    /// Model and OS: calibration validity (§5.2) and the auto-brightness advisory (macOS 26 and later).
     public var machine: MachineIdentity
     /// The flattened settings.
     public var settings: PolicySettings

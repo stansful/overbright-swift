@@ -3,7 +3,7 @@
 // Pure decisions (nonisolated, Foundation + Core only; no clocks, no I/O, no randomness, no strings):
 //   Math/          FactorMath, LevelMapping, StepMath, PresetVisibility (WP0a)
 //   Ceilings/      GainCeiling: liveCap and the helpers (WP0a), sliderTop and the SDR maximum (WP1)
-//   Domain/        TransferDomainResolver, CompatibilityModels (WP0a)
+//   Domain/        TransferDomainResolver, IgnoredTableWriteModels (WP0a)
 //   Tables/        TableClassifier: matchesBase / scaled / foreign / invalid against the profile base (D26)
 //   Eligibility/   EligibilityClassifier: verdict, advisories and class defaults (D8)
 //   Reducer/       BoostPolicy.reduce (D10, §6): DisplayReducer per display, BannerSelector, SymbolSelector

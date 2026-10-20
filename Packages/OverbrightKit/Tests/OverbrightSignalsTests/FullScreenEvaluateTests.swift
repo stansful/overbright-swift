@@ -126,7 +126,7 @@ import Testing
     }
 
     @Test func ourOwnWindowsAndTheDocksNeverCount() {
-        // The Compatibility overlay, Fill Light and calibration windows are full-screen windows of OUR process.
+        // The Fill Light and calibration windows are full-screen windows of OUR process.
         let ours = F.window(F.ourPID, 0, 0, 2560, 1440)
         #expect(evaluate([ours], [F.msiAlone], F.context(frontmost: F.ourPID)).fullScreenDisplays.isEmpty)
         #expect(evaluate([ours], [F.msiAlone], F.context(frontmost: F.ourPID)).frontmostDisplays.isEmpty)

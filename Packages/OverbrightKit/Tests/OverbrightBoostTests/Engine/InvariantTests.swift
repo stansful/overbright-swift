@@ -91,7 +91,7 @@ import Testing
 
     // MARK: 4 Zero work while off
 
-    /// Off and nothing dimmed: no trigger or overlay, no task, no sleeper, no polling, boost-only sources stopped.
+    /// Off and nothing dimmed: no trigger, no task, no sleeper, no polling, boost-only sources stopped.
     @Test func offMeansNoTasksNoWindows() async throws {
         let h = EngineHarness(fixture: .russianNames)
         await h.start()

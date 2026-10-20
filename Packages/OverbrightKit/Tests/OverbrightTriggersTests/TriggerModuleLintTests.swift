@@ -1,7 +1,7 @@
 // OverbrightTriggersTests/TriggerModuleLintTests.swift — source scans for the module's own acceptance rules
 // (ARCHITECTURE.md §10.5): no `.metal` file and no Metal library, function or pipeline API (D22); only the system
 // presenter orders a window in, and no test can reach it (§9.1, D24); EDR layer properties stay in this module's
-// strategy, surface and overlay files; only allowlisted values reach a `.public` log, so no error description does
+// strategy and clear-pass files; only allowlisted values reach a `.public` log, so no error description does
 // (§9.2 rule 8; the scan is `Support/PublicLogLint.swift`). API names are split in two here, so this file never matches
 // its own scans.
 import Foundation
@@ -149,9 +149,8 @@ import Testing
         let properties = ["preferredDynamic" + "Range", "wantsExtendedDynamicRange" + "Content",
                           "contents" + "Headroom", "AVPlayer" + "Layer"]
         let allowed: Set<String> = ["Strategies/TaggedLayerTrigger.swift", "Strategies/HLGStillTrigger.swift",
-                                    "Surfaces/MetalClearPass.swift", "Surfaces/MetalClearSurface.swift",
-                                    "Overlay/CompatibilityOverlay.swift"]
+                                    "Surfaces/MetalClearPass.swift"]
         let found = hits(properties, in: files(under: Self.sources), except: allowed)
-        #expect(found.isEmpty, "EDR surfaces are built only by the strategies, surfaces and the overlay: \(found)")
+        #expect(found.isEmpty, "EDR surfaces are built only by the strategies and the clear pass: \(found)")
     }
 }

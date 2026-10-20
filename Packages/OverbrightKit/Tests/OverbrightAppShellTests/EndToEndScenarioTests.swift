@@ -173,10 +173,8 @@ import Testing
         // Nothing stays open after off, and the counters are the fakes' (no real display is ever touched).
         #expect(dumps["off"]?.triggerWindows == 0, "\(fixture.rawValue)")
         if fixture == .neoIgnoresWrites {
-            // Compatibility mode is unavailable (`MechanismPreference.overlayIsAvailable`, ARCHITECTURE.md §7.5): this
-            // Mac uses the color table like any other.
-            #expect(!MechanismPreference.overlayIsAvailable)
-            #expect((dumps["on"]?.gammaWrites ?? 0) > 0, "the color table, not Compatibility mode")
+            // A Mac that ignores table writes uses the color table like any other (ARCHITECTURE.md §7.5).
+            #expect((dumps["on"]?.gammaWrites ?? 0) > 0, "the color table")
         }
     }
 

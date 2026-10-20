@@ -14,7 +14,7 @@ struct ShellPorts {
     var headroom: any HeadroomPort
     /// The online displays.
     var displays: any DisplayDirectory
-    /// Trigger and overlay windows.
+    /// Trigger windows.
     var triggers: any TriggerFactory
     /// The system snapshot and events (Displays' events are relayed into it).
     var signals: any SystemSignals

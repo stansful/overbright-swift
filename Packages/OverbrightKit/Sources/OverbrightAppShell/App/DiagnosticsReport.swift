@@ -34,7 +34,7 @@ enum DiagnosticsReport {
         var gamma: any GammaPort
         /// EDR values.
         var headroom: any HeadroomPort
-        /// Open trigger and overlay windows (counted).
+        /// Open trigger windows (counted).
         var triggers: any TriggerFactory
         /// The online displays (a read-only snapshot).
         var displays: [DisplayFacts]
@@ -66,7 +66,7 @@ enum DiagnosticsReport {
                          "signing": signing(), "controls": bundlesControlsExtension()]
         report["machine"] = ["model": inputs.machine.model, "osBuild": inputs.machine.osBuild,
                              "osVersion": "\(inputs.machine.osMajor).\(inputs.machine.osMinor).\(inputs.machine.osPatch)",
-                             "compatibilityModeAdvised": CompatibilityModels.tableWritesIgnored(inputs.machine)]
+                             "tableWritesIgnored": IgnoredTableWriteModels.tableWritesIgnored(inputs.machine)]
         report["simulatedFixture"] = inputs.simulatedFixture ?? NSNull()
         if inputs.includesBundleFacts {
             report["preferredLanguages"] = Locale.preferredLanguages
@@ -150,17 +150,14 @@ enum DiagnosticsReport {
         let preferences = inputs.settings[DisplaySettings.perDisplay][facts.ref.key] ?? DisplayPreferences()
         let eligibility = EligibilityClassifier.classify(facts, preferences: preferences, reading: reading,
                                                          machine: inputs.machine)
-        let mechanism = EligibilityClassifier.effectiveMechanism(preferences.mechanism,
-                                                                 defaultMechanism: eligibility.defaultMechanism)
         entry["verdict"] = verdict(eligibility.verdict)
         entry["advisories"] = eligibility.advisories.map(\.rawValue)
         entry["boostEnabled"] = preferences.boostEnabled ?? eligibility.defaultBoostEnabled
-        entry["mechanism"] = mechanism.rawValue
         entry["effectiveDomain"] = TransferDomainResolver.effectiveDomain(
-            preferences.calibration, mechanism: mechanism, machine: inputs.machine, potential: reading?.potential).rawValue
+            preferences.calibration, machine: inputs.machine, potential: reading?.potential).rawValue
         entry["calibration"] = preferences.calibration.map { record in
             ["outcome": record.outcome.rawValue,
-             "valid": EligibilityClassifier.hasValidCalibration(record, mechanism: mechanism, machine: inputs.machine,
+             "valid": EligibilityClassifier.hasValidCalibration(record, machine: inputs.machine,
                                                                  potential: reading?.potential)] as [String: Any]
         } ?? NSNull()
         return entry

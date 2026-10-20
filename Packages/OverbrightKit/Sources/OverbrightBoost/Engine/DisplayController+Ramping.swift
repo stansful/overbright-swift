@@ -21,7 +21,7 @@ extension DisplayController {
     /// Starts a ramp from the applied gain to `gain` (after the rate limiter's delay for an opposing transition).
     /// - Parameters:
     ///   - finalPhase: the phase when the ramp ends (nil keeps the phase: the dim factor returning to 1 while arming).
-    ///   - removesWindowsAtEnd: remove the trigger and overlay once the table is at or below the baseline.
+    ///   - removesWindowsAtEnd: remove the trigger once the table is at or below the baseline.
     ///   - rateLimited: false for Back to Standard and the ramped stop, which never wait (they always work, §4.9).
     func startRamp(to gain: Double, kind: RampPlanner.Kind? = nil, origin: Origin, finalPhase: EnginePhase?,
                    removesWindowsAtEnd: Bool = false, setsRampingPhase: Bool = true, rateLimited: Bool = true) {
@@ -92,25 +92,17 @@ extension DisplayController {
         case .idle:
             driftSlot.cancel(); burstSlot.cancel(); checkSlot.cancel()
             stopRebase()
-            if switchesMechanism {
-                switchesMechanism = false
-                mechanism = decision?.mechanism ?? mechanism
-                notify(needsReduction: true)
-                return
-            }
         default:
             break
         }
         notify()
     }
 
-    /// One write of light gain `gain` through `TableWriter` (or the overlay). False when nothing was written; a
-    /// refusal by a stale epoch starts the hang recovery, any other refusal lands on the baseline at once; a
-    /// WindowServer error leaves the applied state as it was (the caller lands or retries).
+    /// One write of light gain `gain` through `TableWriter`. False when nothing was written; a refusal by a stale
+    /// epoch starts the hang recovery, any other refusal lands on the baseline at once; a WindowServer error leaves
+    /// the applied state as it was (the caller lands or retries).
     func writeGain(_ gain: Double) -> Bool {
-        guard !isOffConsole, parameters.isSessionActive else { return false }
-        if mechanism == .overlay { return setOverlayGain(gain) }
-        guard let baseline else { return false }
+        guard !isOffConsole, parameters.isSessionActive, let baseline else { return false }
         let reading = gain > 1 + TableWriter.neutralTolerance ? takeReading() : nil
         do {
             let wasScaled = isScaledOrDimmed
@@ -139,34 +131,9 @@ extension DisplayController {
         }
     }
 
-    /// The overlay's factor for light gain `gain`, capped by the same interlock (`TableWriter.allowedGain`).
-    func setOverlayGain(_ gain: Double) -> Bool {
-        guard let overlay else { return false }
-        var applied = gain
-        if gain > 1 + TableWriter.neutralTolerance {
-            let reading = takeReading()
-            let request = writeRequest(gain, baseline: .identity(count: 2), reading: reading)
-            applied = (try? deps.writer.allowedGain(for: request, on: ref, reading: reading).appliedGain) ?? 1
-        }
-        // Exactly 1 at Standard: `tableFactor(1)` is 0.999…, which would end the overlay's EDR request.
-        let factor = applied >= 1 - TableWriter.neutralTolerance && applied <= 1 + TableWriter.neutralTolerance
-            ? 1 : FactorMath.tableFactor(forLightGain: applied, domain: domain)
-        do {
-            try overlay.setFactor(factor, headroomRequest: overlayRequest)
-        } catch {
-            deps.journal.record("overlay.failed", display: key, time: deps.time, category: .trigger)
-            return false
-        }
-        let wasScaled = isScaledOrDimmed
-        appliedGain = applied
-        appliedFactor = factor
-        if isScaledOrDimmed != wasScaled { notify() }
-        return true
-    }
-
     /// The gain the interlock allows for `gain` with a reading taken now (nil without a reading or a baseline).
     func allowedGain(for gain: Double) -> Double? {
-        guard let baseline = baseline ?? (mechanism == .overlay ? .identity(count: 2) : nil) else { return nil }
+        guard let baseline else { return nil }
         let reading = takeReading()
         return try? deps.writer.allowedGain(for: writeRequest(gain, baseline: baseline, reading: reading), on: ref,
                                             reading: reading).appliedGain

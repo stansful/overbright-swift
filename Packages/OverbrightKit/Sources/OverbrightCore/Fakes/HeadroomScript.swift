@@ -18,8 +18,6 @@ public nonisolated struct HeadroomScript: Hashable, Sendable {
     public var rampDuration: Duration
     /// Strategies macOS answers; nil = every strategy, empty = none (headroom never arrives).
     public var respondingStrategies: Set<TriggerStrategy>?
-    /// Whether a Compatibility-mode overlay's EDR request is answered.
-    public var overlayResponds: Bool
     /// Another source already holds EDR at this H (an HDR video, our own Fill Light) …
     public var preHeld: Double?
     /// … until this long after the script started; nil = it stays.
@@ -31,17 +29,16 @@ public nonisolated struct HeadroomScript: Hashable, Sendable {
     /// 1.14 s, docs/research/display-facts.md §3).
     public init(idle: Double = 1.0, potential: Double, reference: Double = 0, grant: Double,
                 responseDelay: Duration = .milliseconds(200), rampDuration: Duration = .seconds(1),
-                respondingStrategies: Set<TriggerStrategy>? = nil, overlayResponds: Bool = true,
-                preHeld: Double? = nil, preHeldLeavesAfter: Duration? = nil, hasOwnScreen: Bool = true) {
+                respondingStrategies: Set<TriggerStrategy>? = nil, preHeld: Double? = nil,
+                preHeldLeavesAfter: Duration? = nil, hasOwnScreen: Bool = true) {
         self.idle = idle; self.potential = potential; self.reference = reference; self.grant = grant
         self.responseDelay = responseDelay; self.rampDuration = rampDuration
-        self.respondingStrategies = respondingStrategies; self.overlayResponds = overlayResponds
+        self.respondingStrategies = respondingStrategies
         self.preHeld = preHeld; self.preHeldLeavesAfter = preHeldLeavesAfter; self.hasOwnScreen = hasOwnScreen
     }
 
-    /// Whether a request by `strategy` (nil = the overlay) is answered.
-    public func responds(to strategy: TriggerStrategy?) -> Bool {
-        guard let strategy else { return overlayResponds }
-        return respondingStrategies?.contains(strategy) ?? true
+    /// Whether a request by `strategy` is answered.
+    public func responds(to strategy: TriggerStrategy) -> Bool {
+        respondingStrategies?.contains(strategy) ?? true
     }
 }

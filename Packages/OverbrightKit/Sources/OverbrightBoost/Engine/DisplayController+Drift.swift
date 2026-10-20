@@ -71,7 +71,7 @@ extension DisplayController {
             recoverFromHang()
             return
         }
-        if mechanism == .table, isScaledOrDimmed, let baseline, let read = try? deps.gamma.read(ref.id) {
+        if isScaledOrDimmed, let baseline, let read = try? deps.gamma.read(ref.id) {
             // E″ (a ColorSync profile copy, `vcgt` parse and resample: half the tick on the real port) is computed only
             // when the verdict consults it, and the same fresh value goes to the adoption rules (§4.8 step 1).
             var profile: GammaTable?

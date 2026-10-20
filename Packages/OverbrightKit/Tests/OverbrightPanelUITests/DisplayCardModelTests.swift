@@ -18,12 +18,11 @@ import Testing
                         failedTries: Int = 0, requested: Double = 1, applied: Double = 1) -> DisplayStatus {
         let decision = verdict.map {
             DisplayDecision(key: facts.ref.key, target: target, reasons: reasons,
-                            eligibility: EligibilityResult(verdict: $0, advisories: [], defaultBoostEnabled: true,
-                                                           defaultMechanism: .table),
-                            mechanism: .table, domain: .encoded, requestedGain: requested)
+                            eligibility: EligibilityResult(verdict: $0, advisories: [], defaultBoostEnabled: true),
+                            domain: .encoded, requestedGain: requested)
         }
         return DisplayStatus(key: facts.ref.key, name: facts.name, phase: phase, decision: decision, appliedGain: applied,
-                             appliedFactor: 1, mechanism: .table, strategy: nil, lastReading: reading, sdrWhite: nil,
+                             appliedFactor: 1, strategy: nil, lastReading: reading, sdrWhite: nil,
                              failedTries: failedTries)
     }
 

@@ -336,8 +336,7 @@ extension DisplayCardView: Equatable {
     let services = OverbrightServices.preview()
     let status = ScriptedStatuses.status(named: "boosting")?.displays.first
         ?? DisplayStatus(key: DisplayFixture.Keys.builtIn, name: "Built-in Display", phase: .idle, decision: nil,
-                         appliedGain: 1, appliedFactor: 1, mechanism: .table, strategy: nil, lastReading: nil,
-                         sdrWhite: nil)
+                         appliedGain: 1, appliedFactor: 1, strategy: nil, lastReading: nil, sdrWhite: nil)
     DisplayCardView(status: status, isMasterOn: true, services: services)
         .frame(width: PanelLayout.cardWidth)
         .padding()

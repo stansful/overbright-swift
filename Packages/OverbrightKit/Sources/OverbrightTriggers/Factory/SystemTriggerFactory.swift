@@ -1,10 +1,9 @@
 // OverbrightTriggers/Factory/SystemTriggerFactory.swift — the real `TriggerFactory`: makes the ladder's trigger
-// windows and the Compatibility overlays, counts the open ones, and removes every one when the service stops.
-// ARCHITECTURE.md §3.6, §4.7, §7.4 (stop order: Boost stops first, Triggers after it), §7.5, §8.4 (`triggerWindows`),
-// D22, D24. Thread: main.
+// windows, counts the open ones, and removes every one when the service stops. ARCHITECTURE.md §3.6, §4.7, §7.4 (stop
+// order: Boost stops first, Triggers after it), §8.4 (`triggerWindows`), D22, D24. Thread: main.
 //
-// Making a handle opens nothing: a trigger's window is ordered in by its first `present(_:)`, an overlay's by its first
-// `setFactor(_:headroomRequest:)`. Nothing runs until the engine arms a rung (zero work while off).
+// Making a handle opens nothing: a trigger's window is ordered in by its first `present(_:)`. Nothing runs until the
+// engine arms a rung (zero work while off).
 import CoreGraphics
 import Foundation
 import OverbrightCore
@@ -12,7 +11,7 @@ import os
 
 private let log = Log.logger(.trigger)
 
-/// Makes T1–T4 triggers and Compatibility overlays (`TriggerFactory`); an ordered service (`ServiceLifecycle`).
+/// Makes T1–T4 triggers (`TriggerFactory`); an ordered service (`ServiceLifecycle`).
 public final class SystemTriggerFactory: TriggerFactory, ServiceLifecycle {
     /// Lab switches for the hardware session (both off by default).
     public struct Options: Hashable, Sendable {
@@ -76,7 +75,7 @@ public final class SystemTriggerFactory: TriggerFactory, ServiceLifecycle {
         case .metalOneShot, .metalKeepAlive:
             let edge = TriggerGeometry.clampedEdge(request.edgePoints)
             let pixels = TriggerGeometry.pixelEdge(points: edge, backingScale: screen.backingScaleFactor)
-            guard let surface = environment.makeClearSurface(display.id, pixels, false) else {
+            guard let surface = environment.makeClearSurface(display.id, pixels) else {
                 log.error("No Metal device for display \(display.id)")
                 throw TriggerError.noMetalDevice
             }
@@ -90,27 +89,7 @@ public final class SystemTriggerFactory: TriggerFactory, ServiceLifecycle {
         }
     }
 
-    /// A Compatibility overlay on `display` at factor 1, not yet shown (no window yet). Throws
-    /// `TriggerError.displayGone` when the display has no screen and `.noMetalDevice` when macOS 14–25 has no Metal
-    /// device for the display's surface.
-    public func makeOverlay(on display: DisplayRef) throws -> any OverlayHandle {
-        guard environment.screens.geometry(of: display.id) != nil else { throw TriggerError.displayGone }
-        let host = TriggerHost(display: display, shape: .fullScreen, screens: environment.screens,
-                               presenter: environment.presenter)
-        let surface = overlaySurface()
-        var clearSurface: (any ClearFrameSurface)?
-        if surface == .metal {
-            clearSurface = environment.makeClearSurface(display.id, CompatibilityOverlay.metalDrawablePixels, true)
-            guard clearSurface != nil else {
-                log.error("No Metal device for the overlay on display \(display.id)")
-                throw TriggerError.noMetalDevice
-            }
-        }
-        return CompatibilityOverlay(host: host, surface: surface, clearSurface: clearSurface, time: environment.time,
-                                    registry: registry)
-    }
-
-    /// Trigger and overlay windows that exist now (diagnostics `triggerWindows`; smoke asserts 0).
+    /// Trigger windows that exist now (diagnostics `triggerWindows`; smoke asserts 0).
     public var openWindowCount: Int { registry.openWindowCount }
 
     // MARK: ServiceLifecycle
@@ -121,29 +100,17 @@ public final class SystemTriggerFactory: TriggerFactory, ServiceLifecycle {
     /// Nothing to start: windows open only when the engine arms a rung.
     public func start() async {}
 
-    /// Removes every trigger and overlay the engine left behind. Boost stops first and un-scales before it removes
+    /// Removes every trigger the engine left behind. Boost stops first and un-scales before it removes
     /// its own windows (§4.5 invariant 2), so this is only the backstop.
     public func stop() async { removeAll() }
 
     /// The same, synchronously (`applicationWillTerminate`).
     public func stopNow() { removeAll() }
 
-    /// Orders out and releases every live trigger and overlay.
+    /// Orders out and releases every live trigger.
     public func removeAll() {
         let count = registry.openWindowCount
         registry.removeAll()
         if count > 0 { log.info("Removed \(count) trigger windows at stop") }
-    }
-
-    // MARK: Private
-
-    private func overlaySurface() -> CompatibilityOverlay.Surface {
-        switch environment.overlaySurface {
-        case .metal:
-            return .metal
-        case .automatic:
-            if #available(macOS 26.0, *) { return .taggedColor }
-            return .metal
-        }
     }
 }

@@ -304,19 +304,19 @@ import Testing
         #expect(xdr.spokenValue(at: max) == ValueText.forLevel(max, top: xdr.top, presets: xdr.presets, isEstimate: xdr.readout.isEstimate).accessibilityText)
     }
 
-    /// A calibration record applies while the build and the method match and the potential is within 5 %; without a
-    /// reading it is not called stale for the potential alone.
+    /// A calibration record applies while the build matches and the potential is within 5 %; without a reading it is
+    /// not called stale for the potential alone.
     @Test func calibrationValidity() {
         let machine = DisplayFixture.ownerMachine
         let record = FakeCalibrationSession.record(.encoded)
-        #expect(DisplaySectionModel.isValid(record, mechanism: .table, machine: machine, potential: 16))
-        #expect(DisplaySectionModel.isValid(record, mechanism: .table, machine: machine, potential: 16.7))
-        #expect(!DisplaySectionModel.isValid(record, mechanism: .table, machine: machine, potential: 17))
-        #expect(DisplaySectionModel.isValid(record, mechanism: .table, machine: machine, potential: nil))
+        #expect(DisplaySectionModel.isValid(record, machine: machine, potential: 16))
+        #expect(DisplaySectionModel.isValid(record, machine: machine, potential: 16.7))
+        #expect(!DisplaySectionModel.isValid(record, machine: machine, potential: 17))
+        #expect(DisplaySectionModel.isValid(record, machine: machine, potential: nil))
         var updated = machine
         updated.osBuild = "27A1"
-        #expect(!DisplaySectionModel.isValid(record, mechanism: .table, machine: updated, potential: 16))
-        #expect(!DisplaySectionModel.isValid(nil, mechanism: .table, machine: machine, potential: 16))
+        #expect(!DisplaySectionModel.isValid(record, machine: updated, potential: 16))
+        #expect(!DisplaySectionModel.isValid(nil, machine: machine, potential: 16))
     }
 
     /// Editing a display remembers its name (for "Not connected") and an entry back at every default is removed.

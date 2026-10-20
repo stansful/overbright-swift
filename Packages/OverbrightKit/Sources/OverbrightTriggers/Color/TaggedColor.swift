@@ -1,4 +1,4 @@
-// OverbrightTriggers/Color/TaggedColor.swift — EDR colour builders for T1 and the macOS 26+ overlay.
+// OverbrightTriggers/Color/TaggedColor.swift — EDR colour builders for T1.
 // ARCHITECTURE.md §4.7 ("EDR colours start from CGColor", T1 tag precision), D4.
 //
 // PITFALL (seen on macOS 27.0.1, off screen): `NSColor`'s component-array initialiser returns a tagged-pointer colour
@@ -28,7 +28,7 @@ nonisolated enum TaggedColor {
         return CGColor(headroom: Float(headroom), colorSpace: space, red: v, green: v, blue: v, alpha: 1)
     }
 
-    /// An untagged extended-range grey: the dimming overlay (no EDR request) and the macOS 14–25 legacy T1 path.
+    /// An untagged extended-range grey: the macOS 14–25 legacy T1 path.
     static func untaggedCGColor(value: Double) -> CGColor? {
         guard let space = extendedLinearSRGB() else { return nil }
         let v = CGFloat(clampedComponent(value))

@@ -89,7 +89,7 @@ Since 2026-10-20 (the owner's rule) **every** level change you make away from St
 | 2.3 | The MSI with **HDR off**: dim it to 25 % from the panel | it dims (no extra brightness needed); class `scaled`, ratio < 1 |
 | 2.4 (H-NS1) | Boost the built-in at Bright room and dim the MSI to 50 %; turn **Night Shift** on (Displays ▸ Night Shift ▸ Turn On Until Tomorrow), wait 10 s, turn it off; then the same with **True Tone** | note whether the monitor's class changes (`foreign`?), whether a chip or banner appears, whether the picture looks right; no flicker; record which of the two touch the table |
 | 2.5 (H-K2) | Boosted and dimmed as in 2.4; in a third Terminal run `ob --restore-gamma` (a separate process that writes and exits) | every display is reset by macOS when that process exits; within ≈ 0.3 s Overbright brings the boost and the dim back **with a ramp** (no hard flash back); the journal shows `drift.reapplied` |
-| 2.6 (H-W5) | Boost both displays (MSI with HDR on). **Close the lid** (the MSI stays on) without killing Overbright; wait 10 s; open the lid. Then unplug the MSI while boosted, wait, plug it back | at no time does a bright dot, an overlay or an extra boost appear on the remaining display; each display comes back neutral or re-armed |
+| 2.6 (H-W5) | Boost both displays (MSI with HDR on). **Close the lid** (the MSI stays on) without killing Overbright; wait 10 s; open the lid. Then unplug the MSI while boosted, wait, plug it back | at no time does a bright dot or an extra boost appear on the remaining display; each display comes back neutral or re-armed |
 
 ---
 
@@ -197,7 +197,7 @@ Overbright on, both displays boosting; monitor running (`monitor-7.jsonl`). Firs
 
 ## 10. (Removed) Compatibility mode — H-C1–C3
 
-Nothing to run. On this MacBook Pro (M4 Max, macOS 27.0.1) the built-in turned **white** the moment the full-screen overlay boosted: WindowServer does not blend the overlay's `multiplyBlendMode` layer with the windows beneath it (ARCHITECTURE.md §7.5). The method was disabled on 2026-10-20 and its panel, menu, Settings and calibration surfaces were removed; the color table is the only method. The section number stays so the references below keep their numbers.
+Nothing to run. On this MacBook Pro (M4 Max, macOS 27.0.1) the built-in turned **white** the moment the full-screen overlay boosted: WindowServer does not blend the overlay's `multiplyBlendMode` layer with the windows beneath it (ARCHITECTURE.md §7.5). The method was disabled on 2026-10-20, its panel, menu, Settings and calibration surfaces were removed on 2026-10-21, and its code the same day (the overlay engine, its triggers and the `OverlayHandle` port; the last commit with the code is `c76b47c`); the color table is the only method. The section number stays so the references below keep their numbers.
 
 ---
 
@@ -237,7 +237,7 @@ footprint -p $(obpid) > ~/Overbright-HW/13-<case>-footprint.txt
 sudo powermetrics -i 1000 -n 30 --samplers cpu_power,gpu_power,tasks --show-process-energy > ~/Overbright-HW/13-<case>-power.txt
 ```
 
-Cases: Overbright **off**; on with the winning trigger at Bright room; on with *Metal layer* forced; Fill Light on; both displays at Bright room, once with "Pause for full-screen video" on (the default) and once with it and every other full-screen and "while playing" rule off (ARCHITECTURE.md D28: Signals' 2 s full-screen watch is its own timer). Optional: 30 minutes on battery at Bright room vs Standard (battery % before and after).
+Cases (the Compatibility-mode case was removed with the overlay, §10; last commit with the code: `c76b47c`): Overbright **off**; on with the winning trigger at Bright room; on with *Metal layer* forced; Fill Light on; both displays at Bright room, once with "Pause for full-screen video" on (the default) and once with it and every other full-screen and "while playing" rule off (ARCHITECTURE.md D28: Signals' 2 s full-screen watch is its own timer). Optional: 30 minutes on battery at Bright room vs Standard (battery % before and after).
 
 **Expected:** off = 0 idle wake-ups; on = ≤ 1.5 wake-ups/s and < 0.1 % CPU with no GPU work after the first frame (DESIGN.md §17). Both displays with the full-screen rule on: about 2.0 wake-ups/s by D28's count (two drift checks, the hang ping, the watch), about 1.5 with the rules off; note both, since they decide whether WP16 moves the watch onto one engine tick.
 
@@ -294,6 +294,7 @@ Cases: Overbright **off**; on with the winning trigger at Bright room; on with *
 | H-B1 | taper: continuous light from 100 % to 50 % brightness; even key steps | | 7.9 |
 | conflicts | booster banner without a button, no rescue, behaviour after quitting it | | 8 |
 | H-A1 | auto-brightness toggle: wrong picture? cleared by? | | 9 |
+| ~~H-C1–C3~~ | removed with Compatibility mode (§10; last commit with the code: `c76b47c`) | — | 10 |
 | H-F1 | camera detection without a prompt; Fill Light card; boost still prepares with Fill Light on | | 11 |
 | H-AI-1–3 | intents, Focus filter, translations, key caps by layout, Run Shortcut | | 12 |
 | H-CC-1–2 | ad-hoc control: listed, rendered, after rebuild, after kill -9 | | 12.5–12.6 |

@@ -48,9 +48,8 @@ import OverbrightCore
     }
 
     /// A record with `outcome` for this display's test.
-    static func record(_ outcome: CalibrationRecord.Outcome, mechanism: Mechanism = .table,
-                       sdrWhite: Double? = nil) -> CalibrationRecord {
-        CalibrationRecord(outcome: outcome, mechanism: mechanism, mergeFactor: outcome == .encoded ? 1.62 : nil,
+    static func record(_ outcome: CalibrationRecord.Outcome, sdrWhite: Double? = nil) -> CalibrationRecord {
+        CalibrationRecord(outcome: outcome, mergeFactor: outcome == .encoded ? 1.62 : nil,
                           estimatedExponent: nil, measuredSDRWhiteNits: sdrWhite, headroomAtTest: 2.667,
                           potentialAtTest: 16, osBuild: DisplayFixture.ownerMachine.osBuild,
                           measuredAt: Date(timeIntervalSinceReferenceDate: 800_000_000))

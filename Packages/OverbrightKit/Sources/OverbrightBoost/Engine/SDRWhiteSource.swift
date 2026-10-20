@@ -12,14 +12,14 @@ nonisolated enum SDRWhiteSource {
     /// longer holds and the live worst-case Safe bound applies again (§5.6: "the same with a trusted SDR estimate").
     static let colorimeterHeadroomTolerance = 0.05
 
-    /// A colorimeter value from a valid calibration record for the current mechanism while `reading` shows the same SDR
-    /// white as the calibration did, else an external's HDR-mode frame average (`DisplayAttributes` MaxFrameAverage,
-    /// matched WindowServer's SDR value on the measured OLED; never on an Apple XDR external, where it is the
-    /// full-screen sustained HDR level: Policy's `GainCeiling.frameAverageSDRWhite`).
-    static func estimate(facts: DisplayFacts, preferences: DisplayPreferences, mechanism: Mechanism,
-                         machine: MachineIdentity, reading: HeadroomReading?) -> SDRWhiteEstimate? {
+    /// A colorimeter value from a valid calibration record while `reading` shows the same SDR white as the calibration
+    /// did, else an external's HDR-mode frame average (`DisplayAttributes` MaxFrameAverage, matched WindowServer's SDR
+    /// value on the measured OLED; never on an Apple XDR external, where it is the full-screen sustained HDR level:
+    /// Policy's `GainCeiling.frameAverageSDRWhite`).
+    static func estimate(facts: DisplayFacts, preferences: DisplayPreferences, machine: MachineIdentity,
+                         reading: HeadroomReading?) -> SDRWhiteEstimate? {
         if let record = preferences.calibration, let nits = record.measuredSDRWhiteNits, nits > 0,
-           record.mechanism == mechanism, record.osBuild == machine.osBuild,
+           record.osBuild == machine.osBuild,
            let reading, abs(reading.potential - record.potentialAtTest) <= 0.05 * record.potentialAtTest,
            holds(measuredAt: record.headroomAtTest, reading: reading) {
             return SDRWhiteEstimate(nits: nits, source: .colorimeter)

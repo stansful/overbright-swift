@@ -30,7 +30,7 @@ final class TriggerTestBed {
     /// Surfaces handed out, in order.
     private(set) var surfaces: [ScriptedClearSurface] = []
     /// Drawable edges asked for, in order.
-    private(set) var surfaceRequests: [(display: CGDirectDisplayID, pixels: Int, nearest: Bool)] = []
+    private(set) var surfaceRequests: [(display: CGDirectDisplayID, pixels: Int)] = []
     /// Presents the next surfaces fail first.
     var surfaceFailuresBeforeSuccess = 0
     /// No Metal device: `makeClearSurface` returns nil.
@@ -38,7 +38,6 @@ final class TriggerTestBed {
     let factory: SystemTriggerFactory
 
     init(allowsLegacyLayerPath: Bool = false, tagsMetalLayers: Bool = false,
-         overlaySurface: TriggerEnvironment.OverlaySurface = .automatic,
          codecs: [HLGStillAsset.Codec] = HLGStillAsset.Codec.allCases) {
         let screens = FixedScreens([Self.builtIn.id: Self.builtInGeometry, Self.external.id: Self.externalGeometry])
         let cacheDirectory = FileManager.default.temporaryDirectory
@@ -47,15 +46,13 @@ final class TriggerTestBed {
         self.screens = screens
         self.cacheDirectory = cacheDirectory
         self.stills = stills
-        var made: (CGDirectDisplayID, Int, Bool) -> (any ClearFrameSurface)? = { _, _, _ in nil }
+        var made: (CGDirectDisplayID, Int) -> (any ClearFrameSurface)? = { _, _ in nil }
         var environment = TriggerEnvironment(screens: screens, presenter: presenter,
-                                             makeClearSurface: { made($0, $1, $2) }, time: time,
-                                             stills: stills)
+                                             makeClearSurface: { made($0, $1) }, time: time, stills: stills)
         environment.allowsLegacyLayerPath = allowsLegacyLayerPath
         environment.tagsMetalLayers = tagsMetalLayers
-        environment.overlaySurface = overlaySurface
         factory = SystemTriggerFactory(environment: environment)
-        made = { [unowned self] display, pixels, nearest in self.makeSurface(display, pixels, nearest) }
+        made = { [unowned self] display, pixels in self.makeSurface(display, pixels) }
     }
 
     deinit { try? FileManager.default.removeItem(at: cacheDirectory) }
@@ -68,8 +65,8 @@ final class TriggerTestBed {
                        headroomTag: tag)
     }
 
-    private func makeSurface(_ display: CGDirectDisplayID, _ pixels: Int, _ nearest: Bool) -> (any ClearFrameSurface)? {
-        surfaceRequests.append((display, pixels, nearest))
+    private func makeSurface(_ display: CGDirectDisplayID, _ pixels: Int) -> (any ClearFrameSurface)? {
+        surfaceRequests.append((display, pixels))
         guard hasMetalDevice else { return nil }
         let surface = ScriptedClearSurface(failuresBeforeSuccess: surfaceFailuresBeforeSuccess)
         surfaces.append(surface)

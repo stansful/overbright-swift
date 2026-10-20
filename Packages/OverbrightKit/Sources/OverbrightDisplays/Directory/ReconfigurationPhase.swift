@@ -4,8 +4,8 @@ import CoreGraphics
 
 /// The meaning of one `CGDisplayReconfigurationCallBack` invocation.
 nonisolated enum ReconfigurationPhase: Hashable, Sendable {
-    /// `kCGDisplayBeginConfigurationFlag`: called once per online display before a change. No display queries here;
-    /// overlays go to factor 1, nothing else.
+    /// `kCGDisplayBeginConfigurationFlag`: called once per online display before a change. No display queries here,
+    /// nothing else.
     case began
     /// `kCGDisplayRemoveFlag` (or `kCGDisplayDisabledFlag`, the lid closing with an external display attached): the
     /// display is gone; handled at once, not debounced.

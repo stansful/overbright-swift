@@ -61,57 +61,6 @@ import Testing
         #expect(firstBoost.time > requested)
     }
 
-    /// An overlay display partway through a dim ramp goes to the boost without arming (`goBoost` adjusts the ramp in
-    /// flight; D30's three guarantees, not arming, keep the power read first): the request reads the power source
-    /// before it reduces (`refreshPowerBeforeABoost`), the same reduction ends with `setBoostActive(true)` and its
-    /// synchronous read, and the ramp sleeps before its first step, so the overlay shows nothing new before the read.
-    @Test func anOverlayDimRampSwitchedToABoostReadsThePowerSourceFirst() async throws {
-        let h = EngineHarness()
-        h.setPreferences { $0.mechanism = .overlay }
-        await h.start()
-        h.engine.setLevel(LevelPosition(-0.5), for: h.builtIn, source: .panel)
-        await h.advance(.milliseconds(150))
-        #expect(h.phase() == .ramping)
-        let overlay = try #require(h.triggers.liveOverlays(on: h.builtIn).first)
-        #expect(overlay.factor < 1)                                       // partway down
-        #expect(!h.engine.boostSourcesActive)
-        let refreshes = h.signals.refreshPowerNowCount
-        let steps = overlay.factors.count
-        h.engine.setLevel(LevelPreset.brightRoom.position, for: h.builtIn, source: .panel)
-        #expect(h.phase() == .ramping)                                    // no arming: the same overlay
-        #expect(h.signals.refreshPowerNowCount > refreshes)
-        #expect(h.signals.boostActiveCalls.last == true)
-        #expect(overlay.factors.count == steps)                           // nothing shown yet
-        #expect(await h.advance(until: { overlay.factor > 1 + 1e-6 }))    // the boost arrives on that overlay
-        #expect(h.triggers.liveOverlays(on: h.builtIn).map(ObjectIdentifier.init) == [ObjectIdentifier(overlay)])
-        #expect(h.triggers.made.isEmpty && h.signals.boostActiveCalls.last == true)
-    }
-
-    /// On that path too the read matters (real Policy): the battery is below the guard by the time of the request, the
-    /// reads see it before the ramp's first step, and the overlay never asks for EDR nor shows a factor above 1 (this
-    /// holds even without the read before reducing: `setBoostActive(true)`'s read re-reduces before that step). The
-    /// real reducer picks the table while Compatibility mode is unavailable (§7.5), so its decisions are handed to the
-    /// engine with the overlay mechanism: the engine's overlay path stays under test.
-    @Test func anOverlayDimRampSwitchedToABoostSeesTheBatteryOfNow() async throws {
-        let h = EngineHarness(decide: { input in
-            var decision = BoostPolicy.reduce(input)
-            for key in decision.displays.keys { decision.displays[key]?.mechanism = .overlay }
-            return decision
-        })
-        h.setPreferences { $0.mechanism = .overlay }
-        await h.start()
-        h.engine.setLevel(LevelPosition(-0.5), for: h.builtIn, source: .panel)
-        await h.advance(.milliseconds(150))
-        #expect(h.phase() == .ramping)
-        let overlay = try #require(h.triggers.liveOverlays(on: h.builtIn).first)
-        h.signals.powerOnRefresh = PowerState(source: .battery, batteryPercent: 10, isLowPowerMode: false)
-        h.engine.setLevel(LevelPreset.brightRoom.position, for: h.builtIn, source: .panel)
-        await h.advance(.seconds(5))
-        #expect(h.phase() != .boosted)
-        #expect(!overlay.factors.contains { $0.factor > 1 + 1e-6 || $0.headroomRequest > 1 + 1e-6 })
-        #expect(h.displayStatus()?.decision?.reasons.contains { if case .battery = $0 { true } else { false } } == true)
-    }
-
     /// The read matters: while only dimming no battery source keeps the snapshot current, and the synchronous read
     /// before the boost sees the battery below the guard, so the boost never starts (real Policy).
     @Test func dimToBoostSeesTheBatteryOfNow() async throws {

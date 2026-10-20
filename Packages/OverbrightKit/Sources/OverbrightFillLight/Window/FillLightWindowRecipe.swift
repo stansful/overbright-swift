@@ -3,8 +3,8 @@
 // only), §10.9 (click-through, capture exclusion); DESIGN.md §7.7 (note), §11. Thread: main.
 import AppKit
 
-/// The Fill Light window: the same recipe as the trigger and overlay windows (Triggers owns its own copy; layer-1
-/// modules never import each other), covering the display's whole frame.
+/// The Fill Light window: the same recipe as the trigger windows (Triggers owns its own copy; layer-1 modules never
+/// import each other), covering the display's whole frame.
 enum FillLightWindowRecipe {
     /// Above the menu bar, the Dock and full-screen windows, below the lock-screen shield. Not layer 0, so the
     /// full-screen detector (which also skips our PID) never takes the frame for a full-screen window.

@@ -8,7 +8,7 @@ import OverbrightCore
 struct ServiceStack {
     /// The display directory (the reconfiguration callback and the screen-parameters observer).
     var displays: (any ServiceLifecycle)?
-    /// The trigger and overlay windows (removes every one when it stops).
+    /// The trigger windows (removes every one when it stops).
     var triggers: (any ServiceLifecycle)?
     /// System state and events.
     var signals: (any ServiceLifecycle)?

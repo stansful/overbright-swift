@@ -21,7 +21,6 @@ extension DisplayController {
     func reconfigured(_ newFacts: DisplayFacts) {
         updateFacts(newFacts)
         trigger?.represent()
-        overlay?.represent()
         noteBaseEvent(.reconfiguration)
         switch phase {
         case .suspended(.reconfiguring):
@@ -84,9 +83,8 @@ extension DisplayController {
     /// mistaken for WindowServer's table; shields, removal and stops cancel it (a pending event then restarts or settles
     /// it). A base that cannot be written now (off the console, D27, or a refused write) keeps the event pending.
     func rebase(cause: ReapplyCause) {
-        guard mechanism == .table, let old = baseline else {
+        guard let old = baseline else {
             pendingRebase = nil
-            if mechanism == .overlay { reapply(cause) }
             return
         }
         isRebasing = true
@@ -160,9 +158,7 @@ extension DisplayController {
         guard let cause = pendingRebase else { return }
         pendingRebase = nil
         stopRebase()
-        guard mechanism == .table, lastWrite != nil, let old = baseline, let read = try? deps.gamma.read(ref.id) else {
-            return
-        }
+        guard lastWrite != nil, let old = baseline, let read = try? deps.gamma.read(ref.id) else { return }
         let expected = deps.gamma.profileBase(of: ref.id, count: old.count)
         if isOurs(read) {
             if profileChanged(expected, old: old),

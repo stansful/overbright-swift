@@ -8,7 +8,7 @@ import Foundation
 import OverbrightCore
 import OverbrightPolicy
 
-/// One display's engine: trigger or overlay handle, baseline, applied factor, generation, epoch stamp and its tasks
+/// One display's engine: trigger handle, baseline, applied factor, generation, epoch stamp and its tasks
 /// (gate poll, poll burst, ramp, drift check, linger, re-base). Every table write goes through `TableWriter`.
 @MainActor final class DisplayController {
     /// The ports and shared state every controller uses (the engine owns them).
@@ -67,12 +67,9 @@ import OverbrightPolicy
     var appliedGain = 1.0
     var appliedFactor = 1.0
     var appliedLimit: LimitReason?
-    var mechanism: Mechanism = .table
     var domain: TransferDomain = .encoded
     /// Sessions off the console write nothing (D27); set by the session events, mirrored from the snapshot.
     var isOffConsole = false
-    /// A mechanism change waits for the display to reach idle, then asks for a re-reduction.
-    var switchesMechanism = false
     /// The baseline and factor of our latest table write (what the re-base and the drift check expect to read).
     var lastWrite: (baseline: GammaTable, factor: Double)?
     /// A re-base waits for WindowServer's table: the drift check stands aside meanwhile.
@@ -88,24 +85,16 @@ import OverbrightPolicy
             if isDriven, !oldValue {
                 epochStamp = deps.ledger.hangEpoch
                 refreshBaseline()
-            } else if !isDriven {
-                calibratesOverlay = false
             }
         }
     }
-    /// The driven session is a calibration of the Compatibility-mode overlay (set by `beginCalibration`): it arms and
-    /// scales the overlay, never the table or a trigger.
-    var calibratesOverlay = false
-    /// The headroom request of the overlay a calibration armed.
-    var drivenOverlayRequest = 1.0
     /// A driven display lost its window (occluded, or moved to another screen): the engine ends the calibration or the
     /// self-test on this display.
     var onDrivenWindowLost: ((CalibrationAbortReason) -> Void)?
 
-    // MARK: Trigger, overlay and the gate
+    // MARK: Trigger and the gate
 
     var trigger: (any TriggerHandle)?
-    var overlay: (any OverlayHandle)?
     var rungs: [LadderRung] = []
     var rungPosition = 0
     var currentRung: LadderRung?
@@ -160,7 +149,7 @@ import OverbrightPolicy
 
     /// The display's key.
     var key: DisplayKey { ref.key }
-    /// The table (or overlay) differs from the baseline: scaled or dimmed.
+    /// The table differs from the baseline: scaled or dimmed.
     var isScaledOrDimmed: Bool { abs(appliedFactor - 1) > TableWriter.neutralTolerance }
     /// Any phase that does work or holds a window (everything but idle and failed).
     var isActive: Bool {
@@ -170,17 +159,16 @@ import OverbrightPolicy
         }
     }
     /// Whether Signals' boost-only sources must run for this display (§7.1, D30, DESIGN.md §17): it arms or gates, or it
-    /// ramps toward, holds or disarms from a boost (a boost target, or a table or overlay above its baseline, whatever
-    /// the phase). Every guard those sources feed applies to the boost half only (D10: dimming always works), so a
-    /// dimmed-only display needs none. Dim → boost does not always arm (an overlay partway through a dim ramp adjusts
-    /// that ramp, a disarm whose window is still up goes back to boosted), yet the power source is still read before
-    /// any boost write: a level request reads it before reducing while no display keeps the sources running
-    /// (`refreshPowerBeforeABoost`), the same reduction ends with `updateAggregates` and the synchronous read of
-    /// `setBoostActive(true)`, and every ramp sleeps before its first step (`runRamp`; `BoostSourcesTests`). A
-    /// suspended display whose baseline is written needs none until it resumes (a lock, display sleep or fast user
-    /// switch can last all night; the resume reads the power source again), and neither does a display the self-test
-    /// or a calibration drives (the master is held off). The drift check and the hang watchdog do not depend on this:
-    /// they follow the phase and the safety ledger.
+    /// ramps toward, holds or disarms from a boost (a boost target, or a table above its baseline, whatever the
+    /// phase). Every guard those sources feed applies to the boost half only (D10: dimming always works), so a
+    /// dimmed-only display needs none. Dim → boost does not always arm (a disarm whose window is still up goes back
+    /// to boosted), yet the power source is still read before any boost write: a level request reads it before
+    /// reducing while no display keeps the sources running (`refreshPowerBeforeABoost`), the same reduction ends with
+    /// `updateAggregates` and the synchronous read of `setBoostActive(true)`, and every ramp sleeps before its first
+    /// step (`runRamp`; `BoostSourcesTests`). A suspended display whose baseline is written needs none until it
+    /// resumes (a lock, display sleep or fast user switch can last all night; the resume reads the power source
+    /// again), and neither does a display the self-test or a calibration drives (the master is held off). The drift
+    /// check and the hang watchdog do not depend on this: they follow the phase and the safety ledger.
     var needsBoostSources: Bool {
         guard !isDriven else { return false }
         if appliedFactor > 1 + TableWriter.neutralTolerance { return true }
@@ -215,9 +203,9 @@ import OverbrightPolicy
     /// What the UI reads. Its reading is the stable copy (`stableReading()`); the SDR white still follows the fresh one.
     func status() -> DisplayStatus {
         DisplayStatus(key: key, name: facts.name, phase: phase, decision: decision, appliedGain: appliedGain,
-                      appliedFactor: appliedFactor, mechanism: mechanism,
-                      strategy: trigger != nil ? currentRung?.strategy : nil, lastReading: stableReading(),
-                      sdrWhite: sdrWhite(at: lastReading), failedTries: failedTries, lastGrant: lastGrant)
+                      appliedFactor: appliedFactor, strategy: trigger != nil ? currentRung?.strategy : nil,
+                      lastReading: stableReading(), sdrWhite: sdrWhite(at: lastReading), failedTries: failedTries,
+                      lastGrant: lastGrant)
     }
 
     /// A published reading is replaced once current, potential or reference moved by this much (far below what any

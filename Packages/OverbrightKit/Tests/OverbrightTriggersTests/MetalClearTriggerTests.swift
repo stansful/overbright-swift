@@ -182,6 +182,5 @@ import Testing
         _ = try bed.factory.makeTrigger(TriggerTestBed.request(.metalKeepAlive, edgePoints: 3), on: TriggerTestBed.external)
         #expect(bed.surfaceRequests.map(\.pixels) == [2, 3])
         #expect(bed.surfaceRequests.map(\.display) == [TriggerTestBed.builtIn.id, TriggerTestBed.external.id])
-        #expect(bed.surfaceRequests.allSatisfy { !$0.nearest })
     }
 }

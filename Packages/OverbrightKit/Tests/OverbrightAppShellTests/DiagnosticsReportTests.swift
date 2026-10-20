@@ -20,7 +20,7 @@ import Testing
     }
 
     /// The report reads every display's table and profile base, and never writes a table, restores, opens a
-    /// trigger or overlay window, or writes a preference.
+    /// trigger window, or writes a preference.
     @Test func diagnosticsNeverWrites() throws {
         let log = TrapLog()
         let fixture = DisplayFixture.sidecar                              // a built-in with a table, a virtual display

@@ -11,7 +11,7 @@ import Testing
     nonisolated static let builtIn = DisplayKey(rawValue: "A"), external = DisplayKey(rawValue: "B")
 
     private func display(_ key: DisplayKey, _ name: String, phase: EnginePhase = .boosted, gain: Double = 1.29) -> DisplayStatus {
-        DisplayStatus(key: key, name: name, phase: phase, decision: nil, appliedGain: gain, appliedFactor: 1, mechanism: .table,
+        DisplayStatus(key: key, name: name, phase: phase, decision: nil, appliedGain: gain, appliedFactor: 1,
                       strategy: nil, lastReading: nil, sdrWhite: nil)
     }
 

@@ -58,13 +58,11 @@ public nonisolated struct ReferenceReducer: Sendable {
         let preferences = display.preferences
         var level = input.settings.linkLevels ? input.settings.linkedLevel : preferences.level
         if case .on(let focusLevel) = input.system.focus { level = focusLevel }
-        let mechanism: Mechanism = preferences.mechanism == .overlay ? .overlay : .table
-        let domain = TransferDomainResolver.effectiveDomain(preferences.calibration, mechanism: mechanism,
-                                                            machine: input.machine,
+        let domain = TransferDomainResolver.effectiveDomain(preferences.calibration, machine: input.machine,
                                                             potential: display.feedback.lastReading?.potential)
-        let hasTable = display.facts.gammaCapacity > 0 || mechanism == .overlay
+        let hasTable = display.facts.gammaCapacity > 0
         let eligibility = EligibilityResult(verdict: hasTable ? .supported(safeGain: top, peakGain: top) : .noGammaTable,
-                                            advisories: [], defaultBoostEnabled: true, defaultMechanism: .table)
+                                            advisories: [], defaultBoostEnabled: true)
         let requested = LevelMapping.requestedGain(for: level, top: top)
 
         let (target, reasons): (BoostTarget, [LimitReason]) = {
@@ -80,7 +78,7 @@ public nonisolated struct ReferenceReducer: Sendable {
             if !(preferences.boostEnabled ?? true) { return (.neutral, [.boostNotEnabled]) }
             return (.boost(gain: requested), [])
         }()
-        return DisplayDecision(key: key, target: target, reasons: reasons, eligibility: eligibility,
-                               mechanism: mechanism, domain: domain, requestedGain: requested, level: level)
+        return DisplayDecision(key: key, target: target, reasons: reasons, eligibility: eligibility, domain: domain,
+                               requestedGain: requested, level: level)
     }
 }

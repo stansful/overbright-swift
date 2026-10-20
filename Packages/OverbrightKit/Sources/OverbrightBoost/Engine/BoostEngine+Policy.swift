@@ -99,13 +99,11 @@ extension BoostEngine {
             let preferences = perDisplay[key] ?? DisplayPreferences()
             let controller = controllers[key]
             let reading = controller?.feedbackReading()
-            let mechanism = lastDecision?.displays[key]?.mechanism ?? .table
             return DisplayPolicyInput(facts: facts, preferences: preferences,
                                       feedback: EngineFeedback(trip: controller?.trip, lastReading: reading,
                                                                fullBrightnessHeadroom: controller?.fullBrightnessHeadroom),
                                       sdrWhite: SDRWhiteSource.estimate(facts: facts, preferences: preferences,
-                                                                        mechanism: mechanism, machine: machine,
-                                                                        reading: reading))
+                                                                        machine: machine, reading: reading))
         }
         return PolicyInput(isMasterOn: isMasterOn, pausedUntil: observed.pausedUntil, now: now, minuteOfDay: minute,
                            machine: machine, settings: observed.settings, system: observed.snapshot, displays: inputs,
@@ -115,8 +113,8 @@ extension BoostEngine {
     /// What a controller needs besides its decision.
     func parameters(for facts: DisplayFacts, decision: DisplayDecision, snapshot: SystemSnapshot) -> WriteParameters {
         let preferences = settings[DisplaySettings.perDisplay][facts.ref.key] ?? DisplayPreferences()
-        let sdrWhite = SDRWhiteSource.estimate(facts: facts, preferences: preferences, mechanism: decision.mechanism,
-                                               machine: machine, reading: controllers[facts.ref.key]?.lastReading)
+        let sdrWhite = SDRWhiteSource.estimate(facts: facts, preferences: preferences, machine: machine,
+                                               reading: controllers[facts.ref.key]?.lastReading)
         return WriteParameters(capMode: preferences.capMode, isOLED: Self.isOLED(facts, preferences),
                                sdrWhite: sdrWhite,
                                colorimeterHeadroom: sdrWhite?.source == .colorimeter
@@ -178,9 +176,8 @@ extension BoostEngine {
     /// A display the reducer did not decide for stays neutral.
     static func neutralDecision(for facts: DisplayFacts) -> DisplayDecision {
         DisplayDecision(key: facts.ref.key, target: .neutral, reasons: [],
-                        eligibility: EligibilityResult(verdict: .checking, advisories: [], defaultBoostEnabled: false,
-                                                       defaultMechanism: .table),
-                        mechanism: .table, domain: .encoded, requestedGain: 1)
+                        eligibility: EligibilityResult(verdict: .checking, advisories: [], defaultBoostEnabled: false),
+                        domain: .encoded, requestedGain: 1)
     }
 
     // MARK: HUD changes (DESIGN.md §6)

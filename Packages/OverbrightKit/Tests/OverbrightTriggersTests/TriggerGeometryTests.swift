@@ -1,6 +1,6 @@
-// OverbrightTriggersTests/TriggerGeometryTests.swift — trigger and overlay frames without a screen: corners, the
-// notch with global and screen-local auxiliary areas, fallbacks, edge clamping and pixel rounding.
-// ARCHITECTURE.md §4.7 (placement), §7.5, §10.5.
+// OverbrightTriggersTests/TriggerGeometryTests.swift — trigger frames without a screen: corners, the notch with global
+// and screen-local auxiliary areas, fallbacks, edge clamping and pixel rounding. ARCHITECTURE.md §4.7 (placement),
+// §10.5.
 import CoreGraphics
 import OverbrightCore
 import Testing
@@ -78,11 +78,6 @@ import Testing
         #expect(TriggerGeometry.pixelEdge(points: 1.4, backingScale: 2) == 3)
         #expect(TriggerGeometry.pixelEdge(points: 1, backingScale: 0) == 1)
         #expect(TriggerGeometry.pixelEdge(points: 0.1, backingScale: 1) == 1)
-    }
-
-    @Test func overlayCoversTheWholeScreenIncludingTheMenuBar() {
-        #expect(TriggerGeometry.overlayFrame(on: builtIn) == builtIn.frame)
-        #expect(TriggerGeometry.overlayFrame(on: external) == external.frame)
     }
 
     @Test func everyPlacementStaysInsideItsScreen() {

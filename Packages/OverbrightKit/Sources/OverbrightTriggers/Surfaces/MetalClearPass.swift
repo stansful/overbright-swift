@@ -1,5 +1,5 @@
 // OverbrightTriggers/Surfaces/MetalClearPass.swift — the one GPU operation Overbright performs: a clear-only render
-// pass. ARCHITECTURE.md D4, D22, §4.7 (T2/T3), §7.5 (the 14–25 overlay surface).
+// pass. ARCHITECTURE.md D4, D22, §4.7 (T2/T3).
 //
 // A pass whose colour attachment uses `loadAction = .clear` and that encodes no draw call needs no pipeline state,
 // hence no function and no library: no `.metal` file, no `default.metallib`, no Metal Toolchain [VERIFIED off screen:

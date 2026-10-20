@@ -30,10 +30,8 @@ nonisolated struct DisplayReducer: Sendable {
         let boostEnabled = preferences.boostEnabled ?? eligibility.defaultBoostEnabled
         var level = input.settings.linkLevels ? input.settings.linkedLevel : preferences.level
         if case .on(let focusLevel) = input.system.focus { level = focusLevel }
-        let mechanism = EligibilityClassifier.effectiveMechanism(preferences.mechanism,
-                                                                 defaultMechanism: eligibility.defaultMechanism)
-        let domain = TransferDomainResolver.effectiveDomain(preferences.calibration, mechanism: mechanism,
-                                                            machine: input.machine, potential: reading?.potential)
+        let domain = TransferDomainResolver.effectiveDomain(preferences.calibration, machine: input.machine,
+                                                            potential: reading?.potential)
         let top = GainCeiling.sliderTop(facts: facts, capMode: preferences.capMode, isOLED: isOLED)
         let peakTop = GainCeiling.sliderTop(facts: facts, capMode: .peak, isOLED: isOLED)
         let requested = LevelMapping.requestedGain(for: level, top: top)
@@ -47,15 +45,15 @@ nonisolated struct DisplayReducer: Sendable {
         func decision(_ target: BoostTarget, _ reasons: [LimitReason]) -> DisplayOutcome {
             DisplayOutcome(
                 decision: DisplayDecision(key: facts.ref.key, target: target, reasons: reasons,
-                                          eligibility: eligibility, mechanism: mechanism, domain: domain,
-                                          requestedGain: requested, level: level),
+                                          eligibility: eligibility, domain: domain, requestedGain: requested,
+                                          level: level),
                 requestsChange: level.isDim ? halfAllowed : boosts, requestsBoost: boosts)
         }
 
         // Step 6, row 1.
         guard input.isMasterOn else { return decision(.neutral, [.masterOff]) }
         // Rows 2–18.
-        var stops = stopReasons(display, verdict: verdict, halfAllowed: halfAllowed, mechanism: mechanism)
+        var stops = stopReasons(display, verdict: verdict, halfAllowed: halfAllowed)
         if level.isBoost { stops += guardReasons(display, boostEnabled: boostEnabled, isOLED: isOLED) }
         // Row 19: a reason only.
         // Not a reason any more (2026-10-20): macOS 27 asks a menu-bar agent to suppress HDR from launch, while the
@@ -75,12 +73,12 @@ nonisolated struct DisplayReducer: Sendable {
 
     // MARK: Stops (rows 2–7) and boost-only guards (rows 8–18)
 
-    private func stopReasons(_ display: DisplayPolicyInput, verdict: DisplayVerdict, halfAllowed: Bool,
-                             mechanism: Mechanism) -> [LimitReason] {
+    private func stopReasons(_ display: DisplayPolicyInput, verdict: DisplayVerdict,
+                             halfAllowed: Bool) -> [LimitReason] {
         var reasons: [LimitReason] = []
         if !halfAllowed { reasons.append(.notSupported(verdict)) }
         if input.system.isShielded { reasons.append(.shielded) }
-        if let app = blockingConflict(mechanism: mechanism) { reasons.append(.conflict(app)) }
+        if let app = blockingConflict { reasons.append(.conflict(app)) }
         if let trip = display.feedback.trip { reasons.append(.tripped(trip)) }
         if let pausedUntil { reasons.append(.userPaused(until: pausedUntil)) }
         if input.system.focus == .off { reasons.append(.focusOff) }
@@ -138,14 +136,12 @@ nonisolated struct DisplayReducer: Sendable {
 
     // MARK: Conflicts (§7.2)
 
-    /// The first S1, else S2, app that is not continued. S1 is continued only on an overlay display (it writes no
-    /// table); S2 by Continue Anyway in this session or Always Continue.
-    private func blockingConflict(mechanism: Mechanism) -> ConflictingApp? {
+    /// The first S1 app, else the first S2 app that is not continued. S1 always blocks (§7.2); S2 is continued by
+    /// Continue Anyway in this session or Always Continue.
+    private var blockingConflict: ConflictingApp? {
         let conflicts = input.system.conflicts
-        let booster = conflicts.first { app in
-            app.severity == .booster && !(input.continuedEntryIDs.contains(app.entryID) && mechanism == .overlay)
-        }
-        return booster ?? conflicts.first { app in app.severity == .gammaWriter && !isContinued(app) }
+        return conflicts.first { $0.severity == .booster }
+            ?? conflicts.first { app in app.severity == .gammaWriter && !isContinued(app) }
     }
 
     /// S3 apps: a non-blocking reason after the caps, until the user continues with them.

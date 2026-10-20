@@ -19,8 +19,8 @@ import Testing
     private func status(_ decision: DisplayDecision?, applied: Double, phase: EnginePhase = .boosted,
                         sdrWhite: SDRWhiteEstimate? = nil) -> DisplayStatus {
         DisplayStatus(key: T.builtIn.key, name: "Built-in Display", phase: phase, decision: decision, appliedGain: applied,
-                      appliedFactor: FactorMath.tableFactor(forLightGain: applied, domain: .encoded), mechanism: .table,
-                      strategy: nil, lastReading: nil, sdrWhite: sdrWhite)
+                      appliedFactor: FactorMath.tableFactor(forLightGain: applied, domain: .encoded), strategy: nil,
+                      lastReading: nil, sdrWhite: sdrWhite)
     }
     private func values(_ status: DisplayStatus, on: Bool = true) -> ReadoutValues {
         Readout.values(for: status, isMasterOn: on)

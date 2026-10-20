@@ -7,12 +7,12 @@
 // encoded prediction until "Keep Going", and ends at Space (the merge), at 1.15 × the linear prediction, or early. Step 3,
 // only after a merge near the linear prediction, shows the patches for 2 s at 0.97 × H. Every factor goes through the
 // driver (`TableWriter.writeCalibrationFactor`, which refuses anything above `maxFactor` or the reading's calibration
-// ceiling, a stale reading and a stale hang epoch; in Compatibility mode the overlay's factor under the same checks).
-// The display returns to Standard at once on Esc, a lock, occlusion, a headroom drop, the 60 s limit or a refused write
-// (a hang restore refuses every later write). `finish(brighter:)` applies the decision rule (`CalibrationMath`) and
-// returns the record, keyed by OS build, mechanism and potential; after an abort it records nothing unless the sweep had
-// ended with a mark or the confirmation was answered (§11.1 #35: an earlier record stays). Every async step carries the
-// session's generation (§4.6). The three steps live in `CalibrationController+Steps.swift`.
+// ceiling, a stale reading and a stale hang epoch). The display returns to Standard at once on Esc, a lock, occlusion,
+// a headroom drop, the 60 s limit or a refused write (a hang restore refuses every later write). `finish(brighter:)`
+// applies the decision rule (`CalibrationMath`) and returns the record, keyed by OS build and potential; after an abort
+// it records nothing unless the sweep had ended with a mark or the confirmation was answered (§11.1 #35: an earlier
+// record stays). Every async step carries the session's generation (§4.6). The three steps live in
+// `CalibrationController+Steps.swift`.
 import Foundation
 import Observation
 import OverbrightCore
@@ -34,9 +34,6 @@ private let log = Log.logger(.engine)
     public internal(set) var isSweepPausedAtLimit = false
     /// The step the session is in.
     public internal(set) var state: CalibrationState = .preparing
-    /// The mechanism measured (the engine sets `.overlay` on a Compatibility-mode display before `begin()`); a record
-    /// never carries over to the other mechanism.
-    public var mechanism: Mechanism = .table
     /// Called once when the session ends (finished or aborted), so the engine can release the master.
     @ObservationIgnored public var onEnd: (() -> Void)?
 
@@ -98,10 +95,8 @@ private let log = Log.logger(.engine)
             }
         }
         guard !reads.isEmpty, let potential, potential > 1.01 else { return abort(.noExtraRange) }
-        var rungs = MeasurementLadder.rungs(everyStrategy: false, machine: machine, headroomTag: potential)
+        let rungs = MeasurementLadder.rungs(everyStrategy: false, machine: machine, headroomTag: potential)
             .filter(\.isAvailable)
-        // Compatibility mode: the overlay is the one EDR request; the rung only carries the headroom tag it asks for.
-        if mechanism == .overlay { rungs = Array(rungs.prefix(1)) }
         for (index, rung) in rungs.enumerated() {
             let armed = await driver.arm(rung: rung.request)
             guard g == generation, !ended else { return }
@@ -172,7 +167,7 @@ private let log = Log.logger(.engine)
             : CalibrationMath.outcome(merge: sweepRan ? mergeFactor : nil, headroom: h, linearConfirmed: linearConfirmed)
         let merge = brighter == false ? nil : mergeFactor
         let result = CalibrationRecord(
-            outcome: outcome, mechanism: mechanism, mergeFactor: merge,
+            outcome: outcome, mergeFactor: merge,
             estimatedExponent: CalibrationMath.estimatedExponent(headroom: h, mergeFactor: merge),
             measuredSDRWhiteNits: measuredSDRWhite, headroomAtTest: h, potentialAtTest: potential ?? 1,
             osBuild: machine.osBuild, measuredAt: time.wallClock)

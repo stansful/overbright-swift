@@ -23,7 +23,7 @@ struct DisplaysPane: SettingsPaneView {
             let key = facts.ref.key
             let status = boost.displays.first { $0.key == key }
                 ?? DisplayStatus(key: key, name: facts.name, phase: .idle, decision: nil, appliedGain: 1, appliedFactor: 1,
-                                 mechanism: .table, strategy: nil, lastReading: nil, sdrWhite: nil)
+                                 strategy: nil, lastReading: nil, sdrWhite: nil)
             return DisplaySectionModel(status: status, facts: facts, preferences: editor.preferences(of: key),
                                        isMasterOn: boost.isOn, isPaused: boost.pausedUntil != nil,
                                        linkLevels: settings[DisplaySettings.linkLevels],

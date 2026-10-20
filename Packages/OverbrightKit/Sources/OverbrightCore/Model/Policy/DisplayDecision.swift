@@ -10,8 +10,6 @@ public nonisolated struct DisplayDecision: Hashable, Sendable {
     public var reasons: [LimitReason]
     /// Verdict, advisories and class defaults.
     public var eligibility: EligibilityResult
-    /// Table or overlay.
-    public var mechanism: Mechanism
     /// Effective transfer domain (a stale or unconfirmed calibration falls back to `.encoded`, §5.2).
     public var domain: TransferDomain
     /// Light gain the user's level asks for before any cap (for the readout and the "limited" chip).
@@ -21,8 +19,8 @@ public nonisolated struct DisplayDecision: Hashable, Sendable {
     public var level: LevelPosition
     /// A decision.
     public init(key: DisplayKey, target: BoostTarget, reasons: [LimitReason], eligibility: EligibilityResult,
-                mechanism: Mechanism, domain: TransferDomain, requestedGain: Double, level: LevelPosition = .standard) {
+                domain: TransferDomain, requestedGain: Double, level: LevelPosition = .standard) {
         self.key = key; self.target = target; self.reasons = reasons; self.eligibility = eligibility
-        self.mechanism = mechanism; self.domain = domain; self.requestedGain = requestedGain; self.level = level
+        self.domain = domain; self.requestedGain = requestedGain; self.level = level
     }
 }

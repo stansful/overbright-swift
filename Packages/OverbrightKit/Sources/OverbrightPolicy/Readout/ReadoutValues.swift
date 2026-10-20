@@ -22,7 +22,7 @@ public nonisolated struct ReadoutValues: Hashable, Sendable {
     public var appliedGain: Double
     /// Set when the applied gain is below the request ("×1.21 · asked ×1.47").
     public var requestedGain: Double?
-    /// Only with a trusted SDR white AND a valid calibration record for the current mechanism.
+    /// Only with a trusted SDR white AND a valid calibration record.
     public var nits: Double?
     /// The preset at the current level, if any.
     public var preset: LevelPreset?

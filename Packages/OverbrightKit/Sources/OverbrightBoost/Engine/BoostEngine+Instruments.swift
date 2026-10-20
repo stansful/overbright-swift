@@ -32,17 +32,14 @@ extension BoostEngine {
     /// Returns every display to Standard (triggers removed, neutral tables), hands the display's controller to the
     /// session and holds the master off until the session ends (`onEnd`); nil for a display without a controller or a
     /// transfer table, or while another session runs. Shield and removal events reach the session too, and so does the
-    /// loss of the driven window (`drivenWindowLost`). A Compatibility-mode display calibrates its overlay: no table
-    /// write, no trigger (§5.2, §7.5).
+    /// loss of the driven window (`drivenWindowLost`).
     public func beginCalibration(of display: DisplayKey) -> (any CalibrationSession)? {
         guard calibrationSession == nil, selfTestRunner == nil, let controller = controllers[display],
-              controller.facts.gammaCapacity > 0 || controller.mechanism == .overlay else { return nil }
+              controller.facts.gammaCapacity > 0 else { return nil }
         holdForInstrument()
         controller.isDriven = true
-        controller.calibratesOverlay = controller.mechanism == .overlay
         let session = CalibrationController(display: display, driver: controller, writer: writer, time: time,
                                             machine: machine)
-        session.mechanism = controller.mechanism
         session.onEnd = { [weak self, weak controller] in
             controller?.isDriven = false
             controller?.stopNow()

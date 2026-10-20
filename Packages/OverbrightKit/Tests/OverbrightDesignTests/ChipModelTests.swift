@@ -152,11 +152,10 @@ import Testing
     @Test func theChipOfAStatus() throws {
         let decision = DisplayDecision(key: Self.display, target: .boost(gain: 1.4), reasons: [.focusOff, .headroom],
                                        eligibility: EligibilityResult(verdict: .supported(safeGain: 1.667, peakGain: 2.587),
-                                                                      advisories: [], defaultBoostEnabled: true,
-                                                                      defaultMechanism: .table),
-                                       mechanism: .table, domain: .encoded, requestedGain: 1.6)
+                                                                      advisories: [], defaultBoostEnabled: true),
+                                       domain: .encoded, requestedGain: 1.6)
         let status = DisplayStatus(key: Self.display, name: "Built-in Display", phase: .boosted, decision: decision,
-                                   appliedGain: 1.4, appliedFactor: 1.15, mechanism: .table, strategy: nil, lastReading: nil,
+                                   appliedGain: 1.4, appliedFactor: 1.15, strategy: nil, lastReading: nil,
                                    sdrWhite: nil)
         let context = ChipContext.of(status, facts: nil, language: english)
         let model = try #require(ChipModel.make(for: status, banner: .focusOff, context: context))
@@ -168,11 +167,10 @@ import Testing
     @Test func aDimOnlyDisplayShowsItsBadgeAtStandard() throws {
         let decision = DisplayDecision(key: Self.display, target: .neutral, reasons: [],
                                        eligibility: EligibilityResult(verdict: .notHDR, advisories: [],
-                                                                      defaultBoostEnabled: false, defaultMechanism: .table),
-                                       mechanism: .table, domain: .encoded, requestedGain: 1)
+                                                                      defaultBoostEnabled: false),
+                                       domain: .encoded, requestedGain: 1)
         let status = DisplayStatus(key: Self.display, name: "Office Display", phase: .idle, decision: decision,
-                                   appliedGain: 1, appliedFactor: 1, mechanism: .table, strategy: nil, lastReading: nil,
-                                   sdrWhite: nil)
+                                   appliedGain: 1, appliedFactor: 1, strategy: nil, lastReading: nil, sdrWhite: nil)
         let chip = try #require(ChipModel.make(for: status, banner: nil, context: ChipContext(language: english)))
         #expect(chip.text == "Not supported" && chip.color == .neutral)
         // A display that cannot dim either is in the "Why?" rows, not a card: no chip from here.

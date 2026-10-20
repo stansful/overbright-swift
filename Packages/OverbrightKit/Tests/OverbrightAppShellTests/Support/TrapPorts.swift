@@ -79,10 +79,6 @@ final class TrapTriggerFactory: TriggerFactory {
         log.record("triggers.makeTrigger")
         throw TriggerError.displayGone
     }
-    func makeOverlay(on display: DisplayRef) throws -> any OverlayHandle {
-        log.record("triggers.makeOverlay")
-        throw TriggerError.displayGone
-    }
     var openWindowCount: Int { log.record("triggers.openWindowCount"); return 0 }
 }
 

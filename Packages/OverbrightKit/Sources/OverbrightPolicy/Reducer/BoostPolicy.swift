@@ -6,11 +6,11 @@ import OverbrightCore
 /// D10: the pure guard reducer. Exhaustively tested; no clocks, no I/O, no randomness (`now`, `minuteOfDay`, the
 /// machine and the system snapshot are inputs).
 ///
-/// Per display (§6.1, `DisplayReducer`): eligibility, the effective level (own, linked or Focus), mechanism and
-/// domain; then every stop and boost-only guard in precedence order, the first of which sets `.neutral`; otherwise
-/// `.neutral` at Standard, `.dim(light:)` on the dim half, or `.boost(gain:)` with the static caps of §5.4 and the
-/// reasons that bind. Light gains below ×1.005 are a no-op and stay `.neutral`. Across displays: the banner of
-/// §6.3 (`BannerSelector`) and the symbol of §6.4 (`SymbolSelector`; never `.preparing`, which the engine sets).
+/// Per display (§6.1, `DisplayReducer`): eligibility, the effective level (own, linked or Focus) and domain; then
+/// every stop and boost-only guard in precedence order, the first of which sets `.neutral`; otherwise `.neutral` at
+/// Standard, `.dim(light:)` on the dim half, or `.boost(gain:)` with the static caps of §5.4 and the reasons that bind.
+/// Light gains below ×1.005 are a no-op and stay `.neutral`. Across displays: the banner of §6.3 (`BannerSelector`)
+/// and the symbol of §6.4 (`SymbolSelector`; never `.preparing`, which the engine sets).
 public nonisolated enum BoostPolicy {
     /// Every display's target and reasons, the banner and the menu bar symbol.
     public static func reduce(_ input: PolicyInput) -> PolicyDecision {

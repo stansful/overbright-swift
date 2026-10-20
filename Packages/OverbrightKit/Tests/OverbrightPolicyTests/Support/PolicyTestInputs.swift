@@ -27,12 +27,11 @@ nonisolated enum PolicyTestInputs {
     /// One display's input: the fixture's facts, a reading at the grant (none for a display without its own
     /// screen), and the given preferences.
     static func display(_ display: FixtureDisplay = builtIn, level: LevelPosition = LevelPreset.brightRoom.position,
-                        boostEnabled: Bool? = nil, capMode: CapMode = .safe, mechanism: MechanismPreference = .automatic,
-                        oled: OLEDOverride = .automatic, calibration: CalibrationRecord? = nil,
-                        trip: TripCause? = nil, reading: HeadroomReading?? = nil,
+                        boostEnabled: Bool? = nil, capMode: CapMode = .safe, oled: OLEDOverride = .automatic,
+                        calibration: CalibrationRecord? = nil, trip: TripCause? = nil, reading: HeadroomReading?? = nil,
                         sdrWhite: SDRWhiteEstimate? = nil) -> DisplayPolicyInput {
         let preferences = DisplayPreferences(boostEnabled: boostEnabled, level: level, capMode: capMode,
-                                             mechanism: mechanism, calibration: calibration, oled: oled)
+                                             calibration: calibration, oled: oled)
         let defaultReading = display.headroom.hasOwnScreen ? Self.reading(display) : nil
         return DisplayPolicyInput(facts: display.facts, preferences: preferences,
                                   feedback: EngineFeedback(trip: trip, lastReading: reading ?? defaultReading),
@@ -61,10 +60,9 @@ nonisolated enum PolicyTestInputs {
     }
 
     /// A linear calibration record valid on the owner's Mac at the built-in's potential.
-    static func record(_ outcome: CalibrationRecord.Outcome, mechanism: Mechanism = .table,
-                       build: String = DisplayFixture.ownerMachine.osBuild, potential: Double = 16,
-                       sdrWhite: Double? = nil) -> CalibrationRecord {
-        CalibrationRecord(outcome: outcome, mechanism: mechanism, mergeFactor: 1.613, estimatedExponent: 2.2,
+    static func record(_ outcome: CalibrationRecord.Outcome, build: String = DisplayFixture.ownerMachine.osBuild,
+                       potential: Double = 16, sdrWhite: Double? = nil) -> CalibrationRecord {
+        CalibrationRecord(outcome: outcome, mergeFactor: 1.613, estimatedExponent: 2.2,
                           measuredSDRWhiteNits: sdrWhite, headroomAtTest: 2.667, potentialAtTest: potential,
                           osBuild: build, measuredAt: Date(timeIntervalSinceReferenceDate: 0))
     }

@@ -1,10 +1,10 @@
 // OverbrightCore/Model/Engine/EnginePhase.swift — the per-display engine phase. ARCHITECTURE.md §3.5, §4.2.
 
-/// Per-display engine phase (ARCHITECTURE.md §4.2). Mechanism-agnostic: the overlay walks the same phases.
+/// Per-display engine phase (ARCHITECTURE.md §4.2).
 public nonisolated enum EnginePhase: Hashable, Sendable {
     /// Neutral table, no trigger, zero work.
     case idle
-    /// Table (or overlay) below 1, no headroom needed.
+    /// Table below 1, no headroom needed.
     case dimmed
     /// Trigger rung shown, waiting for the first headroom movement.
     case arming(rung: Int)

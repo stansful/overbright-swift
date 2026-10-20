@@ -1,5 +1,5 @@
 // OverbrightTriggers/Surfaces/MetalClearSurface.swift — the real `ClearFrameSurface`: a `CAMetalLayer` on the GPU that
-// drives the display. ARCHITECTURE.md §4.7 (T2/T3), §7.5, §8.6 (`NSSupportsAutomaticGraphicsSwitching`). Thread: main.
+// drives the display. ARCHITECTURE.md §4.7 (T2/T3), §8.6 (`NSSupportsAutomaticGraphicsSwitching`). Thread: main.
 import CoreGraphics
 import Metal
 import QuartzCore
@@ -11,14 +11,13 @@ final class MetalClearSurface: ClearFrameSurface {
 
     /// A surface on `display`'s own GPU (`CGDirectDisplayCopyCurrentMetalDevice`, never the system default, so a
     /// dual-GPU Intel Mac does not wake its discrete GPU); nil without a device or a queue. `drawablePixels` is the
-    /// drawable's edge; `nearestFiltering` stretches a tiny drawable over a large layer without blur (the overlay).
-    init?(display: CGDirectDisplayID, drawablePixels: Int, wantsEDR: Bool, nearestFiltering: Bool = false) {
+    /// drawable's edge.
+    init?(display: CGDirectDisplayID, drawablePixels: Int, wantsEDR: Bool) {
         guard let device = CGDirectDisplayCopyCurrentMetalDevice(display), let queue = device.makeCommandQueue() else {
             return nil
         }
         let layer = CAMetalLayer()
         MetalClearPass.configure(layer, device: device, drawablePixels: drawablePixels, wantsEDR: wantsEDR)
-        if nearestFiltering { layer.magnificationFilter = .nearest }
         self.metalLayer = layer
         self.queue = queue
     }
@@ -36,9 +35,6 @@ final class MetalClearSurface: ClearFrameSurface {
         commandBuffer.commit()
         return true
     }
-
-    /// `CAMetalLayer.wantsExtendedDynamicRangeContent`.
-    func setWantsEDR(_ wantsEDR: Bool) { metalLayer.wantsExtendedDynamicRangeContent = wantsEDR }
 
     /// `MetalClearPass.applyTag(_:headroom:)`.
     func applyTag(_ headroom: Double?) { MetalClearPass.applyTag(metalLayer, headroom: headroom) }

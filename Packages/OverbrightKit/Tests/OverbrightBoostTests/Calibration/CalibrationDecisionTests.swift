@@ -95,7 +95,7 @@ import Testing
         let record = try #require(c.controller.finish(brighter: true))
         #expect(record.outcome == .encoded)
         #expect(abs((record.mergeFactor ?? 0) - 1.62) < 1e-9)
-        #expect(record.osBuild == DisplayFixture.ownerMachine.osBuild && record.mechanism == .table)
+        #expect(record.osBuild == DisplayFixture.ownerMachine.osBuild)
         #expect(abs(record.headroomAtTest - h) < 0.01 && record.potentialAtTest == 16)
         #expect(c.controller.state == .finished && c.endings == 1 && c.stateAtEnd == .finished)
     }
@@ -139,7 +139,7 @@ import Testing
         #expect(record.outcome == .inconclusive && record.mergeFactor == nil)
     }
 
-    @Test func notBrighterIsRecordedForCompatibilityMode() async throws {
+    @Test func notBrighterIsRecorded() async throws {
         let c = CalibrationRig()
         #expect(await c.ready())
         c.controller.showComparison(boosted: true)

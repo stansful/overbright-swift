@@ -1,6 +1,6 @@
-// OverbrightTriggers/Geometry/TriggerGeometry.swift — where the trigger and overlay windows go, as pure functions.
-// ARCHITECTURE.md §4.7 (placement: top-right corner, notch alternative), §7.5 (the overlay covers the whole frame),
-// §7.6. Tested without a screen (`TriggerGeometryTests`).
+// OverbrightTriggers/Geometry/TriggerGeometry.swift — where the trigger windows go, as pure functions.
+// ARCHITECTURE.md §4.7 (placement: top-right corner, notch alternative), §7.6. Tested without a screen
+// (`TriggerGeometryTests`).
 import CoreGraphics
 import OverbrightCore
 
@@ -38,9 +38,6 @@ nonisolated enum TriggerGeometry {
             return CGRect(x: x, y: f.maxY - e, width: e, height: e)
         }
     }
-
-    /// The Compatibility overlay's frame: the whole screen, menu bar included (§7.5).
-    static func overlayFrame(on screen: ScreenGeometry) -> CGRect { screen.frame }
 
     /// The auxiliary areas are documented in screen coordinates; accept screen-local values too (hardware check H-T6):
     /// a rect whose centre lies outside the screen frame is taken as local and moved by the frame's origin.

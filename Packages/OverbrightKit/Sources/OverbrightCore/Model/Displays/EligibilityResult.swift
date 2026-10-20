@@ -8,12 +8,8 @@ public nonisolated struct EligibilityResult: Hashable, Sendable {
     public var advisories: [Advisory]
     /// Class default of `DisplayPreferences.boostEnabled` (the OLED override is applied before classifying).
     public var defaultBoostEnabled: Bool
-    /// The mechanism `automatic` resolves to before calibration.
-    public var defaultMechanism: Mechanism
     /// A classification result.
-    public init(verdict: DisplayVerdict, advisories: [Advisory], defaultBoostEnabled: Bool,
-                defaultMechanism: Mechanism) {
-        self.verdict = verdict; self.advisories = advisories
-        self.defaultBoostEnabled = defaultBoostEnabled; self.defaultMechanism = defaultMechanism
+    public init(verdict: DisplayVerdict, advisories: [Advisory], defaultBoostEnabled: Bool) {
+        self.verdict = verdict; self.advisories = advisories; self.defaultBoostEnabled = defaultBoostEnabled
     }
 }

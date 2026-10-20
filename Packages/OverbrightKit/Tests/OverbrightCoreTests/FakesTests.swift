@@ -246,8 +246,8 @@ import Testing
         let headroom = ScriptedHeadroom(fixture: .hardwareMirror, time: time)
         let factory = FakeTriggerFactory(headroom: headroom)
         #expect(headroom.reading(for: DisplayRef(key: DisplayFixture.Keys.projector, id: 6)) == nil)  // no own screen
-        let overlay = try factory.makeOverlay(on: ref)
-        try overlay.setFactor(1.2, headroomRequest: 1.3)                          // an overlay's EDR request
+        let trigger = try factory.makeTrigger(request(.taggedLayer), on: ref)
+        #expect(await trigger.present(.black))                                    // a trigger's EDR request
         await time.advance(by: .seconds(2))
         #expect(abs((headroom.currentHeadroom(of: builtIn) ?? 0) - 1600.0 / 600) < 1e-9)
         headroom.setOverride(1, for: nil)                                         // a lock shield
@@ -259,12 +259,13 @@ import Testing
         #expect(rising > 2.7 && rising < 5.3)
         await time.advance(by: .seconds(1))
         #expect(abs((headroom.currentHeadroom(of: builtIn) ?? 0) - 5.33) < 1e-9)
-        try overlay.setFactor(0.5, headroomRequest: 1)                            // dimming: no EDR request
+        trigger.remove()                                                          // the request ends
         #expect(headroom.requestCount(on: builtIn) == 0 && headroom.currentHeadroom(of: builtIn) == 1)
         headroom.update(builtIn) { $0.potential = 1 }                             // potential falls: H follows
         #expect(headroom.currentHeadroom(of: builtIn) == 1)
-        try overlay.setFactor(1, headroomRequest: 1.3)                            // request first, then boost (§7.5)
-        #expect(headroom.requestCount(on: builtIn) == 1)
+        let next = try factory.makeTrigger(request(.taggedLayer), on: ref)
+        #expect(await next.present(.black))
+        #expect(headroom.requestCount(on: builtIn) == 1 && headroom.currentHeadroom(of: builtIn) == 1)
     }
 
     @Test func aRecordLimitDropsOnlyRemovedHandles() async throws {

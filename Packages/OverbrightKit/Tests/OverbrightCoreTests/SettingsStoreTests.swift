@@ -67,7 +67,7 @@ import Testing
         let a = SettingsStore(defaults: defaults)
         let combo = KeyCombo(keyCode: 11, modifiers: [.control, .option, .command, .shift])
         a[ShortcutSettings.bindings] = [.toggle: combo, .brighter: nil]                         // nil = explicitly off
-        let record = CalibrationRecord(outcome: .encoded, mechanism: .table, mergeFactor: 1.61, estimatedExponent: 2.38,
+        let record = CalibrationRecord(outcome: .encoded, mergeFactor: 1.61, estimatedExponent: 2.38,
                                        measuredSDRWhiteNits: nil, headroomAtTest: 2.667, potentialAtTest: 16,
                                        osBuild: "26A434", measuredAt: Date(timeIntervalSinceReferenceDate: 800_000_000))
         let key = DisplayKey(rawValue: "0B21E7F1-0000-4000-8000-000000000002")
@@ -93,6 +93,49 @@ import Testing
     }
 
     /// Reading a key inside `observe` tracks that key only (one observable box per key).
+    /// Preferences stored before Compatibility mode was removed (2026-10-21) still decode, display by display: the
+    /// `mechanism` keys (the preference's and the record's) are ignored, so every display uses the color table, and a
+    /// record that measured the overlay is dropped rather than read as a table record (ARCHITECTURE.md §7.5). The next
+    /// write stores no `mechanism` key.
+    @Test func preferencesFromBeforeTheOverlayWasRemovedStillDecode() throws {
+        let defaults = InMemoryDefaults()
+        let a = "0B21E7F1-0000-4000-8000-00000000000A", b = "0B21E7F1-0000-4000-8000-00000000000B"
+        func record(_ outcome: String, measuring mechanism: String) -> String {
+            #"""
+            {"outcome": "\#(outcome)", "mechanism": "\#(mechanism)", "mergeFactor": 1.61, "headroomAtTest": 2.667,
+             "potentialAtTest": 16, "osBuild": "26A434", "measuredAt": 800000000}
+            """#
+        }
+        let blob = #"""
+            {"\#(a)": {"boostEnabled": true, "level": {"value": 0.6}, "capMode": "peak", "mechanism": "overlay",
+                       "calibration": \#(record("linear", measuring: "overlay")),
+                       "oled": "oled", "oledNoticeAcknowledged": true, "lastKnownName": "MPG322UX OLED"},
+             "\#(b)": {"level": {"value": -0.4}, "capMode": "safe", "mechanism": "table",
+                       "triggerOverride": "metalKeepAlive", "calibration": \#(record("encoded", measuring: "table")),
+                       "oled": "automatic", "oledNoticeAcknowledged": false}}
+            """#
+        defaults.set(Data(blob.utf8), forKey: "overbright.displays.perDisplay")
+        let store = SettingsStore(defaults: defaults)
+        let perDisplay = store[DisplaySettings.perDisplay]
+        let overlay = try #require(perDisplay[DisplayKey(rawValue: a)])
+        let table = try #require(perDisplay[DisplayKey(rawValue: b)])
+        #expect(overlay.boostEnabled == true && overlay.level == LevelPosition(0.6) && overlay.capMode == .peak)
+        #expect(overlay.oled == .oled && overlay.oledNoticeAcknowledged && overlay.lastKnownName == "MPG322UX OLED")
+        #expect(overlay.calibration == nil)                                       // it measured the overlay
+        #expect(table.boostEnabled == nil && table.level == LevelPosition(-0.4) && table.capMode == .safe)
+        #expect(table.triggerOverride == .metalKeepAlive && table.oled == .automatic && !table.oledNoticeAcknowledged)
+        #expect(table.calibration?.outcome == .encoded && table.calibration?.mergeFactor == 1.61)
+        #expect(table.calibration?.osBuild == "26A434" && table.calibration?.potentialAtTest == 16)
+
+        var edited = perDisplay                                                   // any edit writes every display
+        edited[DisplayKey(rawValue: b)]?.lastKnownName = "Studio Display"
+        store[DisplaySettings.perDisplay] = edited
+        let written = String(decoding: try #require(defaults.data(forKey: "overbright.displays.perDisplay")),
+                             as: UTF8.self)
+        #expect(!written.contains("mechanism") && written.contains("\"encoded\""))
+        #expect(SettingsStore(defaults: defaults)[DisplaySettings.perDisplay] == edited)
+    }
+
     @Test func observationIsPerKey() async {
         let store = SettingsStore(defaults: InMemoryDefaults())
         var delivered: [Bool] = []
@@ -149,7 +192,7 @@ import Testing
 
         let preferences = DisplayPreferences()
         #expect(preferences.boostEnabled == nil && preferences.level == LevelPreset.brightRoom.position)
-        #expect(preferences.capMode == .safe && preferences.mechanism == .automatic && preferences.oled == .automatic)
+        #expect(preferences.capMode == .safe && preferences.oled == .automatic)
         #expect(preferences.calibration == nil && preferences.triggerOverride == nil && !preferences.oledNoticeAcknowledged)
         #expect(StepSize.regular.stops == 0.25 && abs(StepSize.fine.stops - 1.0 / 12) < 1e-12)
     }

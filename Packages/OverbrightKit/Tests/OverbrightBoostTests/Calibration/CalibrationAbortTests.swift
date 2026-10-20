@@ -46,7 +46,7 @@ import Testing
     /// calibration window does not store. Every early end of the sweep counts: Esc, a lock, occlusion, a headroom drop.
     @Test(arguments: [CalibrationAbortReason.cancelled, .shielded, .occluded, .headroomDropped, .writeRefused])
     func anInterruptedSweepKeepsTheEarlierRecord(_ reason: CalibrationAbortReason) async throws {
-        let earlier = CalibrationRecord(outcome: .encoded, mechanism: .table, mergeFactor: 1.6, estimatedExponent: 2.4,
+        let earlier = CalibrationRecord(outcome: .encoded, mergeFactor: 1.6, estimatedExponent: 2.4,
                                         measuredSDRWhiteNits: nil, headroomAtTest: 2.667, potentialAtTest: 16,
                                         osBuild: DisplayFixture.ownerMachine.osBuild, measuredAt: Date())
         var preferences = DisplayPreferences()

@@ -1,4 +1,4 @@
-// OverbrightTriggers/Windows/SystemWindowPresenter.swift — the only code that orders a trigger or overlay window in.
+// OverbrightTriggers/Windows/SystemWindowPresenter.swift — the only code that orders a trigger window in.
 // ARCHITECTURE.md §7.6, §9.1 ("No test ever orders a window in"), D24. Thread: main.
 //
 // The single place in the module that calls `orderFrontRegardless()` (lint test

@@ -33,7 +33,7 @@ public nonisolated enum DisplayVerdict: Hashable, Codable, Sendable {
     public var allowsBoost: Bool {
         switch self { case .supported, .noGainAtFullBrightness, .presetLimits: true; default: false }
     }
-    /// Dimming needs only a transfer table (or the overlay), never headroom or the per-display boost switch.
+    /// Dimming needs only a transfer table, never headroom or the per-display boost switch.
     public var allowsDim: Bool {
         switch self { case .virtualDisplay, .noGammaTable, .referencePreset, .checking: false; default: true }
     }

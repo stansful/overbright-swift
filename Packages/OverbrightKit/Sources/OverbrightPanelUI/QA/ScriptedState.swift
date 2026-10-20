@@ -53,9 +53,9 @@ enum ScriptedSettings {
         settings[DisplaySettings.perDisplay] = all
     }
 
-    /// A calibration record that is valid on the owner's Mac (encoded result, the table method).
+    /// A calibration record that is valid on the owner's Mac (encoded result).
     static func calibration(potential: Double, sdrWhite: Double? = nil) -> CalibrationRecord {
-        CalibrationRecord(outcome: .encoded, mechanism: .table, mergeFactor: 1.62, estimatedExponent: 2.3,
+        CalibrationRecord(outcome: .encoded, mergeFactor: 1.62, estimatedExponent: 2.3,
                           measuredSDRWhiteNits: sdrWhite, headroomAtTest: 2.667, potentialAtTest: potential,
                           osBuild: DisplayFixture.ownerMachine.osBuild, measuredAt: ScriptedParts.now)
     }

@@ -1,6 +1,6 @@
-// OverbrightTriggers/Windows/TriggerWindowRegistry.swift — the factory's list of live triggers and overlays: the
-// `triggerWindows` count of diagnostics and smoke (D24, §8.4) and the backstop that removes every window when the
-// service stops. ARCHITECTURE.md §3.6 (`openWindowCount`), §7.4 (stop order). Thread: main.
+// OverbrightTriggers/Windows/TriggerWindowRegistry.swift — the factory's list of live triggers: the `triggerWindows`
+// count of diagnostics and smoke (D24, §8.4) and the backstop that removes every window when the service stops.
+// ARCHITECTURE.md §3.6 (`openWindowCount`), §7.4 (stop order). Thread: main.
 //
 // Entries are weak: a handle the engine drops is gone from the count, and its window goes with it (`TriggerHost`
 // tears down in its deinit), so no window ever outlives its handle. Handles conform to `RegisteredWindowOwner`.

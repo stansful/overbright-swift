@@ -268,7 +268,7 @@ extension BoostEngine {
     /// Standard light at a level: the dim light on the dim half, 1 otherwise.
     func light(of level: LevelPosition) -> Double { level.isDim ? LevelMapping.dimLight(for: level) : 1 }
 
-    /// Displays that can dim (by the last decision's verdict; a table or the overlay when there is none yet).
+    /// Displays that can dim (by the last decision's verdict; a transfer table when there is none yet).
     func dimmableKeys() -> [DisplayKey] {
         displays.displays.filter { facts in
             if let verdict = lastDecision?.displays[facts.ref.key]?.eligibility.verdict, verdict != .checking {

@@ -61,8 +61,7 @@ enum ScriptedParts {
     /// An eligibility result.
     static func eligibility(_ verdict: DisplayVerdict, advisories: [Advisory] = [], boostByDefault: Bool = true)
         -> EligibilityResult {
-        EligibilityResult(verdict: verdict, advisories: advisories, defaultBoostEnabled: boostByDefault,
-                          defaultMechanism: .table)
+        EligibilityResult(verdict: verdict, advisories: advisories, defaultBoostEnabled: boostByDefault)
     }
 
     // MARK: Statuses
@@ -78,10 +77,10 @@ enum ScriptedParts {
                         reasons: [LimitReason] = [], eligibility: EligibilityResult, gain: Double = 1, requested: Double? = nil, reading: HeadroomReading? = nil,
                         sdrWhite: SDRWhiteEstimate? = nil, failedTries: Int = 0) -> DisplayStatus {
         let decision = DisplayDecision(key: facts.ref.key, target: target, reasons: reasons, eligibility: eligibility,
-                                       mechanism: .table, domain: .encoded, requestedGain: requested ?? gain)
+                                       domain: .encoded, requestedGain: requested ?? gain)
         return DisplayStatus(key: facts.ref.key, name: facts.name, phase: phase, decision: decision, appliedGain: gain,
                              appliedFactor: FactorMath.tableFactor(forLightGain: gain, domain: .encoded),
-                             mechanism: .table, strategy: phase == .idle ? nil : .taggedLayer, lastReading: reading,
+                             strategy: phase == .idle ? nil : .taggedLayer, lastReading: reading,
                              sdrWhite: sdrWhite, failedTries: failedTries)
     }
 

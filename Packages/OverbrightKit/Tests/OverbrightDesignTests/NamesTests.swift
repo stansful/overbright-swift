@@ -44,7 +44,7 @@ import Testing
         #expect(LaunchBehavior.dontLaunch.localizedName(in: english) == "Don’t open Overbright")
         #expect(SelfTestStrategyResult.Verdict.invalidBaseline.localizedName(in: english) == "Already bright")
         #expect(ConflictSeverity.benign.localizedKind(in: english) == nil)
-        let record = CalibrationRecord(outcome: .encoded, mechanism: .table, mergeFactor: 1.6, estimatedExponent: nil,
+        let record = CalibrationRecord(outcome: .encoded, mergeFactor: 1.6, estimatedExponent: nil,
                                        measuredSDRWhiteNits: nil, headroomAtTest: 2.667, potentialAtTest: 16, osBuild: "27A1",
                                        measuredAt: Date(timeIntervalSince1970: 0))
         #expect(CalibrationText.make(record, isValid: true, osVersion: "27.0.1", in: english) == "Standard curve (macOS 27.0.1)")

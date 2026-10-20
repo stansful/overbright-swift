@@ -1,5 +1,5 @@
 // OverbrightTriggers/Geometry/ScreenGeometry.swift — what the window code needs to know about one screen.
-// ARCHITECTURE.md §4.7 (placement), §7.6 (trigger and overlay windows).
+// ARCHITECTURE.md §4.7 (placement), §7.6 (trigger windows).
 import CoreGraphics
 
 /// The AppKit geometry of one display's screen, read fresh from `NSScreen` (or a test fixture).
