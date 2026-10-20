@@ -24,26 +24,26 @@ import Testing
 
     // MARK: idle
 
-    /// idle → boost: baseline captured, three idle reads, T1 black armed (macOS 27), movement → gating, stable →
-    /// ramping → boosted at the requested gain; the table is the baseline × F(G).
+    /// idle → boost: baseline captured, three idle reads, T3 bright armed (the automatic ladder's first rung, D4 as
+    /// built), movement → gating, stable → ramping → boosted at the requested gain; the table is the baseline × F(G).
     @Test func idleToBoostArmsGatesRampsAndHolds() async throws {
         let h = EngineHarness()
         await h.start()
         #expect(h.phase() == .idle)
         h.engine.setOn(true, source: .panel)
         await h.settle()
-        #expect(h.phase() == .arming(rung: 1))
+        #expect(h.phase() == .arming(rung: 5))
         await h.advance(.milliseconds(500))
-        #expect(h.phase() == .gating(rung: 1))
+        #expect(h.phase() == .gating(rung: 5))
         #expect(await h.boost())
         let made = try #require(h.triggers.made.first)
-        #expect(made.request.strategy == .taggedLayer && made.request.pixel == .black)
+        #expect(made.request.strategy == .metalKeepAlive && made.request.pixel == .bright)
         let status = try #require(h.displayStatus())
         #expect(abs(status.appliedGain - brightRoomGain) < 1e-9)
         let factor = try #require(h.liveFactor())
         #expect(abs(factor - FactorMath.tableFactor(forLightGain: brightRoomGain, domain: .encoded)) < 1e-4)
         #expect(h.codes.contains("gate.ready"))
-        #expect(h.engine.strategyCache.record(for: h.builtIn, osBuild: h.fixture.machine.osBuild)?.rung == 1)
+        #expect(h.engine.strategyCache.record(for: h.builtIn, osBuild: h.fixture.machine.osBuild)?.rung == 5)
         #expect(h.orderViolations.isEmpty)
     }
 
@@ -110,16 +110,16 @@ import Testing
 
     // MARK: arming
 
-    /// A factory that throws for T1 and a T2 whose first present fails: the ladder moves on to T3.
+    /// A factory that throws for T3 and a T2 whose first present fails: the ladder moves on to T4 black.
     @Test func failedPresentsMoveToTheNextRung() async throws {
         let h = EngineHarness()
-        h.triggers.makeErrors[.taggedLayer] = .colorUnavailable
+        h.triggers.makeErrors[.metalKeepAlive] = .noMetalDevice
         h.triggers.failingPresents = [.metalOneShot]
         await h.start()
         #expect(await h.boost())
-        #expect(h.controller()?.currentRung?.number == 5)
-        #expect(h.liveTriggers().map(\.request.strategy) == [.metalKeepAlive])
-        #expect(h.codes.filter { $0 == "rung.presentFailed" }.count == 4)
+        #expect(h.controller()?.currentRung?.number == 6)
+        #expect(h.liveTriggers().map(\.request.strategy) == [.hlgStill])
+        #expect(h.codes.filter { $0 == "rung.presentFailed" }.count == 3)
     }
 
     /// No movement 2.5 s after the first present: rung n+1 is armed before rung n is removed (make before break).
@@ -129,15 +129,15 @@ import Testing
         await h.start()
         h.engine.setOn(true, source: .panel)
         await h.advance(.milliseconds(2_600))
-        #expect(h.phase() == .arming(rung: 1))
+        #expect(h.phase() == .arming(rung: 5))
         await h.advance(.milliseconds(200))
-        #expect(h.phase() == .arming(rung: 2))
+        #expect(h.phase() == .arming(rung: 4))
         let events = h.checkedTriggers.events
-        let makeSecond = try #require(events.firstIndex(of: "make:taggedLayer/bright"))
-        let removeFirst = try #require(events.firstIndex(of: "remove:taggedLayer/black"))
+        let makeSecond = try #require(events.firstIndex(of: "make:metalOneShot/bright"))
+        let removeFirst = try #require(events.firstIndex(of: "remove:metalKeepAlive/bright"))
         #expect(makeSecond < removeFirst)
         #expect(await h.boost())
-        #expect(h.controller()?.currentRung?.number == 3)
+        #expect(h.controller()?.currentRung?.number == 4)
     }
 
     /// The last rung times out: trigger removed, baseline, failed(headroomNeverArrived), one failed try.
@@ -148,7 +148,7 @@ import Testing
         h.engine.setOn(true, source: .panel)
         let failed = await h.advance(until: { h.phase() == .failed(.headroomNeverArrived) }, limit: .seconds(25))
         #expect(failed)
-        #expect(h.triggers.made.count == 7)
+        #expect(h.triggers.made.count == 5)                               // the automatic ladder: rungs 5, 4, 3, 6, 7
         #expect(h.liveTriggers().isEmpty && h.everyTableAtBase)
         #expect(h.displayStatus()?.failedTries == 1)
         #expect(h.controller()?.trip == .headroomNeverArrived)
@@ -162,12 +162,12 @@ import Testing
         await h.start()
         h.engine.setOn(true, source: .panel)
         await h.advance(.seconds(10))
-        #expect(h.phase() == .arming(rung: 1))
+        #expect(h.phase() == .arming(rung: 5))
         #expect(h.triggers.made.count == 1)
         h.signals.snapshot.isHDRSuppressed = false
         h.signals.emit(.hdrSuppressionEnded)
         #expect(await h.boost())
-        #expect(h.controller()?.currentRung?.number == 3)
+        #expect(h.controller()?.currentRung?.number == 4)
     }
 
     /// Potential falls to 1 while arming: stop escalating, remove the trigger, baseline, failed.
@@ -193,10 +193,10 @@ import Testing
         await h.start()
         h.engine.setOn(true, source: .panel)
         await h.advance(.seconds(2))
-        #expect(h.phase() == .gating(rung: 1))                          // moved after ≈ 1 s
+        #expect(h.phase() == .gating(rung: 5))                          // moved after ≈ 1 s
         await h.advance(.seconds(12))
         #expect(h.triggers.made.count == 2)
-        #expect(h.phase() == .arming(rung: 2) || h.phase() == .gating(rung: 2))
+        #expect(h.phase() == .arming(rung: 4) || h.phase() == .gating(rung: 4))
         #expect(h.codes.contains("rung.timedOut"))
     }
 
@@ -490,9 +490,9 @@ import Testing
         let failed = await h.advance(until: { h.phase() == .failed(.headroomNeverArrived) }, limit: .seconds(70),
                                      step: .milliseconds(50))
         #expect(failed)
-        #expect(h.triggers.made.allSatisfy { $0.request.strategy == .taggedLayer && $0.request.pixel == .black })
+        #expect(h.triggers.made.allSatisfy { $0.request.strategy == .metalKeepAlive && $0.request.pixel == .bright })
         let record = h.engine.strategyCache.record(for: h.builtIn, osBuild: h.fixture.machine.osBuild)
-        #expect(record?.rung == 1 && record?.failures == 0)               // quarantined: no count against the rung
+        #expect(record?.rung == 5 && record?.failures == 0)               // quarantined: no count against the rung
     }
 
     /// failed(headroomNeverArrived) clears by itself on wake, unlock, reconfiguration and Try Again.

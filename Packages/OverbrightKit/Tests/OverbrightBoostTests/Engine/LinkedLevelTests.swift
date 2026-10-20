@@ -32,9 +32,10 @@ import Testing
 
     @Test func movingOneLinkedSliderMovesAll() async throws {
         let h = await twoDisplays(linked: true)
+        let perDisplay = h.settings[DisplaySettings.perDisplay]
         h.engine.setLevel(LevelPreset.indoor.position, for: msi, source: .panel)
         #expect(h.settings[DisplaySettings.linkedLevel] == LevelPreset.indoor.position)
-        #expect(h.settings[DisplaySettings.perDisplay].isEmpty)
+        #expect(h.settings[DisplaySettings.perDisplay] == perDisplay)       // no display's own level is written
         #expect(await h.boost(h.builtIn))
         #expect(await h.boost(msi))
         #expect(abs((h.displayStatus(h.builtIn)?.appliedGain ?? 0) - pow(1000.0 / 600, 0.25)) < 1e-9)
@@ -69,6 +70,7 @@ import Testing
     /// Linked, a multiplier sets the one linked level, read on the named display (else the built-in one).
     @Test func linkedMultiplierSetsTheLinkedLevel() async throws {
         let h = await twoDisplays(linked: true)
+        let perDisplay = h.settings[DisplaySettings.perDisplay]
         h.engine.setOn(true, source: .panel)
         await h.settle()
         h.engine.setExtraBrightness(.multiplier(1.2), for: nil, source: .intent)
@@ -76,7 +78,7 @@ import Testing
         #expect(abs(h.settings[DisplaySettings.linkedLevel].value - expected) < 1e-9)
         h.engine.setExtraBrightness(.multiplier(1.2), for: msi, source: .intent)
         #expect(abs(h.settings[DisplaySettings.linkedLevel].value - log(1.2) / log(1.3)) < 1e-9)
-        #expect(h.settings[DisplaySettings.perDisplay].isEmpty)
+        #expect(h.settings[DisplaySettings.perDisplay] == perDisplay)
     }
 
     /// Brighter / Less Bright move the display under the pointer by a quarter stop (or 1/12 with the fine size).

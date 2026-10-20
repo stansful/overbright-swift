@@ -15,10 +15,13 @@ import Testing
 @MainActor @Suite struct EndToEndScenarioTests {
     // MARK: Running a scenario
 
-    /// Runs `script` over `fixture` on a manual clock; returns the dumps by label.
-    static func run(_ fixture: DisplayFixture, _ script: String) async throws -> [String: StatusSummary] {
+    /// Runs `script` over `fixture` on a manual clock; returns the dumps by label. `confirmsFirstBoost` false leaves
+    /// the fixture's displays unconfirmed, as the QA matrix's fresh defaults suite does (`TestShell.context`).
+    static func run(_ fixture: DisplayFixture, _ script: String,
+                    confirmsFirstBoost: Bool = true) async throws -> [String: StatusSummary] {
         let time = ManualTimeSource()
-        let shell = TestShell.shell(fixture, context: TestShell.context(fixture: fixture, time: time))
+        let context = TestShell.context(fixture: fixture, time: time, confirmsFirstBoost: confirmsFirstBoost)
+        let shell = TestShell.shell(fixture, context: context)
         await CompositionRoot.runLaunchWork(shell)
         let rig = try #require(ScenarioRunner.Rig(shell: shell))
         let runner = ScenarioRunner(rig: rig, wait: { duration in await advance(time, by: duration) })
@@ -85,9 +88,10 @@ import Testing
     static let heat = "Paused because your Mac is hot. Overbright continues when it cools down."
     static let onLabels = ["on", "low-power", "resumed", "locked", "unlocked", "booster", "clear"]
 
-    /// The standard scenario: on, a guard, a shield, a booster, dimming, off.
+    /// The standard scenario: on (answering the first boost's "Keep this level?"), a guard, a shield, a booster,
+    /// dimming, off. The QA matrix runs the same script (scripts/qa-matrix.sh).
     static let standard = """
-        on; wait 8; dump on; low-power on; wait 1; dump low-power; low-power off; wait 8; dump resumed; \
+        on; keep; wait 8; dump on; low-power on; wait 1; dump low-power; low-power off; wait 8; dump resumed; \
         lock; wait 0.1; dump locked; unlock; wait 8; dump unlocked; conflict booster; wait 1; dump booster; \
         conflict none; wait 8; dump clear; level -0.5; wait 1; dump dimmed; off; wait 1; dump off
         """
@@ -171,6 +175,18 @@ import Testing
             #expect(dumps.values.allSatisfy { $0.gammaWrites == 0 }, "Compatibility mode writes no table")
             #expect(dumps["on"]?.triggerWindows == 1 && dumps["dimmed"]?.triggerWindows == 1, "the overlay dims too")
         }
+    }
+
+    /// Unconfirmed, as in the QA matrix's fresh suite: the first boost asks, `keep` answers it, and the standard
+    /// scenario runs as with a kept build (without `keep`, the built-in would be back at Standard at "resumed").
+    @Test func theStandardScenarioAnswersTheFirstBoost() async throws {
+        #expect(try ScenarioScript.parse("on; keep") == [.on, .keep])
+        let dumps = try await Self.run(.builtinXDRLidOpen, Self.standard, confirmsFirstBoost: false)
+        Self.check(dumps, Self.boosting("built-in"), .builtinXDRLidOpen)
+        let unanswered = try await Self.run(.builtinXDRLidOpen, Self.standard.replacingOccurrences(of: "keep; ", with: ""),
+                                            confirmsFirstBoost: false)
+        #expect(unanswered["on"]?.displays.first.map(Self.state) == "boosted")
+        #expect(unanswered["resumed"]?.displays.first.map(Self.state) == "idle")
     }
 
     // MARK: Guards, automations, shields and levels

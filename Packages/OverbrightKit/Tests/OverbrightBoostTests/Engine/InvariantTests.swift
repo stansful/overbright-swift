@@ -196,7 +196,7 @@ import Testing
         await h.start()
         h.engine.setOn(true, source: .panel)
         await h.advance(.milliseconds(1_500))
-        #expect(h.phase() == .gating(rung: 1))
+        #expect(h.phase() == .gating(rung: 5))
         h.engine.setOn(false, source: .panel)
         h.engine.setOn(true, source: .panel)
         h.engine.setOn(false, source: .panel)
