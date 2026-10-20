@@ -23,7 +23,7 @@ SUITE=app.overbright.Overbright.qa-matrix
 WELCOME_DONE='<22302e312e3022>'      # JSON "0.1.0": Welcome finished, so the launch UI shows the panel
 WELCOME_STEPS=(hello displays)             # step 1, and step 2 with its per-display extra brightness switches
 WELCOME_SCRIPT='wait 3; dump welcome; wait 1; quit'
-SCRIPT='on; wait 8; dump on; low-power on; wait 1; dump low-power; low-power off; wait 8; dump resumed; lock; wait 0.1; dump locked; unlock; wait 8; dump unlocked; conflict booster; wait 1; dump booster; conflict none; wait 8; dump clear; level -0.5; wait 1; dump dimmed; off; wait 1; dump off; wait 1; quit'
+SCRIPT='on; keep; wait 8; dump on; low-power on; wait 1; dump low-power; low-power off; wait 8; dump resumed; lock; wait 0.1; dump locked; unlock; wait 8; dump unlocked; conflict booster; wait 1; dump booster; conflict none; wait 8; dump clear; level -0.5; wait 1; dump dimmed; off; wait 1; dump off; wait 1; quit'
 rm -rf "$OUT"; mkdir -p "$OUT"
 
 run() {

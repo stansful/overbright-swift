@@ -6,6 +6,8 @@ import OverbrightCore
 /// One step of a scenario.
 enum ScenarioStep: Equatable {
     case on, off, toggle, standard, brighter, lessBright, dimAll
+    /// "Keep this level?" answered with Keep, as the HUD's button would (a display's first boost on a macOS build asks).
+    case keep
     case level(LevelPosition)
     case dim(percent: Int)
     case boost(DisplayKey, Bool)
