@@ -77,6 +77,22 @@ import Testing
         #expect(app.calls == ["openSettings(\(SettingsLinks.display(builtIn)))", "showCalibration(\(key))"])
     }
 
+    /// The gear beside a Safe-limit chip performs `.choosePeak`: Settings ▸ Displays at that display's Limit row.
+    @Test func theLimitGearOpensTheLimitRow() throws {
+        let (services, _) = try setup("boosting")
+        var status = services.boost.status
+        let index = try #require(status.displays.firstIndex { $0.key == builtIn })
+        status.displays[index].decision?.reasons = [.safeLimit]
+        let boost = try #require(services.boost as? PreviewBoostControl)
+        boost.status = status
+        let model = try card(services, builtIn)
+        #expect(DisplayCardView.offersLimitSetting(model, isMasterOn: true))
+        let commands = PanelCommands(services: services, source: .panel, confirmOLED: { _ in true }, openURL: { _ in })
+        commands.perform(.choosePeak, on: model)
+        let app = try #require(services.app as? PreviewAppControl)
+        #expect(app.calls == ["openSettings(\(SettingsLinks.limit(of: builtIn)))"])
+    }
+
     @Test func linkedLevelsActOnEveryDisplay() throws {
         let (services, boost) = try setup("linked")
         let commands = PanelCommands(services: services, source: .panel, confirmOLED: { _ in true }, openURL: { _ in })

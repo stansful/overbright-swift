@@ -171,13 +171,18 @@ public struct DisplayCardView: View {
         if chip != nil || offersTurnOn {
             CardChipLine {
                 if let chip {
-                    StatusChip(chip, actions: CardChip.actions(for: model, isMasterOn: isMasterOn, commands: commands),
-                               isPresented: $isChipPopoverShown)
-                        .lineLimit(1)
-                        .truncationMode(.middle)
-                        .panelFocus(focus, .chip(model.key), cornerRadius: HitTarget.minimum.height / 2) {
-                            isChipPopoverShown = true
+                    HStack(spacing: Space.xs) {
+                        StatusChip(chip, actions: CardChip.actions(for: model, isMasterOn: isMasterOn, commands: commands),
+                                   isPresented: $isChipPopoverShown)
+                            .lineLimit(1)
+                            .truncationMode(.middle)
+                            .panelFocus(focus, .chip(model.key), cornerRadius: HitTarget.minimum.height / 2) {
+                                isChipPopoverShown = true
+                            }
+                        if Self.offersLimitSetting(model, isMasterOn: isMasterOn) {
+                            limitSettingButton(model)
                         }
+                    }
                 }
             } turnOn: {
                 if offersTurnOn {
@@ -190,6 +195,26 @@ public struct DisplayCardView: View {
             }
             .transition(.opacity)
         }
+    }
+
+    /// Whether the chip names a ceiling the user can raise (Safe or OLED limit): it gets a gear beside it that opens
+    /// Settings ▸ Displays at this display's Limit row, so Safe becomes Peak in one click (the owner's request,
+    /// 2026-10-20). The chip's popover keeps its own "Choose Peak…".
+    static func offersLimitSetting(_ model: DisplayCardModel, isMasterOn: Bool) -> Bool {
+        CardChip.kinds(for: model, isMasterOn: isMasterOn).contains { kind in
+            if case .choosePeak = kind { true } else { false }
+        }
+    }
+
+    /// The gear beside a limit chip.
+    private func limitSettingButton(_ model: DisplayCardModel) -> some View {
+        Button { commands.perform(.choosePeak, on: model) } label: {
+            Image(systemName: OverbrightSymbol.gearshapeFill.rawValue)
+                .accessibilityHidden(true)
+        }
+        .buttonStyle(IconButtonStyle())
+        .help(CardAction.choosePeak.title)
+        .accessibilityLabel(CardAction.choosePeak.title)
     }
 
     @ViewBuilder

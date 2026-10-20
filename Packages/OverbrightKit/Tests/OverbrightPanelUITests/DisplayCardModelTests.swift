@@ -274,4 +274,20 @@ import Testing
         #expect(kinds([.headroom]).isEmpty)
         #expect(kinds([.thermalSerious]).isEmpty)
     }
+
+    /// A chip that names a ceiling the user can raise (Safe or OLED limit) gets the gear beside it (the owner's request,
+    /// 2026-10-20); no other chip does, and none while the master is off (no chips then).
+    @Test func aLimitChipOffersTheGear() {
+        func offers(_ reasons: [LimitReason], master: Bool = true) -> Bool {
+            let card = model(status(builtIn, verdict: ScriptedParts.builtInVerdict, reasons: reasons), isOn: master,
+                             facts: builtIn)
+            return DisplayCardView.offersLimitSetting(card, isMasterOn: master)
+        }
+        #expect(offers([.safeLimit]) && offers([.oledLimit]))
+        #expect(!offers([.safeLimit], master: false))
+        let others: [[LimitReason]] = [[], [.headroom], [.nearFullBrightnessOnly], [.boostNotEnabled], [.thermalSerious],
+                                       [.fullScreenVideo], [.pausedApp(bundleID: "com.example.player")],
+                                       [.tripped(.oscillation)], [.tripped(.foreignTableAtLaunch)]]
+        for reasons in others { #expect(!offers(reasons), "\(reasons)") }
+    }
 }

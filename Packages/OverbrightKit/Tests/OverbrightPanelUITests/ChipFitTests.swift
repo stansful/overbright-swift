@@ -118,6 +118,32 @@ import Testing
         #expect(ShippedLanguages.design("tlh") == nil && ShippedLanguages.panel("tlh") == nil)   // never English instead
     }
 
+    /// The limit chips ("Safe limit", "OLED limit") share their line with the gear that opens the Limit row
+    /// (`DisplayCardView.offersLimitSetting`, 2026-10-20): chip, gap and gear fit the card's 280 pt in every language.
+    @Test(arguments: ShippedLanguages.codes)
+    func theLimitChipAndItsGearFitInEveryLanguage(_ code: String) throws {
+        let language = try #require(ShippedLanguages.design(code), "\(code): no Design table")
+        let gear = FitMeasure.idealWidth(Button {} label: { Image(systemName: OverbrightSymbol.gearshapeFill.rawValue) }
+            .buttonStyle(IconButtonStyle()))
+        #expect(gear >= HitTarget.minimum.width)
+        for reason in [LimitReason.safeLimit, .oledLimit] {
+            let chip = try #require(ChipModel.make(reason: reason, phase: .boosted, failedTries: 0,
+                                                   context: ChipContext(language: language)))
+            let width = FitMeasure.idealWidth(StatusChip(chip, actions: [])) + Space.xs + gear
+            #expect(width <= PanelLayout.cardInnerWidth, "\(code) \(reason): \(width) pt")
+        }
+    }
+
+    /// The same in the pseudo-long locale (+40 %).
+    @Test func theLimitChipAndItsGearFitInThePseudoLongLocale() {
+        let gear = FitMeasure.idealWidth(Button {} label: { Image(systemName: OverbrightSymbol.gearshapeFill.rawValue) }
+            .buttonStyle(IconButtonStyle()))
+        for text in ["Safe limit", "OLED limit"].map(PseudoLocale.lengthen) {
+            let width = FitMeasure.idealWidth(chip(text)) + Space.xs + gear
+            #expect(width <= PanelLayout.cardInnerWidth, "«\(text)» \(width) pt")
+        }
+    }
+
     /// "Extra brightness off" and "Turn on" stay inside the card in every language: on one line when both fit, else
     /// the button under the chip.
     @Test(arguments: ShippedLanguages.codes)
