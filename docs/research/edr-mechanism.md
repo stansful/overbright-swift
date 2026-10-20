@@ -56,10 +56,12 @@ Every tool in this category pairs these two parts [OSS xdr-light (MIT); README d
 ### 3.3 Field practice and open questions
 
 - Shipping open-source triggers render bright values (1.6 to 8.0) and present periodically (every 0.2 s to every 5 s) [OSS xdr-light (MIT), xdr-boost (MIT), others' READMEs]. Nobody has published a test of a **black** or a **static** trigger, pass or fail. Users of one GPL tool reported a visible white dot from its trigger; that project moved the pixel behind the notch.
+  - *As built / measured 2026-10-20:* the owner's Mac now has a result for a black, static trigger, and it is a **white screen**: the tagged black layer (no periodic present) raised the built-in's granted headroom from 1.2 to 4.0, yet with the table scaled behind it the built-in turned white instead of brighter. A rising grant does not show what the panel displays (ARCHITECTURE.md D4).
 - A 1 × 1 pt trigger in the extreme top-right corner of a 14″/16″ MacBook Pro sits under the panel's physically rounded corner (Apple's spec pages note the rounded top corners) and is therefore invisible whatever its value [HW to confirm]. On external displays no area is masked: black (if it works) or soft-light blending (a bright pixel nearly disappears over pure black and pure white, not over mid-grey) are the options.
 - WindowServer's own log on the owner's Mac (read passively) shows headroom up-ramps with a median of 1.14 s (max 4.75 s), near-instant drops, and levels held for minutes without re-hinting [LOCAL]. It also shows macOS 27 idling at **H ≈ 1.2** without any request, so a fixed "H > 1.05" readiness gate passes too early; gate relative to the level measured before arming.
 - A window with alpha 0, an ordered-out window or a zero-size window is not composited and therefore requests nothing [inference from the documented "on-screen" rule].
 - Overbright turns these unknowns into a **ladder** (ARCHITECTURE.md §4.7): tagged layer (black, then bright), one Metal frame (black, then bright), a 5-second keep-alive, an in-memory HLG frame, an HLG still; escalation by measured headroom; the winner cached per display and macOS build.
+  - *As built 2026-10-20:* the automatic ladder is rungs 5, 4, 3, 6, 7: **T3 bright first** (a bright Metal pixel re-presented every 0.2 s, not every 5 s), then one Metal frame bright, then black, then the HLG rungs. The tagged layer left the automatic order after the white screen above and is reachable only through Advanced ▸ Trigger method (ARCHITECTURE.md §4.7).
 
 ## 4. The transfer domain: linear light or encoded values?
 
@@ -98,10 +100,11 @@ Every tool in this category pairs these two parts [OSS xdr-light (MIT); README d
 - One full-screen, click-through window per display holding an EDR layer filled with `(F, F, F)` and `compositingFilter = "multiplyBlendMode"` multiplies everything beneath it; the overlay is its own EDR request [OSS xdr-boost (MIT); DOC CALayer.h on compositing filters]. Additive filters lift blacks and wash out the picture.
 - It works where table writes are ignored, needs no table, and does not conflict with table writers. Costs: the pointer is not brightened (separate hardware plane); Mission Control and Space switches can flicker; screen recordings may capture it; every recomposition pays a full-screen blend; full-screen video may lose direct-to-display scan-out.
 - A factor below 1 dims without any EDR request.
+- *As built / measured 2026-10-20:* Overbright built this overlay as Compatibility mode and **removed it** (disabled 2026-10-20, code removed 2026-10-21): on the owner's Mac the built-in turned **white** the moment the overlay boosted, because WindowServer does not blend a window's `multiplyBlendMode` with the windows beneath it, so the overlay painted its colour instead of multiplying the screen. The transfer table is Overbright's only mechanism (ARCHITECTURE.md §7.5).
 
 ## 8. Known OS behaviour to design around
 
-- **Table writes silently ignored** on the M5 Pro/Max MacBook Pro (Mac17,6–17,9) and the MacBook Neo (Mac17,5) on macOS 26.3 and later: the call succeeds and reads back correctly but nothing changes on screen [FORUM 819331, feedback numbers there]. Software cannot detect it; Overbright uses Compatibility mode on those models and asks "Did the screen get brighter?" during calibration.
+- **Table writes silently ignored** on the M5 Pro/Max MacBook Pro (Mac17,6–17,9) and the MacBook Neo (Mac17,5) on macOS 26.3 and later: the call succeeds and reads back correctly but nothing changes on screen [FORUM 819331, feedback numbers there]. Software cannot detect it; Overbright asks "Did the screen get brighter?" during calibration. *(As built 2026-10-21: Overbright no longer switches those models to Compatibility mode, which was removed (§7); they keep the table, with no visible boost.)*
 - **Auto-brightness interplay on built-in XDR** (macOS 26+): toggling "Automatically adjust brightness" while a table is applied can leave a persistent wrong picture that survives app termination and is cleared by a preset change [FORUM 819331]. Advise not to toggle it while boosted, and return to Standard before asking users to change it (calibration). A headroom jump is not a usable warning sign: the brightness keys and ambient light move headroom just as much, and the bad state is created at the moment of the toggle.
 - **External HDR headroom stuck at 1.0 after wake** on macOS 26 until HDR is toggled [FORUM 810008].
 - **Headroom throttling**: macOS lowers headroom with heat and over long HDR sessions; never fight it; say "Limited by macOS".
@@ -137,7 +140,7 @@ Private frameworks would allow a headroom request without a window, a real nits 
 | Apple Developer Forums 727301, 758402, 787257, 795074, 808016, 810008, 819331 | — | field reports |
 | Apple support 108321 (presets), 121552 (M4 MacBook Pro), 126323 (Studio Display XDR) | — | specs |
 | xdr-light (lichengzhe) | MIT | trigger + table approach, keep-alive, watchdog idea |
-| xdr-boost (levelsio) | MIT | multiply overlay idea (credited for Compatibility mode) |
+| xdr-boost (levelsio) | MIT | multiply overlay idea (credited for Compatibility mode, built and then removed, §7) |
 | displaytint (noahlincke) | MIT | reported process-death revert on macOS 26 |
 | MonitorControl | MIT | screenshot behaviour of table vs shade dimming |
 | brightboi (joaodavidsilva) | licence not stated | field reports only (read-back clamp, reset events); not credited in THIRD_PARTY_NOTICES |

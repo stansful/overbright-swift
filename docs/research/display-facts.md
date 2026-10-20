@@ -80,6 +80,7 @@ See ARCHITECTURE.md §5.6 for the light gains and table factors Overbright write
 1. The built-in with the lid open in P3-1600, P3-600 (and P3-500 if listed), HDR Video and one SDR reference preset: all three values, and `localizedName` under a Russian UI.
 2. The MSI with HDR on, off, and after sleep/wake (the macOS 26 "stuck at 1.0" bug).
 3. Granted headroom on the built-in at full brightness with Overbright's trigger.
+   - *As built / measured 2026-10-20:* with the tagged black layer the built-in's granted headroom went from 1.2 to 4.0 over about 2.6 s and stayed near 4.0 for minutes after the trigger window closed (the scaled table showed white, so that rung left the automatic ladder; ARCHITECTURE.md D4). The grant under T3, the rung that now runs first, is still to measure (HARDWARE-TEST §2.0a).
 4. Whether `BrightnessMilliNits` tracks SDR white while EDR is active, and whether the MSI's frame-average value follows the HDR-mode SDR slider.
 5. Whether read-back of table entries above 1.0 clamps (HARDWARE-TEST §2.0), and whether Night Shift or True Tone touch the table while it is scaled (§2.4).
 6. Pro Display XDR and Studio Display XDR values (testers).
