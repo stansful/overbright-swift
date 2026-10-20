@@ -114,6 +114,10 @@ import OverbrightPolicy
     var samples: [GateEvaluator.Sample] = []
     var presentedAt: MonotonicInstant?
     var movedAt: MonotonicInstant?
+    /// Gate time spent while macOS asked the app to suppress HDR (`WriteParameters.isHDRSuppressed`): it pauses the
+    /// gate timeout only. The stability window keeps measuring from the real movement, so a suppression that never
+    /// ends (macOS 27 sends one to a menu-bar agent at launch) can no longer hold the gate open forever (2026-10-20).
+    var gatePause: Duration = .zero
     var armedPreHeld = false
     var preHeldHeadroom: Double?
     var lastReading: HeadroomReading?

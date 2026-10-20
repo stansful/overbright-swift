@@ -26,11 +26,11 @@ extension DisplayController {
             if parameters.isHDRSuppressed {
                 // Keep the rung and stop escalating: the timeouts pause (§4.3).
                 presentedAt = presentedAt.map { $0 + EngineTiming.gatePollInterval }
-                movedAt = movedAt.map { $0 + EngineTiming.gatePollInterval }
+                if movedAt != nil { gatePause += EngineTiming.gatePollInterval }
             }
             guard let presentedAt else { continue }
             switch GateEvaluator.evaluate(path: gatePath, samples: samples, idle: idleHeadroom,
-                                          presentedAt: presentedAt, movedAt: movedAt, now: now) {
+                                          presentedAt: presentedAt, movedAt: movedAt, gatePause: gatePause, now: now) {
             case .waiting:
                 continue
             case .moved:
@@ -115,7 +115,11 @@ extension DisplayController {
         }
         if trigger != nil, let rung = currentRung {
             trigger?.represent()
-            rungs = backoff != nil ? [rung] : [rung] + plannedRungs(backoff: false).filter { $0.number > rung.number }
+            // The rungs after the kept one in the planned (automatic) order, not by number: the order is 5, 4, 3, 6, 7.
+            let planned = plannedRungs(backoff: false)
+            let later = planned.firstIndex { $0.number == rung.number }.map { Array(planned[($0 + 1)...]) }
+                ?? planned.filter { $0.number != rung.number }
+            rungs = backoff != nil ? [rung] : [rung] + later
             rungPosition = 0
             phase = .arming(rung: rung.number)
             armSlot.run { [weak self] in

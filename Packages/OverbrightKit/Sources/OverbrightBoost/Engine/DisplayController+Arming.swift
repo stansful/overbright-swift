@@ -193,6 +193,7 @@ extension DisplayController {
         let now = deps.time.now
         presentedAt = now
         movedAt = gatePath == .preHeld ? now : nil
+        gatePause = .zero
         samples = []
         let number = currentRung?.number ?? 0
         phase = gatePath == .preHeld ? .gating(rung: number) : .arming(rung: number)

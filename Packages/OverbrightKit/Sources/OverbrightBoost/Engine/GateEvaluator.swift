@@ -85,9 +85,11 @@ nonisolated enum GateEvaluator {
     ///   - idle: H0.
     ///   - presentedAt: the rung's first successful present (the rung timeout's start).
     ///   - movedAt: the first movement on the normal path; the arming instant on the pre-held path (the gate
-    ///     timeout's start); nil while waiting for movement.
+    ///     timeout's start); nil while waiting for movement. Stability is always measured from it.
+    ///   - gatePause: time the gate timeout stood still (macOS asked to suppress HDR); stability ignores it.
     static func evaluate(path: Path, samples: [Sample], idle: Double, presentedAt: MonotonicInstant,
-                                movedAt: MonotonicInstant?, now: MonotonicInstant) -> Verdict {
+                                movedAt: MonotonicInstant?, gatePause: Duration = .zero,
+                                now: MonotonicInstant) -> Verdict {
         guard let latest = samples.last else {
             return now - presentedAt >= EngineTiming.rungTimeout && path == .normal ? .rungTimedOut : .waiting
         }
@@ -99,7 +101,7 @@ nonisolated enum GateEvaluator {
         if latest.headroom >= threshold - 1e-12, isStable(samples.filter { $0.time >= movedAt }, now: now) {
             return .ready(headroom: latest.headroom)
         }
-        return now - movedAt >= EngineTiming.gateTimeout ? .gateTimedOut : .waiting
+        return now - movedAt - gatePause >= EngineTiming.gateTimeout ? .gateTimedOut : .waiting
     }
 }
 

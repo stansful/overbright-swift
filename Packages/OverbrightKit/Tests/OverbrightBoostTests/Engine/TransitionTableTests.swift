@@ -170,6 +170,46 @@ import Testing
         #expect(h.controller()?.currentRung?.number == 4)
     }
 
+    /// macOS 27 asks a menu-bar agent to suppress HDR from launch, and the suppression never ends; the grant still
+    /// ramps (1.2 → 4.0 over about 2.6 s on the owner's MacBook Pro). The gate becomes ready all the same: the
+    /// suppression pauses only the timeouts, and the stability window measures from the real movement. Before
+    /// 2026-10-20 the gate stayed in gating forever there (no ready, no timeout) and no table above 1 was written.
+    @Test func gateBecomesReadyWhileHDRIsSuppressed() async throws {
+        let h = EngineHarness()
+        h.scripted.update(h.builtIn) {
+            $0.idle = 1.2
+            $0.grant = 4.0
+            $0.rampDuration = .milliseconds(2_600)
+        }
+        h.signals.snapshot.isHDRSuppressed = true
+        await h.start()
+        h.engine.setOn(true, source: .panel)
+        #expect(await h.advance(until: { h.phase() == .ramping || h.phase() == .boosted }, limit: .seconds(15)))
+        #expect(await h.boost())
+        #expect(h.codes.contains("gate.ready"))
+        #expect((h.liveFactor() ?? 1) > 1.01)
+        #expect(h.interlockViolations().isEmpty)
+    }
+
+    /// A re-gate whose kept rung no longer answers escalates in the automatic order (5, 4, 3, 6, 7), so from rung 5
+    /// it tries 4 and then 3, not 6 and 7 by rung number (2026-10-20). Here the trigger was occluded and becomes
+    /// visible again (`regate(backoff: nil)`) after macOS stopped answering every trigger.
+    @Test func aRegateFromRungFiveEscalatesToFourThenThree() async throws {
+        let h = await boostedHarness()
+        #expect(h.controller()?.currentRung?.number == 5)
+        h.triggers.setOccluded(true, on: h.builtIn)
+        #expect(h.phase() == .suspended(.occluded))
+        h.scripted.update(h.builtIn) { $0.respondingStrategies = [] }
+        let before = h.triggers.made.count
+        h.triggers.setOccluded(false, on: h.builtIn)
+        #expect(await h.advance(until: { h.triggers.made.count >= before + 2 }, limit: .seconds(20)))
+        let next = h.triggers.made.dropFirst(before).prefix(2).map { "\($0.request.strategy.rawValue) \($0.request.pixel.rawValue)" }
+        #expect(next == ["\(TriggerStrategy.metalOneShot.rawValue) \(TriggerPixel.bright.rawValue)",     // rung 4
+                         "\(TriggerStrategy.metalOneShot.rawValue) \(TriggerPixel.black.rawValue)"])     // rung 3
+        #expect(h.controller()?.currentRung?.number == 3)
+        #expect(h.orderViolations.isEmpty)
+    }
+
     /// Potential falls to 1 while arming: stop escalating, remove the trigger, baseline, failed.
     @Test func potentialAtOneStopsArming() async throws {
         let h = EngineHarness()

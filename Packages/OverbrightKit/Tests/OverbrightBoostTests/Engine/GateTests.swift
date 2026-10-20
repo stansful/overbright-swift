@@ -76,6 +76,26 @@ import Testing
                                        now: at(12_500)) == .gateTimedOut)
     }
 
+    /// Time macOS spent asking the app to suppress HDR (`gatePause`) delays only the gate timeout: stability and the
+    /// ready verdict still count from the movement. Before 2026-10-20 the suppression moved `movedAt` itself, so on
+    /// macOS 27, which suppresses HDR for a menu-bar agent from launch, the stability window never filled.
+    @Test func aGatePauseDelaysOnlyTheTimeout() {
+        let climbing = samples(from: 0, (0..<156).map { 1.0 + 0.012 * Double($0) })   // never stable, up to 15.5 s
+        func verdict(_ now: Int, pause: Duration) -> GateEvaluator.Verdict {
+            GateEvaluator.evaluate(path: .normal, samples: climbing.filter { $0.time <= at(now) }, idle: 1,
+                                   presentedAt: at(0), movedAt: at(500), gatePause: pause, now: at(now))
+        }
+        #expect(verdict(12_500, pause: .zero) == .gateTimedOut)
+        #expect(verdict(12_500, pause: .seconds(3)) == .waiting)
+        #expect(verdict(15_400, pause: .seconds(3)) == .waiting)
+        #expect(verdict(15_500, pause: .seconds(3)) == .gateTimedOut)
+        // Readiness is not delayed: the samples of `normalPathMovesThenReadies` are ready at 2.3 s whatever the pause.
+        let held = samples(from: 300, [1, 1, 1]) + samples(from: 600, [1.2])
+            + samples(from: 700, Array(repeating: 2.667, count: 16)) + samples(from: 2_300, [2.667])
+        #expect(GateEvaluator.evaluate(path: .normal, samples: held, idle: 1, presentedAt: at(200), movedAt: at(600),
+                                       gatePause: .seconds(30), now: at(2_300)) == .ready(headroom: 2.667))
+    }
+
     @Test func preHeldPathSkipsMovement() {
         let held = samples(from: 0, Array(repeating: 2.6, count: 16))
         #expect(GateEvaluator.evaluate(path: .preHeld, samples: held, idle: 2.6, presentedAt: at(0), movedAt: at(0),
