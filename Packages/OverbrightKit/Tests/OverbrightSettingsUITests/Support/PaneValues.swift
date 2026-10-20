@@ -67,7 +67,7 @@ import Testing
         case "general.automaticUpdates": settings[UpdateSettings.automatic] = true
         case "general.prereleases": settings[UpdateSettings.prereleases] = true
         case "displays.linkLevels": settings[DisplaySettings.linkLevels] = true
-        case "displays.nearFullBrightness": settings[DisplaySettings.boostOnlyNearFullBrightness] = false
+        case "displays.nearFullBrightness": settings[DisplaySettings.boostOnlyNearFullBrightness] = true
         case "automations.power": settings[AutomationSettings.batteryGuard] = .onlyOnAdapter
         case "automations.batteryThreshold": settings[AutomationSettings.batteryThreshold] = 40
         case "automations.lowPowerMode": settings[AutomationSettings.pauseInLowPowerMode] = false

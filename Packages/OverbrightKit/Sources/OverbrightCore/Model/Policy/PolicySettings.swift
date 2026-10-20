@@ -33,7 +33,7 @@ public nonisolated struct PolicySettings: Hashable, Sendable {
                 pauseForFullScreenVideo: Bool = true, pauseForAllFullScreen: Bool = false, pauseInGames: Bool = false,
                 pauseForListedApps: Bool = true, pausedApps: [PausedAppRule] = [], schedule: ScheduleWindow? = nil,
                 linkLevels: Bool = false, linkedLevel: LevelPosition = LevelPreset.brightRoom.position,
-                boostOnlyNearFullBrightness: Bool = true, alwaysContinueEntryIDs: Set<String> = []) {
+                boostOnlyNearFullBrightness: Bool = false, alwaysContinueEntryIDs: Set<String> = []) {
         self.batteryGuard = batteryGuard; self.batteryThreshold = batteryThreshold
         self.pauseInLowPowerMode = pauseInLowPowerMode; self.pauseForFullScreenVideo = pauseForFullScreenVideo
         self.pauseForAllFullScreen = pauseForAllFullScreen; self.pauseInGames = pauseInGames

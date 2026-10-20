@@ -212,17 +212,13 @@ extension DisplayController {
         return estimate
     }
 
-    /// The taper's reference (§5.4): the lowest ready headroom of this display and OS build, never above the seed
-    /// `panelPeak ÷ sdrMax`.
+    /// The taper's reference (§5.4): the lowest ready headroom of this display and OS build, never BELOW the seed
+    /// `panelPeak ÷ sdrMax` (`GainCeiling.taperReference`). A ready reading can be taken while the grant is still
+    /// ramping (1.31 on the owner's built-in, seed 2.67), and a reference that low tapered every boost to nothing
+    /// (2026-10-20).
     var fullBrightnessHeadroom: Double? {
-        let seed = GainCeiling.fullBrightnessHeadroomSeed(facts: facts)
         let learned = deps.cache.record(for: key, osBuild: deps.machine.osBuild)?.lowestReadyHeadroom
-        switch (seed, learned) {
-        case let (seed?, learned?): return min(seed, learned)
-        case let (seed?, nil): return seed
-        case let (nil, learned?): return learned
-        case (nil, nil): return nil
-        }
+        return GainCeiling.taperReference(measured: learned, facts: facts)
     }
 
     /// Journals and logs every phase change and tells the engine. Reaching idle or failed judges a base event whose

@@ -79,21 +79,40 @@ import Testing
     }
 
     /// The chip names the taper exactly when the writer applies it: the reducer gets the controller's reference (the
-    /// learned lowest ready H 1.6, below the seed 2.667), so at H 2.2 the decision says "Below full brightness" and the
-    /// writer's limit agrees (C-BOOST-7).
+    /// learned lowest ready H 3.6, above the seed 2.667, so it is used as it is; a learned value below the seed reads as
+    /// the seed, `GainCeiling.taperReference`), so at H 6.0 the decision says "Below full brightness", the writer's
+    /// limit agrees, and the writer still boosts: against the seed, H 6.0 would be past twice the reference and give
+    /// no boost at all (C-BOOST-7). The taper is turned on: it is off by default since 2026-10-20.
     @Test func theTaperReasonFollowsTheWritersReference() async throws {
         let h = EngineHarness(decide: BoostPolicy.reduce)
-        h.engine.strategyCache.learnReadyHeadroom(1.6, for: h.builtIn, osBuild: h.fixture.machine.osBuild)
-        h.scripted.update(h.builtIn) { $0.grant = 2.2 }
+        h.settings[DisplaySettings.boostOnlyNearFullBrightness] = true
+        h.engine.strategyCache.learnReadyHeadroom(3.6, for: h.builtIn, osBuild: h.fixture.machine.osBuild)
+        h.scripted.update(h.builtIn) { $0.grant = 6.0 }
         await h.start()
         #expect(await h.boost())
         await h.advance(.seconds(1))
         let status = try #require(h.displayStatus())
-        #expect(h.controller()?.fullBrightnessHeadroom == 1.6)
+        #expect(h.controller()?.fullBrightnessHeadroom == 3.6)
         #expect(h.controller()?.appliedLimit == .nearFullBrightnessOnly)
         #expect(status.decision?.reasons.contains(.nearFullBrightnessOnly) == true)
+        #expect(status.appliedGain > 1.01)                          // against the seed: t = 0, ×1
         #expect(status.appliedGain < (status.decision?.requestedGain ?? 0) - 0.01)
-        #expect(h.inputs.last?.displays.first?.feedback.fullBrightnessHeadroom == 1.6)
+        #expect(h.inputs.last?.displays.first?.feedback.fullBrightnessHeadroom == 3.6)
+    }
+
+    /// A learned lowest ready H below the seed (1.31 on the owner's built-in: a ready reading taken while the grant was
+    /// still ramping from 1.2 to 4.0) is floored at the seed 2.667: with the taper on, H 4.0 still boosts (2026-10-20).
+    @Test func aLowLearnedReferenceStillBoosts() async throws {
+        let h = EngineHarness(decide: BoostPolicy.reduce)
+        h.settings[DisplaySettings.boostOnlyNearFullBrightness] = true
+        h.engine.strategyCache.learnReadyHeadroom(1.31, for: h.builtIn, osBuild: h.fixture.machine.osBuild)
+        h.scripted.update(h.builtIn) { $0.grant = 4.0 }
+        await h.start()
+        #expect(await h.boost())
+        await h.advance(.seconds(1))
+        #expect(abs((h.controller()?.fullBrightnessHeadroom ?? 0) - 1600.0 / 600) < 1e-9)
+        #expect((h.displayStatus()?.appliedGain ?? 1) > 1.05)
+        #expect((h.liveFactor() ?? 1) > 1.01)
     }
 
     /// The largest grant seen while boosting is kept and published as the gain it allows (`lastGrant`, DESIGN.md

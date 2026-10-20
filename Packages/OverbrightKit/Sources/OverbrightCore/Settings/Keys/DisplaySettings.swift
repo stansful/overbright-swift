@@ -11,5 +11,5 @@ public nonisolated enum DisplaySettings {
     /// The dim level of "Dim All Displays", the Dim shortcut and the menu's "Dimmed", as LIGHT (0.02…0.99).
     public static let lastDimLight = SettingKey(.displays, "lastDimLight", default: 0.25)
     /// "Add extra brightness only near full brightness" (§5.4).
-    public static let boostOnlyNearFullBrightness = SettingKey(.displays, "boostOnlyNearFullBrightness", default: true)
+    public static let boostOnlyNearFullBrightness = SettingKey(.displays, "boostOnlyNearFullBrightness", default: false)
 }

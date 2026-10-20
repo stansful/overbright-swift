@@ -98,6 +98,19 @@ public nonisolated enum GainCeiling {
         guard let peak = facts.panelPeakNits, let sdr = facts.sdrMaxNits, sdr > 0 else { return nil }
         return peak / sdr
     }
+    /// The full-brightness headroom the taper compares the live H with: the lowest ready H Boost has seen, but never
+    /// below the panel's own `peak ÷ sdrMax`. A ready reading taken while the grant was still ramping up (1.31 on the
+    /// owner's built-in, whose full-brightness headroom is 1600 ÷ 600 ≈ 2.67) would otherwise read every later H as
+    /// "far below full brightness" and taper the boost to nothing (2026-10-20). Nil when neither is known.
+    public static func taperReference(measured: Double?, facts: DisplayFacts) -> Double? {
+        let seed = fullBrightnessHeadroomSeed(facts: facts)
+        switch (measured, seed) {
+        case let (measured?, seed?): return max(measured, seed)
+        case let (measured?, nil): return measured
+        case let (nil, seed?): return seed
+        case (nil, nil): return nil
+        }
+    }
     /// Exponent applied to the static gain by the taper: 1 near full brightness, 0 at about half brightness.
     public static func taperExponent(headroom: Double, fullBrightnessHeadroom: Double) -> Double {
         let r = headroom / max(fullBrightnessHeadroom, 1)
@@ -123,7 +136,7 @@ public nonisolated enum GainCeiling {
             if term < g * (1 - bindingTolerance) { reason = why }
             g = term
         }
-        if taper, let ref = fullBrightnessHeadroom {
+        if taper, let ref = taperReference(measured: fullBrightnessHeadroom, facts: facts) {
             bind(pow(g, taperExponent(headroom: h, fullBrightnessHeadroom: ref)), .nearFullBrightnessOnly)
         }
         if capMode == .safe, sdrWhite == nil, safeBound == .worstCaseGrant,

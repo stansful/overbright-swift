@@ -117,7 +117,7 @@ import Testing
         #expect(!s[GeneralSettings.showsDockIcon])
         #expect(s[DisplaySettings.perDisplay].isEmpty && !s[DisplaySettings.linkLevels])
         #expect(s[DisplaySettings.linkedLevel] == LevelPosition(0.5) && s[DisplaySettings.lastDimLight] == 0.25)
-        #expect(s[DisplaySettings.boostOnlyNearFullBrightness])
+        #expect(!s[DisplaySettings.boostOnlyNearFullBrightness])                     // off since 2026-10-20 (§5.4)
         #expect(s[AutomationSettings.batteryGuard] == .belowThreshold && s[AutomationSettings.batteryThreshold] == 20)
         #expect(s[AutomationSettings.pauseInLowPowerMode] && s[AutomationSettings.autoOffMinutes] == nil)
         #expect(s[AutomationSettings.pauseForFullScreenVideo] && !s[AutomationSettings.pauseForAllFullScreen])

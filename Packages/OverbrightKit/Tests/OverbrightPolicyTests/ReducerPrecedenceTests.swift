@@ -332,17 +332,25 @@ import Testing
         #expect(decide([T.display(level: brightRoom, reading: .some(nil))]).builtIn?.target == .neutral)  // checking
     }
 
-    /// The taper's reference is the engine's (the feedback's learned lowest ready H), not the seed: at H 2.2 on the
-    /// M4 Max the seed 2.667 gives full gain while the writer, with a learned 1.6, fades the boost (C-BOOST-7).
+    /// The taper's reference is the engine's (the feedback's learned lowest ready H), floored at the seed
+    /// `panelPeak ÷ sdrMax` (`GainCeiling.taperReference`, 2026-10-20): a reference below the seed reads as the seed, a
+    /// reference above it is used as it is. On the M4 Max (seed 2.667) at H 4.0 the seed tapers the boost; a measured
+    /// 1.31 (a ready reading taken while the grant was still ramping) tapers it exactly as much, not to nothing; a
+    /// measured 3.6 keeps the full gain (C-BOOST-7). The taper is on explicitly: it is off by default.
     @Test func theTaperReferenceComesFromTheFeedback() {
         func reasons(_ h: Double, reference: Double?, capMode: CapMode = .safe) -> [LimitReason]? {
             var display = T.display(level: brightRoom, capMode: capMode, reading: T.reading(T.builtIn, current: h))
             display.feedback.fullBrightnessHeadroom = reference
-            return decide([display]).builtIn?.reasons
+            return decide([display], settings: PolicySettings(boostOnlyNearFullBrightness: true)).builtIn?.reasons
         }
         #expect(reasons(2.2, reference: nil) == [])                                         // the seed
-        #expect(reasons(2.2, reference: 1.6) == [.nearFullBrightnessOnly])                  // the writer's reference
+        #expect(reasons(2.2, reference: 1.6) == [])                                         // below the seed: the seed
+        #expect(reasons(4.0, reference: nil) == [.nearFullBrightnessOnly])                  // H 1.5 × the seed
+        #expect(reasons(4.0, reference: 1.31) == [.nearFullBrightnessOnly])                 // floored, not t = 0
+        #expect(reasons(4.0, reference: 3.6) == [])                                         // above the seed: used
         #expect(reasons(1.7, reference: 1.6, capMode: .peak) == [])                         // ≤ 1.15 × H_full
+        #expect(decide([T.display(level: brightRoom, reading: T.reading(T.builtIn, current: 4.0))]).builtIn?.reasons
+                == [])                                                                      // the default: no taper
     }
 
     /// Property: for any reading, reference, level, cap mode and taper setting, the reducer reports a live term

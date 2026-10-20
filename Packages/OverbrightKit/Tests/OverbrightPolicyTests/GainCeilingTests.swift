@@ -110,6 +110,33 @@ import Testing
         #expect(GainCeiling.taperExponent(headroom: 9, fullBrightnessHeadroom: 0.5) == 0)                // ref floored at 1
     }
 
+    /// The taper's reference never falls below the seed `panelPeak ÷ sdrMax` (2026-10-20). On the owner's MacBook Pro
+    /// the strategy cache's lowest ready H was 1.31, a reading taken while the grant still ramped from 1.2 to 4.0;
+    /// compared with it, H 4.0 read as "far below full brightness" and the taper cut every boost to ×1. Floored at the
+    /// seed 2.67 the same H keeps a boost; a measured reference above the seed is used as it is.
+    @Test func taperReferenceNeverBelowTheSeed() throws {
+        let seed = 1600.0 / 600
+        #expect(abs(try #require(GainCeiling.taperReference(measured: 1.31, facts: builtIn)) - seed) < 1e-12)
+        #expect(abs(try #require(GainCeiling.taperReference(measured: nil, facts: builtIn)) - seed) < 1e-12)
+        #expect(GainCeiling.taperReference(measured: 3.2, facts: builtIn) == 3.2)
+        let unknownPeak = facts(.hdrExternal, peak: nil)
+        #expect(GainCeiling.taperReference(measured: 1.31, facts: unknownPeak) == 1.31)
+        #expect(GainCeiling.taperReference(measured: nil, facts: unknownPeak) == nil)
+        // Against 1.31, H 4.0 is past twice the reference: t = 0, no boost at all.
+        #expect(GainCeiling.taperExponent(headroom: 4.0, fullBrightnessHeadroom: 1.31) == 0)
+        for mode in CapMode.allCases {
+            let measured = GainCeiling.liveCap(staticGain: top(builtIn, mode), reading: reading(4.0), facts: builtIn,
+                                               capMode: mode, isOLED: false, sdrWhite: nil, taper: true,
+                                               fullBrightnessHeadroom: 1.31)
+            let seeded = GainCeiling.liveCap(staticGain: top(builtIn, mode), reading: reading(4.0), facts: builtIn,
+                                             capMode: mode, isOLED: false, sdrWhite: nil, taper: true,
+                                             fullBrightnessHeadroom: seed)
+            #expect(measured.gain > 1, "\(mode)")
+            #expect(measured == seeded, "\(mode)")
+            #expect(measured.reason == .nearFullBrightnessOnly, "\(mode)")
+        }
+    }
+
     /// §5.4: the M4 Max built-in at 75 % brightness (SDR 450) gets ≈ 670 nits at Safe with the taper on.
     @Test func taperAtThreeQuarterBrightness() {
         let cap = GainCeiling.liveCap(staticGain: top(builtIn, .safe), reading: reading(1600.0 / 450), facts: builtIn,
