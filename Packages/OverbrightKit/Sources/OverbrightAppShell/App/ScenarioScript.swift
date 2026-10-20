@@ -3,6 +3,7 @@
 // the tests run one script. Steps are separated by `;`; each is a word and its arguments:
 //
 //   on | off | toggle | standard | brighter | less | dim-all      the engine, as a global shortcut would
+//   keep                                                         "Keep this level?" answered, as the HUD's Keep would
 //   level <standard|indoor|bright-room|sunlight|max|-1…1>        every display's level, as the panel would
 //   dim <2…99>                                                   every display dimmed to that % of Standard light
 //   boost <display> on|off                                       a display's "Use extra brightness" switch
@@ -57,6 +58,7 @@ enum ScenarioScript {
         case "brighter": return .brighter
         case "less": return .lessBright
         case "dim-all": return .dimAll
+        case "keep": return .keep
         case "level": return first.flatMap(level).map(ScenarioStep.level)
         case "dim": return first.flatMap { Int($0) }.map { .dim(percent: $0) }
         case "boost":

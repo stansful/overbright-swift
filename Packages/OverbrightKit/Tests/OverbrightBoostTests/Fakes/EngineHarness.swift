@@ -29,13 +29,19 @@ import OverbrightTestSupport
 
     /// The engine over `fixture` with the reference reducer (`tops` per display; the M4 Max Safe top otherwise), or
     /// with `decide` when given. `wrapGamma` puts a decorator (`CountingGammaPort`) between the engine and `gamma`;
-    /// `defaults` backs the settings (`CountingDefaults` counts their writes).
+    /// `defaults` backs the settings (`CountingDefaults` counts their writes). `confirmsFirstBoost` stores a kept first
+    /// boost on the engine's macOS build for every fixture display, so a boost does not ask "Keep this level?" and
+    /// revert after 10 s (§4.9); `FirstBoostConfirmationTests` pass false.
     init(fixture: DisplayFixture = .builtinXDRLidOpen, reducer: ReferenceReducer = ReferenceReducer(),
          machine: MachineIdentity? = nil, decide: ((PolicyInput) -> PolicyDecision)? = nil,
          wrapGamma: (FakeGammaPort, ManualTimeSource) -> any GammaPort = { gamma, _ in gamma },
-         defaults: UserDefaults = InMemoryDefaults()) {
+         defaults: UserDefaults = InMemoryDefaults(), confirmsFirstBoost: Bool = true) {
         self.fixture = fixture
         settings = SettingsStore(defaults: defaults)
+        if confirmsFirstBoost {
+            Self.confirmFirstBoost(of: fixture.displays.map(\.facts.ref.key), build: (machine ?? fixture.machine).osBuild,
+                                   in: settings)
+        }
         directory = FakeDisplayDirectory(fixture: fixture)
         gamma = FakeGammaPort(fixture: fixture, time: time)
         scripted = ScriptedHeadroom(fixture: fixture, time: time)
@@ -178,6 +184,17 @@ import OverbrightTestSupport
 
     /// Live trigger windows on `key`.
     func liveTriggers(_ key: DisplayKey? = nil) -> [FakeTriggerHandle] { triggers.liveTriggers(on: key ?? builtIn) }
+
+    /// Stores a kept first boost on `build` for `keys` (`DisplayPreferences.boostConfirmedBuild`).
+    static func confirmFirstBoost(of keys: [DisplayKey], build: String, in settings: SettingsStore) {
+        var all = settings[DisplaySettings.perDisplay]
+        for key in keys {
+            var preferences = all[key] ?? DisplayPreferences()
+            preferences.boostConfirmedBuild = build
+            all[key] = preferences
+        }
+        settings[DisplaySettings.perDisplay] = all
+    }
 
     /// Stores preferences of `key`.
     func setPreferences(_ key: DisplayKey? = nil, _ change: (inout DisplayPreferences) -> Void) {

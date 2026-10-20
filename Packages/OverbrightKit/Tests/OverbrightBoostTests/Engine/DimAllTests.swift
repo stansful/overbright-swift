@@ -49,13 +49,14 @@ import Testing
     @Test func virtualDisplaysAreLeftAlone() async throws {
         let h = EngineHarness(fixture: .sidecar)
         await h.start()
+        let sidecar = h.settings[DisplaySettings.perDisplay][DisplayFixture.Keys.sidecar]
         h.engine.setOn(true, source: .panel)
         await h.settle()
         h.engine.toggleDim(source: .menu)
         await h.advance(.milliseconds(400))
         #expect(h.phase(h.builtIn) == .dimmed)
         #expect(h.phase(DisplayFixture.Keys.sidecar) == .idle)
-        #expect(h.settings[DisplaySettings.perDisplay][DisplayFixture.Keys.sidecar] == nil)
+        #expect(h.settings[DisplaySettings.perDisplay][DisplayFixture.Keys.sidecar] == sidecar)   // its level untouched
     }
 
     @Test func setDimLightClampsAndBecomesTheDimAllLight() async throws {

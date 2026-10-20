@@ -9,9 +9,11 @@ nonisolated enum TriggerTiming {
     static let firstPresentRetryInterval: Duration = .milliseconds(50)
     /// …for at most this long; after it `present(_:)` returns false.
     static let firstPresentRetryLimit: Duration = .seconds(2)
-    /// T3 presents one more clear-only frame this often. 5 s, not faster: below about 1 s the GPU working set stays
-    /// allocated for good (0.2 s is a lab setting only, D4).
-    static let keepAliveInterval: Duration = .seconds(5)
+    /// T3 presents one more clear-only frame this often: 0.2 s, the cadence shipping boosters prove on the owner's
+    /// built-in XDR panel, where a table scaled behind other triggers turned the screen white (2026-10-20, D4 as
+    /// built). Below about 1 s the GPU working set (≈ 230 MB on M4 Max) stays allocated while boosting; that is the
+    /// accepted price until the hardware session shows a slower cadence keeps the panel brighter rather than white.
+    static let keepAliveInterval: Duration = .milliseconds(200)
     /// HLG layers (T4, T4-alt) are polled this often until they report a frame ready for display…
     static let readinessPollInterval: Duration = .milliseconds(50)
     /// …for at most this long (a successful T4 present is "the layer became ready for display", §4.7).

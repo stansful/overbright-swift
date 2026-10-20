@@ -92,6 +92,7 @@ final class ScenarioRunner {
         case .brighter: boost.step(.brighter, source: .shortcut)
         case .lessBright: boost.step(.lessBright, source: .shortcut)
         case .dimAll: boost.toggleDim(source: .shortcut)
+        case .keep: boost.keepLowLevel()
         case .level(let level): boost.setLevel(level, for: nil, source: .panel)
         case .dim(let percent): boost.setDimLight(Double(min(max(percent, 2), 99)) / 100, for: nil, source: .panel)
         case let .boost(key, on): setBoostEnabled(on, for: key)

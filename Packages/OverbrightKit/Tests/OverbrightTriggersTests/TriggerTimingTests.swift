@@ -1,6 +1,6 @@
 // OverbrightTriggersTests/TriggerTimingTests.swift — the trigger-side timing constants match ARCHITECTURE.md §4.4
-// (`firstPresentRetry`: every 50 ms for ≤ 2 s, the same numbers as Boost's `EngineTiming`) and §4.7 (T3 at 5 s, never
-// the 0.2 s lab cadence).
+// (`firstPresentRetry`: every 50 ms for ≤ 2 s, the same numbers as Boost's `EngineTiming`) and §4.7 (T3 at 0.2 s, the
+// cadence shipping boosters prove on the owner's built-in XDR; D4 as built).
 import Testing
 @testable import OverbrightTriggers
 
@@ -11,9 +11,11 @@ import Testing
         #expect(TriggerTiming.firstPresentRetries == 40)
     }
 
-    @Test func keepAliveIsSlowEnoughToFreeTheGPUWorkingSet() {
-        #expect(TriggerTiming.keepAliveInterval == .seconds(5))
-        #expect(TriggerTiming.keepAliveInterval >= .seconds(2), "below about 2 s the working set stays allocated")
+    /// Five presents a second: the proven cadence, paid for with a GPU working set that stays allocated while
+    /// boosting (D4 as built); never so fast that the keep-alive becomes a render loop.
+    @Test func keepAlivePresentsFiveTimesASecond() {
+        #expect(TriggerTiming.keepAliveInterval == .milliseconds(200))
+        #expect(TriggerTiming.keepAliveInterval >= .milliseconds(100), "a keep-alive, not a render loop")
     }
 
     @Test func hlgReadinessIsPolledLikeTheFirstPresent() {

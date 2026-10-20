@@ -8,12 +8,23 @@ import OverbrightHotKeys
 
 /// Builds shells over the simulated ports.
 @MainActor enum TestShell {
-    /// A context over `settings` and `time` with the fixture's Mac.
+    /// A context over `settings` and `time` with the fixture's Mac. `confirmsFirstBoost` stores a kept first boost on
+    /// the fixture's macOS build for every fixture display, so a scenario's boost does not ask "Keep this level?" and
+    /// return to Standard after 10 s (ARCHITECTURE.md §4.9); pass false to see the prompt.
     static func context(fixture: DisplayFixture = .builtinXDRLidOpen,
                         settings: SettingsStore = SettingsStore(defaults: InMemoryDefaults()),
-                        time: any TimeSource = ManualTimeSource()) -> ShellContext {
-        ShellContext(settings: settings, paths: .temporary(), machine: fixture.machine, time: time,
-                     journal: RingBufferJournal(capacity: 5_000), announcer: Announcer(post: { _ in }, now: { 0 }))
+                        time: any TimeSource = ManualTimeSource(), confirmsFirstBoost: Bool = true) -> ShellContext {
+        if confirmsFirstBoost {
+            var all = settings[DisplaySettings.perDisplay]
+            for display in fixture.displays {
+                var preferences = all[display.facts.ref.key] ?? DisplayPreferences()
+                preferences.boostConfirmedBuild = fixture.machine.osBuild
+                all[display.facts.ref.key] = preferences
+            }
+            settings[DisplaySettings.perDisplay] = all
+        }
+        return ShellContext(settings: settings, paths: .temporary(), machine: fixture.machine, time: time,
+                            journal: RingBufferJournal(capacity: 5_000), announcer: Announcer(post: { _ in }, now: { 0 }))
     }
 
     /// The simulated ports of `fixture`, with `hotKeys` recording.

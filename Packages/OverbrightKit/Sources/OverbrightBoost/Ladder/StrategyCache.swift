@@ -6,7 +6,8 @@ import Foundation
 import OverbrightCore
 
 /// Per display and OS build: the winning rung (replaced by a heavier one only after it failed in two separate normal
-/// arms outside the wake/unlock quarantine) and the lowest headroom at which a gate became ready.
+/// arms outside the wake/unlock quarantine) and the lowest headroom at which a gate became ready. "Heavier" is later in
+/// the automatic order (`LadderPlanner.automaticOrder`, 5, 4, 3, 6, 7), not a higher rung number.
 @MainActor public final class StrategyCache {
     /// Failures of the cached rung, in separate arms, before a heavier winner replaces it (§4.7).
     public static let replacementFailures = 2
@@ -49,17 +50,21 @@ import OverbrightCore
     // MARK: Learning
 
     /// A normal arm became ready on `rung`. The first winner is cached; the cached rung winning again clears its
-    /// failures; a heavier winner replaces it only after `replacementFailures` failed arms. Pre-held arms never call
-    /// this (§4.7).
+    /// failures; a heavier winner (later in the automatic order) replaces it only after `replacementFailures` failed
+    /// arms. A cached rung the automatic ladder no longer runs (a tagged-layer rung, D4 as built) is replaced by the
+    /// next win at once, since it can never fail again; a win outside the automatic order (Advanced ▸ Trigger method
+    /// pinned to the tagged layer) never replaces an automatic one. Pre-held arms never call this (§4.7).
     public func recordWin(rung: Int, for display: DisplayKey, osBuild: String) {
+        let order = LadderPlanner.automaticOrder
         update(display, osBuild) { record in
-            guard let cached = record.rung else {
+            guard let cached = record.rung, let cachedIndex = order.firstIndex(of: cached) else {
                 record.rung = rung; record.failures = 0
                 return
             }
             if rung == cached {
                 record.failures = 0
-            } else if rung > cached, record.failures >= Self.replacementFailures {
+            } else if let index = order.firstIndex(of: rung), index > cachedIndex,
+                      record.failures >= Self.replacementFailures {
                 record.rung = rung; record.failures = 0
             }
         }

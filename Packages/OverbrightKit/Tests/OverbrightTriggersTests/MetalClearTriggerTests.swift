@@ -1,5 +1,5 @@
 // OverbrightTriggersTests/MetalClearTriggerTests.swift — T2/T3 without a GPU: the first present retried every 50 ms
-// for up to 2 s, T3's 5 s keep-alive as a stored task, superseded presents, re-presents, tag policy, and the device
+// for up to 2 s, T3's 0.2 s keep-alive as a stored task, superseded presents, re-presents, tag policy, and the device
 // released on remove. ARCHITECTURE.md §4.6, §4.7, §8.1 rule 5, §10.5. `ManualTimeSource` drives every wait; the
 // surface is scripted and the presenter only records.
 import AppKit
@@ -57,19 +57,19 @@ import Testing
         #expect(bed.time.sleeperCount == 0)
     }
 
-    @Test func t3KeepsAliveEveryFiveSecondsAndT2DoesNot() async throws {
+    @Test func t3KeepsAliveFiveTimesASecondAndT2DoesNot() async throws {
         let bed = TriggerTestBed()
         let (t3, t3Surface) = try make(bed, .metalKeepAlive)
         #expect(await t3.present(.bright))
         #expect(t3.isKeepingAlive)
         #expect(t3Surface.presentedValues == [1.6])
         #expect(await eventually { bed.time.sleeperCount == 1 })
-        await bed.time.advance(by: .milliseconds(4900))
+        await bed.time.advance(by: .milliseconds(190))
         #expect(t3Surface.presentedValues.count == 1)
-        await bed.time.advance(by: .milliseconds(100))
+        await bed.time.advance(by: .milliseconds(10))
         #expect(t3Surface.presentedValues.count == 2)
-        await bed.time.advance(by: .seconds(10))
-        #expect(t3Surface.presentedValues == [1.6, 1.6, 1.6, 1.6])
+        await bed.time.advance(by: .seconds(1))
+        #expect(t3Surface.presentedValues == Array(repeating: 1.6, count: 7))
 
         let (t2, t2Surface) = try make(bed, .metalOneShot, on: TriggerTestBed.external)
         #expect(await t2.present(.bright))

@@ -13,7 +13,14 @@ extension BoostEngine {
     /// disarms every display (ramp, baseline, triggers removed); stored levels stay.
     public func setOn(_ on: Bool, source: ControlSource) {
         if on {
-            if isMasterOn { refreshPowerBeforeABoost() } else { turnOn(source: source) }
+            if isMasterOn {
+                refreshPowerBeforeABoost()
+            } else {
+                let keys = displays.displays.map(\.ref.key)
+                turnOn(source: source)
+                checkFirstBoost(priorStored: Self.byKey(keys.map { ($0, storedLevel(of: $0)) }),
+                                wasBoosting: [:], source: source)
+            }
         } else {
             turnOff()
         }
@@ -189,6 +196,7 @@ extension BoostEngine {
         let keys = linked ? displays.displays.map(\.ref.key) : Array(levels.keys)
         let priorStored = Self.byKey(keys.map { ($0, storedLevel(of: $0)) })
         let priorLight = Self.byKey(keys.map { ($0, isMasterOn ? light(of: storedLevel(of: $0)) : 1) })
+        let wasBoosting = Self.byKey(keys.map { ($0, isMasterOn && storedLevel(of: $0).isBoost) })
         // Every reader (the reducer below, the UI, Signals) sees the new levels at once; UserDefaults gets them once
         // the steps pause (`armLevelPersist`).
         if linked {
@@ -216,6 +224,7 @@ extension BoostEngine {
             turnOn(source: source)
         }
         checkLowLevel(priorStored: priorStored, priorLight: priorLight, source: source)
+        checkFirstBoost(priorStored: priorStored, wasBoosting: wasBoosting, source: source)
         reduceNow(ControlRequest(source: source, kind: .level, display: display, wantsBoost: wantsBoost))
     }
 
