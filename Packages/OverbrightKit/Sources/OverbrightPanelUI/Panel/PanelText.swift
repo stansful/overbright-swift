@@ -17,6 +17,14 @@ enum PanelText {
         String(localized: "None of your displays can show extra brightness right now.", bundle: .module,
                comment: "Panel: sentence above the cards when no display can show extra brightness")
     }
+    static var externalsHidden: String {
+        String(localized: "The built-in display isn’t in use, and external displays are hidden.", bundle: .module,
+               comment: "Panel: sentence in place of the cards when the built-in display is not in use (lid closed) and Settings hides external displays from the panel")
+    }
+    static var showExternals: String {
+        String(localized: "Show external displays…", bundle: .module,
+               comment: "Panel: link under the sentence about hidden external displays; opens Settings at the switch that shows them in the panel")
+    }
     /// "1 display can't be adjusted" (plural forms in the catalog).
     static func cannotBeAdjusted(_ count: Int) -> String {
         String(localized: "\(count) displays can’t be adjusted", bundle: .module,

@@ -1,6 +1,6 @@
 // OverbrightPanelUI/QA/ScriptedState.swift — one named state of the gallery: the engine status plus what is not part of
 // the status (levels, cap modes, linked levels, the per-display switch, calibration records, Fill Light, the expanded
-// "Why?" row). DESIGN.md §5.13; ARCHITECTURE.md §8.5 (`--qa-state` drives `PreviewBoostControl` with the status).
+// "Why?" row, whether the panel shows external displays). DESIGN.md §5.13; ARCHITECTURE.md §8.5 (`--qa-state` drives `PreviewBoostControl` with the status).
 import Foundation
 import OverbrightCore
 
@@ -18,6 +18,9 @@ struct ScriptedState {
     var fillLightOn = false
     /// The "Why?" row is expanded.
     var expandsWhy = false
+    /// The panel shows external displays (Settings' switch on): every state but the `externals-hidden` ones, whose
+    /// subject is the default, so the gallery keeps the cards each state is about.
+    var showsExternalDisplays = true
 
     /// A HUD or Keep-this-level state (DESIGN.md §5.13's last row).
     var isHUDState: Bool { id.hasPrefix("hud-") || id == "keep-level" }
@@ -37,7 +40,7 @@ struct ScriptedState {
             return display
         }
         return ScriptedState(id: id, status: status, facts: facts, configure: configure, fillLightOn: fillLightOn,
-                             expandsWhy: expandsWhy)
+                             expandsWhy: expandsWhy, showsExternalDisplays: showsExternalDisplays)
     }
 }
 

@@ -40768,6 +40768,215 @@
         }
       }
     },
+    "Show external displays in the panel" : {
+      "comment" : "Settings ▸ Displays: switch (off: the menu bar panel lists only the built-in display)",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إظهار الشاشات الخارجية في اللوحة"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostra les pantalles externes al tauler"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zobrazovat externí monitory na panelu"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vis eksterne skærme i panelet"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Externe Displays im Panel anzeigen"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Εμφάνιση εξωτερικών οθονών στο πάνελ"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar pantallas externas en el panel"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Näytä ulkoiset näytöt paneelissa"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher les écrans externes dans le panneau"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "הצגת צגים חיצוניים בלוח"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "पैनल में बाहरी डिस्प्ले दिखाएँ"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prikaži vanjske zaslone na ploči"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Külső kijelzők megjelenítése a panelen"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tampilkan layar eksternal di panel"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostra gli schermi esterni nel pannello"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "パネルに外部ディスプレイを表示"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "패널에서 외장 디스플레이 보기"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tunjukkan paparan luaran dalam panel"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vis eksterne skjermer i panelet"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toon externe beeldschermen in paneel"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokazuj wyświetlacze zewnętrzne na panelu"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar telas externas no painel"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar monitores externos no painel"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afișare afișaje externe în panou"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Показывать внешние дисплеи в панели"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zobrazovať externé displeje na paneli"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prikaži zunanje zaslone na plošči"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visa externa skärmar i panelen"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "แสดงจอภาพภายนอกในแผง"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Harici ekranları panelde göster"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Показувати зовнішні дисплеї на панелі"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hiển thị màn hình ngoài trong bảng điều khiển"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在面板中显示外接显示器"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在面板中顯示外接顯示器"
+          }
+        }
+      }
+    },
     "Show in Dock" : {
       "comment" : "Settings ▸ General: switch (“Dock” is macOS’s own name)",
       "localizations" : {
@@ -52484,6 +52693,215 @@
         }
       }
     },
+    "When it’s off, the panel shows only the built-in display. External displays keep their levels; adjust them below or in the menu." : {
+      "comment" : "Settings ▸ Displays: footnote of Show external displays in the panel",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "عند إيقاف هذا الخيار، تعرض اللوحة الشاشة المضمنة فقط. وتحتفظ الشاشات الخارجية بمستوياتها؛ يمكنك ضبطها أدناه أو من القائمة."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quan aquesta opció està desactivada, el tauler només mostra la pantalla integrada. Les pantalles externes mantenen el seu nivell; ajusta‑les més avall o al menú."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Když je tato volba vypnutá, panel zobrazuje jen vestavěný monitor. Externí monitory si zachovají své úrovně; můžete je upravit níže nebo v nabídce."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Når indstillingen er slået fra, viser panelet kun den indbyggede skærm. Eksterne skærme beholder deres niveauer; juster dem nedenfor eller i menuen."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wenn diese Option deaktiviert ist, zeigt das Panel nur das integrierte Display an. Externe Displays behalten ihre Stufen; passe sie unten oder im Menü an."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Όταν η επιλογή είναι απενεργοποιημένη, το πάνελ εμφανίζει μόνο την ενσωματωμένη οθόνη. Οι εξωτερικές οθόνες διατηρούν τα επίπεδά τους. Μπορείτε να τα ρυθμίσετε παρακάτω ή στο μενού."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si esta opción está desactivada, el panel solo muestra la pantalla integrada. Las pantallas externas mantienen su nivel; ajústalas más abajo o en el menú."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kun tämä on pois päältä, paneelissa näkyy vain sisäinen näyttö. Ulkoiset näytöt säilyttävät tasonsa; niitä voi säätää alempana tai valikossa."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lorsque cette option est désactivée, le panneau n’affiche que l’écran intégré. Les écrans externes conservent leur niveau ; réglez-les ci-dessous ou dans le menu."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "כשהאפשרות כבויה, הלוח מציג רק את הצג המובנה. הצגים החיצוניים שומרים על הרמות שלהם; אפשר לכוונן אותן למטה או בתפריט."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "जब यह सेटिंग बंद हो, तो पैनल सिर्फ़ बिल्टइन डिस्प्ले दिखाता है। बाहरी डिस्प्ले अपने स्तर बनाए रखते हैं; आप उन्हें नीचे या मेन्यू में ऐडजस्ट कर सकते हैं।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kad je ova postavka isključena, ploča prikazuje samo ugrađeni zaslon. Vanjski zasloni zadržavaju svoje razine; možete ih podesiti u nastavku ili u izborniku."
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ha ki van kapcsolva, a panelen csak a beépített kijelző jelenik meg. A külső kijelzők megtartják a szintjüket; ezeket alább vagy a menüben állíthatja be."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saat dimatikan, panel hanya menampilkan layar internal. Layar eksternal mempertahankan levelnya; sesuaikan di bawah atau di menu."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quando questa opzione è disattivata, il pannello mostra solo lo schermo integrato. Gli schermi esterni mantengono il proprio livello; regolali qui sotto o nel menu."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "オフの場合は、パネルには内蔵ディスプレイのみが表示されます。外部ディスプレイのレベルは維持され、下の設定またはメニューで調整できます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 옵션을 끄면 패널에 내장 디스플레이만 표시됩니다. 외장 디스플레이는 레벨을 그대로 유지하며, 아래 또는 메뉴에서 조절할 수 있습니다."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apabila ia dimatikan, panel hanya menunjukkan paparan terbina dalam. Paparan luaran mengekalkan tahap masing-masing; laraskannya di bawah atau dalam menu."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Når innstillingen er av, viser panelet bare den innebygde skjermen. Eksterne skjermer beholder nivåene sine; du kan justere dem nedenfor eller i menyen."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Als dit is uitgeschakeld, toont het paneel alleen het ingebouwde beeldscherm. Externe beeldschermen behouden hun niveau; pas ze hieronder of in het menu aan."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gdy ta opcja jest wyłączona, panel pokazuje tylko wbudowany wyświetlacz. Wyświetlacze zewnętrzne zachowują swoje poziomy; możesz je regulować poniżej lub w menu."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quando esta opção estiver desativada, o painel mostra somente a tela integrada. As telas externas mantêm seus níveis; ajuste-as abaixo ou no menu."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quando esta opção estiver desativada, o painel mostra apenas o monitor integrado. Os monitores externos mantêm o seu nível; ajuste‑os mais abaixo ou no menu."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Când opțiunea este dezactivată, panoul arată doar afișajul integrat. Afișajele externe își păstrează nivelurile; ajustați‑le mai jos sau din meniu."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Если выключено, в панели показан только встроенный дисплей. Внешние дисплеи сохраняют свои уровни; их можно настроить ниже или в меню."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keď je táto funkcia vypnutá, panel zobrazuje len vstavaný displej. Externé displeje si zachovajú svoje úrovne; môžete ich upraviť nižšie alebo v menu."
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ko je ta možnost izklopljena, plošča prikazuje samo vgrajeni zaslon. Zunanji zasloni ohranijo svoje ravni; prilagodite jih lahko spodaj ali v meniju."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "När inställningen är av visar panelen bara den inbyggda skärmen. Externa skärmar behåller sina nivåer; justera dem nedan eller i menyn."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เมื่อปิดตัวเลือกนี้ แผงจะแสดงเฉพาะจอภาพในตัวเครื่อง จอภาพภายนอกจะคงระดับของตัวเองไว้ ปรับได้ที่ด้านล่างหรือในเมนู"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu ayar kapalıyken panel yalnızca yerleşik ekranı gösterir. Harici ekranlar düzeylerini korur; bunları aşağıda veya menüde ayarlayabilirsiniz."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Якщо цей параметр вимкнено, на панелі показано лише вбудований дисплей. Зовнішні дисплеї зберігають свої рівні; їх можна налаштувати нижче або в меню."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Khi tắt tùy chọn này, bảng điều khiển chỉ hiển thị màn hình tích hợp. Các màn hình ngoài vẫn giữ mức riêng; bạn có thể điều chỉnh chúng ở bên dưới hoặc trong menu."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭时，面板仅显示内建显示器。外接显示器会保持各自的级别；你可以在下方或菜单中调整。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "關閉時，面板只會顯示內建顯示器。外接顯示器會保留各自的等級；你可以在下方或選單中調整。"
+          }
+        }
+      }
+    },
     "When you log in" : {
       "comment" : "Settings ▸ General: what Overbright does at login (radio group)",
       "localizations" : {
@@ -60262,6 +60680,215 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "退出"
+          }
+        }
+      }
+    },
+    "external" : {
+      "comment" : "Settings search: keyword for Show external displays in the panel",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "خارجية"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "externa"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "externí"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ekstern"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "extern"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "εξωτερική"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "externo"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ulkoinen"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "externe"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "חיצוני"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "बाहरी"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "vanjski"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "külső"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "eksternal"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "esterno"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "外部ディスプレイ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "외장"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "luaran"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ekstern"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "extern"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "zewnętrzny"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "externo"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "externo"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "extern"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "внешний"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "externý"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "zunanji"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "extern"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ภายนอก"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "harici"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "зовнішній"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ngoài"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "外接显示器"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "外接顯示器"
           }
         }
       }

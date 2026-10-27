@@ -1,5 +1,6 @@
 // OverbrightPanelUITests/PanelLayoutTests.swift — the panel's sections and layout: which displays get a card and
-// which collapse into "Why?" (DESIGN.md §5.10; expanded from the start when nothing can boost, §5.11), the empty state,
+// which collapse into "Why?" (DESIGN.md §5.10; expanded from the start when nothing can boost, §5.11), external displays
+// only while Settings shows them and the line that says they are hidden (§5.4, §5.11), the empty state,
 // the one-time tip, the battery chip (§5.3, §5.9, §5.11), names told apart (§5.4), the 320-pt width, one card system
 // (every card 304 pt, the slider row exactly the 280-pt inner width, §5.4), the scrolling list from four displays on
 // (three whole cards and a peek, shrinking under the height cap, §5.1, §5.11), and the gallery of §5.13 complete. Views
@@ -22,7 +23,7 @@ import Testing
         "banner-low-power", "banner-heat", "banner-paused", "banner-focus", "banner-schedule", "heat-cap",
         "conflict-booster", "conflict-color-app", "conflict-may-interfere", "flicker-stop", "foreign-table",
         "full-screen-video", "full-screen", "paused-app", "oled-idle", "why-expanded",
-        "nothing-capable", "two-identical-externals", "long-russian-name", "fill-light-card", "calibration-tip",
+        "nothing-capable", "two-identical-externals", "externals-hidden", "externals-hidden-lid-closed", "long-russian-name", "fill-light-card", "calibration-tip",
         "four-displays", "menubar-hidden", "move-to-applications", "hud-boost", "hud-dim", "hud-standard", "hud-off",
         "hud-preparing", "hud-blocked", "hud-two-displays", "hud-automation-timer", "hud-automation-battery",
         "hud-automation-low-power", "hud-automation-heat", "hud-automation-schedule", "hud-automation-back", "keep-level",
@@ -80,6 +81,69 @@ import Testing
         let normal = PanelContent(status: boosting, tipShown: true, calibrated: [], fillLightOn: false, hasBattery: false)
         #expect(normal.cards.count == 2 && normal.nonCapable.isEmpty && !normal.showsNothingCapable)
         #expect(!normal.showsBatteryChip)
+    }
+
+    /// Off by default, Show external displays in the panel leaves the built-in display alone in the panel (DESIGN.md
+    /// §5.4); the gallery's other states show external displays, the cards they are about.
+    @Test func externalDisplaysGetCardsOnlyWhileSettingsShowsThem() throws {
+        let services = try #require(ScriptedStatuses.services(named: "externals-hidden"))
+        let view = PanelView(services: services)
+        #expect(!services.settings[DisplaySettings.showsExternalDisplaysInPanel])
+        #expect(view.content.cards.map(\.key) == [DisplayFixture.Keys.builtIn] && !view.content.showsExternalsHidden)
+        services.settings[DisplaySettings.showsExternalDisplaysInPanel] = true
+        #expect(view.content.cards.map(\.key) == [DisplayFixture.Keys.builtIn, DisplayFixture.Keys.mpg322ux])
+        let boosting = try #require(ScriptedStatuses.services(named: "boosting"))
+        #expect(PanelView(services: boosting).content.cards.count == 2)
+    }
+
+    /// Lid closed with external displays hidden: no display is listed, and the panel says why and links to the switch
+    /// in the cards' place (DESIGN.md §5.11, §5.12).
+    @Test func withNoBuiltInDisplayInUseThePanelSaysExternalsAreHidden() throws {
+        let services = try #require(ScriptedStatuses.services(named: "externals-hidden-lid-closed"))
+        let view = PanelView(services: services)
+        let content = view.content
+        #expect(content.cards.isEmpty && content.nonCapable.isEmpty && content.showsExternalsHidden)
+        #expect(!content.showsNothingCapable)
+        // A hidden external that cannot boost (HDR off) says only that the external displays are hidden.
+        let hdrOff = try #require(ScriptedStatuses.status(named: "nothing-capable")?.displays
+            .first { $0.key == ScriptedParts.msiHDROff.ref.key })
+        let nothingListed = PanelContent(status: ScriptedParts.status([hdrOff]), tipShown: true, calibrated: [],
+                                         fillLightOn: false, hasBattery: true, builtInOnly: [])
+        #expect(nothingListed.showsExternalsHidden && !nothingListed.showsNothingCapable)
+        #expect(Array(view.focusOrder(content, status: services.boost.status).order.prefix(2)) == [.masterSwitch, .showExternals])
+        #expect(SettingsLinks.externalDisplays == "displays#externalDisplays")
+    }
+
+    /// A Mac without a built-in display (no built-in display online, no battery) lists every display whatever the
+    /// switch says: hiding external displays would leave its panel empty.
+    @Test func aMacWithoutABuiltInDisplayListsEveryDisplay() throws {
+        let services = try #require(ScriptedStatuses.services(named: "externals-hidden-lid-closed"))
+        try #require(services.signals as? FakeSystemSignals).snapshot.power.batteryPercent = nil      // a Mac mini
+        #expect(PanelContent.builtInOnly(services: services) == nil)
+        let content = PanelView(services: services).content
+        #expect(content.cards.map(\.key) == [DisplayFixture.Keys.mpg322ux] && !content.showsExternalsHidden)
+    }
+
+    /// Hidden displays leave the "Why?" row and the calibration tip; "None of your displays…" still speaks of every
+    /// display, hidden ones too.
+    @Test func hiddenDisplaysLeaveTheWhyRowAndTheTip() throws {
+        let nothing = try #require(ScriptedStatuses.status(named: "nothing-capable"))   // LCD built-in, MSI, Sidecar
+        let lcd = ScriptedParts.lcd.ref.key
+        let content = PanelContent(status: nothing, tipShown: true, calibrated: [], fillLightOn: false, hasBattery: true,
+                                   builtInOnly: [lcd])
+        #expect(content.cards.map(\.key) == [lcd] && content.nonCapable.isEmpty)
+        #expect(content.showsNothingCapable && !content.showsExternalsHidden)
+        // A hidden external that can boost keeps the sentence away, though the listed LCD cannot boost.
+        let lcdStatus = try #require(nothing.displays.first { $0.key == lcd })
+        let capableHidden = PanelContent(status: ScriptedParts.status([lcdStatus, ScriptedParts.msiStandard()]),
+                                         tipShown: true, calibrated: [], fillLightOn: false, hasBattery: true,
+                                         builtInOnly: [lcd])
+        #expect(capableHidden.cards.map(\.key) == [lcd] && !capableHidden.showsNothingCapable)
+        let small = try #require(ScriptedStatuses.status(named: "small-gain"))         // the MSI alone, boosted
+        #expect(PanelContent(status: small, tipShown: false, calibrated: [], fillLightOn: false, hasBattery: true)
+            .calibrationTip == DisplayFixture.Keys.mpg322ux)
+        #expect(PanelContent(status: small, tipShown: false, calibrated: [], fillLightOn: false, hasBattery: true,
+                             builtInOnly: []).calibrationTip == nil)
     }
 
     @Test func undecidedDisplaysGetCardsAndNoEmptyState() {

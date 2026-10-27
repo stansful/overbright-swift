@@ -1,13 +1,15 @@
 // OverbrightPanelUI/Panel/PanelFocus.swift — the panel's keyboard map as data: every focusable element and the Tab
-// order of DESIGN.md §5.12 (master switch → per card: slider, chip, Turn on → "Why?" and, when expanded, each row's fix
-// and Learn more → banner buttons → the calibration tip's buttons → footer chips → the Fill Light card → "⋯"), plus
-// ↑ / ↓ between the cards' sliders. The view binds `@FocusState` to it; `PanelKeyboardTests` walk it.
+// order of DESIGN.md §5.12 (master switch → "Show external displays…" in the cards' place while no display is listed →
+// per card: slider, chip, Turn on → "Why?" and, when expanded, each row's fix and Learn more → banner buttons → the
+// calibration tip's buttons → footer chips → the Fill Light card → "⋯"), plus ↑ / ↓ between the cards' sliders. The view binds `@FocusState` to it; `PanelKeyboardTests` walk it.
 import OverbrightCore
 
 /// A focusable element of the panel.
 public nonisolated enum PanelFocus: Hashable, Sendable {
     /// The header's master switch.
     case masterSwitch
+    /// "Show external displays…" under the sentence that says they are hidden.
+    case showExternals
     /// A card's level slider.
     case slider(DisplayKey)
     /// A card's status chip.
@@ -72,6 +74,8 @@ public struct PanelFocusOrder: Hashable {
         public init(key: DisplayKey, hasFix: Bool) { self.key = key; self.hasFix = hasFix }
     }
 
+    /// "The built-in display isn’t in use, and external displays are hidden." shows, with its link.
+    public var hasExternalsHidden: Bool
     /// The cards, in order.
     public var cards: [Card]
     /// The "Why?" line shows.
@@ -88,15 +92,17 @@ public struct PanelFocusOrder: Hashable {
     public var hasFillLightCard: Bool
 
     /// The order of the panel's elements.
-    public init(cards: [Card], hasWhy: Bool, whyRows: [WhyRow], bannerButtons: Int, hasTip: Bool, hasBatteryChip: Bool,
-                hasFillLightCard: Bool) {
-        self.cards = cards; self.hasWhy = hasWhy; self.whyRows = whyRows; self.bannerButtons = bannerButtons
-        self.hasTip = hasTip; self.hasBatteryChip = hasBatteryChip; self.hasFillLightCard = hasFillLightCard
+    public init(hasExternalsHidden: Bool = false, cards: [Card], hasWhy: Bool, whyRows: [WhyRow], bannerButtons: Int,
+                hasTip: Bool, hasBatteryChip: Bool, hasFillLightCard: Bool) {
+        self.hasExternalsHidden = hasExternalsHidden; self.cards = cards; self.hasWhy = hasWhy; self.whyRows = whyRows
+        self.bannerButtons = bannerButtons; self.hasTip = hasTip; self.hasBatteryChip = hasBatteryChip
+        self.hasFillLightCard = hasFillLightCard
     }
 
     /// Every element in Tab order.
     public var order: [PanelFocus] {
         var order: [PanelFocus] = [.masterSwitch]
+        if hasExternalsHidden { order.append(.showExternals) }
         for card in cards {
             order.append(.slider(card.key))
             if card.hasChip { order.append(.chip(card.key)) }

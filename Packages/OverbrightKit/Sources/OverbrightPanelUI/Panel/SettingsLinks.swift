@@ -9,6 +9,8 @@ import OverbrightCore
 public nonisolated enum SettingsLinks {
     /// Settings ▸ Displays ▸ Add extra brightness only near full brightness ("Change setting…").
     public static let nearFullBrightness = "displays#nearFullBrightness"
+    /// Settings ▸ Displays ▸ Show external displays in the panel ("Show external displays…").
+    public static let externalDisplays = "displays#externalDisplays"
     /// Settings ▸ Automations ▸ Power ("Change power rules…").
     public static let powerRules = "automations#power"
     /// Settings ▸ Automations ▸ Apps and video ("Change rules…").

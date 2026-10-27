@@ -173,6 +173,7 @@ import Testing
         #expect(s[DisplaySettings.perDisplay].isEmpty && !s[DisplaySettings.linkLevels])
         #expect(s[DisplaySettings.linkedLevel] == LevelPosition(0.5) && s[DisplaySettings.lastDimLight] == 0.25)
         #expect(!s[DisplaySettings.boostOnlyNearFullBrightness])                     // off since 2026-10-20 (§5.4)
+        #expect(!s[DisplaySettings.showsExternalDisplaysInPanel])                    // the owner's rule, 2026-10-27
         #expect(s[AutomationSettings.batteryGuard] == .belowThreshold && s[AutomationSettings.batteryThreshold] == 20)
         #expect(s[AutomationSettings.pauseInLowPowerMode] && s[AutomationSettings.autoOffMinutes] == nil)
         #expect(!s[AutomationSettings.pauseForFullScreenVideo] && !s[AutomationSettings.pauseForAllFullScreen])
@@ -203,6 +204,7 @@ import Testing
                    GeneralSettings.showsHUD.id, GeneralSettings.haptics.id, GeneralSettings.showsDockIcon.id,
                    DisplaySettings.perDisplay.id, DisplaySettings.linkLevels.id, DisplaySettings.linkedLevel.id,
                    DisplaySettings.lastDimLight.id, DisplaySettings.boostOnlyNearFullBrightness.id,
+                   DisplaySettings.showsExternalDisplaysInPanel.id,
                    AutomationSettings.batteryGuard.id, AutomationSettings.batteryThreshold.id,
                    AutomationSettings.pauseInLowPowerMode.id, AutomationSettings.autoOffMinutes.id,
                    AutomationSettings.pauseForFullScreenVideo.id, AutomationSettings.pauseForAllFullScreen.id,

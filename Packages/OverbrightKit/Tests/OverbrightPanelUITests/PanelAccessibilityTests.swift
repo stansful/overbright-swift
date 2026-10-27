@@ -26,6 +26,7 @@ import Testing
         func footer(_ kind: FooterChip.Kind) -> String? { chips.first { $0.kind == kind }?.model.accessibilityLabel }
         switch focus {
         case .masterSwitch: return "Overbright"
+        case .showExternals: return PanelText.showExternals
         case .slider(let key): return titles[key].map { BoostSlider.label($0) }
         case .chip(let key): return card(key).flatMap { CardChip.model(for: $0, isMasterOn: status.isOn) }?.accessibilityLabel
         case .turnOn: return CardAction.turnOnExtraBrightness.title
@@ -50,7 +51,8 @@ import Testing
     }
 
     @Test(arguments: ["boosting", "extra-brightness-off", "banner-low-power", "banner-paused", "why-expanded",
-                      "fill-light-card", "calibration-tip", "no-extra-range", "conflict-booster", "four-displays"])
+                      "fill-light-card", "calibration-tip", "no-extra-range", "conflict-booster", "four-displays",
+                      "externals-hidden-lid-closed"])
     func everyControlHasALabel(_ name: String) throws {
         let services = try #require(ScriptedStatuses.services(named: name))
         services.settings[OnboardingSettings.calibrationTipShown] = name != "calibration-tip"
@@ -69,7 +71,7 @@ import Testing
         let bundle = try #require(ShippedLanguages.panel(code), "\(code): no PanelUI table")
         let locale = Locale(identifier: code)
         for key in ["More", "Why?", "Learn more", "Not now", "Calibrate…", "Display", "Brightness", "Warmth", "Turn off",
-                    "Turn on", "Battery limit", "Auto-pause", "Timer", "Cool", "Warm"] {
+                    "Turn on", "Battery limit", "Auto-pause", "Timer", "Cool", "Warm", "Show external displays…"] {
             let text = String(localized: String.LocalizationValue(key), bundle: bundle, locale: locale)
             #expect(!text.trimmingCharacters(in: .whitespaces).isEmpty, "\(code): «\(key)»")
         }

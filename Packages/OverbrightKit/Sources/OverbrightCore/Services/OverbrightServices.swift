@@ -45,4 +45,11 @@ import Observation
         self.signals = signals; self.boost = boost; self.fillLight = fillLight; self.shortcuts = shortcuts
         self.updates = updates
     }
+
+    /// The Mac has a built-in display: one is online, or the Mac has a battery (a laptop with its lid closed, whose
+    /// built-in display the directory leaves out). `DisplaySettings.showsExternalDisplaysInPanel` applies only then; on
+    /// a Mac without one (a Mac mini) the panel lists every display and Settings hides the switch.
+    public var hasBuiltInDisplay: Bool {
+        displays.displays.contains(where: \.isBuiltIn) || signals.snapshot.power.batteryPercent != nil
+    }
 }
