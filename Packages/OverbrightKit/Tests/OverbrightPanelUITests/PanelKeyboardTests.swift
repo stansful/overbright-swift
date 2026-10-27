@@ -18,10 +18,11 @@ import Testing
     private let a = DisplayFixture.Keys.builtIn
     private let b = DisplayFixture.Keys.mpg322ux
 
-    /// Every element present: two cards (the second with a chip and Turn on), "Why?" expanded with a fix, the banner's
-    /// two buttons, the tip, all three footer chips, the Fill Light card.
+    /// Every element present: "Show external displays…", two cards (the second with a chip and Turn on), "Why?" expanded
+    /// with a fix, the banner's two buttons, the tip, all three footer chips, the Fill Light card.
     private var everything: PanelFocusOrder {
-        PanelFocusOrder(cards: [.init(key: a, hasChip: true, hasTurnOn: false), .init(key: b, hasChip: true, hasTurnOn: true)],
+        PanelFocusOrder(hasExternalsHidden: true,
+                        cards: [.init(key: a, hasChip: true, hasTurnOn: false), .init(key: b, hasChip: true, hasTurnOn: true)],
                         hasWhy: true, whyRows: [.init(key: DisplayFixture.Keys.sidecar, hasFix: true)], bannerButtons: 2,
                         hasTip: true, hasBatteryChip: true, hasFillLightCard: true)
     }
@@ -29,7 +30,7 @@ import Testing
     @Test func tabWalksTheDesignOrderWithEveryElementPresent() {
         let sidecar = DisplayFixture.Keys.sidecar
         let expected: [PanelFocus] = [
-            .masterSwitch, .slider(a), .chip(a), .slider(b), .chip(b), .turnOn(b), .why, .fix(sidecar), .learnMore(sidecar),
+            .masterSwitch, .showExternals, .slider(a), .chip(a), .slider(b), .chip(b), .turnOn(b), .why, .fix(sidecar), .learnMore(sidecar),
             .bannerPrimary, .bannerSecondary, .tipCalibrate, .tipNotNow, .footerBattery, .footerAutoPause, .footerTimer,
             .fillLightDisplay, .fillLightBrightness, .fillLightWarmth, .fillLightTurnOff, .overflow,
         ]

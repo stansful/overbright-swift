@@ -128,7 +128,27 @@ import Testing
         #expect(ids.contains("displays.\(key)"))                                   // the section: its verdict
         #expect(!ids.contains("displays.\(key).type"))                             // built-in: no display type
         #expect(!ids.contains("displays.\(key).method"))                           // one method: no Method row
-        #expect(ids.isSuperset(of: ["displays.linkLevels", "displays.nearFullBrightness"]))
+        #expect(ids.isSuperset(of: ["displays.linkLevels", "displays.nearFullBrightness", "displays.externalDisplays"]))
+    }
+
+    /// Show external displays in the panel shows only on a Mac with a built-in display: one online, or a battery (a
+    /// laptop with its lid closed). A Mac mini lists every display in the panel, so the switch would do nothing there.
+    @Test func theExternalDisplaysSwitchShowsOnlyOnAMacWithABuiltInDisplay() throws {
+        let id = DisplaysRows.externalDisplays.id
+        func shows(_ services: OverbrightServices) -> Bool {
+            let rows = DisplaysPane.rows(services: services).map(\.id)
+            #expect(rows.contains(id) == DisplaysPane.values(services: services).map(\.info.id).contains(id))
+            return rows.contains(id)
+        }
+        #expect(shows(TestServices.classified(.builtinXDRLidOpen)))
+        let lidClosed = TestServices.classified(.mpg322uxHDROn)                       // externals only, a battery
+        #expect(shows(lidClosed))
+        let signals = try #require(lidClosed.signals as? FakeSystemSignals)
+        signals.snapshot.power.batteryPercent = nil                                   // no battery: a Mac mini
+        #expect(!shows(lidClosed))
+        let iMac = OverbrightServices.preview()
+        try #require(iMac.signals as? FakeSystemSignals).snapshot.power.batteryPercent = nil
+        #expect(shows(iMac))                                                          // a built-in display, no battery
     }
 
     @Test func anExternalOLEDDisplayHasAType() throws {
@@ -252,7 +272,7 @@ import Testing
     @Test func everyDeepLinkPointsAtARowThatExists() {
         let services = TestServices.classified(.builtinXDRLidOpen)
         let rows = Set(SettingsPaneCatalog.rows(services: services).map(\.id))
-        let links = ["displays#nearFullBrightness", "automations#power", "automations#timer", "automations#apps",
+        let links = ["displays#nearFullBrightness", "displays#externalDisplays", "automations#power", "automations#timer", "automations#apps",
                      "automations#pausedApps", "automations#schedule", "advanced#selfTest", "general#quit",
                      "displays#\(builtIn.rawValue)", "displays#\(builtIn.rawValue).limit", "advanced#resetAll"]
         for link in links {

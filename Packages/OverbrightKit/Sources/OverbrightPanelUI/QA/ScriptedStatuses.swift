@@ -1,9 +1,9 @@
 // OverbrightPanelUI/QA/ScriptedStatuses.swift — named engine statuses for snapshots and `--qa-state`.
 // DESIGN.md §5.13; ARCHITECTURE.md §8.5, §10.0 (PanelUI seam). The shell reads `names` and `status(named:)` (fixed),
 // and for `--qa-state` also what is not part of the status: `apply(named:to:)` writes the state's settings (levels, cap
-// modes, linked levels, the per-display switch, calibration records) into the run's QA suite, `fillLightOn(named:)`
-// and `expandsWhy(named:)` say how Fill Light and the "Why?" row show; without them a scripted status contradicts
-// itself in the app (a readout at one level with the thumb at another). `services(named:)` builds a preview hub with
+// modes, linked levels, the per-display switch, calibration records, whether the panel shows external displays) into
+// the run's QA suite, `fillLightOn(named:)` and `expandsWhy(named:)` say how Fill Light and the "Why?" row show;
+// without them a scripted status contradicts itself in the app (a readout at one level with the thumb at another). `services(named:)` builds a preview hub with
 // the state's settings, directory and Fill Light, for the snapshot suites and #Previews.
 import Foundation
 import OverbrightCore
@@ -17,8 +17,9 @@ public enum ScriptedStatuses {
     public static func status(named name: String) -> BoostStatus? { state(named: name)?.status }
 
     /// Writes the settings the state called `name` needs into `settings`, after setting back to their defaults the
-    /// ones any state writes (so a QA suite kept between runs shows this state alone) and marking the calibration tip
-    /// as shown (only `calibration-tip` shows it). False, and nothing written, for an unknown name.
+    /// ones any state writes (so a QA suite kept between runs shows this state alone), marking the calibration tip as
+    /// shown (only `calibration-tip` shows it) and showing external displays in the panel (all but the
+    /// `externals-hidden` states). False, and nothing written, for an unknown name.
     @discardableResult
     public static func apply(named name: String, to settings: SettingsStore) -> Bool {
         guard let state = state(named: name) else { return false }
@@ -28,6 +29,7 @@ public enum ScriptedStatuses {
         settings.reset(DisplaySettings.boostOnlyNearFullBrightness)
         settings.reset(AutomationSettings.autoOffMinutes)
         settings[OnboardingSettings.calibrationTipShown] = true
+        settings[DisplaySettings.showsExternalDisplaysInPanel] = state.showsExternalDisplays
         state.configure(settings)
         return true
     }

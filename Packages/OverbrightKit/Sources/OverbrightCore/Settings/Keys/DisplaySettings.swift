@@ -12,4 +12,8 @@ public nonisolated enum DisplaySettings {
     public static let lastDimLight = SettingKey(.displays, "lastDimLight", default: 0.25)
     /// "Add extra brightness only near full brightness" (§5.4).
     public static let boostOnlyNearFullBrightness = SettingKey(.displays, "boostOnlyNearFullBrightness", default: false)
+    /// "Show external displays in the panel" (DESIGN.md §5.4, §7.4). Off, the panel lists only the built-in display, and
+    /// none while it is not in use (lid closed). Presentation only: the engine, the menu and the shortcuts still act on
+    /// every display. It applies only on a Mac with a built-in display (`OverbrightServices.hasBuiltInDisplay`).
+    public static let showsExternalDisplaysInPanel = SettingKey(.displays, "showsExternalDisplaysInPanel", default: false)
 }

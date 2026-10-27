@@ -129,6 +129,19 @@ import Testing
         #expect(model.dump().contains("All Displays ▸"))
     }
 
+    /// Show external displays in the panel is presentation of the panel only: off (its default), the menu still lists
+    /// the external display that the panel hides (DESIGN.md §4.3).
+    @Test func theMenuListsExternalDisplaysThePanelHides() throws {
+        let services = try services("externals-hidden")
+        #expect(!services.settings[DisplaySettings.showsExternalDisplaysInPanel])
+        let panel = PanelContent(status: services.boost.status, tipShown: true, calibrated: [], fillLightOn: false,
+                                 hasBattery: true, builtInOnly: PanelContent.builtInOnly(services: services))
+        #expect(panel.cards.count == 1)
+        let model = StatusMenuModel.make(services: services)
+        #expect(kinds(model.rows).filter { $0 == "display" }.count == 2)
+        #expect(model.dump().contains("MPG322UX OLED ▸"))
+    }
+
     @Test func displaysThatCannotBeAdjustedHaveNoSubmenu() throws {
         let model = StatusMenuModel.make(services: try services("why-expanded"))
         #expect(kinds(model.rows).filter { $0 == "display" }.count == 1)       // the Sidecar display is left out

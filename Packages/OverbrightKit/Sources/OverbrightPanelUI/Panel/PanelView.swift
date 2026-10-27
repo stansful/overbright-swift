@@ -1,5 +1,7 @@
 // OverbrightPanelUI/Panel/PanelView.swift — the panel's content: header, Fill Light card, banner, calibration tip, the
-// empty-state sentence, one card per display that can boost or dim, the "Why?" row, footer chips. DESIGN.md §5.1–§5.12
+// empty-state sentence, one card per listed display that can boost or dim (external displays only while Settings shows
+// them, §5.4; "external displays are hidden" and its link into Settings while none is listed, §5.11), the "Why?" row,
+// footer chips. DESIGN.md §5.1–§5.12
 // (the card list scrolls beyond the height cap or from four displays on: three whole cards and a 24-pt peek of the
 // next one, shrinking when the cap binds; header, banner and footer stay), §5.11 (the "Why?" rows start expanded when
 // no display can boost), §12.3 (banners name the display), §2.0 rule 3 (the shell's hosting view applies
@@ -32,8 +34,9 @@ public struct PanelView: View {
     public init(services: OverbrightServices, symbol: @escaping (StatusSymbolState) -> Image = { _ in Image(symbol: .sunMax) },
                 takesFocus: Bool = false, expandsWhy: Bool = false, close: @escaping @MainActor () -> Void = {}) {
         self.services = services
-        let nothingCapable = PanelContent(status: services.boost.status, tipShown: true, calibrated: [],
-                                          fillLightOn: false, hasBattery: false).showsNothingCapable
+        let nothingCapable = PanelContent(status: services.boost.status, tipShown: true, calibrated: [], fillLightOn: false,
+                                          hasBattery: false, builtInOnly: PanelContent.builtInOnly(services: services))
+            .showsNothingCapable
         _whyExpanded = State(initialValue: expandsWhy || nothingCapable)
         self.symbol = symbol
         self.takesFocus = takesFocus
@@ -46,7 +49,8 @@ public struct PanelView: View {
         return PanelContent(status: services.boost.status,
                             tipShown: services.settings[OnboardingSettings.calibrationTipShown],
                             calibrated: calibrated, fillLightOn: services.fillLight.isOn,
-                            hasBattery: services.signals.snapshot.power.batteryPercent != nil)
+                            hasBattery: services.signals.snapshot.power.batteryPercent != nil,
+                            builtInOnly: PanelContent.builtInOnly(services: services))
     }
 
     public var body: some View {
@@ -120,6 +124,7 @@ public struct PanelView: View {
                     .fixedSize(horizontal: false, vertical: true)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
+            if content.showsExternalsHidden { externalsHidden }
             ForEach(content.cards, id: \.key) { display in
                 let model = DisplayCardModel(status: display, isMasterOn: status.isOn, services: services, inputs: inputs)
                 DisplayCardView(model: model,
@@ -153,6 +158,24 @@ public struct PanelView: View {
         }
     }
 
+    /// "The built-in display isn’t in use, and external displays are hidden." and the link to the switch that shows
+    /// them (Settings ▸ Displays, DESIGN.md §5.11).
+    private var externalsHidden: some View {
+        VStack(alignment: .leading, spacing: Space.xs) {
+            Text(verbatim: PanelText.externalsHidden)
+                .font(.callout)
+                .fixedSize(horizontal: false, vertical: true)
+            Button(action: showExternals) { Text(verbatim: PanelText.showExternals) }
+                .buttonStyle(OverbrightLinkButtonStyle())
+                .panelFocus($focus, .showExternals, activate: showExternals)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private func showExternals() {
+        commands.openSettings(SettingsLinks.externalDisplays)
+    }
+
     @ViewBuilder
     private func footer(_ content: PanelContent, status: BoostStatus) -> some View {
         if status.autoOffAt != nil {
@@ -184,7 +207,8 @@ public struct PanelView: View {
             PanelFocusOrder.WhyRow(key: display.key,
                                    hasFix: display.decision.map { CardChip.verdictFix($0.eligibility.verdict) != nil } ?? false)
         } : []
-        return PanelFocusOrder(cards: cards, hasWhy: !content.nonCapable.isEmpty, whyRows: rows,
+        return PanelFocusOrder(hasExternalsHidden: content.showsExternalsHidden, cards: cards,
+                               hasWhy: !content.nonCapable.isEmpty, whyRows: rows,
                                bannerButtons: status.banner.flatMap(BannerAction.primary(for:)) == nil ? 0 : 1,
                                hasTip: content.calibrationTip != nil, hasBatteryChip: content.showsBatteryChip,
                                hasFillLightCard: content.showsFillLightCard)
@@ -203,6 +227,12 @@ public struct PanelView: View {
 
 #Preview("Panel · banner and chips") {
     let services = ScriptedStatuses.services(named: "banner-battery") ?? OverbrightServices.preview()
+    PanelView(services: services)
+        .overbrightThemeRoot()
+}
+
+#Preview("Panel · external displays hidden, lid closed") {
+    let services = ScriptedStatuses.services(named: "externals-hidden-lid-closed") ?? OverbrightServices.preview()
     PanelView(services: services)
         .overbrightThemeRoot()
 }

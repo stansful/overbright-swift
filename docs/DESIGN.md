@@ -37,6 +37,7 @@
 | 17 | Launching and quitting | Silent agent; always open UI | **Every launch that is not a login launch shows UI**, and Quit is in the panel, the menu, Settings ▸ General and Welcome. An agent app that shows nothing when launched by hand, with its icon hidden, has no visible way out. |
 | 18 | Banner length (WP14) | Cut after three lines; grow with the sentence | **The whole sentence, always.** The banner grows and the card list below scrolls; only an app name is cut, in the middle, as a chip cuts it, with the full name in VoiceOver and the help tag. The second half of a banner sentence is what to do about it, and a three-line limit cut it in 29 languages, English included (§2.2, §5.8). |
 | 19 | Welcome layout (WP14) | A layout per step; one split on every step | **One split on every step:** the stage, the headline at the stage boundary, then the step's controls; steps 2 and 3 take a compact band of glyphs instead of the half-height stage, so the headline never jumps between steps and always introduces what is under it. The progress dots stay centred in the window and visible on every step (§8). |
+| 20 | External displays in the panel | Always listed; never; a setting | **A setting, off by default** (the owner's rule, 2026-10-27): Settings ▸ Displays ▸ **Show external displays in the panel**. Off, the panel lists only the built-in display, and none while it is not in use (lid closed), saying so with a link to the switch. Presentation only: the engine, the menu, the shortcuts and Dim All Displays still act on every display. A Mac without a built-in display lists every display whatever the switch says, so its panel is never empty (§5.4, §5.11, §7.4). |
 
 ---
 
@@ -283,6 +284,7 @@ Quit Overbright                           ⌘Q
 - Preset items list only the presets shown on that display (§5.5); the dim item uses the last dim level (default "Dimmed · 25%", light relative to Standard).
 - **Don't Use on This Display** turns extra brightness off for that display and returns it to Standard (dims undone); the opposite item turns extra brightness on (an OLED shows its notice first, §12.4).
 - With no display that can boost, the presets are replaced by a disabled "No Extra Brightness on This Display"; a display that can only dim keeps Standard and Dimmed.
+- The menu lists every display that can boost or dim whatever **Show external displays in the panel** says (§7.4): it is where a hidden external display stays adjustable from the menu bar.
 - **Back to Standard is not in this menu**: Turn Off already sits in the first group and does the same, a little slower. Back to Standard stays on its shortcut (once recorded), in the Dock menu and in the Shortcuts app.
 
 ### 4.4 Launching, reopening, hiding the icon, quitting, Dock icon
@@ -340,6 +342,8 @@ Quit Overbright                           ⌘Q
 └────────────────────────────────────────────────┘
 ```
 
+Drawn with Show external displays in the panel on; by default the MSI's card is not listed (§5.4).
+
 ### 5.3 Header
 
 - Leading: the status symbol in its current state (16 pt), then "Overbright" (`panelTitle`).
@@ -349,7 +353,7 @@ Quit Overbright                           ⌘Q
 
 ### 5.4 Display card
 
-- `card` fill, `cardStroke` hairline, `Radius.card`, padding 12, 8 pt between cards. Every display that can boost **or dim** gets a full card. As built (WP14): one card style (`panelCard`) for the display cards, the calibration tip, the Fill Light card and the expanded "Why?" rows, each exactly 304 pt wide, so their edges line up with each other and the banner, all opaque with a full-strength hairline under Increase Contrast.
+- `card` fill, `cardStroke` hairline, `Radius.card`, padding 12, 8 pt between cards. Every display that can boost **or dim** gets a full card, except external displays while Settings ▸ Displays ▸ **Show external displays in the panel** is off (the default, §7.4): then only the built-in display gets one, and none while it is not in use (lid closed; §5.11). Sidecar and AirPlay displays are external too. On a Mac without a built-in display (none online and no battery: a Mac mini) every display gets its card whatever the switch says (`OverbrightServices.hasBuiltInDisplay`). Hiding is presentation only: the master switch, Dim All Displays, linked levels (the built-in slider still moves hidden displays), shortcuts, the HUD, Welcome, the Shortcuts app and the menu (§4.3) still act on every display, and a banner may name a hidden display. As built (WP14): one card style (`panelCard`) for the display cards, the calibration tip, the Fill Light card and the expanded "Why?" rows, each exactly 304 pt wide, so their edges line up with each other and the banner, all opaque with a full-strength hairline under Increase Contrast.
 - **Title:** display name (`cardTitle`, up to two lines). With linked levels a `link` glyph precedes the name of every card ("Same level on all displays"). Two displays with the same name get " (1)", " (2)" in UUID order, as macOS does.
 - **Slider row** (§5.5) with `sun.min` at the dim end and `sun.max.fill` at the boost end (14 pt, `secondaryLabelColor`), 6 pt gaps: a 240-pt track whose boost half is 120 pt (the thumb's centre travels 220 pt of it, §5.5). The glyphs draw 16 and 17 pt wide, so each sits in a 14 × 14 frame and the row is exactly the 280-pt inner width.
 - **Readout** (§5.6). Nothing sits under it: the color table is the only method, so no caption names one (the Compatibility-mode caption went with the method, removed 2026-10-21: ARCHITECTURE.md §7.5).
@@ -424,13 +428,14 @@ As built (2026-10-20): with every Auto-pause rule off by default the default row
 
 ### 5.10 Displays that cannot be boosted or dimmed
 
-Displays with neither a boostable nor a dimmable verdict (virtual displays, reference presets) collapse into one line under the cards: "1 display can't be adjusted · Why?" (pluralised). "Why?" expands it in place (`expand`) into one row per display: name, the verdict sentence (§12.1) and its fix (an **Open System Settings** button when the fix is in System Settings, **Settings for this display…** when it is in Overbright) and a **Learn more** link that opens the Help window at the matching answer. Displays that can dim but not boost (an SDR external, HDR off, a MacBook Air) show a full card with the boost half disabled, the verdict sentence as the boost half's help tag, and the verdict badge as a `neutral` chip ("HDR is off") whose popover holds the sentence and its fix.
+Displays with neither a boostable nor a dimmable verdict (virtual displays, reference presets) collapse into one line under the cards: "1 display can't be adjusted · Why?" (pluralised). Displays the panel hides (§5.4) leave this line too; so does the one-time calibration tip (§5.3), which names only a listed display. "Why?" expands it in place (`expand`) into one row per display: name, the verdict sentence (§12.1) and its fix (an **Open System Settings** button when the fix is in System Settings, **Settings for this display…** when it is in Overbright) and a **Learn more** link that opens the Help window at the matching answer. Displays that can dim but not boost (an SDR external, HDR off, a MacBook Air) show a full card with the boost half disabled, the verdict sentence as the boost half's help tag, and the verdict badge as a `neutral` chip ("HDR is off") whose popover holds the sentence and its fix.
 
 ### 5.11 Empty and edge states
 
 | Situation | Panel shows |
 |---|---|
-| No display can boost | The banner-less panel with each display's card (dim-only cards where dimming works), the "Why?" line expanded for the rest, and the sentence "None of your displays can show extra brightness right now." above the cards |
+| No display can boost | The banner-less panel with each display's card (dim-only cards where dimming works), the "Why?" line expanded for the rest, and the sentence "None of your displays can show extra brightness right now." above the cards. The sentence is judged over every display, hidden external ones too (it speaks of all of them), and does not show while no display is listed |
+| External displays hidden, built-in display not in use (lid closed) | No card; in their place "The built-in display isn’t in use, and external displays are hidden." and the link **Show external displays…**, which opens Settings ▸ Displays at the switch (§7.4). Header, banner and footer stay |
 | Overbright off | Cards with their sliders (moving one turns Overbright on), readouts "Off", boost fills drawn with `inactiveHatch`, no chips, no marker |
 | Paused (by you, or by a global guard) | The banner; cards at full opacity (text is never faded); boost fills with `inactiveHatch`; moving a slider ends a pause you set, while a guard pause stores the level |
 | First arm of a display | Chip "Preparing…" with a small progress indicator; slider usable; readout "Preparing…"; the symbol `preparing` |
@@ -442,7 +447,7 @@ Displays with neither a boostable nor a dimmable verdict (virtual displays, refe
 
 | Keys | Action |
 |---|---|
-| Tab / ⇧Tab | master switch → for each card: its slider, its chip, its Turn on → "Why?" (then its fix buttons and Learn more links when expanded) → banner buttons → footer chips → the Fill Light card's controls (when shown) → "⋯" |
+| Tab / ⇧Tab | master switch → "Show external displays…" (in the cards' place, only while no display is listed, §5.11) → for each card: its slider, its chip, its Turn on → "Why?" (then its fix buttons and Learn more links when expanded) → banner buttons → footer chips → the Fill Light card's controls (when shown) → "⋯" |
 | ↑ / ↓ | previous / next card's slider |
 | ← / →, ⌥← / ⌥→, Home, End | slider (§5.5); ← / → also step the Fill Light card's sliders |
 | ⌃↩ | the focused card's context menu |
@@ -457,7 +462,7 @@ A 2-pt accent focus ring, concentric (radius + 3, outset 3), shows only after ke
 
 ### 5.13 States gallery (snapshot names)
 
-Every state below is a named status in PanelUI's `ScriptedStatuses` (`--qa-state <name>`, ARCHITECTURE.md §8.5; in the app the state's levels, switches, links, calibration records, Fill Light and "Why?" row come with it, so its thumbs and HUD bars agree with its readouts) and has a snapshot in Light, Dark and Increase Contrast: in English and a pseudo-long locale while the UI is built (WP10), in Russian once WP15 has translated it, and in all 35 languages for the fit tests. Fixtures from ARCHITECTURE.md §3.9.
+Every state below is a named status in PanelUI's `ScriptedStatuses` (`--qa-state <name>`, ARCHITECTURE.md §8.5; in the app the state's levels, switches, links, calibration records, Fill Light and "Why?" row come with it, so its thumbs and HUD bars agree with its readouts) and has a snapshot in Light, Dark and Increase Contrast: in English and a pseudo-long locale while the UI is built (WP10), in Russian once WP15 has translated it, and in all 35 languages for the fit tests. Fixtures from ARCHITECTURE.md §3.9. Every state shows external displays (Show external displays in the panel on, written with the state's settings; `ScriptedState.showsExternalDisplays`), the cards each is about, except the two `externals-hidden` states, which show the default.
 
 | Name | Shows |
 |---|---|
@@ -484,6 +489,8 @@ Every state below is a named status in PanelUI's `ScriptedStatuses` (`--qa-state
 | `why-expanded` | a virtual display in the expanded "Why?" rows |
 | `nothing-capable` | the empty state with the dim-only cards |
 | `two-identical-externals`, `long-russian-name` | name handling in the title |
+| `externals-hidden` | the default: built-in display and MSI connected, only the built-in card |
+| `externals-hidden-lid-closed` | the MSI alone (lid closed, a battery): no card, "The built-in display isn’t in use, and external displays are hidden." and Show external displays… |
 | `fill-light-card` | the Fill Light card with its sliders |
 | `calibration-tip` | the one-time tip card |
 | `four-displays` | scrolling card list |
@@ -519,7 +526,7 @@ Every state below is a named status in PanelUI's `ScriptedStatuses` (`--qa-state
 | Pane | Icon | Contents |
 |---|---|---|
 | General | `gearshape.fill` / gray | startup, menu bar (with Quit), Dock, feedback, updates |
-| Displays | `display` / blue | all displays (same level, near full brightness); one section per display: verdict, extra brightness, level, limit, calibration, type |
+| Displays | `display` / blue | all displays (same level, near full brightness, external displays in the panel); one section per display: verdict, extra brightness, level, limit, calibration, type |
 | Automations | `bolt.fill` / green | battery, Low Power, heat note, timer, apps and video, schedule, OLED idle, Focus |
 | Shortcuts | `keyboard` / indigo | recorders, step size, Shortcuts app and Control Center |
 | Fill Light | `person.crop.rectangle` / orange | preview, switch, display, width, warmth, brightness, camera rule |
@@ -531,7 +538,7 @@ Every state below is a named status in PanelUI's `ScriptedStatuses` (`--qa-state
 - `Form { … }.formStyle(.grouped)`; `Toggle` with `.switch` and `.controlSize(.small)`; segmented pickers for ≤ 4 options, pop-ups otherwise; sliders always show their value with its unit and ticks at meaningful stops. As built (WP14): Settings' sliders (Fill Light's Width, Warmth and Brightness) have no stop worth a tick, so they draw none (a tick per step put 27 dots under Width); the value settles on whole steps, every track has the same width, and words for the ends sit under the track (Cool · Warm). As built (energy E3, 2026-10-21): the switches (Settings and Welcome) are Design's `AccentSwitch`, as the panel's master switch, accent while on whether or not the window is key, and the sliders are `AccentSlider`, as the Fill Light card's (focus and ← / → by a twentieth of the range, VoiceOver adjusts by the same step): the system `.switch` and `Slider` render their Liquid Glass knob with in-process Metal, whose state stayed after the window closed and woke the app every 3 s (§17).
 - Every non-obvious row has a one-line footnote in `.secondary`.
 - A 6-pt accent dot before the label marks a changed value; every row with a value has **Reset to Default** in its context menu; every pane footer has **Reset ‹Pane›…** (confirmation §12.9); Reset All is in Advanced, destructive, confirmed, and undoable until the window closes.
-- **Search** matches pane names, row labels and keywords ("HDR", "XDR", "nits", "brighter", "dim", "battery", "shortcut", "camera", "login", "OLED", "flicker", "colors", "quit"); a result opens the pane, scrolls to the row and highlights it with an accent wash fading over 1 s. Deep links `pane#row` serve chips, banners, the menu and Help. As built (WP14): the index is rebuilt as soon as a row appears or goes with a setting or app state (From / To, Battery level, OLED idle, the icon warning), and a row that acts when linked to (Run Self-Test… opens its sheet) acts only for a deep link, never for a search hit.
+- **Search** matches pane names, row labels and keywords ("HDR", "XDR", "nits", "brighter", "dim", "battery", "shortcut", "camera", "login", "OLED", "flicker", "colors", "quit", "external"); a result opens the pane, scrolls to the row and highlights it with an accent wash fading over 1 s. Deep links `pane#row` serve chips, banners, the menu and Help. As built (WP14): the index is rebuilt as soon as a row appears or goes with a setting or app state (From / To, Battery level, OLED idle, the icon warning), and a row that acts when linked to (Run Self-Test… opens its sheet) acts only for a deep link, never for a search hit.
 - Push buttons and sheet/alert buttons are title case (AppKit chrome); row labels and footnotes are sentence case. Buttons follow the destination rule of §16.
 
 ### 7.3 General
@@ -562,6 +569,7 @@ Every state below is a named status in PanelUI's `ScriptedStatuses` (`--qa-state
 |---|---|---|---|
 | Same level on all displays | switch | off | "Moving one slider moves the others. Each display still stops at its own limit." |
 | Add extra brightness only near full brightness | switch | **off** (on before 2026-10-20) | "Extra brightness fades out as you lower the display brightness, so the brightness keys keep their normal range. Turn this off to multiply any brightness." Off by default since the taper cut the owner's boost to ×1 (a reference measured while the grant still ramped; ARCHITECTURE.md §5.4); its reference is now never below the panel's own full-brightness headroom. |
+| Show external displays in the panel | switch | **off** (the owner's rule, 2026-10-27) | "When it’s off, the panel shows only the built-in display. External displays keep their levels; adjust them below or in the menu." Shown only on a Mac with a built-in display (one online, or a battery: a laptop with its lid closed); elsewhere the panel lists every display (§5.4). Deep link `displays#externalDisplays`. |
 
 **One section per connected display** (header: the display name and a verdict badge, §12.1):
 

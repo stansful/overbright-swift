@@ -1,5 +1,6 @@
 // OverbrightSettingsUI/Panes/DisplaysPane.swift — Settings ▸ Displays (DESIGN.md §7.4): all displays (the same level on
-// all displays; extra brightness only near full brightness), then one section per connected display (verdict and fix,
+// all displays; extra brightness only near full brightness; external displays in the panel, only on a Mac with a
+// built-in display), then one section per connected display (verdict and fix,
 // extra brightness, level, limit, method, calibration, type; `DisplaySection`), then the displays that are not
 // connected, with their last name and Forget. Seeded empty by WP0b behind the `SettingsPaneView` seam
 // (ARCHITECTURE.md §10.2); WP11 owns it (§10.13).
@@ -35,16 +36,22 @@ struct DisplaysPane: SettingsPaneView {
 
     /// The searchable rows: all displays, every connected display's rows, every remembered display.
     static func rows(services: OverbrightServices) -> [SettingsRowInfo] {
-        [DisplaysRows.linkLevels, DisplaysRows.nearFullBrightness]
-            + models(services: services).flatMap(DisplaySection.rows)
+        var rows = [DisplaysRows.linkLevels, DisplaysRows.nearFullBrightness]
+        if services.hasBuiltInDisplay { rows.append(DisplaysRows.externalDisplays) }
+        return rows + models(services: services).flatMap(DisplaySection.rows)
             + remembered(services: services).map { DisplaysRows.remembered($0.key, name: $0.name) }
     }
 
     /// The rows with a value and their Reset to Default.
     static func values(services: OverbrightServices) -> [RowValue] {
-        [RowValue(DisplaysRows.linkLevels, settings: services.settings, key: DisplaySettings.linkLevels),
-         RowValue(DisplaysRows.nearFullBrightness, settings: services.settings, key: DisplaySettings.boostOnlyNearFullBrightness)]
-            + models(services: services).flatMap { DisplaySection.values($0, services: services) }
+        var values = [RowValue(DisplaysRows.linkLevels, settings: services.settings, key: DisplaySettings.linkLevels),
+                      RowValue(DisplaysRows.nearFullBrightness, settings: services.settings,
+                               key: DisplaySettings.boostOnlyNearFullBrightness)]
+        if services.hasBuiltInDisplay {
+            values.append(RowValue(DisplaysRows.externalDisplays, settings: services.settings,
+                                   key: DisplaySettings.showsExternalDisplaysInPanel))
+        }
+        return values + models(services: services).flatMap { DisplaySection.values($0, services: services) }
     }
 
     /// Rows that show no value of their own: a display's verdict and advisory, a remembered display.
@@ -74,6 +81,13 @@ struct DisplaysPane: SettingsPaneView {
                           footnote: String(localized: "Extra brightness fades out as you lower the display brightness, so the brightness keys keep their normal range. Turn this off to multiply any brightness.",
                                            bundle: .module,
                                            comment: "Settings ▸ Displays: footnote of Add extra brightness only near full brightness"))
+                if services.hasBuiltInDisplay {
+                    ToggleRow(info: DisplaysRows.externalDisplays, settings: settings,
+                              key: DisplaySettings.showsExternalDisplaysInPanel,
+                              footnote: String(localized: "When it’s off, the panel shows only the built-in display. External displays keep their levels; adjust them below or in the menu.",
+                                               bundle: .module,
+                                               comment: "Settings ▸ Displays: footnote of Show external displays in the panel"))
+                }
             } header: {
                 Text("All displays", bundle: .module, comment: "Settings ▸ Displays: section header of the rows that apply to every display")
             }

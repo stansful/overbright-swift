@@ -23,6 +23,15 @@ enum DisplaysRows {
                                           comment: "Settings search: keyword for Add extra brightness only near full brightness")])
     }
 
+    /// Shown only on a Mac with a built-in display (`OverbrightServices.hasBuiltInDisplay`).
+    static var externalDisplays: SettingsRowInfo {
+        SettingsRowInfo(.displays, "externalDisplays",
+                        title: String(localized: "Show external displays in the panel", bundle: .module,
+                                      comment: "Settings ▸ Displays: switch (off: the menu bar panel lists only the built-in display)"),
+                        keywords: [String(localized: "external", bundle: .module,
+                                          comment: "Settings search: keyword for Show external displays in the panel")])
+    }
+
     /// The section of one display (its header: the name and the verdict badge).
     static func section(_ display: DisplayKey, name: String) -> SettingsRowInfo {
         SettingsRowInfo(.displays, display.rawValue, title: name, keywords: [PaneWords.hdr, PaneWords.xdr])
