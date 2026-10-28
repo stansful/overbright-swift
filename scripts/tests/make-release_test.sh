@@ -62,6 +62,8 @@ NL='
 '
 # line <text>: a line of the output is exactly the text
 line() { case "$NL$OUT$NL" in *"$NL$1$NL"*) return 0 ;; esac; return 1; }
+# starts <text>: the output begins with the text
+starts() { case $OUT in "$1"*) return 0 ;; esac; return 1; }
 
 echo "# scripts/make-release.sh under $("$BASH_BIN" -c 'echo "bash $BASH_VERSION"'), $(git --version)"
 
@@ -194,30 +196,31 @@ set_version() {
   g commit -q -am "feat: release - version $1"
 }
 
-# --- Enter takes the suggestion, the next minor version
+# --- Enter takes the suggestion, the next patch version
 new_case enter
 before=$(count) head=$(g rev-parse HEAD) out_before=$(refs_out)
 mr '\n\n'
-check "prints the current version" 'line "Current version:  0.1.0 (VERSION)"'
-check "prints the last release tag" 'line "Last release tag: v0.1.0"'
+check "prints the current version" 'line "Current version (VERSION): 0.1.0"'
+check "prints the last release tag" 'line "Last release tag:          v0.1.0"'
 check "...and no 'not released yet' note for a released version" '! has "No tag v0.1.0 yet"'
-check "prints the next patch, minor and major versions" 'line "Next: 0.1.1 (patch), 0.2.0 (minor), 1.0.0 (major)."'
-check "suggests the next minor version" 'has "New version [0.2.0]: "'
+check "suggests the next patch version" 'has "New version [0.1.1]: "'
+check "...right after those two lines: nothing else comes first" \
+  'starts "Current version (VERSION): 0.1.0${NL}Last release tag:          v0.1.0${NL}New version [0.1.1]: "'
 check "shows the diff of both files and asks to commit them" \
-  'has "+0.2.0" && has "+$(mvl 0.2.0)" && has "Commit VERSION $PF as \"feat: release - version 0.2.0\"? [Y/n] "'
-check "Enter takes 0.2.0, Enter commits (run from outside the repository)" '[ $RC = 0 ] && files_are 0.2.0'
+  'has "+0.1.1" && has "+$(mvl 0.1.1)" && has "Commit VERSION $PF as \"feat: release - version 0.1.1\"? [Y/n] "'
+check "Enter takes 0.1.1, Enter commits (run from outside the repository)" '[ $RC = 0 ] && files_are 0.1.1'
 check "...exactly one new commit, on the old HEAD" \
   '[ "$(count)" = $((before + 1)) ] && [ "$(g rev-parse HEAD^)" = "$head" ]'
-check "...'feat: release - version 0.2.0', only the line of VERSION and the two MARKETING_VERSION lines" \
-  'release_commit 0.1.0 0.2.0 && clean'
-check "...prints the commit" 'has "Commit $(g rev-parse --short HEAD): feat: release - version 0.2.0"'
+check "...'feat: release - version 0.1.1', only the line of VERSION and the two MARKETING_VERSION lines" \
+  'release_commit 0.1.0 0.1.1 && clean'
+check "...prints the commit" 'has "Commit $(g rev-parse --short HEAD): feat: release - version 0.1.1"'
 check "...pushes nothing and makes no tag: origin and the tags untouched" '[ "$(refs_out)" = "$out_before" ]'
 check "...and says what to push" \
-  'has "Push it (git push origin main): release 0.2.0 (tag v0.2.0) goes out once this commit is on main on GitHub"'
+  'has "Push it (git push origin main): release 0.1.1 (tag v0.1.1) goes out once this commit is on main on GitHub"'
 
 new_case 'with space'
 mr '' --yes
-check "a repository path with a space works" '[ $RC = 0 ] && files_are 0.2.0 && release_commit 0.1.0 0.2.0 && clean'
+check "a repository path with a space works" '[ $RC = 0 ] && files_are 0.1.1 && release_commit 0.1.0 0.1.1 && clean'
 
 # --- bump words at the prompt
 for c in 'patch|0.1.1' 'Patch|0.1.1' 'minor|0.2.0' 'MINOR|0.2.0' 'major|1.0.0' 'Major|1.0.0' '  patch  |0.1.1'; do
@@ -264,11 +267,11 @@ check "prompt: a released version (its tag exists) is refused" \
 check "prompt: 'v0.2.0' and 'V0.2.0' are refused, with the version without the v" \
   'has "  $(v_hint v0.2.0). Enter another version." && has "  $(v_hint V0.2.0). Enter another version."'
 for v in 1.2 01.2.3 0.02.0 0.1.00 1234567890.0.0 0.1.1234567890 0.2.0-rc1 bump 'next version'; do
-  check "prompt: '$v' is not X.Y.Z, refused" 'has "  $(not_version "$v" 0.2.0). Enter another version."'
+  check "prompt: '$v' is not X.Y.Z, refused" 'has "  $(not_version "$v" 0.1.1). Enter another version."'
 done
 check "prompt: each of the 13 refused answers asks again" \
   '[ "$(printf "%s\n" "$OUT" | grep -c "Enter another version\.$")" = 13 ] &&
-    [ "$(printf "%s\n" "$OUT" | grep -cF "New version [0.2.0]: ")" = 14 ]'
+    [ "$(printf "%s\n" "$OUT" | grep -cF "New version [0.1.1]: ")" = 14 ]'
 check "prompt: then 0.3.0 (blanks trimmed) is taken and committed" \
   '[ $RC = 0 ] && files_are 0.3.0 && [ "$(count)" = $((before + 1)) ] && release_commit 0.1.0 0.3.0 && clean'
 
@@ -287,12 +290,12 @@ new_case refuse
 before=$(count)
 for c in "0.0.9|version 0.0.9 is not higher than the current version 0.1.0" \
   "0.1.0|tag v0.1.0 exists: version 0.1.0 was released already" \
-  "v0.2.0|$(v_hint v0.2.0)" "V1.0.0|$(v_hint V1.0.0)" "1.2|$(not_version 1.2 0.2.0)" \
-  "1.2.3.4|$(not_version 1.2.3.4 0.2.0)" "01.2.3|$(not_version 01.2.3 0.2.0)" "1.02.3|$(not_version 1.02.3 0.2.0)" \
-  "1.2.03|$(not_version 1.2.03 0.2.0)" "0.2.0-rc1|$(not_version 0.2.0-rc1 0.2.0)" \
-  " 0.2.0|$(not_version ' 0.2.0' 0.2.0)" "1234567890.0.0|$(not_version 1234567890.0.0 0.2.0)" \
-  "0.1234567890.0|$(not_version 0.1234567890.0 0.2.0)" "0.1.1234567890|$(not_version 0.1.1234567890 0.2.0)" \
-  "bump|$(not_version bump 0.2.0)" "pAtch|$(not_version pAtch 0.2.0)" "|no version given"; do
+  "v0.2.0|$(v_hint v0.2.0)" "V1.0.0|$(v_hint V1.0.0)" "1.2|$(not_version 1.2 0.1.1)" \
+  "1.2.3.4|$(not_version 1.2.3.4 0.1.1)" "01.2.3|$(not_version 01.2.3 0.1.1)" "1.02.3|$(not_version 1.02.3 0.1.1)" \
+  "1.2.03|$(not_version 1.2.03 0.1.1)" "0.2.0-rc1|$(not_version 0.2.0-rc1 0.1.1)" \
+  " 0.2.0|$(not_version ' 0.2.0' 0.1.1)" "1234567890.0.0|$(not_version 1234567890.0.0 0.1.1)" \
+  "0.1234567890.0|$(not_version 0.1234567890.0 0.1.1)" "0.1.1234567890|$(not_version 0.1.1234567890 0.1.1)" \
+  "bump|$(not_version bump 0.1.1)" "pAtch|$(not_version pAtch 0.1.1)" "|no version given"; do
   v=${c%%|*} want=${c#*|}
   mr '' --yes "$v"
   check "argument '$v' is refused: $want" \
@@ -332,9 +335,8 @@ check "a version below the highest tag, one only origin has, is refused" \
   '[ $RC = 1 ] && has "error: version 0.8.0 is not higher than the last release tag v0.9.0."'
 check "...nothing changed" 'files_are 0.1.0 && [ "$(count)" = "$before" ] && clean && [ "$(refs_out)" = "$out_before" ]'
 mr '0.7.0\n0.8.0\n'
-check "the last tag and the suggestions come from every release tag, other tags left out" \
-  'line "Last release tag: v0.9.0" && line "Next: 0.9.1 (patch), 0.10.0 (minor), 1.0.0 (major)." &&
-    has "New version [0.10.0]: " && [ $RC = 1 ]'
+check "the last tag and the suggestion come from every release tag, other tags left out" \
+  'line "Last release tag:          v0.9.0" && has "New version [0.9.1]: " && [ $RC = 1 ]'
 check "...the prompt refuses them too" \
   'has "  tag 0.7.0 exists: version 0.7.0 was released already. Enter another version." &&
     has "  version 0.8.0 is not higher than the last release tag v0.9.0. Enter another version."'
@@ -345,8 +347,8 @@ for c in 'patch|0.9.1' 'MINOR|0.10.0' 'Major|1.0.0'; do
   g checkout -q -- VERSION "$PF"
 done
 mr '' --yes
-check "--yes takes the next minor version, 0.10.0, and commits without a question" \
-  '[ $RC = 0 ] && ! has "[Y/n]" && release_commit 0.1.0 0.10.0 && [ "$(count)" = $((before + 1)) ] && clean'
+check "--yes takes the next patch version, 0.9.1, and commits without a question" \
+  '[ $RC = 0 ] && ! has "[Y/n]" && release_commit 0.1.0 0.9.1 && [ "$(count)" = $((before + 1)) ] && clean'
 check "...and pushes nothing" '[ "$(refs_out)" = "$out_before" ]'
 
 new_case localtag
@@ -356,7 +358,8 @@ check "a version below the highest tag, a local one, is refused" \
   '[ $RC = 1 ] && has "error: version 0.4.0 is not higher than the last release tag v0.5.0." && files_are 0.1.0 &&
     clean'
 mr '' --yes
-check "...--yes takes 0.6.0" '[ $RC = 0 ] && line "Last release tag: v0.5.0" && release_commit 0.1.0 0.6.0 && clean'
+check "...--yes takes 0.5.1" \
+  '[ $RC = 0 ] && line "Last release tag:          v0.5.0" && release_commit 0.1.0 0.5.1 && clean'
 
 # --- origin's tags cannot be read: a warning, then the local tags only
 new_case badorigin
@@ -367,8 +370,8 @@ g remote set-url origin "$CASE/missing.git"
 want="warning: could not read origin's tags ($CASE/missing.git): comparing with the local tags only."
 mr '' -y
 check "origin unreachable: a warning, the local tags only, the commit is made" \
-  '[ $RC = 0 ] && line "$want" && line "Last release tag: v0.1.0 (of the local tags)" && release_commit 0.1.0 0.2.0 &&
-    clean'
+  '[ $RC = 0 ] && line "$want" && line "Last release tag:          v0.1.0 (of the local tags)" &&
+    release_commit 0.1.0 0.1.1 && clean'
 
 new_case notags-offline
 g tag -d v0.1.0 >/dev/null
@@ -381,7 +384,7 @@ g checkout -q -- VERSION "$PF"
 g tag v0.1.0 HEAD~1
 mr '0.2.0\n' --no-commit
 check "origin unreachable with local tags: the last local tag, marked as such" \
-  '[ $RC = 0 ] && line "Last release tag: v0.1.0 (of the local tags)" && ! has " yet:"'
+  '[ $RC = 0 ] && line "Last release tag:          v0.1.0 (of the local tags)" && ! has " yet:"'
 g checkout -q -- VERSION "$PF"
 
 # --- no release tags at all
@@ -390,7 +393,7 @@ g tag -d v0.1.0 >/dev/null
 git -C "$CASE/origin.git" tag -d v0.1.0 >/dev/null
 mr ''
 check "no tags: says so, and that the current version is not released yet" \
-  'line "No release tag yet." && line "$(unreleased 0.1.0)" && has "New version [0.2.0]: "'
+  'line "No release tag yet." && line "$(unreleased 0.1.0)" && has "New version [0.1.1]: "'
 mr '' 0.1.0 --yes
 check "no tags: the current version itself is still refused" \
   '[ $RC = 1 ] && has "error: version 0.1.0 is not higher than the current version 0.1.0." && files_are 0.1.0 && clean'
@@ -540,12 +543,12 @@ check "...that command, run as printed, makes the release commit" \
   '[ -n "$printed" ] && release_commit 0.1.0 0.2.0 && clean'
 g reset -q --hard HEAD^
 mr '\n' --no-commit
-check "--no-commit at the prompt: Enter writes 0.2.0, no question" \
-  '[ $RC = 0 ] && files_are 0.2.0 && ! has "[Y/n]" && [ "$(count)" = "$before" ]'
+check "--no-commit at the prompt: Enter writes 0.1.1, no question" \
+  '[ $RC = 0 ] && files_are 0.1.1 && ! has "[Y/n]" && [ "$(count)" = "$before" ]'
 g checkout -q -- VERSION "$PF"
 mr '' --yes --no-commit
-check "--yes --no-commit: 0.2.0 written, no question, no commit" \
-  '[ $RC = 0 ] && files_are 0.2.0 && ! has "[Y/n]" && [ "$(count)" = "$before" ]'
+check "--yes --no-commit: 0.1.1 written, no question, no commit" \
+  '[ $RC = 0 ] && files_are 0.1.1 && ! has "[Y/n]" && [ "$(count)" = "$before" ]'
 g checkout -q -- VERSION "$PF"
 
 new_case options
@@ -749,15 +752,15 @@ g remote remove origin
 before=$(count)
 mr '' --yes
 check "without origin: the local tags count, no warning, the commit is made" \
-  '[ $RC = 0 ] && ! has "warning" && line "Last release tag: v0.1.0" && release_commit 0.1.0 0.2.0 &&
+  '[ $RC = 0 ] && ! has "warning" && line "Last release tag:          v0.1.0" && release_commit 0.1.0 0.1.1 &&
     [ "$(count)" = $((before + 1)) ]'
 check "...and it says to add the GitHub repository" \
-  'has "Add the GitHub repository (git remote add origin <url>) and push: release 0.2.0 (tag v0.2.0) goes out"'
+  'has "Add the GitHub repository (git remote add origin <url>) and push: release 0.1.1 (tag v0.1.1) goes out"'
 g branch -q -m main dev
 mr '' --yes
 check "neither origin nor main or master: a warning, the commit is made" \
   '[ $RC = 0 ] && line "warning: the default branch is unknown; releases go out from main only." &&
-    release_commit 0.2.0 0.3.0'
+    release_commit 0.1.1 0.1.2'
 
 # --- git settings that change what git prints: diff.orderFile reorders the paths of a diff, column.ui=always puts
 # the tags git tag -l lists side by side
@@ -767,13 +770,13 @@ git config --global diff.orderFile "$CASE/order"
 mr '' --yes
 check "a global diff.orderFile that lists VERSION first (git diff does): the release is committed" \
   '[ $RC = 0 ] && [ "$(g diff --numstat HEAD^ HEAD | cut -f 3)" = "$(printf "VERSION\n%s" "$PF")" ] &&
-    release_commit 0.1.0 0.2.0 && clean'
+    release_commit 0.1.0 0.1.1 && clean'
 git config --global --unset diff.orderFile
 g config diff.orderFile "$CASE/order"
 mr '\n\n'
 check "...the repository's diff.orderFile: the same" \
   '[ $RC = 0 ] && [ "$(g diff --numstat HEAD^ HEAD | cut -f 3)" = "$(printf "VERSION\n%s" "$PF")" ] &&
-    release_commit 0.2.0 0.3.0 && clean'
+    release_commit 0.1.1 0.1.2 && clean'
 
 new_case columns
 g remote remove origin
@@ -782,9 +785,9 @@ g tag v0.10.0
 g config column.ui always
 mr '\n\n'
 check "column.ui=always (git tag -l puts the tags on one line), local tags v0.1.0 v0.9.0 v0.10.0: last tag v0.10.0" \
-  '[ "$(COLUMNS=80 git -C "$REPO" tag -l | wc -l | tr -d " ")" = 1 ] && line "Last release tag: v0.10.0" &&
-    line "Next: 0.10.1 (patch), 0.11.0 (minor), 1.0.0 (major)." && has "New version [0.11.0]: "'
-check "...Enter takes 0.11.0 and commits it" '[ $RC = 0 ] && release_commit 0.1.0 0.11.0 && clean'
+  '[ "$(COLUMNS=80 git -C "$REPO" tag -l | wc -l | tr -d " ")" = 1 ] && line "Last release tag:          v0.10.0" &&
+    has "New version [0.10.1]: "'
+check "...Enter takes 0.10.1 and commits it" '[ $RC = 0 ] && release_commit 0.1.0 0.10.1 && clean'
 
 # The script reads its diffs with -O/dev/null and shows the release's with --no-ext-diff, so neither setting stops it
 # half-way with the version written. A diff.orderFile git cannot read fails git commit itself (any commit): the
@@ -822,27 +825,38 @@ unset CDPATH
 check "an exported CDPATH with a scripts/ of its own: scripts/make-release.sh commits the release" \
   '[ $RC = 0 ] && release_commit 0.1.0 0.2.0 && clean'
 
-# --- the last version with at most 9 digits per number
+# --- the last versions with at most 9 digits per number
+# the patch number at its limit: Enter and --yes take the minor bump
 new_case limit
-set_version 0.999999999.0
-before=$(count) head=$(g rev-parse HEAD)
+set_version 0.1.999999999
+head=$(g rev-parse HEAD)
 mr '\n\n'
-check "prompt: only the bumps that are versions are offered, Enter takes the major one" \
-  'line "Next: 0.999999999.1 (patch), 1.0.0 (major)." && has "New version [1.0.0]: " && ! has "0.1000000000.0" &&
-    [ $RC = 0 ] && release_commit 0.999999999.0 1.0.0'
+check "prompt: the patch number at its limit, Enter takes the minor bump" \
+  'has "New version [0.2.0]: " && ! has "0.1.1000000000" && [ $RC = 0 ] && release_commit 0.1.999999999 0.2.0'
 g reset -q --hard "$head"
-mr '0.1000000000.0\nminor\n1.0.0\nn\n'
-check "prompt: 0.1000000000.0, typed or as minor, is refused" \
-  '[ $RC = 1 ] && [ "$(printf "%s\n" "$OUT" | grep -cF "$(not_version 0.1000000000.0 1.0.0)")" = 2 ] &&
-    files_are 0.999999999.0 && clean'
+mr '0.1.1000000000\npatch\n0.2.0\nn\n'
+check "prompt: 0.1.1000000000, typed or as patch, is refused" \
+  '[ $RC = 1 ] && [ "$(printf "%s\n" "$OUT" | grep -cF "$(not_version 0.1.1000000000 0.2.0)")" = 2 ] &&
+    files_are 0.1.999999999 && clean'
+mr '' patch --yes
+check "argument patch, 0.1.1000000000, is refused" \
+  '[ $RC = 1 ] && has "error: $(not_version 0.1.1000000000 0.2.0)." && files_are 0.1.999999999 && clean'
+mr '' --yes
+check "--yes takes 0.2.0 then, never 0.1.1000000000" '[ $RC = 0 ] && release_commit 0.1.999999999 0.2.0'
+g reset -q --hard "$head"
+# the patch and minor numbers at their limit: the major bump
+set_version 0.999999999.999999999
+head=$(g rev-parse HEAD)
+mr '\n\n'
+check "prompt: the patch and minor numbers at their limit, Enter takes the major bump" \
+  'has "New version [1.0.0]: " && ! has "0.1000000000.0" && [ $RC = 0 ] &&
+    release_commit 0.999999999.999999999 1.0.0'
+g reset -q --hard "$head"
 mr '' minor --yes
 check "argument minor, 0.1000000000.0, is refused" \
-  '[ $RC = 1 ] && has "error: $(not_version 0.1000000000.0 1.0.0)." && files_are 0.999999999.0 && clean'
+  '[ $RC = 1 ] && has "error: $(not_version 0.1000000000.0 1.0.0)." && files_are 0.999999999.999999999 && clean'
 mr '' --yes
-check "--yes takes 1.0.0 then, never 0.1000000000.0" '[ $RC = 0 ] && release_commit 0.999999999.0 1.0.0'
-g reset -q --hard "$head"
-mr '' patch --yes
-check "...while patch, 0.999999999.1, is taken" '[ $RC = 0 ] && release_commit 0.999999999.0 0.999999999.1'
+check "--yes takes 1.0.0 then" '[ $RC = 0 ] && release_commit 0.999999999.999999999 1.0.0'
 g reset -q --hard "$head"
 set_version 999999999.999999999.999999999
 before=$(count)
@@ -864,8 +878,8 @@ git -C "$CASE/origin.git" tag -d v0.1.0 >/dev/null
 set_version 999999999.999999999.5
 head=$(g rev-parse HEAD) last=999999999.999999999.6
 mr '\n\n'
-check "999999999.999999999.5, no tags: the prompt offers only the patch bump, $last" \
-  'line "No release tag yet." && line "Next: $last (patch)." && has "New version [$last]: "'
+check "999999999.999999999.5, no tags: the prompt suggests the patch bump, $last" \
+  'line "No release tag yet." && has "New version [$last]: "'
 check "...Enter takes it, Enter commits it" '[ $RC = 0 ] && release_commit 999999999.999999999.5 "$last" && clean'
 g reset -q --hard "$head"
 mr 'patch\n\n'
@@ -897,9 +911,8 @@ check "...the argument major, 1000000000.0.0, is refused" \
 new_case ahead
 set_version 0.3.0
 mr ''
-check "a version above every tag: says it is not released yet and suggests its next minor version" \
-  'line "Current version:  0.3.0 (VERSION)" && line "$(unreleased 0.3.0)" &&
-    line "Next: 0.3.1 (patch), 0.4.0 (minor), 1.0.0 (major)." && has "New version [0.4.0]: "'
+check "a version above every tag: says it is not released yet and suggests its next patch version" \
+  'line "Current version (VERSION): 0.3.0" && line "$(unreleased 0.3.0)" && has "New version [0.3.1]: "'
 mr '' Patch --no-commit
 check "'Patch' bumps the current version when it is above every tag: 0.3.1" '[ $RC = 0 ] && files_are 0.3.1'
 g checkout -q -- VERSION "$PF"
@@ -933,16 +946,16 @@ g commit -q -am 'Release configuration at 0.0.9'
 mr '' --yes
 check "a MARKETING_VERSION other than VERSION's: a warning" \
   'line "warning: $PF has MARKETING_VERSION 0.1.0 0.0.9, VERSION 0.1.0: both get the new version."'
-check "...both files get 0.2.0, in one release commit" \
-  '[ $RC = 0 ] && files_are 0.2.0 && [ "$(subject)" = "feat: release - version 0.2.0" ] &&
+check "...both files get 0.1.1, in one release commit" \
+  '[ $RC = 0 ] && files_are 0.1.1 && [ "$(subject)" = "feat: release - version 0.1.1" ] &&
     [ "$(g diff --numstat HEAD^ HEAD)" = "$(printf "2\t2\t%s\n1\t1\tVERSION" "$PF")" ] && clean'
 new_case mismatch-all
 pbxproj 0.0.9 >"$REPO/$PF"
 g commit -q -am 'MARKETING_VERSION 0.0.9'
 mr '\n\n'
-check "every MARKETING_VERSION line with another version: the warning, both files get 0.2.0" \
+check "every MARKETING_VERSION line with another version: the warning, both files get 0.1.1" \
   '[ $RC = 0 ] && line "warning: $PF has MARKETING_VERSION 0.0.9, VERSION 0.1.0: both get the new version." &&
-    files_are 0.2.0 && [ "$(g diff --numstat HEAD^ HEAD)" = "$(printf "2\t2\t%s\n1\t1\tVERSION" "$PF")" ] && clean'
+    files_are 0.1.1 && [ "$(g diff --numstat HEAD^ HEAD)" = "$(printf "2\t2\t%s\n1\t1\tVERSION" "$PF")" ] && clean'
 new_case mismatch-new
 pbxproj 0.2.0 0.1.0 >"$REPO/$PF"
 g commit -q -am 'Debug at 0.2.0'
@@ -960,14 +973,14 @@ check "every MARKETING_VERSION line at the new version already: the commit chang
 # a line with the new version that does not read exactly "= X.Y.Z;" (quoted, spaced otherwise, blanks after ";") is
 # rewritten all the same, and the release commit has it too
 new_case quoted
-pbxproj '"0.2.0"' 0.1.0 >"$REPO/$PF"
-g commit -q -am 'Debug at "0.2.0"'
+pbxproj '"0.1.1"' 0.1.0 >"$REPO/$PF"
+g commit -q -am 'Debug at "0.1.1"'
 mr '\n\n'
-check "a MARKETING_VERSION line that holds \"0.2.0\" in quotes: the warning, Enter takes 0.2.0" \
-  'line "warning: $PF has MARKETING_VERSION 0.2.0 0.1.0, VERSION 0.1.0: both get the new version." &&
-    has "New version [0.2.0]: "'
-check "...both lines end as '= 0.2.0;', committed with VERSION" \
-  '[ $RC = 0 ] && files_are 0.2.0 && [ "$(subject)" = "feat: release - version 0.2.0" ] &&
+check "a MARKETING_VERSION line that holds \"0.1.1\" in quotes: the warning, Enter takes 0.1.1" \
+  'line "warning: $PF has MARKETING_VERSION 0.1.1 0.1.0, VERSION 0.1.0: both get the new version." &&
+    has "New version [0.1.1]: "'
+check "...both lines end as '= 0.1.1;', committed with VERSION" \
+  '[ $RC = 0 ] && files_are 0.1.1 && [ "$(subject)" = "feat: release - version 0.1.1" ] &&
     [ "$(g diff --numstat HEAD^ HEAD)" = "$(printf "2\t2\t%s\n1\t1\tVERSION" "$PF")" ] && clean'
 tab="$(printf '\t')"
 for c in "unspaced|MARKETING_VERSION=0.2.0;|no blanks around '='" \
@@ -993,30 +1006,30 @@ mr '\n' --no-commit
 check "project.pbxproj without MARKETING_VERSION lines: a warning" \
   '[ $RC = 0 ] && line "warning: $PF has no MARKETING_VERSION line: only VERSION gets the new version."'
 check "...--no-commit writes VERSION alone and names it alone" \
-  '[ "$(cat "$REPO/VERSION")" = 0.2.0 ] && cmp -s "$REPO/$PF" "$CASE/project.before" &&
-    line "VERSION: version 0.2.0. No commit (--no-commit). Commit only these files:" &&
-    line "  git commit -m '\''feat: release - version 0.2.0'\'' -- VERSION"'
+  '[ "$(cat "$REPO/VERSION")" = 0.1.1 ] && cmp -s "$REPO/$PF" "$CASE/project.before" &&
+    line "VERSION: version 0.1.1. No commit (--no-commit). Commit only these files:" &&
+    line "  git commit -m '\''feat: release - version 0.1.1'\'' -- VERSION"'
 g checkout -q -- VERSION
 mr '\n\n'
-check "...the question names VERSION alone" 'has "Commit VERSION as \"feat: release - version 0.2.0\"? [Y/n] "'
+check "...the question names VERSION alone" 'has "Commit VERSION as \"feat: release - version 0.1.1\"? [Y/n] "'
 check "...only VERSION is committed, project.pbxproj untouched" \
-  '[ $RC = 0 ] && [ "$(cat "$REPO/VERSION")" = 0.2.0 ] && cmp -s "$REPO/$PF" "$CASE/project.before" &&
-    [ "$(subject)" = "feat: release - version 0.2.0" ] && [ "$(g diff --numstat HEAD^ HEAD)" = "$(printf "1\t1\tVERSION")" ] &&
+  '[ $RC = 0 ] && [ "$(cat "$REPO/VERSION")" = 0.1.1 ] && cmp -s "$REPO/$PF" "$CASE/project.before" &&
+    [ "$(subject)" = "feat: release - version 0.1.1" ] && [ "$(g diff --numstat HEAD^ HEAD)" = "$(printf "1\t1\tVERSION")" ] &&
     [ "$(count)" = $((before + 1)) ] && clean'
 
 # --- the script run from another directory, by a relative path
 new_case relative
 mkdir -p "$CASE/elsewhere"
 from "$CASE/elsewhere" ../repo/scripts/make-release.sh --yes
-check "run from another directory by a relative path" '[ $RC = 0 ] && release_commit 0.1.0 0.2.0 && clean'
+check "run from another directory by a relative path" '[ $RC = 0 ] && release_commit 0.1.0 0.1.1 && clean'
 from "$REPO/scripts" make-release.sh --yes
-check "...from scripts/ by its bare name" '[ $RC = 0 ] && release_commit 0.2.0 0.3.0 && clean'
+check "...from scripts/ by its bare name" '[ $RC = 0 ] && release_commit 0.1.1 0.1.2 && clean'
 from "$REPO" scripts/make-release.sh --yes
 check "...from the repository root as scripts/make-release.sh (make release)" \
-  '[ $RC = 0 ] && release_commit 0.3.0 0.4.0 && clean'
+  '[ $RC = 0 ] && release_commit 0.1.2 0.1.3 && clean'
 ln -s "$REPO" "$CASE/link"
 from "$CASE" link/scripts/make-release.sh --yes
-check "...through a symbolic link to the repository" '[ $RC = 0 ] && release_commit 0.4.0 0.5.0 && clean'
+check "...through a symbolic link to the repository" '[ $RC = 0 ] && release_commit 0.1.3 0.1.4 && clean'
 
 # --- outside a git repository, without commits, version files not in git, a script not in the repository root
 REPO="$WORK/plain"
@@ -1047,8 +1060,8 @@ check "a project.pbxproj that is not in git is refused" \
 g add -A
 g commit -q -m project
 mr '' --yes
-check "...then, without origin and tags, 0.2.0 is committed" \
-  '[ $RC = 0 ] && line "No release tag yet." && release_commit 0.1.0 0.2.0 && clean && [ "$(count)" = 4 ]'
+check "...then, without origin and tags, 0.1.1 is committed" \
+  '[ $RC = 0 ] && line "No release tag yet." && release_commit 0.1.0 0.1.1 && clean && [ "$(count)" = 4 ]'
 
 REPO="$WORK/outer/sub"
 mkdir -p "$REPO/scripts/lib" "$REPO/Overbright.xcodeproj"

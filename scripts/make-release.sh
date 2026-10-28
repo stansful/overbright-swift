@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Prepares a release: shows the current version (VERSION) and the last release tag, asks for the new version (Enter
-# takes the next minor version, or the major or patch one at the 9-digit limit), checks that it is higher than the
+# takes the next patch version, or the minor or major one at the 9-digit limit), checks that it is higher than the
 # current version and every release tag (local ones and origin's), writes it into VERSION and into the MARKETING_VERSION lines of Overbright.xcodeproj/project.pbxproj
 # (the builds that bypass scripts/lib/build.sh read those), and commits only these files as
 # "feat: release - version X.Y.Z". It never pushes: the release starts when that commit reaches main on GitHub
@@ -27,8 +27,8 @@ when that commit is on main on GitHub (.github/workflows/release.yml).
 
   scripts/make-release.sh [X.Y.Z|patch|minor|major] [--yes] [--no-commit]
 
-  X.Y.Z          the new version; without it the script shows the current one and asks (Enter: the next minor
-                 version, or the major or patch one when the minor number is at its 9-digit limit)
+  X.Y.Z          the new version; without it the script shows the current one and asks (Enter: the next patch
+                 version, or the minor or major one when the patch number is at its 9-digit limit)
   patch, minor, major
                  the next patch, minor or major version
   -y, --yes      no questions: the version Enter would take (unless one is given), and the commit without asking
@@ -180,12 +180,12 @@ highest="$(printf '%s\n' "$tags" | highest_tag)"
 highest_version=${highest%% *}
 last_tag=${highest#* }
 
-say "Current version:  $current ($APP_VERSION_FILE)"
+say "Current version ($APP_VERSION_FILE): $current"
 if [ -n "$highest" ]; then
   if [ -n "$tags_known" ]; then
-    say "Last release tag: $last_tag"
+    say "Last release tag:          $last_tag"
   else
-    say "Last release tag: $last_tag (of the local tags)"
+    say "Last release tag:          $last_tag (of the local tags)"
   fi
 elif [ -n "$tags_known" ]; then
   say "No release tag yet."
@@ -197,20 +197,16 @@ if [ -n "$tags_known" ] && { [ -z "$highest" ] || version_gt "$current" "$highes
 fi
 base=$current
 [ -z "$highest" ] || ! version_gt "$highest_version" "$base" || base=$highest_version
-# The valid bumps of the base (above the current version and every tag they always are); Enter and --yes take the
-# minor one, or the major one when the minor number is at its limit, or the patch one when both are
-choices='' suggested='' patch_bump=''
+# What Enter and --yes take: the next patch version of the base, or the minor one when the patch number is at its
+# limit, or the major one when both are (a bump of the base is above the current version and every tag)
+suggested=''
 for kind in patch minor major; do
   v="$(version_bump "$base" "$kind")"
-  version_valid "$v" || continue
-  choices="$choices${choices:+, }$v ($kind)"
-  if [ "$kind" = patch ]; then
-    patch_bump=$v
-  elif [ -z "$suggested" ]; then
+  if version_valid "$v"; then
     suggested=$v
+    break
   fi
 done
-[ -n "$suggested" ] || suggested=$patch_bump
 [ -n "$suggested" ] || die "no version after $base fits X.Y.Z with at most 9 digits per number."
 
 # check_version <v>: prints why v cannot be the new version, and fails
@@ -260,7 +256,6 @@ elif [ -n "$yes" ]; then
   reason="$(check_version "$new")" || die "$reason."
   say "New version: $new"
 else
-  say "Next: $choices."
   while :; do
     printf 'New version [%s]: ' "$suggested"
     if ! IFS= read -r answer; then

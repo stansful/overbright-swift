@@ -260,7 +260,7 @@ with the commit subjects since the previous release as its notes. A push that ke
 
 ```zsh
 make -C <repo> release                  # shows the version and the last release tag, asks for the next one (Enter:
-                                        # the next minor version), writes it into VERSION and the project's
+                                        # the next patch version), writes it into VERSION and the project's
                                         # MARKETING_VERSION and commits both as "feat: release - version X.Y.Z";
                                         # never pushes
 make -C <repo> release V=patch          # or V=minor, V=major, V=1.4.0: no question asked
