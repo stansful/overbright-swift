@@ -63,7 +63,8 @@ enum PanelPlacement {
     /// The tallest the panel may be on the screen it opens on: `PanelLayout.maximumHeightFraction` (70 %) of that
     /// screen's visible height (DESIGN.md §5.1); beyond it the card list scrolls.
     static func maximumHeight(anchor: CGRect?, screens: [Screen], main: Screen?) -> CGFloat {
-        let screen = anchor.flatMap { screen(of: $0, in: screens) } ?? main ?? screens.first ?? fallbackScreen
+        // `Self.`: Swift 6.3 resolves a bare `screen(of:in:)` in a closure to the local `screen`, not the function.
+        let screen = anchor.flatMap { Self.screen(of: $0, in: screens) } ?? main ?? screens.first ?? fallbackScreen
         return (screen.visibleFrame.height * PanelLayout.maximumHeightFraction).rounded(.down)
     }
 
@@ -79,7 +80,7 @@ enum PanelPlacement {
     /// The result always lies on a screen.
     static func frame(for size: CGSize, anchor: CGRect?, screens: [Screen], main: Screen?) -> CGRect {
         let fallback = main ?? screens.first ?? fallbackScreen
-        let placedOn = anchor.flatMap { screen(of: $0, in: screens) }
+        let placedOn = anchor.flatMap { Self.screen(of: $0, in: screens) }
         let screen = placedOn ?? fallback
         let visible = screen.visibleFrame
         let full = screen.frame
