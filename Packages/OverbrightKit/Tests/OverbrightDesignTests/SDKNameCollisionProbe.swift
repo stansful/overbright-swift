@@ -23,6 +23,9 @@ import OverbrightCore
 import OverbrightPolicy
 import OverbrightDesign
 
+private typealias ProbeAccentSlider = AccentSlider
+private typealias ProbeAccentSwitch = AccentSwitch
+private typealias ProbeAccentSwitchStyle = AccentSwitchStyle
 private typealias ProbeBannerModel = BannerModel
 private typealias ProbeBidiIsolation = BidiIsolation
 private typealias ProbeBoostHalfState = BoostHalfState
