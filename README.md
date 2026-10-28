@@ -1,168 +1,139 @@
-# Overbright
+<p align="center">
+  <img src="docs/images/icon.png" width="128" alt="Overbright icon">
+</p>
 
-**Extra brightness for XDR and HDR displays on your Mac, and dimming below the macOS minimum.** Overbright is a
-small menu bar app that lets a capable display go past its standard maximum, display by display, explains every
-limit it runs into, and always brings the display back to a neutral picture. Free and open source (MIT), no account,
-no analytics.
+<h1 align="center">Overbright</h1>
 
-> **Status: 0.1.0 — first complete build; brightness boost not yet verified on hardware, see
-> [docs/HARDWARE-TEST.md](docs/HARDWARE-TEST.md).** Everything listed below is built and tested against simulated
-> displays: as of 2026-10-20 the package has 1,907 automated tests in 16 test targets, all passing (`make test`;
-> `grep -rho '@Test\b' Packages/OverbrightKit/Tests | wc -l` gives today's number). No boost has run on a real
-> display yet. Two steps remain before the first release: the owner's session on real displays, which checks that
-> extra brightness works there and tunes the engine's limits and timings, and the release itself (signing, the
-> icon's last review, notes). How it is built is in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), how it looks and
-> reads in [docs/DESIGN.md](docs/DESIGN.md).
+<p align="center">
+  <b>Extra brightness for XDR and HDR displays on your Mac, and dimming below the macOS minimum.</b><br>
+  A small menu bar app. Free and open source (MIT), no account, no analytics.
+</p>
+
+<p align="center">
+  <b>English</b> · <a href="README.ru.md">Русский</a>
+</p>
+
+<p align="center">
+  <img src="docs/images/panel.png" width="320" alt="The Overbright panel in dark mode: the built-in display boosted to ×1.29">
+  &nbsp;
+  <img src="docs/images/panel-light.png" width="320" alt="The same panel in light mode">
+</p>
 
 ## What it does
 
-- **Extra brightness** on displays that have extra range: the Liquid Retina XDR display of a MacBook Pro, Apple's
-  XDR displays and HDR external displays with HDR turned on. macOS keeps that range for HDR video; Overbright lets
-  everyday content use it, so the screen stays readable in a bright room or in sunlight. It never scales past the
-  range macOS grants at that moment, and always lands back on the display's own color profile.
-- **Dim below minimum** on any display, HDR or not, with one slider per display: left of Standard dims, right of it
-  adds extra brightness. **Dim All Displays** can have its own shortcut, and every level change asks "Keep this
-  level?" and goes back to Standard after 10 seconds unless you keep it.
-- **Honest about every limit.** Each display gets a verdict and a fix ("Turn on High Dynamic Range for this display
-  in Displays settings"), the slider shows where it stops right now, and the reason when battery, heat, a full-screen
-  video or another app holds it back.
-- **Safe by default.** It starts off, has a Safe ceiling and a Peak one, ramps every change so nothing flickers,
-  and steps back on its own: on battery (below 20 % by default), in Low Power Mode, when the Mac gets warm, when an
-  OLED display sits idle, next to another brightness or color app, and, if you choose, for full-screen video and the
-  video apps on its list, after a timer, outside set hours, in games or in a Focus.
-- **Back to Standard** from anywhere, no shortcut needed (the panel, the menu, the Dock menu, Shortcuts, or a
-  shortcut you record), and a check at every launch that no display was left scaled.
-- **Fill Light** for video calls, on by hand or while a camera is in use; a small on-screen indicator for level
-  changes and automatic stops; a Welcome tour; Settings with search; a one-minute calibration and a self-test.
-- **Shortcuts actions** (turn on or off, set extra brightness, dim, pause, resume, get the state, Back to Standard)
-  and a Focus filter; keyboard shortcuts you record (none is set by default), shown in your keyboard layout; full
-  keyboard and VoiceOver support; 35 languages.
+### ☀️ Brighter than the macOS maximum
 
-Your display uses more power when it is brighter: that is what extra brightness is. Overbright's own work is close to
-nothing while it is off and small while it is on.
+The MacBook Pro's Liquid Retina XDR display, Apple's XDR displays and HDR monitors can show light brighter than
+ordinary white, but macOS keeps that range for HDR video. Overbright lets everyday content use it, so the screen stays
+readable in a bright room or in the sun. One slider per display: **right of Standard adds brightness**.
+
+### 🌙 Darker than the macOS minimum
+
+**Left of Standard dims** any display, HDR or not: handy at night. Dim All Displays can get its own shortcut.
+
+<p align="center">
+  <img src="docs/images/panel-dimmed.png" width="320" alt="The built-in display dimmed to 25%">
+  &nbsp;
+  <img src="docs/images/panel-limit.png" width="320" alt="Extra brightness limited by heat, with the reason shown">
+</p>
+
+### 🛡️ Safe, and honest about every limit
+
+- Starts **off**, with a **Safe** and a **Peak** ceiling; every change ramps smoothly, nothing flickers.
+- Each change asks **“Keep this level?”** and goes back to Standard after 10 seconds if you don’t answer.
+- Steps back on its own on battery, in Low Power Mode, when the Mac gets warm, and, if you want, for full-screen
+  video, games, a timer or set hours. The panel always says **why** (“Limited by heat”).
+- **Back to Standard** from anywhere: the panel switch, the menu, the Dock, the Shortcuts app or your own shortcut.
+
+<p align="center">
+  <img src="docs/images/settings-automations.png" width="640" alt="Settings ▸ Automations: battery, Low Power Mode, heat, timer, apps and video">
+</p>
+
+### 💡 Fill Light for video calls
+
+Lights your face on video calls with a glowing frame around the screen, warm or cool. Turn it on by hand or
+whenever a camera is in use.
+
+<p align="center">
+  <img src="docs/images/panel-fill-light.png" width="320" alt="The Fill Light card: display, brightness and warmth">
+</p>
+
+### ⚙️ Per-display settings and calibration
+
+Choose the level, the limit and whether a display uses extra brightness at all. A one-minute calibration makes
+the numbers exact for your display.
+
+<p align="center">
+  <img src="docs/images/settings-displays.png" width="640" alt="Settings ▸ Displays: same level on all displays, Safe and Peak limits, calibration">
+</p>
+
+### ⌨️ Shortcuts and automation
+
+Record your own keyboard shortcuts (none is set by default), and use Overbright’s actions in the **Shortcuts** app:
+turn it on or off, set extra brightness, dim, pause, get the state. A Focus filter is included.
+
+<p align="center">
+  <img src="docs/images/settings-shortcuts.png" width="640" alt="Settings ▸ Shortcuts: record a key for each action">
+</p>
+
+### 👋 A friendly start
+
+A short Welcome tour shows what your display can do: drag the divider to compare Standard with extra brightness.
+
+<p align="center">
+  <img src="docs/images/welcome.png" width="560" alt="Welcome: drag the divider to compare">
+</p>
+
+And also: full keyboard and VoiceOver support, **35 languages**, no permissions to grant.
 
 ## Install
 
 Requires **macOS 14 Sonoma or later** (Apple silicon or Intel).
 
-1. Download `Overbright-<version>.dmg` (or `.zip`) from the GitHub Releases page. No release is published yet;
-   until then, build from source below.
-2. Drag **Overbright** to **Applications** and open it. It lives in the menu bar; there is no Dock icon unless you
-   turn one on. Launched from somewhere else, it offers to move itself to Applications, because Shortcuts actions
-   and opening at login work only from there.
+1. Download `Overbright-<version>.dmg` from [Releases](https://github.com/stansful/overbright-swift/releases).
+2. Drag **Overbright** to **Applications** and open it. It lives in the menu bar.
 
-**"Overbright can't be opened" / "unidentified developer".** Builds that are not notarized by Apple are blocked by
-Gatekeeper the first time. Either open **Privacy & Security** in System Settings and click **Open Anyway** next to
-the message about Overbright, or remove the quarantine flag in Terminal:
+If macOS says the app **can’t be opened**, click **Open Anyway** in System Settings ▸ Privacy & Security, or run:
 
-```zsh
+```bash
 xattr -dr com.apple.quarantine /Applications/Overbright.app
 ```
 
-## Build from source
+## If the screen looks wrong
 
-You need **Xcode 27** to build the app (the Swift package alone also builds and tests with Xcode 26). No Metal
-Toolchain is needed: Overbright has no shader files. No third-party tools either.
+Nothing to worry about, every way back is built in:
 
-If `xcode-select -p` points at the Command Line Tools rather than Xcode, select Xcode for the commands you type
-yourself (the `make` targets find Xcode in `/Applications` on their own):
+- Wait 10 seconds: an unconfirmed change goes back to Standard on its own.
+- Turn Overbright off in the panel or the menu, or **Force Quit** it: macOS restores the displays at once.
+- Or reset every display’s colors from Terminal:
 
-```zsh
-export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
+```bash
+/Applications/Overbright.app/Contents/MacOS/Overbright --restore-gamma
 ```
-
-Then, one command at a time:
-
-```zsh
-git clone <this repository> Overbright
-make -C Overbright build      # universal Release build → build/Overbright.app (ad-hoc signed, no Apple account)
-make -C Overbright test       # the package's unit tests (Swift Testing)
-make -C Overbright run        # Debug build, launched with simulated displays: it never changes your screen
-make -C Overbright help       # everything else (check, strings, smoke test, dist, …)
-```
-
-`make run` starts the app with `--off --qa-simulate builtin-xdr-lid-open` and a settings suite of its own, so a
-development build never brightens or dims a real display and never touches your installed copy's settings.
-[docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) explains the rest.
-
-## Permissions
-
-**None.** Overbright asks for no privacy permission: no Accessibility, Screen Recording, camera or microphone access.
-Its global shortcuts use the system's hot-key API, and noticing that a camera is in use (for Fill Light's automatic
-mode) reads only whether a camera runs, never its picture.
-
-## Safety and recovery
-
-Overbright changes your display's brightness through the display's color table and macOS's extra range. Every way
-back to a normal picture is built in:
-
-- **Back to Standard** — no keyboard shortcut needed (none is set by default): the switch at the top of the panel,
-  "Turn Off Overbright" in the menu bar menu, "Back to Standard" in the Dock menu (when the Dock icon is on) and the
-  Back to Standard action in the Shortcuts app each turn Overbright off at once. Your levels are kept for next time.
-  If you want a key for it, record one in Settings ▸ Shortcuts (Welcome's "Where to find Overbright" step links
-  there).
-- **"Keep this level?"** — every level change away from Standard asks. Without an answer the display goes back to
-  Standard after 10 seconds, so a screen you cannot read comes back on its own.
-- **Quit, crash or Force Quit** — macOS restores every display the moment Overbright's process ends. If Overbright
-  ever stops responding, Force Quit it; your displays return to normal at once.
-- **Colors look wrong after another app quit?** Settings ▸ Advanced ▸ Reset Display Colors… puts every display back
-  on its color profile.
-- **From Terminal**, without opening any window:
-
-  ```zsh
-  /Applications/Overbright.app/Contents/MacOS/Overbright --restore-gamma
-  ```
-
-  It checks every display against its color profile, restores the profile where something else is left, prints
-  the result and quits. If a display still looks wrong after that, change its preset (or its color profile) in
-  Displays settings and back, or log out.
-
-At every launch Overbright first checks that no display was left scaled; it never starts brighter than Standard
-unless you chose "Open Overbright and turn it on".
-
-## Energy
-
-Brighter displays draw more power; that part is the point. Overbright's own work is kept small: while it is off it
-runs no timers, and while it boosts it wakes about once every 2 seconds whatever the number of displays (≈ 0.01–0.02 %
-of one core) and uses about 28–30 MB. These figures come from `make perf` against simulated displays (DESIGN.md §17);
-numbers on real displays come from the hardware session.
 
 ## Privacy
 
-- No analytics, no crash reporting, no account, no ads.
-- Everything stays on your Mac: settings in the app's preferences, self-test logs in
-  `~/Library/Application Support/app.overbright.Overbright/`, caches in `~/Library/Caches/app.overbright.Overbright/`.
-- The only network request is the optional daily update check against this project's GitHub Releases page (no
-  identifiers, no cookies). It is off until you turn it on. Releases published here ask this repository; a build
-  from source has no repository set, and so no update check, unless you build it with
-  `OVERBRIGHT_GITHUB_REPOSITORY=owner/repo`.
-- Copy Diagnostics puts a technical report on the clipboard; nothing is ever sent anywhere.
+No analytics, no crash reporting, no account. Everything stays on your Mac. The only network request is an optional
+update check against this repository’s Releases page, off until you turn it on.
 
-## Languages
+## Build from source
 
-English · العربية · Català · Čeština · Dansk · Deutsch · Ελληνικά · Español · Suomi · Français · עברית · हिन्दी ·
-Hrvatski · Magyar · Bahasa Indonesia · Italiano · 日本語 · 한국어 · Bahasa Melayu · Norsk bokmål · Nederlands ·
-Polski · Português (Brasil) · Português (Portugal) · Română · Русский · Slovenčina · Slovenščina · Svenska · ไทย ·
-Türkçe · Українська · Tiếng Việt · 简体中文 · 繁體中文
+You need **Xcode 27**.
 
-English is the original. All 35 languages are translated; corrections are welcome, and
-[docs/TRANSLATING.md](docs/TRANSLATING.md) shows how to fix or review a language.
+```bash
+make build
+```
 
-## Contributing
+`make run` starts a Debug build with simulated displays, so it never changes your real screen; `make test` runs
+the tests; `make help` lists the rest.
 
-Bug reports and pull requests are welcome. Start with [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) (rules, workflow,
-how to build one module, visual QA), then [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (code structure and
-contracts) and [docs/DESIGN.md](docs/DESIGN.md) (every pixel, color and word). Translators:
-[docs/TRANSLATING.md](docs/TRANSLATING.md).
+## More
 
-## Credits
-
-Overbright is original work by the Overbright contributors, MIT-licensed, with no third-party dependencies. Parts of
-its scaffold, build scripts, translation tools, settings store, hot-key center and update checker come from
-[Cranny](THIRD_PARTY_NOTICES.md), an MIT-licensed app by the same owner; its notice is in
-[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md), together with the projects whose ideas Overbright learned from
-(xdr-boost, xdr-light, displaytint, MonitorControl). SF Symbols and the system frameworks are Apple's.
+- [docs/OVERVIEW.md](docs/OVERVIEW.md) — the full overview: safety and recovery, energy, privacy, languages, build
+- [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) — how to contribute
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and [docs/DESIGN.md](docs/DESIGN.md) — how it’s built and how it looks
+- [docs/TRANSLATING.md](docs/TRANSLATING.md) — fix or review a translation
 
 ## License
 
-MIT, see [LICENSE](LICENSE).
+MIT, see [LICENSE](LICENSE). Credits and third-party notices are in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
