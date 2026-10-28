@@ -43,9 +43,9 @@ enum SourceScan {
                                                       ".derived", "xcuserdata", ".idea"]
     private static let binarySuffixes = [".png", ".jpg", ".jpeg", ".icns", ".pdf", ".mov", ".car", ".zip", ".dmg"]
 
-    /// Every text file of the repository, as `scripts/lint-copy.py`'s `scanned_files()` lists them for the clean-room
-    /// scan: what git tracks plus the untracked files `.gitignore` does not exclude, or, without git, every file under
-    /// the root except build outputs, SwiftPM caches and per-user state.
+    /// Every text file of the repository, as `scripts/lib/lint-copy.py`'s `scanned_files()` lists them for the
+    /// clean-room scan: what git tracks plus the untracked files `.gitignore` does not exclude, or, without git, every
+    /// file under the root except build outputs, SwiftPM caches and per-user state.
     static func repositoryFiles() -> [ScannedFile] {
         guard let paths = gitListedFiles() else { return files(in: [""]) }
         return paths.compactMap { path -> ScannedFile? in

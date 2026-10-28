@@ -107,7 +107,8 @@ import Testing
         return (fromReasons + fromPhases + badges).filter { !$0.isEmpty }
     }
 
-    /// The fit tests below run every language of `scripts/l10n/languages.json`, and Design's catalog ships each one.
+    /// The fit tests below run every language of `scripts/lib/l10n/languages.json`, and Design's catalog ships each
+    /// one.
     @Test func everyShippedLanguageIsMeasured() throws {
         #expect(ShippedLanguages.codes == (try ShippedLanguages.listed()))
         #expect(ShippedLanguages.codes.count == 35)

@@ -90,7 +90,7 @@ import Testing
     static let onLabels = ["on", "low-power", "resumed", "locked", "unlocked", "booster", "clear"]
 
     /// The standard scenario: on (answering the first boost's "Keep this level?"), a guard, a shield, a booster,
-    /// dimming, off. The QA matrix runs the same script (scripts/qa-matrix.sh).
+    /// dimming, off. The QA matrix runs the same script (scripts/lib/qa-matrix.sh).
     static let standard = """
         on; keep; wait 8; dump on; low-power on; wait 1; dump low-power; low-power off; wait 8; dump resumed; \
         lock; wait 0.1; dump locked; unlock; wait 8; dump unlocked; conflict booster; wait 1; dump booster; \

@@ -1,0 +1,5 @@
+# actionlint (ci.yml's scripts job). xcode-27 is GitHub's own Xcode 27 image (arm64, macOS 27; generally available
+# since 2026-10-15), newer than the label list of actionlint 1.7.12: declared here so the lint accepts it.
+self-hosted-runner:
+  labels:
+    - xcode-27

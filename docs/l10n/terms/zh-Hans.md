@@ -5,7 +5,7 @@ typography decisions are language facts and stay; Cranny’s notch, widget and a
 deleted, and examples and notes that named Cranny’s features (the notch, the Tray, widgets, Calendar, Notes,
 Media, permissions) were replaced with Overbright’s or dropped. Overbright’s own names, its pane names among them,
 were decided in WP15 (ARCHITECTURE.md §10.17, §8.8); the table shows them as the catalogs ship them.
-`scripts/l10n/languages.json` has this language’s plural categories and quotation marks.
+`scripts/lib/l10n/languages.json` has this language’s plural categories and quotation marks.
 
 ## Register and typography
 

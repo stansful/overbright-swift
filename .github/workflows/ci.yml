@@ -1,26 +1,74 @@
+# Tests every push to a branch other than main, and every pull request. A push to main does not start this workflow:
+# release.yml calls it (workflow_call) before it builds and publishes anything, so the checks run once per push and no
+# skipped CI run is left behind.
+#   scripts           actionlint (the workflows), shellcheck (the release scripts) and the tests of the release scripts
+#                     (scripts/tests/run.sh)
+#   build             lint, l10n, every module on its own with the unit tests, the Thread Sanitizer, the generated files
+#                     and the release build of scripts/build-release.sh (pending translations allowed), uploaded
+#   package-macos-26  the package on the oldest supported toolchain
 name: CI
 
 on:
   push:
-    branches: [main]
+    branches-ignore: [main]
   pull_request:
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      release:
+        description: Called by release.yml, which runs these checks on every push to main
+        type: boolean
+        default: false
 
+permissions:
+  contents: read
+
+# A newer push to a branch or pull request cancels its older checks. The checks release.yml calls get a group of their
+# own run (release.yml queues its runs itself), so nothing, not even a dry run of the same branch, cancels them.
 concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  group: ci-${{ inputs.release && format('release-{0}', github.run_id) || github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ !inputs.release }}
+
+defaults:
+  run:
+    shell: bash --noprofile --norc -euo pipefail {0}
 
 jobs:
+  scripts:
+    name: Scripts and workflows
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      ACTIONLINT_IMAGE: rhysd/actionlint:1.7.12@sha256:b1934ee5f1c509618f2508e6eb47ee0d3520686341fec936f3b79331f9315667
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # the workflows, with shellcheck over their run: scripts
+      - name: actionlint
+        run: docker run --rm -v "$PWD:/repo" -w /repo "$ACTIONLINT_IMAGE" -color
+      # actionlint does not look at script files; the same image's shellcheck does
+      - name: shellcheck
+        if: ${{ !cancelled() }}
+        run: |
+          docker run --rm -v "$PWD:/repo" -w /repo --entrypoint shellcheck "$ACTIONLINT_IMAGE" -x -f gcc \
+            scripts/*.sh scripts/lib/version.sh scripts/tests/*.sh .github/scripts/*.sh
+      - name: Release scripts tests (version.sh, make-release.sh, build-release.sh, release-state.sh, release-notes.sh)
+        if: ${{ !cancelled() }}
+        run: scripts/tests/run.sh
+
   build:
     # Xcode-27 image (arm64, macOS 27). The app needs Xcode 27: the App Intents declarations in App/Intents use
     # `allowedExecutionTargets`, which only the macOS 27 SDK has (ARCHITECTURE.md §8.9). CI runners are VMs with
     # virtual displays: no test needs a real display, and smoke passes with `displays: []`.
-    # The runner labels and the @v7 actions are carried over from Cranny, whose CI never ran: confirm them on the
-    # first push.
+    # The runner label is carried over from Cranny, whose CI never ran: confirm it on the first push (release.yml's
+    # build job uses it too).
     runs-on: xcode-27
     timeout-minutes: 40
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Toolchain
         run: |
@@ -32,10 +80,10 @@ jobs:
         run: make lint
 
       - name: Shipped languages are complete and valid (placeholders, plural forms, quotes; new keys may be pending)
-        run: /usr/bin/python3 -I scripts/l10n/validate.py --shipped
+        run: /usr/bin/python3 -I scripts/lib/l10n/validate.py --shipped
 
       - name: Every OverbrightKit module builds on its own (zero warnings) + unit tests
-        run: JOBS=3 TEST=1 scripts/check-modules.sh
+        run: JOBS=3 TEST=1 scripts/lib/check-modules.sh
 
       # The off-main tests of ARCHITECTURE.md §9.2 rule 9 (every <Source>OffMainTests suite, the status item's drawing
       # handler in StatusSymbolTests), the hang watchdog and the gamma write gate. SignalStopTests (the signal queue)
@@ -45,28 +93,24 @@ jobs:
         run: make tsan FILTER='HangWatchdog|OffMain|GammaWriteGate|StatusSymbolTests'
 
       - name: SDK name-collision probes are up to date
-        run: CHECK=1 scripts/name-probe.sh
+        run: CHECK=1 scripts/lib/name-probe.sh
 
       - name: String Catalogs are in sync with code
-        run: CHECK=1 scripts/sync-strings.sh
+        run: CHECK=1 scripts/lib/sync-strings.sh
 
       - name: Compile check with the dormant Control Center extension (CONTROLS=1)
         env:
           BUILD_NUMBER: ${{ github.run_number }}
-        run: CONTROLS=1 scripts/build.sh
+        run: CONTROLS=1 scripts/lib/build.sh
 
-      - name: Release build (universal arm64 + x86_64, ad-hoc signed, extension removed)
+      # What release.yml builds, ad-hoc signed and without the update check's repository: the universal Release build,
+      # the launch smoke test (--diagnostics only, read-only, no UI; App Intents metadata), zip + dmg + sha256
+      - name: Release build (scripts/build-release.sh)
         env:
           BUILD_NUMBER: ${{ github.run_number }}
-        run: scripts/build.sh
+        run: scripts/build-release.sh --allow-pending
 
-      - name: Launch smoke test (--diagnostics only, read-only, no UI; App Intents metadata)
-        run: scripts/smoke.sh
-
-      - name: Package zip + dmg
-        run: scripts/dist.sh
-
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: Overbright-${{ github.sha }}
           path: |
@@ -76,11 +120,12 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: failure()
         with:
-          name: logs-${{ github.sha }}
+          name: logs-${{ github.sha }}-${{ github.run_attempt }}
           path: build/logs/
+          if-no-files-found: ignore
 
   package-macos-26:
     # Minimum-toolchain job (ARCHITECTURE.md §8.9): the `macos-26` image with its default Xcode 26.x (Swift 6.2) builds
@@ -94,7 +139,9 @@ jobs:
       run:
         working-directory: Packages/OverbrightKit
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Toolchain
         run: |

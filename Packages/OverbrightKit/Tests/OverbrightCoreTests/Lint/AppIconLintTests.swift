@@ -1,8 +1,8 @@
 // OverbrightCoreTests/Lint/AppIconLintTests.swift — the geometry of the app icon's layers (DESIGN.md §14 "Past white"),
-// as `scripts/render-icon.swift` renders them into App/AppIcon.icon/Assets: the bloom is a small hot core with a short
-// warm falloff (no wide half-transparent haze, which plus-lighter turns muddy over the graphite), its white is brighter
-// than the screen, the screen leans back in perspective instead of being rotated in the image plane, and the warm
-// keyline is wide enough to show at 128 px. The layers are 1024 × 1024 PNGs with transparency.
+// as `scripts/lib/render-icon.swift` renders them into App/AppIcon.icon/Assets: the bloom is a small hot core with a
+// short warm falloff (no wide half-transparent haze, which plus-lighter turns muddy over the graphite), its white is
+// brighter than the screen, the screen leans back in perspective instead of being rotated in the image plane, and the
+// warm keyline is wide enough to show at 128 px. The layers are 1024 × 1024 PNGs with transparency.
 import CoreGraphics
 import Foundation
 import ImageIO

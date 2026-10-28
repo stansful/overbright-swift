@@ -47,7 +47,7 @@ import Testing
     }
 
     @Test func everyStringOfTheDesignIsInItsCatalog() throws {
-        // DESIGN.md §12.8, with typographic apostrophes (scripts/lint-copy.py).
+        // DESIGN.md §12.8, with typographic apostrophes (scripts/lib/lint-copy.py).
         let app = try Self.keys(of: "App/Localizable.xcstrings")
         let titles = ["Turn Overbright On or Off", "Turn On Overbright", "Turn Off Overbright", "Set Extra Brightness",
                       "Dim Displays", "Pause Overbright", "Resume Overbright", "Get Overbright State", "Back to Standard"]

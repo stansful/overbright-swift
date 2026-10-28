@@ -9,8 +9,8 @@ shows, so a few of its rules exist to protect your own screen while you work. Th
 - **Clean room (ARCHITECTURE.md D3).** Overbright is an independent alternative to a commercial app. Never copy its
   code, assets, icon, UI text, feature names or translations, and never look at its translations when you translate.
   For the record, the app is Vivid by Lumen Digital, named only on lines that carry the lint's marker. <!-- denylist-ok -->
-  `scripts/lint-copy.py` and the Core test `noDenylistedNamesOutsideAllowlist` reject its name, its maker's and those
-  of other display tools in every catalog (keys, values and translator comments, every language) and in every text
+  `scripts/lib/lint-copy.py` and the Core test `noDenylistedNamesOutsideAllowlist` reject its name, its maker's and
+  those of other display tools in every catalog (keys, values and translator comments, every language) and in every text
   file of the repository: what git tracks plus untracked files `.gitignore` does not exclude, so the root's README,
   notices, Makefile and `.gitattributes`, the workflows, the Xcode project and `Package.swift` as much as the sources,
   tests, scripts and docs (without git, a walk of the root minus build outputs and caches). The allowlist is short: the
@@ -72,7 +72,7 @@ test and packaging.
 ## Everyday commands
 
 ```zsh
-<repo>/scripts/check-modules.sh OverbrightBoost   # one target alone, zero warnings (logs in build/logs/)
+<repo>/scripts/lib/check-modules.sh OverbrightBoost   # one target alone, zero warnings (logs in build/logs/)
 make -C <repo> test FILTER=OverbrightBoostTests    # swift test --filter, scratch path .build-test
 make -C <repo> check                               # every target alone (JOBS=4; TEST=1 adds swift test)
 make -C <repo> tsan FILTER='HangWatchdog|OffMain|GammaWriteGate|StatusSymbolTests'   # Thread Sanitizer (CI's filter)
@@ -90,6 +90,8 @@ make -C <repo> perf RUNS=ui                        # after `make debug`: energy 
 make -C <repo> perf-compare A=<dir> B=<dir>        # two perf folders side by side: own CPU, own wake-ups, footprint, §17 verdicts
 make -C <repo> run                                 # Debug build, simulated displays, a dev settings suite
 make -C <repo> dist                                # zip + dmg + sha256 (+ notarization when signing)
+make -C <repo> release                             # the next version into VERSION, committed (see Releasing)
+make -C <repo> release-build                       # the release files as release.yml builds them → dist/
 make -C <repo> distclean                           # also every .build-* scratch dir
 ```
 
@@ -107,7 +109,7 @@ lingers in the Control Center gallery or the Open With menu.
 - Universal builds need `-destination 'generic/platform=macOS'` (the scripts pass it).
 - Debug and Release differ in hardening: verify signing and entitlements on a Release build (`make smoke`).
 - Never link a `.dynamic` product into the app: a hardened ad-hoc Release dies with "different Team IDs".
-- Launch the built app with `open` (LaunchServices) or `scripts/run.sh`, not by running the binary, except for the
+- Launch the built app with `open` (LaunchServices) or `scripts/lib/run.sh`, not by running the binary, except for the
   command-line modes (`--diagnostics`, `--monitor`, `--restore-gamma`).
 - `xcodebuild` never adds catalog keys: run `make strings`. **Building in the Xcode app rewrites String Catalogs**
   (its own key order, stale marks): if `git status` shows catalogs you did not mean to change, run `make strings` or
@@ -128,8 +130,8 @@ can run next to your installed copy.
 
 ```zsh
 QA=(--off --qa-simulate builtin-xdr-lid-open --qa-defaults-suite app.overbright.Overbright.qa)
-<repo>/scripts/run.sh -- "${QA[@]}" --qa-settings about --qa-snapshot /tmp/qa --qa-exit-after 8
-<repo>/scripts/run.sh -- "${QA[@]}" --qa-welcome defaults --qa-snapshot /tmp/qa --qa-exit-after 8
+<repo>/scripts/lib/run.sh -- "${QA[@]}" --qa-settings about --qa-snapshot /tmp/qa --qa-exit-after 8
+<repo>/scripts/lib/run.sh -- "${QA[@]}" --qa-welcome defaults --qa-snapshot /tmp/qa --qa-exit-after 8
 defaults delete app.overbright.Overbright.qa       # the next session starts from the defaults
 ```
 
@@ -186,11 +188,11 @@ Skipped unless their variable is set; never run in CI:
 
 ## Measuring energy
 
-`scripts/perf.sh` (`make perf`, ARCHITECTURE.md §8.7) measures a Debug build under `--qa-simulate` against
+`scripts/lib/perf.sh` (`make perf`, ARCHITECTURE.md §8.7) measures a Debug build under `--qa-simulate` against
 DESIGN.md §17, phase by phase. Each run launches the app once with a scripted scenario and a unique
 `--qa-defaults-suite`, which it deletes afterwards; beside it runs the soak's control app
-(`scripts/soak-control.swift`), a menu bar app that subscribes to what Overbright subscribes to at rest. Every number
-is the app's minus the control's:
+(`scripts/lib/soak-control.swift`), a menu bar app that subscribes to what Overbright subscribes to at rest. Every
+number is the app's minus the control's:
 
 - **CPU** is CPU time (`proc_pid_rusage` user + system) over a clean window, as % of one core. The Mac may be busy
   with other work: never judge by `top`'s instantaneous %.
@@ -230,7 +232,7 @@ cp -R <repo>/build/Overbright.app <repo>/build/Overbright-base.app   # or build 
 make -C <repo> perf RUNS="ui events" APP=build/Overbright-base.app VARIANT=base
 make -C <repo> perf RUNS="ui events"                                  # your build → build/logs/perf/Overbright/
 make -C <repo> perf-compare A=build/logs/perf/base B=build/logs/perf/Overbright
-<repo>/scripts/perf.sh summarize <repo>/build/logs/perf/Overbright    # the tables again (perf.md, perf.csv)
+<repo>/scripts/lib/perf.sh summarize <repo>/build/logs/perf/Overbright    # the tables again (perf.md, perf.csv)
 ```
 
 **Protocol.** Measure the base and your branch alternately in one session (base, branch, base, branch), every steady
@@ -248,6 +250,33 @@ and fail when a QA run changed it (ARCHITECTURE.md §8.5); they never delete a k
 **Safety.** perf.sh refuses a Release build, runs only the simulated ports (D24), never posts input and never attaches
 a debugger: `sample`, `footprint` and `vmmap` read the process. Do not attach `lldb -p` or `xctrace --attach` to a QA
 run either: lldb asks for a password on screen and makes `footprint` and `sample` hang.
+
+## Releasing
+
+Releases go out from `main` on GitHub (`.github/workflows/release.yml`, ARCHITECTURE.md §8.9): a push whose `VERSION`
+has no release yet runs the whole CI, builds the release on the xcode-27 runner with `scripts/build-release.sh` and
+publishes `Overbright-<version>.zip`, `.dmg` and `.sha256` as the release "Overbright <version>", tagged `v<version>`,
+with the commit subjects since the previous release as its notes. A push that keeps the version is only tested.
+
+```zsh
+make -C <repo> release                  # shows the version and the last release tag, asks for the next one (Enter:
+                                        # the next minor version), writes it into VERSION and the project's
+                                        # MARKETING_VERSION and commits both as "feat: release - version X.Y.Z";
+                                        # never pushes
+make -C <repo> release V=patch          # or V=minor, V=major, V=1.4.0: no question asked
+git -C <repo> push origin main          # starts the release
+make -C <repo> release-build            # the same files locally, built the way release.yml builds them → dist/
+SIMULATE=1 make -C <repo> release-build ARGS=--allow-pending   # agents: no real display ports; pending strings allowed
+make -C <repo> release-test             # the release scripts' tests (CI runs them too)
+```
+
+The new version must be higher than `VERSION` and every release tag (`vX.Y.Z`, local or on GitHub). With the
+repository secrets `DEVELOPER_ID_P12_BASE64`, `NOTARY_KEY_P8_BASE64`, `NOTARY_KEY_ID` and `NOTARY_ISSUER_ID` (and
+`DEVELOPER_ID_P12_PASSWORD` when the .p12 has a password) the release is signed with Developer ID and notarized; with
+none of them it is ad-hoc signed. Once a release is signed with Developer ID, a build that is ad-hoc or of another team
+is refused. A release refuses strings
+pending translation. When a release job fails, re-run it or push a fix: the version stays unreleased until its release
+is published. Run the workflow by hand with **dry_run** to build any branch without publishing anything.
 
 ## Engineering rules (summary of ARCHITECTURE.md §8–§9)
 
@@ -296,7 +325,7 @@ busy with other tests, until it checked the condition as often as an idle one wo
 
 ## Definition of done (ARCHITECTURE.md §9.3)
 
-`scripts/check-modules.sh <Target>` with zero warnings; `make test FILTER=<Target>Tests` passes; new strings synced,
+`scripts/lib/check-modules.sh <Target>` with zero warnings; `make test FILTER=<Target>Tests` passes; new strings synced,
 translated or pending, and `make strings-check` green; `make build` and `make smoke` pass with `gammaWrites == 0` and
 `triggerWindows == 0`; previews, accessibility labels and values, Reduce Motion / Transparency / Increase Contrast
 behaviour for every view; no edits outside your paths; the acceptance criteria demonstrated in the pull request;

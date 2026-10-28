@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<!-- Merged with the keys Xcode generates (GENERATE_INFOPLIST_FILE = YES). Localized in InfoPlist.xcstrings.
-	     ARCHITECTURE.md §8.6. No *UsageDescription key: Overbright asks for no permission (scripts/smoke.sh fails on one). -->
+	     ARCHITECTURE.md §8.6. No *UsageDescription key: Overbright asks for no permission (scripts/lib/smoke.sh fails on one). -->
 	<!-- A menu bar app: no Dock icon by default (the optional Dock icon is switched at runtime, D13). -->
 	<key>LSUIElement</key>
 	<true/>
@@ -11,8 +11,8 @@
 	<string>public.app-category.utilities</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2026 Overbright contributors. MIT License.</string>
-	<!-- Without this, SwiftPM resource bundles fall back to English. Every language of scripts/l10n/languages.json
-	     (scripts/smoke.sh checks the built app). -->
+	<!-- Without this, SwiftPM resource bundles fall back to English. Every language of scripts/lib/l10n/languages.json
+	     (scripts/lib/smoke.sh checks the built app). -->
 	<key>CFBundleLocalizations</key>
 	<array>
 		<string>en</string>
@@ -56,7 +56,7 @@
 	<key>NSSupportsAutomaticGraphicsSwitching</key>
 	<true/>
 	<!-- "owner/repo" for the GitHub Releases update check. Empty = update check disabled, no network at all (D2). The
-	     build setting OVERBRIGHT_GITHUB_REPOSITORY is empty in the project; scripts/build.sh passes it from the
+	     build setting OVERBRIGHT_GITHUB_REPOSITORY is empty in the project; scripts/lib/build.sh passes it from the
 	     environment, and release.yml sets it to the repository the release is published from. -->
 	<key>OverbrightGitHubRepository</key>
 	<string>$(OVERBRIGHT_GITHUB_REPOSITORY)</string>

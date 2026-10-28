@@ -13,14 +13,14 @@ import Testing
 
     /// D3: no competitor name outside the allowlist, in every text file of the repository: the root's README, notices
     /// and Makefile, the workflows, the Xcode project and Package.swift as much as the sources, tests, scripts and
-    /// docs (the same files and rules as `scripts/lint-copy.py`).
+    /// docs (the same files and rules as `scripts/lib/lint-copy.py`).
     @Test func noDenylistedNamesOutsideAllowlist() throws {
         let caseless = try NSRegularExpression(pattern: "v[iíì]v[iíì]d|lumen[\\s-]*digital|bright[\\s-]*intosh|better[\\s-]*display",
                                                options: .caseInsensitive)
         let cased = try NSRegularExpression(pattern: "\\bLunar\\b|lunar\\.app|fyi\\.lunar")
         let identifierLiteral = try NSRegularExpression(pattern: "\"[A-Za-z0-9._-]+\"")
         let conflictCatalog = "\(sources)/OverbrightPolicy/Conflicts/ConflictCatalog.swift"
-        let markedDefinitions: Set<String> = ["scripts/lint-copy.py", "scripts/l10n/l10n.py"]
+        let markedDefinitions: Set<String> = ["scripts/lib/lint-copy.py", "scripts/lib/l10n/l10n.py"]
         func denylisted(_ text: String) -> Bool {
             !SourceScan.matches(caseless, in: text).isEmpty || !SourceScan.matches(cased, in: text).isEmpty
         }
@@ -62,7 +62,7 @@ import Testing
             + SourceScan.files(in: ["scripts"], extensions: ["swift", "py", "sh"])
         let hits = lines(in: files.filter { $0.path != writer }) { line in setters.contains(where: line.contains) }
         #expect(files.contains { $0.path == writer })
-        for script in ["scripts/render-icon.swift", "scripts/run.sh", "scripts/lint-copy.py"] {
+        for script in ["scripts/lib/render-icon.swift", "scripts/lib/run.sh", "scripts/lib/lint-copy.py"] {
             #expect(files.contains { $0.path == script }, "\(script)")
         }
         #expect(hits.isEmpty, "only CoreGraphicsGamma.swift may change display state: \(hits)")

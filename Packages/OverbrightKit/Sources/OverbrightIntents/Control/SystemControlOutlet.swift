@@ -18,7 +18,8 @@ import WidgetKit
         self.bundle = bundle; self.store = store; self.word = word
     }
 
-    /// Whether the extension is in the bundle's `PlugIns` folder (`scripts/build.sh` removes it unless `CONTROLS=1`).
+    /// Whether the extension is in the bundle's `PlugIns` folder (`scripts/lib/build.sh` removes it unless
+    /// `CONTROLS=1`).
     public var isControlInstalled: Bool {
         guard let plugIns = bundle.builtInPlugInsURL else { return false }
         return FileManager.default.fileExists(atPath: plugIns.appending(path: BoostChannel.extensionBundleName).path)

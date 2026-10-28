@@ -47,7 +47,7 @@
    log stream --level info --predicate 'subsystem == "app.overbright.Overbright"' > ~/Overbright-HW/log-<section>.txt
    ```
 7. Shortcuts and automations ship off (since 2026-10-20). In Settings ▸ Shortcuts record **Back to Standard** (⌃⌥⌘0), **Less Bright** (⌃⌥⌘-) and **Brighter** (⌃⌥⌘=), the keys this plan names; §7 turns its own automations on. External displays leave the panel by default (since 2026-10-27): turn on Settings ▸ Displays ▸ **Show external displays in the panel**, since this plan uses the MSI's card, its chips and the "Why?" row.
-8. Only one Overbright app may run (`ob --monitor` and `obdiag` do not count). A second launch (a Debug build from `scripts/run.sh`, `open -n`) hands over to the running one and quits; quit the installed copy before any step that uses a Debug build.
+8. Only one Overbright app may run (`ob --monitor` and `obdiag` do not count). A second launch (a Debug build from `scripts/lib/run.sh`, `open -n`) hands over to the running one and quits; quit the installed copy before any step that uses a Debug build.
 
 **What to send back:** zip `~/Overbright-HW` and hand it to WP16 together with `results.md`. Nothing in it contains personal files or window titles; display names and app names appear only where you typed them in `results.md`.
 
@@ -134,7 +134,7 @@ Monitor running (`monitor-5.jsonl`). Overbright on, built-in at **Max**. §2.0 m
 | 5.2 | Open Overbright again | starts off; `obdiag …/5.2.json` shows `boostMarker` present before and cleared after launch; journal "recovered by macOS" |
 | 5.3 | Boost again, **close the lid** (the MSI stays on), `kill -9 $(obpid)`, open the lid | the built-in comes back `matchesBase` |
 | 5.4 | Boost again, log out, log back in | `matchesBase` after login |
-| 5.5 | Hang test (Debug build): quit the installed copy, then `<your clone>/scripts/run.sh -- --qa-defaults-suite app.overbright.Overbright.hw --qa-hang-main 20,8`, and within 20 s turn the boost on | about 3–5 s after the hang starts the monitor shows `matchesBase` (the watchdog restored); after the hang ends, the boost returns only after a fresh gate (no instant jump back) |
+| 5.5 | Hang test (Debug build): quit the installed copy, then `<your clone>/scripts/lib/run.sh -- --qa-defaults-suite app.overbright.Overbright.hw --qa-hang-main 20,8`, and within 20 s turn the boost on | about 3–5 s after the hang starts the monitor shows `matchesBase` (the watchdog restored); after the hang ends, the boost returns only after a fresh gate (no instant jump back) |
 | 5.6 | (informational) Boost, then `kill -STOP $(obpid)` for 10 s, then `kill -CONT $(obpid)` | the monitor keeps printing; a fully stopped process cannot restore: the table stays SCALED while stopped (expected, documented); after CONT the engine continues |
 | 5.7 | Quit Overbright from the panel, then `ob --restore-gamma` | prints "already neutral" |
 | 5.8 | **H-X2** (WP2: CoreGraphics' transfer calls off the main thread). After 5.5 and after a `kill $(obpid)` (SIGTERM) while boosted, both of which write the baselines from a background queue: `/usr/bin/log show --last 15m --style compact --predicate 'process == "Overbright" AND messageType == fault' > ~/Overbright-HW/5.8-faults.txt`; look in `~/Library/Logs/DiagnosticReports` for an Overbright report | no fault and no crash report; each display came back `matchesBase` (the watchdog's and the signal queue's writes worked off the main thread) |

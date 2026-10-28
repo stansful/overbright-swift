@@ -1,6 +1,6 @@
 // OverbrightSettingsUI/Calibration/CalibrationCopy.swift — the words of the calibration window (DESIGN.md §9, exact
 // English where the design gives it): the checklist, the three steps and their buttons (title case), the results and
-// the line that always follows them. "gray", not "grey" (American English, scripts/lint-copy.py).
+// the line that always follows them. "gray", not "grey" (American English, scripts/lib/lint-copy.py).
 import Foundation
 import OverbrightCore
 import OverbrightDesign

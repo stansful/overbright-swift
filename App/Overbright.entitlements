@@ -3,6 +3,6 @@
 <plist version="1.0">
 <dict>
 	<!-- Not sandboxed (D1): CoreGraphics transfer tables and agent windows. No TCC resource is used. -->
-	<!-- scripts/smoke.sh fails on any entitlement (Debug's get-task-allow excepted). ARCHITECTURE.md §8.6. -->
+	<!-- scripts/lib/smoke.sh fails on any entitlement (Debug's get-task-allow excepted). ARCHITECTURE.md §8.6. -->
 </dict>
 </plist>

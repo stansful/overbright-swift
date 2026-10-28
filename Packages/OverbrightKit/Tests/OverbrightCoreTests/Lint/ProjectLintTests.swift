@@ -1,8 +1,8 @@
-// OverbrightCoreTests/Lint/ProjectLintTests.swift — the Xcode project's build settings that scripts/check-modules.sh
-// cannot see (ARCHITECTURE.md §8.6): the app target (App/, its intent adapters) and the dormant Controls extension
-// (Controls/, Shared/) compile only in the Xcode build, so zero warnings has to be a setting of theirs; and a Debug
-// build links its binary once, so the App Intents metadata is always extracted (§7.7, scripts/smoke.sh); and the
-// update check's repository is a build setting a release can set (D2).
+// OverbrightCoreTests/Lint/ProjectLintTests.swift — the Xcode project's build settings that
+// scripts/lib/check-modules.sh cannot see (ARCHITECTURE.md §8.6): the app target (App/, its intent adapters) and the
+// dormant Controls extension (Controls/, Shared/) compile only in the Xcode build, so zero warnings has to be a setting
+// of theirs; and a Debug build links its binary once, so the App Intents metadata is always extracted (§7.7,
+// scripts/lib/smoke.sh); and the update check's repository is a build setting a release can set (D2).
 import Foundation
 import Testing
 
@@ -34,7 +34,7 @@ import Testing
     }
 
     /// D2, §8.6: the update check's repository comes from the build setting, empty in the project (no network), so
-    /// `scripts/build.sh` can pass the one release.yml publishes from; a literal in Info.plist could not be set.
+    /// `scripts/lib/build.sh` can pass the one release.yml publishes from; a literal in Info.plist could not be set.
     @Test(arguments: [appDebug, appRelease])
     func updateRepositoryIsABuildSetting(configuration: String) throws {
         let settings = try #require(Self.buildSettings(of: configuration, in: project), "\(configuration)")

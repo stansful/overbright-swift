@@ -1,7 +1,7 @@
 // OverbrightPanelUITests/Support/ShippedLanguages.swift — the languages of WP15's all-language fit tests (ARCHITECTURE.md
-// §8.8, §10.17): every localization Design's catalog ships, checked against scripts/l10n/languages.json, with Design's
-// words (`CopyLanguage`) and this module's own table in one of them. Nothing changes the test process's language: each
-// language is read from its `.lproj` folder.
+// §8.8, §10.17): every localization Design's catalog ships, checked against scripts/lib/l10n/languages.json, with
+// Design's words (`CopyLanguage`) and this module's own table in one of them. Nothing changes the test process's
+// language: each language is read from its `.lproj` folder.
 import Foundation
 import OverbrightDesign
 @testable import OverbrightPanelUI
@@ -28,11 +28,12 @@ nonisolated enum ShippedLanguages {
         return Bundle(url: folder)
     }
 
-    /// The codes of `scripts/l10n/languages.json` (the list the catalogs, `Info.plist` and the release check share).
+    /// The codes of `scripts/lib/l10n/languages.json` (the list the catalogs, `Info.plist` and the release check
+    /// share).
     static func listed() throws -> [String] {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
             .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
-        let data = try Data(contentsOf: root.appending(path: "scripts/l10n/languages.json"))
+        let data = try Data(contentsOf: root.appending(path: "scripts/lib/l10n/languages.json"))
         let entries = try JSONSerialization.jsonObject(with: data) as? [[String: Any]] ?? []
         return entries.compactMap { $0["code"] as? String }.sorted()
     }
