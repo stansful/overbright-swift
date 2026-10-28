@@ -73,7 +73,8 @@ private struct PausedAppRow: View {
                     .lineLimit(1)
             }
             Spacer(minLength: Space.m)
-            Picker(selection: Binding(get: { rule.mode }, set: setMode)) {
+            // A closure, not `set: setMode`: Swift 6.3's IRGen crashes on the thunk that converts the function value.
+            Picker(selection: Binding(get: { rule.mode }, set: { setMode($0) })) {
                 ForEach(modes, id: \.self) { mode in Text(verbatim: mode.localizedName()).tag(mode) }
             } label: {
                 Text(verbatim: PausedAppsEditor.spokenName(identity))   // VoiceOver: the app's name, then its mode
