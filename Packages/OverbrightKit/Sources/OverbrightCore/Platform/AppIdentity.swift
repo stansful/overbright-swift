@@ -105,10 +105,19 @@ public struct AppIdentity {
     /// Called off the main actor, right after `locate`.
     @ObservationIgnored private let iconForFile: @Sendable (URL) -> NSImage?
 
+    /// The real lookups (Launch Services, Icon Services), for `shared` and the tests of the real lookup. Not default
+    /// arguments of `init(locate:icon:)`: every caller that takes a default argument compiles its own copy of the
+    /// closure, and two copies of an async closure can disagree on the size of its async frame. Linked into one binary
+    /// (SwiftPM's native build puts every test target in one bundle), the code of one copy can end up with the frame
+    /// size of the other; the closure then writes past its frame and corrupts the task's allocator (SIGBUS on CI).
+    public convenience init() {
+        self.init(locate: { await AppIdentityResolver.locate($0) }, icon: { NSWorkspace.shared.icon(forFile: $0.path) })
+    }
+
     /// `locate` answers for one bundle identifier (nil = not installed), off the main actor; `icon` gives the icon of
     /// a bundle that is safe to read, also off the main actor. Tests inject both; the app uses `shared`.
-    public init(locate: @escaping @concurrent @Sendable (String) async -> AppIdentity.Location? = { await AppIdentityResolver.locate($0) },
-                icon: @escaping @Sendable (URL) -> NSImage? = { NSWorkspace.shared.icon(forFile: $0.path) }) {
+    public init(locate: @escaping @concurrent @Sendable (String) async -> AppIdentity.Location?,
+                icon: @escaping @Sendable (URL) -> NSImage?) {
         self.locate = locate
         iconForFile = icon
     }
