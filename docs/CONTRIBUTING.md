@@ -53,15 +53,15 @@ requirement or a stored property through an extension, and a new case breaks eve
    only**; the integration package folds them into their final files.
 4. Adding a public top-level Core or Policy type? Run `make probe` and commit the regenerated name-collision probe.
 
-`main` is always green: CI runs the copy rules, `check-modules`, the tests, the Thread Sanitizer suite,
-`strings-check`, the name probe, a universal build (and the dormant Controls extension with `CONTROLS=1`), the smoke
-test and packaging.
+`main` is always green: CI runs the copy rules, `strings-check`, the name probe, a universal build, the smoke test and
+packaging. The unit tests, `check-modules` and the Thread Sanitizer suite are not in CI: run them locally before you
+push (`make test`, `make check`, `make tsan`).
 
 ## Toolchain
 
 - **Xcode 27** for the app (the App Intents use `allowedExecutionTargets`, which only Xcode 27's SDK has); the package
   alone builds and tests with Xcode 26.6 / Swift 6.3, given `--build-system swiftbuild` (Xcode 26's default native
-  backend leaves the String Catalogs uncompiled, as CI's macos-26 job notes). **No Metal Toolchain** (there are no
+  backend leaves the String Catalogs uncompiled). **No Metal Toolchain** (there are no
   `.metal` files, and `make lint` keeps it that way).
 - If `xcode-select -p` points at the Command Line Tools, start every manual command with
   `export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`; the scripts find Xcode themselves.
@@ -76,7 +76,7 @@ test and packaging.
 <repo>/scripts/lib/check-modules.sh OverbrightBoost   # one target alone, zero warnings (logs in build/logs/)
 make -C <repo> test FILTER=OverbrightBoostTests    # swift test --filter, scratch path .build-test
 make -C <repo> check                               # every target alone (JOBS=4; TEST=1 adds swift test)
-make -C <repo> tsan FILTER='HangWatchdog|OffMain|GammaWriteGate|StatusSymbolTests'   # Thread Sanitizer (CI's filter)
+make -C <repo> tsan FILTER='HangWatchdog|OffMain|GammaWriteGate|StatusSymbolTests'   # Thread Sanitizer (the off-main suites)
 make -C <repo> lint                                # copy rules, competitor denylist, no shader files, script self-tests
 make -C <repo> strings                             # add new English keys to the String Catalogs
 make -C <repo> l10n-pending                        # mark them pending in every language (docs/TRANSLATING.md)

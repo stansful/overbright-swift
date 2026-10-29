@@ -677,21 +677,21 @@ fi
 
 # --- runners and actions
 
-# actionlint 1.7.12 knows GitHub's ubuntu and macos-26 labels, not xcode-27 (GitHub's Xcode 27 image, newer)
+# actionlint 1.7.12 knows GitHub's ubuntu labels, not xcode-27 (GitHub's Xcode 27 image, newer)
 runners="$(sed -n 's/^ *runs-on: *//p' "$RELEASE" "$CI" | LC_ALL=C sort -u)"
 odd=''
 for r in $runners; do
-  case $r in ubuntu-* | macos-26 | xcode-27) ;; *) odd="$odd $r" ;; esac
+  case $r in ubuntu-* | xcode-27) ;; *) odd="$odd $r" ;; esac
 done
 if that "no runs-on in the workflows" -n "$runners" && that "runs-on:$odd" -z "$odd" &&
   has_line "$BUILD_JOB" '    runs-on: xcode-27' && has_line "$CI_BUILD" '    runs-on: xcode-27'; then
-  ok "every job runs on ubuntu, macos-26 (ci.yml's package job) or xcode-27, the image of both builds"
+  ok "every job runs on ubuntu or xcode-27, the image of both builds"
 else
-  nok "every job runs on ubuntu, macos-26 (ci.yml's package job) or xcode-27, the image of both builds" "$WHY"
+  nok "every job runs on ubuntu or xcode-27, the image of both builds" "$WHY"
 fi
 undeclared=''
 for r in $runners; do
-  case $r in ubuntu-* | macos-26) continue ;; esac
+  case $r in ubuntu-*) continue ;; esac
   in_block "$ACTIONLINT" 'labels:' "- $r" || undeclared="$undeclared $r"
 done
 if in_block "$ACTIONLINT" 'self-hosted-runner:' 'labels:' && that "not declared:$undeclared" -z "$undeclared"; then

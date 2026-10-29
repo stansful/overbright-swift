@@ -10,7 +10,7 @@ PACKAGE_DIR="$ROOT/Packages/OverbrightKit"
 BUILD_DIR="$ROOT/build"
 DERIVED_DIR="$BUILD_DIR/DerivedData"
 # The intent declarations in App/Intents use `allowedExecutionTargets`, which only Xcode 27's SDK has
-# (ARCHITECTURE.md header and §8.6). The package alone still builds with Xcode 26 (CI's macos-26 job).
+# (ARCHITECTURE.md header and §8.6). The package alone still builds with Xcode 26.
 MIN_XCODE_MAJOR=27
 APP_NAME="Overbright"
 CONTROLS_APPEX="OverbrightControls.appex"

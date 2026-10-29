@@ -1,11 +1,10 @@
 # Tests every push to a branch other than main, and every pull request. A push to main does not start this workflow:
 # release.yml calls it (workflow_call) before it builds and publishes anything, so the checks run once per push and no
 # skipped CI run is left behind.
-#   scripts           actionlint (the workflows), shellcheck (the release scripts) and the tests of the release scripts
-#                     (scripts/tests/run.sh)
-#   build             lint, l10n, every module on its own with the unit tests, the Thread Sanitizer, the generated files
-#                     and the release build of scripts/build-release.sh (pending translations allowed), uploaded
-#   package-macos-26  the package on the oldest supported toolchain
+#   scripts  actionlint (the workflows), shellcheck (the release scripts) and the tests of the release scripts
+#            (scripts/tests/run.sh)
+#   build    lint, l10n, the generated files and the release build of scripts/build-release.sh (pending translations
+#            allowed), uploaded. The unit tests run locally (make test, make check, make tsan), not here.
 name: CI
 
 on:
@@ -60,9 +59,7 @@ jobs:
   build:
     # Xcode-27 image (arm64, macOS 27). The app needs Xcode 27: the App Intents declarations in App/Intents use
     # `allowedExecutionTargets`, which only the macOS 27 SDK has (ARCHITECTURE.md §8.9). CI runners are VMs with
-    # virtual displays: no test needs a real display, and smoke passes with `displays: []`.
-    # The runner label is carried over from Cranny, whose CI never ran: confirm it on the first push (release.yml's
-    # build job uses it too).
+    # virtual displays: smoke passes with `displays: []`. release.yml's build job runs on the same image.
     runs-on: xcode-27
     timeout-minutes: 40
     steps:
@@ -82,29 +79,15 @@ jobs:
       - name: Shipped languages are complete and valid (placeholders, plural forms, quotes; new keys may be pending)
         run: /usr/bin/python3 -I scripts/lib/l10n/validate.py --shipped
 
-      - name: Every OverbrightKit module builds on its own (zero warnings) + unit tests
-        run: JOBS=3 TEST=1 scripts/lib/check-modules.sh
-
-      # The off-main tests of ARCHITECTURE.md §9.2 rule 9 (every <Source>OffMainTests suite, the status item's drawing
-      # handler in StatusSymbolTests), the hang watchdog and the gamma write gate. SignalStopTests (the signal queue)
-      # join once their timeouts are made robust for the sanitizer's slowdown (review item C-BOOST-14): add
-      # `|SignalStop` to the filter then.
-      - name: Thread Sanitizer (hang watchdog, gamma write gate, the off-main entry points)
-        run: make tsan FILTER='HangWatchdog|OffMain|GammaWriteGate|StatusSymbolTests'
-
       - name: SDK name-collision probes are up to date
         run: CHECK=1 scripts/lib/name-probe.sh
 
       - name: String Catalogs are in sync with code
         run: CHECK=1 scripts/lib/sync-strings.sh
 
-      - name: Compile check with the dormant Control Center extension (CONTROLS=1)
-        env:
-          BUILD_NUMBER: ${{ github.run_number }}
-        run: CONTROLS=1 scripts/lib/build.sh
-
-      # What release.yml builds, ad-hoc signed and without the update check's repository: the universal Release build,
-      # the launch smoke test (--diagnostics only, read-only, no UI; App Intents metadata), zip + dmg + sha256
+      # What release.yml builds, ad-hoc signed and without the update check's repository: the universal Release build
+      # (the dormant Control Center extension is always compiled, then dropped), the launch smoke test (--diagnostics
+      # only, read-only, no UI; App Intents metadata), zip + dmg + sha256
       - name: Release build (scripts/build-release.sh)
         env:
           BUILD_NUMBER: ${{ github.run_number }}
@@ -126,36 +109,3 @@ jobs:
           name: logs-${{ github.sha }}-${{ github.run_attempt }}
           path: build/logs/
           if-no-files-found: ignore
-
-  package-macos-26:
-    # Minimum-toolchain job (ARCHITECTURE.md §8.9): Xcode 26.6 (Swift 6.3) on the `macos-26` image builds and tests the
-    # package only. The app's intent declarations need Xcode 27's SDK, so no app build here. Xcode is pinned, not the
-    # image's default: Swift 6.2 and 6.3.0-6.3.1 make `Bundle.module` main-actor in a MainActor module (Design's
-    # nonisolated CopyLanguage reads it), and Swift 6.2's swiftbuild backend runs no Swift Testing test yet passes. Both
-    # steps ask for the swiftbuild backend, the default from Xcode 27 on: Xcode 26's native one copies the String
-    # Catalogs uncompiled (no `.lproj`, so the language tests fail) and links every test target into one process. Until
-    # its first green run it reports without failing the workflow; then remove `continue-on-error`.
-    runs-on: macos-26
-    timeout-minutes: 30
-    continue-on-error: true
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
-    defaults:
-      run:
-        working-directory: Packages/OverbrightKit
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-
-      - name: Toolchain
-        run: |
-          xcode-select -p
-          xcodebuild -version
-          swift --version
-
-      - name: Build OverbrightKit (zero warnings)
-        run: swift build --build-system swiftbuild --scratch-path .build -Xswiftc -warnings-as-errors
-
-      - name: Test OverbrightKit
-        run: swift test --build-system swiftbuild --scratch-path .build-test
