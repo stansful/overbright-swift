@@ -75,7 +75,9 @@ import Testing
         #expect(abs(frames[1].minX - frames[0].maxX - 16) < 1e-9)
         let space = try #require(CGColorSpace(name: CGColorSpace.displayP3))
         #expect(CodeValueView.components(0.95, in: space) == [0.95, 0.95, 0.95, 1])
-        #expect(StepWedgeView.minimumWidth(count: 4) == CGFloat(4 * 100 + 3 * 16 + 64))
+        // Typed apart: inside `CGFloat(…)` the literal sum costs the solver ~820k scopes, near its limit.
+        let wedgeWidth: CGFloat = 4 * 100 + 3 * 16 + 64
+        #expect(StepWedgeView.minimumWidth(count: 4) == wedgeWidth)
     }
 
     /// The welcome card's stand-in shows Standard at 1 / gain of the light (sRGB-encoded), white beside it.

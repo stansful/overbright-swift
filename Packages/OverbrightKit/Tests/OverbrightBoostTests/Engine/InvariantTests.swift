@@ -81,7 +81,8 @@ import Testing
         #expect(h.writes().count > 30)
         for write in h.writes() {
             // One factor for every entry of every channel (where the base carries a ratio).
-            let ratios = zip(write.table.channels, base.channels).flatMap { table, reference in
+            // `[Double]`: unannotated, the chain costs the solver ~660k scopes and Swift 6.2 gives up on it.
+            let ratios: [Double] = zip(write.table.channels, base.channels).flatMap { table, reference in
                 zip(table, reference).filter { $1 >= 0.05 }.map { Double($0) / Double($1) }
             }
             let spread = (ratios.max() ?? 0) - (ratios.min() ?? 0)
