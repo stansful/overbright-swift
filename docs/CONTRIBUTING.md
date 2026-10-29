@@ -60,8 +60,9 @@ test and packaging.
 ## Toolchain
 
 - **Xcode 27** for the app (the App Intents use `allowedExecutionTargets`, which only Xcode 27's SDK has); the package
-  alone builds and tests with Xcode 26 / Swift 6.2. **No Metal Toolchain** (there are no `.metal` files, and
-  `make lint` keeps it that way).
+  alone builds and tests with Xcode 26.6 / Swift 6.3, given `--build-system swiftbuild` (Xcode 26's default native
+  backend leaves the String Catalogs uncompiled, as CI's macos-26 job notes). **No Metal Toolchain** (there are no
+  `.metal` files, and `make lint` keeps it that way).
 - If `xcode-select -p` points at the Command Line Tools, start every manual command with
   `export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`; the scripts find Xcode themselves.
 - **Run commands one at a time and check each exit status.** On some shells (the owner's zsh profile prints

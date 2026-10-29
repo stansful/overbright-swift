@@ -128,13 +128,18 @@ jobs:
           if-no-files-found: ignore
 
   package-macos-26:
-    # Minimum-toolchain job (ARCHITECTURE.md §8.9): the `macos-26` image with its default Xcode 26.x (Swift 6.2) builds
-    # and tests the package only. The app's intent declarations need Xcode 27's SDK, so no app build here. It has not
-    # run on GitHub yet: until its first green run it reports without failing the workflow; then remove
-    # `continue-on-error`.
+    # Minimum-toolchain job (ARCHITECTURE.md §8.9): Xcode 26.6 (Swift 6.3) on the `macos-26` image builds and tests the
+    # package only. The app's intent declarations need Xcode 27's SDK, so no app build here. Xcode is pinned, not the
+    # image's default: Swift 6.2 and 6.3.0-6.3.1 make `Bundle.module` main-actor in a MainActor module (Design's
+    # nonisolated CopyLanguage reads it), and Swift 6.2's swiftbuild backend runs no Swift Testing test yet passes. Both
+    # steps ask for the swiftbuild backend, the default from Xcode 27 on: Xcode 26's native one copies the String
+    # Catalogs uncompiled (no `.lproj`, so the language tests fail) and links every test target into one process. Until
+    # its first green run it reports without failing the workflow; then remove `continue-on-error`.
     runs-on: macos-26
     timeout-minutes: 30
     continue-on-error: true
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
     defaults:
       run:
         working-directory: Packages/OverbrightKit
@@ -150,7 +155,7 @@ jobs:
           swift --version
 
       - name: Build OverbrightKit (zero warnings)
-        run: swift build --scratch-path .build -Xswiftc -warnings-as-errors
+        run: swift build --build-system swiftbuild --scratch-path .build -Xswiftc -warnings-as-errors
 
       - name: Test OverbrightKit
-        run: swift test --scratch-path .build-test
+        run: swift test --build-system swiftbuild --scratch-path .build-test

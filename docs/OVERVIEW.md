@@ -64,7 +64,7 @@ xattr -dr com.apple.quarantine /Applications/Overbright.app
 
 ## Build from source
 
-You need **Xcode 27** to build the app (the Swift package alone also builds and tests with Xcode 26). No Metal
+You need **Xcode 27** to build the app (the Swift package alone also builds and tests with Xcode 26.6). No Metal
 Toolchain is needed: Overbright has no shader files. No third-party tools either.
 
 If `xcode-select -p` points at the Command Line Tools rather than Xcode, select Xcode for the commands you type
